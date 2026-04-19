@@ -1,7 +1,7 @@
-# J3 — Schéma cible des 5 référentiels shooting (v2)
+# J3 — Schéma cible des 6 référentiels shooting (v3)
 
 > **Statut** : J3.A figé le 2026-04-19 — sert de brief technique pour J3.B et J3.C
-> **Version 2** : intègre 3 directives stratégiques de Sarah (humanité visible obligatoire, distribution 80/20 ambiances, duo cyclique par pack)
+> **Version 3** : ajoute le 6ème référentiel `mannequins_recurrents.json` (casting fixe 12+8 = 20 personnages, 100% IA, répartition démographique française)
 > **Localisation cible** : `referentiels/shooting/`
 > **Sources consommées** : 4 outils AI Studio + DOCX prompts + XLSX plan + Brigitte v2 + charte éditoriale
 
@@ -21,26 +21,28 @@ referentiels/
     ├── direction_artistique_hero.json          ⏳ J3.B
     ├── ambiances_shooting.json                 ⏳ J3.B
     ├── types_de_shots.json                     ⏳ J3.B
+    ├── mannequins_recurrents.json              ⏳ J3.B  (6ème référentiel - NOUVEAU)
     ├── prompts_library.json                    ⏳ J3.C
     └── plan_shooting_systematique.json         ⏳ J3.C
 ```
 
 ---
 
-## 2. Logique d'orchestration des 5 référentiels
+## 2. Logique d'orchestration des 6 référentiels
 
-Les 3 axes orthogonaux du système shooting Ypersoa :
+Les 4 axes orthogonaux du système shooting Ypersoa :
 
 ```
 AXE 1 : AMBIANCE (mood/lumière/lieu)        → ambiances_shooting.json
 AXE 2 : TYPE DE SHOT (cadrage/composition)  → types_de_shots.json
-AXE 3 : PROMPT TEMPLATE (texte EN)          → prompts_library.json
+AXE 3 : MANNEQUIN (qui apparaît à l'image)  → mannequins_recurrents.json
+AXE 4 : PROMPT TEMPLATE (texte EN)          → prompts_library.json
 ```
 
 Pour générer une image, le Hub combine 1 valeur de chaque axe :
-> "Génère un **Crop** (axe 2) en **Studio Brut** (axe 1) avec le template **PP-H03** (axe 3)"
+> "Génère un **Crop** (axe 2) en **Studio Brut** (axe 1) avec **Marie #1** (axe 3) et le template **PP-H03** (axe 4)"
 
-Au-dessus de ces 3 axes, 2 référentiels stratégiques :
+Au-dessus de ces 4 axes, 2 référentiels stratégiques :
 - `direction_artistique_hero.json` — la grammaire visuelle globale + règles de production pack
 - `plan_shooting_systematique.json` — la matrice 408 shots (planification production)
 
@@ -51,7 +53,7 @@ Au-dessus de ces 3 axes, 2 référentiels stratégiques :
 ### Source
 - `archives/aistudio_legacy/shooting_director/src/services/gemini.ts`
 - Section "anti-supermodel" du `archives/aistudio_legacy/atelier_social/src/lib/gemini.ts`
-- **Directives Sarah J3.A** (3 règles ajoutées)
+- **Directives Sarah J3.A** (3 règles ajoutées en v2)
 
 ### Rôle
 Définir la **grammaire visuelle globale** que tous les shootings doivent respecter par défaut, avec règles de production pack et possibilité d'override par motif spécifique.
@@ -63,39 +65,40 @@ Définir la **grammaire visuelle globale** que tous les shootings doivent respec
   "_meta": {
     "schema_version": "2.0",
     "referentiel": "direction_artistique_hero",
-    "description": "Grammaire visuelle globale Ypersoa. Inspirée de Shooting Director (univers décor) + Atelier Social (direction modèles). Intègre les 3 directives stratégiques Sarah de J3.A. Override possible au niveau motif.",
+    "description": "Grammaire visuelle globale Ypersoa. Inspirée de Shooting Director (univers décor) + Atelier Social (direction modèles). Intègre les directives stratégiques Sarah de J3.A. Override possible au niveau motif.",
     "directives_strategiques_integrees": [
       "Humanité visible OBLIGATOIRE (anti-supermodel renforcé)",
       "Distribution ambiances 80% Studio Brut + Loft Organique (40/40), 20% autres",
-      "Duo systématique par pack avec rotation cyclique sur 4 types"
+      "Duo systématique par pack avec rotation cyclique sur 4 types",
+      "Casting fixé à 20 mannequins récurrents (12 principaux + 8 secondaires)"
     ]
   },
 
   "univers_signature": {
     "decor_principal": "appartement éditorial parisien, mur moulé vert sauge, parquet chevron",
     "lumiere_dominante": "naturelle, lumière de fenêtre",
-    "accessoires": "botaniques, vintage, bois clair, céramique",
-    "source": "Shooting Director gemini.ts ligne 28"
+    "accessoires": "botaniques, vintage, bois clair, céramique"
   },
 
   "direction_modeles_globale": {
     "regle_par_defaut": "humanite_visible",
     "statut": "REGLE_ABSOLUE",
     "philosophie": "Pro-humanité visible. Les défauts physiques ne sont pas tolérés mais REVENDIQUÉS comme partie intégrante de l'identité brand. Une image Ypersoa doit montrer une personne qui pourrait être ta voisine, ta mère, ta tante.",
+    "casting_fixe": "Voir mannequins_recurrents.json - 20 personnages récurrents (12 principaux + 8 secondaires)",
 
     "specifications": {
-      "age_cible": "30 à 60 ans (étendu pour inclure cheveux gris)",
+      "age_cible": "5 à 75 ans (incluant enfants, jeunes, adultes, seniors)",
       "physique_obligatoire_au_choix": [
-        "rides et lignes d'expression naturelles autour des yeux et de la bouche",
+        "rides et lignes d'expression naturelles",
         "cheveux gris, blancs ou poivre-et-sel bienvenus",
-        "taches de rousseur visibles si présentes",
-        "morphologies non-standard (surpoids, body curvy, plus-size)",
-        "eczéma, cicatrices, marques de peau, vergetures",
+        "taches de rousseur visibles",
+        "morphologies non-standard (curvy, plus-size)",
+        "eczéma, vitiligo, cicatrices, vergetures",
         "imperfections visibles et assumées"
       ],
       "regle_application": "Au moins UN défaut physique visible par modèle, parfois plusieurs",
       "regard_par_defaut": "directement dans l'objectif",
-      "expression_par_defaut": "sourire authentique, vraie vie, émotion palpable, regard qui sourit aussi",
+      "expression_par_defaut": "sourire authentique, vraie vie, émotion palpable",
       "interdictions_absolues": [
         "mannequins lisses ou retouchés",
         "perfection plastique",
@@ -116,24 +119,8 @@ Définir la **grammaire visuelle globale** que tous les shootings doivent respec
     ]
   },
 
-  "casting_diversite": {
-    "ethnicites_a_inclure": ["diverse", "white", "black", "asian", "hispanic", "middle-eastern", "south-asian"],
-    "age_ranges": ["young (20-30)", "middle-aged (35-50)", "senior (60+)", "child"],
-    "morphologies": ["slim", "athletic", "curvy", "plus-size"],
-    "particularites_physiques_a_inclure": ["wheelchair", "prosthetic", "hearing-aid", "visible-disability"],
-    "interactions_obligatoires_par_collection": [
-      "couple adulte",
-      "duo mère-fille",
-      "interactions adulte-enfant",
-      "solos adulte",
-      "solos enfant",
-      "duos adultes multiculturels"
-    ],
-    "source": "Shoot Studio constants.tsx + Shooting Director gemini.ts"
-  },
-
   "regles_production_pack": {
-    "description": "Règles de génération d'un pack d'images pour un motif (typiquement 6-10 shots). RÈGLES OBLIGATOIRES, pas des préférences.",
+    "description": "Règles de génération d'un pack d'images pour un motif. RÈGLES OBLIGATOIRES, pas des préférences.",
 
     "distribution_ambiances": {
       "regle": "80/20 entre cluster premium-sobre et autres ambiances",
@@ -143,15 +130,19 @@ Définir la **grammaire visuelle globale** que tous les shootings doivent respec
       "echappee_sauvage": "6%",
       "lumiere_sepia": "6%",
       "calcul_pour_pack_de_10": "4 Studio Brut + 4 Loft Organique + 1 ambiance_autre + 1 ambiance_autre",
-      "calcul_pour_pack_de_6": "3 Studio Brut + 2 Loft Organique + 1 ambiance_autre",
-      "raison": "Les 80% Studio Brut + Loft Organique garantissent la cohérence brand premium et minimaliste. Les 20% restants apportent la variété éditoriale (chaleur, intimité, romance) sans diluer l'identité."
+      "calcul_pour_pack_de_6": "3 Studio Brut + 2 Loft Organique + 1 ambiance_autre"
     },
 
     "duo_obligatoire_par_pack": {
       "regle": "Minimum 1 shot duo par pack complet, choisi par rotation cyclique",
       "rotation_cyclique": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
-      "logique_rotation": "Chaque nouveau pack avance d'un cran dans la liste. Pack 1 = parent_enfant, Pack 2 = grand_parent_parent, Pack 3 = adultes_amis, Pack 4 = couple, Pack 5 = retour parent_enfant.",
-      "raison": "Le duo incarne la dimension affective du motif (offert à quelqu'un qu'on aime). La rotation garantit une représentation équilibrée des liens familiaux et amicaux dans la communication brand sur la durée."
+      "logique_rotation": "Chaque nouveau pack avance d'un cran. Pack 1 = parent_enfant, Pack 2 = grand_parent_parent, Pack 3 = adultes_amis, Pack 4 = couple, Pack 5 = retour parent_enfant."
+    },
+
+    "casting_par_pack": {
+      "regle": "Chaque pack utilise 2-3 mannequins maximum (cohérence visuelle)",
+      "rotation_long_terme": "Sur 6 mois, chaque mannequin principal doit apparaître dans minimum 30 shots",
+      "mannequins_secondaires": "Apparaissent 5-10 fois maximum sur tout le catalogue"
     }
   },
 
@@ -161,20 +152,6 @@ Définir la **grammaire visuelle globale** que tous les shootings doivent respec
     "style_photographique": "35mm film photography, medium format camera, soft cinematic natural lighting",
     "post_processing": "no retouching feel, analog film grain, raw editorial",
     "modeles_gemini": ["gemini-3.1-flash-image-preview (principal)", "gemini-2.5-flash-image (fallback)"]
-  },
-
-  "strategies_optimisation_collection": {
-    "volume_max_images": "500-600 photos par collection",
-    "hierarchie_motifs": {
-      "hero_lifestyle": "10-15 motifs maximum (le top)",
-      "produit_standard": "tous les motifs (packshot + crop)",
-      "detail_broderie": "tous les motifs (macro)"
-    },
-    "hierarchie_couleurs": {
-      "hero_colors": "4-6 couleurs",
-      "secondary_colors": "le reste de la palette"
-    },
-    "source": "Shooting Director gemini.ts règles d'optimisation"
   }
 }
 ```
@@ -185,167 +162,20 @@ Définir la **grammaire visuelle globale** que tous les shootings doivent respec
 
 ### Source
 - `archives/aistudio_legacy/atelier_social/src/components/VibeSelector.tsx` (5 vibes codifiées)
-- Section `direction_artistique_shooting.ambiances_recommandees` de Brigitte v2
 
 ### Rôle
 Catalogue des 5 ambiances/moods disponibles. Axe 1 du système. Enrichies avec palette + mannequins + usage par pilier.
 
-### Structure cible
+### Structure cible (résumé)
 
-```json
-{
-  "_meta": {
-    "schema_version": "1.0",
-    "referentiel": "ambiances_shooting",
-    "description": "5 ambiances visuelles officielles Ypersoa, enrichies avec palette chromatique et profils mannequins. Source : VibeSelector.tsx d'Atelier Social.",
-    "nb_ambiances": 5,
-    "axe_systeme": "1 sur 3 (mood/lumière/lieu)",
-    "distribution_recommandee_par_pack": "Voir direction_artistique_hero.json > regles_production_pack > distribution_ambiances"
-  },
+5 ambiances ordonnées par priorité :
+1. **Studio Brut** (40% pack) — minimalisme absolu, ombres franches
+2. **Loft Organique** (40% pack) — béton ciré, serre lumineuse, chic végétal
+3. **L'Aube Intime** (8% pack) — lumière matinale, intimité
+4. **Échappée Sauvage** (6% pack) — vent, mouvement, nature brute
+5. **Lumière Sépia** (6% pack) — heure dorée, nostalgie
 
-  "ambiances": [
-    {
-      "id": "studio_brut",
-      "label_fr": "Studio Brut",
-      "id_legacy_vibeselector": "minimal",
-      "icone_legacy": "Sparkles",
-      "rang_priorite_pack": 1,
-      "pourcentage_pack_default": "40%",
-      "description_courte": "Minimalisme absolu, ombres franches, haute couture",
-      "prompt_en_keywords": "High-end minimalist studio, concrete or pure off-white background, sharp elegant shadows, avant-garde fashion editorial, pure and sophisticated",
-
-      "lumiere_dominante": "studio_directionnelle_franche",
-      "tons_chromatiques": ["blanc_casse", "beton", "noir_anthracite"],
-      "lieu_type": "studio photo, fond uni",
-
-      "mannequins_recommandes": [
-        "femme 30-50 ans pose épurée, peau texturée visible",
-        "homme 40-60 ans cheveux gris, regard hors champ",
-        "femme senior cheveux blancs, taches de rousseur"
-      ],
-
-      "compatible_motifs_priorite": ["YPM-001", "YPM-011"],
-      "incompatible_motifs": [],
-
-      "usage_par_pilier": {
-        "p1_process": false,
-        "p2_emotion": false,
-        "p3_produit": true,
-        "p4_preuve": true
-      }
-    },
-    {
-      "id": "loft_organique",
-      "label_fr": "Loft Organique",
-      "id_legacy_vibeselector": "botanical-loft",
-      "icone_legacy": "Flower",
-      "rang_priorite_pack": 2,
-      "pourcentage_pack_default": "40%",
-      "description_courte": "Béton ciré, serre lumineuse, chic et végétal",
-      "prompt_en_keywords": "Premium chic aesthetic, modern botanical greenhouse loft, polished concrete floors, abundant bright natural light, lush organic plants, Vogue living editorial",
-
-      "lumiere_dominante": "naturelle_zenithale_serre",
-      "tons_chromatiques": ["vert_sauge", "beton", "blanc_lumineux", "vert_jade"],
-      "lieu_type": "loft architectural, serre, jardin d'hiver",
-
-      "mannequins_recommandes": [
-        "femme 30-50 ans urbaine sobre, eczéma assumé",
-        "couple créatif, complicité réelle",
-        "homme senior cheveux gris, posture confiante"
-      ],
-
-      "compatible_motifs_priorite": [],
-      "incompatible_motifs": ["YPM-001"],
-      "raison_incompatibilite_brigitte": "Brigitte est trop sobre, l'environnement végétal détourne du motif minimal"
-    },
-    {
-      "id": "aube_intime",
-      "label_fr": "L'Aube Intime",
-      "id_legacy_vibeselector": "cozy",
-      "icone_legacy": "Coffee",
-      "rang_priorite_pack": 3,
-      "pourcentage_pack_default": "8%",
-      "description_courte": "Lumière matinale, grain de peau, douceur du coton",
-      "prompt_en_keywords": "Intimate morning light, soft shadows, warm skin tones, wrinkled white linen, slow living, deep comfort, highly emotional",
-
-      "lumiere_dominante": "douce_naturelle_matin",
-      "tons_chromatiques": ["beige_chaud", "blanc_casse", "rose_pale", "lin"],
-      "lieu_type": "intérieur intimiste, chambre, cuisine matinale",
-
-      "mannequins_recommandes": [
-        "femme 30-40 ans cheveux en bataille naturels",
-        "couple complicité tendre matinale",
-        "mère-enfant lien intimiste",
-        "grand-mère cheveux blancs, sourire ridé"
-      ],
-
-      "compatible_motifs_priorite": ["YPM-001", "YPM-011"],
-      "incompatible_motifs": [],
-
-      "usage_par_pilier": {
-        "p1_process": false,
-        "p2_emotion": true,
-        "p3_produit": true,
-        "p4_preuve": true
-      }
-    },
-    {
-      "id": "echappee_sauvage",
-      "label_fr": "Échappée Sauvage",
-      "id_legacy_vibeselector": "nature",
-      "icone_legacy": "Leaf",
-      "rang_priorite_pack": 4,
-      "pourcentage_pack_default": "6%",
-      "description_courte": "Vent, mouvement, éléments naturels bruts",
-      "prompt_en_keywords": "Wild natural setting, wind in the hair and fabric, dappled sunlight, organic textures, freedom and connection to earth, cinematic outdoor",
-
-      "lumiere_dominante": "naturelle_exterieur_dynamique",
-      "tons_chromatiques": ["vert_jardin", "ocre", "ciel_blanc", "terracotta"],
-      "lieu_type": "extérieur, plage, forêt, dunes, prairie",
-
-      "mannequins_recommandes": [
-        "couple aventureux, tâches de rousseur visibles",
-        "famille en weekend, énergie réelle",
-        "femme solo cheveux au vent, rides au coin des yeux"
-      ],
-
-      "compatible_motifs_priorite": [],
-      "incompatible_motifs": ["YPM-001"],
-      "raison_incompatibilite_brigitte": "Brigitte évoque l'intime, le vent et la nature dispersent l'attention"
-    },
-    {
-      "id": "lumiere_sepia",
-      "label_fr": "Lumière Sépia",
-      "id_legacy_vibeselector": "romantic",
-      "icone_legacy": "Sun",
-      "rang_priorite_pack": 5,
-      "pourcentage_pack_default": "6%",
-      "description_courte": "Heure dorée, nostalgie, poésie visuelle",
-      "prompt_en_keywords": "Golden hour lighting, nostalgic 35mm film look, romantic and poetic atmosphere, warm sunset glow, soft focus, highly emotive and timeless",
-
-      "lumiere_dominante": "doree_couchant",
-      "tons_chromatiques": ["dore", "ocre", "terracotta", "brun_chaud"],
-      "lieu_type": "extérieur fin de journée, terrasse, balcon, fenêtre couchant",
-
-      "mannequins_recommandes": [
-        "couple intemporel, signes de l'âge assumés",
-        "femme 30-50 ans regard contemplatif, cicatrice visible",
-        "mère-enfant moment précieux, vraie tendresse"
-      ],
-
-      "compatible_motifs_priorite": ["YPM-001", "YPM-011"],
-      "incompatible_motifs": [],
-
-      "usage_par_pilier": {
-        "p1_process": false,
-        "p2_emotion": true,
-        "p3_produit": false,
-        "p4_preuve": true
-      }
-    }
-  ]
-}
-```
+Chaque ambiance contient : `id`, `label_fr`, `prompt_en_keywords`, `lumiere_dominante`, `tons_chromatiques`, `lieu_type`, `mannequins_compatibles_par_id` (référence vers mannequins_recurrents.json), `usage_par_pilier`.
 
 ---
 
@@ -353,10 +183,43 @@ Catalogue des 5 ambiances/moods disponibles. Axe 1 du système. Enrichies avec p
 
 ### Source
 - `archives/shooting_legacy/ypersoa_shooting_complet_v5.xlsx` onglet "Récap"
-- Sections du DOCX `prompt_shooting_Site.docx` (PP-H01 à AM-04)
+- Sections du DOCX `prompt_shooting_Site.docx`
 
 ### Rôle
-Catalogue des 6 types de cadrage/composition disponibles. Axe 2 du système.
+Catalogue des 6 types de cadrage/composition. Axe 2 du système.
+
+### Structure cible (résumé)
+
+6 types :
+1. **Ghost Packshot** (sans modèle, fond blanc)
+2. **Crop Poitrine** (cadrage serré, broderie en focal)
+3. **Lifestyle Studio** (intérieur curé, ambiance Maison Labiche)
+4. **Lifestyle Outdoor** (rue côtière, golden hour)
+5. **Macro Broderie** (gros plan, savoir-faire)
+6. **Duo / Couple** (intergénérationnel obligatoire)
+
+Chaque type contient : `id`, `label_fr`, `usage_principal`, `specs_techniques`, `duo_compatible`, `prompt_en_keywords`, `mannequins_minimum_requis`, `nb_mannequins_typique`.
+
+---
+
+## 6. Référentiel 4 — mannequins_recurrents.json (NOUVEAU)
+
+### Source
+- **Décision stratégique Sarah J3.A** (2026-04-19, séance de nuit)
+- Inspiration : direction modèles d'Atelier Social + biais corrigés
+
+### Rôle
+Casting FIXE de 20 personnages récurrents qui apparaissent sur tous les shootings et toutes les communications RS pour créer une **reconnaissance brand** et incarner authentiquement la **diversité française**.
+
+### Philosophie
+
+> Une communauté reconnaît ses visages. Plutôt que 408 modèles anonymes générés par IA à chaque appel, on fixe 20 personnages qui reviennent et créent une narration visuelle continue. La cliente d'Ypersoa finit par "connaître" Marie, Karim, Léa & Lila.
+
+### Politique générale
+
+- **100% IA pure** : aucun droit à l'image à gérer, full liberté créative
+- **20 personnages au total** : 12 principaux (récurrents souvent) + 8 secondaires (apparitions ponctuelles)
+- **Stabilité IA** : chaque mannequin a une "image de référence" générée une fois et injectée systématiquement dans les prompts pour cohérence visuelle (~70-80% de stabilité avec Gemini 3.1)
 
 ### Structure cible
 
@@ -364,299 +227,533 @@ Catalogue des 6 types de cadrage/composition disponibles. Axe 2 du système.
 {
   "_meta": {
     "schema_version": "1.0",
-    "referentiel": "types_de_shots",
-    "description": "6 types de cadrage/composition officiels Ypersoa, indépendants des ambiances. Axe 2 sur 3.",
-    "nb_types": 6,
-    "axe_systeme": "2 sur 3 (cadrage/composition technique)"
+    "referentiel": "mannequins_recurrents",
+    "description": "Casting fixe Ypersoa — 20 personnages récurrents (12 principaux + 8 secondaires). 100% IA pure. Répartition démographique française.",
+    "nb_mannequins": 20,
+    "axe_systeme": "3 sur 4 (qui apparaît à l'image)"
   },
 
-  "types_de_shots": [
+  "philosophie": "Une communauté reconnaît ses visages. Plutôt que 408 modèles anonymes, 20 personnages qui reviennent et créent une narration visuelle continue.",
+
+  "politique_generale": {
+    "type_creation": "100% IA pure",
+    "modele_ia_recommande": "gemini-3.1-flash-image-preview",
+    "stabilite_visuelle": "Image de référence générée une fois par mannequin, injectée dans tous les prompts ultérieurs pour cohérence ~75%",
+    "droits_image": "Aucun (100% IA, pas de personnes réelles)"
+  },
+
+  "repartition_demographique_visee": {
+    "blanc_he_s": 6,
+    "noir_e_s": 3,
+    "maghrebin_e_s_moyen_orient": 2,
+    "metisses": 6,
+    "afro_caribeen_ne": 1,
+    "sud_asiatique": 1,
+    "asiatique_est": 1,
+    "mediterraneen_ne": 1,
+    "total": 20,
+    "commentaire": "Répartition basée sur la démographie française réelle (~70% origine européenne, 30% origines diverses dont fortes communautés afro et maghrébine)"
+  },
+
+  "particularites_physiques_distribuees": {
+    "vitiligo": "Sur mannequin afro-caribéenne (#17) - encore plus visible sur peau foncée",
+    "canne_marche": "Sur mannequin maghrébin senior (#18)",
+    "fauteuil_roulant": "Sur mannequin métisse (#20)",
+    "eczema": "Sur mannequin métisse maghrébin-européen (#7)",
+    "rides_marquees": "Sur tous les seniors et plusieurs adultes 35+",
+    "taches_rousseur": "#1 française brune, #8 enfant métisse",
+    "cheveux_gris_blancs": "#5, #7, #10, #16, #18, #19"
+  },
+
+  "mannequins_principaux": [
     {
-      "id": "ghost",
-      "label_fr": "Ghost Packshot",
-      "icone_legacy": "👻",
-      "usage_principal": "image 1 hero PDP fiche produit",
-      "description_courte": "Mannequin fantôme fond blanc, vue de face, broderie nette",
-      "specs_techniques": "vue de face symétrique, fond blanc pur, sans modèle visible",
-      "duo_compatible": false,
-      "prompt_en_keywords": "Clean e-commerce product photography, ghost mannequin, pure white background, perfectly lit with soft studio lighting, no harsh shadows, true-to-color, symmetrical front view, commercial fashion packshot, Maison Labiche product page style"
+      "id": "MAN-P01",
+      "prenom_brand": "Camille",
+      "tier": "principal",
+      "age": 40,
+      "genre": "femme",
+      "ethnicite": "blanche française",
+      "morphologie": "curvy",
+      "cheveux": "bruns mi-longs ondulés",
+      "particularites": ["taches de rousseur visage", "rides sourires marquées"],
+      "personnalite_visuelle": "lumineuse, complice, accessible",
+      "scenes_recommandees": ["lifestyle_studio", "duo_couple", "lifestyle_outdoor"],
+      "pilier_affinite": ["p2_emotion", "p3_produit"],
+      "image_reference_a_generer": "mannequins/MAN-P01_camille_reference.png",
+      "prompt_en_signature": "A 40-year-old French woman, curvy figure, brown wavy shoulder-length hair, freckles on face, deep laugh lines around eyes and mouth, luminous and warm expression"
     },
     {
-      "id": "crop_poitrine",
-      "label_fr": "Crop Poitrine",
-      "icone_legacy": "✂️",
-      "usage_principal": "image 2 fiche produit, focus broderie portée",
-      "description_courte": "Plan poitrine serré porté, menton coupé, broderie en focal",
-      "specs_techniques": "menton à peine visible, mains partiellement visibles, fond uni",
-      "duo_compatible": false,
-      "prompt_en_keywords": "Tight cropped fashion editorial, chin barely visible at top of frame, hands partially visible at bottom, plain off-white background, flat soft studio lighting, sharp detail on embroidery stitching"
+      "id": "MAN-P02",
+      "prenom_brand": "Sofia",
+      "tier": "principal",
+      "age": 35,
+      "genre": "femme",
+      "ethnicite": "méditerranéenne (italienne/espagnole)",
+      "morphologie": "slim",
+      "cheveux": "noirs longs ondulés",
+      "particularites": ["peau olive", "expression intense"],
+      "personnalite_visuelle": "élégante, intense, classique",
+      "scenes_recommandees": ["studio_brut", "lifestyle_studio", "lumiere_sepia"],
+      "prompt_en_signature": "A 35-year-old Mediterranean woman (Italian or Spanish heritage), slim figure, long black wavy hair, olive skin tone, natural intense gaze"
     },
     {
-      "id": "lifestyle_studio",
-      "label_fr": "Lifestyle Studio",
-      "icone_legacy": "🏠",
-      "usage_principal": "image 3 carrousel, ambiance Maison Labiche",
-      "description_courte": "Porté intérieur curé, ambiance vert sauge ou lin",
-      "specs_techniques": "intérieur structuré, mur moulé, lumière de fenêtre, modèle 3/4",
-      "duo_compatible": true,
-      "prompt_en_keywords": "Editorial fashion photography, curated Parisian apartment, sage green paneled wall, dark wooden parquet floor, vintage props, full body or 3/4 shot, relaxed confident pose, soft ambient interior lighting, Maison Labiche lookbook style"
+      "id": "MAN-P03",
+      "prenom_brand": "Aïcha",
+      "tier": "principal",
+      "age": 40,
+      "genre": "femme",
+      "ethnicite": "afro-caribéenne",
+      "morphologie": "athletic",
+      "cheveux": "crépus naturels mi-longs",
+      "particularites": ["sourire éclatant", "peau foncée lumineuse"],
+      "scenes_recommandees": ["loft_organique", "studio_brut", "lifestyle_outdoor"],
+      "prompt_en_signature": "A 40-year-old Afro-Caribbean woman, athletic build, natural shoulder-length curly afro hair, dark luminous skin, radiant smile"
     },
     {
-      "id": "lifestyle_outdoor",
-      "label_fr": "Lifestyle Outdoor",
-      "icone_legacy": "🌿",
-      "usage_principal": "image 3 alt, style français brut",
-      "description_courte": "Porté extérieur rue pavée golden hour",
-      "specs_techniques": "extérieur ville côtière française, golden hour, marche naturelle",
-      "duo_compatible": true,
-      "prompt_en_keywords": "Fashion editorial photograph, woman walking quiet cobblestone street in small French coastal town, golden hour backlight, soft lens flare, muted earthy color grading, full body composition, Hoalen and October brand aesthetic, effortless French style, cinematic depth of field"
+      "id": "MAN-P04",
+      "prenom_brand": "Yasmine",
+      "tier": "principal",
+      "age": 45,
+      "genre": "femme",
+      "ethnicite": "maghrébine (marocaine/algérienne)",
+      "morphologie": "curvy",
+      "cheveux": "noirs ondulés longs",
+      "particularites": ["regard intense", "peau mate"],
+      "scenes_recommandees": ["loft_organique", "lifestyle_studio"],
+      "prompt_en_signature": "A 45-year-old Maghrebi woman (Moroccan or Algerian heritage), curvy figure, long black wavy hair, intense gaze, matte skin tone"
     },
     {
-      "id": "macro_broderie",
-      "label_fr": "Macro Broderie",
-      "icone_legacy": "🔍",
-      "usage_principal": "image 4 fiche produit, savoir-faire",
-      "description_courte": "Gros plan broderie bokeh, texture fil visible",
-      "specs_techniques": "macro lens 100mm, bokeh crémeux, mise au point ultra nette sur la broderie",
-      "duo_compatible": false,
-      "prompt_en_keywords": "Extreme close-up macro photography, dark forest green thread embroidery, visible thread texture and fabric weave details, soft directional side lighting creating subtle shadows on stitching, Canon 100mm macro lens f/4, ultra sharp focus on embroidery with creamy bokeh background, luxury fashion product photography, artisan craftsmanship detail shot"
+      "id": "MAN-P05",
+      "prenom_brand": "Béatrice",
+      "tier": "principal",
+      "age": 55,
+      "genre": "femme",
+      "ethnicite": "métisse noir-blanc",
+      "morphologie": "plus-size",
+      "cheveux": "gris-blancs courts naturels",
+      "particularites": ["cheveux argentés", "rides marquées sourire"],
+      "scenes_recommandees": ["lifestyle_studio", "duo_couple", "aube_intime"],
+      "rotation_duo": "grand_parent_parent",
+      "prompt_en_signature": "A 55-year-old mixed-race (Black and White) woman, plus-size figure, short natural silver-gray hair, deep smile lines, warm motherly expression"
     },
     {
-      "id": "duo_couple",
-      "label_fr": "Duo / Couple",
-      "icone_legacy": "👫",
-      "usage_principal": "image 5 galerie, intimité storytelling, OBLIGATOIRE par pack",
-      "description_courte": "Couple/mère-enfant/grand-parent/amis - duo intergénérationnel",
-      "specs_techniques": "2 modèles cadrage serré, complicité réelle, fond uni ou intérieur",
-      "duo_compatible": true,
-      "rotation_cyclique_obligatoire": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
-      "prompt_en_keywords": "Tight cropped fashion editorial, two people standing close together, plain off-white studio backdrop, both wearing matching natural raw beige hoodies, intimate framing cropped from mid-thigh to head, A.P.C. campaign aesthetic, no retouching feel, analog film grain, real human imperfections visible"
+      "id": "MAN-P06",
+      "prenom_brand": "Mathieu",
+      "tier": "principal",
+      "age": 40,
+      "genre": "homme",
+      "ethnicite": "blanc français",
+      "morphologie": "athletic",
+      "cheveux": "bruns épais avec barbe courte",
+      "particularites": ["barbe naturelle", "regard franc"],
+      "personnalite_visuelle": "papa moderne, mari aimant",
+      "scenes_recommandees": ["duo_couple", "lifestyle_outdoor", "lifestyle_studio"],
+      "rotation_duo": "couple OR parent_enfant",
+      "prompt_en_signature": "A 40-year-old French man, white European, athletic build, thick brown hair, well-groomed short beard, natural confident gaze"
+    },
+    {
+      "id": "MAN-P07",
+      "prenom_brand": "Karim",
+      "tier": "principal",
+      "age": 45,
+      "genre": "homme",
+      "ethnicite": "métisse maghrébin-européen",
+      "morphologie": "curvy",
+      "cheveux": "gris poivre-sel courts",
+      "particularites": ["eczéma sur les mains assumé", "barbe poivre-sel"],
+      "scenes_recommandees": ["lifestyle_studio", "duo_couple", "studio_brut"],
+      "rotation_duo": "grand_parent_parent",
+      "prompt_en_signature": "A 45-year-old mixed-race man (Maghrebi and European heritage), slightly curvy build, short salt-and-pepper hair, matching beard, visible eczema on hands"
+    },
+    {
+      "id": "MAN-P08",
+      "prenom_brand": "Lila",
+      "tier": "principal",
+      "age": 7,
+      "genre": "fille",
+      "ethnicite": "métisse noir-blanche",
+      "morphologie": "enfant",
+      "cheveux": "bouclés afro mi-longs",
+      "particularites": ["taches de rousseur", "sourire enfantin"],
+      "scenes_recommandees": ["duo_couple"],
+      "rotation_duo": "parent_enfant (avec MAN-P05 ou MAN-P03)",
+      "prompt_en_signature": "A 7-year-old mixed-race girl, shoulder-length curly afro hair, freckles on face, joyful childlike smile"
+    },
+    {
+      "id": "MAN-P09",
+      "prenom_brand": "Théo",
+      "tier": "principal",
+      "age": 5,
+      "genre": "garçon",
+      "ethnicite": "métisse maghrébin-blanc",
+      "morphologie": "enfant",
+      "cheveux": "noirs lisses courts",
+      "particularites": ["yeux noisette", "petite cicatrice menton"],
+      "scenes_recommandees": ["duo_couple"],
+      "rotation_duo": "parent_enfant (avec MAN-P06 ou MAN-P07)",
+      "prompt_en_signature": "A 5-year-old mixed-race boy (Maghrebi and European), straight short black hair, hazel eyes, small chin scar"
+    },
+    {
+      "id": "MAN-P10",
+      "prenom_brand": "Marie-Hélène",
+      "tier": "principal",
+      "age": 65,
+      "genre": "femme",
+      "ethnicite": "blanche française",
+      "morphologie": "slim",
+      "cheveux": "roux blanchissants longs",
+      "particularites": ["taches de rousseur sur tout le corps", "lignes d'expression marquées", "yeux verts"],
+      "scenes_recommandees": ["lifestyle_studio", "lumiere_sepia", "duo_couple"],
+      "rotation_duo": "grand_parent_parent",
+      "prompt_en_signature": "A 65-year-old French woman, slim figure, long red-graying hair, freckles on face and arms, deep expression lines, green eyes, elegant senior"
+    },
+    {
+      "id": "MAN-P11",
+      "prenom_brand": "Léa & Sarah",
+      "tier": "principal",
+      "type": "couple",
+      "age": "35-40",
+      "genre": "couple femme/femme",
+      "ethnicite_membre_1": "métisse afro",
+      "ethnicite_membre_2": "blanche nordique",
+      "morphologie": "athletic",
+      "particularites": "Couple LGBTQ+ visible (alliance, complicité)",
+      "scenes_recommandees": ["duo_couple", "lifestyle_studio"],
+      "rotation_duo": "couple",
+      "prompt_en_signature": "A loving lesbian couple, both around 35-40 years old. Léa is mixed-race (Black/White) with curly hair. Sarah is Nordic White with blonde hair. Athletic builds, visible commitment, natural intimacy"
+    },
+    {
+      "id": "MAN-P12",
+      "prenom_brand": "Lucia",
+      "tier": "principal",
+      "age": 22,
+      "genre": "femme",
+      "ethnicite": "métisse hispanique",
+      "morphologie": "slim",
+      "cheveux": "noirs ondulés longs",
+      "particularites": ["énergie jeune", "expression vive"],
+      "personnalite_visuelle": "jeune adulte connectée, génération Z",
+      "scenes_recommandees": ["lifestyle_outdoor", "echappee_sauvage", "studio_brut"],
+      "prompt_en_signature": "A 22-year-old mixed-race Hispanic woman, slim figure, long black wavy hair, vibrant energetic expression, Gen Z urban style"
     }
   ],
 
-  "matrice_combinaison_par_defaut_par_pilier": {
-    "p1_process": ["macro_broderie"],
-    "p2_emotion": ["lifestyle_studio", "lifestyle_outdoor", "duo_couple"],
-    "p3_produit": ["ghost", "crop_poitrine", "lifestyle_studio", "duo_couple"],
-    "p4_preuve": ["lifestyle_studio", "duo_couple", "macro_broderie"]
-  },
+  "mannequins_secondaires": [
+    {
+      "id": "MAN-S13",
+      "prenom_brand": "Priya",
+      "tier": "secondaire",
+      "age": 16,
+      "genre": "femme",
+      "ethnicite": "sud-asiatique (sri-lankaise)",
+      "morphologie": "slim",
+      "cheveux": "noirs longs lisses",
+      "particularites": ["sourire timide", "regard contemplatif"],
+      "personnalite_visuelle": "adolescente sensible",
+      "scenes_recommandees": ["aube_intime", "lifestyle_studio"],
+      "usage_specifique": "Adolescente Fête des mères, génération teen",
+      "prompt_en_signature": "A 16-year-old South Asian girl (Sri Lankan heritage), slim figure, long straight black hair, shy smile, contemplative gaze"
+    },
+    {
+      "id": "MAN-S14",
+      "prenom_brand": "Marcus",
+      "tier": "secondaire",
+      "age": 23,
+      "genre": "homme",
+      "ethnicite": "afro-américain",
+      "morphologie": "athletic",
+      "cheveux": "dreadlocks mi-longs",
+      "particularites": ["dreadlocks", "tatouage visible"],
+      "scenes_recommandees": ["lifestyle_outdoor", "studio_brut", "echappee_sauvage"],
+      "usage_specifique": "Jeune homme Génération Z",
+      "prompt_en_signature": "A 23-year-old Afro-American man, athletic build, shoulder-length dreadlocks, visible arm tattoo"
+    },
+    {
+      "id": "MAN-S15",
+      "prenom_brand": "Bébé Noé",
+      "tier": "secondaire",
+      "age": 1,
+      "genre": "indéfini",
+      "ethnicite": "métisse",
+      "morphologie": "bébé",
+      "cheveux": "bouclés naissants",
+      "scenes_recommandees": ["duo_couple", "aube_intime"],
+      "usage_specifique": "Naissance, fête des parents, baby shower",
+      "rotation_duo": "parent_enfant (porté)",
+      "prompt_en_signature": "A 12-month-old mixed-race baby (gender neutral presentation), tiny soft curly hair, peaceful expression"
+    },
+    {
+      "id": "MAN-S16",
+      "prenom_brand": "Hiroshi",
+      "tier": "secondaire",
+      "age": 55,
+      "genre": "homme",
+      "ethnicite": "asiatique de l'est (japonais)",
+      "morphologie": "athletic",
+      "cheveux": "gris noirs courts",
+      "particularites": ["lunettes design", "rides discrètes"],
+      "scenes_recommandees": ["studio_brut", "loft_organique"],
+      "usage_specifique": "Diversité asiatique unique, senior actif",
+      "prompt_en_signature": "A 55-year-old East Asian man (Japanese heritage), athletic build, salt-and-pepper short hair, design glasses, subtle wrinkles"
+    },
+    {
+      "id": "MAN-S17",
+      "prenom_brand": "Fatou",
+      "tier": "secondaire",
+      "age": 40,
+      "genre": "femme",
+      "ethnicite": "afro-caribéenne",
+      "morphologie": "athletic",
+      "cheveux": "crépus courts",
+      "particularites": ["VITILIGO visible mains, cou et visage", "peau foncée avec dépigmentation patches"],
+      "scenes_recommandees": ["studio_brut", "lifestyle_studio", "macro_broderie"],
+      "usage_specifique": "Visibilité vitiligo - particularité physique célébrée",
+      "prompt_en_signature": "A 40-year-old Afro-Caribbean woman with prominent VITILIGO patches visible on hands, neck, and face, athletic build, short natural curly hair, dark skin with depigmented areas, confident proud expression"
+    },
+    {
+      "id": "MAN-S18",
+      "prenom_brand": "Hassan",
+      "tier": "secondaire",
+      "age": 68,
+      "genre": "homme",
+      "ethnicite": "maghrébin (algérien)",
+      "morphologie": "slim",
+      "cheveux": "blancs courts",
+      "particularites": ["CANNE EN BOIS pour marcher", "rides marquées sourires", "barbe blanche taillée"],
+      "scenes_recommandees": ["lifestyle_studio", "lumiere_sepia", "aube_intime"],
+      "rotation_duo": "grand_parent_parent",
+      "usage_specifique": "Senior + canne, sagesse, transmission familiale",
+      "prompt_en_signature": "A 68-year-old Maghrebi man (Algerian heritage), slim figure, short white hair, neatly trimmed white beard, deep smile lines, walking with a wooden cane"
+    },
+    {
+      "id": "MAN-S19",
+      "prenom_brand": "Couple Henri & Joséphine",
+      "tier": "secondaire",
+      "type": "couple",
+      "age": "70-72",
+      "genre": "couple homme/femme",
+      "ethnicite_homme": "blanc nordique français",
+      "ethnicite_femme": "afro-caribéenne",
+      "morphologie": "homme slim, femme curvy",
+      "cheveux": "homme cheveux blancs, femme cheveux gris-blancs courts",
+      "particularites": "Couple senior mixte ethnique, alliances visibles, complicité de longue date",
+      "scenes_recommandees": ["lumiere_sepia", "lifestyle_studio", "duo_couple"],
+      "rotation_duo": "couple (senior)",
+      "usage_specifique": "Anniversaire de mariage, longévité, couple intergénérationnel mixte",
+      "prompt_en_signature": "A senior couple in their early 70s. Henri is a Nordic French white man with white hair, slim. Joséphine is an Afro-Caribbean woman with short gray-white hair, curvy. Visible wedding rings, deep complicity, lifelong love"
+    },
+    {
+      "id": "MAN-S20",
+      "prenom_brand": "Anaïs",
+      "tier": "secondaire",
+      "age": 35,
+      "genre": "femme",
+      "ethnicite": "métisse",
+      "morphologie": "slim",
+      "cheveux": "bruns longs",
+      "particularites": ["FAUTEUIL ROULANT (utilisatrice quotidienne)", "regard franc", "tenue stylée"],
+      "scenes_recommandees": ["studio_brut", "lifestyle_studio", "loft_organique"],
+      "usage_specifique": "Visibilité handicap moteur, mode adaptive",
+      "prompt_en_signature": "A 35-year-old mixed-race woman in a wheelchair (active daily user), slim figure, long brown hair, direct confident gaze, stylish outfit"
+    }
+  ],
 
-  "regle_duo_systematique": {
-    "description": "Chaque pack complet DOIT contenir au moins 1 shot duo_couple. Voir direction_artistique_hero.json > regles_production_pack > duo_obligatoire_par_pack pour la logique de rotation cyclique."
+  "duo_recurrents_etablis": [
+    {
+      "id": "DUO_BEATRICE_LILA",
+      "type_rotation": "grand_parent_parent",
+      "membre_1": "MAN-P05",
+      "membre_2": "MAN-P08",
+      "lien": "grand-mère et petite-fille",
+      "scenes_recommandees": ["duo_couple", "aube_intime"]
+    },
+    {
+      "id": "DUO_MATHIEU_THEO",
+      "type_rotation": "parent_enfant",
+      "membre_1": "MAN-P06",
+      "membre_2": "MAN-P09",
+      "lien": "père et fils",
+      "scenes_recommandees": ["duo_couple", "lifestyle_outdoor"]
+    },
+    {
+      "id": "DUO_LEA_SARAH",
+      "type_rotation": "couple",
+      "membre_1": "MAN-P11_lea",
+      "membre_2": "MAN-P11_sarah",
+      "lien": "couple lesbien marié",
+      "scenes_recommandees": ["duo_couple", "lifestyle_studio"]
+    },
+    {
+      "id": "DUO_HENRI_JOSEPHINE",
+      "type_rotation": "couple senior",
+      "membre_1": "MAN-S19_henri",
+      "membre_2": "MAN-S19_josephine",
+      "lien": "couple senior marié 50 ans",
+      "scenes_recommandees": ["lumiere_sepia", "duo_couple"]
+    }
+  ],
+
+  "regles_distribution": {
+    "par_pack": "Chaque pack utilise 2-3 mannequins maximum (cohérence visuelle)",
+    "par_collection": "Tous les mannequins principaux apparaissent au moins une fois sur la durée d'une collection",
+    "rotation_long_terme": "Sur 6 mois, chaque mannequin principal doit apparaître dans minimum 30 shots",
+    "mannequins_secondaires_quota": "Apparaissent 5-10 fois maximum sur tout le catalogue (gardés pour des occasions précises)"
   }
 }
 ```
 
 ---
 
-## 6. Référentiel 4 — prompts_library.json
+## 7. Référentiel 5 — prompts_library.json
 
 ### Source
 - `archives/shooting_legacy/prompt_shooting_Site.docx` (37 prompts paramétrables)
-- Variables universelles : `[MOTIF]`, `[COULEUR FIL]`, `[COULEUR SWEAT]`, `[PRODUIT]`
 
 ### Rôle
-Bibliothèque opérationnelle de prompts paramétrables. Axe 3 du système. Le Hub injecte les vraies valeurs (motif YPM-XXX, fil_xxx, support_xxx) à la place des variables.
+Bibliothèque opérationnelle de prompts paramétrables. Axe 4 du système.
 
-### Structure cible
+### Variables universelles (mises à jour avec mannequin)
 
 ```json
-{
-  "_meta": {
-    "schema_version": "1.0",
-    "referentiel": "prompts_library",
-    "description": "37 prompts paramétrables pour génération d'images IA. Variables universelles : [MOTIF], [COULEUR FIL], [COULEUR SWEAT], [PRODUIT]. Tous les prompts intègrent la règle anti-supermodel (humanité visible).",
-    "nb_prompts": 37,
-    "axe_systeme": "3 sur 3 (template texte EN)",
-    "regle_universelle_appendee": "Tous les prompts ajoutent automatiquement le suffixe : '. Real human models with visible imperfections (wrinkles, gray hair, freckles, scars, eczema, body diversity). No retouching, no skin smoothing, no perfection plastic.'"
-  },
-
-  "variables_universelles": {
-    "PRODUIT": "type de vêtement (ex: hoodie, sweat, t-shirt, zoodie)",
-    "MOTIF": "id YPM-XXX + image jointe en pièce jointe",
-    "COULEUR_FIL": "id fil_xxx (ex: fil_vert_jade, fil_terracotta)",
-    "COULEUR_SWEAT": "id couleur_support (ex: marine, beige, blanc)"
-  },
-
-  "sections": {
-    "section_1_packshots_produit": {
-      "description": "Packshots produit - 16 prompts par type de vêtement",
-      "prompts": [
-        {
-          "id": "PP-H01",
-          "label": "Hoodie - Flat lay éditorial",
-          "type_de_shot_associe": "lifestyle_studio",
-          "ambiance_associee_par_defaut": "aube_intime",
-          "prompt_en_template": "Professional flat lay photography of a [PRODUIT] in [COULEUR_SWEAT], with embroidered [MOTIF] in [COULEUR_FIL] thread on the left chest, laid on a crumpled off-white linen bedsheet. Morning golden hour light streaming from the left. Styled with a small dried eucalyptus branch and a ceramic coffee mug. Shot from directly above, Canon EOS R5, 35mm lens, f/2.8, soft diffused natural light, warm muted tones, editorial fashion photography, minimalist Scandinavian aesthetic, 4K ultra sharp"
-        }
-      ]
-    },
-    "section_2_portraits_studio_adulte": { "prompts": [] },
-    "section_3_duo_couple": { "prompts": [] },
-    "section_4_famille": { "prompts": [] },
-    "section_5_enfant": { "prompts": [] },
-    "section_6_lifestyle_ambiance": { "prompts": [] }
-  }
+"variables_universelles": {
+  "PRODUIT": "type de vêtement (ex: hoodie, sweat, t-shirt, zoodie)",
+  "MOTIF": "id YPM-XXX + image jointe en pièce jointe",
+  "COULEUR_FIL": "id fil_xxx (ex: fil_vert_jade, fil_terracotta)",
+  "COULEUR_SWEAT": "id couleur_support (ex: marine, beige, blanc)",
+  "MANNEQUIN_ID": "id MAN-PXX ou MAN-SXX (référence vers mannequins_recurrents.json)",
+  "MANNEQUIN_PROMPT_SIGNATURE": "injection automatique du prompt_en_signature du mannequin"
 }
 ```
 
+### Règle universelle anti-supermodel + mannequin
+
+> Tous les prompts ajoutent automatiquement les suffixes :
+> 1. **Mannequin signature** : `[MANNEQUIN_PROMPT_SIGNATURE]`
+> 2. **Anti-supermodel** : `Real human model with visible imperfections (wrinkles, gray hair, freckles, scars, eczema, body diversity). No retouching, no skin smoothing, no perfection plastic.`
+
 ---
 
-## 7. Référentiel 5 — plan_shooting_systematique.json
+## 8. Référentiel 6 — plan_shooting_systematique.json
 
 ### Source
 - `archives/shooting_legacy/ypersoa_shooting_complet_v5.xlsx` onglet "Motifs — 6 shots"
 
 ### Rôle
-Matrice de 408 shots à produire pour couvrir tout le catalogue (17 motifs × 5 supports × 6 types de shots, optimisé pour ne pas tout shooter sur tout).
+Matrice de 408 shots à produire. Indexée motif × produit × type de shot. **Inclut maintenant la référence au mannequin assigné** (axe 3).
 
-### Structure cible
+### Structure (avec mannequin)
 
 ```json
-{
-  "_meta": {
-    "schema_version": "1.0",
-    "referentiel": "plan_shooting_systematique",
-    "description": "408 shots indexés selon la matrice motif × produit × type de shot. Filenames standardisés. Sert de plan de production pour le Hub.",
-    "nb_shots_total": 408,
-    "calcul": "68 combinaisons motif × produit × 6 shots minimum",
-    "convention_filename": "[Motif]-[Produit]-[Couleur]-[Genre]-[TypeShot]-[Numero].png"
-  },
-
-  "shots_par_combinaison": [
-    {
-      "combinaison_id": "YPM-001-YP001-Beige-Adulte",
-      "motif_code": "YPM-001",
-      "motif_nom": "La Brigitte",
-      "famille_motif": "Cœurs",
-      "produit_id": "YP001",
-      "produit_nom": "Hoodie Adulte",
-      "couleur_support": "beige",
-      "dimension_broderie_cm": "4-6",
-      "emplacement_broderie": "poignet ou buste gauche",
-
-      "shots": [
-        {
-          "type": "ghost",
-          "filename": "Brigitte-Hoodie-Beige-Adulte-Ghost-01.png",
-          "prompt_template_id": "PP-H02",
-          "ambiance_default": "studio_brut"
-        },
-        {
-          "type": "crop_poitrine",
-          "filename": "Brigitte-Hoodie-Beige-Adulte-Crop-01.jpg",
-          "prompt_template_id": "PP-H04",
-          "ambiance_default": "loft_organique"
-        }
-      ]
-    }
-  ]
-}
+"shots_par_combinaison": [
+  {
+    "combinaison_id": "YPM-001-YP001-Beige-Adulte",
+    "motif_code": "YPM-001",
+    "produit_id": "YP001",
+    "shots": [
+      {
+        "type": "ghost",
+        "filename": "Brigitte-Hoodie-Beige-Adulte-Ghost-01.png",
+        "prompt_template_id": "PP-H02",
+        "ambiance_default": "studio_brut",
+        "mannequin_assigned": null
+      },
+      {
+        "type": "lifestyle_studio",
+        "filename": "Brigitte-Hoodie-Beige-Adulte-Lifestyle-Studio-01.jpg",
+        "prompt_template_id": "PP-H03",
+        "ambiance_default": "loft_organique",
+        "mannequin_assigned": "MAN-P01"
+      },
+      {
+        "type": "duo_couple",
+        "filename": "Brigitte-Hoodie-Beige-Adulte-Duo-01.jpg",
+        "prompt_template_id": "PP-H05",
+        "ambiance_default": "studio_brut",
+        "mannequin_assigned": "DUO_LEA_SARAH",
+        "rotation_cyclique": "couple"
+      }
+    ]
+  }
+]
 ```
 
 ---
 
-## 8. Plan d'exécution J3.B et J3.C
+## 9. Plan d'exécution J3.B et J3.C
 
-### Session J3.B (estimée 2h30 — augmentée car directives Sarah enrichissent les fichiers)
+### Session J3.B (estimée 3h — augmentée car 6ème référentiel)
 
-1. **direction_artistique_hero.json** (1h)
-   - Lire `Shooting Director gemini.ts` complet
-   - Lire la section anti-supermodel d'Atelier Social
-   - Intégrer les 3 directives Sarah J3.A
-   - Générer le fichier
-2. **ambiances_shooting.json** (1h)
-   - Lire VibeSelector.tsx (déjà fait en J3.A)
-   - Enrichir chaque ambiance avec palette + mannequins (validation Sarah par questions)
-   - Intégrer la distribution 80/20
-   - Générer le fichier
+1. **direction_artistique_hero.json** (45 min)
+2. **ambiances_shooting.json** (45 min)
 3. **types_de_shots.json** (30 min)
-   - Lire le récap XLSX (déjà fait en J3.A)
-   - Lire les sections DOCX (déjà fait en J3.A)
-   - Ajouter rotation cyclique duo
-   - Générer le fichier
+4. **mannequins_recurrents.json** (1h - NOUVEAU 6ème référentiel)
 
-**Commit** : `J3.B: 3 référentiels shooting (DA hero + ambiances + types_de_shots)`
+**Commit** : `J3.B: 4 référentiels shooting (DA hero + ambiances + types_de_shots + mannequins_recurrents)`
 
 ### Session J3.C (estimée 2h) — 2 référentiels volumineux
 
 1. **prompts_library.json** (1h15)
-   - Extraire les 37 prompts du DOCX un par un
-   - Nettoyer les variables (remplacer "vert forêt" par fil_vert_jade via _mapping_legacy)
-   - Catégoriser par section + associer ambiance + type de shot
-   - Ajouter le suffixe universel "anti-supermodel"
-   - Générer le fichier
-2. **plan_shooting_systematique.json** (45 min)
-   - Parser l'XLSX onglet "Motifs — 6 shots"
-   - Générer les 408 entrées avec filenames standardisés
-   - Vérifier cohérence avec types_de_shots.json
-   - Appliquer la distribution 80/20 ambiances aux 408 shots
-   - Générer le fichier
+2. **plan_shooting_systematique.json** (45 min) — assignation mannequins aux 408 shots
 
-**Commit** : `J3.C: 2 référentiels shooting volumineux (prompts_library + plan_shooting)`
+**Commit** : `J3.C: 2 référentiels shooting volumineux (prompts_library + plan_shooting avec mannequins assignés)`
 
 ---
 
-## 9. Réconciliations à faire en J3.B
+## 10. Réconciliations à faire en J3.B
 
 ### Réconciliation 1 — Direction modèles Brigitte
 Brigitte v2 dit "regard hors champ pensif". Atelier Social dit "regard caméra direct".
-**Décision J3.A** : globale = caméra direct, override Brigitte = hors champ pensif.
-**Action J3.B** : ajouter un override `direction_modeles_override` dans Brigitte v2 + documenter le mécanisme dans `direction_artistique_hero.json`.
+**Action J3.B** : ajouter override Brigitte dans son JSON.
 
 ### Réconciliation 2 — Mention "Tajima TMEZ" dans Brigitte v2
-Brigitte v2 contient encore : *"mentionner brode sur metier Tajima uniquement si contexte technique"*.
-**Décision J2** : "Tajima TMEZ" interdit, remplacer par "brodé à la commande" + "brodé sur métier Tajima" en contexte long.
-**Action J3.B** : corriger cette ligne dans Brigitte v2 et propager aux 16 autres motifs en J6+.
+**Action J3.B** : corriger cette ligne dans Brigitte v2.
 
 ### Réconciliation 3 — Couleurs incohérentes legacy
-Le DOCX prompts utilise "vert forêt" qui n'existe pas. Le mapping legacy `_mapping_legacy.json` traduit `vert forêt → fil_vert_jade`.
-**Action J3.C** : appliquer le mapping à TOUS les 37 prompts lors de l'extraction.
+**Action J3.C** : appliquer le _mapping_legacy aux 37 prompts.
+
+### Réconciliation 4 (NOUVELLE) — Mannequins recommandés Brigitte
+Brigitte v2 dit "femme 30-45 cheveux chatains". Maintenant on a 20 mannequins fixes.
+**Action J3.B** : remplacer la description vague par une liste de mannequins compatibles (ex: MAN-P01, MAN-P02, MAN-P10).
 
 ---
 
-## 10. Checklist de validation J3 complet
+## 11. Checklist de validation J3 complet
 
-À la fin de J3 (après J3.B + J3.C), on aura :
-
-- [ ] 5 référentiels dans `referentiels/shooting/`
-- [ ] Brigitte v2 corrigé (override DA + correction Tajima TMEZ)
+- [ ] 6 référentiels dans `referentiels/shooting/`
+- [ ] Brigitte v2 corrigé (override DA + correction Tajima TMEZ + mannequins compatibles)
 - [ ] Tous les prompts nettoyés via `_mapping_legacy.json`
-- [ ] Suffixe "anti-supermodel" appliqué à tous les prompts
+- [ ] Suffixe "anti-supermodel" + injection mannequin appliqués à tous les prompts
 - [ ] Distribution 80/20 ambiances appliquée au plan systématique
 - [ ] Rotation cyclique duo documentée
+- [ ] 408 shots assignés à un mannequin (ou null pour Ghost/Macro)
 - [ ] 4 commits Git J3.0, J3.A, J3.B, J3.C
-- [ ] Cohérence vérifiée entre les 3 axes (ambiances × types × prompts)
+- [ ] Cohérence vérifiée entre les 4 axes (ambiances × types × mannequins × prompts)
 - [ ] Plan de 408 shots utilisable directement par le Hub
 
 ---
 
-## 11. Directives stratégiques Sarah J3.A — récapitulatif
+## 12. Directives stratégiques Sarah J3.A — récapitulatif final
 
 ### Directive 1 — Humanité visible OBLIGATOIRE
 > "L'anti-supermodel c'est une règle. On veut des modèles humains (avec des défauts, des rides, des cheveux gris, des taches de rousseur, du surpoids, de l'eczéma...)"
 
-**Application** :
-- Renforcement de la section `direction_modeles_globale` avec liste de défauts physiques OBLIGATOIRES
-- Suffixe systématique ajouté à tous les prompts en J3.C
-- Statut REGLE_ABSOLUE (pas guideline)
-
 ### Directive 2 — Distribution 80/20 ambiances (40/40)
 > "Pour les styles de shots, j'aimerais garder une proportionnelle : minimaliste/botanical loft à 80% (40/40)"
-
-**Application** :
-- 40% Studio Brut + 40% Loft Organique = 80%
-- 8% Aube Intime + 6% Échappée Sauvage + 6% Lumière Sépia = 20%
-- Calculs précis donnés pour packs de 6 et de 10
 
 ### Directive 3 — Duo systématique avec rotation cyclique
 > "Un duo (parent-enfant, grand-parent parent, adultes, couple...) dans chaque génération de pack complet"
 
+### Directive 4 (NOUVELLE) — Casting fixe 20 mannequins récurrents
+> "Je me demandais si on devait pas créer un outil de mannequin et fixer que le mannequin qui sert pour le shooting, sert pour les RS..."
+
 **Application** :
-- Minimum 1 shot duo_couple par pack
-- Rotation cyclique sur 4 types
-- Mécanisme documenté dans `direction_artistique_hero.json`
+- 12 mannequins principaux + 8 secondaires = 20 personnages
+- 100% IA pure (pas de droits à l'image)
+- Répartition démographique française réelle (6 blanc·he·s, 3 noir·e·s, 2 maghrébin·e·s, 6 métisses, etc.)
+- Particularités physiques distribuées sur profils non-blancs (vitiligo sur afro-caribéenne, canne sur maghrébin senior, fauteuil roulant sur métisse)
+- Couples établis à l'avance (Léa & Sarah lesbien, Henri & Joséphine senior mixte)
+- Image de référence générée une fois par mannequin pour stabilité visuelle
 
 ---
 
-*Document figé en J3.A v2 le 2026-04-19 — sert de brief technique pour les sessions J3.B et J3.C.*
+*Document figé en J3.A v3 le 2026-04-19 — sert de brief technique pour les sessions J3.B et J3.C.*
