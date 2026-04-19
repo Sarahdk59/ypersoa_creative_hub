@@ -1,0 +1,424 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "charte_editoriale",
+    "last_updated": "2026-04-19",
+    "description": "Charte éditoriale officielle Ypersoa. Fusion de CLAUDE.md + YPERSOA_CONTENT_MACHINE.md avec divergences tranchées (délais, vocabulaire fabrication, durée Reel, hashtags, typos, statut du badge circulaire).",
+    "sources_integrees": [
+      "archives/CLAUDE.md",
+      "archives/YPERSOA_CONTENT_MACHINE.md",
+      "archives/ypersoa-content-studio.jsx (sous-piliers émotion)",
+      "site ypersoa.fr (page Délais & livraisons)"
+    ],
+    "autorite": "Ce document fait foi pour TOUT output éditorial Hub. En cas de conflit avec les motifs individuels, la charte motif prévaut pour les règles spécifiques au motif. La charte éditoriale prévaut pour tout le reste."
+  },
+
+  "identite_marque": {
+    "nom": "Ypersoa",
+    "fondatrices": {
+      "sarah": "Directrice créative, co-fondatrice",
+      "adriana": "Production, opératrice métier Tajima",
+      "mai": "Alternante communication, réseaux sociaux, tournages"
+    },
+    "entite_juridique": "PhenixLog / Phenix Group",
+    "atelier": "Wattrelos, Nord de France",
+    "url": "ypersoa.fr",
+    "promesse": "Offrir une pièce unique, brodée à la commande sur métier professionnel, chargée d'une intention personnelle — pour soi ou pour quelqu'un qu'on aime.",
+    "positionnement": "Premium accessible. Artisanat industriel de précision. Made in France.",
+    "anti_positionnements": [
+      "Pas une boutique Etsy",
+      "Pas du mass market",
+      "Pas du bas de gamme",
+      "Pas de l'artisanal générique sans signature"
+    ]
+  },
+
+  "charte_graphique": {
+    "couleurs_officielles": {
+      "cream": {
+        "hex": "#F5F0EA",
+        "usage": "fond principal, arrière-plans, cartes"
+      },
+      "ink": {
+        "hex": "#1E2D4A",
+        "usage": "texte principal, titres, headers"
+      },
+      "terracotta": {
+        "hex": "#C4694A",
+        "usage": "accents, CTA, highlights, séparateurs"
+      },
+      "cream_dark": {
+        "hex": "#EDE8E0",
+        "usage": "fonds secondaires, tags, surfaces"
+      }
+    },
+    "couleurs_interdites": [
+      "noir pur (#000000)",
+      "blanc pur (#FFFFFF)",
+      "toute couleur hors palette officielle sans validation"
+    ],
+    "typographies": {
+      "titres": {
+        "police": "Josefin Sans",
+        "poids": "bold",
+        "usage": "h1, h2, hooks, accroches, headings, labels UI"
+      },
+      "corps": {
+        "police": "DM Sans",
+        "poids": "regular",
+        "usage": "captions, descriptions, texte courant"
+      },
+      "accent": {
+        "police": "Cormorant Garamond",
+        "style": "italic",
+        "usage": "sous-titres éditoriaux, citations, mots signatures en fin de titre (ex: 'Délais & livraisons.')"
+      }
+    },
+    "regle_combinaison_typo": "Un titre peut combiner Josefin Sans (mot principal) + Cormorant Garamond italic (mot d'accent). Exemple validé : 'Délais' (Josefin Sans) & 'livraisons.' (Cormorant italic).",
+    "style_visuel": {
+      "ambiance": "douce, lumière naturelle, fonds neutres (cream ou blanc cassé)",
+      "matieres_privilegiees": "tissu, fil, texture broderie, machine Tajima (en contexte éditorial long uniquement)",
+      "composition": "épurée, asymétrie légère, beaucoup de respiration",
+      "interdits": [
+        "fonds noirs",
+        "néons, filtres Instagram agressifs",
+        "typographies fantaisie ou script imitant l'écriture manuscrite",
+        "effets digitaux, renders 3D génériques"
+      ]
+    }
+  },
+
+  "ton_de_voix": {
+    "regles_absolues": {
+      "tutoiement": "systématique — toujours 'tu', jamais 'vous'",
+      "registre": "élégant mais direct, poétique sans être précieux",
+      "anti_urgentisme": "jamais 'commandez maintenant', 'offre limitée', 'plus que X en stock'",
+      "anti_generique": "jamais 'qualité supérieure', 'fait avec amour', 'prix compétitifs'",
+      "emojis": "max 1-2 par post si vraiment nécessaire, jamais d'excès"
+    },
+    "tons_autorises": ["intime", "pudique", "sobre", "poétique minimal", "chaleureux", "direct"],
+    "tons_interdits": ["exubérant", "publicitaire agressif", "hallmark", "maternaliste", "commercial criant", "urgentiste"]
+  },
+
+  "vocabulaire_fabrication": {
+    "formulation_par_defaut": "brodé à la commande",
+    "commentaire_par_defaut": "Formulation humaine, compréhensible, vue sur ypersoa.fr. À utiliser partout : fiches produits, captions courtes, posts IG, emails service client.",
+
+    "autorisees": [
+      {
+        "formulation": "brodé à la commande",
+        "contexte": "universel, par défaut partout"
+      },
+      {
+        "formulation": "brodé sur métier Tajima",
+        "contexte": "éditorial long : article blog, vidéo process atelier, page À propos, storytelling savoir-faire"
+      },
+      {
+        "formulation": "réalisé dans notre atelier à Wattrelos",
+        "contexte": "ancrage géographique, made in France"
+      }
+    ],
+
+    "interdites_absolues": [
+      {
+        "formulation": "brodé à la main",
+        "raison": "faux techniquement, trompeur"
+      },
+      {
+        "formulation": "fait main",
+        "raison": "faux, positionnement artisanal qu'on refuse"
+      },
+      {
+        "formulation": "Tajima TMEZ",
+        "raison": "jargon industriel incompréhensible pour les clientes, crée de la distance émotionnelle"
+      },
+      {
+        "formulation": "brodé sur métier Tajima TMEZ",
+        "raison": "trop technique, ne parle à personne en dehors du métier"
+      },
+      {
+        "formulation": "artisanal",
+        "raison": "positionnement générique qu'on refuse, préférer 'précision' ou 'savoir-faire'"
+      }
+    ]
+  },
+
+  "vocabulaire_interdit_general": [
+    {
+      "terme_interdit": "trace",
+      "en_tant_que": "mot émotionnel clé",
+      "remplacer_par": ["lien", "souvenir", "présence", "mémoire"]
+    },
+    {
+      "terme_interdit": "personnalisable",
+      "remplacer_par": ["brodé à ton prénom", "brodé selon tes envies"]
+    },
+    {
+      "terme_interdit": "Etsy",
+      "remplacer_par": ["ypersoa.fr"]
+    },
+    {
+      "terme_interdit": "petits prix",
+      "remplacer_par": ["— (ne pas parler de prix dans les contenus organiques)"]
+    },
+    {
+      "terme_interdit": "vouvoiement (vous, votre, offrez, découvrez)",
+      "remplacer_par": ["tutoiement systématique (tu, ton, offre, découvre)"]
+    }
+  ],
+
+  "exemples_de_ton_juste": [
+    "Ton prénom. Brodé sur métier Tajima. Pour toi, ou pour quelqu'un que tu aimes.",
+    "Certains cadeaux deviennent des souvenirs. Celui-là le sera.",
+    "Même loin. Ta présence brodée sur un tissu qu'ils portent tous les jours."
+  ],
+
+  "catalogue": {
+    "bases_produits": [
+      "sweat (col rond) — YP005",
+      "hoodie adulte — YP001",
+      "hoodie enfant — YP004",
+      "t-shirt — YP019",
+      "zoodie (sweat zippé) — YP021"
+    ],
+    "nb_motifs": 17,
+    "plage_motifs": "YPM-001 à YPM-017",
+    "regle_presentation": "Toujours présenter comme '17 motifs' sans les lister exhaustivement sauf si nécessaire.",
+    "statut_motifs_signatures": "Les 17 motifs sont au même niveau hiérarchique. Aucun n'est LE signature unique. YPM-003 Le Club (badge circulaire) est un motif populaire mais pas un motif signature au-dessus des autres.",
+
+    "personnalisation": {
+      "nb_couleurs_fil": 20,
+      "reference_palette": "referentiels/palette_fils_broderie.json",
+      "option_broderie_poignet": "+6 €",
+      "vocabulaire_perso": [
+        "brodé à ton prénom",
+        "brodé selon tes envies",
+        "brodé à la lettre qui compte"
+      ]
+    }
+  },
+
+  "delais_production": {
+    "structure_trois_niveaux": {
+      "confection_interne_cible": {
+        "valeur": "72h",
+        "usage": "communication interne, service client, engagement personnel de Sarah et Adriana"
+      },
+      "confection_affichee_client": {
+        "valeur": "3 à 6 jours ouvrés",
+        "usage": "fiches produits Shopify, FAQ, page Délais & livraisons"
+      },
+      "total_livraison": {
+        "france_metropolitaine": "5 à 11 jours ouvrés",
+        "belgique_luxembourg": "6 à 11 jours ouvrés",
+        "union_europeenne": "8 à 14 jours ouvrés",
+        "usage": "page Délais & livraisons, checkout Shopify, emails de confirmation"
+      }
+    },
+    "formulations_autorisees": [
+      "brodé à la commande, livré en 5 à 11 jours",
+      "confection sous 3 à 6 jours ouvrés",
+      "expédition depuis Wattrelos en 72h après fabrication"
+    ],
+    "usage_par_contexte": {
+      "fiche_produit": "3 à 6 jours ouvrés de confection + livraison selon zone",
+      "post_rs_court": "Brodé à la commande, livré en 5 à 11 jours",
+      "campagne_urgente_noel_fetes": "Commande avant le [date] pour recevoir avant [date]",
+      "service_client": "72h pour la confection elle-même, puis 2 à 8 jours de livraison"
+    }
+  },
+
+  "piliers_de_contenu": {
+    "systeme": "4 piliers P1 à P4 (inspiré de CONTENT_MACHINE) avec sous-piliers Émotion (extraits de CLAUDE.md)",
+
+    "p1_process": {
+      "nom": "PROCESS",
+      "objectif": "Montrer le vrai travail du métier Tajima, coulisses atelier, savoir-faire technique",
+      "signal_engagement_vise": ["confiance", "légitimité", "saves"],
+      "a_filmer": ["machine Tajima en action", "gros plans aiguilles et fil", "mains d'Adriana qui travaille", "palette des 20 fils"],
+      "jour_publication_type": "lundi",
+      "heure_type": "09h00"
+    },
+
+    "p2_emotion": {
+      "nom": "ÉMOTION",
+      "objectif": "Connexion identitaire, self-expression, appartenance, lien affectif",
+      "signal_engagement_vise": ["commentaires", "partages", "saves"],
+      "sous_piliers": {
+        "lien": {
+          "hook_reference": "Pas un cadeau. Un lien. Pour toujours.",
+          "contexte_usage": "couple, famille, amis proches"
+        },
+        "souvenir": {
+          "hook_reference": "Certains cadeaux deviennent des souvenirs.",
+          "contexte_usage": "naissance, diplôme, départ"
+        },
+        "presence": {
+          "hook_reference": "Même loin. Ta présence. Brodée.",
+          "contexte_usage": "distance, expatrié, deuil"
+        }
+      },
+      "jour_publication_type": "mercredi",
+      "heure_type": "19h00"
+    },
+
+    "p3_produit": {
+      "nom": "PRODUIT",
+      "objectif": "Faire désirer une pièce précise, appeler à configurer",
+      "signal_engagement_vise": ["clics vers ypersoa.fr"],
+      "a_montrer": ["produit fini porté", "déclinaisons couleurs", "configurateur en action", "avant/après"],
+      "jour_publication_type": "vendredi",
+      "heure_type": "12h00"
+    },
+
+    "p4_preuve": {
+      "nom": "PREUVE",
+      "objectif": "Social proof : avis clients, délais tenus, résultats, révélations commande",
+      "signal_engagement_vise": ["conversion", "lever les freins à l'achat"],
+      "a_filmer": ["reveal commande terminée", "avant/après", "client qui ouvre son colis", "reformulation d'avis clients"],
+      "jour_publication_type": "samedi",
+      "heure_type": "11h00",
+      "condition": "si footage disponible"
+    }
+  },
+
+  "formats_de_contenu": {
+    "post_statique": {
+      "ratios": ["4:5 (portrait, préféré)", "1:1 (carré)"],
+      "structure": "hook Josefin Sans bold + sous-titre italic + caption 80-100 mots + CTA",
+      "visuel_type": "fond cream, gros plan broderie, lumière naturelle"
+    },
+
+    "carrousel": {
+      "nb_slides_min": 6,
+      "slide_1": "hook accrocheur (stopper le scroll)",
+      "slides_2_5": "développement — une idée par slide, concis",
+      "slide_6": "CTA + lien bio",
+      "fond_coherent": "cream ou ink sur toutes les slides"
+    },
+
+    "reel": {
+      "duree_regle": "Pas de durée stricte — s'adapter au contenu",
+      "plages_indicatives_par_type": {
+        "reel_revelation_produit_p3_p4": "10 à 20 secondes",
+        "reel_process_atelier_p1": "15 à 30 secondes (laisser le geste respirer)",
+        "reel_emotion_temoignage_p2": "12 à 25 secondes",
+        "story_produit_rapide": "5 à 10 secondes"
+      },
+      "structure_type": {
+        "hook_0_3s": "overlay hook texte",
+        "dev_3_10s": "plan produit ou machine",
+        "revelation_10_15s": "révélation finale",
+        "cta_15_fin": "appel à l'action"
+      },
+      "musique": "instrumental doux, pas de drop brutal, tempo modéré, jamais de titres protégés",
+      "texte_overlay": "Josefin Sans, cream sur fond ink ou terracotta sur cream"
+    },
+
+    "format_de_sortie_reel_obligatoire": [
+      "1. PILIER (P1/P2/P3/P4)",
+      "2. TITRE interne accrocheur",
+      "3. DURÉE CIBLE en secondes",
+      "4. HOOK (0-2s) phrase exacte à l'écran",
+      "5. STORYBOARD tableau (scène / durée / visuel avec réf. style shoot / texte écran)",
+      "6. CAPTION texte complet + emojis modérés + CTA + hashtags",
+      "7. MUSIQUE type d'audio, ambiance, tempo",
+      "8. PUBLICATION jour + heure recommandés",
+      "9. VARIANTE ENGAGEMENT question ou mécanique pour commentaires/saves"
+    ]
+  },
+
+  "styles_de_shoots": {
+    "ghost_packshot": {
+      "description": "Vêtement à plat, fond blanc pur, éclairage neutre",
+      "usage": "e-commerce, stories produit"
+    },
+    "studio_lifestyle": {
+      "description": "Modèle plein corps, fond béton ou serre, lumière naturelle diffuse, tenue casual (jean + sneakers)",
+      "usage": "fiches produits, carrousels P2 émotion, posts lifestyle"
+    },
+    "editorial": {
+      "description": "Intérieur chaleureux (canapé, bibliothèque, fenêtre), couple ou solo, émotion et rire, ambiance française authentique",
+      "usage": "Reels P2 émotion, storytelling, campagnes saisonnières"
+    },
+    "macro_broderie": {
+      "description": "Gros plan badge sur fond sombre, texture fil visible, rendu de la broderie mis en valeur",
+      "usage": "P1 process, P3 produit détail, storytelling savoir-faire"
+    }
+  },
+
+  "hashtags": {
+    "regle": "Variable selon pilier — 5 hashtags fixes + 3 à 5 variables selon pilier = 8 à 10 hashtags par post",
+    "langue": "français principalement, anglais uniquement exceptions justifiées",
+
+    "fixes_toujours_presents": [
+      "#Ypersoa",
+      "#BroderieTajima",
+      "#BroderieSurMesure",
+      "#Wattrelos",
+      "#PersonnalisationFrance"
+    ],
+
+    "variables_par_pilier": {
+      "p1_process": ["#CoulisseAtelier", "#FaitEnFrance", "#SavoirFaire", "#BroderieFrance"],
+      "p2_emotion": ["#ModeSurMesure", "#StylePerso", "#TenueIdentité", "#VêtementPersonnalisé"],
+      "p3_produit": ["#CadeauPersonnalisé", "#IdéeCadeau", "#SweatPersonnalisé", "#HoodieBrodé"],
+      "p4_preuve": ["#AvantAprès", "#TransformationTextile", "#ClientSatisfait"]
+    },
+
+    "interdits": [
+      "hashtags trop génériques (#mode, #fashion)",
+      "hashtags achetés ou spam",
+      "plus de 10 hashtags par post"
+    ]
+  },
+
+  "regles_generation_images": {
+    "toujours_inclure": [
+      "fond : cream linen texture ou #F5F0EA",
+      "matière : embroidery thread detail, fabric close-up",
+      "lumière : warm soft natural light, no harsh shadows",
+      "style : editorial product photography, minimal clean composition"
+    ],
+    "ne_jamais_inclure": [
+      "texte dans l'image (no text, no watermark)",
+      "visages identifiables (sauf droits à l'image signés)",
+      "fonds noirs ou très sombres",
+      "effets digitaux, néons, renders 3D génériques"
+    ],
+    "template_prompt_flux_en": "[description précise de la scène en anglais], cream linen background, embroidery close-up detail, warm soft natural light, [couleur fil] thread, [couleur vêtement] garment, minimal editorial fashion photography, no text, no watermark, photorealistic"
+  },
+
+  "lignes_rouges_absolues": [
+    "brodé à la main (faux techniquement)",
+    "Tajima TMEZ (jargon technique, distance émotionnelle)",
+    "Comparer à d'autres boutiques Etsy ou marques de broderie",
+    "Promettre des délais sans validation côté production (Adriana)",
+    "Ton agressif ou urgentiste (vite, soldé, dernier stock)",
+    "Parler de petit prix ou bas de gamme",
+    "Utiliser 'trace' comme mot émotionnel clé",
+    "Emojis en excès (max 1-2 par post)",
+    "Typographies script imitant l'écriture manuscrite dans les visuels",
+    "Noms de tendances (dopamine dressing, quiet luxury) — incarner sans nommer",
+    "Titres musicaux protégés dans les Reels"
+  ],
+
+  "contraintes_operationnelles": {
+    "budget_pub": "0€ — 100% organique",
+    "frequence_publication": "3 à 4 posts par semaine",
+    "priorite_engagement": ["saves", "partages", "commentaires", "likes"],
+    "formats_organiques_maximaux": [
+      "question en caption",
+      "choix à faire",
+      "tag quelqu'un qui...",
+      "identification à un sentiment"
+    ],
+    "caption_longueur_max": "150 mots"
+  },
+
+  "usage_par_le_hub": {
+    "generation_texte": "Toute génération de caption, titre, description, script Reel doit consulter cette charte AVANT d'appeler l'API. Les règles absolues (tutoiement, vocabulaire interdit, lignes rouges) sont des filtres bloquants.",
+    "generation_images": "Les prompts Flux/Gemini intègrent systématiquement le bloc 'regles_generation_images' en préfixe. Le vocabulaire technique (Tajima TMEZ) est banni des prompts publics.",
+    "validation_pre_publication": "Avant publication, le Hub vérifie l'absence de vocabulaire interdit dans le contenu généré."
+  }
+}
