@@ -1,0 +1,5 @@
+{
+  "name": "Shooting Director AI",
+  "description": "Outil directeur de shooting pour générer des plans de production photo e-commerce et lifestyle avec Gemini.",
+  "requestFramePermissions": []
+}

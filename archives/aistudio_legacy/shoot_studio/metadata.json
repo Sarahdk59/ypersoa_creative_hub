@@ -1,0 +1,7 @@
+{
+  "name": "Ypersoa Studio",
+  "description": "Plateforme de génération de mockups ultra-réalistes pour la marque Ypersoa, alliant l'esprit tribu et une esthétique premium dans des décors botaniques.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

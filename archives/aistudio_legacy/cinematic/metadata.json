@@ -1,0 +1,8 @@
+{
+  "name": "Ypersoa Cinematic Studio",
+  "description": "Créez des vidéos promotionnelles cinématiques pour la marque Ypersoa avec l'esprit tribu, des tons naturels et une lumière dorée.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

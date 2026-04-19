@@ -1,0 +1,208 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "_mapping_legacy",
+    "last_updated": "2026-04-19",
+    "description": "Table de correspondance entre les nomenclatures legacy (outils AI Studio + DOCX prompts shooting + XLSX plan shooting) et la nomenclature officielle du Hub (YPxxx pour les produits, fil_xxx pour les fils, ids snake_case pour les supports). Toute donnée legacy importée dans le Hub doit passer par cette table de traduction.",
+    "portee": "import_legacy_uniquement",
+    "usage": "Consulté par tout script d'extraction qui ingère du contenu legacy (ex: prompts_library.json, plan_shooting_systematique.json, packs_generation.json). Sans ce mapping, les imports créeraient des références à des produits/couleurs inexistants dans les référentiels officiels.",
+    "underscore_prefix": "Le préfixe underscore (_mapping_legacy) signale que ce fichier est un référentiel utilitaire (méta-référentiel), pas un référentiel métier consommé directement par le Hub à l'exécution."
+  },
+
+  "sources_couvertes": [
+    "archives/aistudio_legacy/studio_premium/constants.tsx (supprimé, mais ses données sont dans Shoot Studio)",
+    "archives/aistudio_legacy/shoot_studio/constants.tsx",
+    "archives/aistudio_legacy/cinematic/ (à confirmer)",
+    "archives/aistudio_legacy/atelier_social/src/ (à confirmer)",
+    "archives/aistudio_legacy/shooting_director/src/services/gemini.ts",
+    "archives/_shooting_sources/prompt_shooting_Site.docx (à archiver)",
+    "archives/_shooting_sources/ypersoa_shooting_complet_v5.xlsx (à archiver)"
+  ],
+
+  "produits": {
+    "documentation": "Les codes JH-xxx sont les codes fournisseur Awdis (vu dans constants.tsx Shoot Studio). Les codes YPxxx sont les codes commerciaux internes Ypersoa (vu dans assets_produits/).",
+    "mapping_codes_fournisseur_vers_yp": {
+      "JH001 Hoodie cordons ronds sans embout": "YP001",
+      "Zoodie JH050 cordons ronds sans embout": "YP021",
+      "JH030": "YP005",
+      "T-shirt Epais": "YP019",
+      "JH01J Hoodie Junior sans cordon": "YP004"
+    },
+    "mapping_termes_generiques_vers_yp": {
+      "hoodie": "YP001",
+      "hoodie adulte": "YP001",
+      "sweat à capuche": "YP001",
+      "zoodie": "YP021",
+      "sweat zippé": "YP021",
+      "sweat à capuche zippé": "YP021",
+      "sweat": "YP005",
+      "sweat col rond": "YP005",
+      "crewneck": "YP005",
+      "sweat sans capuche": "YP005",
+      "t-shirt": "YP019",
+      "tshirt": "YP019",
+      "hoodie enfant": "YP004",
+      "hoodie junior": "YP004"
+    },
+    "verite_metier_yp": {
+      "YP001": {
+        "nom": "Hoodie adulte",
+        "fiche_technique": "assets_produits/YP001/YP001_fiche_produit.json"
+      },
+      "YP004": {
+        "nom": "Hoodie enfant",
+        "fiche_technique": "assets_produits/YP004/YP004_fiche_produit.json"
+      },
+      "YP005": {
+        "nom": "Sweat adulte (col rond)",
+        "fiche_technique": "assets_produits/YP005/YP005_fiche_produit.json"
+      },
+      "YP019": {
+        "nom": "T-shirt adulte",
+        "fiche_technique": "assets_produits/YP019/YP019_fiche_produit.json"
+      },
+      "YP021": {
+        "nom": "Zoodie (sweat zippé)",
+        "fiche_technique": "assets_produits/YP021/YP021_fiche_produit.json"
+      }
+    }
+  },
+
+  "couleurs_fils": {
+    "documentation": "Les couleurs fils legacy proviennent de plusieurs sources (Shoot Studio: 13 couleurs, DOCX: termes libres). Le Hub utilise 20 couleurs officielles dans referentiels/palette_fils_broderie.json. Toute couleur legacy doit être mappée vers un fil_xxx existant ou marquée comme abandonnée.",
+    "mapping_termes_legacy_vers_fil_xxx": {
+      "blanc": "fil_blanc",
+      "ivoire": "fil_ivoire",
+      "gris clair": "fil_gris_clair",
+      "gris": "fil_gris",
+      "charbon": "fil_anthracite",
+      "anthracite": "fil_anthracite",
+      "noir": "fil_noir",
+      "marine": "fil_marine",
+      "encre marine": "fil_marine",
+      "bleu marine": "fil_marine",
+      "bleu roi": "fil_bleu_roi",
+      "bleu glacier": "fil_bleu_glacier",
+      "bleu ciel": "fil_bleu_glacier",
+      "canard": "fil_canard",
+      "pétrole": "fil_canard",
+      "petrole": "fil_canard",
+      "vert jade": "fil_vert_jade",
+      "vert forêt": "fil_vert_jade",
+      "vert foret": "fil_vert_jade",
+      "vert jardin": "fil_vert_jardin",
+      "vert sauge": "fil_vert_jardin",
+      "bordeaux": "fil_bordeaux",
+      "rouge": "fil_rouge",
+      "rouge rubis": "fil_rouge",
+      "rose pâle": "fil_rose_pale",
+      "rose pale": "fil_rose_pale",
+      "framboise": "fil_framboise",
+      "lilas": "fil_lilas",
+      "sable": "fil_sable",
+      "terracotta": "fil_terracotta",
+      "camel": "fil_camel"
+    },
+    "couleurs_legacy_abandonnees": {
+      "vert olive": "Aucune correspondance dans la palette officielle. À ne pas utiliser dans les nouveaux contenus.",
+      "jaune": "Aucune correspondance. À ne pas utiliser.",
+      "violet": "Aucune correspondance. À ne pas utiliser.",
+      "autre": "Valeur de fallback Shoot Studio. À remplacer par une couleur officielle au cas par cas."
+    }
+  },
+
+  "couleurs_supports": {
+    "documentation": "Les couleurs supports legacy proviennent surtout du DOCX prompts shooting et de l'XLSX plan shooting. Le Hub utilise 22 couleurs officielles dans referentiels/palette_supports_vetements.json.",
+    "mapping_termes_legacy_vers_support": {
+      "beige": "beige",
+      "beige naturel": "beige",
+      "beige naturel brut": "beige",
+      "blanc": "blanc",
+      "blanc cassé": "offwhite",
+      "blanc casse": "offwhite",
+      "offwhite": "offwhite",
+      "écru": "offwhite",
+      "ecru": "offwhite",
+      "pierre naturelle": "pierre_naturelle",
+      "mastic": "mastic",
+      "rose poudré": "rose_pale",
+      "rose poudre": "rose_pale",
+      "rose pâle": "rose_pale",
+      "rose orchidée": "rose_orchidee",
+      "bleu clair": "bleu_clair",
+      "bleu pastel": "bleu_pastel",
+      "bleu ciel": "bleu_ciel",
+      "marine": "marine",
+      "bleu marine": "marine",
+      "noir": "noir",
+      "noir charbon": "noir",
+      "gris": "gris",
+      "gris chiné": "gris",
+      "gris chine": "gris",
+      "gris foncé": "gris_fonce",
+      "gris fonce": "gris_fonce",
+      "vert sauge": "vert_sauge",
+      "vert olive": "vert_olive",
+      "vert terre": "vert_terre",
+      "canard": "canard",
+      "bleu pétrole": "bleu_petrole",
+      "bleu petrole": "bleu_petrole",
+      "lilas": "lilas",
+      "citron": "citron",
+      "kaki": "kaki"
+    }
+  },
+
+  "esthetiques_referencees": {
+    "documentation": "Le DOCX prompts shooting cite des marques de référence pour calibrer l'esthétique des images IA. Ces marques sont des inspirations brand, pas des concurrents directs.",
+    "marques_de_reference_inspiration": [
+      "Sézane (chic parisien décontracté)",
+      "A.P.C. (sobriété éditoriale, no retouching)",
+      "Maison Labiche (broderie premium, lookbook)",
+      "Émoï-Émoï (féminité douce, hygge)",
+      "Sœur (ambiance cocooning)",
+      "AMI Paris (esthetic minimal)",
+      "Hoalen (cinematic outdoor)",
+      "October (lifestyle French)"
+    ],
+    "usage_dans_prompts": "Ces noms peuvent apparaître dans les prompts EN destinés à Flux/Gemini (ex: 'Sézane campaign aesthetic'). Ne JAMAIS les mentionner dans les contenus FR destinés au public."
+  },
+
+  "anciennes_terminologies_a_eviter": {
+    "termes_brand_obsoletes": [
+      {
+        "terme": "Tajima TMEZ",
+        "raison": "Jargon technique banni dans la charte éditoriale (J2)",
+        "remplacer_par": "brodé à la commande (par défaut) ou brodé sur métier Tajima (contexte long)"
+      },
+      {
+        "terme": "brodé à la main",
+        "raison": "Faux techniquement",
+        "remplacer_par": "brodé à la commande"
+      },
+      {
+        "terme": "AMOUR CLUB comme motif signature",
+        "raison": "Réinterprété en J2 comme YPM-003 Le Club, motif parmi les 17",
+        "remplacer_par": "YPM-003 (motif parmi les 17, pas signature unique)"
+      }
+    ]
+  },
+
+  "incoherences_connues_a_resoudre": [
+    {
+      "incoherence": "Studio Premium et Shoot Studio sont quasi-doublons",
+      "decision": "Studio Premium supprimé en J3.0. Shoot Studio devient la seule source.",
+      "date_resolution": "2026-04-19"
+    },
+    {
+      "incoherence": "Plusieurs systèmes de codes produits coexistent (JH, YP, termes génériques)",
+      "decision": "Le Hub n'utilise QUE les YPxxx. Toute autre nomenclature passe par ce mapping.",
+      "date_resolution": "2026-04-19"
+    },
+    {
+      "incoherence": "La couleur 'vert forêt' est très présente dans le DOCX prompts mais n'existe pas dans palette_fils_broderie.json",
+      "decision": "Mappé vers fil_vert_jade pour tous les imports.",
+      "date_resolution": "2026-04-19"
+    }
+  ]
+}
