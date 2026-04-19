@@ -1,0 +1,221 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "produit_support",
+    "last_updated": "2026-04-19",
+    "statut": "actif",
+    "base_sur_template": "YP001 v1.3",
+    "particularite": "Premier produit non-Awdis du catalogue Ypersoa. Marque B&C avec dialecte de couleurs propre. Voie 1 retenue : double hex dans variantes (palette officielle Ypersoa + hex reel B&C echantillonne)."
+  },
+
+  "identite": {
+    "yp_ref": "YP019",
+    "nom_commercial_ypersoa": "T-Shirt Epais Adulte",
+    "type_produit": "tshirt",
+    "public_cible": "adulte_unisexe",
+    "statut_catalogue": "standard",
+    "tagline": "Le t-shirt unisexe lourd Ypersoa — coton premium 220g/m2, coupe ajustee europeenne"
+  },
+
+  "fournisseur": {
+    "marque_reelle": "B&C",
+    "gamme": "B&C Collection",
+    "reference_fournisseur": "BC09T",
+    "code_couleur_b_c": "#E220",
+    "plateforme_commande": "Imbretex",
+    "url_fiche_fournisseur": "https://www.imbretex.fr/produits/191041"
+  },
+
+  "specs_techniques": {
+    "grammage_g_m2": 220,
+    "composition": "100% coton (Better Cotton)",
+    "interieur": "non concerne (t-shirt sans doublure)",
+    "coupe": "Modele unisexe avec coutures laterales",
+    "nom_commercial_fournisseur": "B&C BC09T Tee-shirt lourd unisexe",
+    "finitions": {
+      "col": "col rond, bord côte",
+      "manches": "manches courtes",
+      "coutures": "coutures laterales (pas de coupe tubulaire)",
+      "ourlet": "ourlet simple",
+      "etiquette": "[A_VALIDER] interieure"
+    },
+    "certifications": [
+      "Better Cotton (BCI)"
+    ],
+    "entretien": {
+      "lavage": "à froid",
+      "sechage": "basse température",
+      "repassage": "à froid",
+      "javel": "non",
+      "nettoyage_sec": "non"
+    },
+    "differences_structurelles_vs_awdis": [
+      "Composition 100% COTON Better Cotton (vs 80% coton Ringspun / 20% polyester chez Awdis Just Hoods) — touche plus naturel, moins extensible",
+      "Grammage 220 g/m² (vs 280 g/m² chez Awdis) — t-shirt plus leger, plus fluide",
+      "Coupe unisexe ajustee europeenne (vs Fit Relax Ample du JH001) — plus pres du corps",
+      "Coutures laterales (vs coupe tubulaire de certains Awdis) — meilleure tenue sur le corps",
+      "Better Cotton certified (vs OEKO-TEX standard d'Awdis) — argument durabilite different"
+    ]
+  },
+
+  "tailles": {
+    "unite": "cm",
+    "systeme": "tailles_adultes_unisexe",
+    "grille_simple": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+    "grille_detaillee": "[A_COMPLETER] Mesures cm (tour poitrine, longueur corps, longueur manche courte) a ajouter lors de la creation de la fiche technique Ypersoa YP019",
+    "note": "9 tailles XS a 5XL — meme plage que les Awdis adulte"
+  },
+
+  "_note_double_hex": "VOIE 1 : chaque couleur a son nom Ypersoa officiel + son hex de palette officielle + son hex reel B&C echantillonne sur le packshot. Le hub IA doit utiliser le packshot comme reference visuelle (hex_packshot_reel = verite terrain) et la palette officielle pour la communication ecrite (id_palette + nom Ypersoa).",
+
+  "variantes_couleurs": [
+    {
+      "id_palette": "blanc",
+      "nom_ypersoa": "Blanc",
+      "nom_fournisseur_b_c": "White",
+      "hex_palette_officiel": "#FFFFFF",
+      "hex_packshot_reel": "#ECECEC",
+      "ecart_visuel": "leger (compression photo, blanc casse vs blanc pur)",
+      "packshot": "YP019_packshot_blanc.png"
+    },
+    {
+      "id_palette": "offwhite",
+      "nom_ypersoa": "Offwhite",
+      "nom_fournisseur_b_c": "OffWhite",
+      "hex_palette_officiel": "#F4EFEA",
+      "hex_packshot_reel": "#EAE2D5",
+      "ecart_visuel": "moyen (B&C plus chaud/jaune que Awdis)",
+      "packshot": "YP019_packshot_offwhite.png"
+    },
+    {
+      "id_palette": "mastic",
+      "nom_ypersoa": "Mastic",
+      "nom_fournisseur_b_c": "Mastic",
+      "hex_palette_officiel": "#C5C0B3",
+      "hex_packshot_reel": "#ACA18F",
+      "ecart_visuel": "moyen (B&C plus brun-bronze que la palette officielle)",
+      "packshot": "YP019_packshot_mastic.png"
+    },
+    {
+      "id_palette": "rose_orchidee",
+      "nom_ypersoa": "Rose orchidée",
+      "nom_fournisseur_b_c": "Orchid Pink",
+      "hex_palette_officiel": "#FAD0D5",
+      "hex_packshot_reel": "#FAD0D5",
+      "ecart_visuel": "aucun (palette officielle alignee sur la vraie couleur B&C en v1.4)",
+      "packshot": "YP019_packshot_rose_orchidee.png",
+      "note": "Visuellement tres proche du rose_pale (#F0B8C0) mais reference produit distincte chez B&C."
+    },
+    {
+      "id_palette": "bleu_pastel",
+      "nom_ypersoa": "Bleu pastel",
+      "nom_fournisseur_b_c": "Lake Blue",
+      "hex_palette_officiel": "#8AAFD4",
+      "hex_packshot_reel": "#5887C6",
+      "ecart_visuel": "GROS ECART — B&C 'Lake Blue' est nettement plus sature et plus fonce que le bleu_pastel officiel. Le packshot fait foi pour l'IA.",
+      "packshot": "YP019_packshot_bleu_pastel.png"
+    },
+    {
+      "id_palette": "canard",
+      "nom_ypersoa": "Canard",
+      "nom_fournisseur_b_c": "Teal",
+      "hex_palette_officiel": "#1A5A69",
+      "hex_packshot_reel": "#3B4A4F",
+      "ecart_visuel": "GROS ECART — B&C 'Teal' est plus gris-bleu sombre, palette canard plus turquoise lumineux. Le packshot fait foi pour l'IA.",
+      "packshot": "YP019_packshot_canard.png"
+    },
+    {
+      "id_palette": "marine",
+      "nom_ypersoa": "Marine",
+      "nom_fournisseur_b_c": "Navy",
+      "hex_palette_officiel": "#1E2D4A",
+      "hex_packshot_reel": "#202634",
+      "ecart_visuel": "leger (B&C marine legerement plus gris que palette)",
+      "packshot": "YP019_packshot_marine.png"
+    },
+    {
+      "id_palette": "noir",
+      "nom_ypersoa": "Noir",
+      "nom_fournisseur_b_c": "Black",
+      "hex_palette_officiel": "#1A1A1A",
+      "hex_packshot_reel": "#292728",
+      "ecart_visuel": "leger (compression photo)",
+      "packshot": "YP019_packshot_noir.png"
+    },
+    {
+      "id_palette": "gris_fonce",
+      "nom_ypersoa": "Gris foncé",
+      "nom_fournisseur_b_c": "Dark Grey",
+      "hex_palette_officiel": "#404040",
+      "hex_packshot_reel": "#4B4A50",
+      "ecart_visuel": "leger",
+      "packshot": "YP019_packshot_gris_fonce.png"
+    },
+    {
+      "id_palette": "kaki",
+      "nom_ypersoa": "Kaki",
+      "nom_fournisseur_b_c": "Khaki",
+      "hex_palette_officiel": "#5C614B",
+      "hex_packshot_reel": "#575145",
+      "ecart_visuel": "leger",
+      "packshot": "YP019_packshot_kaki.png"
+    }
+  ],
+
+  "placements_broderie_autorises": [
+    {"id": "poitrine_gauche", "label": "Poitrine gauche", "usage": "standard", "compatible_avec_tous_motifs": true}
+  ],
+
+  "placements_broderie_NON_autorises": [
+    {"id": "dos_centre_haut", "raison": "Pas de broderie dos sur t-shirt leger - decision Ypersoa pour preserver la legerete visuelle du t-shirt"},
+    {"id": "poignet", "raison": "Manches courtes - pas de poignet broderie possible techniquement"},
+    {"id": "manche", "raison": "Manche courte trop fine pour broderie nette"}
+  ],
+
+  "assets": {
+    "dossier_racine": "assets_produits/YP019/",
+    "fiche_technique_officielle": null,
+    "fiche_technique_status": "A_CREER - modele : YP001_fiche_technique.jpg",
+    "packshots_disponibles": 10,
+    "photo_reference_par_defaut": "YP019_packshot_offwhite.png",
+    "note_ancrage_visuel": "Les packshots fond blanc uniforme sont a injecter comme 'character reference' dans les prompts Studio IA. ATTENTION : YP019 est un T-SHIRT 100% coton 220 g/m2, coupe AJUSTEE unisexe. Forme tres differente d'un t-shirt americain ample. Le packshot doit ancrer la coupe europeenne pres du corps.",
+    "note_couleurs_b_c_specifiques": "Le packshot fait foi pour l'IA car les couleurs B&C reelles sont parfois nettement differentes des hex de palette Ypersoa officielle (notamment Lake Blue et Teal qui sont des references B&C distinctes des couleurs Awdis equivalentes)."
+  },
+
+  "interdits_visuels_specifiques": {
+    "tshirt_bc09t": [
+      "CAPUCHE (interdit absolu — YP019 est un t-shirt manches courtes, jamais de capuche)",
+      "manches longues (YP019 est manches courtes uniquement)",
+      "col V ou col chemise (YP019 est col rond bord cote)",
+      "col polo (interdit)",
+      "boutons sur l'encolure (YP019 n'a pas de patte de boutonnage)",
+      "poche poitrine (YP019 est uni, sans poche)",
+      "coupe oversize americaine ample (YP019 est coupe europeenne ajustee unisexe)",
+      "etiquette de marque exterieure visible (etiquette interieure)",
+      "broderie dos (decision Ypersoa : poitrine gauche uniquement)",
+      "couture tubulaire visible (YP019 a coutures laterales propres)"
+    ],
+    "note": "Le YP019 est le support le plus epure du catalogue : aucune fantaisie technique. Toute generation IA qui ajoute capuche, poche, manches longues, ou coupe ample est immediatement non-Ypersoa. Sa coupe europeenne ajustee est l'element le plus distinctif visuellement."
+  },
+
+  "ambiance_editoriale_produit": {
+    "saisons_signature": ["printemps", "ete"],
+    "ambiances_shooting_recommandees": ["aube_intime", "echappee_sauvage", "studio_brut"],
+    "profils_cibles": [
+      "femme 25-55 silhouette ajustee",
+      "homme 25-55 minimaliste ne cherchant pas le sportwear",
+      "duos couples coordonnes en saison chaude",
+      "tenue casual chic ete (avec jean ou short)"
+    ],
+    "occasions_cles": [
+      "ete",
+      "vacances",
+      "fete_meres_tardive",
+      "fete_peres",
+      "anniversaire_estival",
+      "saint_valentin_climats_chauds",
+      "cadeau_voyage"
+    ],
+    "note": "Le YP019 est le support 'saison chaude' du catalogue Ypersoa. Sa coupe ajustee europeenne et son grammage 220 g/m2 le distinguent des Awdis 280 g/m2 ample. Cible une clientele plus mode / moins sportwear que les hoodies. Forte complementarite avec YP001 hoodie (un en hiver, l'autre en ete pour la meme cliente)."
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "_meta": {
+    "schema_version": "1.3",
+    "referentiel": "produit_support",
+    "last_updated": "2026-04-19",
+    "statut": "template_maitre_valide",
+    "changelog": [
+      "v1.1 - Composition tissu 80/20, ajout initial Vert terre",
+      "v1.2 - Retrait 'Vert olive' (n'existe pas pour YP001). Confirmation 'Vert terre' = nom fournisseur Earthy Green. 12 couleurs officielles.",
+      "v1.3 - Enrichissement finitions officielles Ypersoa : capuche doublee avec cordons ton sur ton, poche kangourou, poignets et ourlet bords cote, double coutures, etiquette detachable. Composition precisee : coton Ringspun (et non coton standard). Interieur corrige en molleton brosse. Ajout du nom commercial fournisseur : College Hoodie JH001 Just Hoods."
+    ]
+  },
+
+  "identite": {
+    "yp_ref": "YP001",
+    "nom_commercial_ypersoa": "Hoodie Adulte",
+    "type_produit": "hoodie",
+    "public_cible": "adulte_unisexe",
+    "statut_catalogue": "iconique",
+    "tagline": "Le support iconique Ypersoa — fit relax ample, intérieur polaire brossé"
+  },
+
+  "fournisseur": {
+    "marque_reelle": "Awdis",
+    "gamme": "Just Hoods",
+    "reference_fournisseur": "JH001",
+    "plateforme_commande": "Imbretex",
+    "url_fiche_fournisseur": "https://www.imbretex.fr/produits/75117"
+  },
+
+  "specs_techniques": {
+    "grammage_g_m2": 280,
+    "composition": "80% coton Ringspun / 20% polyester",
+    "interieur": "molleton brossé",
+    "coupe": "Fit Relax Ample",
+    "nom_commercial_fournisseur": "College Hoodie JH001 Just Hoods",
+    "finitions": {
+      "capuche": "doublée, avec cordons ton sur ton",
+      "poche": "kangourou",
+      "poignets": "bords côte",
+      "ourlet": "bords côte",
+      "coutures": "double coutures",
+      "etiquette": "détachable"
+    },
+    "certifications": [
+      "OEKO-TEX Standard 100",
+      "Sedex",
+      "PETA Approved Vegan",
+      "WRAP"
+    ],
+    "entretien": {
+      "lavage": "à froid",
+      "sechage": "basse température",
+      "repassage": "à froid",
+      "javel": "non",
+      "nettoyage_sec": "non"
+    }
+  },
+
+  "tailles": {
+    "unite": "cm",
+    "tolerance": "±2",
+    "grille": [
+      {"taille": "XS",  "tour_poitrine": 49, "longueur_corps": 64, "longueur_manche": 57.5},
+      {"taille": "S",   "tour_poitrine": 51, "longueur_corps": 67, "longueur_manche": 59.0},
+      {"taille": "M",   "tour_poitrine": 56, "longueur_corps": 70, "longueur_manche": 60.5},
+      {"taille": "L",   "tour_poitrine": 61, "longueur_corps": 73, "longueur_manche": 63.5},
+      {"taille": "XL",  "tour_poitrine": 65, "longueur_corps": 76, "longueur_manche": 63.5},
+      {"taille": "XXL", "tour_poitrine": 69, "longueur_corps": 82, "longueur_manche": 66.5},
+      {"taille": "3XL", "tour_poitrine": 73, "longueur_corps": 82, "longueur_manche": 68.5},
+      {"taille": "4XL", "tour_poitrine": 78, "longueur_corps": 86, "longueur_manche": 70.5},
+      {"taille": "5XL", "tour_poitrine": 83, "longueur_corps": 90, "longueur_manche": 70.5}
+    ]
+  },
+
+  "variantes_couleurs": [
+    {"id_palette": "beige",            "nom_fournisseur": "Vanilla Milkshake", "packshot": "YP001_packshot_beige.webp"},
+    {"id_palette": "blanc",            "nom_fournisseur": "Artic White",        "packshot": "YP001_packshot_blanc.webp"},
+    {"id_palette": "vert_sauge",       "nom_fournisseur": "Dusty Green",        "packshot": "YP001_packshot_vert_sauge.png"},
+    {"id_palette": "noir",             "nom_fournisseur": "Deep Black",         "packshot": "YP001_packshot_noir.webp"},
+    {"id_palette": "rose_pale",        "nom_fournisseur": "Baby pink",          "packshot": "YP001_packshot_rose_pale.webp"},
+    {"id_palette": "pierre_naturelle", "nom_fournisseur": "Natural Stone",      "packshot": "YP001_packshot_pierre_naturelle.webp"},
+    {"id_palette": "lilas",            "nom_fournisseur": "Lilac",              "packshot": "YP001_packshot_lilas.png"},
+    {"id_palette": "marine",           "nom_fournisseur": "New French Navy",    "packshot": "YP001_packshot_marine.webp"},
+    {"id_palette": "bleu_petrole",     "nom_fournisseur": "Ink Blue",           "packshot": "YP001_packshot_bleu_petrole.webp"},
+    {"id_palette": "citron",           "nom_fournisseur": "Sherbet Lemon",      "packshot": "YP001_packshot_citron.webp"},
+    {"id_palette": "bleu_clair",       "nom_fournisseur": "Ice Blue",           "packshot": "YP001_packshot_bleu_clair.webp"},
+    {"id_palette": "vert_terre",       "nom_fournisseur": "Earthy Green",       "packshot": "YP001_packshot_vert_terre.png"}
+  ],
+
+  "placements_broderie_autorises": [
+    {"id": "poitrine_gauche", "label": "Poitrine gauche", "usage": "standard", "compatible_avec_tous_motifs": true},
+    {"id": "dos_centre_haut", "label": "Dos centre haut", "usage": "statement", "compatible_avec_tous_motifs": false},
+    {"id": "poignet_gauche",  "label": "Poignet gauche", "usage": "addon_6eur", "compatible_avec_tous_motifs": true}
+  ],
+
+  "assets": {
+    "dossier_racine": "assets_produits/YP001/",
+    "fiche_technique_officielle": "YP001_fiche_technique.jpg",
+    "packshots_disponibles": 12,
+    "photo_reference_par_defaut": "YP001_packshot_pierre_naturelle.webp",
+    "note_ancrage_visuel": "Les packshots fond blanc uniforme sont a injecter comme 'character reference' dans les prompts Studio IA afin d'ancrer l'IA sur la vraie forme du JH001 Awdis (capuche, cordons, finitions, poche kangourou) — resout les hallucinations embouts plastique et finitions incorrectes."
+  },
+
+  "interdits_visuels_specifiques": {
+    "hoodie_jh001": [
+      "embouts plastique sur les cordons (les cordons Awdis JH001 sont en coton brut, sans embouts)",
+      "oeillets metalliques visibles en couleur contrastee",
+      "fermeture zip (le JH001 est un hoodie ferme par le devant uniquement, sans zip — pour zip utiliser le Zoodie YP020 JH050)",
+      "couture de capuche contrastee",
+      "etiquette de marque exterieure (l'etiquette Awdis est interieure)",
+      "poche kangourou decentree ou asymetrique"
+    ],
+    "note": "Ces interdits sont specifiques au JH001. Les autres produits (t-shirts, sweats, zoodies) auront leurs propres interdits dans leurs fiches respectives."
+  },
+
+  "ambiance_editoriale_produit": {
+    "saisons_signature": ["automne", "hiver", "mi_saison"],
+    "ambiances_shooting_recommandees": ["studio_brut", "aube_intime", "loft_organique"],
+    "profils_cibles": [
+      "femme 25-55 qui cherche un basique cosy et signe",
+      "homme 25-55 minimaliste",
+      "duos couples/amis/famille coordonnes"
+    ],
+    "note": "Le JH001 est le support iconique d'Ypersoa — le plus polyvalent, le plus porte, le plus shoote. Present dans la majorite des campagnes."
+  }
+}

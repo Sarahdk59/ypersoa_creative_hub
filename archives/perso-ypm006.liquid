@@ -1,0 +1,411 @@
+{% comment %}
+  perso-ypm006.liquid — YPM-006 Le Câlin
+  Famille  : Coeurs · Snippet : perso-minimal
+  Champs   : Placement (3 choix) + Initiale (1 lettre minuscule) + Couleur cœur
+  Règle    : initiale = couleur du vêtement automatique · même emplacement interdit 2×
+  Option   : 2ᵉ broderie +6€ (emplacement différent obligatoire)
+{% endcomment %}
+
+{% assign ypersoa_palette = "Blanc|#FFFFFF,Ivoire|#F5F0E0,Gris clair|#C8C8C8,Gris|#A0A0A0,Anthracite|#4A4A4A,Noir|#1A1A1A,Marine|#1E2D4A,Bleu roi|#1A3A8F,Bleu glacier|#8AAFD4,Canard|#1A6670,Vert jade|#1A7A6E,Vert jardin|#7A9E7E,Bordeaux|#6B1E2E,Rouge|#C0392B,Rose pâle|#F0B8C0,Framboise|#C4294E,Lilas|#B8A0C8,Sable|#D4C4A8,Terracotta|#C4694A,Camel|#A0785A" | split: "," %}
+
+<div class="yp-perso-premium" data-motif="YPM-006">
+
+  <div class="yp-perso-premium__header">
+    <svg class="yp-perso-premium__icon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+    </svg>
+    <h3 class="yp-perso-premium__title">créez votre broderie</h3>
+    <span class="yp-perso-premium__badge">Le Câlin</span>
+  </div>
+
+  <div class="yp-perso-premium__content">
+
+    <!-- ① Placement -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">1</span>
+        <label class="yp-step__label">emplacement de la broderie</label>
+      </div>
+      <div class="ypm006-placement-grid" role="group" aria-label="Emplacement broderie">
+        <label class="ypm006-placement-option">
+          <input type="radio" class="sr-only"
+            name="properties[Placement]"
+            id="ypm006-placement-buste"
+            value="Côté buste"
+            checked required>
+          <span class="ypm006-placement-option__label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h4"/></svg>
+            Côté buste
+          </span>
+        </label>
+        <label class="ypm006-placement-option">
+          <input type="radio" class="sr-only"
+            name="properties[Placement]"
+            id="ypm006-placement-poignet"
+            value="Poignet">
+          <span class="ypm006-placement-option__label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 20h12M8 20V8a4 4 0 0 1 8 0v12"/></svg>
+            Poignet
+          </span>
+        </label>
+        <label class="ypm006-placement-option">
+          <input type="radio" class="sr-only"
+            name="properties[Placement]"
+            id="ypm006-placement-poche"
+            value="Poche kangourou">
+          <span class="ypm006-placement-option__label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M9 4v7a3 3 0 0 0 6 0V4"/></svg>
+            Poche
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ② Initiale -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">2</span>
+        <label class="yp-step__label" for="ypm006-initiale">
+          initiale brodée
+          <span class="yp-step__hint">· 1 lettre · minuscule cursive</span>
+        </label>
+      </div>
+      <div class="ypm006-initiale-wrap">
+        <input
+          class="ypm006-initiale-input"
+          type="text"
+          id="ypm006-initiale"
+          name="properties[Initiale]"
+          maxlength="1"
+          placeholder="m"
+          autocomplete="off" autocorrect="off" spellcheck="false"
+          required aria-required="true"
+        >
+        <span class="ypm006-initiale-preview" id="ypm006-initiale-preview" aria-hidden="true"></span>
+      </div>
+      <div class="ypm006-info-bloc" role="note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>L'initiale prend automatiquement la couleur de ton vêtement — elle ne se choisit pas séparément.</span>
+      </div>
+    </div>
+
+    <!-- ③ Couleur du cœur -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">3</span>
+        <label class="yp-step__label">couleur du cœur</label>
+      </div>
+      <div class="yp-color-grid" role="group" aria-label="Couleur du cœur">
+        {% for couleur in ypersoa_palette %}
+          {% assign parts = couleur | split: "|" %}
+          <label class="yp-color-swatch-wrap" title="{{ parts[0] }}">
+            <input type="radio" class="sr-only"
+              name="properties[Couleur cœur]"
+              value="{{ parts[0] | escape }}"
+              {% if forloop.first %}checked{% endif %} required>
+            <span class="yp-color-swatch{% if parts[0] == 'Blanc' or parts[0] == 'Ivoire' %} yp-color-swatch--light{% endif %}" style="background-color: {{ parts[1] }};"></span>
+          </label>
+        {% endfor %}
+      </div>
+      <p class="yp-color-selected-name" id="ypm006-color-name">Blanc</p>
+    </div>
+
+    <!-- ④ Option 2ᵉ broderie +6€ -->
+    <div class="yp-step yp-step--addon">
+      <label class="ypm001-addon-toggle" for="ypm006-broderie2-toggle">
+        <input type="checkbox" id="ypm006-broderie2-toggle" aria-controls="ypm006-broderie2-fields">
+        <span class="ypm001-addon-toggle__icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </span>
+        <span class="ypm001-addon-toggle__text">
+          Ajouter une 2ᵉ broderie
+          <strong>+6,00 €</strong>
+        </span>
+      </label>
+    </div>
+
+    <div id="ypm006-broderie2-fields" class="yp-step yp-step--poignet-fields" hidden aria-hidden="true">
+
+      <!-- A — Placement 2ᵉ broderie -->
+      <div class="yp-step__header">
+        <span class="yp-step__number">A</span>
+        <label class="yp-step__label">emplacement</label>
+      </div>
+      <div class="ypm006-placement-grid" role="group" aria-label="Emplacement 2ᵉ broderie" id="ypm006-placement2-group">
+        <label class="ypm006-placement-option">
+          <input type="radio" class="sr-only"
+            name="properties[Placement 2e broderie]"
+            value="Côté buste"
+            checked disabled>
+          <span class="ypm006-placement-option__label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h4"/></svg>
+            Côté buste
+          </span>
+        </label>
+        <label class="ypm006-placement-option">
+          <input type="radio" class="sr-only"
+            name="properties[Placement 2e broderie]"
+            value="Poignet" disabled>
+          <span class="ypm006-placement-option__label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 20h12M8 20V8a4 4 0 0 1 8 0v12"/></svg>
+            Poignet
+          </span>
+        </label>
+        <label class="ypm006-placement-option">
+          <input type="radio" class="sr-only"
+            name="properties[Placement 2e broderie]"
+            value="Poche kangourou" disabled>
+          <span class="ypm006-placement-option__label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M9 4v7a3 3 0 0 0 6 0V4"/></svg>
+            Poche
+          </span>
+        </label>
+      </div>
+      <p class="yp-perso-tip ypm006-placement-conflict-hint" id="ypm006-conflict-hint" hidden>⚠ Même emplacement déjà choisi pour la 1ʳᵉ broderie — sélectionne un emplacement différent.</p>
+
+      <!-- B — Initiale 2ᵉ broderie -->
+      <div class="yp-step__header" style="margin-top: 18px;">
+        <span class="yp-step__number">B</span>
+        <label class="yp-step__label" for="ypm006-initiale-2">
+          initiale brodée
+          <span class="yp-step__hint">· 1 lettre · minuscule cursive</span>
+        </label>
+      </div>
+      <div class="ypm006-initiale-wrap">
+        <input
+          class="ypm006-initiale-input"
+          type="text"
+          id="ypm006-initiale-2"
+          name="properties[Initiale 2e broderie]"
+          maxlength="1"
+          placeholder="a"
+          autocomplete="off" autocorrect="off" spellcheck="false"
+          disabled>
+        <span class="ypm006-initiale-preview" id="ypm006-initiale-preview-2" aria-hidden="true"></span>
+      </div>
+      <p class="yp-perso-tip" style="margin-top: 6px;">Couleur du vêtement automatique</p>
+
+      <!-- C — Couleur du cœur 2ᵉ broderie -->
+      <div class="yp-step__header" style="margin-top: 18px;">
+        <span class="yp-step__number">C</span>
+        <label class="yp-step__label">couleur du cœur</label>
+      </div>
+      <div class="yp-color-grid" role="group" aria-label="Couleur cœur 2ᵉ broderie">
+        {% for couleur in ypersoa_palette %}
+          {% assign parts = couleur | split: "|" %}
+          <label class="yp-color-swatch-wrap" title="{{ parts[0] }}">
+            <input type="radio" class="sr-only"
+              name="properties[Couleur cœur 2e broderie]"
+              value="{{ parts[0] | escape }}"
+              {% if forloop.first %}checked{% endif %}
+              disabled>
+            <span class="yp-color-swatch{% if parts[0] == 'Blanc' or parts[0] == 'Ivoire' %} yp-color-swatch--light{% endif %}" style="background-color: {{ parts[1] }};"></span>
+          </label>
+        {% endfor %}
+      </div>
+      <p class="yp-color-selected-name" id="ypm006-color2-name">Blanc</p>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+/* ── Design system partagé YPM ── */
+.yp-perso-premium { margin: 24px 0; border: 1px solid #D9D1C7; border-radius: 12px; background: #FAF8F5; overflow: hidden; }
+.yp-perso-premium__header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F5F0E8; border-bottom: 1px solid #D9D1C7; }
+.yp-perso-premium__icon { width: 22px; height: 22px; color: #C4694A; flex-shrink: 0; }
+.yp-perso-premium__title { margin: 0; font-size: 14px; font-weight: 600; color: #1E2D4A; flex: 1; text-transform: lowercase; letter-spacing: 0.01em; }
+.yp-perso-premium__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #C4694A; background: #fff; padding: 3px 8px; border-radius: 20px; border: 1px solid #C4694A; text-transform: uppercase; }
+.yp-perso-premium__content { padding: 20px 18px; display: flex; flex-direction: column; gap: 20px; }
+
+.yp-step__header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.yp-step__number { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #1E2D4A; color: #fff; font-size: 11px; font-weight: 700; border-radius: 50%; flex-shrink: 0; }
+.yp-step__label { font-size: 13px; font-weight: 600; color: #1E2D4A; margin: 0; cursor: pointer; text-transform: lowercase; }
+.yp-step__hint { font-weight: 400; font-size: 12px; color: #9E9086; }
+.yp-perso-tip { font-size: 11px; color: #9E9086; margin: 8px 0 0; line-height: 1.5; }
+
+/* ── Palette couleurs ── */
+.yp-color-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.yp-color-swatch-wrap { cursor: pointer; }
+.yp-color-swatch-wrap .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.yp-color-swatch { display: block; width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(0,0,0,0.08); transition: transform 0.12s, box-shadow 0.12s; }
+.yp-color-swatch--light { box-shadow: inset 0 0 0 1.5px #D9D1C7; }
+.yp-color-swatch-wrap input:checked + .yp-color-swatch { transform: scale(1.18); box-shadow: 0 0 0 2px #fff, 0 0 0 4px #C4694A; }
+.yp-color-swatch-wrap:hover .yp-color-swatch { transform: scale(1.1); }
+.yp-color-selected-name { font-size: 11px; color: #9E9086; margin: 8px 0 0; min-height: 16px; }
+
+/* ── Option 2ᵉ broderie ── */
+.yp-step--addon { padding-top: 6px; border-top: 1px dashed #E0D8D0; }
+.ypm001-addon-toggle { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.ypm001-addon-toggle input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; accent-color: #C4694A; flex-shrink: 0; cursor: pointer; }
+.ypm001-addon-toggle__icon { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #F5F0E8; border-radius: 50%; color: #C4694A; flex-shrink: 0; }
+.ypm001-addon-toggle__text { font-size: 13px; color: #1E2D4A; font-weight: 500; line-height: 1.4; }
+.ypm001-addon-toggle__text strong { display: block; font-size: 12px; color: #C4694A; font-weight: 600; margin-top: 1px; }
+.yp-step--poignet-fields { border-left: 2px solid #F0EBE4; padding-left: 14px; margin-left: 4px; }
+
+/* ── Grille placement 3 colonnes ── */
+.ypm006-placement-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ypm006-placement-option { cursor: pointer; }
+.ypm006-placement-option .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.ypm006-placement-option__label {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 6px 9px;
+  font-size: 11px; font-weight: 600; color: #1E2D4A; text-align: center; line-height: 1.3;
+  background: #fff; border: 1.5px solid #D9D1C7; border-radius: 10px;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.ypm006-placement-option input:checked + .ypm006-placement-option__label {
+  border-color: #C4694A; background: #FFF9F7; color: #C4694A; box-shadow: 0 0 0 1px #C4694A;
+}
+.ypm006-placement-option:hover .ypm006-placement-option__label { border-color: #C4694A; }
+.ypm006-placement-option--disabled .ypm006-placement-option__label {
+  opacity: 0.35; cursor: not-allowed; pointer-events: none;
+}
+
+/* ── Input initiale ── */
+.ypm006-initiale-wrap { position: relative; display: flex; align-items: center; gap: 12px; }
+.ypm006-initiale-input {
+  width: 72px; height: 72px;
+  font-family: 'Playfair Display', Georgia, serif; font-size: 36px; font-style: italic; font-weight: 700;
+  text-align: center; color: #1E2D4A;
+  border: 1.5px solid #D9D1C7; border-radius: 10px; background: #fff;
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  caret-color: #C4694A;
+}
+.ypm006-initiale-input:focus { border-color: #C4694A; box-shadow: 0 0 0 3px rgba(196,105,74,0.12); }
+.ypm006-initiale-input::placeholder { color: #D9D1C7; font-style: italic; }
+.ypm006-initiale-input:disabled { background: #F5F0E8; opacity: 0.6; }
+.ypm006-initiale-preview {
+  font-family: 'Playfair Display', Georgia, serif; font-size: 48px; font-style: italic; font-weight: 700;
+  color: #1E2D4A; opacity: 0.15; line-height: 1; min-width: 40px; text-align: center;
+  pointer-events: none; user-select: none;
+}
+
+/* ── Bloc info couleur automatique ── */
+.ypm006-info-bloc {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-top: 10px; padding: 9px 12px;
+  background: #F5F0E8; border-radius: 8px;
+  font-size: 11.5px; color: #6B5C50; line-height: 1.5;
+}
+.ypm006-info-bloc svg { color: #C4694A; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Hint conflit placement ── */
+.ypm006-placement-conflict-hint { color: #B03030 !important; }
+</style>
+
+<script>
+(function () {
+  if (window.__ypInit006) return;
+  window.__ypInit006 = true;
+
+  function initYPM006() {
+
+    /* ── Forçage minuscule + lettres uniquement ── */
+    ['ypm006-initiale', 'ypm006-initiale-2'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el || el._ypm6Init) return;
+      el._ypm6Init = true;
+      var previewId = id === 'ypm006-initiale' ? 'ypm006-initiale-preview' : 'ypm006-initiale-preview-2';
+      var preview = document.getElementById(previewId);
+      el.addEventListener('input', function () {
+        var pos = this.selectionStart;
+        this.value = this.value.toLowerCase().replace(/[^a-zà-ÿ]/g, '');
+        this.setSelectionRange(pos, pos);
+        if (preview) preview.textContent = this.value;
+      });
+      el.addEventListener('keypress', function (e) {
+        var char = String.fromCharCode(e.which || e.keyCode);
+        if (!/[a-zA-Zà-ÿ]/.test(char)) e.preventDefault();
+      });
+    });
+
+    /* ── Couleur swatch nom ── */
+    function bindColorName(groupName, displayId) {
+      var display = document.getElementById(displayId);
+      if (!display || display._ypmBound) return;
+      display._ypmBound = true;
+      document.querySelectorAll('[name="' + groupName + '"]').forEach(function (r) {
+        r.addEventListener('change', function () { if (this.checked) display.textContent = this.value; });
+      });
+      var checked = document.querySelector('[name="' + groupName + '"]:checked');
+      if (checked) display.textContent = checked.value;
+    }
+    bindColorName('properties[Couleur cœur]',            'ypm006-color-name');
+    bindColorName('properties[Couleur cœur 2e broderie]', 'ypm006-color2-name');
+
+    /* ── Validation placement : interdire même emplacement 2× ── */
+    var p1 = document.querySelectorAll('[name="properties[Placement]"]');
+    var p2 = document.querySelectorAll('[name="properties[Placement 2e broderie]"]');
+    var conflictHint = document.getElementById('ypm006-conflict-hint');
+
+    function syncPlacements() {
+      var val1 = '';
+      p1.forEach(function (r) { if (r.checked) val1 = r.value; });
+      var hasConflict = false;
+      p2.forEach(function (r) {
+        var opt = r.closest('.ypm006-placement-option');
+        var isConflict = r.value === val1;
+        if (opt) opt.classList.toggle('ypm006-placement-option--disabled', isConflict);
+        r.disabled = isConflict || r.closest('#ypm006-broderie2-fields[hidden]') !== null;
+        if (isConflict && r.checked) {
+          hasConflict = true;
+          r.checked = false;
+          /* auto-select first available */
+          var first = Array.from(p2).find(function (x) { return x.value !== val1; });
+          if (first) first.checked = true;
+        }
+      });
+      if (conflictHint) conflictHint.hidden = !hasConflict;
+    }
+
+    p1.forEach(function (r) { r.addEventListener('change', syncPlacements); });
+    syncPlacements();
+
+    /* ── Toggle 2ᵉ broderie ── */
+    var toggle = document.getElementById('ypm006-broderie2-toggle');
+    var panel  = document.getElementById('ypm006-broderie2-fields');
+    if (toggle && panel && !toggle._ypmInit) {
+      toggle._ypmInit = true;
+      function applyPanel(active) {
+        panel.hidden = !active;
+        panel.setAttribute('aria-hidden', String(!active));
+        panel.querySelectorAll('input').forEach(function (el) {
+          var opt = el.closest('.ypm006-placement-option');
+          /* Les options en conflit restent disabled même quand le panneau s'ouvre */
+          var p1val = '';
+          p1.forEach(function (r) { if (r.checked) p1val = r.value; });
+          if (el.type === 'radio' && el.name === 'properties[Placement 2e broderie]') {
+            el.disabled = !active || el.value === p1val;
+          } else {
+            el.disabled = !active;
+          }
+        });
+        if (active) {
+          syncPlacements();
+          bindColorName('properties[Couleur cœur 2e broderie]', 'ypm006-color2-name');
+          var first = panel.querySelector('input[type="text"]');
+          if (first) first.focus();
+        }
+      }
+      toggle.addEventListener('change', function () { applyPanel(this.checked); });
+      applyPanel(toggle.checked);
+    }
+
+    /* ── Module cart add-on ── */
+    if (window.YpersoaPoignet && toggle && panel && !toggle._ypmCartInit) {
+      toggle._ypmCartInit = true;
+      window.YpersoaPoignet.init({ checkboxId: 'ypm006-broderie2-toggle', panelId: 'ypm006-broderie2-fields', motifId: 'YPM-006' });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initYPM006);
+  } else {
+    initYPM006();
+  }
+}());
+</script>

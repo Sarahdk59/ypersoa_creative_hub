@@ -1,0 +1,111 @@
+{% comment %}
+  perso-yp019.liquid — YP019 T-shirts
+  Famille  : Cœurs · 1 initiale + couleur fil
+  Identique à YPM-001 — sans l'option broderie poignet
+{% endcomment %}
+
+{% assign ypersoa_palette = "Blanc|#FFFFFF,Ivoire|#F5F0E0,Gris clair|#C8C8C8,Gris|#A0A0A0,Anthracite|#4A4A4A,Noir|#1A1A1A,Marine|#1E2D4A,Bleu roi|#1A3A8F,Bleu glacier|#8AAFD4,Canard|#1A6670,Vert jade|#1A7A6E,Vert jardin|#7A9E7E,Bordeaux|#6B1E2E,Rouge|#C0392B,Rose pâle|#F0B8C0,Framboise|#C4294E,Lilas|#B8A0C8,Sable|#D4C4A8,Terracotta|#C4694A,Camel|#A0785A" | split: "," %}
+
+<div class="yp-perso-premium" data-motif="YP019">
+
+  <div class="yp-perso-premium__header">
+    <svg class="yp-perso-premium__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+    </svg>
+    <h3 class="yp-perso-premium__title">créez votre broderie</h3>
+    <span class="yp-perso-premium__badge">La Brigitte</span>
+  </div>
+
+  <div class="yp-perso-premium__content">
+
+    <!-- ① Initiale buste -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">1</span>
+        <label class="yp-step__label" for="yp019-initiale">
+          ton initiale
+          <span class="yp-step__hint">· 1 lettre · A à Z</span>
+        </label>
+      </div>
+      <div class="ypm001-char-wrap">
+        <input
+          class="ypm001-char-input perso-input--char"
+          type="text"
+          id="yp019-initiale"
+          name="properties[Initiale buste]"
+          maxlength="1"
+          placeholder="M"
+          autocomplete="off" autocorrect="off" spellcheck="false"
+          required aria-required="true"
+        >
+        <span class="ypm001-char-preview" aria-hidden="true" id="yp019-initiale-preview"></span>
+      </div>
+      <p class="yp-perso-tip">Majuscule automatique · le cœur est brodé au-dessus de ton initiale</p>
+    </div>
+
+    <!-- ② Couleur de fils buste -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">2</span>
+        <label class="yp-step__label">couleur de fils</label>
+      </div>
+      <div class="yp-color-grid" role="group" aria-label="Couleur de fils">
+        {% for couleur in ypersoa_palette %}
+          {% assign parts = couleur | split: "|" %}
+          <label class="yp-color-swatch-wrap" title="{{ parts[0] }}">
+            <input type="radio" class="sr-only"
+              name="properties[Couleur fil buste]"
+              value="{{ parts[0] | escape }}"
+              {% if forloop.first %}checked{% endif %}
+              required>
+            <span class="yp-color-swatch{% if parts[0] == 'Blanc' or parts[0] == 'Ivoire' %} yp-color-swatch--light{% endif %}" style="background-color: {{ parts[1] }};"></span>
+          </label>
+        {% endfor %}
+      </div>
+      <p class="yp-color-selected-name" id="yp019-color-name">Blanc</p>
+    </div>
+
+  </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+.ypm001-char-preview { display: none; }
+</style>
+
+<script>
+(function () {
+  function initYP019() {
+    var bustInput   = document.getElementById('yp019-initiale');
+    var bustPreview = document.getElementById('yp019-initiale-preview');
+    if (bustInput && !bustInput._ypInit) {
+      bustInput._ypInit = true;
+      bustInput.addEventListener('input', function () {
+        this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '');
+        if (bustPreview) bustPreview.textContent = this.value;
+      });
+      bustInput.addEventListener('keypress', function (e) {
+        if (!/[A-Za-z]/.test(String.fromCharCode(e.which || e.keyCode))) e.preventDefault();
+      });
+    }
+
+    var display = document.getElementById('yp019-color-name');
+    if (display && !display._ypBound) {
+      display._ypBound = true;
+      document.querySelectorAll('[name="properties[Couleur fil buste]"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          if (this.checked) display.textContent = this.value;
+        });
+      });
+      var checked = document.querySelector('[name="properties[Couleur fil buste]"]:checked');
+      if (checked) display.textContent = checked.value;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initYP019);
+  } else {
+    initYP019();
+  }
+}());
+</script>

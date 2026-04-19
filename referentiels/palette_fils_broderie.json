@@ -1,0 +1,214 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "palette_fils_broderie",
+    "last_updated": "2026-04-19",
+    "description": "20 couleurs officielles des fils de broderie Ypersoa, utilisés pour personnaliser les motifs. Source : snippet Liquid ypersoa_palette.",
+    "nb_couleurs": 20
+  },
+
+  "couleurs": [
+    {
+      "id": "fil_blanc",
+      "rang": 1,
+      "nom": "Blanc",
+      "hex": "#FFFFFF",
+      "famille": "neutres_clairs",
+      "usage_recommande": "sur_supports_fonces",
+      "supports_incompatibles": ["blanc", "offwhite", "beige"],
+      "ambiance_editoriale": ["pur", "minimal", "lumineux"]
+    },
+    {
+      "id": "fil_ivoire",
+      "rang": 2,
+      "nom": "Ivoire",
+      "hex": "#F5F0E0",
+      "famille": "neutres_clairs",
+      "usage_recommande": "sur_supports_fonces_chauds",
+      "supports_incompatibles": ["beige", "offwhite", "mastic", "pierre_naturelle"],
+      "ambiance_editoriale": ["doux", "naturel", "organique"]
+    },
+    {
+      "id": "fil_gris_clair",
+      "rang": 3,
+      "nom": "Gris clair",
+      "hex": "#C8C8C8",
+      "famille": "neutres_gris",
+      "usage_recommande": "discret_moderne",
+      "supports_incompatibles": ["gris", "gris_fonce"],
+      "ambiance_editoriale": ["contemporain", "sobre", "urbain"]
+    },
+    {
+      "id": "fil_gris",
+      "rang": 4,
+      "nom": "Gris",
+      "hex": "#A0A0A0",
+      "famille": "neutres_gris",
+      "usage_recommande": "polyvalent",
+      "supports_incompatibles": ["gris", "gris_fonce", "mastic"],
+      "ambiance_editoriale": ["neutre", "intemporel"]
+    },
+    {
+      "id": "fil_anthracite",
+      "rang": 5,
+      "nom": "Anthracite",
+      "hex": "#4A4A4A",
+      "famille": "neutres_fonces",
+      "usage_recommande": "chic_sobre",
+      "supports_incompatibles": ["gris_fonce", "noir", "anthracite"],
+      "ambiance_editoriale": ["chic", "raffine", "minimaliste"]
+    },
+    {
+      "id": "fil_noir",
+      "rang": 6,
+      "nom": "Noir",
+      "hex": "#1A1A1A",
+      "famille": "neutres_fonces",
+      "usage_recommande": "polyvalent_puissant",
+      "supports_incompatibles": ["noir"],
+      "ambiance_editoriale": ["puissant", "graphique", "affirme"]
+    },
+    {
+      "id": "fil_marine",
+      "rang": 7,
+      "nom": "Marine",
+      "hex": "#1E2D4A",
+      "famille": "bleus_fonces",
+      "usage_recommande": "classique_elegant",
+      "supports_incompatibles": ["bleu", "marine"],
+      "ambiance_editoriale": ["classique", "elegant", "timeless"]
+    },
+    {
+      "id": "fil_bleu_roi",
+      "rang": 8,
+      "nom": "Bleu roi",
+      "hex": "#1A3A8F",
+      "famille": "bleus_vifs",
+      "usage_recommande": "affirme",
+      "supports_incompatibles": ["bleu", "marine"],
+      "ambiance_editoriale": ["affirme", "profond", "vibrant"]
+    },
+    {
+      "id": "fil_bleu_glacier",
+      "rang": 9,
+      "nom": "Bleu glacier",
+      "hex": "#8AAFD4",
+      "famille": "bleus_clairs",
+      "usage_recommande": "doux_frais",
+      "supports_incompatibles": ["bleu_clair", "bleu_pastel"],
+      "ambiance_editoriale": ["frais", "aerien", "doux"]
+    },
+    {
+      "id": "fil_canard",
+      "rang": 10,
+      "nom": "Canard",
+      "hex": "#1A6670",
+      "famille": "bleus_verts",
+      "usage_recommande": "signature_editoriale",
+      "supports_incompatibles": ["canard", "bleu_petrole"],
+      "ambiance_editoriale": ["profond", "poetique", "singulier"]
+    },
+    {
+      "id": "fil_vert_jade",
+      "rang": 11,
+      "nom": "Vert jade",
+      "hex": "#1A7A6E",
+      "famille": "verts_vifs",
+      "usage_recommande": "noble_saison",
+      "supports_incompatibles": ["vert_olive"],
+      "ambiance_editoriale": ["noble", "vegetal", "riche"]
+    },
+    {
+      "id": "fil_vert_jardin",
+      "rang": 12,
+      "nom": "Vert jardin",
+      "hex": "#7A9E7E",
+      "famille": "verts_pastels",
+      "usage_recommande": "naturel_doux",
+      "supports_incompatibles": ["vert_sauge", "vert_olive", "vert"],
+      "ambiance_editoriale": ["naturel", "doux", "organique"]
+    },
+    {
+      "id": "fil_bordeaux",
+      "rang": 13,
+      "nom": "Bordeaux",
+      "hex": "#6B1E2E",
+      "famille": "rouges_fonces",
+      "usage_recommande": "intemporel_cosy",
+      "supports_incompatibles": [],
+      "ambiance_editoriale": ["profond", "automnal", "chaleureux"]
+    },
+    {
+      "id": "fil_rouge",
+      "rang": 14,
+      "nom": "Rouge",
+      "hex": "#C0392B",
+      "famille": "rouges_vifs",
+      "usage_recommande": "affirme_saint_valentin_noel",
+      "supports_incompatibles": [],
+      "ambiance_editoriale": ["passion", "vibrant", "fete"]
+    },
+    {
+      "id": "fil_rose_pale",
+      "rang": 15,
+      "nom": "Rose pâle",
+      "hex": "#F0B8C0",
+      "famille": "roses_doux",
+      "usage_recommande": "tendre_feminin",
+      "supports_incompatibles": ["rose_pale", "rose_orchidee"],
+      "ambiance_editoriale": ["tendre", "doux", "poudre"]
+    },
+    {
+      "id": "fil_framboise",
+      "rang": 16,
+      "nom": "Framboise",
+      "hex": "#C4294E",
+      "famille": "roses_vifs",
+      "usage_recommande": "fete_meres_affirme",
+      "supports_incompatibles": [],
+      "ambiance_editoriale": ["lumineux", "gourmand", "affirme"]
+    },
+    {
+      "id": "fil_lilas",
+      "rang": 17,
+      "nom": "Lilas",
+      "hex": "#B8A0C8",
+      "famille": "violets_doux",
+      "usage_recommande": "poetique_printanier",
+      "supports_incompatibles": ["lilas"],
+      "ambiance_editoriale": ["poetique", "delicat", "printanier"]
+    },
+    {
+      "id": "fil_sable",
+      "rang": 18,
+      "nom": "Sable",
+      "hex": "#D4C4A8",
+      "famille": "neutres_chauds",
+      "usage_recommande": "naturel_minimal",
+      "supports_incompatibles": ["beige", "pierre_naturelle", "mastic"],
+      "ambiance_editoriale": ["naturel", "chaud", "minimal"]
+    },
+    {
+      "id": "fil_terracotta",
+      "rang": 19,
+      "nom": "Terracotta",
+      "hex": "#C4694A",
+      "famille": "oranges_terreux",
+      "usage_recommande": "automnal_signature_ypersoa",
+      "supports_incompatibles": [],
+      "ambiance_editoriale": ["chaleureux", "mediterraneen", "signature_marque"]
+    },
+    {
+      "id": "fil_camel",
+      "rang": 20,
+      "nom": "Camel",
+      "hex": "#A0785A",
+      "famille": "bruns_chauds",
+      "usage_recommande": "elegant_hiver",
+      "supports_incompatibles": ["vert_terre"],
+      "ambiance_editoriale": ["luxe_discret", "chaud", "elegant"]
+    }
+  ],
+
+  "_note_incompatibilites": "Les supports_incompatibles listent les couleurs de support vetement sur lesquelles le fil serait peu lisible ou visuellement pauvre. Cette donnee doit etre confrontee au referentiel palette_supports_vetements.json pour valider les combinaisons a chaque generation de shooting."
+}

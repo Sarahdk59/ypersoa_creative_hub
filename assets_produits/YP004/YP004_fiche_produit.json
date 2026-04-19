@@ -1,0 +1,134 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "referentiel": "produit_support",
+    "last_updated": "2026-04-19",
+    "statut": "actif",
+    "base_sur_template": "YP001 v1.2",
+    "changelog": [
+      "v1.0 - Creation fiche YP004 basee sur YP001 + specificites enfant (pas de cordons EN 14682)",
+      "v1.1 - Specs officielles Ypersoa ajoutees : molleton brosse (et non polaire), finitions detaillees (capuche doublee, poche kangourou, poignets et ourlet bords cote, double coutures), tailles officielles 3/4 a 12/13 ans"
+    ]
+  },
+
+  "identite": {
+    "yp_ref": "YP004",
+    "nom_commercial_ypersoa": "Hoodie Enfant",
+    "type_produit": "hoodie",
+    "public_cible": "enfant",
+    "statut_catalogue": "standard",
+    "tagline": "La version enfant du hoodie iconique Ypersoa — sans cordons pour la sécurité"
+  },
+
+  "fournisseur": {
+    "marque_reelle": "Awdis",
+    "gamme": "Just Hoods Kids",
+    "reference_fournisseur": "JH01J",
+    "plateforme_commande": "Imbretex",
+    "url_fiche_fournisseur": "https://www.imbretex.fr/produits/74689",
+    "plateformes_secondaires": ["L-Shop-Team"],
+    "note_sourcing": "Certaines couleurs (Bleu clair, Lilas) peuvent etre indisponibles chez Imbretex et approvisionnees via L-Shop-Team : https://shop.l-shop-team.fr/fr/Assortiment/Sweatshirt/Enfant-sweatshirt-avec-capuchon/Kids-Hoodie.html"
+  },
+
+  "specs_techniques": {
+    "grammage_g_m2": 280,
+    "composition": "80% coton / 20% polyester",
+    "interieur": "molleton brossé",
+    "coupe": "Fit enfant (adapté morphologie 3-13 ans)",
+    "finitions": {
+      "capuche": "doublée, sans cordon",
+      "poche": "kangourou",
+      "poignets": "bords côte",
+      "ourlet": "bords côte",
+      "coutures": "double coutures"
+    },
+    "certifications": [
+      "OEKO-TEX Standard 100",
+      "Sedex",
+      "PETA Approved Vegan",
+      "WRAP",
+      "Conforme EN 14682 (securite cordons vetements enfants)"
+    ],
+    "entretien": {
+      "lavage": "à froid",
+      "sechage": "basse température",
+      "repassage": "à froid",
+      "javel": "non",
+      "nettoyage_sec": "non"
+    },
+    "difference_vs_version_adulte": "Pas de cordons de capuche (conformite EN 14682) — difference structurelle majeure vs JH001 adulte"
+  },
+
+  "tailles": {
+    "unite": "ans",
+    "systeme": "tailles_europeennes_enfant",
+    "grille_simple": ["3/4 ans", "5/6 ans", "7/8 ans", "9/11 ans", "12/13 ans"],
+    "grille_detaillee": "[A_COMPLETER] Mesures cm (tour poitrine, longueur corps, longueur manche) a ajouter lors de la creation de la fiche technique Ypersoa YP004",
+    "note": "Tailles officielles Ypersoa de 3/4 ans a 12/13 ans (5 tailles totales)"
+  },
+
+  "variantes_couleurs": [
+    {"id_palette": "beige",            "nom_fournisseur": "Vanilla Milkshake", "packshot": "YP004_packshot_beige.png"},
+    {"id_palette": "blanc",            "nom_fournisseur": "Artic White",        "packshot": "YP004_packshot_blanc.png"},
+    {"id_palette": "vert_sauge",       "nom_fournisseur": "Dusty Green",        "packshot": "YP004_packshot_vert_sauge.png"},
+    {"id_palette": "noir",             "nom_fournisseur": "Deep Black",         "packshot": "YP004_packshot_noir.png"},
+    {"id_palette": "rose_pale",        "nom_fournisseur": "Baby pink",          "packshot": "YP004_packshot_rose_pale.png"},
+    {"id_palette": "pierre_naturelle", "nom_fournisseur": "Natural Stone",      "packshot": "YP004_packshot_pierre_naturelle.png"},
+    {"id_palette": "lilas",            "nom_fournisseur": "Lilac",              "packshot": "YP004_packshot_lilas.png"},
+    {"id_palette": "marine",           "nom_fournisseur": "New French Navy",    "packshot": "YP004_packshot_marine.png"},
+    {"id_palette": "bleu_clair",       "nom_fournisseur": "Ice Blue",           "packshot": "YP004_packshot_bleu_clair.png"}
+  ],
+
+  "note_couleurs_ecartees_v1": {
+    "olive": {
+      "hex_packshot_echantillonne": "#4B4133",
+      "description": "Brun-chocolat sombre (pas un vrai vert)",
+      "decision": "Retire du catalogue v1 Ypersoa — couleur disponible chez Awdis mais non commercialisee par Ypersoa pour l'instant"
+    }
+  },
+
+  "placements_broderie_autorises": [
+    {"id": "poitrine_gauche", "label": "Poitrine gauche", "usage": "standard", "compatible_avec_tous_motifs": true},
+    {"id": "dos_centre_haut", "label": "Dos centre haut", "usage": "statement", "compatible_avec_tous_motifs": false},
+    {"id": "poignet_gauche",  "label": "Poignet gauche", "usage": "addon_6eur", "compatible_avec_tous_motifs": true}
+  ],
+
+  "assets": {
+    "dossier_racine": "assets_produits/YP004/",
+    "fiche_technique_officielle": null,
+    "fiche_technique_status": "A_CREER - modele : YP001_fiche_technique.jpg",
+    "packshots_disponibles": 9,
+    "photo_reference_par_defaut": "YP004_packshot_pierre_naturelle.png",
+    "note_ancrage_visuel": "Les packshots fond blanc uniforme sont a injecter comme 'character reference' dans les prompts Studio IA. ATTENTION : difference critique vs YP001 — le JH01J enfant N'A PAS DE CORDONS (norme EN 14682). Ne jamais generer un hoodie enfant avec cordons."
+  },
+
+  "interdits_visuels_specifiques": {
+    "hoodie_jh01j_enfant": [
+      "CORDONS DE CAPUCHE (interdits par EN 14682 sur vetements enfants) — le JH01J est livre sans cordon, l'IA ne doit JAMAIS en dessiner",
+      "embouts plastique (consequence directe de l'interdit cordons)",
+      "oeillets metalliques visibles en couleur contrastee (passages cordons neutralises sur JH01J)",
+      "fermeture zip (le JH01J est un hoodie ferme par le devant uniquement, sans zip)",
+      "couture de capuche contrastee",
+      "etiquette de marque exterieure (etiquette Awdis interieure)",
+      "poche kangourou decentree ou asymetrique"
+    ],
+    "note": "L'interdit cordons est LE point de vigilance numero 1 sur le YP004. Une generation IA qui ajoute des cordons est (1) hors charte (2) non conforme EN 14682 (3) immediatement detectable comme non-Ypersoa."
+  },
+
+  "ambiance_editoriale_produit": {
+    "saisons_signature": ["automne", "hiver", "mi_saison"],
+    "ambiances_shooting_recommandees": ["aube_intime", "loft_organique", "echappee_sauvage"],
+    "profils_cibles": [
+      "enfants 3-12 ans",
+      "duos parent-enfant coordonnes (combinaison YP001 + YP004 meme motif)",
+      "fratries (combinaison de plusieurs YP004 en plusieurs couleurs)"
+    ],
+    "occasions_cles": [
+      "naissance (via petites tailles)",
+      "anniversaire enfant",
+      "noel famille",
+      "photo famille officielle"
+    ],
+    "note": "Le YP004 brille en combinaison avec YP001 pour les shootings parent-enfant et famille. Meme motif brode, coordination de couleurs, effet 'clan Ypersoa'. Fort potentiel Fete des Meres, Fete des Peres, Noel."
+  }
+}

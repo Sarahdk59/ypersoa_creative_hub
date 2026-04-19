@@ -1,0 +1,144 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "produit_support",
+    "last_updated": "2026-04-19",
+    "statut": "actif",
+    "base_sur_template": "YP001 v1.3",
+    "note_correction_referentielle": "Excel original listait ce produit comme YP020 - reference corrigee en YP021. L'Excel doit etre mis a jour."
+  },
+
+  "identite": {
+    "yp_ref": "YP021",
+    "nom_commercial_ypersoa": "Zoodie Adulte",
+    "type_produit": "hoodie_zip",
+    "public_cible": "adulte_unisexe",
+    "statut_catalogue": "standard",
+    "tagline": "Le hoodie zippe Ypersoa — pratique, polyvalent, signe"
+  },
+
+  "fournisseur": {
+    "marque_reelle": "Awdis",
+    "gamme": "Just Hoods",
+    "reference_fournisseur": "JH050",
+    "plateforme_commande": "Imbretex",
+    "url_fiche_fournisseur": "https://www.imbretex.fr/produits/75176",
+    "plateformes_secondaires": ["L-Shop-Team"],
+    "note_sourcing": "Couleurs Bleu ciel et Rose pale approvisionnees via L-Shop-Team : https://shop.l-shop-team.fr/fr/Assortiment/Sweatshirt/Sweatshirt-capuche-grand-zip/Zoodie.html"
+  },
+
+  "specs_techniques": {
+    "grammage_g_m2": 280,
+    "composition": "[A_VALIDER] 80% coton Ringspun / 20% polyester (standard gamme Awdis Just Hoods)",
+    "interieur": "[A_VALIDER] molleton brossé (standard gamme)",
+    "coupe": "[A_VALIDER] Fit Relax Ample (standard gamme)",
+    "nom_commercial_fournisseur": "Awdis Zoodie JH050",
+    "finitions": {
+      "capuche": "[A_VALIDER] doublée, avec cordons ton sur ton",
+      "fermeture": "zip frontal pleine longueur, ton sur ton, plastique cache sous bande de proprete",
+      "poches": "[A_VALIDER] deux poches kangourou laterales (typique JH050)",
+      "poignets": "[A_VALIDER] bords côte",
+      "ourlet": "[A_VALIDER] bords côte",
+      "coutures": "[A_VALIDER] double coutures",
+      "etiquette": "[A_VALIDER] détachable"
+    },
+    "certifications": [
+      "OEKO-TEX Standard 100",
+      "Sedex",
+      "PETA Approved Vegan",
+      "WRAP"
+    ],
+    "entretien": {
+      "lavage": "à froid",
+      "sechage": "basse température",
+      "repassage": "à froid",
+      "javel": "non",
+      "nettoyage_sec": "non"
+    },
+    "differences_structurelles_vs_hoodie_jh001": [
+      "Fermeture ZIP frontale (le JH001 est ferme par le devant uniquement)",
+      "DEUX POCHES KANGOUROU LATERALES (le JH001 a une seule poche kangourou centrale)",
+      "Bande de proprete interieure pour cacher le zip"
+    ],
+    "_note_a_valider": "Les champs marques [A_VALIDER] sont des deductions standard Awdis Just Hoods Zoodie. Confirmer avec descriptif officiel Ypersoa quand disponible."
+  },
+
+  "tailles": {
+    "unite": "cm",
+    "systeme": "tailles_adultes_unisexe",
+    "grille_simple": "[A_VALIDER] XS a 5XL (standard gamme Awdis Just Hoods)",
+    "grille_detaillee": "[A_COMPLETER] Mesures cm a ajouter lors de la creation de la fiche technique Ypersoa YP021"
+  },
+
+  "variantes_couleurs": [
+    {"id_palette": "blanc",            "nom_fournisseur": "Artic White",        "packshot": "YP021_packshot_blanc.png"},
+    {"id_palette": "bleu_ciel",        "nom_fournisseur": "[A_CONFIRMER]",      "packshot": "YP021_packshot_bleu_ciel.webp", "note": "Approvisionne L-Shop-Team. Ajoute palette en v1.3 sous nom 'Bleu ciel' (#8BA0B0)"},
+    {"id_palette": "vert_sauge",       "nom_fournisseur": "Dusty Green",        "packshot": "YP021_packshot_vert_sauge.png"},
+    {"id_palette": "noir",             "nom_fournisseur": "Deep Black",         "packshot": "YP021_packshot_noir.webp"},
+    {"id_palette": "rose_pale",        "nom_fournisseur": "Baby pink",          "packshot": "YP021_packshot_rose_pale.png", "note": "Approvisionne L-Shop-Team"},
+    {"id_palette": "pierre_naturelle", "nom_fournisseur": "Natural Stone",      "packshot": "YP021_packshot_pierre_naturelle.webp"},
+    {"id_palette": "marine",           "nom_fournisseur": "New French Navy",    "packshot": "YP021_packshot_marine.jpg"}
+  ],
+
+  "note_couleurs_ecartees_v1": {
+    "vert_olive_brun_chocolat": {
+      "decision": "Exclu du catalogue v1 Ypersoa (decision globale tous produits)",
+      "rappel": "Ne pas confondre avec Vert terre (Earthy Green Awdis) qui est un vert olive militaire et qui est dans le catalogue Ypersoa officiel"
+    }
+  },
+
+  "placements_broderie_autorises": [
+    {"id": "poitrine_gauche_decalee", "label": "Poitrine gauche decalee", "usage": "standard", "compatible_avec_tous_motifs": true,
+     "note_specifique_zip": "Sur YP021, la broderie poitrine gauche doit etre DECALEE de 8-10cm vers la gauche par rapport au zip central, pour ne pas etre tronquee ni placee trop pres du zip"},
+    {"id": "poignet_gauche", "label": "Poignet gauche", "usage": "addon_6eur", "compatible_avec_tous_motifs": true}
+  ],
+
+  "placements_broderie_NON_autorises": [
+    {"id": "dos_centre_haut", "raison": "Pas de broderie dos sur zoodie - decision Ypersoa"},
+    {"id": "poitrine_centre", "raison": "Impossible techniquement (zip au centre)"}
+  ],
+
+  "assets": {
+    "dossier_racine": "assets_produits/YP021/",
+    "fiche_technique_officielle": null,
+    "fiche_technique_status": "A_CREER - modele : YP001_fiche_technique.jpg",
+    "packshots_disponibles": 7,
+    "photo_reference_par_defaut": "YP021_packshot_pierre_naturelle.webp",
+    "note_ancrage_visuel": "Les packshots fond blanc uniforme sont a injecter comme 'character reference' dans les prompts Studio IA. ATTENTION : YP021 est un hoodie ZIPPE (zoodie), avec zip frontal pleine longueur ton sur ton. Ne jamais generer YP021 sans zip ou avec zip d'une autre couleur."
+  },
+
+  "interdits_visuels_specifiques": {
+    "zoodie_jh050": [
+      "ABSENCE DE ZIP (le JH050 est imperativement zippe pleine longueur, sans zip c'est un JH001 standard)",
+      "zip de couleur differente du vetement (le zip doit etre TON SUR TON, jamais contraste)",
+      "zip metallique apparent (le zip JH050 est plastique cache sous bande de proprete)",
+      "fermeture demi-zip (le JH050 est zip pleine longueur, pas demi-zip)",
+      "embouts plastique colores sur cordons (cordons sont en coton brut ton sur ton)",
+      "broderie centree sur le torse (impossible avec zip - broderie doit etre DECALEE poitrine gauche)",
+      "broderie sur le dos (decision Ypersoa : pas de broderie dos sur zoodie)",
+      "couture de capuche contrastee",
+      "etiquette de marque exterieure (etiquette Awdis interieure detachable)",
+      "poche kangourou unique centrale (le JH050 a deux poches kangourou laterales separees par le zip)"
+    ],
+    "note": "Le zip est l'element identitaire du JH050. Toute generation IA qui omet, deplace, ou colore differemment le zip est invalide. La presence de bande de proprete cachant le mecanisme du zip est aussi typique de la gamme Awdis."
+  },
+
+  "ambiance_editoriale_produit": {
+    "saisons_signature": ["automne", "hiver", "mi_saison", "printemps_frais"],
+    "ambiances_shooting_recommandees": ["studio_brut", "loft_organique", "echappee_sauvage"],
+    "profils_cibles": [
+      "femme 25-55 active qui prefere le pratique d'un zip",
+      "homme 25-55 sportwear casual",
+      "usage transitionnel (mi-saison, voyage, sport apres-effort)",
+      "duos couples coordonnes (souvent JH001 + JH021 = un en hoodie ferme, un en zoodie)"
+    ],
+    "occasions_cles": [
+      "cadeau_pratique",
+      "fete_peres",
+      "anniversaire",
+      "noel",
+      "couples_coordonnes"
+    ],
+    "note": "Le YP021 est plus 'fonctionnel' que le YP001 (poches faciles d'acces, ouverture rapide). Souvent choisi pour les profils actifs ou comme alternative pratique au hoodie classique. La broderie poitrine gauche decalee donne un cote 'badge' tres reconnaissable, presque uniforme premium."
+  }
+}

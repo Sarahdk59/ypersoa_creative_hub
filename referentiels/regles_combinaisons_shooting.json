@@ -1,0 +1,135 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "regles_combinaisons_shooting",
+    "last_updated": "2026-04-19",
+    "description": "Règles universelles de contraste support/fil pour la génération d'images shooting IA. Ces règles ne s'appliquent PAS côté configurateur Shopify (le client conserve l'accès libre aux 20 couleurs de fils).",
+    "portee": "hub_shooting_ia_uniquement",
+    "nb_regles": 18
+  },
+
+  "severites": {
+    "critique": "Motif invisible ou quasi-invisible sur image IA. À éliminer des prompts de génération.",
+    "moyenne": "Motif peu lisible pour une image éditoriale. À éviter sauf direction artistique contraire.",
+    "faible": "Acceptable mais à éviter si meilleure combinaison disponible."
+  },
+
+  "logique_contraste": "La broderie doit être lisible sur l'image finale. Éviter les ton sur ton (fil et support de même famille chromatique) et les combinaisons proches en luminosité.",
+
+  "combinaisons_deconseillees": [
+    {
+      "support_ids": ["blanc", "offwhite"],
+      "fil_id": "fil_blanc",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["beige", "pierre_naturelle", "mastic"],
+      "fil_id": "fil_ivoire",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["beige", "pierre_naturelle", "mastic"],
+      "fil_id": "fil_sable",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["beige", "pierre_naturelle"],
+      "fil_id": "fil_blanc",
+      "severite": "moyenne",
+      "raison": "contraste_faible"
+    },
+    {
+      "support_ids": ["gris"],
+      "fil_id": "fil_gris",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["gris", "gris_fonce"],
+      "fil_id": "fil_gris_clair",
+      "severite": "moyenne",
+      "raison": "contraste_faible"
+    },
+    {
+      "support_ids": ["gris_fonce", "noir"],
+      "fil_id": "fil_anthracite",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["noir"],
+      "fil_id": "fil_noir",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["marine"],
+      "fil_id": "fil_marine",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["marine"],
+      "fil_id": "fil_bleu_roi",
+      "severite": "moyenne",
+      "raison": "contraste_faible"
+    },
+    {
+      "support_ids": ["bleu_clair", "bleu_pastel", "bleu_ciel"],
+      "fil_id": "fil_bleu_glacier",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["bleu_petrole", "canard"],
+      "fil_id": "fil_canard",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["bleu_petrole"],
+      "fil_id": "fil_marine",
+      "severite": "moyenne",
+      "raison": "contraste_faible"
+    },
+    {
+      "support_ids": ["vert_sauge", "vert_olive", "vert_terre"],
+      "fil_id": "fil_vert_jardin",
+      "severite": "moyenne",
+      "raison": "meme_famille_chromatique"
+    },
+    {
+      "support_ids": ["vert_sauge", "vert_olive", "kaki"],
+      "fil_id": "fil_vert_jade",
+      "severite": "moyenne",
+      "raison": "meme_famille_chromatique"
+    },
+    {
+      "support_ids": ["rose_pale", "rose_orchidee"],
+      "fil_id": "fil_rose_pale",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    },
+    {
+      "support_ids": ["rose_pale", "rose_orchidee"],
+      "fil_id": "fil_framboise",
+      "severite": "moyenne",
+      "raison": "meme_famille_chromatique"
+    },
+    {
+      "support_ids": ["lilas"],
+      "fil_id": "fil_lilas",
+      "severite": "critique",
+      "raison": "ton_sur_ton_invisible"
+    }
+  ],
+
+  "usage_par_le_hub": {
+    "shooting_ia": "Filtrer les prompts de génération pour exclure les combinaisons critiques.",
+    "suggestion_combinaisons_iconiques": "Proposer automatiquement des combinaisons à contraste fort pour les visuels hero.",
+    "validation_pre_production": "Alerter si une fiche produit hero utilise une combinaison critique."
+  }
+}

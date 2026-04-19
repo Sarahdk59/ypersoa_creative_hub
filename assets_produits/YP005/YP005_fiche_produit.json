@@ -1,0 +1,143 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "produit_support",
+    "last_updated": "2026-04-19",
+    "statut": "actif",
+    "base_sur_template": "YP001 v1.3"
+  },
+
+  "identite": {
+    "yp_ref": "YP005",
+    "nom_commercial_ypersoa": "Sweat Adulte",
+    "type_produit": "sweat_col_rond",
+    "public_cible": "adulte_unisexe",
+    "statut_catalogue": "standard",
+    "tagline": "Le sweat col rond Ypersoa — sobre, chaud, intemporel"
+  },
+
+  "fournisseur": {
+    "marque_reelle": "Awdis",
+    "gamme": "Awdis Sweat",
+    "reference_fournisseur": "JH030",
+    "plateforme_commande": "Imbretex",
+    "url_fiche_fournisseur": "https://www.imbretex.fr/produits/75049"
+  },
+
+  "specs_techniques": {
+    "grammage_g_m2": 280,
+    "composition": "80% coton Ringspun / 20% polyester",
+    "interieur": "molleton brossé",
+    "coupe": "Fit standard",
+    "nom_commercial_fournisseur": "Awdis Sweat JH030",
+    "finitions": {
+      "col": "col rond, bords côte",
+      "manches": "manches droites",
+      "bande_proprete": "oui (renfort col interieur)",
+      "poignets": "bords côte",
+      "ourlet": "bords côte",
+      "coutures": "double coutures",
+      "etiquette": "détachable"
+    },
+    "certifications": [
+      "OEKO-TEX Standard 100",
+      "Sedex",
+      "PETA Approved Vegan",
+      "WRAP"
+    ],
+    "entretien": {
+      "lavage": "à froid",
+      "sechage": "basse température",
+      "repassage": "à froid",
+      "javel": "non",
+      "nettoyage_sec": "non"
+    },
+    "differences_structurelles_vs_hoodie_jh001": [
+      "PAS DE CAPUCHE (col rond bords cote a la place)",
+      "PAS DE CORDONS",
+      "PAS DE POCHE KANGOUROU",
+      "Bande de proprete interieure (absente sur hoodie)",
+      "Manches droites standard"
+    ]
+  },
+
+  "tailles": {
+    "unite": "cm",
+    "systeme": "tailles_adultes_unisexe",
+    "grille_simple": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+    "grille_detaillee": "[A_COMPLETER] Mesures cm (tour poitrine, longueur corps, longueur manche) a ajouter lors de la creation de la fiche technique Ypersoa YP005",
+    "note": "9 tailles de XS a 5XL — meme plage que le hoodie YP001"
+  },
+
+  "variantes_couleurs": [
+    {"id_palette": "beige",            "nom_fournisseur": "Vanilla Milkshake", "packshot": "YP005_packshot_beige.png"},
+    {"id_palette": "blanc",            "nom_fournisseur": "Artic White",        "packshot": "YP005_packshot_blanc.png"},
+    {"id_palette": "vert_sauge",       "nom_fournisseur": "Dusty Green",        "packshot": "YP005_packshot_vert_sauge.png"},
+    {"id_palette": "noir",             "nom_fournisseur": "Deep Black",         "packshot": "YP005_packshot_noir.png"},
+    {"id_palette": "rose_pale",        "nom_fournisseur": "Baby pink",          "packshot": "YP005_packshot_rose_pale.png"},
+    {"id_palette": "pierre_naturelle", "nom_fournisseur": "Natural Stone",      "packshot": "YP005_packshot_pierre_naturelle.png"},
+    {"id_palette": "marine",           "nom_fournisseur": "New French Navy",    "packshot": "YP005_packshot_marine.png"},
+    {"id_palette": "bleu_clair",       "nom_fournisseur": "Ice Blue",           "packshot": "YP005_packshot_bleu_clair.png"},
+    {"id_palette": "vert_terre",       "nom_fournisseur": "Earthy Green",       "packshot": "YP005_packshot_vert_terre.png"}
+  ],
+
+  "note_couleurs_ecartees_v1": {
+    "olive": {
+      "hex_packshot_echantillonne": "#4F463D",
+      "description": "Brun-chocolat sombre (distinct du Vert terre olive-militaire)",
+      "decision": "Exclu du catalogue v1 Ypersoa (decision globale tous produits) — packshot disponible mais couleur non commercialisee pour l'instant",
+      "packshot_source_si_reouverture": "uploads/YP005_olive.png"
+    }
+  },
+
+  "placements_broderie_autorises": [
+    {"id": "poitrine_gauche", "label": "Poitrine gauche", "usage": "standard", "compatible_avec_tous_motifs": true},
+    {"id": "dos_centre_haut", "label": "Dos centre haut", "usage": "statement", "compatible_avec_tous_motifs": false},
+    {"id": "poignet_gauche",  "label": "Poignet gauche", "usage": "addon_6eur", "compatible_avec_tous_motifs": true}
+  ],
+
+  "assets": {
+    "dossier_racine": "assets_produits/YP005/",
+    "fiche_technique_officielle": null,
+    "fiche_technique_status": "A_CREER - modele : YP001_fiche_technique.jpg",
+    "packshots_disponibles": 9,
+    "photo_reference_par_defaut": "YP005_packshot_pierre_naturelle.png",
+    "note_ancrage_visuel": "Les packshots fond blanc uniforme sont a injecter comme 'character reference' dans les prompts Studio IA. ATTENTION : YP005 est un sweat col rond, PAS un hoodie. Ne jamais generer de capuche, cordons, ni poche kangourou sur YP005."
+  },
+
+  "interdits_visuels_specifiques": {
+    "sweat_jh030_col_rond": [
+      "CAPUCHE (interdit absolu — YP005 est col rond uniquement. Pour capuche utiliser YP001 ou YP004)",
+      "cordons (consequence directe de l'interdit capuche)",
+      "embouts plastique",
+      "poche kangourou (pas presente sur JH030)",
+      "fermeture zip (pas presente sur JH030)",
+      "col V ou col chemise (JH030 est col rond classique)",
+      "manches courtes (JH030 est manches longues uniquement)",
+      "coutures contrastees visibles en couleur differente",
+      "etiquette de marque exterieure (etiquette Awdis est detachable, interieure)",
+      "effet vintage delave non demande"
+    ],
+    "note": "Le JH030 est le support le plus sobre du catalogue. Son absence de details (pas de capuche, pas de cordons, pas de poche) en fait un support particulierement strict visuellement — toute fantaisie ajoutee sera immediatement detectable comme non-Ypersoa."
+  },
+
+  "ambiance_editoriale_produit": {
+    "saisons_signature": ["automne", "hiver", "mi_saison", "printemps"],
+    "ambiances_shooting_recommandees": ["studio_brut", "aube_intime", "loft_organique", "lumiere_sepia"],
+    "profils_cibles": [
+      "femme 25-55 qui prefere la sobriete d'un col rond au hoodie",
+      "homme 25-55 elegant minimaliste",
+      "usage professionnel smart-casual (bureaux creatifs, startups)",
+      "duos couples/amis/famille coordonnes"
+    ],
+    "occasions_cles": [
+      "cadeau_intemporel",
+      "fete_meres",
+      "fete_peres",
+      "anniversaire",
+      "saint_valentin",
+      "noel"
+    ],
+    "note": "Le JH030 cible une clientele plus sobre / plus habillee que le JH001. Souvent choisi pour les motifs plus graphiques ou sophistiques (pas les motifs hyper decontractes). Sa polyvalence saisonniere (plus legere que le hoodie 280g/m2 en polaire) en fait un support 4 saisons."
+  }
+}

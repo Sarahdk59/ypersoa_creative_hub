@@ -1,0 +1,579 @@
+{% comment %}
+  perso-ypm003.liquid — YPM-003 Le Club
+  Famille  : Signes / Badges · 2 mots + symbole + 1 couleur solidaire
+  Poignet  : style YPM-002 — template A/B/C/D + texte libre + symbole + 2 couleurs
+  Module   : ypersoa-poignet-addon (option poignet +6€)
+{% endcomment %}
+
+{% assign ypersoa_palette = "Blanc|#FFFFFF,Ivoire|#F5F0E0,Gris clair|#C8C8C8,Gris|#A0A0A0,Anthracite|#4A4A4A,Noir|#1A1A1A,Marine|#1E2D4A,Bleu roi|#1A3A8F,Bleu glacier|#8AAFD4,Canard|#1A6670,Vert jade|#1A7A6E,Vert jardin|#7A9E7E,Bordeaux|#6B1E2E,Rouge|#C0392B,Rose pâle|#F0B8C0,Framboise|#C4294E,Lilas|#B8A0C8,Sable|#D4C4A8,Terracotta|#C4694A,Camel|#A0785A" | split: "," %}
+{% assign suggestions_haut = "MAMA,SISTA,TEAM,AMOUR,FAMILLE" | split: "," %}
+
+<div class="yp-perso-premium" data-motif="YPM-003">
+
+  <div class="yp-perso-premium__header">
+    <svg class="yp-perso-premium__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 16.5c-2.5-2.5-5-4.8-5-6.7 0-1.8 1.4-2.4 2.4-2.4.6 0 1.9.2 2.6 2 .7-1.8 2-2 2.6-2 1.2 0 2.4.7 2.4 2.4 0 1.9-2.3 4-5 6.7z"/>
+    </svg>
+    <h3 class="yp-perso-premium__title">créez votre broderie</h3>
+    <span class="yp-perso-premium__badge">Le Club</span>
+  </div>
+
+  <div class="yp-perso-premium__content">
+
+    <!-- ① Mot du haut -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">1</span>
+        <label class="yp-step__label" for="ypm003-mot-haut">
+          mot du haut
+          <span class="yp-step__hint">· 7 caractères max · majuscules</span>
+        </label>
+      </div>
+      <div class="ypm003-badge-wrap">
+        <input
+          class="ypm003-badge-input"
+          type="text"
+          id="ypm003-mot-haut"
+          name="properties[Mot haut buste]"
+          maxlength="7"
+          placeholder="MAMA"
+          autocomplete="off" autocorrect="off" spellcheck="false"
+          required aria-required="true"
+        >
+        <span class="ypm002-counter" aria-live="polite" id="ypm003-counter-haut">0 / 7</span>
+      </div>
+      <div class="ypm003-suggestions" role="group" aria-label="Suggestions">
+        {% for s in suggestions_haut %}
+          <button type="button" class="ypm003-suggestion-btn" data-target="ypm003-mot-haut" data-counter="ypm003-counter-haut">{{ s }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ② Mot du bas -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">2</span>
+        <label class="yp-step__label" for="ypm003-mot-bas">
+          mot du bas
+          <span class="yp-step__hint">· 7 caractères max · majuscules</span>
+        </label>
+      </div>
+      <div class="ypm003-badge-wrap">
+        <input
+          class="ypm003-badge-input"
+          type="text"
+          id="ypm003-mot-bas"
+          name="properties[Mot bas buste]"
+          maxlength="7"
+          placeholder="2024"
+          autocomplete="off" autocorrect="off" spellcheck="false"
+          required aria-required="true"
+        >
+        <span class="ypm002-counter" aria-live="polite" id="ypm003-counter-bas">0 / 7</span>
+      </div>
+      <p class="yp-perso-tip">Même couleur que le mot du haut — cercle, cœur et textes sont solidaires</p>
+    </div>
+
+    <!-- ③ Symbole du badge -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">3</span>
+        <label class="yp-step__label">symbole du badge</label>
+      </div>
+      <div class="ypm003-symbol-grid" role="group" aria-label="Symbole du badge buste">
+
+        <label class="ypm003-symbol-card" title="Cœur">
+          <input type="radio" class="sr-only" name="properties[Symbole buste]" value="Cœur" checked required>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21c-5-5-9-8.7-9-13 0-3.3 2.7-5 5-5 1.2 0 3.5.4 4 3.5.5-3.1 2.8-3.5 4-3.5 2.3 0 5 1.7 5 5 0 4.3-4 8-9 13z"/></svg>
+            <span class="ypm003-symbol-card__name">Cœur</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Étoile">
+          <input type="radio" class="sr-only" name="properties[Symbole buste]" value="Étoile" required>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 7.9H23l-6.7 4.9 2.6 7.9L12 18l-6.9 4.7 2.6-7.9L1 8.9h8.4z"/></svg>
+            <span class="ypm003-symbol-card__name">Étoile</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Trèfle">
+          <input type="radio" class="sr-only" name="properties[Symbole buste]" value="Trèfle" required>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="7" r="4"/><circle cx="7" cy="14" r="4"/><circle cx="17" cy="14" r="4"/>
+              <rect x="11" y="15" width="2" height="5" rx="1"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Trèfle</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Fleur">
+          <input type="radio" class="sr-only" name="properties[Symbole buste]" value="Fleur" required>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="5" r="4"/><circle cx="19" cy="9.5" r="4"/><circle cx="17" cy="18" r="4"/>
+              <circle cx="7" cy="18" r="4"/><circle cx="5" cy="9.5" r="4"/>
+              <circle cx="12" cy="12" r="3.5" fill="white"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Fleur</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Infini">
+          <input type="radio" class="sr-only" name="properties[Symbole buste]" value="Infini" required>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+              <path d="M12 12c-2-2.5-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1.5 6-4z"/>
+              <path d="M12 12c2 2.5 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.5-6 4z"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Infini</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Patte">
+          <input type="radio" class="sr-only" name="properties[Symbole buste]" value="Patte" required>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <ellipse cx="12" cy="15.5" rx="4" ry="3.5"/>
+              <circle cx="7" cy="10" r="2"/><circle cx="11.5" cy="8.5" r="2"/>
+              <circle cx="16" cy="10" r="2"/>
+              <circle cx="5.5" cy="13.5" r="1.5"/><circle cx="18.5" cy="13.5" r="1.5"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Patte</span>
+          </span>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- ④ Couleur de fils -->
+    <div class="yp-step">
+      <div class="yp-step__header">
+        <span class="yp-step__number">4</span>
+        <label class="yp-step__label">couleur de fils</label>
+      </div>
+      <p class="yp-perso-tip" style="margin: 0 0 10px;">S'applique à l'ensemble du badge — cercle, symbole et les deux mots.</p>
+      <div class="yp-color-grid" role="group" aria-label="Couleur de fils">
+        {% for couleur in ypersoa_palette %}
+          {% assign parts = couleur | split: "|" %}
+          <label class="yp-color-swatch-wrap" title="{{ parts[0] }}">
+            <input type="radio" class="sr-only"
+              name="properties[Couleur fil buste]"
+              value="{{ parts[0] | escape }}"
+              {% if forloop.first %}checked{% endif %}
+              required>
+            <span class="yp-color-swatch{% if parts[0] == 'Blanc' or parts[0] == 'Ivoire' %} yp-color-swatch--light{% endif %}" style="background-color: {{ parts[1] }};"></span>
+          </label>
+        {% endfor %}
+      </div>
+      <p class="yp-color-selected-name" id="ypm003-color-name">Blanc</p>
+    </div>
+
+    <!-- ⑤ Option poignet +6€ — masqué si produit tagué yp-019 (t-shirt) -->
+    {%- unless product.tags contains 'yp-019' -%}
+    <div class="yp-step yp-step--addon">
+      <label class="ypm001-addon-toggle" for="ypm003-poignet-toggle">
+        <input type="checkbox" id="ypm003-poignet-toggle" aria-controls="ypm003-poignet-fields">
+        <span class="ypm001-addon-toggle__icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </span>
+        <span class="ypm001-addon-toggle__text">
+          Ajouter la broderie poignet gauche
+          <strong>+6,00 €</strong>
+        </span>
+      </label>
+    </div>
+    {%- endunless -%}
+
+    <!-- Champs poignet — 4 étapes max -->
+    {%- unless product.tags contains 'yp-019' -%}
+    <div id="ypm003-poignet-fields" class="yp-step yp-step--poignet-fields" hidden aria-hidden="true">
+
+      <!-- A — Texte poignet -->
+      <div class="yp-step__header">
+        <span class="yp-step__number">A</span>
+        <label class="yp-step__label" for="ypm003-texte-poignet">
+          texte poignet
+          <span class="yp-step__hint">· 10 car. / ligne · 3 lignes max</span>
+        </label>
+      </div>
+      <div class="ypm002-poignet-input-wrap">
+        <input
+          class="ypm002-text-input perso-input--text"
+          type="text"
+          id="ypm003-texte-poignet"
+          name="properties[Texte poignet]"
+          maxlength="32"
+          placeholder="Léa, Maman…"
+          autocomplete="off" autocorrect="off" spellcheck="false"
+          disabled>
+      </div>
+      <div class="ypm002-lines-preview" id="ypm003-lines-preview" aria-live="polite"></div>
+      <p class="yp-perso-tip">Virgule ou espace = passage à la ligne · 10 car. max · 3 lignes maximum</p>
+
+      <!-- B — Couleur du texte poignet -->
+      <div class="yp-step__header" style="margin-top: 18px;">
+        <span class="yp-step__number">B</span>
+        <label class="yp-step__label">couleur du texte</label>
+      </div>
+      <div class="yp-color-grid" role="group" aria-label="Couleur texte poignet">
+        {% for couleur in ypersoa_palette %}
+          {% assign parts = couleur | split: "|" %}
+          <label class="yp-color-swatch-wrap" title="{{ parts[0] }}">
+            <input type="radio" class="sr-only"
+              name="properties[Couleur texte poignet]"
+              value="{{ parts[0] | escape }}"
+              {% if forloop.first %}checked{% endif %}
+              disabled>
+            <span class="yp-color-swatch{% if parts[0] == 'Blanc' or parts[0] == 'Ivoire' %} yp-color-swatch--light{% endif %}" style="background-color: {{ parts[1] }};"></span>
+          </label>
+        {% endfor %}
+      </div>
+      <p class="yp-color-selected-name" id="ypm003-poignet-texte-name">Blanc</p>
+
+      <!-- C — Symbole poignet -->
+      <div class="yp-step__header" style="margin-top: 18px;">
+        <span class="yp-step__number">C</span>
+        <label class="yp-step__label">symbole poignet</label>
+      </div>
+      <div class="ypm003-symbol-grid" role="group" aria-label="Symbole poignet">
+
+        <label class="ypm003-symbol-card" title="Cœur">
+          <input type="radio" class="sr-only" name="properties[Symbole poignet]" value="Cœur" checked disabled>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21c-5-5-9-8.7-9-13 0-3.3 2.7-5 5-5 1.2 0 3.5.4 4 3.5.5-3.1 2.8-3.5 4-3.5 2.3 0 5 1.7 5 5 0 4.3-4 8-9 13z"/></svg>
+            <span class="ypm003-symbol-card__name">Cœur</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Étoile">
+          <input type="radio" class="sr-only" name="properties[Symbole poignet]" value="Étoile" disabled>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 7.9H23l-6.7 4.9 2.6 7.9L12 18l-6.9 4.7 2.6-7.9L1 8.9h8.4z"/></svg>
+            <span class="ypm003-symbol-card__name">Étoile</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Trèfle">
+          <input type="radio" class="sr-only" name="properties[Symbole poignet]" value="Trèfle" disabled>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="7" r="4"/><circle cx="7" cy="14" r="4"/><circle cx="17" cy="14" r="4"/>
+              <rect x="11" y="15" width="2" height="5" rx="1"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Trèfle</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Fleur">
+          <input type="radio" class="sr-only" name="properties[Symbole poignet]" value="Fleur" disabled>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="5" r="4"/><circle cx="19" cy="9.5" r="4"/><circle cx="17" cy="18" r="4"/>
+              <circle cx="7" cy="18" r="4"/><circle cx="5" cy="9.5" r="4"/>
+              <circle cx="12" cy="12" r="3.5" fill="white"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Fleur</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Infini">
+          <input type="radio" class="sr-only" name="properties[Symbole poignet]" value="Infini" disabled>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+              <path d="M12 12c-2-2.5-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1.5 6-4z"/>
+              <path d="M12 12c2 2.5 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.5-6 4z"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Infini</span>
+          </span>
+        </label>
+
+        <label class="ypm003-symbol-card" title="Patte">
+          <input type="radio" class="sr-only" name="properties[Symbole poignet]" value="Patte" disabled>
+          <span class="ypm003-symbol-card__inner">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <ellipse cx="12" cy="15.5" rx="4" ry="3.5"/>
+              <circle cx="7" cy="10" r="2"/><circle cx="11.5" cy="8.5" r="2"/>
+              <circle cx="16" cy="10" r="2"/>
+              <circle cx="5.5" cy="13.5" r="1.5"/><circle cx="18.5" cy="13.5" r="1.5"/>
+            </svg>
+            <span class="ypm003-symbol-card__name">Patte</span>
+          </span>
+        </label>
+
+      </div>
+
+      <!-- D — Couleur du symbole poignet -->
+      <div class="yp-step__header" style="margin-top: 18px;">
+        <span class="yp-step__number">D</span>
+        <label class="yp-step__label">couleur du symbole</label>
+      </div>
+      <div class="yp-color-grid" role="group" aria-label="Couleur symbole poignet">
+        {% for couleur in ypersoa_palette %}
+          {% assign parts = couleur | split: "|" %}
+          <label class="yp-color-swatch-wrap" title="{{ parts[0] }}">
+            <input type="radio" class="sr-only"
+              name="properties[Couleur symbole poignet]"
+              value="{{ parts[0] | escape }}"
+              {% if forloop.first %}checked{% endif %}
+              disabled>
+            <span class="yp-color-swatch{% if parts[0] == 'Blanc' or parts[0] == 'Ivoire' %} yp-color-swatch--light{% endif %}" style="background-color: {{ parts[1] }};"></span>
+          </label>
+        {% endfor %}
+      </div>
+      <p class="yp-color-selected-name" id="ypm003-poignet-symbole-name">Blanc</p>
+
+    </div>
+    {%- endunless -%}
+
+  </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+/* ── Design system partagé YPM ── */
+.yp-perso-premium { margin: 24px 0; border: 1px solid #D9D1C7; border-radius: 12px; background: #FAF8F5; overflow: hidden; }
+.yp-perso-premium__header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F5F0E8; border-bottom: 1px solid #D9D1C7; }
+.yp-perso-premium__icon { width: 22px; height: 22px; color: #C4694A; flex-shrink: 0; }
+.yp-perso-premium__title { margin: 0; font-size: 14px; font-weight: 600; color: #1E2D4A; flex: 1; text-transform: lowercase; letter-spacing: 0.01em; }
+.yp-perso-premium__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #C4694A; background: #fff; padding: 3px 8px; border-radius: 20px; border: 1px solid #C4694A; text-transform: uppercase; }
+.yp-perso-premium__content { padding: 20px 18px; display: flex; flex-direction: column; gap: 20px; }
+
+.yp-step__header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.yp-step__number { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #1E2D4A; color: #fff; font-size: 11px; font-weight: 700; border-radius: 50%; flex-shrink: 0; }
+.yp-step__label { font-size: 13px; font-weight: 600; color: #1E2D4A; margin: 0; cursor: pointer; text-transform: lowercase; }
+.yp-step__hint { font-weight: 400; font-size: 12px; color: #9E9086; }
+
+/* ── Input badge ── */
+.ypm003-badge-wrap { display: flex; align-items: center; gap: 10px; }
+.ypm003-badge-input {
+  flex: 1; height: 48px; padding: 0 14px;
+  border: 1.5px solid #D9D1C7; border-radius: 10px; background: #fff;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px; font-weight: 700; color: #1E2D4A;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none;
+}
+.ypm003-badge-input::placeholder { color: #D9D1C7; font-size: 16px; }
+.ypm003-badge-input:focus { outline: none; border-color: #C4694A; box-shadow: 0 0 0 3px rgba(196,105,74,0.12); }
+.ypm003-badge-input:not(:placeholder-shown) { border-color: #1E2D4A; }
+.ypm003-badge-input:disabled { background: #F5F0E8; opacity: 0.6; }
+
+.ypm002-counter { font-size: 11px; color: #9E9086; white-space: nowrap; flex-shrink: 0; }
+.yp-perso-tip { font-size: 11px; color: #9E9086; margin: 8px 0 0; line-height: 1.5; }
+
+/* ── Suggestions rapides ── */
+.ypm003-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.ypm003-suggestion-btn {
+  padding: 4px 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+  color: #1E2D4A; background: #fff; border: 1px solid #D9D1C7; border-radius: 20px;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.ypm003-suggestion-btn:hover { border-color: #C4694A; color: #C4694A; background: #FFF9F7; }
+
+/* ── Grille symboles ── */
+.ypm003-symbol-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.ypm003-symbol-card { cursor: pointer; }
+.ypm003-symbol-card .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.ypm003-symbol-card__inner {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 10px 4px 8px;
+  background: #fff; border: 1.5px solid #E8E2DC; border-radius: 10px;
+  color: #1E2D4A;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.ypm003-symbol-card input:checked + .ypm003-symbol-card__inner {
+  border-color: #C4694A; background: #FFF9F7; color: #C4694A;
+  box-shadow: 0 0 0 1px #C4694A;
+}
+.ypm003-symbol-card:hover .ypm003-symbol-card__inner { border-color: #C4694A; }
+.ypm003-symbol-card__name { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.03em; color: inherit; text-align: center; }
+
+/* ── Color swatches ── */
+.yp-color-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.yp-color-swatch-wrap { cursor: pointer; position: relative; }
+.yp-color-swatch-wrap .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.yp-color-swatch { display: block; width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; transition: transform 0.15s, box-shadow 0.15s; }
+.yp-color-swatch--light { box-shadow: inset 0 0 0 1px #E0D8D0; }
+.yp-color-swatch-wrap input:checked + .yp-color-swatch { transform: scale(1.1); box-shadow: 0 0 0 2px #fff, 0 0 0 4px #C4694A; }
+.yp-color-swatch-wrap:hover .yp-color-swatch { transform: scale(1.08); }
+.yp-color-selected-name { font-size: 12px; color: #9E9086; margin: 8px 0 0; text-transform: lowercase; letter-spacing: 0.02em; }
+
+/* ── Option poignet ── */
+.yp-step--addon { border-top: 1px solid #E8E2DC; padding-top: 18px; margin-top: -4px; }
+.ypm001-addon-toggle { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.ypm001-addon-toggle input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.ypm001-addon-toggle__icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; flex-shrink: 0;
+  border: 1.5px solid #D9D1C7; border-radius: 8px;
+  background: #fff; color: #9E9086; transition: all 0.2s;
+}
+.ypm001-addon-toggle input:checked ~ .ypm001-addon-toggle__icon { border-color: #C4694A; background: #FFF9F7; color: #C4694A; }
+.ypm001-addon-toggle input:checked ~ .ypm001-addon-toggle__icon svg { transform: rotate(45deg); }
+.ypm001-addon-toggle__icon svg { transition: transform 0.2s; }
+.ypm001-addon-toggle__text { font-size: 13px; color: #1E2D4A; font-weight: 500; line-height: 1.4; }
+.ypm001-addon-toggle__text strong { display: block; font-size: 12px; color: #C4694A; font-weight: 600; margin-top: 1px; }
+.yp-step--poignet-fields { border-left: 2px solid #F0EBE4; padding-left: 14px; margin-left: 4px; }
+
+/* ── Template poignet (partagé avec YPM-002) ── */
+.ypm002-template-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.ypm002-template-card { cursor: pointer; }
+.ypm002-template-card .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.ypm002-template-card__inner {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 6px 8px;
+  background: #fff; border: 1.5px solid #E8E2DC; border-radius: 10px; color: #1E2D4A;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.ypm002-template-card input:checked + .ypm002-template-card__inner { border-color: #C4694A; background: #FFF9F7; color: #C4694A; box-shadow: 0 0 0 1px #C4694A; }
+.ypm002-template-card:hover .ypm002-template-card__inner { border-color: #C4694A; }
+.ypm002-template-card__label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; color: inherit; }
+
+/* ── Preview lignes poignet (partagé avec YPM-002) ── */
+.ypm002-poignet-input-wrap { position: relative; }
+.ypm002-text-input {
+  width: 100%; height: 48px; padding: 0 14px;
+  border: 1.5px solid #D9D1C7; border-radius: 10px; background: #fff;
+  font-size: 16px; color: #1E2D4A;
+  transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none;
+}
+.ypm002-text-input::placeholder { color: #D9D1C7; }
+.ypm002-text-input:focus { outline: none; border-color: #C4694A; box-shadow: 0 0 0 3px rgba(196,105,74,0.12); }
+.ypm002-text-input:disabled { background: #F5F0E8; opacity: 0.6; }
+.ypm002-lines-preview { display: flex; flex-direction: column; gap: 3px; margin: 8px 0 0; }
+.ypm002-lines-preview:empty { display: none; }
+.ypm002-line-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; background: #F5F0E8; border: 1px solid #E0D8D0; border-radius: 6px;
+  font-size: 12px; font-weight: 600; color: #1E2D4A; letter-spacing: 0.04em; max-width: fit-content;
+}
+.ypm002-line-chip__num { font-size: 10px; color: #9E9086; font-weight: 400; }
+.ypm002-line-error {
+  display: flex; align-items: center; gap: 6px; margin-top: 4px; padding: 6px 10px;
+  background: #FFF0F0; border: 1px solid #F0C0C0; border-radius: 6px;
+  font-size: 11.5px; color: #B03030;
+}
+</style>
+
+<script>
+(function () {
+  function initYPM003() {
+    var root = document.querySelector('[data-motif="YPM-003"]');
+    if (!root || root._ypmInit) return;
+    root._ypmInit = true;
+
+    /* ── Forçage majuscules + compteur badge ── */
+    var counterMap = {
+      'ypm003-mot-haut': 'ypm003-counter-haut',
+      'ypm003-mot-bas':  'ypm003-counter-bas'
+    };
+    root.querySelectorAll('.ypm003-badge-input').forEach(function (input) {
+      if (input._ypmInit) return;
+      input._ypmInit = true;
+      var counter = document.getElementById(counterMap[input.id]);
+      input.addEventListener('input', function () {
+        var pos = this.selectionStart;
+        this.value = this.value.toUpperCase();
+        this.setSelectionRange(pos, pos);
+        if (counter) counter.textContent = this.value.length + ' / 7';
+      });
+    });
+
+    /* ── Suggestions ── */
+    root.querySelectorAll('.ypm003-suggestion-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input   = document.getElementById(this.dataset.target);
+        var counter = document.getElementById(this.dataset.counter);
+        if (!input) return;
+        input.value = this.textContent;
+        if (counter) counter.textContent = input.value.length + ' / 7';
+        input.focus();
+      });
+    });
+
+    /* ── Nom couleur buste ── */
+    function bindColorName(groupName, displayId) {
+      var display = document.getElementById(displayId);
+      if (!display || display._ypmBound) return;
+      display._ypmBound = true;
+      document.querySelectorAll('[name="' + groupName + '"]').forEach(function (r) {
+        r.addEventListener('change', function () { if (this.checked) display.textContent = this.value; });
+      });
+      var checked = document.querySelector('[name="' + groupName + '"]:checked');
+      if (checked) display.textContent = checked.value;
+    }
+    bindColorName('properties[Couleur fil buste]',         'ypm003-color-name');
+    bindColorName('properties[Couleur symbole poignet]',   'ypm003-poignet-symbole-name');
+    bindColorName('properties[Couleur texte poignet]',     'ypm003-poignet-texte-name');
+
+    /* ── Preview lignes poignet ── */
+    function bindLinesPreview(inputId, previewId) {
+      var input   = document.getElementById(inputId);
+      var preview = document.getElementById(previewId);
+      if (!input || !preview || input._ypm3LinesInit) return;
+      input._ypm3LinesInit = true;
+      function render() {
+        var parts = input.value.split(/[, ]+/).filter(function (s) { return s.length > 0; });
+        preview.innerHTML = '';
+        var errors = [];
+        parts.forEach(function (line, i) { if (line.length > 10) errors.push('Ligne ' + (i + 1) + ' : ' + line.length + ' car.'); });
+        if (parts.length > 3) errors.push('3 lignes max (' + parts.length + ' détectées)');
+        parts.slice(0, 3).forEach(function (line, i) {
+          var chip = document.createElement('span');
+          chip.className = 'ypm002-line-chip';
+          chip.innerHTML = '<span class="ypm002-line-chip__num">L' + (i + 1) + '</span>' + line;
+          preview.appendChild(chip);
+        });
+        if (errors.length) {
+          var err = document.createElement('div');
+          err.className = 'ypm002-line-error';
+          err.textContent = '⚠ ' + errors.join(' · ');
+          preview.appendChild(err);
+          input.setCustomValidity(errors.join('. '));
+        } else {
+          input.setCustomValidity('');
+        }
+      }
+      input.addEventListener('input', render);
+    }
+
+    /* ── Toggle poignet ── */
+    var toggle = document.getElementById('ypm003-poignet-toggle');
+    var panel  = document.getElementById('ypm003-poignet-fields');
+    if (toggle && panel && !toggle._ypmInit) {
+      toggle._ypmInit = true;
+      function applyPanel(active) {
+        panel.hidden = !active;
+        panel.setAttribute('aria-hidden', String(!active));
+        panel.querySelectorAll('input, select').forEach(function (el) { el.disabled = !active; });
+        if (active) {
+          bindLinesPreview('ypm003-texte-poignet', 'ypm003-lines-preview');
+          bindColorName('properties[Couleur symbole poignet]', 'ypm003-poignet-symbole-name');
+          bindColorName('properties[Couleur texte poignet]',   'ypm003-poignet-texte-name');
+          var first = panel.querySelector('input[type="text"]');
+          if (first) first.focus();
+        }
+      }
+      toggle.addEventListener('change', function () { applyPanel(this.checked); });
+      applyPanel(toggle.checked);
+    }
+
+    /* ── Module cart add-on ── */
+    if (window.YpersoaPoignet && toggle && panel && !toggle._ypmCartInit) {
+      toggle._ypmCartInit = true;
+      window.YpersoaPoignet.init({ checkboxId: 'ypm003-poignet-toggle', panelId: 'ypm003-poignet-fields', motifId: 'YPM-003' });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initYPM003);
+  } else {
+    initYPM003();
+  }
+}());
+</script>

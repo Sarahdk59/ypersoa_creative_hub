@@ -1,0 +1,592 @@
+{% comment %}
+  Section: Page de Blog Ypersoa
+{% endcomment %}
+
+<style>
+  :root { --cream: #F5F0EA; --ink: #1E2D4A; --terracotta: #C4694A; --ink-light: #3a4e6e; --cream-dark: #EAE3D9; }
+  .blog-wrapper { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.8; }
+  .blog-header { text-align: center; padding: 5rem 2rem 3rem; border-bottom: 1px solid var(--cream-dark); }
+  .blog-header .eyebrow { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 1rem; font-weight: 500; }
+  .blog-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 300; line-height: 1.1; color: var(--ink); letter-spacing: -0.01em; }
+  .blog-header h1 em { font-style: italic; color: var(--terracotta); }
+  .articles-grid { max-width: 1200px; margin: 4rem auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .article-card { background: white; border: 1px solid var(--cream-dark); overflow: hidden; cursor: pointer; transition: transform 0.2s ease; }
+  .article-card:hover { transform: translateY(-4px); }
+  .article-card-img { height: 240px; display: flex; align-items: center; justify-content: center; font-size: 4rem; position: relative; overflow: hidden; }
+  .card-img-1 { background: #D9CBBB; }
+  .card-img-2 { background: #C4B5A5; }
+  .card-img-3 { background: #BFC8B8; }
+  .card-img-4 { background: #D0D8D1; }
+  .card-img-5 { background: #E1E6EB; }
+  .card-img-decoration { position: absolute; font-family: 'Cormorant Garamond', serif; font-size: 7rem; font-weight: 300; opacity: 0.12; color: var(--ink); letter-spacing: -0.05em; user-select: none; }
+  .card-emblem { width: 80px; height: 80px; border: 2px solid var(--ink); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+  .card-emblem svg { width: 36px; height: 36px; }
+  .article-card-body { padding: 1.8rem 2rem 2rem; }
+  .card-tag { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 0.8rem; }
+  .card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.65rem; font-weight: 400; line-height: 1.2; color: var(--ink); margin-bottom: 0.8rem; }
+  .card-excerpt { font-size: 0.9rem; color: var(--ink-light); line-height: 1.7; margin-bottom: 1.4rem; }
+  .card-cta { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; color: var(--terracotta); text-decoration: none; border-bottom: 1px solid var(--terracotta); padding-bottom: 2px; }
+  
+  .article-page { display: none; max-width: 740px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+  .article-page.active { display: block; }
+  .article-back { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 3rem; cursor: pointer; border: none; background: none; padding: 0; font-family: 'DM Sans', sans-serif; font-weight: 500; }
+  .article-back:hover { color: var(--terracotta); }
+  .article-meta { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }
+  .article-tag { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--terracotta); font-weight: 500; }
+  .article-date { font-size: 0.8rem; color: var(--ink-light); opacity: 0.7; }
+  .article-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 300; line-height: 1.1; color: var(--ink); margin-bottom: 1rem; letter-spacing: -0.01em; }
+  .article-title em { font-style: italic; color: var(--terracotta); }
+  .article-intro { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; font-style: italic; color: var(--ink-light); line-height: 1.6; margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--cream-dark); }
+  .article-body { font-size: 1rem; line-height: 1.85; color: var(--ink); }
+  .article-body p { margin-bottom: 1.4rem; }
+  .article-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: var(--ink); margin: 2.5rem 0 1rem; line-height: 1.2; }
+  .article-body h2 em { font-style: italic; color: var(--terracotta); }
+  .article-body .pullquote { border-left: 2px solid var(--terracotta); padding: 0.5rem 0 0.5rem 1.8rem; margin: 2rem 0; font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-style: italic; font-weight: 300; color: var(--ink); line-height: 1.5; }
+  .motif-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+  .motif-card { background: white; border: 1px solid var(--cream-dark); padding: 1.2rem; text-align: center; }
+  .motif-card .motif-icon { font-size: 1.8rem; margin-bottom: 0.5rem; display: block; }
+  .motif-card .motif-label { font-size: 0.8rem; font-weight: 500; color: var(--ink); margin-bottom: 0.2rem; font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
+  .motif-card .motif-name { font-size: 0.7rem; letter-spacing: 0.08em; color: var(--terracotta); text-transform: uppercase; }
+  .article-cta-block { margin-top: 3rem; padding: 2.5rem; background: var(--ink); color: var(--cream); text-align: center; }
+  .article-cta-block h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; margin-bottom: 0.8rem; letter-spacing: 0.02em; }
+  .article-cta-block p { font-size: 0.9rem; opacity: 0.7; margin-bottom: 1.5rem; }
+  .btn-cta { display: inline-block; padding: 0.75rem 2.5rem; background: var(--terracotta); color: white; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; font-family: 'DM Sans', sans-serif; text-decoration: none; border: none; cursor: pointer; border-radius: 6px; }
+  .reading-time { font-size: 0.75rem; color: var(--ink-light); opacity: 0.6; }
+  .blog-index { display: block; }
+  .blog-index.hidden { display: none; }
+
+  /* INSPI ARTICLE SPECIFIC */
+  .inspi-article-page { max-width: 100% !important; padding: 0 !important; }
+  .inspi-article-page .article-back { margin: 2rem 2rem 0; display: block; }
+  .inspi-article-page .article-meta, .inspi-article-page .article-title, .inspi-article-page .article-intro { max-width: 740px; margin-left: auto; margin-right: auto; padding-left: 2rem; padding-right: 2rem; }
+  .inspi-cats-nav { background: var(--cream); border-top: 1px solid var(--cream-dark); border-bottom: 1px solid var(--cream-dark); position: sticky; top: 0; z-index: 100; padding: 0 2rem; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; margin-top: 2rem; }
+  .inspi-cats-nav::-webkit-scrollbar { display: none; }
+  .inspi-cat-tab { padding: 1rem 1.2rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); opacity: 0.4; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; display: block; font-family: 'DM Sans', sans-serif; font-weight: 500; }
+  .inspi-cat-tab:hover { opacity: 0.8; }
+  .inspi-cat-tab.active { opacity: 1; color: var(--terracotta); border-bottom-color: var(--terracotta); }
+  .inspi-section { padding: 4rem 3rem; border-bottom: 1px solid var(--cream-dark); }
+  .inspi-section:nth-child(odd) { background: #FAF8F4; }
+  .inspi-section.dark-section { background: var(--ink) !important; color: #F5F0EA; border-bottom-color: rgba(245,240,232,0.08); }
+  .inspi-section-inner { display: grid; grid-template-columns: 240px 1fr; gap: 4rem; max-width: 1100px; margin: 0 auto; align-items: start; }
+  .inspi-sec-num { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 0.6rem; display: block; }
+  .dark-section .inspi-sec-num { color: #E8937A; }
+  .inspi-sec-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.01em; }
+  .inspi-sec-title em { font-style: italic; color: var(--terracotta); }
+  .dark-section .inspi-sec-title em { color: #E8937A; }
+  .inspi-sec-hint { margin-top: 0.8rem; font-size: 0.82rem; line-height: 1.7; opacity: 0.5; }
+  .inspi-sec-cta { margin-top: 1.5rem; display: inline-flex; align-items: center; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terracotta); text-decoration: none; border-bottom: 1px solid var(--terracotta); padding-bottom: 3px; font-weight: 500; }
+  .dark-section .inspi-sec-cta { color: #E8937A; border-bottom-color: #E8937A; }
+  .tags-cloud { display: flex; flex-wrap: wrap; gap: 8px; align-content: start; }
+  .copy-hint-label { width: 100%; font-size: 0.65rem; opacity: 0.4; letter-spacing: 0.1em; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 6px; }
+  .copy-hint-label::before { content: '→'; color: var(--terracotta); }
+  .dark-section .copy-hint-label { color: rgba(245,240,232,0.4); }
+  .itag { padding: 8px 18px; border: 1px solid var(--cream-dark); font-size: 0.85rem; font-family: 'Cormorant Garamond', serif; font-style: italic; cursor: pointer; transition: all 0.25s; background: transparent; color: var(--ink); position: relative; overflow: hidden; user-select: none; }
+  .itag::before { content: ''; position: absolute; inset: 0; background: var(--terracotta); transform: translateX(-100%); transition: transform 0.3s ease; }
+  .itag:hover::before { transform: translateX(0); }
+  .itag:hover { color: white; border-color: var(--terracotta); }
+  .itag span { position: relative; z-index: 1; }
+  .dark-section .itag { border-color: rgba(245,240,232,0.15); color: #F5F0EA; }
+  .itag.featured { background: var(--terracotta); color: white; border-color: var(--terracotta); font-style: normal; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: default; }
+  .itag.featured::before { display: none; }
+  .itag.copied::after { content: '✓ copié'; position: absolute; inset: 0; background: #8A9E8C; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 0.7rem; letter-spacing: 0.1em; color: white; z-index: 2; }
+  .inspi-quote-band { background: var(--terracotta); padding: 3rem 3rem; text-align: center; }
+  .inspi-quote-band blockquote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 300; font-style: italic; color: white; max-width: 680px; margin: 0 auto; line-height: 1.25; }
+
+  @media (max-width: 900px) {
+    .articles-grid { grid-template-columns: 1fr 1fr; }
+    .inspi-section-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .inspi-section { padding: 3rem 1.5rem; }
+  }
+  @media (max-width: 700px) {
+    .articles-grid { grid-template-columns: 1fr; }
+    .motif-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div class="blog-wrapper">
+  
+  <div class="blog-index" id="blogIndex">
+    <div class="blog-header">
+      <p class="eyebrow">Le journal Ypersoa</p>
+      <h1>Broderie, <em>inspirations</em><br>& cadeaux qui durent</h1>
+    </div>
+
+    <div class="articles-grid">
+      <!-- Card 1 -->
+      <div class="article-card" onclick="showArticle('article1')">
+        <div class="article-card-img card-img-1">
+          <span class="card-img-decoration">?</span>
+          <div class="card-emblem">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18" cy="18" r="8" stroke="#1E2D4A" stroke-width="1.5"/>
+              <path d="M18 26v4M18 6v4M26 18h4M6 18h4" stroke="#1E2D4A" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M15 15c0-1.66 1.34-3 3-3s3 1.34 3 3c0 1.5-1.5 2.5-3 3v2" stroke="#C4694A" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="18" cy="24" r="0.8" fill="#C4694A"/>
+            </svg>
+          </div>
+        </div>
+        <div class="article-card-body">
+          <p class="card-tag">Inspiration &amp; idées</p>
+          <h2 class="card-title">En manque d'inspiration ?</h2>
+          <p class="card-excerpt">Tu ne sais pas quel motif choisir, ni pour qui, ni pour quelle occasion ? On t'aide à trouver la pièce qui va toucher juste.</p>
+          <span class="card-cta">Lire l'article →</span>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="article-card" onclick="showArticle('article2')">
+        <div class="article-card-img card-img-2">
+          <span class="card-img-decoration">♡</span>
+          <div class="card-emblem">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 28S6 21 6 13a6 6 0 0112 0 6 6 0 0112 0c0 8-12 15-12 15z" stroke="#1E2D4A" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M12 10c0 1 1 2 2 2" stroke="#C4694A" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="article-card-body">
+          <p class="card-tag">Cadeaux &amp; sens</p>
+          <h2 class="card-title">Un cadeau avec du sens</h2>
+          <p class="card-excerpt">Dans un monde d'objets oubliables, offrir une broderie c'est offrir quelque chose qui reste — sur le tissu, et dans les mémoires.</p>
+          <span class="card-cta">Lire l'article →</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="article-card" onclick="showArticle('article3')">
+        <div class="article-card-img card-img-3">
+          <span class="card-img-decoration" style="font-style:italic;">abc</span>
+          <div class="card-emblem">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 26l4-12h2l4 12M12 22h8" stroke="#1E2D4A" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M22 14c2 0 4 1 4 3s-2 3-4 3h-1v3" stroke="#C4694A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="article-card-body">
+          <p class="card-tag">Guide interactif</p>
+          <h2 class="card-title">100+ idées de broderies</h2>
+          <p class="card-excerpt">Prénoms, surnoms, famille, amour... Clique sur une idée pour la copier et la coller directement dans ton champ de personnalisation.</p>
+          <span class="card-cta">Explorer les idées →</span>
+        </div>
+      </div>
+
+      <!-- Card 4 (Made in France) -->
+      <div class="article-card" onclick="showArticle('article4')">
+        <div class="article-card-img card-img-4">
+          <span class="card-img-decoration" style="font-style:italic;">FR</span>
+          <div class="card-emblem">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 18L18 10L26 18M13 15v11h10V15" stroke="#1E2D4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 20L18 26" stroke="#C4694A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="article-card-body">
+          <p class="card-tag">Atelier &amp; Savoir-faire</p>
+          <h2 class="card-title">L'artisanat français (du Nord)</h2>
+          <p class="card-excerpt">Plongez dans les coulisses de notre atelier à Wattrelos. Là où chaque point de broderie est ajusté par nos soins, sur notre fidèle machine Tajima.</p>
+          <span class="card-cta">Lire l'article →</span>
+        </div>
+      </div>
+
+      <!-- Card 5 (B2B, Evénements) -->
+      <div class="article-card" onclick="showArticle('article5')">
+        <div class="article-card-img card-img-5">
+          <span class="card-img-decoration" style="font-style:italic;">&amp;</span>
+          <div class="card-emblem">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20C10 16 14 14 18 14C22 14 26 16 26 20" stroke="#1E2D4A" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="18" cy="18" r="8" stroke="#1E2D4A" stroke-width="1.5"/>
+              <path d="M12 16L15 12M24 16L21 12" stroke="#C4694A" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="article-card-body">
+          <p class="card-tag">Événements</p>
+          <h2 class="card-title">Rassembler par le vêtement</h2>
+          <p class="card-excerpt">Mariages, EVJF ou team building : découvrez comment nos broderies sur-mesure accompagnent vos plus belles célébrations d'équipe et famille.</p>
+          <span class="card-cta">Lire l'article →</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ARTICLE 1 -->
+  <div class="article-page" id="article1">
+    <button class="article-back" onclick="showIndex()">← Retour au blog</button>
+    <div class="article-meta">
+      <span class="article-tag">Inspiration &amp; idées</span>
+      <span class="reading-time">5 min de lecture</span>
+      <span class="article-date">Mars 2026</span>
+    </div>
+
+    <h1 class="article-title">En manque<br><em>d'inspiration ?</em></h1>
+    <p class="article-intro">Tu veux faire broder quelque chose — pour toi ou pour quelqu'un d'autre — mais tu tournes en rond devant le catalogue. C'est normal. Voici quelques pistes pour trouver le motif qui va sonner juste.</p>
+
+    <div class="article-body">
+      <h2>Commence par <em>la personne</em>, pas le motif</h2>
+      <p>Quand on ne sait pas quoi choisir, le réflexe est de parcourir les motifs un par un en espérant que quelque chose accroche. C'est rarement comme ça que ça marche. La bonne approche : pense d'abord à la personne pour qui tu commandes. Qu'est-ce qui la définit ? Ce qu'elle aime, ce qui la touche, ce qu'elle répète souvent.</p>
+      <p>Une maman qui parle de ses enfants à chaque phrase ? Le motif <strong>La Tendresse</strong> — deux prénoms brodés côte à côte, discrets et bouleversants. Une amie qui se définit par son signe astro ? Les <strong>Signes Astrologiques</strong> sont faits pour elle.</p>
+
+      <div class="pullquote">« Le meilleur motif n'est pas forcément le plus beau — c'est celui qui fait dire "c'est exactement moi". »</div>
+
+      <h2>Quelques profils, <em>quelques pistes</em></h2>
+      <div class="motif-grid">
+        <div class="motif-card">
+          <span class="motif-icon">🌿</span>
+          <p class="motif-label">La passionnée de nature</p>
+          <p class="motif-name">L'Ambre · YPM002</p>
+        </div>
+        <div class="motif-card">
+          <span class="motif-icon">✦</span>
+          <p class="motif-label">L'amie fidèle</p>
+          <p class="motif-name">La Brigitte · YPM001</p>
+        </div>
+        <div class="motif-card">
+          <span class="motif-icon">♡</span>
+          <p class="motif-label">La maman débordante d'amour</p>
+          <p class="motif-name">La Tendresse · YPM003</p>
+        </div>
+      </div>
+
+      <h2>Et si tu commandes <em>pour toi ?</em></h2>
+      <p>C'est parfaitement acceptable — et souvent plus compliqué. On connaît trop bien ses propres goûts pour choisir facilement. Notre conseil : pense à l'objet sur lequel tu vas le porter au quotidien. Un hoodie porté le week-end appellera quelque chose de doux et discret. Un sweat de travail mérite peut-être quelque chose de plus affirmé.</p>
+      <p>La broderie au poignet est une option à ne pas négliger : un prénom, une date, une initiale. Invisible au premier regard, intime au second. C'est souvent là que se cachent les plus belles pièces.</p>
+
+      <h2>La couleur, <em>ça compte aussi</em></h2>
+      <p>On l'oublie souvent, mais le coloris du vêtement change tout à la lisibilité et à l'émotion du motif. Le fil bordeaux sur le Beige crème donne quelque chose de chaleureux et intemporel. Le fil blanc cassé sur le Marine, c'est du contraste graphique et net. Le fil terracotta sur le Vert Sauge, ça parle d'automne et de douceur.</p>
+      <p>Si tu hésites : choisis d'abord la couleur du vêtement — celle que tu porterais le plus volontiers — et laisse le fil se décider autour.</p>
+    </div>
+
+    <div class="article-cta-block">
+      <h3>Trouve ton motif</h3>
+      <p>Explore les motifs du catalogue et personnalise ta pièce en quelques clics.</p>
+      <a class="btn-cta" href="/collections/all">Voir les motifs →</a>
+    </div>
+  </div>
+
+  <!-- ARTICLE 2 -->
+  <div class="article-page" id="article2">
+    <button class="article-back" onclick="showIndex()">← Retour au blog</button>
+    <div class="article-meta">
+      <span class="article-tag">Cadeaux &amp; sens</span>
+      <span class="reading-time">4 min de lecture</span>
+      <span class="article-date">Mars 2026</span>
+    </div>
+
+    <h1 class="article-title">Un cadeau<br><em>avec du sens</em></h1>
+
+    <p class="article-intro">
+      On a tous reçu des cadeaux oubliables — jolis sur le moment, oubliés deux semaines plus tard. La broderie artisanale, c'est l'inverse de ça. Voici pourquoi elle change vraiment quelque chose.
+    </p>
+
+    <div class="article-body">
+      <h2>Le problème <em>du cadeau parfait</em></h2>
+      <p>Trouver un cadeau qui touche juste est devenu compliqué. Pas par manque d'offre — c'est même le contraire. Il y a trop de tout, trop facilement. Et pourtant, cette abondance rend chaque chose moins précieuse, moins mémorable. On offre un objet, l'autre le remercie, et trois semaines plus tard plus personne n'y pense.</p>
+      <p>Ce n'est pas de la mauvaise volonté. C'est juste que l'objet n'était pas vraiment fait pour cette personne-là. Il aurait pu être pour n'importe qui.</p>
+
+      <div class="pullquote">« Un cadeau qui touche, c'est un cadeau qui dit : j'ai pensé à toi, vraiment. »</div>
+
+      <h2>Ce que la personnalisation <em>change concrètement</em></h2>
+      <p>Quand tu fais broder le prénom d'une personne, une date qui compte, ou un signe qui la représente — tu transformes un vêtement en objet singulier. Il n'en existe pas d'autre comme ça dans le monde. Pas parce que c'est rare au sens de la rareté artificielle, mais parce qu'il a été fait pour elle, avec ce soin-là.</p>
+      <p>C'est cette intention qui reste. Les gens portent pendant des années des pièces brodées qu'on leur a offertes — non pas parce que le vêtement est parfait, mais parce qu'ils se souviennent du geste.</p>
+
+      <h2>La broderie artisanale, <em>pas la broderie industrielle</em></h2>
+      <p>Il y a une différence que l'on voit au premier coup d'œil entre une broderie produite en masse sur une chaîne automatisée et une broderie réalisée sur une machine Tajima, ajustée point par point pour chaque commande. La densité du fil, la définition des courbes, le tombé sur le tissu — tout ça se sent.</p>
+      <p>Chez Ypersoa, chaque pièce passe entre les mains d'Adriana avant de partir. Pas pour contrôler une production — pour s'assurer que ce qui sort est quelque chose dont on est fières.</p>
+
+      <div class="pullquote">« Ce n'est pas de la broderie faite vite. C'est de la broderie faite bien. »</div>
+
+      <h2>Pour quelle <em>occasion ?</em></h2>
+      <p>La question revient souvent : est-ce que c'est adapté pour un anniversaire ? Pour Noël ? Pour une naissance ? La réponse courte : oui, pour tout ça — et pour les occasions sans nom aussi. Le "juste parce que" est souvent le plus beau des cadeaux.</p>
+      <p>Une broderie au prénom pour une naissance, c'est évident et bouleversant. Mais une broderie "La Brigitte" offerte à une amie un vendredi ordinaire parce que tu pensais à elle — ça, ça reste.</p>
+
+      <h2>Un mot sur <em>l'emballage et la livraison</em></h2>
+      <p>On y pense souvent en dernier, et pourtant : recevoir un colis qui a été pensé, c'est déjà une expérience en soi. Chaque commande Ypersoa est préparée avec soin. Si tu commandes pour offrir directement, indique-le à la commande — on s'adapte.</p>
+    </div>
+
+    <div class="article-cta-block">
+      <h3>Offrir une broderie Ypersoa</h3>
+      <p>Une pièce unique, brodée sur métier Tajima, livrée avec soin. Pour toutes les occasions — et pour aucune en particulier.</p>
+      <a class="btn-cta" href="/collections/all">Créer mon cadeau →</a>
+    </div>
+  </div>
+
+  <!-- ARTICLE 3 — INSPI INTERACTIVE -->
+  <div class="article-page inspi-article-page" id="article3">
+    <button class="article-back" onclick="showIndex()">← Retour au blog</button>
+    <div style="max-width:740px; margin:1rem auto; padding:0 2rem;">
+      <div class="article-meta">
+        <span class="article-tag">Guide interactif</span>
+        <span class="reading-time">À garder sous la main</span>
+        <span class="article-date">Mars 2026</span>
+      </div>
+      <h1 class="article-title">100+ idées<br><em>de broderies</em></h1>
+      <p class="article-intro">Prénoms, surnoms, famille, amour, occasions, bonne humeur — tout ce qu'on peut broder. Clique sur une idée pour la copier, puis colle-la dans le champ de personnalisation au moment de ta commande.</p>
+    </div>
+
+    <nav class="inspi-cats-nav">
+      <a class="inspi-cat-tab active" href="#sec-prenoms">Prénoms & surnoms</a>
+      <a class="inspi-cat-tab" href="#sec-maman">Pour maman</a>
+      <a class="inspi-cat-tab" href="#sec-famille">En famille</a>
+      <a class="inspi-cat-tab" href="#sec-enfants">Pour les enfants</a>
+      <a class="inspi-cat-tab" href="#sec-amour">Amour & couple</a>
+      <a class="inspi-cat-tab" href="#sec-amis">Entre amis</a>
+      <a class="inspi-cat-tab" href="#sec-occasions">Par occasion</a>
+      <a class="inspi-cat-tab" href="#sec-vibes">Good vibes</a>
+    </nav>
+
+    <div class="inspi-section" id="sec-prenoms">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">01</span>
+          <h2 class="inspi-sec-title">Prénoms<br/>& <em>surnoms</em></h2>
+          <p class="inspi-sec-hint">Le classique indémodable. Un prénom brodé, c'est un hoodie qui ne ressemblera jamais à un autre.</p>
+          <a class="inspi-sec-cta" href="/collections/all">Personnaliser →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag" onclick="copyItag(this)"><span>Emma</span></div><div class="itag" onclick="copyItag(this)"><span>Léa</span></div><div class="itag" onclick="copyItag(this)"><span>Zoé</span></div><div class="itag" onclick="copyItag(this)"><span>Chloé</span></div><div class="itag" onclick="copyItag(this)"><span>Inès</span></div><div class="itag" onclick="copyItag(this)"><span>Manon</span></div><div class="itag" onclick="copyItag(this)"><span>Lola</span></div><div class="itag" onclick="copyItag(this)"><span>Camille</span></div><div class="itag" onclick="copyItag(this)"><span>Lou</span></div><div class="itag" onclick="copyItag(this)"><span>Jade</span></div><div class="itag" onclick="copyItag(this)"><span>Lucas</span></div><div class="itag" onclick="copyItag(this)"><span>Hugo</span></div><div class="itag" onclick="copyItag(this)"><span>Tom</span></div><div class="itag" onclick="copyItag(this)"><span>Nathan</span></div><div class="itag" onclick="copyItag(this)"><span>Noah</span></div><div class="itag" onclick="copyItag(this)"><span>Maxou</span></div><div class="itag" onclick="copyItag(this)"><span>Loulou</span></div><div class="itag" onclick="copyItag(this)"><span>Crevette</span></div><div class="itag" onclick="copyItag(this)"><span>Chaton</span></div><div class="itag" onclick="copyItag(this)"><span>Bichette</span></div><div class="itag" onclick="copyItag(this)"><span>Doudou</span></div><div class="itag" onclick="copyItag(this)"><span>Poulette</span></div><div class="itag" onclick="copyItag(this)"><span>Belette</span></div><div class="itag" onclick="copyItag(this)"><span>Jolie môme</span></div><div class="itag" onclick="copyItag(this)"><span>Beau gosse</span></div><div class="itag" onclick="copyItag(this)"><span>P'tit cœur</span></div><div class="itag" onclick="copyItag(this)"><span>Mon soleil</span></div><div class="itag" onclick="copyItag(this)"><span>Bout'chou</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspi-quote-band">
+      <blockquote>« Un prénom brodé, c'est la preuve que ce cadeau a été pensé pour toi — rien que pour toi. »</blockquote>
+    </div>
+
+    <div class="inspi-section dark-section" id="sec-maman">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">02</span>
+          <h2 class="inspi-sec-title">Pour<br/><em>maman</em></h2>
+          <p class="inspi-sec-hint">Le cadeau Fête des Mères qui dit enfin ce qu'on n'ose pas dire à voix haute.</p>
+          <a class="inspi-sec-cta" href="/collections/all">Voir la collection →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag featured">⭐ Coup de cœur</div><div class="itag" onclick="copyItag(this)"><span>Maman chérie</span></div><div class="itag" onclick="copyItag(this)"><span>Super Maman</span></div><div class="itag" onclick="copyItag(this)"><span>Ma maman d'amour</span></div><div class="itag" onclick="copyItag(this)"><span>Mamounette</span></div><div class="itag" onclick="copyItag(this)"><span>Best Mum</span></div><div class="itag" onclick="copyItag(this)"><span>Cool Mama</span></div><div class="itag" onclick="copyItag(this)"><span>La Mamma</span></div><div class="itag" onclick="copyItag(this)"><span>Mamma Mia</span></div><div class="itag" onclick="copyItag(this)"><span>Mum of two</span></div><div class="itag" onclick="copyItag(this)"><span>Mum of three</span></div><div class="itag" onclick="copyItag(this)"><span>La plus belle des mamans</span></div><div class="itag" onclick="copyItag(this)"><span>Maman de [prénom]</span></div><div class="itag" onclick="copyItag(this)"><span>Je t'aime Maman</span></div><div class="itag" onclick="copyItag(this)"><span>Merci Maman</span></div><div class="itag" onclick="copyItag(this)"><span>Mum to be</span></div><div class="itag" onclick="copyItag(this)"><span>Future Maman</span></div><div class="itag" onclick="copyItag(this)"><span>Nouvelle Maman</span></div><div class="itag" onclick="copyItag(this)"><span>Mamie chérie</span></div><div class="itag" onclick="copyItag(this)"><span>Super Mamie</span></div><div class="itag" onclick="copyItag(this)"><span>Mamie d'amour</span></div><div class="itag" onclick="copyItag(this)"><span>Mamie poule</span></div><div class="itag" onclick="copyItag(this)"><span>La meilleure des Mamies</span></div><div class="itag" onclick="copyItag(this)"><span>Merci Nounou</span></div><div class="itag" onclick="copyItag(this)"><span>Nounou chérie</span></div><div class="itag" onclick="copyItag(this)"><span>Notre Nounou d'amour</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspi-section" id="sec-famille">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">03</span>
+          <h2 class="inspi-sec-title">En<br/><em>famille</em></h2>
+          <p class="inspi-sec-hint">Des hoodies assortis pour toute la tribu. Parce que rien ne vaut un duo mère-enfant brodé à l'identique.</p>
+          <a class="inspi-sec-cta" href="/collections/all">Voir les duos →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag featured">💙 Idée duo</div><div class="itag" onclick="copyItag(this)"><span>Family first</span></div><div class="itag" onclick="copyItag(this)"><span>We are family</span></div><div class="itag" onclick="copyItag(this)"><span>Happy family</span></div><div class="itag" onclick="copyItag(this)"><span>Family power</span></div><div class="itag" onclick="copyItag(this)"><span>La famille [nom]</span></div><div class="itag" onclick="copyItag(this)"><span>Les p'tits [nom]</span></div><div class="itag" onclick="copyItag(this)"><span>Team [nom]</span></div><div class="itag" onclick="copyItag(this)"><span>Cool family</span></div><div class="itag" onclick="copyItag(this)"><span>Frérot</span></div><div class="itag" onclick="copyItag(this)"><span>Soeurette</span></div><div class="itag" onclick="copyItag(this)"><span>Brother</span></div><div class="itag" onclick="copyItag(this)"><span>Sister</span></div><div class="itag" onclick="copyItag(this)"><span>Best Bro'</span></div><div class="itag" onclick="copyItag(this)"><span>Best Sister</span></div><div class="itag" onclick="copyItag(this)"><span>Mini moi</span></div><div class="itag" onclick="copyItag(this)"><span>Mon mini moi</span></div><div class="itag" onclick="copyItag(this)"><span>Papa poule</span></div><div class="itag" onclick="copyItag(this)"><span>Best Dad</span></div><div class="itag" onclick="copyItag(this)"><span>Daddy cool</span></div><div class="itag" onclick="copyItag(this)"><span>Super Papa</span></div><div class="itag" onclick="copyItag(this)"><span>Papa d'amour</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspi-section" id="sec-enfants" style="background:#F0E8DF;">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">04</span>
+          <h2 class="inspi-sec-title">Pour les<br/><em>enfants</em></h2>
+          <p class="inspi-sec-hint">Un petit surnom brodé sur un hoodie enfant — le cadeau qui fait fondre à coup sûr.</p>
+          <a class="inspi-sec-cta" href="/collections/all">Collection Enfant →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag" onclick="copyItag(this)"><span>Mini champion</span></div><div class="itag" onclick="copyItag(this)"><span>Mini championne</span></div><div class="itag" onclick="copyItag(this)"><span>P'tit mousse</span></div><div class="itag" onclick="copyItag(this)"><span>Baroudeur</span></div><div class="itag" onclick="copyItag(this)"><span>Baroudeuse</span></div><div class="itag" onclick="copyItag(this)"><span>Rêveur</span></div><div class="itag" onclick="copyItag(this)"><span>Rêveuse</span></div><div class="itag" onclick="copyItag(this)"><span>Charmeur</span></div><div class="itag" onclick="copyItag(this)"><span>Charmeuse</span></div><div class="itag" onclick="copyItag(this)"><span>Fonceur</span></div><div class="itag" onclick="copyItag(this)"><span>Fonceuse</span></div><div class="itag" onclick="copyItag(this)"><span>Chouineur</span></div><div class="itag" onclick="copyItag(this)"><span>Chouineuse</span></div><div class="itag" onclick="copyItag(this)"><span>Dancing king</span></div><div class="itag" onclick="copyItag(this)"><span>Dancing queen</span></div><div class="itag" onclick="copyItag(this)"><span>Bolide</span></div><div class="itag" onclick="copyItag(this)"><span>Surfer</span></div><div class="itag" onclick="copyItag(this)"><span>Hilarant</span></div><div class="itag" onclick="copyItag(this)"><span>Hilarante</span></div><div class="itag" onclick="copyItag(this)"><span>Born in [année]</span></div><div class="itag" onclick="copyItag(this)"><span>Millésime [année]</span></div><div class="itag" onclick="copyItag(this)"><span>Since [année]</span></div><div class="itag" onclick="copyItag(this)"><span>Génération [année]</span></div><div class="itag" onclick="copyItag(this)"><span>Club [année]</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspi-section dark-section" id="sec-amour">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">05</span>
+          <h2 class="inspi-sec-title">Amour<br/>& <em>couple</em></h2>
+          <p class="inspi-sec-hint">Pour offrir à l'autre un hoodie qui dit ce que les mots ne suffisent pas à dire.</p>
+          <a class="inspi-sec-cta" href="/collections/all">Saint-Valentin →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag featured">❤️ Coup de cœur</div><div class="itag" onclick="copyItag(this)"><span>À toi, rien qu'à toi</span></div><div class="itag" onclick="copyItag(this)"><span>Pour toujours</span></div><div class="itag" onclick="copyItag(this)"><span>À la vie, à l'amour</span></div><div class="itag" onclick="copyItag(this)"><span>L'amour fou</span></div><div class="itag" onclick="copyItag(this)"><span>Amour</span></div><div class="itag" onclick="copyItag(this)"><span>Boom boom</span></div><div class="itag" onclick="copyItag(this)"><span>Felicità</span></div><div class="itag" onclick="copyItag(this)"><span>À la folie</span></div><div class="itag" onclick="copyItag(this)"><span>Mon grand amour</span></div><div class="itag" onclick="copyItag(this)"><span>L'homme idéal</span></div><div class="itag" onclick="copyItag(this)"><span>La femme idéale</span></div><div class="itag" onclick="copyItag(this)"><span>Monsieur</span></div><div class="itag" onclick="copyItag(this)"><span>Madame</span></div><div class="itag" onclick="copyItag(this)"><span>Futur(e) marié(e)</span></div><div class="itag" onclick="copyItag(this)"><span>Team mariés</span></div><div class="itag" onclick="copyItag(this)"><span>Just married</span></div><div class="itag" onclick="copyItag(this)"><span>Date de mariage</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspi-section" id="sec-amis">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">06</span>
+          <h2 class="inspi-sec-title">Entre<br/><em>amis</em></h2>
+          <p class="inspi-sec-hint">Des hoodies assortis pour le gang. Parce qu'une bande de potes avec les mêmes broderies, ça n'a pas de prix.</p>
+          <a class="inspi-sec-cta" href="/collections/all">Créer un duo →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag" onclick="copyItag(this)"><span>BFF</span></div><div class="itag" onclick="copyItag(this)"><span>Besties</span></div><div class="itag" onclick="copyItag(this)"><span>Best crew</span></div><div class="itag" onclick="copyItag(this)"><span>My crew</span></div><div class="itag" onclick="copyItag(this)"><span>Le club des 4</span></div><div class="itag" onclick="copyItag(this)"><span>Les copains d'abord</span></div><div class="itag" onclick="copyItag(this)"><span>Bande de filles</span></div><div class="itag" onclick="copyItag(this)"><span>Cool kids</span></div><div class="itag" onclick="copyItag(this)"><span>Team [prénom]</span></div><div class="itag" onclick="copyItag(this)"><span>Club sourires</span></div><div class="itag" onclick="copyItag(this)"><span>Mini pote</span></div><div class="itag" onclick="copyItag(this)"><span>Gang of [ville]</span></div><div class="itag" onclick="copyItag(this)"><span>Les inséparables</span></div><div class="itag" onclick="copyItag(this)"><span>For life</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspi-section" id="sec-occasions" style="background:var(--cream);">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">07</span>
+          <h2 class="inspi-sec-title">Par<br/><em>occasion</em></h2>
+          <p class="inspi-sec-hint">Chaque moment mérite sa broderie. Anniversaire, naissance, mariage, rentrée...</p>
+          <a class="inspi-sec-cta" href="/collections/all">Idées cadeaux →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag featured">🎂 Anniversaire</div><div class="itag" onclick="copyItag(this)"><span>Happy Birthday [prénom]</span></div><div class="itag" onclick="copyItag(this)"><span>[Prénom] — [âge] ans</span></div><div class="itag" onclick="copyItag(this)"><span>Team [âge] ans</span></div><div class="itag" onclick="copyItag(this)"><span>Born in [année]</span></div><div class="itag featured">👶 Naissance</div><div class="itag" onclick="copyItag(this)"><span>Bienvenue [prénom]</span></div><div class="itag" onclick="copyItag(this)"><span>Nouveau membre</span></div><div class="itag" onclick="copyItag(this)"><span>Le petit dernier</span></div><div class="itag" onclick="copyItag(this)"><span>La petite dernière</span></div><div class="itag featured">🎒 Rentrée</div><div class="itag" onclick="copyItag(this)"><span>CP class [année]</span></div><div class="itag" onclick="copyItag(this)"><span>Team maternelle</span></div><div class="itag" onclick="copyItag(this)"><span>Première rentrée</span></div><div class="itag featured">🎓 Diplôme</div><div class="itag" onclick="copyItag(this)"><span>Major de promo</span></div><div class="itag" onclick="copyItag(this)"><span>Diplômé(e) [année]</span></div><div class="itag" onclick="copyItag(this)"><span>Bachelier(ère)</span></div><div class="itag featured">🏖️ Vacances</div><div class="itag" onclick="copyItag(this)"><span>Little breton(ne)</span></div><div class="itag" onclick="copyItag(this)"><span>Team Bretagne</span></div><div class="itag" onclick="copyItag(this)"><span>Surf in Biarritz</span></div><div class="itag" onclick="copyItag(this)"><span>Gang of [ville]</span></div><div class="itag" onclick="copyItag(this)"><span>Team montagne</span></div><div class="itag" onclick="copyItag(this)"><span>Team poudreuse</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspi-section" id="sec-vibes">
+      <div class="inspi-section-inner">
+        <div>
+          <span class="inspi-sec-num">08</span>
+          <h2 class="inspi-sec-title">Good<br/><em>vibes</em></h2>
+          <p class="inspi-sec-hint">Quand tu veux un hoodie qui reflète ta personnalité — pas juste ton prénom.</p>
+          <a class="inspi-sec-cta" href="/collections/all">Tout personnaliser →</a>
+        </div>
+        <div>
+          <p class="copy-hint-label">Clique pour copier</p>
+          <div class="tags-cloud">
+            <div class="itag" onclick="copyItag(this)"><span>Smile</span></div><div class="itag" onclick="copyItag(this)"><span>Good vibes</span></div><div class="itag" onclick="copyItag(this)"><span>Best life</span></div><div class="itag" onclick="copyItag(this)"><span>Farniente</span></div><div class="itag" onclick="copyItag(this)"><span>Flemme</span></div><div class="itag" onclick="copyItag(this)"><span>Viva la vida</span></div><div class="itag" onclick="copyItag(this)"><span>Roule ma poule</span></div><div class="itag" onclick="copyItag(this)"><span>Cool Raoul</span></div><div class="itag" onclick="copyItag(this)"><span>On the road</span></div><div class="itag" onclick="copyItag(this)"><span>Voyage voyage</span></div><div class="itag" onclick="copyItag(this)"><span>Coquillage & crustacés</span></div><div class="itag" onclick="copyItag(this)"><span>En voiture Simone</span></div><div class="itag" onclick="copyItag(this)"><span>Carpe diem</span></div><div class="itag" onclick="copyItag(this)"><span>Slow life</span></div><div class="itag" onclick="copyItag(this)"><span>No stress</span></div><div class="itag" onclick="copyItag(this)"><span>Libre</span></div><div class="itag" onclick="copyItag(this)"><span>Sauvage</span></div><div class="itag" onclick="copyItag(this)"><span>Soleil</span></div><div class="itag" onclick="copyItag(this)"><span>Douce nuit</span></div><div class="itag" onclick="copyItag(this)"><span>À la belle étoile</span></div><div class="itag" onclick="copyItag(this)"><span>Coucher de soleil</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--ink); padding:4rem 3rem; display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:end;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:3.5rem; font-weight:300; font-style:italic; color:rgba(245,240,232,0.15); line-height:1;">Ypersoa</div>
+      <div>
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:#F5F0EA; margin-bottom:0.8rem; line-height:1.2;">Tu as trouvé ton idée ?<br/>Il ne reste plus qu'à broder.</h3>
+        <p style="font-size:0.85rem; color:rgba(245,240,232,0.4); margin-bottom:1.8rem; line-height:1.7;">Choisis ta pièce, entre ta broderie, et on s'occupe du reste depuis notre atelier de Wattrelos.</p>
+        <a href="/collections/all" class="btn-cta">Créer ma broderie →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLE 4 -->
+  <div class="article-page" id="article4">
+    <button class="article-back" onclick="showIndex()">← Retour au blog</button>
+    <div class="article-meta">
+      <span class="article-tag">Atelier &amp; Savoir-faire</span>
+      <span class="reading-time">3 min de lecture</span>
+      <span class="article-date">Mars 2026</span>
+    </div>
+    <h1 class="article-title">L'artisanat français,<br><em>de Wattrelos à toi</em></h1>
+    <p class="article-intro">Derrière chaque point de broderie de vos T-shirts, vos hoodies ou vos sweats, se cachent avant tout des mains expertes. Bienvenue dans notre atelier.</p>
+    <div class="article-body">
+      <h2>Un atelier dans <em>notre région de cœur</em></h2>
+      <p>Chez Ypersoa, nous ne croyons pas à la délocalisation abstraite où le vêtement parcourt trois fois le tour de la planète avant d'arriver chez vous. C'est pour cela que nous avons installé notre atelier à Wattrelos, dans le nord de la France, berceau historique du textile.</p>
+      <p>Avoir l'atelier à côté de nous, ça veut dire que chaque matin, nous vérifions nous-mêmes les couleurs, nous ajustons la tension des fils et nous nous assurons que l'aiguille danse parfaitement au rythme de notre fameuse machine Tajima.</p>
+      <div class="pullquote">« La proximité, c'est le luxe de notre époque. C'est la seule façon d'assurer une qualité irréprochable sur chaque commande. »</div>
+      <h2>La magie <em>de la Tajima</em></h2>
+      <p>La Tajima, c'est un peu la Rolls-Royce de la broderie. Cette machine japonaise nous offre une précision de point inégalée. Mais la machine ne fait pas tout. Pour qu'une jolie phrase ou un pictogramme fin soit lisible sans tirer sur le maille du T-shirt, il y a un réglage méticuleux que seule l'humain maîtrise : l'art du placement du "stabilisateur" ou l'ajustement du fichier numérique.</p>
+      <p>Tout est géré sur place, à Wattrelos. Dès que votre commande tombe, votre personnalisation est transformée en milliers de points de broderie dans notre atelier.</p>
+    </div>
+    <div class="article-cta-block">
+      <h3>Soutiens le métier</h3>
+      <p>Commande aujourd'hui, on brode avec passion demain.</p>
+      <a class="btn-cta" href="/collections/all">Voir les collections →</a>
+    </div>
+  </div>
+
+  <!-- ARTICLE 5 -->
+  <div class="article-page" id="article5">
+    <button class="article-back" onclick="showIndex()">← Retour au blog</button>
+    <div class="article-meta">
+      <span class="article-tag">Événements</span>
+      <span class="reading-time">4 min de lecture</span>
+      <span class="article-date">Mars 2026</span>
+    </div>
+    <h1 class="article-title">Rassembler par le<br><em>vêtement</em></h1>
+    <p class="article-intro">Que ce soit pour un enterrement de vie de jeune fille, un cadeau de naissance ou une réunion d'entreprise, la broderie personnalisée soude n'importe quel groupe ou famille.</p>
+    <div class="article-body">
+      <h2>Les événements <em>importants</em></h2>
+      <p>On nous contacte de plus en plus pour célébrer des mariages ou des événements privés. Un T-shirt "Bride to Be", "Demoiselle d'honneur" brodé sur-mesure restera. C'est une signature discrète, mille fois plus élégante qu'une grosse impression sérigraphique qui s'effrite au bout de trois lavages.</p>
+      <p>Imaginez un instant vos amis en week-end d'enterrement de vie de jeune fille (EVJF/EVG), portant le même Hoodie en teinte Mastic avec une date brodée délicatement près du cœur, et sur leur poignet le symbole "Lune". Difficile de faire plus fort émotionnellement.</p>
+      <div class="pullquote">« Ce n'est pas qu'un hoodie. C'est une mémoire de coton que vous portez avec vous. »</div>
+      <h2>Et pour les entreprises ? <em>Le confort pro</em></h2>
+      <p>Les "goodies" plastiques jetables et mal finis, c'est dépassé. Les entreprises qui tiennent à la santé de leur équipe et de leur marque employeur misent sur du confort lourd, du premium, et de la broderie B2B fine. Nous équipons de plus en plus de jeunes startups et d'agences créatives avec notre gamme Club ou Standard. S'habiller confort et chic au travail n'a jamais été aussi simple, car la broderie apporte automatiquement cette "French Touch".</p>
+    </div>
+    <div class="article-cta-block">
+      <h3>Vous préparez un événement ?</h3>
+      <p>Contactez-nous pour une personnalisation de groupe, B2B ou privée.</p>
+      <a class="btn-cta" href="/pages/contact">Nous contacter →</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showArticle(id) {
+    document.getElementById('blogIndex').classList.add('hidden');
+    document.querySelectorAll('.article-page').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function showIndex() {
+    document.getElementById('blogIndex').classList.remove('hidden');
+    document.querySelectorAll('.article-page').forEach(function(p) { p.classList.remove('active'); });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function copyItag(el) {
+    var text = el.querySelector('span') ? el.querySelector('span').textContent : el.textContent.trim();
+    navigator.clipboard.writeText(text).then(function() {
+      el.classList.add('copied');
+      setTimeout(function() { el.classList.remove('copied'); }, 1800);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var inspiSections = document.querySelectorAll('.inspi-section[id]');
+    var inspiTabs = document.querySelectorAll('.inspi-cat-tab');
+    if (inspiSections.length > 0 && typeof IntersectionObserver !== 'undefined') {
+      var inspiObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            inspiTabs.forEach(function(t) { t.classList.remove('active'); });
+            var active = document.querySelector('.inspi-cat-tab[href="#' + entry.target.id + '"]');
+            if (active) active.classList.add('active');
+          }
+        });
+      }, { threshold: 0.3 });
+      inspiSections.forEach(function(s) { inspiObserver.observe(s); });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Page Blog",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Page Blog"
+    }
+  ]
+}
+{% endschema %}

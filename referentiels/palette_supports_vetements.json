@@ -1,0 +1,206 @@
+{
+  "_meta": {
+    "schema_version": "1.4",
+    "referentiel": "palette_supports_vetements",
+    "last_updated": "2026-04-19",
+    "description": "Couleurs officielles des vetements supports Ypersoa (hoodies, t-shirts, sweats). Palette canonisee apres arbitrage des doublons.",
+    "nb_couleurs_officielles": 21,
+    "changelog": [
+      "v1.1 - Canonisation des doublons : 'Bleu' supprime (alias de Marine), 'Vert' supprime (alias de Vert sauge), 'Jaune' et 'Citron jaune' supprimes (alias de Citron), 'Khaki' supprime (alias de Kaki)",
+      "v1.2 - Correction hex 'Vert terre' : #8B7355 (marron-taupe, faux) -> #616D55 (vert olive militaire, echantillonne sur packshot Awdis Earthy Green)",
+      "v1.3 - Ajout 'Bleu ciel' (#8BA0B0) suite decouverte sur YP021. Distinct du Bleu clair (#A8C8D8) et du Bleu pastel (#8AAFD4).",
+      "v1.4 - Correction hex 'Rose orchidee' : #E2ACC1 -> #FAD0D5 (vraie couleur echantillonnee sur packshot B&C Orchid Pink utilise pour YP019)"
+    ]
+  },
+
+  "couleurs": [
+    {
+      "id": "beige",
+      "nom": "Beige",
+      "hex": "#F5F0E0",
+      "famille": "neutres_clairs_chauds",
+      "saison_signature": "toute_annee",
+      "ambiance_editoriale": ["naturel", "doux", "intemporel"]
+    },
+    {
+      "id": "blanc",
+      "nom": "Blanc",
+      "hex": "#FFFFFF",
+      "famille": "neutres_clairs_froids",
+      "saison_signature": "printemps_ete",
+      "ambiance_editoriale": ["pur", "minimaliste", "lumineux"]
+    },
+    {
+      "id": "offwhite",
+      "nom": "Offwhite",
+      "hex": "#F4EFEA",
+      "famille": "neutres_clairs_chauds",
+      "saison_signature": "toute_annee",
+      "ambiance_editoriale": ["signature_ypersoa", "chaleureux", "elegant"],
+      "note": "Couleur signature du catalogue Ypersoa - support le plus iconique"
+    },
+    {
+      "id": "pierre_naturelle",
+      "nom": "Pierre naturelle",
+      "hex": "#C4B89A",
+      "famille": "neutres_chauds",
+      "saison_signature": "automne_hiver",
+      "ambiance_editoriale": ["mineral", "naturel", "brut"]
+    },
+    {
+      "id": "mastic",
+      "nom": "Mastic",
+      "hex": "#C5C0B3",
+      "famille": "neutres_chauds",
+      "saison_signature": "toute_annee",
+      "ambiance_editoriale": ["doux", "mineral", "sobre"]
+    },
+    {
+      "id": "rose_pale",
+      "nom": "Rose pâle",
+      "hex": "#F0B8C0",
+      "famille": "roses_doux",
+      "saison_signature": "printemps",
+      "ambiance_editoriale": ["tendre", "feminin", "poudre"]
+    },
+    {
+      "id": "rose_orchidee",
+      "nom": "Rose orchidée",
+      "hex": "#FAD0D5",
+      "famille": "roses_doux",
+      "saison_signature": "printemps_ete",
+      "ambiance_editoriale": ["poetique", "delicat", "floral"],
+      "note": "Hex corrige en v1.4 : ancienne valeur #E2ACC1 (estimee). Vraie couleur echantillonnee sur packshot B&C Orchid Pink. Visuellement tres proche du rose_pale (#F0B8C0) mais reference produit distincte chez B&C."
+    },
+    {
+      "id": "bleu_clair",
+      "nom": "Bleu clair",
+      "hex": "#A8C8D8",
+      "famille": "bleus_clairs",
+      "saison_signature": "printemps_ete",
+      "ambiance_editoriale": ["frais", "aerien", "apaisant"]
+    },
+    {
+      "id": "bleu_pastel",
+      "nom": "Bleu pastel",
+      "hex": "#8AAFD4",
+      "famille": "bleus_clairs",
+      "saison_signature": "printemps",
+      "ambiance_editoriale": ["doux", "serein", "lumineux"]
+    },
+    {
+      "id": "bleu_ciel",
+      "nom": "Bleu ciel",
+      "hex": "#8BA0B0",
+      "famille": "bleus_clairs",
+      "saison_signature": "printemps_ete",
+      "ambiance_editoriale": ["aerien", "doux", "frais"],
+      "note": "Ajoute en v1.3 suite decouverte sur YP021. Distinct du Bleu clair (#A8C8D8, plus pastel) et du Bleu pastel (#8AAFD4, plus sature). Plus gris-bleu que les deux autres."
+    },
+    {
+      "id": "marine",
+      "nom": "Marine",
+      "hex": "#1E2D4A",
+      "famille": "bleus_fonces",
+      "saison_signature": "toute_annee",
+      "ambiance_editoriale": ["classique", "timeless", "chic"],
+      "aliases_liquid": ["bleu"],
+      "note": "Absorbe l'ancien 'Bleu' (#1B2A4A) suite canonisation v1.1"
+    },
+    {
+      "id": "noir",
+      "nom": "Noir",
+      "hex": "#1A1A1A",
+      "famille": "neutres_fonces",
+      "saison_signature": "toute_annee",
+      "ambiance_editoriale": ["puissant", "graphique", "absolu"]
+    },
+    {
+      "id": "gris",
+      "nom": "Gris",
+      "hex": "#9B9B9B",
+      "famille": "neutres_gris",
+      "saison_signature": "toute_annee",
+      "ambiance_editoriale": ["neutre", "urbain", "discret"]
+    },
+    {
+      "id": "gris_fonce",
+      "nom": "Gris foncé",
+      "hex": "#404040",
+      "famille": "neutres_fonces",
+      "saison_signature": "automne_hiver",
+      "ambiance_editoriale": ["chic", "urbain", "sobre"]
+    },
+    {
+      "id": "vert_sauge",
+      "nom": "Vert sauge",
+      "hex": "#7A9E7E",
+      "famille": "verts_pastels",
+      "saison_signature": "printemps_ete",
+      "ambiance_editoriale": ["naturel", "apaisant", "botanique"],
+      "aliases_liquid": ["vert"],
+      "note": "Absorbe l'ancien 'Vert' suite canonisation v1.1"
+    },
+    {
+      "id": "vert_olive",
+      "nom": "Vert olive",
+      "hex": "#6B7A3A",
+      "famille": "verts_profonds",
+      "saison_signature": "automne",
+      "ambiance_editoriale": ["mediterraneen", "naturel", "riche"]
+    },
+    {
+      "id": "vert_terre",
+      "nom": "Vert terre",
+      "hex": "#616D55",
+      "famille": "verts_profonds",
+      "saison_signature": "automne_hiver",
+      "ambiance_editoriale": ["militaire", "terreux", "noble"],
+      "note": "Hex corrige en v1.2 : l'ancienne valeur #8B7355 (marron-taupe) etait fausse. Correspond au Earthy Green d'Awdis."
+    },
+    {
+      "id": "canard",
+      "nom": "Canard",
+      "hex": "#1A5A69",
+      "famille": "bleus_verts",
+      "saison_signature": "automne_hiver",
+      "ambiance_editoriale": ["profond", "poetique", "signature"]
+    },
+    {
+      "id": "bleu_petrole",
+      "nom": "Bleu pétrole",
+      "hex": "#1A6670",
+      "famille": "bleus_verts",
+      "saison_signature": "automne_hiver",
+      "ambiance_editoriale": ["riche", "mineral", "sophistique"]
+    },
+    {
+      "id": "lilas",
+      "nom": "Lilas",
+      "hex": "#C4A8D4",
+      "famille": "violets_doux",
+      "saison_signature": "printemps",
+      "ambiance_editoriale": ["poetique", "floral", "delicat"]
+    },
+    {
+      "id": "citron",
+      "nom": "Citron",
+      "hex": "#E8D84A",
+      "famille": "jaunes_vifs",
+      "saison_signature": "ete",
+      "ambiance_editoriale": ["solaire", "vibrant", "audacieux"],
+      "aliases_liquid": ["jaune", "citron jaune"],
+      "note": "Absorbe les anciens 'Jaune' et 'Citron jaune' suite canonisation v1.1"
+    },
+    {
+      "id": "kaki",
+      "nom": "Kaki",
+      "hex": "#5C614B",
+      "famille": "verts_profonds",
+      "saison_signature": "automne_hiver",
+      "ambiance_editoriale": ["utilitaire", "naturel", "robuste"],
+      "aliases_liquid": ["khaki"],
+      "note": "Absorbe l'orthographe anglaise 'Khaki' suite canonisation v1.1"
+    }
+  ]
+}
