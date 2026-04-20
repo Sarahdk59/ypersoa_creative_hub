@@ -1,0 +1,405 @@
+{
+  "meta": {
+    "lot": 3,
+    "version": "1.0",
+    "date": "2026-04-20",
+    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "fiches_contenues": ["MAN-P05", "MAN-P06", "MAN-P07", "MAN-P09", "MAN-P10", "MAN-P12"],
+    "choix_directionnels_sarah": {
+      "MAN-P05_Beatrice": "C pur - Grand-mère bourgeoise campagne normande",
+      "MAN-P06_Mathieu": "C - Papa sportwear chic (marinière + Stan Smith + veste denim)",
+      "MAN-P07_Nicolas": "B - Mari attentionné classique style Octobre/Maison Labiche",
+      "MAN-P09_Gabin": "Cheveux noirs plutôt longs (correctif vs proposition initiale)",
+      "MAN-P10_Marie-Helene": "B - Rousse toujours rousse avec mèches argentées",
+      "MAN-P12_Brune": "B - Créative mode décontractée (Thylane Blondeau civile)"
+    }
+  },
+  "mannequins": [
+    {
+      "id": "MAN-P05",
+      "prenom": "Béatrice",
+      "age": 55,
+      "genre": "F",
+      "ethnicite": "métisse noir-blanc",
+      "ancrage_geographique": "Maison de famille en Normandie (pays d'Auge ou Cotentin), pied-à-terre parisien",
+      "apparence_physique": {
+        "silhouette": "1m68, silhouette solide et ancrée, posture droite mais relâchée — le port d'une femme qui a passé ses week-ends à jardiner et à marcher sur la plage",
+        "cheveux": "Argentés naturels mi-longs, souvent tirés en chignon bas lâche ou queue de cheval basse, quelques mèches qui s'échappent",
+        "visage": "Traits forts et beaux, pommettes hautes (héritage paternel noir), yeux clairs (héritage maternel blanc), rides d'expression naturelles aux yeux et à la bouche",
+        "peau": "Métisse claire lumineuse, légèrement hâlée par le grand air, grain de peau habité"
+      },
+      "personnalite_role_narratif": "Ancienne prof d'université ou notaire à la retraite, divorcée, vit entre Paris et sa maison de famille normande. Les enfants et petits-enfants débarquent pour les week-ends et les vacances. Incarne la bourgeoisie campagne française mixte — cultivée, sans affectation, chaleureuse. Matriarche moderne du casting.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et chaleureux, ou posé sur Félicie (sa petite-fille), rire franc",
+        "expressions_privilegiees": ["rire franc", "concentration sur un geste (cueillette, cuisine, lecture)", "tendresse avec enfant"],
+        "eviter": "Poses matriarche figée, lumière qui accentuerait les rides",
+        "cadrages_type": ["plan moyen dans cuisine de famille", "plan large dans jardin", "portrait 3/4 assise sur banc avec Félicie"],
+        "lumiere_signature": "Lumière de fenêtre campagne, ambre du soir dans la maison, lumière d'automne"
+      },
+      "duo": "DUO_BEATRICE_FELICIE",
+      "style_wear": {
+        "signature_vestimentaire": "Bourgeoise campagne normande — superpositions de pièces usées mais nobles, cachemire patiné, jean droit qui a vécu, bottines en cuir huilé. Zéro tape-à-l'œil, tout dans la patine.",
+        "pieces_favorites": [
+          "Pull cachemire col V écru ou gris patiné",
+          "Chemise en coton oxford bleu ciel froissée",
+          "Jean droit taille haute légèrement délavé",
+          "Rangers en cuir marron (Paraboot ou similaire)",
+          "Barbour huilé vert bouteille (usé)",
+          "Jupe en velours côtelé taupe mi-longue",
+          "Écharpe en laine tartan"
+        ],
+        "couleurs_de_predilection": [
+          "écru",
+          "gris souris",
+          "bleu ciel",
+          "marron chocolat",
+          "vert bouteille",
+          "tartan bordeaux/vert"
+        ],
+        "styles_francais_refs": [
+          "Vanessa Seward campagne",
+          "Charlotte Perriand retirée",
+          "Hermès façon propriétaire terrienne",
+          "esthétique Cabourg hors saison"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : cachemire écru + jean droit + sweat Ypersoa brodé en dessous, à la cheminée avec Félicie",
+          "week-end : chemise oxford + barbour + rangers, promenade sur plage, T-shirt Ypersoa visible sous la chemise ouverte",
+          "mariage : tailleur laine taupe + blouse Ypersoa brodée col rond, mariage de cousin en Normandie",
+          "champ coquelicots : pull écru + jupe velours + bottines, panier cueillette, sweat Ypersoa noué aux épaules"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "talons hauts",
+          "tailleurs stricts de ville",
+          "streetwear",
+          "couleurs vives flashy",
+          "total look noir parisien",
+          "imprimés léopard ou voyants",
+          "bijoux ostentatoires"
+        ]
+      }
+    },
+    {
+      "id": "MAN-P06",
+      "prenom": "Mathieu",
+      "age": 40,
+      "genre": "H",
+      "ethnicite": "blanc français",
+      "ancrage_geographique": "Paris 11e ou Bordeaux centre, famille vit dans un appart lumineux",
+      "apparence_physique": {
+        "silhouette": "1m82, silhouette fine et détendue, posture relâchée, s'affale volontiers",
+        "cheveux": "Bruns légèrement longs, souvent dépeignés, mèches qui tombent sur le front",
+        "visage": "Barbe brune de 3 jours (jamais taillée à la perfection), yeux bruns, rides de sourire, regard doux",
+        "peau": "Claire, légèrement hâlée, grain de peau visible"
+      },
+      "personnalite_role_narratif": "DA freelance ou ingénieur son, papa de Gabin. Cool sans être branché, décontracté sans être négligé. Emmène son fils à l'école en vélo cargo, brunche avec sa femme le dimanche, part camper le week-end. Incarne le papa français d'aujourd'hui — présent, doux, stylé sans y penser.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Souvent vers Gabin ou hors champ, rarement caméra directe — pudeur masculine",
+        "expressions_privilegiees": ["sourire en coin", "concentration sur enfant", "éclat de rire retenu"],
+        "eviter": "Poses viriles appuyées, mains dans les poches frontales, regards caméra intenses",
+        "cadrages_type": ["plan américain assis avec Gabin sur les genoux", "plan moyen en marche avec enfant", "détail main de père sur épaule de fils"],
+        "lumiere_signature": "Lumière naturelle douce, scènes urbaines du matin (école, café, parc)"
+      },
+      "duo": "DUO_MATHIEU_GABIN",
+      "style_wear": {
+        "signature_vestimentaire": "Papa sportwear chic — la marinière éternelle, jeans droits, Stan Smith, veste de travail en denim, rien qui cherche. L'élégance du papa qui s'habille vite mais bien.",
+        "pieces_favorites": [
+          "Marinière Saint James bleu marine/écru",
+          "T-shirt blanc épais col rond",
+          "Jean droit brut (Levi's 501 ou équivalent)",
+          "Stan Smith cuir blanc patinées",
+          "Veste de travail en denim (Orcival, Le Laboureur)",
+          "Chino beige patiné",
+          "Sweat molleton gris chiné"
+        ],
+        "couleurs_de_predilection": [
+          "marine",
+          "blanc cassé",
+          "denim bleu",
+          "gris chiné",
+          "beige",
+          "kaki"
+        ],
+        "styles_francais_refs": [
+          "papa de Jeanne Damas",
+          "Orcival × Armor Lux campagne",
+          "Hoalen hiver",
+          "Édouard Baer civil"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : marinière + jean + sweat Ypersoa brodé sur les épaules, dîner maison",
+          "week-end : T-shirt blanc + chino + Stan Smith + T-shirt Ypersoa brodé visible",
+          "mariage : chemise oxford blanche + pantalon laine + veste denim, T-shirt Ypersoa brodé en dessous",
+          "champ coquelicots : marinière + jean + veste denim, Gabin sur les épaules, sweat Ypersoa au cas où il fait frais"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "costume strict 3 pièces",
+          "logos sportifs",
+          "sneakers technique type running",
+          "chemises hawaïennes",
+          "total look noir",
+          "montre tape-à-l'œil",
+          "baskets blanches immaculées qui n'ont jamais servi"
+        ]
+      }
+    },
+    {
+      "id": "MAN-P07",
+      "prenom": "Nicolas",
+      "age": 45,
+      "genre": "H",
+      "ethnicite": "blanc français",
+      "ancrage_geographique": "Paris ou Lyon, cadre dans une entreprise familiale ou indépendant",
+      "apparence_physique": {
+        "silhouette": "1m80, silhouette soignée et sobre, posture droite sans raideur, geste posé",
+        "cheveux": "Châtains foncés avec tempes poivre-sel, coupe classique courte-moyenne, raie sur le côté discrète",
+        "visage": "Traits réguliers, yeux bruns doux, léger sourire de fond, rides d'expression aux yeux",
+        "peau": "Claire, grain de peau lisse et vivant, barbe rasée de près (parfois barbe de 2 jours)"
+      },
+      "personnalite_role_narratif": "Cadre moyen ou indépendant, 45 ans, marié, peut-être des ados. Mari attentionné qui offre des cadeaux pensés. Incarne la fiabilité masculine française — solide, doux, présent. Client type Maison Labiche / Octobre : élégant sans recherche, fidèle à ses marques.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P3_Usage", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et calme, ou légèrement hors champ en pleine concentration, sourire retenu",
+        "expressions_privilegiees": ["calme posé", "sourire doux", "concentration sur objet ou interlocuteur"],
+        "eviter": "Poses de séduction, regards intenses caméra, gestes amples",
+        "cadrages_type": ["portrait 3/4 assis bureau ou café", "plan moyen debout appuyé contre un mur", "détail mains tenant T-shirt brodé"],
+        "lumiere_signature": "Lumière latérale douce d'intérieur, café ou salon, lumière Vermeer masculine"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Mari attentionné style Octobre / Maison Labiche — pulls marins, pantalons en toile patinée, chemises sobres, rien qui ne crie. L'élégance du mec qui achète peu mais bien.",
+        "pieces_favorites": [
+          "Pull marin laine mérinos marine",
+          "Chemise oxford bleu ciel ou blanche",
+          "Pantalon en toile beige ou kaki (Vetra, Orcival, Octobre)",
+          "Derbies en cuir marron patiné",
+          "Veste en laine bouillie marine",
+          "T-shirt col rond blanc épais",
+          "Pull cachemire camel col rond"
+        ],
+        "couleurs_de_predilection": [
+          "marine",
+          "blanc cassé",
+          "beige",
+          "camel",
+          "gris anthracite",
+          "kaki"
+        ],
+        "styles_francais_refs": [
+          "Maison Labiche homme",
+          "Octobre éditorial",
+          "Hoalen printemps",
+          "Éric Altmayer civil"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : pull marin + chino + T-shirt Ypersoa brodé en dessous visible au col",
+          "week-end : chemise oxford + jean droit + sweat Ypersoa brodé posé sur les épaules, brunch en famille",
+          "mariage : chemise blanche + pantalon laine + veste laine bouillie, T-shirt Ypersoa brodé discret",
+          "champ coquelicots : pull cachemire + chino + derbies, sweat Ypersoa dans le sac"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "streetwear logos",
+          "costume trois pièces brillant",
+          "sneakers techniques",
+          "chemises fantaisie à motifs",
+          "total look noir",
+          "accessoires bling"
+        ]
+      }
+    },
+    {
+      "id": "MAN-P09",
+      "prenom": "Gabin",
+      "age": 5,
+      "genre": "H",
+      "ethnicite": "blanc",
+      "apparence_physique": {
+        "silhouette": "Petit, fin, énergie bondissante",
+        "cheveux": "Noirs plutôt longs (hérités de son père Mathieu), mèches qui tombent sur les yeux, souvent en bataille",
+        "visage": "Yeux bruns vifs, joues pleines, fossettes quand il rit, petite bouche expressive",
+        "peau": "Claire, rosée aux joues, peut-être une petite cicatrice discrète genou ou menton (vie d'enfant)"
+      },
+      "personnalite_role_narratif": "Fils de Mathieu (DUO_MATHIEU_GABIN). Garçon vif, sensible, imaginatif. Construit des cabanes, dessine sur les murs, adore cuisiner avec son père. Le genre d'enfant qui pose mille questions sur tout.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Hors champ (concentration sur jeu/objet), entre lui et son père, rarement caméra",
+        "expressions_privilegiees": ["concentration intense", "rire éclaté", "émerveillement"],
+        "eviter": "Poses 'enfant mignon' forcées, sourires commandés, costumes de fête",
+        "cadrages_type": ["plan large dans jeu avec père", "détail mains sur broderie T-shirt", "plan moyen assis sur épaules du père"],
+        "lumiere_signature": "Lumière vivante, scènes de vie, mouvement, pas de setup statique"
+      },
+      "duo": "DUO_MATHIEU_GABIN",
+      "style_wear": {
+        "signature_vestimentaire": "Mini-sportwear chic à la française — salopettes, marinières, baskets enfant Veja, vêtements faits pour courir et grimper",
+        "pieces_favorites": [
+          "Salopette en jean patinée",
+          "Marinière enfant (Petit Bateau, Saint James kids)",
+          "Pantalon jogger molleton gris chiné",
+          "T-shirt blanc col rond",
+          "Pull molleton orange ou bleu marine",
+          "Baskets Veja enfant",
+          "Bottes en caoutchouc jaunes"
+        ],
+        "couleurs_de_predilection": [
+          "marine",
+          "écru",
+          "gris chiné",
+          "orange brûlé",
+          "rouge tomette",
+          "denim"
+        ],
+        "styles_francais_refs": [
+          "Bonpoint décontracté",
+          "enfants Gamin Gamine",
+          "Petit Bateau intemporel",
+          "Amaia Kids"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : pyjama coton + T-shirt Ypersoa brodé au cœur pour le dîner",
+          "week-end : salopette + marinière + baskets + T-shirt Ypersoa visible au col",
+          "mariage : chemise blanche + pantalon laine bleu marine + T-shirt Ypersoa brodé en dessous",
+          "champ coquelicots : sur les épaules du père, T-shirt Ypersoa + jean court + bottes"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "vêtements 'petit prince'",
+          "logos dessins animés",
+          "costumes de déguisement mis en scène",
+          "chaussures qui s'allument",
+          "tenues trop neuves/jamais portées"
+        ]
+      }
+    },
+    {
+      "id": "MAN-P10",
+      "prenom": "Marie-Hélène",
+      "age": 65,
+      "genre": "F",
+      "ethnicite": "blanche française (rousse)",
+      "ancrage_geographique": "Campagne française (Sarthe, Touraine, ou Bourgogne), maison ancienne avec jardin",
+      "apparence_physique": {
+        "silhouette": "1m65, silhouette fine, posture droite naturelle, gestes posés",
+        "cheveux": "Toujours rousse (roux cuivré profond qui ne vieillit pas), mèches argentées visibles sur les tempes et autour du visage, coupe mi-longue naturelle souvent attachée en chignon lâche ou queue de cheval",
+        "visage": "Traits fins, peau très claire, taches de rousseur denses sur le visage et les bras (héritage de rousse), yeux verts ou bleus, rides fines aux yeux",
+        "peau": "Très claire, grain de peau de rousse visible, sans maquillage marqué"
+      },
+      "personnalite_role_narratif": "Veuve ou divorcée, ancienne libraire ou jardinière paysagiste, vit à la campagne dans une maison héritée. Reçoit ses enfants et petits-enfants, s'occupe de son jardin, écrit des lettres. Incarne l'élégance française de la campagne, celle qui ne se laisse pas aller mais ne joue pas à la parisienne.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et chaleureux, ou concentré sur une tâche (jardinage, cuisine, lecture, couture)",
+        "expressions_privilegiees": ["sourire doux intelligent", "concentration posée", "émotion retenue"],
+        "eviter": "Poses 'mamie' stéréotypées, lumière qui sur-accentuerait les taches de rousseur ou les rides",
+        "cadrages_type": ["portrait 3/4 dans jardin", "plan moyen assise table de cuisine", "détail mains sur livre ou sur broderie"],
+        "lumiere_signature": "Lumière douce de fin d'après-midi, lumière de fenêtre campagne, vert et ambre"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Élégance campagne française — coupes nettes, matières naturelles, palette terre et végétale, superpositions hiver/mi-saison",
+        "pieces_favorites": [
+          "Chemise en popeline blanc cassé ou lin",
+          "Pull en laine mérinos col V camel ou vert bouteille",
+          "Jupe midi en lainage gris ou taupe",
+          "Pantalon en velours côtelé marron ou kaki",
+          "Mocassins en cuir camel",
+          "Gilet long en maille écru",
+          "Foulard en soie léger imprimé floral"
+        ],
+        "couleurs_de_predilection": [
+          "écru",
+          "camel",
+          "vert bouteille",
+          "bordeaux",
+          "gris souris",
+          "taupe"
+        ],
+        "styles_francais_refs": [
+          "Inès de la Fressange campagne",
+          "Charlotte Rampling civile",
+          "Caroline de Maigret mère",
+          "esthétique 'La Mother et Child' campagne"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : chemise lin + jupe velours + cardigan écru + T-shirt Ypersoa brodé en dessous",
+          "week-end : pull camel + pantalon velours + mocassins + sweat Ypersoa noué aux épaules dans le jardin",
+          "mariage : robe midi laine taupe + foulard soie + blouse Ypersoa brodée délicate au col",
+          "champ coquelicots : chemise blanche + jupe longue + bottines + pull Ypersoa pour la fraîcheur"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "rose pastel fade",
+          "imprimés 'vieille dame'",
+          "talons hauts pointus",
+          "streetwear",
+          "total look noir sombre",
+          "bijoux ostentatoires",
+          "maquillage marqué (même pour les occasions)"
+        ]
+      }
+    },
+    {
+      "id": "MAN-P12",
+      "prenom": "Brune",
+      "age": 22,
+      "genre": "F",
+      "ethnicite": "blanche française",
+      "ancrage_geographique": "Paris (10e, 11e, 20e) ou étudiante à Bordeaux/Nantes",
+      "apparence_physique": {
+        "silhouette": "1m72, silhouette élancée longiligne, posture relâchée, s'avachit volontiers",
+        "cheveux": "Bruns longs (au milieu du dos), mèches naturelles éclaircies par le soleil, souvent attachés en queue de cheval haute ou demi-queue désordonnée",
+        "visage": "Traits fins, yeux noisette ou verts, sourcils naturels non travaillés, bouche expressive, piercing discret au nez ou aux oreilles",
+        "peau": "Claire, grain de peau jeune et vivant, quelques tâches solaires apparaissent en été"
+      },
+      "personnalite_role_narratif": "Étudiante en mode, beaux-arts, ou en école de commerce créative. Vit en coloc ou chez ses parents selon la période. Archétype de la jeune cliente Ypersoa : elle achète Ypersoa pour elle-même ET pour offrir à sa mère. Incarne la nouvelle génération française — moins intello que Lou Doillon, moins propre qu'une fille Sézane, plus solaire qu'une fille A.P.C.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Direct et assumé, ou regard caméra mi-amusé mi-sérieux — la Gen Z sait qu'elle est photographiée",
+        "expressions_privilegiees": ["sourire large", "mi-sérieux intense", "éclat de rire"],
+        "eviter": "Poses trop 'mannequin', regards fades, maquillage visible marqué",
+        "cadrages_type": ["plan américain rue parisienne", "portrait serré café terrasse", "plan moyen sur canapé coloc"],
+        "lumiere_signature": "Lumière naturelle urbaine, golden hour, terrasses, cafés, lumière crue assumée"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Créative mode décontractée Gen Z française — crop tops, jeans larges, Converses, bracelets empilés. Mélange pieces vintage chinées + basiques + une pièce statement",
+        "pieces_favorites": [
+          "Crop top blanc simple",
+          "Jean large taille basse délavé",
+          "Converses Chuck Taylor (blanches ou noires, toujours sales)",
+          "Chemise oversize chinée (homme XL)",
+          "Mini-jupe en jean vintage",
+          "T-shirt de groupe vintage",
+          "Kim Long Beach bracelets empilés or fin",
+          "Sac tote bag coton type exposition/librairie"
+        ],
+        "couleurs_de_predilection": [
+          "blanc",
+          "denim bleu délavé",
+          "noir",
+          "camel chiné",
+          "vert mousse",
+          "rouge brûlé"
+        ],
+        "styles_francais_refs": [
+          "Thylane Blondeau civile Instagram",
+          "Lola Le Lann campagne",
+          "campagnes Weekday × Make My Lemonade",
+          "filles Gamin Gamine Gen Z"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : crop top + jean large + Converses + T-shirt Ypersoa brodé noué à la taille",
+          "week-end : chemise oversize ouverte + T-shirt Ypersoa dessous + jean large + sac tote",
+          "mariage : mini-robe noire vintage + sweat Ypersoa sur les épaules (anti-chic assumé)",
+          "champ coquelicots : crop top + jean court vintage + Converses + sweat Ypersoa autour de la taille"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "tailleurs stricts",
+          "escarpins pointus",
+          "total look 'rangé de maman'",
+          "vêtements fast fashion logos",
+          "maquillage lourd type soirée",
+          "bijoux tape-à-l'œil"
+        ]
+      }
+    }
+  ]
+}
