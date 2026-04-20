@@ -1,0 +1,311 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "direction_artistique_hero",
+    "last_updated": "2026-04-20",
+    "description": "Grammaire visuelle globale Ypersoa. Règles de direction artistique applicables à TOUS les shootings et toutes les communications visuelles. Intègre les 4 directives stratégiques Sarah de J3.A. Override possible au niveau motif.",
+    "statut": "REFERENTIEL_META_STRATEGIQUE",
+    "autorite": "Ce document fait foi pour toute décision de direction artistique. En cas de conflit avec les règles spécifiques à un motif, la règle motif prévaut POUR ce motif. La direction artistique globale prévaut pour tout le reste.",
+    "directives_strategiques_integrees": [
+      "Humanité visible OBLIGATOIRE (anti-supermodel renforcé)",
+      "Distribution ambiances 80% Studio Brut + Loft Organique (40/40), 20% autres",
+      "Duo systématique par pack avec rotation cyclique sur 4 types",
+      "Casting fixé à 20 mannequins récurrents (12 principaux + 8 secondaires)"
+    ],
+    "sources": [
+      "archives/aistudio_legacy/shooting_director/src/services/gemini.ts (univers signature)",
+      "archives/aistudio_legacy/atelier_social/src/lib/gemini.ts (direction modèles anti-supermodel)",
+      "referentiels/charte_editoriale.json (charte graphique + ton de voix)",
+      "decisions_strategiques_sarah_J3A (4 directives)"
+    ]
+  },
+
+  "univers_signature": {
+    "description": "L'univers visuel signature Ypersoa est constant à travers toute la communication. C'est le 'decor principal' dans lequel se déploient toutes les scènes lifestyle.",
+    
+    "decor_principal": {
+      "lieu_type": "appartement éditorial parisien",
+      "elements_architecturaux": [
+        "mur moulé vert sauge",
+        "parquet chevron foncé",
+        "hauts plafonds style haussmannien",
+        "fenêtres à petits carreaux"
+      ],
+      "props_signature": [
+        "suitcase vintage en cuir",
+        "imprimés botaniques encadrés",
+        "plantes en pot (ficus, eucalyptus séché, olivier)",
+        "chapeaux et écharpes accrochés",
+        "céramiques mate",
+        "livres empilés",
+        "lampes en laiton patiné"
+      ],
+      "palette_decor_hex": {
+        "vert_sauge_mur": "#9DC183",
+        "bois_parquet": "#8B5A2B",
+        "creme_murs_secondaires": "#F5F0EA",
+        "laiton_patine": "#B5A48A"
+      }
+    },
+
+    "lumiere_dominante_globale": {
+      "type": "naturelle",
+      "direction": "de fenêtre (latérale)",
+      "temperature": "chaude (3800-4500 K)",
+      "qualite": "douce diffuse, pas d'ombres dures",
+      "moment_prefere": "matin 9h-11h ou fin d'après-midi 16h-18h"
+    },
+
+    "atmosphere_generale": "Chic parisien décontracté, héritage français, vécu mais raffiné, habité mais pas encombré"
+  },
+
+  "direction_modeles_globale": {
+    "description": "Règles de casting et direction des modèles. S'applique à TOUS les modèles générés, sauf override explicite par motif.",
+    "statut": "REGLE_ABSOLUE",
+
+    "philosophie": "Pro-humanité visible. Les défauts physiques ne sont pas tolérés mais REVENDIQUÉS comme partie intégrante de l'identité brand. Une image Ypersoa doit montrer une personne qui pourrait être ta voisine, ta mère, ta tante. Jamais une supermodel.",
+
+    "casting_fixe": {
+      "reference": "referentiels/shooting/mannequins_recurrents.json",
+      "principe": "20 personnages récurrents (12 principaux + 8 secondaires) réutilisés sur tous les shootings pour créer une reconnaissance brand sur la durée."
+    },
+
+    "specifications_physiques": {
+      "age_cible_par_defaut": "30 à 60 ans (étendu pour inclure cheveux gris et signes de l'âge)",
+      "tranches_age_autorisees": ["5-10 ans (enfants)", "15-25 ans (jeunes adultes)", "30-50 ans (cœur)", "55-75 ans (seniors)"],
+      
+      "physique_obligatoire_au_choix": {
+        "description": "Au MOINS UN défaut physique visible par modèle. Souvent plusieurs.",
+        "liste_non_exhaustive": [
+          "rides et lignes d'expression naturelles (yeux, bouche, front)",
+          "cheveux gris, blancs ou poivre-et-sel",
+          "taches de rousseur visibles (visage, bras, épaules)",
+          "morphologies non-standard (curvy, plus-size, petites)",
+          "eczéma, vitiligo visible",
+          "cicatrices (visage, corps)",
+          "vergetures",
+          "acné ou marques d'acné",
+          "dents imparfaites",
+          "calvitie naissante ou totale",
+          "cernes naturels"
+        ]
+      },
+
+      "regard_par_defaut": "directement dans l'objectif",
+      "expression_par_defaut": "sourire authentique, vraie vie, émotion palpable, regard qui sourit aussi",
+
+      "interdictions_absolues": [
+        "mannequins lisses ou retouchés",
+        "perfection plastique",
+        "expressions figées style catalogue",
+        "skin smoothing (filtre lissant la peau)",
+        "filtre beauté",
+        "retouches Photoshop sur le visage",
+        "maquillage professionnel visible",
+        "dents ultra-blanchies",
+        "corps athlétiques standardisés"
+      ]
+    },
+
+    "override_possible_par_motif": {
+      "activable": true,
+      "syntaxe": "Dans le JSON du motif, ajouter une section 'direction_modeles_override' qui remplace les règles globales pour ce motif uniquement",
+      "exemples_overrides_documentes": [
+        {
+          "motif": "YPM-001 La Brigitte",
+          "override_regard": "hors champ pensif (pas le sourire caméra)",
+          "override_expression": "contemplative, intime, pudique",
+          "raison": "La sobriété épurée de Brigitte (cœur + initiale) demande une attitude plus contemplative que joyeuse. Les règles globales 'sourire caméra' ne s'appliquent PAS pour ce motif."
+        }
+      ]
+    }
+  },
+
+  "casting_diversite": {
+    "description": "Règles de diversité dans le casting global Ypersoa, reflétant la démographie française réelle.",
+    
+    "repartition_demographique_globale": {
+      "source": "referentiels/shooting/mannequins_recurrents.json > repartition_demographique_visee",
+      "blanc_he_s": 6,
+      "noir_e_s": 3,
+      "metisses": 6,
+      "maghrebin_e_s_moyen_orient": 2,
+      "afro_caribeen_ne": 1,
+      "sud_asiatique": 1,
+      "asiatique_est": 1,
+      "mediterraneen_ne": 1,
+      "total": 20
+    },
+
+    "interactions_obligatoires_par_collection": {
+      "description": "Chaque collection (ensemble de shootings pour une saison/campagne) doit inclure minimum ces types d'interactions pour garantir la diversité narrative",
+      "interactions": [
+        "couple adulte hétéro",
+        "couple adulte LGBTQ+ (duo femme/femme ou homme/homme)",
+        "duo mère-fille",
+        "duo père-fils",
+        "duo grand-parent/petit-enfant",
+        "interactions adulte-enfant non-parents (tante/oncle/ami proche)",
+        "solos adulte (tous genres)",
+        "solos enfant",
+        "solos senior",
+        "duos adultes multiculturels"
+      ]
+    },
+
+    "particularites_physiques_distribuees": {
+      "description": "Les particularités physiques (handicap, vitiligo, canne...) sont distribuées sur profils NON-BLANCS pour éviter le biais 'le handicap visible sur peau claire'.",
+      "distribution": {
+        "vitiligo": "MAN-S17 Fatou (afro-caribéenne, vitiligo très visible sur peau foncée)",
+        "canne_marche": "MAN-S18 Hassan (maghrébin senior)",
+        "fauteuil_roulant": "MAN-S20 Anaïs (métisse)",
+        "eczema_mains": "MAN-P07 Karim (métisse maghrébin-européen)"
+      }
+    }
+  },
+
+  "regles_production_pack": {
+    "description": "Règles OBLIGATOIRES de composition d'un pack d'images pour un motif. Pas des préférences : des règles.",
+
+    "distribution_ambiances_par_pack": {
+      "regle": "80/20 entre cluster premium-sobre et autres ambiances",
+      "pourcentages": {
+        "studio_brut": "40%",
+        "loft_organique": "40%",
+        "aube_intime": "8%",
+        "echappee_sauvage": "6%",
+        "lumiere_sepia": "6%"
+      },
+      "calcul_pack_6_shots": "3 Studio Brut + 2 Loft Organique + 1 ambiance_autre (rotation entre Aube Intime / Échappée Sauvage / Lumière Sépia)",
+      "calcul_pack_10_shots": "4 Studio Brut + 4 Loft Organique + 1 Aube Intime + 1 ambiance_autre",
+      "raison": "Les 80% Studio Brut + Loft Organique garantissent la cohérence brand premium et minimaliste. Les 20% restants apportent la variété éditoriale (chaleur, intimité, romance) sans diluer l'identité."
+    },
+
+    "duo_obligatoire_par_pack": {
+      "regle": "Minimum 1 shot duo par pack complet",
+      "rotation_cyclique_obligatoire": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
+      "logique_rotation": "Chaque nouveau pack avance d'un cran dans la liste. Pack 1 = parent_enfant, Pack 2 = grand_parent_parent, Pack 3 = adultes_amis, Pack 4 = couple, Pack 5 = retour parent_enfant, etc.",
+      "tracking_rotation": "Le Hub doit maintenir un compteur de rotation pour éviter la répétition du même type de duo sur plusieurs packs consécutifs",
+      "raison": "Le duo incarne la dimension affective du motif (offert à quelqu'un qu'on aime). La rotation garantit une représentation équilibrée des liens familiaux et amicaux sur la durée de la communication brand."
+    },
+
+    "casting_par_pack": {
+      "regle": "Chaque pack utilise 2-3 mannequins maximum (cohérence visuelle)",
+      "rotation_long_terme": "Sur 6 mois, chaque mannequin principal (MAN-P01 à MAN-P12) doit apparaître dans minimum 30 shots",
+      "mannequins_secondaires_quota": "Les secondaires (MAN-S13 à MAN-S20) apparaissent 5-10 fois maximum sur tout le catalogue (gardés pour occasions précises)"
+    },
+
+    "placement_motif_universel": {
+      "regle": "Le motif est TOUJOURS positionné côté buste gauche (côté cœur)",
+      "reference": "referentiels/shooting/types_de_shots.json > regle_placement_motif_universelle",
+      "exceptions_autorisees": [
+        "poignet gauche (option add-on +6€)",
+        "dos centre haut (sur certains motifs uniquement, à documenter dans le motif)"
+      ],
+      "interdiction": "Le motif NE DOIT JAMAIS être au centre de la poitrine (placement non Ypersoa)"
+    },
+
+    "composition_pack_complet": {
+      "description": "Structure type d'un pack complet pour un motif × produit (6 shots minimum)",
+      "reference": "referentiels/shooting/types_de_shots.json > composition_pack_complet_type",
+      "structure_minimale": {
+        "ghost_packshot": 1,
+        "crop_poitrine": 1,
+        "lifestyle_studio": 1,
+        "macro_broderie": 1,
+        "duo_couple": 1,
+        "lifestyle_outdoor_ou_autre": 1
+      },
+      "total": 6
+    }
+  },
+
+  "specifications_techniques_par_defaut": {
+    "description": "Paramètres techniques par défaut pour toutes les générations d'images IA",
+    
+    "aspect_ratios_par_usage": {
+      "square_1_1": "PDP fiche produit, carrousel Instagram, packshot",
+      "portrait_3_4": "Standard portrait, crop poitrine",
+      "portrait_4_5": "Instagram feed recommandé, full body",
+      "landscape_4_3": "Hero banner secondaire",
+      "vertical_9_16": "Story / Reel",
+      "panoramic_16_9": "Hero homepage, banner principal"
+    },
+
+    "image_size_par_defaut": "2K (2048x2048 pour carré, équivalent pour autres ratios)",
+
+    "style_photographique_universel": {
+      "philosophie": "35mm film photography, medium format camera feel",
+      "post_processing": "no retouching feel, analog film grain subtle, raw editorial",
+      "a_eviter": [
+        "saturation excessive",
+        "HDR style",
+        "look 'Instagram filter'",
+        "post-traitement numérique visible",
+        "vignetage artificiel"
+      ]
+    },
+
+    "modeles_ia_recommandes": {
+      "principal": "gemini-3.1-flash-image-preview",
+      "fallback": "gemini-2.5-flash-image",
+      "pour_reels_video": "voir cinematic (J5+)"
+    },
+
+    "prompt_suffix_universel": {
+      "description": "Suffixe à ajouter à TOUS les prompts d'image IA pour garantir la cohérence brand",
+      "suffixe_a_appender": "Real human model with visible imperfections (wrinkles, gray hair, freckles, scars, eczema, body diversity, age marks). No retouching, no skin smoothing, no perfection plastic, no beauty filter. Embroidered design on the LEFT CHEST (not centered). 35mm film photography aesthetic, soft cinematic natural lighting, analog film grain, raw editorial feel."
+    }
+  },
+
+  "strategies_optimisation_collection": {
+    "description": "Règles d'optimisation du volume d'images à produire pour une collection entière",
+    
+    "volume_cible_par_collection": {
+      "max_images": "500-600 photos par collection",
+      "commentaire": "Limite volontaire pour garder cohérence et éviter la surproduction diluée"
+    },
+
+    "hierarchie_motifs": {
+      "hero_lifestyle": {
+        "nb_motifs": "10-15 maximum sur les 17",
+        "description": "Les motifs best-sellers qui méritent des shootings complets (10+ shots chacun)"
+      },
+      "produit_standard": {
+        "nb_motifs": "tous les 17",
+        "description": "Pack minimal 6 shots par motif × produit"
+      },
+      "detail_broderie": {
+        "nb_motifs": "tous les 17",
+        "description": "Macro broderie obligatoire pour tous les motifs"
+      }
+    },
+
+    "hierarchie_couleurs": {
+      "hero_colors": {
+        "nb_couleurs": "4-6",
+        "description": "Couleurs les plus vendues, celles qui portent la collection"
+      },
+      "secondary_colors": {
+        "nb_couleurs": "le reste",
+        "description": "Déclinaisons, pack minimal uniquement"
+      }
+    }
+  },
+
+  "liens_systeme": {
+    "description": "Ce référentiel est le point d'entrée méta. Il référence tous les autres référentiels du système shooting.",
+    "referentiels_enfants": {
+      "ambiances_shooting": "referentiels/shooting/ambiances_shooting.json",
+      "types_de_shots": "referentiels/shooting/types_de_shots.json",
+      "mannequins_recurrents": "referentiels/shooting/mannequins_recurrents.json",
+      "prompts_library": "referentiels/shooting/prompts_library.json",
+      "plan_shooting_systematique": "referentiels/shooting/plan_shooting_systematique.json"
+    },
+    "referentiels_amont": {
+      "charte_editoriale": "referentiels/charte_editoriale.json",
+      "regles_combinaisons_shooting": "referentiels/regles_combinaisons_shooting.json",
+      "mapping_legacy": "referentiels/_mapping_legacy.json"
+    }
+  }
+}
