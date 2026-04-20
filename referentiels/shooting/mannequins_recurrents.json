@@ -1,80 +1,120 @@
 {
-  "meta": {
-    "version": "2.0",
-    "date_maj": "2026-04-20",
+  "_meta": {
+    "schema_version": "3.1",
+    "referentiel": "mannequins_recurrents",
+    "last_updated": "2026-04-20",
     "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
-    "total_mannequins": 21,
-    "principe": "Beauté incarnée à la française — ni supermodel, ni réalité crue"
+    "statut": "COMPLET — 21 fiches détaillées sur 21 (100%)",
+    "principe": "Beauté incarnée à la française — ni supermodel, ni réalité crue. Références: Jeanne Damas, Caroline de Maigret, Clémentine Desseaux, Tina Kunakey, Mélodie Vaxelaire.",
+    "changelog": {
+      "v1.0_2026-04-19": "Casting 20 mannequins, directive 1 'humanité visible obligatoire'",
+      "v2.0_2026-04-20_matin": "Casting 21 mannequins, directive 1 v2.0 'beauté incarnée', re-calibrage démographique (64% blancs)",
+      "v3.0_2026-04-20_soir": "Assemblage J3.B — 20/21 fiches détaillées (alerte Coline non détaillée)",
+      "v3.1_2026-04-20_soir": "Cloture J3.B — 21/21 fiches détaillées (Coline ajoutée en session finale)"
+    }
   },
+
+  "index_fichiers_detailles": {
+    "description": "Les fiches mannequins complètes (style_wear, direction photo, personnalité) sont réparties sur 4 fichiers par lots de production. Ce fichier-ci est l'index et la vue d'ensemble.",
+    "lot_1": {
+      "fichier": "referentiels/shooting/mannequins_lot1_5fiches.json",
+      "contient": ["MAN-P01 Camille", "MAN-P03 Aïcha", "MAN-P08 Félicie", "MAN-P11 Léa & Sarah", "MAN-S17 Césaria"]
+    },
+    "lot_2": {
+      "fichier": "referentiels/shooting/mannequins_lot2_2fiches.json",
+      "contient": ["MAN-P02 Anna", "MAN-P04 Lila"]
+    },
+    "lot_3": {
+      "fichier": "referentiels/shooting/mannequins_lot3_6fiches.json",
+      "contient": ["MAN-P05 Béatrice", "MAN-P06 Mathieu", "MAN-P07 Nicolas", "MAN-P09 Gabin", "MAN-P10 Marie-Hélène", "MAN-P12 Brune"]
+    },
+    "lot_4": {
+      "fichier": "referentiels/shooting/mannequins_lot4_8fiches.json",
+      "contient": ["MAN-S13 Priya", "MAN-S14 Gaspard", "MAN-S15 Bébé Noé", "MAN-S16 Hiroshi", "MAN-S18 Hassan", "MAN-S19 Henri & Joséphine", "MAN-S21 Hugo"]
+    },
+    "lot_4_bis": {
+      "fichier": "referentiels/shooting/mannequins_coline_fiche.json",
+      "contient": ["MAN-S20 Coline"],
+      "_note": "Fiche ajoutée en cloture J3.B (oubli initial Lot 4)"
+    },
+    "lot_5_duos": {
+      "fichier": "referentiels/shooting/duos_detailles_et_distribution.json",
+      "contient": ["DUO_BEATRICE_FELICIE", "DUO_MATHIEU_GABIN", "DUO_LEA_SARAH", "DUO_HENRI_JOSEPHINE", "Règles distribution"]
+    }
+  },
+
   "repartition_demographique": {
+    "total_entrees_mannequins": 21,
     "total_individus": 22,
-    "commentaire": "22 individus pour 21 entrées car MAN-P11 est un couple (Léa + Sarah). Cible clientèle française CSP+ urbaine.",
+    "commentaire": "22 individus pour 21 entrées car MAN-P11 est un couple (Léa + Sarah). Cible clientèle française CSP+ urbaine (Lille/Paris/Lyon, cible Emoi Emoi/Make My Lemonade/Gamin Gamine).",
     "categories": {
       "blancs": { "nb": 14, "pct": 64, "ids": ["MAN-P01", "MAN-P02", "MAN-P06", "MAN-P07", "MAN-P08", "MAN-P09", "MAN-P10", "MAN-P11-SARAH", "MAN-P12", "MAN-S14", "MAN-S15", "MAN-S19-HENRI", "MAN-S20", "MAN-S21"] },
       "maghrebins": { "nb": 2, "pct": 9, "ids": ["MAN-P04", "MAN-S18"] },
-      "afro": { "nb": 3, "pct": 14, "ids": ["MAN-P03", "MAN-S17", "MAN-S19-JOSEPHINE"] },
+      "afro_caribeens": { "nb": 3, "pct": 14, "ids": ["MAN-P03", "MAN-S17", "MAN-S19-JOSEPHINE"] },
       "metisses": { "nb": 2, "pct": 9, "ids": ["MAN-P05", "MAN-P11-LEA"] },
       "asiatiques": { "nb": 2, "pct": 9, "ids": ["MAN-S13", "MAN-S16"] }
     },
     "tranches_age": {
-      "enfants_0_12": ["MAN-P08 Félicie 7", "MAN-P09 Gabin 5", "MAN-S15 Noé 1"],
+      "enfants_0_12": ["MAN-P08 Félicie 7", "MAN-P09 Gabin 5", "MAN-S15 Bébé Noé 1"],
       "ados_13_20": ["MAN-S13 Priya 16"],
       "jeunes_adultes_21_34": ["MAN-P12 Brune 22", "MAN-S14 Gaspard 23", "MAN-S21 Hugo 30"],
       "adultes_35_50": ["MAN-P01 Camille 40", "MAN-P02 Anna 35", "MAN-P03 Aïcha 40", "MAN-P04 Lila 45", "MAN-P06 Mathieu 40", "MAN-P07 Nicolas 45", "MAN-P11 Léa&Sarah 35-37", "MAN-S17 Césaria 40", "MAN-S20 Coline 35"],
       "seniors_51_70": ["MAN-P05 Béatrice 55", "MAN-P10 Marie-Hélène 65", "MAN-S16 Hiroshi 55", "MAN-S18 Hassan 68", "MAN-S19 Henri&Joséphine 70-72"]
     }
   },
-  "mannequins": [
-    { "id": "MAN-P01", "prenom": "Camille", "age": 40, "genre": "F", "ethnicite": "blanche française", "particularite": "taches de rousseur, rides naturelles", "duo": null, "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P02", "prenom": "Anna", "age": 35, "genre": "F", "ethnicite": "blanche (sud de la France)", "particularite": "peau légèrement hâlée, cheveux bruns épais", "duo": null, "statut_fiche": "A_DETAILLER_LOT2" },
-    { "id": "MAN-P03", "prenom": "Aïcha", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": null, "duo": null, "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P04", "prenom": "Lila", "age": 45, "genre": "F", "ethnicite": "maghrébine", "particularite": null, "duo": null, "statut_fiche": "A_DETAILLER_LOT2" },
-    { "id": "MAN-P05", "prenom": "Béatrice", "age": 55, "genre": "F", "ethnicite": "métisse noir-blanc", "particularite": "cheveux argentés élégants", "duo": "DUO_BEATRICE_FELICIE", "statut_fiche": "A_DETAILLER_LOT3" },
-    { "id": "MAN-P06", "prenom": "Mathieu", "age": 40, "genre": "H", "ethnicite": "blanc français", "particularite": "barbe brune, cheveux bruns", "duo": "DUO_MATHIEU_GABIN", "statut_fiche": "A_DETAILLER_LOT3" },
-    { "id": "MAN-P07", "prenom": "Nicolas", "age": 45, "genre": "H", "ethnicite": "blanc français", "particularite": "cheveux poivre-sel, traits réguliers", "duo": null, "statut_fiche": "A_DETAILLER_LOT3", "_note_remplacement": "Remplace l'ancien Karim (retiré : eczéma mains incompatible avec cadrage produit broderie)" },
-    { "id": "MAN-P08", "prenom": "Félicie", "age": 7, "genre": "F", "ethnicite": "blanche", "particularite": "taches de rousseur, fossettes", "duo": "DUO_BEATRICE_FELICIE", "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P09", "prenom": "Gabin", "age": 5, "genre": "H", "ethnicite": "blanc", "particularite": null, "duo": "DUO_MATHIEU_GABIN", "statut_fiche": "A_DETAILLER_LOT3" },
-    { "id": "MAN-P10", "prenom": "Marie-Hélène", "age": 65, "genre": "F", "ethnicite": "blanche française rousse", "particularite": "cheveux roux argentés, port altier", "duo": null, "statut_fiche": "A_DETAILLER_LOT3" },
-    { "id": "MAN-P11", "prenom": "Léa & Sarah", "age": "35-37", "genre": "F/F", "ethnicite": "métisse (Léa) + nordique (Sarah)", "particularite": "couple lesbien marié", "duo": "DUO_LEA_SARAH", "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P12", "prenom": "Brune", "age": 22, "genre": "F", "ethnicite": "blanche", "particularite": "cheveux bruns longs, silhouette élancée", "duo": null, "statut_fiche": "A_DETAILLER_LOT3" },
-    { "id": "MAN-S13", "prenom": "Priya", "age": 16, "genre": "F", "ethnicite": "sud-asiatique (sri-lankaise)", "particularite": null, "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
-    { "id": "MAN-S14", "prenom": "Gaspard", "age": 23, "genre": "H", "ethnicite": "blanc", "particularite": "cheveux châtains mi-longs, style urbain", "duo": null, "statut_fiche": "A_DETAILLER_LOT4", "_note_remplacement": "Remplace l'ancien Marcus" },
-    { "id": "MAN-S15", "prenom": "Bébé Noé", "age": 1, "genre": "indéf", "ethnicite": "blanc", "particularite": null, "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
-    { "id": "MAN-S16", "prenom": "Hiroshi", "age": 55, "genre": "H", "ethnicite": "asiatique est (japonais)", "particularite": "cheveux argentés", "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
-    { "id": "MAN-S17", "prenom": "Césaria", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": "vitiligo discret (mains, cou)", "duo": null, "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-S18", "prenom": "Hassan", "age": 68, "genre": "H", "ethnicite": "maghrébin", "particularite": "canne élégante (bois)", "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
-    { "id": "MAN-S19", "prenom": "Henri & Joséphine", "age": "70-72", "genre": "H/F", "ethnicite": "blanc (Henri) + afro-caribéenne (Joséphine)", "particularite": "couple senior mixte", "duo": "DUO_HENRI_JOSEPHINE", "statut_fiche": "A_DETAILLER_LOT4" },
-    { "id": "MAN-S20", "prenom": "Coline", "age": 35, "genre": "F", "ethnicite": "blanche", "particularite": "fauteuil roulant", "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
-    { "id": "MAN-S21", "prenom": "Hugo", "age": 30, "genre": "H", "ethnicite": "blanc", "particularite": "jeune père, barbe courte", "duo": null, "statut_fiche": "A_DETAILLER_LOT4", "_note_ajout": "Ajouté 2026-04-20 pour combler trou démographique 25-35 H (cible jeune papa qui offre)" }
-  ],
-  "duos": [
-    {
-      "id": "DUO_BEATRICE_FELICIE",
-      "membres": ["MAN-P05", "MAN-P08"],
-      "nature": "grand-mère + petite-fille",
-      "types_shots_compatibles": ["parent_enfant", "grand_parent_parent", "famille_vivante"],
-      "_renomme_depuis": "DUO_BEATRICE_LILA (Lila MAN-P08 renommée Félicie le 2026-04-20)"
-    },
-    {
-      "id": "DUO_MATHIEU_GABIN",
-      "membres": ["MAN-P06", "MAN-P09"],
-      "nature": "père + fils",
-      "types_shots_compatibles": ["parent_enfant", "famille_vivante"],
-      "_renomme_depuis": "DUO_MATHIEU_THEO (Théo MAN-P09 renommé Gabin le 2026-04-20)"
-    },
-    {
-      "id": "DUO_LEA_SARAH",
-      "membres": ["MAN-P11-LEA", "MAN-P11-SARAH"],
-      "nature": "couple lesbien marié",
-      "types_shots_compatibles": ["couple", "famille_vivante"]
-    },
-    {
-      "id": "DUO_HENRI_JOSEPHINE",
-      "membres": ["MAN-S19-HENRI", "MAN-S19-JOSEPHINE"],
-      "nature": "couple senior mixte",
-      "types_shots_compatibles": ["couple"]
+
+  "particularites_physiques_distribuees": {
+    "principe": "Présentes dans le casting, distribuées avec grâce. JAMAIS au centre du cadrage, JAMAIS sujet principal. Test de validation : si on décrit le shot par le mot 'inclusif' ou 'militant', le shot est raté.",
+    "distribution": {
+      "vitiligo": {
+        "mannequin": "MAN-S17 Césaria",
+        "traitement_photo": "Visible mais discret. Lumière douce qui unifie. Style_wear classique français intemporel (PAS de statement encolures dégagées)."
+      },
+      "canne_marche": {
+        "mannequin": "MAN-S18 Hassan",
+        "traitement_photo": "Canne présente, jamais sujet. Cadrages 'assis élégant' ou buste majoritaires."
+      },
+      "fauteuil_roulant": {
+        "mannequin": "MAN-S20 Coline",
+        "traitement_photo": "Fauteuil présent, jamais sujet. Cadrages buste majoritaires, scènes quotidiennes non-thématisées."
+      }
     }
+  },
+
+  "mannequins": [
+    { "id": "MAN-P01", "prenom": "Camille", "age": 40, "genre": "F", "ethnicite": "blanche française", "particularite": "taches de rousseur, rides naturelles", "duo": null, "style_wear_signature": "Vintage français brut (Caroline de Maigret)", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P02", "prenom": "Anna", "age": 35, "genre": "F", "ethnicite": "blanche (sud de la France)", "particularite": "peau hâlée naturellement, taches de rousseur nez/épaules", "duo": null, "style_wear_signature": "Provençale moderne (Sessùn/Soeur)", "statut_fiche": "DETAILLEE_LOT2" },
+    { "id": "MAN-P03", "prenom": "Aïcha", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": null, "duo": null, "style_wear_signature": "Élégance parisienne-caribéenne (Clémentine Desseaux)", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P04", "prenom": "Lila", "age": 45, "genre": "F", "ethnicite": "maghrébine", "particularite": null, "duo": null, "style_wear_signature": "Parisienne maghrébine sophistiquée (Leïla Bekhti élégante, The Row × Khaite)", "statut_fiche": "DETAILLEE_LOT2" },
+    { "id": "MAN-P05", "prenom": "Béatrice", "age": 55, "genre": "F", "ethnicite": "métisse noir-blanc", "particularite": "cheveux argentés élégants", "duo": "DUO_BEATRICE_FELICIE", "style_wear_signature": "Bourgeoise campagne normande (Vanessa Seward)", "statut_fiche": "DETAILLEE_LOT3" },
+    { "id": "MAN-P06", "prenom": "Mathieu", "age": 40, "genre": "H", "ethnicite": "blanc français", "particularite": "barbe brune de 3 jours, cheveux bruns dépeignés", "duo": "DUO_MATHIEU_GABIN", "style_wear_signature": "Papa sportwear chic (marinière Saint James + Stan Smith)", "statut_fiche": "DETAILLEE_LOT3" },
+    { "id": "MAN-P07", "prenom": "Nicolas", "age": 45, "genre": "H", "ethnicite": "blanc français", "particularite": "cheveux poivre-sel", "duo": null, "style_wear_signature": "Mari attentionné classique (Octobre/Maison Labiche)", "statut_fiche": "DETAILLEE_LOT3", "_note_remplacement": "Remplace Karim (retiré 2026-04-20, eczéma mains incompatible cadrage produit broderie)" },
+    { "id": "MAN-P08", "prenom": "Félicie", "age": 7, "genre": "F", "ethnicite": "blanche", "particularite": "taches de rousseur, fossettes, cheveux blond vénitien", "duo": "DUO_BEATRICE_FELICIE", "style_wear_signature": "Mini-vintage français (Bonpoint × Petit Bateau)", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P09", "prenom": "Gabin", "age": 5, "genre": "H", "ethnicite": "blanc", "particularite": "cheveux noirs plutôt longs", "duo": "DUO_MATHIEU_GABIN", "style_wear_signature": "Mini-sportwear chic (salopette + marinière + Veja)", "statut_fiche": "DETAILLEE_LOT3" },
+    { "id": "MAN-P10", "prenom": "Marie-Hélène", "age": 65, "genre": "F", "ethnicite": "blanche française rousse", "particularite": "rousse cuivrée + mèches argentées, taches de rousseur denses", "duo": null, "style_wear_signature": "Élégance campagne française (Inès de la Fressange campagne)", "statut_fiche": "DETAILLEE_LOT3" },
+    { "id": "MAN-P11", "prenom": "Léa & Sarah", "age": "35-37", "genre": "F/F", "ethnicite": "métisse (Léa) + nordique (Sarah)", "particularite": "couple lesbien marié", "duo": "DUO_LEA_SARAH", "style_wear_signature": "Léa Canadian tuxedo denim + Sarah minimalisme nordique", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P12", "prenom": "Brune", "age": 22, "genre": "F", "ethnicite": "blanche française", "particularite": "cheveux bruns longs, piercing discret", "duo": null, "style_wear_signature": "Créative mode décontractée Gen Z (Thylane Blondeau civile)", "statut_fiche": "DETAILLEE_LOT3" },
+    { "id": "MAN-S13", "prenom": "Priya", "age": 16, "genre": "F", "ethnicite": "sud-asiatique (sri-lankaise)", "particularite": null, "duo": null, "style_wear_signature": "Ado sportwear élégant (jogger + brassière + Nike Cortez)", "statut_fiche": "DETAILLEE_LOT4" },
+    { "id": "MAN-S14", "prenom": "Gaspard", "age": 23, "genre": "H", "ethnicite": "blanc", "particularite": "cheveux châtains mi-longs en bataille, barbe naissante", "duo": null, "style_wear_signature": "Skateur élégant étudiant archi (Carhartt + Vans usées)", "statut_fiche": "DETAILLEE_LOT4", "_note_remplacement": "Remplace Marcus (retiré 2026-04-20, re-calibrage démographique)" },
+    { "id": "MAN-S15", "prenom": "Bébé Noé", "age": 1, "genre": "indéf", "ethnicite": "blanc", "particularite": null, "duo": null, "style_wear_signature": "Bébé — body brodé, bavoirs brodés, pyjamas coton", "statut_fiche": "DETAILLEE_LOT4_MINIMALE" },
+    { "id": "MAN-S16", "prenom": "Hiroshi", "age": 55, "genre": "H", "ethnicite": "asiatique est (japonais)", "particularite": "cheveux argentés", "duo": null, "style_wear_signature": "Architecte parisien minimaliste (Yohji/CDG/Lemaire)", "statut_fiche": "DETAILLEE_LOT4" },
+    { "id": "MAN-S17", "prenom": "Césaria", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": "vitiligo discret (mains/cou/tempe)", "duo": null, "style_wear_signature": "Classique français intemporel (Inès de la Fressange × prof Sorbonne chic)", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-S18", "prenom": "Hassan", "age": 68, "genre": "H", "ethnicite": "maghrébin (algérien)", "particularite": "canne en bois sculpté", "duo": null, "style_wear_signature": "Patriarche algérois Paris (chemises blanches + cardigans)", "statut_fiche": "DETAILLEE_LOT4" },
+    { "id": "MAN-S19", "prenom": "Henri & Joséphine", "age": "72 + 70", "genre": "H/F", "ethnicite": "blanc (Henri) + afro-caribéenne (Joséphine)", "particularite": "couple senior mixte, 40 ans de mariage", "duo": "DUO_HENRI_JOSEPHINE", "style_wear_signature": "Henri bourgeoisie rive gauche (Weston+PdG) + Joséphine élégante métissée (tailleurs + or fin)", "statut_fiche": "DETAILLEE_LOT4" },
+    { "id": "MAN-S20", "prenom": "Coline", "age": 35, "genre": "F", "ethnicite": "blanche française", "particularite": "fauteuil roulant", "duo": null, "style_wear_signature": "Minimaliste urbaine (Emoi Emoi × The Row light, Totême/Arket)", "statut_fiche": "DETAILLEE_LOT4_BIS" },
+    { "id": "MAN-S21", "prenom": "Hugo", "age": 30, "genre": "H", "ethnicite": "blanc", "particularite": "jeune papa, barbe courte, porte-bébé permanent", "duo": null, "style_wear_signature": "Papa nouveau-né urbain (sweats + chinos + baskets blanches)", "statut_fiche": "DETAILLEE_LOT4" }
   ],
+
+  "duos_resume": {
+    "_reference_complete": "referentiels/shooting/duos_detailles_et_distribution.json",
+    "duos": [
+      { "id": "DUO_BEATRICE_FELICIE", "nature": "grand-mère + petite-fille", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse intergénérationnelle campagne normande" },
+      { "id": "DUO_MATHIEU_GABIN", "nature": "père + fils", "categorie_usage": "principal_forte_rotation", "phrase": "Complicité masculine tendre et ludique. Masculinité française douce." },
+      { "id": "DUO_LEA_SARAH", "nature": "couple lesbien marié", "categorie_usage": "iconique_rare", "phrase": "Complicité quotidienne d'un couple établi. Le couple est un fait, pas un statement." },
+      { "id": "DUO_HENRI_JOSEPHINE", "nature": "couple senior mixte", "categorie_usage": "seniors_rare_transmission", "phrase": "Tendresse posée d'un long amour. Élégance rive gauche éclairée." }
+    ]
+  },
+
   "mapping_legacy_renommages_2026_04_20": {
     "Lucia_22_metisse": "Brune_22_blanche (MAN-P12)",
     "Sofia_35_mediterraneenne": "Anna_35_blanche (MAN-P02)",
@@ -87,8 +127,12 @@
     "Marcus_23_afro_dreadlocks": "SUPPRIMÉ → remplacé par Gaspard_23_blanc (MAN-S14)",
     "_ajouts": "MAN-S21 Hugo_30_blanc (nouveau, 21ème mannequin)"
   },
-  "regles_distribution": {
-    "_statut": "À DÉTAILLER EN LOT 5",
-    "_placeholder": "Règles de pondération des apparitions par mannequin selon type de shot et pilier à formaliser."
+
+  "liens_systeme": {
+    "direction_artistique_hero": "referentiels/shooting/direction_artistique_hero.json",
+    "types_de_shots": "referentiels/shooting/types_de_shots.json",
+    "ambiances_shooting": "referentiels/shooting/ambiances_shooting.json",
+    "duos_detailles": "referentiels/shooting/duos_detailles_et_distribution.json",
+    "fiches_mannequins": "Voir section index_fichiers_detailles ci-dessus"
   }
 }

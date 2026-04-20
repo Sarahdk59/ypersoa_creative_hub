@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "lot": "4-bis",
+    "version": "1.0",
+    "date": "2026-04-20",
+    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "fiches_contenues": ["MAN-S20"],
+    "_note": "Fiche produite en fin de session J3.B, complète le Lot 4 (oubli initial).",
+    "choix_directionnels_sarah": {
+      "MAN-S20_Coline": "B - Minimaliste urbaine (Emoi Emoi × The Row light), 30s épanouie solo"
+    }
+  },
+  "mannequins": [
+    {
+      "id": "MAN-S20",
+      "prenom": "Coline",
+      "age": 35,
+      "genre": "F",
+      "ethnicite": "blanche française",
+      "ancrage_geographique": "Paris 10e ou Lyon 2e, appartement lumineux accessible en rez-de-chaussée ou avec ascenseur",
+      "situation_familiale": "Célibataire épanouie, belle vie sociale, voyages réguliers (accessibilité pensée en amont, jamais rechignée)",
+      "apparence_physique": {
+        "silhouette": "Buste fin et tonique (pratique natation adaptée), posture droite et assumée dans son fauteuil roulant",
+        "cheveux": "Blonds cendrés mi-longs, coupe carré structurée, souvent attachés en queue de cheval basse",
+        "visage": "Traits fins, yeux bleu-gris, léger sourire de fond, maquillage minimal (rouge à lèvres nude parfois)",
+        "peau": "Claire lumineuse, grain lisse et vivant, quelques taches de rousseur discrètes",
+        "fauteuil": "Fauteuil roulant actif léger (type Quickie, Küschall), cadre noir mat, assis droit — jamais médicalisé"
+      },
+      "personnalite_role_narratif": "Chargée de communication ou consultante indépendante (stratégie digitale, conseil en marques), 35 ans. Vie sociale riche : dîners, vernissages, voyages. Porte Ypersoa pour elle-même et offre à ses proches. Incarne la trentenaire parisienne épanouie — solo assumée, belle vie, exigeante sur le goût. Le fauteuil fait partie d'elle sans la définir : elle a du goût, rien d'autre à prouver.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P3_Usage", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et assuré, ou posé sur un interlocuteur hors champ, sourire posé",
+        "expressions_privilegiees": ["sérénité posée", "sourire en coin intelligent", "concentration sur tâche (lecture, écriture, conversation)"],
+        "eviter_absolu": [
+          "Cadrages qui zoomeraient sur le fauteuil comme sujet",
+          "Angles en plongée qui la rapetissent",
+          "Mise en scène 'courageuse femme en fauteuil'",
+          "Photos 'inspirationnelles' militantes",
+          "Vocabulaire visuel documentaire/médical"
+        ],
+        "cadrages_type": [
+          "portrait serré visage/buste (fauteuil hors cadre ou partiel)",
+          "plan taille assise à une table",
+          "plan moyen latéral dans appartement lumineux",
+          "détail mains sur ordinateur ou livre",
+          "plan américain dans café terrasse avec amie"
+        ],
+        "lumiere_signature": "Lumière de fenêtre franche, appartement lumineux blanc et bois, golden hour urbain. Jamais de lumière clinique.",
+        "regle_critique_fauteuil": "Le fauteuil est présent parce qu'il fait partie d'elle, mais il n'est JAMAIS le sujet de la photo. Cadrages majoritairement buste. Quand il est visible, il est vu de biais ou intégré naturellement (ex: derrière une table, à côté d'un canapé). Le spectateur voit d'abord Coline, ensuite éventuellement qu'elle est en fauteuil."
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Minimaliste urbaine — chemises blanches parfaites, pantalons larges fluides, mocassins cuir, trench. Codes The Row × Emoi Emoi version parisienne CSP+. Tout est dans la coupe et la matière.",
+        "pieces_favorites": [
+          "Chemise en popeline blanche oversize (Totême, Arket, The Frankie Shop)",
+          "Pantalon large taille haute en laine fine grise ou crème",
+          "T-shirt blanc col rond coupe boxy épais",
+          "Mocassins en cuir camel (G.H. Bass, The Row)",
+          "Pull cachemire col rond écru ou gris",
+          "Trench beige ceinturé coupe longue",
+          "Jean droit taille haute brut (Agolde, Citizens of Humanity)",
+          "Escarpins bas en cuir noir bout rond (jamais pointus)"
+        ],
+        "couleurs_de_predilection": [
+          "blanc optique",
+          "écru",
+          "gris souris",
+          "camel",
+          "noir profond",
+          "marine"
+        ],
+        "styles_francais_refs": [
+          "Emoi Emoi campagne",
+          "Totême × The Row version parisienne",
+          "Caroline de Maigret urbaine minimaliste",
+          "Phoebe Philo Céline vibe jeune",
+          "Arket editorials"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : chemise blanche + pantalon large crème + T-shirt Ypersoa brodé discret en dessous, dîner chez des amis",
+          "week-end : pull cachemire écru + jean droit + mocassins + sweat Ypersoa noué aux épaules, café terrasse dimanche",
+          "mariage : combinaison en laine crème ou robe fluide midi + blouse Ypersoa brodée délicate au col rond",
+          "champ coquelicots : chemise blanche + pantalon large beige + mocassins + T-shirt Ypersoa brodé visible au col"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "tenues 'adaptées au handicap' mises en scène",
+          "couleurs pastel fades",
+          "streetwear logos",
+          "imprimés criards",
+          "total look noir austère",
+          "bijoux volumineux ou 'bohème' statement",
+          "matières synthétiques brillantes",
+          "tailleurs stricts corporate"
+        ]
+      }
+    }
+  ]
+}
