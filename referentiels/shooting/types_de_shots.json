@@ -1,16 +1,21 @@
 {
   "_meta": {
-    "schema_version": "1.1",
+    "schema_version": "2.0",
     "referentiel": "types_de_shots",
-    "last_updated": "2026-04-19",
-    "description": "6 types de cadrage/composition officiels Ypersoa, indépendants des ambiances et mannequins. Axe 2 sur 4 du système shooting.",
-    "nb_types": 6,
+    "last_updated": "2026-04-20",
+    "description": "7 types de cadrage/composition officiels Ypersoa, indépendants des ambiances et mannequins. Axe 2 sur 4 du système shooting.",
+    "nb_types": 7,
     "axe_systeme": "2 sur 4 (cadrage/composition technique)",
     "source": [
       "archives/shooting_legacy/ypersoa_shooting_complet_v5.xlsx onglet Récap",
-      "archives/shooting_legacy/prompt_shooting_Site.docx sections PP-H01 à AM-04"
+      "archives/shooting_legacy/prompt_shooting_Site.docx sections PP-H01 à AM-04",
+      "decisions_strategiques_sarah_J3B_2026-04-20 (ajout famille_vivante)"
     ],
-    "note_placement_motif": "Le motif Ypersoa est TOUJOURS positionné côté buste gauche (placement standard documenté dans motifs/ypm_001_brigitte.json et répété dans tous les 17 motifs)."
+    "note_placement_motif": "Le motif Ypersoa est TOUJOURS positionné côté buste gauche (placement standard documenté dans motifs/ypm_001_brigitte.json et répété dans tous les 17 motifs).",
+    "changelog": {
+      "v1.1_2026-04-19": "6 types (ghost, crop_poitrine, lifestyle_studio, lifestyle_outdoor, macro_broderie, duo_couple)",
+      "v2.0_2026-04-20": "Ajout 7ème type famille_vivante (scène vivante duo/trio/4+, failles non centrales, ADN Gamin Gamine). Renommage duos (MATHIEU_THEO->MATHIEU_GABIN, BEATRICE_LILA->BEATRICE_FELICIE)."
+    }
   },
 
   "principe": "Un type de shot définit UNIQUEMENT le cadrage et la composition technique. Il se combine avec une ambiance (axe 1), un mannequin (axe 3) et un prompt template (axe 4) pour produire une image finale cohérente.",
@@ -249,14 +254,14 @@
         "description": "Chaque pack avance d'un cran dans cette liste pour garantir la diversité des liens représentés",
         "types": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
         "exemples_mannequins": {
-          "parent_enfant": "DUO_MATHIEU_THEO (MAN-P06 + MAN-P09) ou autres combinaisons",
-          "grand_parent_parent": "DUO_BEATRICE_LILA (MAN-P05 + MAN-P08) ou variantes avec MAN-P10",
-          "adultes_amis": "Combinaisons libres entre mannequins principaux adultes",
+          "parent_enfant": "DUO_MATHIEU_GABIN (MAN-P06 + MAN-P09) ou autres combinaisons",
+          "grand_parent_parent": "DUO_BEATRICE_FELICIE (MAN-P05 + MAN-P08) ou variantes avec MAN-P10",
+          "adultes_amis": "Combinaisons libres entre mannequins principaux adultes (ex: Camille + Aïcha, Anna + Lila, Césaria + Marie-Hélène)",
           "couple": "DUO_LEA_SARAH (MAN-P11 couple LGBTQ+) ou DUO_HENRI_JOSEPHINE (MAN-S19 senior mixte)"
         }
       },
 
-      "prompt_en_keywords": "Tight cropped fashion editorial, two people standing close together, plain off-white studio backdrop or intimate interior, both wearing matching Ypersoa embroidered garments with design on the LEFT CHEST, intimate framing cropped from mid-thigh to head, A.P.C. campaign aesthetic, no retouching feel, analog film grain, real human imperfections visible, authentic complicity and tenderness",
+      "prompt_en_keywords": "Tight cropped fashion editorial, two people standing close together, plain off-white studio backdrop or intimate interior, both wearing matching Ypersoa embroidered garments with design on the LEFT CHEST, intimate framing cropped from mid-thigh to head, A.P.C. campaign aesthetic, no retouching feel, analog film grain, authentic complicity and tenderness, French elegance",
 
       "references_prompts_library": ["DC-01", "DC-02", "DC-03", "FA-01", "FA-02"],
 
@@ -268,35 +273,130 @@
       },
 
       "distribution_pack_type": "1 shot OBLIGATOIRE par pack complet (rotation cyclique)"
+    },
+
+    {
+      "id": "famille_vivante",
+      "label_fr": "Famille vivante",
+      "icone": "🏡",
+      "rang_catalogue": 7,
+
+      "usage_principal": "Shot collectif vivant pour motifs famille/transmission, scène de vie en mouvement",
+      "description_courte": "Scène de vie duo/trio/4+ colorée et vivante, failles présentes mais non centrales",
+      "description_longue": "Photographie éditoriale collective (3 à 6 personnes) dans une scène de vie vivante et colorée. L'énergie du groupe est le sujet : mouvement, interaction, regards croisés, rires partagés. Plus coloré que les autres types. Les particularités physiques éventuellement présentes (vitiligo Césaria, canne Hassan, fauteuil Coline) sont dissoutes dans la scène — jamais centrées, jamais thématisées. Le premier regard sur la photo doit voir le LIEN, l'INSTANT, l'ÉNERGIE — et seulement au second regard, éventuellement, une particularité. ADN Gamin Gamine / Make My Lemonade / campagnes Bonpoint décontractées.",
+
+      "specs_techniques": {
+        "cadrage": "plan large ou plan moyen, rarement serré — on veut voir la composition du groupe",
+        "placement_motif": "buste gauche (côté cœur) sur tous les modèles visibles",
+        "decor": "scène de vie familiale : table dressée terrasse, cuisine ouverte, jardin, canapé bibliothèque, pique-nique, tablée d'anniversaire",
+        "lumiere": "chaude et enveloppante, dorée si extérieur, de fenêtre si intérieur — jamais de lumière dure qui sépare les personnes",
+        "objectif_recommande": "35mm f/4 à f/5.6 (profondeur de champ qui garde tout le groupe net ou presque)",
+        "aspect_ratio_recommande": "4:5 (feed Instagram), 4:3 (hero) ou 16:9 (banner panoramique)",
+        "palette_couleur": "PLUS COLORÉE que les autres types — vêtements peuvent comporter imprimés, terracotta, ocre, bleu, vert. La scène respire la joie colorée.",
+        "post_production": "tons chauds, grain argentique, pas de dé-saturation cinéma",
+        "contrainte_profondeur_de_champ": "f/4 à f/5.6 — pas de blur bokeh qui isole une personne du groupe"
+      },
+
+      "presence_mannequin": true,
+      "duo_compatible": true,
+      "nb_personnes_shot": "3 à 6 (typique : 3 ou 4)",
+
+      "configurations_privilegiees": {
+        "3_generations": "DUO_BEATRICE_FELICIE + 1 adulte médiateur (Camille ou Anna) — scène grand-mère/mère/fille",
+        "famille_nucleaire": "Couple + 1 ou 2 enfants (ex: DUO_MATHIEU_GABIN + Camille + un autre enfant)",
+        "couple_et_tribu": "DUO_LEA_SARAH + ami·e·s à dîner — scène couple+tribu (3 ou 4 personnes)",
+        "seniors_et_petits_enfants": "DUO_HENRI_JOSEPHINE + petits-enfants (Félicie, Gabin) — scène 3 générations",
+        "trio_femmes_amies": "Camille + Aïcha + Anna (ou Lila) — scène brunch/apéro",
+        "famille_recomposee": "Composition libre avec enfants de différents mannequins"
+      },
+
+      "regle_critique_particularites_physiques": {
+        "principe": "Les particularités physiques (vitiligo, canne, fauteuil) PEUVENT être présentes dans un shot famille_vivante, mais ne doivent JAMAIS être l'élément visuellement dominant.",
+        "exemples_bonnes_pratiques": [
+          "Fauteuil Coline : elle est assise à table parmi les autres, le fauteuil est présent mais partiellement caché par la table ou cadrée haut",
+          "Canne Hassan : il est assis avec un enfant sur les genoux, la canne est posée à côté, pas tenue en main",
+          "Vitiligo Césaria : elle rit à table, lumière douce qui unifie le grain, pas de gros plan main"
+        ],
+        "test_de_validation": "Si le premier mot qui vient pour décrire le shot c'est 'inclusif', 'militant' ou 'diversité' — le shot est raté. Premier mot attendu : 'joyeux', 'vivant', 'chaleureux', 'tablée', 'famille', 'vraie vie'."
+      },
+
+      "difference_vs_duo_couple": {
+        "duo_couple": "Portrait posé ou semi-posé de 2 personnes, centré sur la relation, cadrage serré",
+        "famille_vivante": "Scène vivante 3+ personnes, centré sur l'énergie du groupe, cadrage large, mouvement obligatoire"
+      },
+
+      "prompt_en_keywords": "Lively family editorial photograph, 3 to 6 people sharing a moment (family dinner, garden picnic, breakfast together, reading on a couch), warm colorful scene, authentic interaction and movement, shared laughter and crossed glances, embroidered designs visible on the LEFT CHEST of all wearers, natural warm lighting (golden hour outdoor OR window light indoor), 35mm f/5 group composition with everyone in focus, more saturated color palette with terracotta/ochre/blue/green accents, Bonpoint and Gamin Gamine campaign aesthetic, French family lifestyle, analog film grain, no retouching feel",
+
+      "references_prompts_library": ["FV-01", "FV-02", "FV-03"],
+      "_note_prompts_library": "Les références FV-01 à FV-03 sont à créer lors de la J3.C (prompts_library.json).",
+
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+
+      "distribution_pack_type": "1 shot OBLIGATOIRE pour motifs hero famille (YPM-010 La Ronde, YPM-003 Le Club, YPM-004 Notre Héritage) — optionnel ailleurs",
+
+      "motifs_ypersoa_compatibilite": {
+        "obligatoire": ["YPM-010 La Ronde", "YPM-003 Le Club", "YPM-004 Notre Héritage"],
+        "recommande": ["YPM-006 Le Câlin", "YPM-007 Le Chouchou", "YPM-015 La Déclaration"],
+        "eviter": ["YPM-001 La Brigitte", "YPM-011 La Confidence", "YPM-012 La Meute"],
+        "_note_sarah": "Liste proposée par Claude, à arbitrer par Sarah selon ADN narratif de chaque motif."
+      }
     }
   ],
 
   "matrice_combinaison_par_defaut_par_pilier": {
     "description": "Types de shots recommandés par pilier de contenu (charte éditoriale J2)",
     "p1_process": ["macro_broderie"],
-    "p2_emotion": ["lifestyle_studio", "lifestyle_outdoor", "duo_couple"],
-    "p3_produit": ["ghost", "crop_poitrine", "lifestyle_studio", "duo_couple"],
-    "p4_preuve": ["lifestyle_studio", "duo_couple", "macro_broderie"]
+    "p2_emotion": ["lifestyle_studio", "lifestyle_outdoor", "duo_couple", "famille_vivante"],
+    "p3_produit": ["ghost", "crop_poitrine", "lifestyle_studio", "duo_couple", "famille_vivante"],
+    "p4_preuve": ["lifestyle_studio", "duo_couple", "macro_broderie", "famille_vivante"],
+    "_note_famille_vivante": "famille_vivante est PRINCIPAL pour P2 version 'transmission et vie collective', SECONDAIRE pour P3 (cadeau vu dans usage collectif), et PREUVE DE VIE RÉELLE pour P4."
   },
 
   "composition_pack_complet_type": {
-    "description": "Composition recommandée d'un pack complet pour un motif (6 shots minimum par motif × produit)",
-    "structure_6_shots": [
-      {"type": "ghost", "obligatoire": true, "commentaire": "hero PDP"},
-      {"type": "crop_poitrine", "obligatoire": true, "commentaire": "focus motif porté"},
-      {"type": "lifestyle_studio", "obligatoire": true, "commentaire": "ambiance intérieur"},
-      {"type": "lifestyle_outdoor", "obligatoire": false, "commentaire": "alternative au studio"},
-      {"type": "macro_broderie", "obligatoire": true, "commentaire": "storytelling savoir-faire"},
-      {"type": "duo_couple", "obligatoire": true, "commentaire": "rotation cyclique duo"}
-    ],
-    "total_obligatoire": 5,
-    "total_optionnel": 1,
-    "regle_duo": "Le shot duo_couple applique la rotation cyclique (parent_enfant → grand_parent_parent → adultes_amis → couple → retour parent_enfant)"
+    "description": "Composition recommandée d'un pack complet pour un motif. Deux niveaux : pack standard 6 shots (tous motifs), pack hero 8 shots (motifs famille).",
+
+    "structure_pack_standard_6_shots": {
+      "usage": "Tous les motifs, minimum obligatoire",
+      "shots": [
+        {"type": "ghost", "obligatoire": true, "commentaire": "hero PDP"},
+        {"type": "crop_poitrine", "obligatoire": true, "commentaire": "focus motif porté"},
+        {"type": "lifestyle_studio", "obligatoire": true, "commentaire": "ambiance intérieur"},
+        {"type": "lifestyle_outdoor", "obligatoire": false, "commentaire": "alternative au studio"},
+        {"type": "macro_broderie", "obligatoire": true, "commentaire": "storytelling savoir-faire"},
+        {"type": "duo_couple", "obligatoire": true, "commentaire": "rotation cyclique duo"}
+      ],
+      "total_obligatoire": 5,
+      "total_optionnel": 1
+    },
+
+    "structure_pack_hero_famille_8_shots": {
+      "usage": "Motifs famille/transmission hero (YPM-010, YPM-003, YPM-004)",
+      "shots": [
+        {"type": "ghost", "obligatoire": true, "commentaire": "hero PDP"},
+        {"type": "crop_poitrine", "obligatoire": true, "commentaire": "focus motif porté"},
+        {"type": "lifestyle_studio", "obligatoire": true, "commentaire": "ambiance intérieur"},
+        {"type": "lifestyle_outdoor", "obligatoire": true, "commentaire": "scène extérieure"},
+        {"type": "macro_broderie", "obligatoire": true, "commentaire": "storytelling savoir-faire"},
+        {"type": "duo_couple", "obligatoire": true, "commentaire": "rotation cyclique duo"},
+        {"type": "famille_vivante", "obligatoire": true, "commentaire": "scène collective vivante"},
+        {"type": "saisonnier_ou_special", "obligatoire": false, "commentaire": "shot éditorial campagne"}
+      ],
+      "total_obligatoire": 7,
+      "total_optionnel": 1
+    },
+
+    "regle_duo": "Le shot duo_couple applique la rotation cyclique (parent_enfant -> grand_parent_parent -> adultes_amis -> couple -> retour parent_enfant)",
+    "regle_famille_vivante": "Si un pack contient à la fois duo_couple ET famille_vivante, les 2 shots doivent utiliser des configurations de personnes DIFFÉRENTES (pas le même duo décliné en grand groupe)."
   },
 
   "regles_orchestration_hub": {
-    "axe_1_ambiance": "Chaque type de shot peut être combiné avec les 5 ambiances (sauf Ghost qui est neutre)",
-    "axe_3_mannequin": "Ghost = pas de mannequin. Crop/Macro/Lifestyle = 1 mannequin. Duo = 2 mannequins (duo établi ou libre).",
+    "axe_1_ambiance": "Chaque type de shot peut être combiné avec les 5 ambiances (sauf Ghost qui est neutre). Pour famille_vivante : Loft Organique (prioritaire), Studio Brut (secondaire), Échappée Sauvage, Lumière Sépia.",
+    "axe_3_mannequin": "Ghost = pas de mannequin. Crop/Macro/Lifestyle = 1 mannequin. Duo = 2 mannequins (duo établi ou libre). Famille_vivante = 3 à 6 mannequins (configurations privilégiées listées dans le type).",
     "axe_4_prompt_template": "Chaque type pointe vers un ou plusieurs prompts de la prompts_library via 'references_prompts_library'",
     "distribution_ambiances_par_pack": "Voir direction_artistique_hero.json > regles_production_pack > distribution_ambiances (80% Studio Brut + Loft Organique, 20% autres)",
     "regle_placement_motif": "Sauf override par motif, le motif est TOUJOURS côté buste gauche. Cette règle est universelle et doit apparaître dans tous les prompts EN ('design on the LEFT CHEST')."

@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "lot": 2,
+    "version": "1.0",
+    "date": "2026-04-20",
+    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "fiches_contenues": ["MAN-P02", "MAN-P04"],
+    "choix_directionnels_sarah": {
+      "MAN-P02_Anna": "A - Provençale moderne (Sessùn/Soeur, lin naturel, palette ocre/terracotta)",
+      "MAN-P04_Lila": "A - Parisienne maghrébine sophistiquée (Leïla Bekhti élégante, tailleurs fluides, or fin)"
+    }
+  },
+  "mannequins": [
+    {
+      "id": "MAN-P02",
+      "prenom": "Anna",
+      "age": 35,
+      "genre": "F",
+      "ethnicite": "blanche française (sud de la France)",
+      "ancrage_geographique": "Aix-en-Provence / Arles / arrière-pays varois",
+      "apparence_physique": {
+        "silhouette": "1m70, silhouette détendue et ancrée, posture relâchée mais droite — le port d'une femme qui ne court pas",
+        "cheveux": "Châtain doré mi-longs, ondulations naturelles marquées (cheveux méchés par le soleil en été), souvent attachés en chignon bas lâche ou demi-queue",
+        "visage": "Traits réguliers et doux, yeux noisette, quelques taches de rousseur sur le nez et les épaules (dues au soleil), sourire paisible",
+        "peau": "Hâlée naturellement (pas bronzée cabine), grain de peau habité, quelques ridules autour des yeux"
+      },
+      "personnalite_role_narratif": "Céramiste ou architecte d'intérieur installée dans une maison en pierre de l'arrière-pays. Reçoit ses amis en terrasse sous la glycine, offre des cadeaux en vacances, incarne la douceur provençale contemporaine. Client type : gens qui fuient Paris mais gardent l'exigence.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Souvent hors champ (lumière, horizon), ou posé sur un objet/détail — le regard direct caméra est rare chez elle",
+        "expressions_privilegiees": ["sourire paisible", "concentration sur un geste", "rire doux à un ami"],
+        "eviter": "Cadrages urbains froids, lumière bleutée, poses debout frontales",
+        "cadrages_type": ["plan américain en terrasse", "détail mains sur céramique brodée sur sweat", "portrait 3/4 à contre-lumière dorée"],
+        "lumiere_signature": "Lumière dorée de fin d'après-midi, light flares acceptés, fenêtres ouvertes, pierre claire"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Provençale moderne — lin naturel, coupes longues et fluides, palette terre et ciel, accessoires en cuir brut. L'élégance solaire sans effort.",
+        "pieces_favorites": [
+          "Robe longue en lin écru taille empire",
+          "Chemise en lin à manches longues couleur sable",
+          "Pantalon large en lin taupe",
+          "Espadrilles plates en jute",
+          "Jupe longue en coton imprimé botanique fané",
+          "T-shirt en coton épais coupe boxy",
+          "Panier en osier usé"
+        ],
+        "couleurs_de_predilection": [
+          "écru",
+          "terracotta",
+          "ocre",
+          "sable",
+          "bleu lavande passé",
+          "blanc cassé"
+        ],
+        "styles_francais_refs": [
+          "Caroline de Maigret en vacances en Provence",
+          "Jeanne Damas période maison de famille",
+          "campagnes Sessùn × Soeur",
+          "Inès de la Fressange à l'étranger"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : robe longue lin écru + sweat Ypersoa brodé noué sur les épaules en terrasse",
+          "week-end : chemise lin sable + jean droit délavé + T-shirt Ypersoa en dessous visible au col",
+          "mariage : ensemble lin taupe fluide + blouse Ypersoa brodée discrète",
+          "champ coquelicots : robe longue lin + panier osier + pull écru Ypersoa sur les épaules"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "talons hauts pointus",
+          "tailleur strict",
+          "streetwear urbain",
+          "couleurs flashy",
+          "total look noir",
+          "matières synthétiques brillantes"
+        ]
+      }
+    },
+    {
+      "id": "MAN-P04",
+      "prenom": "Lila",
+      "age": 45,
+      "genre": "F",
+      "ethnicite": "maghrébine",
+      "ancrage_geographique": "Paris 3e / 11e / Montmartre",
+      "apparence_physique": {
+        "silhouette": "1m67, silhouette fine et élancée, posture droite et assurée — maintien d'une femme qui sait sa valeur",
+        "cheveux": "Noirs brillants, coupés au carré long ou lissés en chignon bas strict selon occasion. Parfois quelques fils gris assumés à la tempe.",
+        "visage": "Traits fins et dessinés, pommettes hautes, sourcils marqués naturellement, regard sombre et intense, bouche fine",
+        "peau": "Mate olive, grain de peau lisse et vivant, maquillage minimal visible (sourcils + rouge à lèvres discret)"
+      },
+      "personnalite_role_narratif": "Architecte ou avocate d'affaires, 45 ans, divorcée ou mariée selon le shot. Mère d'ados. Exigeante, cultivée, exigence silencieuse. Offre des cadeaux réfléchis et qualitatifs. Incarne l'élégance maghrébine parisienne — ni exotisée, ni effacée.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct caméra privilégié (regard frontal assuré) ou regard posé sur un interlocuteur hors champ",
+        "expressions_privilegiees": ["sérénité posée", "sourire en coin", "concentration pensive"],
+        "eviter": "Poses 'douces', sourires trop larges non naturels, cadrages qui la rapetissent, maquillage 'orientalisant'",
+        "cadrages_type": ["portrait frontal serré", "plan taille en intérieur parisien", "plan américain assis bureau/bibliothèque"],
+        "lumiere_signature": "Lumière de fenêtre latérale douce type Vermeer, contrastes modérés qui sculptent les traits sans les durcir"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Parisienne sophistiquée — coupes architecturales, matières nobles, palette sobre avec accent bijoux en or fin. Rien de tape-à-l'œil, tout dans la précision.",
+        "pieces_favorites": [
+          "Blazer laine taille cintrée noir ou crème",
+          "Pantalon cigarette laine noire",
+          "Chemise soie blanche ou crème col italien",
+          "Robe fourreau mi-longue en laine fine",
+          "Escarpins cuir noirs bout pointu (Roger Vivier, Aeyde)",
+          "Mocassins cuir camel (The Row aesthetic)",
+          "Bijoux en or jaune fin : créoles moyennes, chaîne fine, bague signet"
+        ],
+        "couleurs_de_predilection": [
+          "noir profond",
+          "crème",
+          "bordeaux",
+          "camel",
+          "chocolat",
+          "marine"
+        ],
+        "styles_francais_refs": [
+          "Leïla Bekhti en photocall",
+          "Inès de la Fressange intemporelle",
+          "Carla Bruni sobre",
+          "aesthetic The Row × Khaite version parisienne"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : chemise soie crème + pantalon cigarette + T-shirt Ypersoa brodé discret en dessous",
+          "week-end : blazer noir + jean droit + sweat Ypersoa en laine fine brodé au cœur",
+          "mariage : robe fourreau laine + blouse Ypersoa brodée délicate au col rond",
+          "champ coquelicots : chemise blanche oversize + pantalon large crème + T-shirt Ypersoa brodé"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "streetwear",
+          "imprimés criards",
+          "bijoux volumineux ou fantaisie",
+          "maquillage coloré",
+          "tenues 'folkloriques' ou orientalisantes mises en scène",
+          "matières synthétiques",
+          "sneakers (sauf exception week-end minimalistes blanches)"
+        ]
+      }
+    }
+  ]
+}
