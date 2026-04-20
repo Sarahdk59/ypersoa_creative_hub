@@ -1,0 +1,355 @@
+{
+  "meta": {
+    "lot": 5,
+    "version": "1.0",
+    "date": "2026-04-20",
+    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "contenu": [
+      "4 duos détaillés avec dynamiques relationnelles",
+      "Direction photo par duo",
+      "Scènes types par duo",
+      "Règles de distribution sur collections"
+    ],
+    "_note_integration": "Ce document est le complément de mannequins_recurrents.json > duos. À référencer depuis les motifs et les prompts de génération image."
+  },
+
+  "duos": [
+    {
+      "id": "DUO_BEATRICE_FELICIE",
+      "membres": ["MAN-P05 Béatrice", "MAN-P08 Félicie"],
+      "nature": "grand-mère + petite-fille",
+      "ages": "55 + 7 = écart 48 ans",
+      "ethnicites": "métisse + blanche (lien génétique implicite plausible via mère non montrée)",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Tendresse intergénérationnelle campagne normande. La grand-mère initie, la petite-fille observe et imite.",
+        "mode_relationnel": "transmission douce",
+        "attitudes_type": [
+          "Béatrice montre un geste, Félicie reproduit",
+          "Félicie pose des questions, Béatrice répond en continuant son geste",
+          "Silence partagé côte à côte",
+          "Béatrice porte, Félicie se blottit",
+          "Béatrice lit, Félicie écoute sur ses genoux"
+        ]
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan moyen dans cuisine de famille",
+          "plan large dans jardin normand",
+          "plan américain assises sur banc en bois",
+          "portrait 3/4 côte à côte près de la cheminée",
+          "détail mains (main âgée sur petite main)"
+        ],
+        "regards": "Béatrice vers Félicie > Félicie vers Béatrice > rare direct caméra (shots d'autorité P4 uniquement)",
+        "contact_physique": "fréquent et naturel : main sur épaule, bras autour des épaules, Félicie assise sur les genoux ou tout contre",
+        "ambiances_prioritaires": ["Loft Organique", "Lumière Sépia"],
+        "decors_type": [
+          "cuisine de maison de famille (table bois brut, céramiques, cuivres)",
+          "jardin normand (pommiers, herbes aromatiques)",
+          "salon avec cheminée (livres, lampe Tolomeo)",
+          "plage normande hors saison (Cabourg, Étretat)"
+        ],
+        "lumiere_signature": "Lumière ambrée de fin d'après-midi, feu de cheminée, lumière de fenêtre sur table de cuisine",
+        "post_production": "tons chauds miel/ambre, grain argentique marqué, légère désaturation douce"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Confitures d'automne",
+          "description": "Béatrice et Félicie en cuisine, pots de confiture, Félicie sur un tabouret touille, toutes les 2 portent des T-shirts Ypersoa brodés au cœur. Tabliers usés.",
+          "piliers": ["P1_Savoir-Faire", "P2_Emotion"]
+        },
+        {
+          "titre": "Lecture du dimanche",
+          "description": "Béatrice lit à voix haute sur le canapé, Félicie sur ses genoux, cheveux mêlés. Sweats Ypersoa assortis brodés.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Cueillette au jardin",
+          "description": "Plan large dans verger, panier en osier, rangers pour Béatrice, bottes jaunes pour Félicie. T-shirts Ypersoa brodés visibles.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'grand_parent_parent')",
+        "famille_vivante (si +1 adulte ajouté, ex: Camille ou Anna)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-004 Notre Héritage", "YPM-010 La Ronde", "YPM-007 Le Chouchou", "YPM-014 Le Depuis"]
+    },
+
+    {
+      "id": "DUO_MATHIEU_GABIN",
+      "membres": ["MAN-P06 Mathieu", "MAN-P09 Gabin"],
+      "nature": "père + fils",
+      "ages": "40 + 5 = écart 35 ans",
+      "ethnicites": "blanc + blanc",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Complicité masculine tendre et ludique. Papa porteur, fils grimpeur. Masculinité française douce.",
+        "mode_relationnel": "jeu et tendresse",
+        "attitudes_type": [
+          "Gabin sur les épaules de Mathieu, mains dans les cheveux",
+          "Mathieu porte Gabin sur la hanche, Gabin rit",
+          "Tous les deux allongés sur le canapé, Mathieu lit, Gabin grimpe",
+          "Marche côte à côte, Mathieu un peu devant, Gabin tenant sa main",
+          "Gabin fait le pitre, Mathieu éclate de rire"
+        ]
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan américain avec Gabin sur les épaules",
+          "plan moyen en marche dans rue parisienne",
+          "plan large dans parc",
+          "portrait rapproché Mathieu assis avec Gabin sur les genoux",
+          "détail main de père sur épaule de fils"
+        ],
+        "regards": "Mathieu vers Gabin > Gabin hors champ (jeu) > rare caméra directe",
+        "contact_physique": "très fréquent : porter, enlacer, main sur la tête, chatouilles. Masculinité tendre assumée.",
+        "ambiances_prioritaires": ["Studio Brut", "Loft Organique", "Échappée Sauvage"],
+        "decors_type": [
+          "appartement lumineux parisien avec parquet",
+          "rue parisienne calme (11e, 20e, Canal Saint-Martin)",
+          "parc urbain (Buttes-Chaumont, Monceau)",
+          "café familial du dimanche"
+        ],
+        "lumiere_signature": "Lumière naturelle vive, scènes de vie urbaine du matin ou du week-end",
+        "post_production": "tons chauds clairs, grain fin, pas de désaturation"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "École à vélo",
+          "description": "Mathieu tient le vélo cargo, Gabin assis dedans, les 2 en T-shirts Ypersoa brodés, rue pavée, matin.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Crêpes du dimanche",
+          "description": "Cuisine ouverte, Mathieu fait sauter une crêpe, Gabin sur un tabouret regarde, rit. Sweats Ypersoa brodés.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Parc après-midi",
+          "description": "Plan large dans parc, Gabin sur les épaules de Mathieu, broderies Ypersoa visibles, lumière dorée.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'parent_enfant')",
+        "famille_vivante (si +1 adulte ou enfant ajouté)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-006 Le Câlin", "YPM-010 La Ronde", "YPM-003 Le Club", "YPM-009 La Palette"]
+    },
+
+    {
+      "id": "DUO_LEA_SARAH",
+      "membres": ["MAN-P11-LEA Léa (métisse 37)", "MAN-P11-SARAH Sarah (nordique 35)"],
+      "nature": "couple lesbien marié",
+      "ages": "37 + 35 = écart 2 ans",
+      "ethnicites": "métisse noir-blanc + nordique blanche",
+      "anciennete_relation": "mariées depuis 3 ans, ensemble depuis 8 ans",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Complicité quotidienne d'un couple établi. Regards croisés, main sur la main, pas de démonstration frontale. Le couple est un fait, pas un statement.",
+        "mode_relationnel": "quotidien stylé d'un couple adulte",
+        "attitudes_type": [
+          "Léa regarde Sarah qui regarde ailleurs (travail, livre)",
+          "Main de Léa sur genou de Sarah, sans regarder",
+          "Partage d'un café, silence complice",
+          "Rire partagé sur une blague privée",
+          "Sarah ajuste le col de Léa avec tendresse"
+        ],
+        "_attention_direction": "JAMAIS de baiser frontal démonstratif, JAMAIS de pose 'couple iconique' appuyée. Le but : qu'on ne se dise pas 'regardez le couple lesbien' mais 'regardez ce couple'."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan taille côte à côte sur canapé",
+          "main sur main détail (bijoux discrets visibles)",
+          "portrait serré regards croisés",
+          "plan américain appartement lumineux",
+          "profil 3/4 en train de cuisiner ensemble"
+        ],
+        "regards": "Léa vers Sarah > Sarah hors champ > croisés > rare direct caméra",
+        "contact_physique": "discret mais constant : main sur main, épaules qui se touchent, poings sur hanches l'une contre l'autre",
+        "ambiances_prioritaires": ["Studio Brut", "Loft Organique"],
+        "decors_type": [
+          "appartement lillois ou parisien lumineux (Lille pour ancrage Sarah)",
+          "atelier de danse (pour Léa)",
+          "cuisine ouverte moderne",
+          "terrasse dimanche matin",
+          "brasserie urbaine"
+        ],
+        "lumiere_signature": "Lumière de fenêtre nette, lumière d'appartement Nord (Lille) ou Est (Paris), blanc et gris lumineux",
+        "post_production": "tons neutres, blancs propres, grain argentique subtil"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Brunch dimanche",
+          "description": "Cuisine ouverte, Léa prépare le café, Sarah lit le journal. Sweats Ypersoa assortis mais pas identiques. Broderies au cœur.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Dîner maison à deux",
+          "description": "Table dressée simple, Léa verse le vin, Sarah coupe du pain. T-shirts Ypersoa brodés visibles.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Portrait couple",
+          "description": "Plan taille sur fond neutre, côte à côte, main de Léa sur épaule de Sarah, regards pas tout à fait caméra. Anneaux de mariage visibles.",
+          "piliers": ["P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'couple')",
+        "famille_vivante (couple + ami·e·s, 3-4 personnes)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-003 Le Club", "YPM-015 La Déclaration", "YPM-016 La Signature", "YPM-002 L'Ambre"]
+    },
+
+    {
+      "id": "DUO_HENRI_JOSEPHINE",
+      "membres": ["MAN-S19-HENRI Henri (blanc 72)", "MAN-S19-JOSEPHINE Joséphine (afro 70)"],
+      "nature": "couple senior mixte, marié",
+      "ages": "72 + 70 = écart 2 ans",
+      "ethnicites": "blanc français + afro-caribéenne",
+      "anciennete_relation": "mariés depuis 40 ans",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Tendresse posée d'un long amour. Lecture côte à côte, thé partagé, regards complices de ceux qui se connaissent par cœur. L'élégance rive gauche éclairée.",
+        "mode_relationnel": "long amour cultivé",
+        "attitudes_type": [
+          "Lecture côte à côte sur canapé, chacun son livre, genoux qui se touchent",
+          "Henri sert le thé, Joséphine le reçoit avec un sourire connaisseur",
+          "Rire sur une vieille blague privée",
+          "Promenade lente bras dessus bras dessous",
+          "Silence partagé face à une fenêtre"
+        ]
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan taille sur canapé bibliothèque",
+          "portrait 3/4 côte à côte",
+          "détail mains entrelacées ridées",
+          "plan moyen en promenade rive gauche",
+          "plan américain assis terrasse café"
+        ],
+        "regards": "Henri vers Joséphine > Joséphine direct caméra (posture assumée) > regards croisés",
+        "contact_physique": "posé et naturel : main de Henri sur la sienne, bras entrelacés en promenade, genoux qui se touchent",
+        "ambiances_prioritaires": ["Loft Organique", "Lumière Sépia"],
+        "decors_type": [
+          "appartement rive gauche (6e/7e) : bibliothèque, parquet, œuvres d'art discrètes",
+          "café rive gauche (Flore, Café de l'Industrie)",
+          "jardin du Luxembourg",
+          "maison de famille en Bourgogne"
+        ],
+        "lumiere_signature": "Lumière de fenêtre classique, lumière ambrée, patine dorée des appartements anciens",
+        "post_production": "tons chauds bourgeois, grain argentique fin, subtile désaturation"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Thé lecture",
+          "description": "Canapé bibliothèque, Henri sert le thé, Joséphine lit. Pulls cachemire Ypersoa brodés discrets au cœur.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        },
+        {
+          "titre": "Promenade Luxembourg",
+          "description": "Plan large allée jardin, Henri et Joséphine bras dessus bras dessous, T-shirts Ypersoa brodés sous leurs trenchs.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Anniversaire de mariage",
+          "description": "Portrait 3/4 en appartement, regards complices, main de Henri sur celle de Joséphine, alliances et T-shirts Ypersoa brodés visibles.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'couple')",
+        "famille_vivante (couple + petits-enfants Félicie/Gabin, scène 3 générations)",
+        "lifestyle_studio"
+      ],
+
+      "motifs_prioritaires": ["YPM-004 Notre Héritage", "YPM-015 La Déclaration", "YPM-014 Le Depuis", "YPM-010 La Ronde"]
+    }
+  ],
+
+  "regles_distribution_par_collection": {
+    "description": "Règles de dosage d'usage de chaque duo sur les collections pour garantir rotation équilibrée et préserver la force symbolique des duos rares.",
+    "logique_generale": "Rotation cyclique obligatoire sur 4 packs (parent_enfant → grand_parent_parent → adultes_amis → couple) + quotas par duo pour équilibrer force narrative et usure symbolique.",
+
+    "categories_duos": {
+      "principaux_forte_rotation": {
+        "duos": ["DUO_BEATRICE_FELICIE", "DUO_MATHIEU_GABIN"],
+        "usage_cible_par_collection": "4 à 6 shots par collection chacun",
+        "justification": "Duos quotidiens, narratifs forts, utilisables sur la majorité des motifs. Pilier émotion structurant."
+      },
+      "iconique_rare": {
+        "duos": ["DUO_LEA_SARAH"],
+        "usage_cible_par_collection": "1 à 2 shots par collection maximum",
+        "justification": "Couple lesbien marié = statement narratif fort. Sur-usage = dilution symbolique. Rareté = force. Préférer des motifs premium (La Déclaration, Le Club) plutôt qu'un saupoudrage léger."
+      },
+      "seniors_rare_transmission": {
+        "duos": ["DUO_HENRI_JOSEPHINE"],
+        "usage_cible_par_collection": "1 à 3 shots par collection, uniquement sur motifs hero famille/transmission",
+        "justification": "Couple senior mixte = représentation rare et précieuse. Réserver aux motifs Notre Héritage, La Ronde, Le Depuis, La Déclaration où leur présence densifie l'ADN transmission."
+      }
+    },
+
+    "regle_rotation_cyclique_par_pack": {
+      "reference": "types_de_shots.json > duo_couple > rotation_cyclique_obligatoire",
+      "ordre": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
+      "mapping_duos_vers_types": {
+        "parent_enfant": "DUO_MATHIEU_GABIN (principal) + autres combinaisons libres (ex: Camille + Felicie, Aïcha + Gabin)",
+        "grand_parent_parent": "DUO_BEATRICE_FELICIE (principal) + variantes avec Marie-Hélène, Hassan, Hiroshi",
+        "adultes_amis": "Combinaisons libres entre adultes (ex: Camille + Aïcha, Anna + Lila, Césaria + Marie-Hélène, Nicolas + Mathieu)",
+        "couple": "DUO_LEA_SARAH OU DUO_HENRI_JOSEPHINE (alterner entre les 2 couples pour éviter la monotonie)"
+      }
+    },
+
+    "regles_combinaison_famille_vivante": {
+      "description": "Quand un duo établi est utilisé dans un shot famille_vivante (3+ personnes), quelles combinaisons sont privilégiées.",
+      "combinaisons_fortes": [
+        "DUO_BEATRICE_FELICIE + Camille (ou Anna, ou Marie-Hélène) = 3 générations féminines",
+        "DUO_MATHIEU_GABIN + Camille (conjointe implicite) + 2ème enfant = famille nucléaire",
+        "DUO_LEA_SARAH + 1 ou 2 ami·e·s (Camille, Aïcha, Nicolas) = couple + tribu",
+        "DUO_HENRI_JOSEPHINE + Félicie + Gabin (petits-enfants implicites) = 3 générations mixtes"
+      ],
+      "combinaisons_a_eviter": [
+        "2 duos établis ensemble dans un même shot (confusion narrative)",
+        "DUO_LEA_SARAH + enfants propres (pas de famille nucléaire enfantée pour ce couple dans l'univers brand actuel)"
+      ]
+    },
+
+    "quotas_long_terme_6_mois": {
+      "reference": "direction_artistique_hero.json > regles_production_pack > casting_par_pack",
+      "principaux_min_shots_6mois": 30,
+      "secondaires_max_shots_6mois": 10,
+      "couple_LEA_SARAH_max_shots_6mois": 12,
+      "couple_HENRI_JOSEPHINE_max_shots_6mois": 15,
+      "_note": "Les quotas couples (12 et 15) sont des plafonds pour préserver leur force narrative."
+    }
+  },
+
+  "liens_systeme": {
+    "mannequins_recurrents": "referentiels/shooting/mannequins_recurrents.json",
+    "types_de_shots": "referentiels/shooting/types_de_shots.json",
+    "direction_artistique_hero": "referentiels/shooting/direction_artistique_hero.json"
+  }
+}
