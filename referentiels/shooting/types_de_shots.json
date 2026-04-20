@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "schema_version": "1.0",
+    "schema_version": "1.1",
     "referentiel": "types_de_shots",
     "last_updated": "2026-04-19",
     "description": "6 types de cadrage/composition officiels Ypersoa, indépendants des ambiances et mannequins. Axe 2 sur 4 du système shooting.",
@@ -9,10 +9,21 @@
     "source": [
       "archives/shooting_legacy/ypersoa_shooting_complet_v5.xlsx onglet Récap",
       "archives/shooting_legacy/prompt_shooting_Site.docx sections PP-H01 à AM-04"
-    ]
+    ],
+    "note_placement_motif": "Le motif Ypersoa est TOUJOURS positionné côté buste gauche (placement standard documenté dans motifs/ypm_001_brigitte.json et répété dans tous les 17 motifs)."
   },
 
   "principe": "Un type de shot définit UNIQUEMENT le cadrage et la composition technique. Il se combine avec une ambiance (axe 1), un mannequin (axe 3) et un prompt template (axe 4) pour produire une image finale cohérente.",
+
+  "regle_placement_motif_universelle": {
+    "placement_par_defaut": "buste gauche (côté cœur)",
+    "reference": "motifs/ypm_XXX.json > visuel_motif > placement_standard",
+    "exceptions": [
+      "poignet gauche (option add-on +6€)",
+      "dos centre haut (sur certains motifs uniquement)"
+    ],
+    "interdiction": "Le motif NE DOIT PAS être au centre de la poitrine (placement non Ypersoa)"
+  },
 
   "types_de_shots": [
     {
@@ -20,35 +31,36 @@
       "label_fr": "Ghost Packshot",
       "icone": "👻",
       "rang_catalogue": 1,
-      
+
       "usage_principal": "Image 1 hero PDP fiche produit",
       "description_courte": "Mannequin fantôme fond blanc, vue de face, broderie nette",
-      "description_longue": "Packshot e-commerce épuré avec le vêtement présenté sur un mannequin fantôme invisible. Vue frontale symétrique, fond blanc pur, éclairage neutre sans ombres marquées. Le motif brodé doit être parfaitement lisible et centré. Format standardisé pour le catalogue Shopify.",
-      
+      "description_longue": "Packshot e-commerce épuré avec le vêtement présenté sur un mannequin fantôme invisible. Vue frontale SYMÉTRIQUE DU VÊTEMENT (pas du motif), fond blanc pur, éclairage neutre sans ombres marquées. Le motif brodé, positionné côté buste gauche (placement standard Ypersoa), doit être parfaitement lisible et net. Format standardisé pour le catalogue Shopify.",
+
       "specs_techniques": {
-        "cadrage": "vue de face symétrique, plein vêtement",
+        "cadrage": "vue de face symétrique du vêtement, plein vêtement visible",
+        "placement_motif": "buste gauche (côté cœur), NON centré",
         "fond": "blanc pur (#FFFFFF)",
         "lumiere": "studio doux, neutre, sans ombres marquées",
         "objectif_recommande": "50mm f/5.6",
         "aspect_ratio_recommande": "1:1 (carré PDP)",
         "post_production": "couleur fidèle (true-to-color), sans retouche créative"
       },
-      
+
       "presence_mannequin": false,
       "duo_compatible": false,
       "nb_personnes_shot": 0,
-      
-      "prompt_en_keywords": "Clean e-commerce product photography, ghost mannequin invisible display, pure white background, perfectly lit with soft studio lighting, no harsh shadows, true-to-color representation, symmetrical front view, commercial fashion packshot, Maison Labiche product page style",
-      
+
+      "prompt_en_keywords": "Clean e-commerce product photography, ghost mannequin invisible display, pure white background, perfectly lit with soft studio lighting, no harsh shadows, true-to-color representation, symmetrical front view of the garment, embroidered design visible on the LEFT CHEST (not centered), commercial fashion packshot, Maison Labiche product page style",
+
       "references_prompts_library": ["PP-H02", "PP-Z01", "PP-T01", "PP-C01"],
-      
+
       "usage_par_pilier": {
         "p1_process": false,
         "p2_emotion": false,
         "p3_produit": true,
         "p4_preuve": false
       },
-      
+
       "distribution_pack_type": "1 shot par motif × produit (obligatoire pour catalogue)"
     },
 
@@ -57,35 +69,36 @@
       "label_fr": "Crop Poitrine",
       "icone": "✂️",
       "rang_catalogue": 2,
-      
+
       "usage_principal": "Image 2 fiche produit, focus broderie portée",
       "description_courte": "Plan poitrine serré porté, menton coupé, broderie en focal",
-      "description_longue": "Cadrage très serré sur la zone poitrine du vêtement porté par un modèle. Menton à peine visible en haut, mains partiellement visibles en bas. La broderie est le point focal absolu. Montre comment le motif tombe réellement sur le corps.",
-      
+      "description_longue": "Cadrage très serré sur la zone poitrine du vêtement porté par un modèle. Menton à peine visible en haut, mains partiellement visibles en bas. La broderie, positionnée côté buste gauche, est le point focal absolu. Montre comment le motif tombe réellement sur le corps.",
+
       "specs_techniques": {
         "cadrage": "poitrine serré, menton coupé, mid-thigh en bas de cadre",
+        "placement_motif": "buste gauche (côté cœur)",
         "fond": "uni blanc cassé ou cream",
         "lumiere": "studio plat et doux, netteté sur broderie",
         "objectif_recommande": "90mm macro f/3.5",
         "aspect_ratio_recommande": "1:1 ou 4:5 (portrait)",
         "post_production": "détail fil net, texture tissu visible"
       },
-      
+
       "presence_mannequin": true,
       "duo_compatible": false,
       "nb_personnes_shot": 1,
-      
-      "prompt_en_keywords": "Tight cropped fashion editorial photograph focusing on chest area, chin barely visible at top of frame, hands partially visible at bottom, plain off-white or cream background, flat soft studio lighting, sharp detail on embroidery stitching and fabric texture, A.P.C. and Maison Labiche product close-up style, clean and minimal",
-      
+
+      "prompt_en_keywords": "Tight cropped fashion editorial photograph focusing on chest area, chin barely visible at top of frame, hands partially visible at bottom, embroidered design on the LEFT CHEST (not centered), plain off-white or cream background, flat soft studio lighting, sharp detail on embroidery stitching and fabric texture, A.P.C. and Maison Labiche product close-up style, clean and minimal",
+
       "references_prompts_library": ["PP-H04", "PP-T03"],
-      
+
       "usage_par_pilier": {
         "p1_process": false,
         "p2_emotion": false,
         "p3_produit": true,
         "p4_preuve": true
       },
-      
+
       "distribution_pack_type": "1 shot par motif × produit (obligatoire pour catalogue)"
     },
 
@@ -94,13 +107,14 @@
       "label_fr": "Lifestyle Studio",
       "icone": "🏠",
       "rang_catalogue": 3,
-      
+
       "usage_principal": "Image 3 carrousel, ambiance Maison Labiche",
       "description_courte": "Porté intérieur curé, ambiance vert sauge ou lin",
-      "description_longue": "Photographie lifestyle dans un intérieur éditorial parisien structuré : mur moulé vert sauge, parquet chevron, props vintage (vieux suitcase, imprimés botaniques, plante en pot, chapeaux accrochés). Modèle en pose décontractée, confiance assumée, plein corps ou 3/4. Lumière ambiante chaude d'intérieur.",
-      
+      "description_longue": "Photographie lifestyle dans un intérieur éditorial parisien structuré : mur moulé vert sauge, parquet chevron, props vintage (vieux suitcase, imprimés botaniques, plante en pot, chapeaux accrochés). Modèle en pose décontractée, confiance assumée, plein corps ou 3/4. Motif brodé visible côté buste gauche. Lumière ambiante chaude d'intérieur.",
+
       "specs_techniques": {
         "cadrage": "plein corps ou 3/4, modèle debout ou assis",
+        "placement_motif": "buste gauche (côté cœur)",
         "decor": "appartement parisien curé, mur vert sauge, parquet chevron",
         "lumiere": "ambiante chaude, lumière de fenêtre",
         "objectif_recommande": "80mm f/4 (medium format Hasselblad) ou 50mm f/1.8",
@@ -108,22 +122,22 @@
         "props": "vintage, bois clair, céramique, plantes, livres, chapeaux",
         "post_production": "tons chauds muted avec accents verts, grain argentique"
       },
-      
+
       "presence_mannequin": true,
       "duo_compatible": true,
       "nb_personnes_shot": "1 ou 2",
-      
-      "prompt_en_keywords": "Editorial fashion photography, young person casually standing or leaning in a curated Parisian apartment, sage green paneled wall, dark wooden parquet floor, vintage props (old suitcase, framed botanical prints, potted plant, hung hats and scarves), full body or 3/4 shot, relaxed confident pose, soft ambient interior lighting, warm muted earth tones with green accents, French heritage brand campaign aesthetic, Maison Labiche lookbook style",
-      
+
+      "prompt_en_keywords": "Editorial fashion photography, young person casually standing or leaning in a curated Parisian apartment, sage green paneled wall, dark wooden parquet floor, vintage props (old suitcase, framed botanical prints, potted plant, hung hats and scarves), embroidered design visible on the LEFT CHEST, full body or 3/4 shot, relaxed confident pose, soft ambient interior lighting, warm muted earth tones with green accents, French heritage brand campaign aesthetic, Maison Labiche lookbook style",
+
       "references_prompts_library": ["PP-H05", "SA-04", "SA-06", "AM-02"],
-      
+
       "usage_par_pilier": {
         "p1_process": false,
         "p2_emotion": true,
         "p3_produit": true,
         "p4_preuve": true
       },
-      
+
       "distribution_pack_type": "1-2 shots par motif × produit (variations de mannequins et poses)"
     },
 
@@ -132,13 +146,14 @@
       "label_fr": "Lifestyle Outdoor",
       "icone": "🌿",
       "rang_catalogue": 4,
-      
+
       "usage_principal": "Image 3 alt, style français brut",
       "description_courte": "Porté extérieur rue pavée golden hour",
-      "description_longue": "Photographie éditoriale en extérieur dans une ville côtière française : ruelle pavée, architecture française vintage, atmosphère fin d'après-midi. Modèle en marche naturelle, léger sourire rentenu, gestuelle quotidienne. Golden hour avec backlight doux et lens flare léger. Ambiance Hoalen / October.",
-      
+      "description_longue": "Photographie éditoriale en extérieur dans une ville côtière française : ruelle pavée, architecture française vintage, atmosphère fin d'après-midi. Modèle en marche naturelle, léger sourire retenu, gestuelle quotidienne. Motif brodé visible côté buste gauche. Golden hour avec backlight doux et lens flare léger. Ambiance Hoalen / October.",
+
       "specs_techniques": {
         "cadrage": "plein corps, modèle en mouvement, parfois 3/4",
+        "placement_motif": "buste gauche (côté cœur)",
         "decor": "ruelle pavée ville côtière française, façades anciennes",
         "lumiere": "golden hour backlight, lens flare doux",
         "objectif_recommande": "50mm f/1.8 ou 35mm f/2",
@@ -146,22 +161,22 @@
         "meteo": "ciel laiteux ou ensoleillé doux, fin d'après-midi",
         "post_production": "muted earthy color grading, cinematic depth of field"
       },
-      
+
       "presence_mannequin": true,
       "duo_compatible": true,
       "nb_personnes_shot": "1 ou 2",
-      
-      "prompt_en_keywords": "Fashion editorial photograph, woman walking in a quiet cobblestone street in a small French coastal town, slightly turning back toward the camera with a natural relaxed smile, golden hour backlight, soft lens flare, muted earthy color grading, full body composition, Hoalen and October brand aesthetic, effortless French style, cinematic depth of field",
-      
+
+      "prompt_en_keywords": "Fashion editorial photograph, woman walking in a quiet cobblestone street in a small French coastal town, slightly turning back toward the camera with a natural relaxed smile, embroidered design on the LEFT CHEST, golden hour backlight, soft lens flare, muted earthy color grading, full body composition, Hoalen and October brand aesthetic, effortless French style, cinematic depth of field",
+
       "references_prompts_library": ["AM-03", "SA-05"],
-      
+
       "usage_par_pilier": {
         "p1_process": false,
         "p2_emotion": true,
         "p3_produit": true,
         "p4_preuve": true
       },
-      
+
       "distribution_pack_type": "1 shot par motif × produit (alternative au lifestyle_studio)"
     },
 
@@ -170,13 +185,15 @@
       "label_fr": "Macro Broderie",
       "icone": "🔍",
       "rang_catalogue": 5,
-      
+
       "usage_principal": "Image 4 fiche produit, savoir-faire",
       "description_courte": "Gros plan broderie bokeh, texture fil visible",
-      "description_longue": "Photographie macro extrêmement serrée sur la broderie. Visibilité totale de la texture du fil, de la trame du tissu, et des points de broderie. Bokeh crémeux en arrière-plan. Mise en valeur du savoir-faire artisanal industriel du métier Tajima. Ne montre que le détail, pas le vêtement complet.",
-      
+      "description_longue": "Photographie macro extrêmement serrée sur la broderie (positionnée côté buste gauche). Visibilité totale de la texture du fil, de la trame du tissu, et des points de broderie. Bokeh crémeux en arrière-plan. Mise en valeur du savoir-faire artisanal industriel du métier Tajima. Ne montre que le détail, pas le vêtement complet.",
+
       "specs_techniques": {
         "cadrage": "macro extrême, focal sur la broderie uniquement",
+        "placement_motif_dans_cadre": "centré dans le cadre macro (le macro isole la broderie du vêtement)",
+        "placement_motif_sur_vetement": "buste gauche (côté cœur)",
         "fond": "bokeh crémeux (le vêtement en fond flou)",
         "lumiere": "latérale douce et directionnelle, ombres subtiles sur les points",
         "objectif_recommande": "100mm macro f/4 (Canon ou équivalent)",
@@ -184,22 +201,22 @@
         "post_production": "ultra sharp focus sur broderie, bokeh doux",
         "contrainte": "La broderie DOIT être le sujet principal, pas le mannequin"
       },
-      
+
       "presence_mannequin": "optionnelle (peut être sur vêtement porté ou posé)",
       "duo_compatible": false,
       "nb_personnes_shot": "0 ou 1 (hors champ)",
-      
+
       "prompt_en_keywords": "Extreme close-up macro photography, embroidery thread texture visible in finest details, fabric weave visible, soft directional side lighting creating subtle shadows on stitching, Canon 100mm macro lens f/4, ultra sharp focus on embroidery with creamy bokeh background, luxury fashion product photography, artisan craftsmanship detail shot, warm neutral tones",
-      
+
       "references_prompts_library": ["PP-H03", "EN-06"],
-      
+
       "usage_par_pilier": {
         "p1_process": true,
         "p2_emotion": false,
         "p3_produit": true,
         "p4_preuve": true
       },
-      
+
       "distribution_pack_type": "1 shot par motif × produit (obligatoire pour storytelling savoir-faire)"
     },
 
@@ -208,13 +225,14 @@
       "label_fr": "Duo / Couple",
       "icone": "👫",
       "rang_catalogue": 6,
-      
+
       "usage_principal": "Image 5 galerie, intimité storytelling, SHOT OBLIGATOIRE par pack",
       "description_courte": "Couple/mère-enfant/grand-parent/amis - duo intergénérationnel ou intime",
-      "description_longue": "Photographie éditoriale avec 2 personnes portant des vêtements assortis. Cadrage serré favorisant la complicité visible, la tendresse, le lien affectif. Les 2 modèles peuvent être : parent-enfant / grand-parent-parent / adultes-amis / couple (rotation cyclique obligatoire par pack). Le motif brodé doit être visible sur les 2 modèles.",
-      
+      "description_longue": "Photographie éditoriale avec 2 personnes portant des vêtements assortis. Cadrage serré favorisant la complicité visible, la tendresse, le lien affectif. Les 2 modèles peuvent être : parent-enfant / grand-parent-parent / adultes-amis / couple (rotation cyclique obligatoire par pack). Le motif brodé, positionné côté buste gauche sur les 2 vêtements, doit être visible sur les 2 modèles.",
+
       "specs_techniques": {
         "cadrage": "serré, mid-thigh au-dessus des têtes, deux personnes proches",
+        "placement_motif": "buste gauche (côté cœur) sur les 2 modèles",
         "fond": "uni off-white ou intérieur neutre",
         "lumiere": "studio plate et douce, ou lumière de fenêtre",
         "objectif_recommande": "85mm f/2, faible profondeur de champ",
@@ -222,11 +240,11 @@
         "composition": "les 2 modèles proches, touches subtiles, complicité réelle",
         "post_production": "no retouching feel, analog film grain, raw humanity"
       },
-      
+
       "presence_mannequin": true,
       "duo_compatible": true,
       "nb_personnes_shot": 2,
-      
+
       "rotation_cyclique_obligatoire": {
         "description": "Chaque pack avance d'un cran dans cette liste pour garantir la diversité des liens représentés",
         "types": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
@@ -237,18 +255,18 @@
           "couple": "DUO_LEA_SARAH (MAN-P11 couple LGBTQ+) ou DUO_HENRI_JOSEPHINE (MAN-S19 senior mixte)"
         }
       },
-      
-      "prompt_en_keywords": "Tight cropped fashion editorial, two people standing close together, plain off-white studio backdrop or intimate interior, both wearing matching Ypersoa embroidered garments, intimate framing cropped from mid-thigh to head, A.P.C. campaign aesthetic, no retouching feel, analog film grain, real human imperfections visible, authentic complicity and tenderness",
-      
+
+      "prompt_en_keywords": "Tight cropped fashion editorial, two people standing close together, plain off-white studio backdrop or intimate interior, both wearing matching Ypersoa embroidered garments with design on the LEFT CHEST, intimate framing cropped from mid-thigh to head, A.P.C. campaign aesthetic, no retouching feel, analog film grain, real human imperfections visible, authentic complicity and tenderness",
+
       "references_prompts_library": ["DC-01", "DC-02", "DC-03", "FA-01", "FA-02"],
-      
+
       "usage_par_pilier": {
         "p1_process": false,
         "p2_emotion": true,
         "p3_produit": true,
         "p4_preuve": true
       },
-      
+
       "distribution_pack_type": "1 shot OBLIGATOIRE par pack complet (rotation cyclique)"
     }
   ],
@@ -280,6 +298,7 @@
     "axe_1_ambiance": "Chaque type de shot peut être combiné avec les 5 ambiances (sauf Ghost qui est neutre)",
     "axe_3_mannequin": "Ghost = pas de mannequin. Crop/Macro/Lifestyle = 1 mannequin. Duo = 2 mannequins (duo établi ou libre).",
     "axe_4_prompt_template": "Chaque type pointe vers un ou plusieurs prompts de la prompts_library via 'references_prompts_library'",
-    "distribution_ambiances_par_pack": "Voir direction_artistique_hero.json > regles_production_pack > distribution_ambiances (80% Studio Brut + Loft Organique, 20% autres)"
+    "distribution_ambiances_par_pack": "Voir direction_artistique_hero.json > regles_production_pack > distribution_ambiances (80% Studio Brut + Loft Organique, 20% autres)",
+    "regle_placement_motif": "Sauf override par motif, le motif est TOUJOURS côté buste gauche. Cette règle est universelle et doit apparaître dans tous les prompts EN ('design on the LEFT CHEST')."
   }
 }
