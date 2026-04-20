@@ -1,0 +1,316 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "ambiances_shooting",
+    "last_updated": "2026-04-20",
+    "description": "5 ambiances visuelles officielles Ypersoa, enrichies avec palette chromatique, mannequins recommandés et usage par pilier. Axe 1 sur 4 du système shooting.",
+    "nb_ambiances": 5,
+    "axe_systeme": "1 sur 4 (mood/lumière/lieu)",
+    "source": "archives/aistudio_legacy/atelier_social/src/components/VibeSelector.tsx (5 vibes codifiées)",
+    "distribution_par_pack": "Voir direction_artistique_hero.json > regles_production_pack > distribution_ambiances (80% Studio Brut + Loft Organique, 20% autres)"
+  },
+
+  "principe": "Une ambiance définit le mood, la lumière et le lieu général d'une image. Elle se combine avec un type de shot (axe 2), un mannequin (axe 3) et un prompt template (axe 4) pour produire une image finale cohérente.",
+
+  "regle_distribution_universelle": {
+    "description": "Règle stratégique Sarah J3.A : 80% des shots utilisent Studio Brut ou Loft Organique pour maintenir la cohérence brand premium. 20% apportent la variété éditoriale.",
+    "distribution_pack_de_10_shots": {
+      "studio_brut": 4,
+      "loft_organique": 4,
+      "aube_intime": 1,
+      "echappee_sauvage": 0.5,
+      "lumiere_sepia": 0.5
+    },
+    "distribution_pack_de_6_shots": {
+      "studio_brut": 3,
+      "loft_organique": 2,
+      "ambiance_autre_au_choix": 1
+    }
+  },
+
+  "ambiances": [
+    {
+      "id": "studio_brut",
+      "label_fr": "Studio Brut",
+      "id_legacy_vibeselector": "minimal",
+      "icone_legacy": "Sparkles",
+      "rang_priorite_pack": 1,
+      "pourcentage_pack_default": "40%",
+
+      "description_courte": "Minimalisme absolu, ombres franches, haute couture",
+      "description_longue": "Studio photo haut de gamme, fond uni blanc cassé ou béton ciré, ombres élégantes et directionnelles. Esthétique avant-garde, éditoriale, sophistiquée. Le vêtement et le motif brodé sont les seuls sujets, aucune distraction environnementale. Pose structurée, attitude assumée.",
+
+      "prompt_en_keywords": "High-end minimalist studio, concrete or pure off-white background, sharp elegant shadows, avant-garde fashion editorial, pure and sophisticated atmosphere",
+
+      "lumiere_dominante": "studio directionnelle franche",
+      "tons_chromatiques": ["blanc_casse", "beton_gris", "noir_anthracite"],
+      "tons_hex": ["#F5F0EA", "#A0A0A0", "#2C2C2A"],
+      "lieu_type": "studio photo, fond uni",
+      "saisonnalite": "toute saison",
+
+      "mannequins_recommandes_ids": [
+        "MAN-P01",
+        "MAN-P02",
+        "MAN-P06",
+        "MAN-P10",
+        "MAN-P12",
+        "MAN-S14",
+        "MAN-S16",
+        "MAN-S17",
+        "MAN-S20"
+      ],
+
+      "mannequins_compatibles_description": "Tous les profils adultes (30-60+). Excellente pour showcaser les particularités physiques (vitiligo de MAN-S17, fauteuil roulant de MAN-S20) sur fond neutre qui met en valeur. Non recommandé pour enfants seuls (trop statique).",
+
+      "types_de_shots_compatibles": ["ghost", "crop_poitrine", "lifestyle_studio", "duo_couple", "macro_broderie"],
+
+      "compatible_motifs_priorite": ["YPM-001", "YPM-011"],
+      "incompatible_motifs": [],
+
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+
+      "exemples_utilisation": [
+        "Photo hero fiche produit PDP",
+        "Ghost packshot catalogue",
+        "Crop poitrine sur fond neutre pour showcaser la broderie",
+        "Duo couple LGBTQ+ sur fond uni (DUO_LEA_SARAH)"
+      ]
+    },
+
+    {
+      "id": "loft_organique",
+      "label_fr": "Loft Organique",
+      "id_legacy_vibeselector": "botanical-loft",
+      "icone_legacy": "Flower",
+      "rang_priorite_pack": 2,
+      "pourcentage_pack_default": "40%",
+
+      "description_courte": "Béton ciré, serre lumineuse, chic et végétal",
+      "description_longue": "Intérieur loft moderne avec forte présence végétale. Sol en béton poli, plantes luxuriantes, lumière naturelle abondante (verrière ou serre). Esthétique chic premium, mélange architectural et organique. Ambiance Vogue Living. Vêtement porté dans un environnement habité.",
+
+      "prompt_en_keywords": "Premium chic aesthetic, interior of a modern botanical greenhouse loft, polished concrete floors, abundant bright natural light, lush organic plants, highly luminous, architectural and organic blend, high-end interior design photography, Vogue living editorial",
+
+      "lumiere_dominante": "naturelle zénithale (serre ou verrière)",
+      "tons_chromatiques": ["vert_sauge", "beton_clair", "blanc_lumineux", "vert_jade_plantes"],
+      "tons_hex": ["#9DC183", "#D8D4CB", "#FAFAFA", "#2D7A5F"],
+      "lieu_type": "loft architectural, serre, jardin d'hiver, intérieur moderne végétalisé",
+      "saisonnalite": "toute saison (idéal printemps-été pour lumière)",
+
+      "mannequins_recommandes_ids": [
+        "MAN-P03",
+        "MAN-P04",
+        "MAN-P07",
+        "MAN-P11",
+        "MAN-P12",
+        "MAN-S14",
+        "MAN-S16",
+        "MAN-S20"
+      ],
+
+      "mannequins_compatibles_description": "Mannequins adultes 30-55. Affinité particulière avec profils urbains et créatifs. Convient particulièrement à Aïcha (MAN-P03), Yasmine (MAN-P04), Lucia (MAN-P12). Le couple LGBTQ+ DUO_LEA_SARAH trouve sa place naturelle dans cet environnement ouvert.",
+
+      "types_de_shots_compatibles": ["lifestyle_studio", "duo_couple", "crop_poitrine"],
+
+      "compatible_motifs_priorite": [],
+      "incompatible_motifs": ["YPM-001"],
+      "raison_incompatibilite_brigitte": "Brigitte est un motif minimaliste (cœur + initiale). L'environnement végétal luxuriant détourne l'attention du motif épuré. Pour Brigitte, préférer Studio Brut.",
+
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+
+      "exemples_utilisation": [
+        "Carrousel Instagram pilier P2 Émotion",
+        "Hero homepage site",
+        "Campagne printemps-été",
+        "Duo adultes-amis en environnement urbain chic"
+      ]
+    },
+
+    {
+      "id": "aube_intime",
+      "label_fr": "L'Aube Intime",
+      "id_legacy_vibeselector": "cozy",
+      "icone_legacy": "Coffee",
+      "rang_priorite_pack": 3,
+      "pourcentage_pack_default": "8%",
+
+      "description_courte": "Lumière matinale, grain de peau, douceur du coton",
+      "description_longue": "Intérieur intimiste baigné de lumière matinale douce. Chambre, cuisine, ou salon en lin froissé. Atmosphère de slow living, moments de grâce du matin. Tons chauds et humanité visible. Grain de peau mis en valeur par la lumière naturelle. Pose contemplative ou tendre.",
+
+      "prompt_en_keywords": "Intimate morning light, soft shadows, warm skin tones, wrinkled white linen, a feeling of slow living and deep comfort, highly emotional, golden hour early morning",
+
+      "lumiere_dominante": "douce naturelle matin (fenêtre est)",
+      "tons_chromatiques": ["beige_chaud", "blanc_casse", "rose_pale", "lin_froisse"],
+      "tons_hex": ["#E8D5B7", "#F5F0EA", "#F0D3D7", "#E5DED2"],
+      "lieu_type": "intérieur intimiste, chambre, cuisine matinale, salon",
+      "saisonnalite": "toute saison (automne-hiver particulièrement adaptés)",
+
+      "mannequins_recommandes_ids": [
+        "MAN-P01",
+        "MAN-P05",
+        "MAN-P08",
+        "MAN-P10",
+        "MAN-S13",
+        "MAN-S15",
+        "MAN-S18"
+      ],
+
+      "mannequins_compatibles_description": "Idéal pour mannequins à tons chauds et moments d'intimité. Convient particulièrement aux duos parent-enfant (DUO_BEATRICE_LILA), aux seniors (MAN-P10, MAN-S18), et aux bébés/enfants (MAN-P08, MAN-S15). L'humanité visible (rides, cheveux gris) est magnifiée par la lumière matinale douce.",
+
+      "types_de_shots_compatibles": ["lifestyle_studio", "duo_couple", "crop_poitrine"],
+
+      "compatible_motifs_priorite": ["YPM-001", "YPM-011"],
+      "incompatible_motifs": [],
+
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+
+      "exemples_utilisation": [
+        "Post Instagram pilier P2 Émotion (sous-pilier Intime)",
+        "Campagne Fête des Mères",
+        "Carrousel sous-pilier Souvenir (lendemain de naissance)",
+        "Duo grand-mère/petite-fille DUO_BEATRICE_LILA"
+      ]
+    },
+
+    {
+      "id": "echappee_sauvage",
+      "label_fr": "Échappée Sauvage",
+      "id_legacy_vibeselector": "nature",
+      "icone_legacy": "Leaf",
+      "rang_priorite_pack": 4,
+      "pourcentage_pack_default": "6%",
+
+      "description_courte": "Vent, mouvement, éléments naturels bruts",
+      "description_longue": "Environnement naturel sauvage : plage, forêt, dunes, prairie. Vent dans les cheveux et dans les vêtements, lumière naturelle dappled, liberté du mouvement. Cinematic outdoor, sensation de liberté et de connexion à la terre. Le vêtement est en mouvement, montre sa tenue dans la vraie vie.",
+
+      "prompt_en_keywords": "Wild natural setting, wind in the hair and fabric, dappled sunlight, organic textures, feeling of freedom and connection to earth, cinematic outdoor photography, movement and energy",
+
+      "lumiere_dominante": "naturelle extérieur dynamique (backlight)",
+      "tons_chromatiques": ["vert_prairie", "ocre_terre", "ciel_blanc", "terracotta_sable"],
+      "tons_hex": ["#87A96B", "#B8763E", "#E8E4D9", "#C4694A"],
+      "lieu_type": "extérieur sauvage : plage, forêt, dunes, prairie, montagne",
+      "saisonnalite": "printemps / été / début automne (évite hiver brumeux)",
+
+      "mannequins_recommandes_ids": [
+        "MAN-P12",
+        "MAN-S14",
+        "MAN-P03",
+        "MAN-P06",
+        "MAN-P11"
+      ],
+
+      "mannequins_compatibles_description": "Profils jeunes-adultes énergiques ou couples dynamiques. Lucia (MAN-P12, 22 ans) et Marcus (MAN-S14, 23 ans) sont particulièrement adaptés. Peu adapté aux seniors et aux enfants seuls (logistique extérieur + fragilité).",
+
+      "types_de_shots_compatibles": ["lifestyle_outdoor", "duo_couple"],
+
+      "compatible_motifs_priorite": [],
+      "incompatible_motifs": ["YPM-001"],
+      "raison_incompatibilite_brigitte": "Brigitte évoque l'intime et la pudeur. Le vent, le mouvement et la nature dispersent l'attention et contredisent la sobriété du motif.",
+
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+
+      "exemples_utilisation": [
+        "Reel Instagram génération Z (MAN-P12 Lucia)",
+        "Campagne printemps-été 'air libre'",
+        "Duo adultes-amis en weekend (MAN-P03 + MAN-P06 ou MAN-P12 + MAN-S14)",
+        "Storytelling liberté et mouvement"
+      ]
+    },
+
+    {
+      "id": "lumiere_sepia",
+      "label_fr": "Lumière Sépia",
+      "id_legacy_vibeselector": "romantic",
+      "icone_legacy": "Sun",
+      "rang_priorite_pack": 5,
+      "pourcentage_pack_default": "6%",
+
+      "description_courte": "Heure dorée, nostalgie, poésie visuelle",
+      "description_longue": "Fin d'après-midi, heure dorée. Lumière chaude couchante, nostalgie 35mm film, poésie romantique visuelle. Soft focus, atmosphere intemporelle et émotive. Convient aux moments contemplatifs, aux couples intergénérationnels, aux témoignages de longévité. L'éclairage doré sublime toutes les peaux.",
+
+      "prompt_en_keywords": "Golden hour lighting, nostalgic 35mm film look, romantic and poetic atmosphere, warm sunset glow, soft focus, highly emotive and timeless, analog film grain",
+
+      "lumiere_dominante": "dorée couchant (backlight ou rimlight)",
+      "tons_chromatiques": ["dore_miel", "ocre_couchant", "terracotta_chaud", "brun_cacao"],
+      "tons_hex": ["#D4A574", "#B87333", "#C4694A", "#8B5A3C"],
+      "lieu_type": "extérieur fin de journée, terrasse, balcon, fenêtre couchant, jardin",
+      "saisonnalite": "toute saison (printemps-automne idéaux)",
+
+      "mannequins_recommandes_ids": [
+        "MAN-P10",
+        "MAN-S18",
+        "MAN-S19",
+        "MAN-P05",
+        "MAN-P02",
+        "MAN-P11"
+      ],
+
+      "mannequins_compatibles_description": "Particulièrement adapté aux seniors (MAN-P10, MAN-S18, MAN-S19 couple senior) et aux couples intemporels. La lumière sépia sublime les cheveux gris, les rides et les signes de l'âge. Excellent pour DUO_HENRI_JOSEPHINE (couple senior mixte) qui incarne la longévité.",
+
+      "types_de_shots_compatibles": ["lifestyle_outdoor", "duo_couple", "crop_poitrine"],
+
+      "compatible_motifs_priorite": ["YPM-001", "YPM-011"],
+      "incompatible_motifs": [],
+
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": false,
+        "p4_preuve": true
+      },
+
+      "exemples_utilisation": [
+        "Campagne Fête des Grands-Mères/Pères",
+        "Anniversaire de mariage (DUO_HENRI_JOSEPHINE)",
+        "Pilier P2 Émotion sous-pilier Présence (expatrié, deuil)",
+        "Pilier P4 Preuve avec témoignage longévité client"
+      ]
+    }
+  ],
+
+  "matrice_ambiance_x_pilier": {
+    "description": "Quelles ambiances fonctionnent le mieux pour quel pilier de contenu",
+    "p1_process": {
+      "ambiances_recommandees": ["studio_brut"],
+      "commentaire": "Process = savoir-faire = focus sur la broderie. Studio Brut ou Macro sans ambiance."
+    },
+    "p2_emotion": {
+      "ambiances_recommandees": ["loft_organique", "aube_intime", "echappee_sauvage", "lumiere_sepia"],
+      "commentaire": "Émotion demande lieu habité et lumière expressive. Toutes ambiances sauf Studio Brut (trop froid)."
+    },
+    "p3_produit": {
+      "ambiances_recommandees": ["studio_brut", "loft_organique", "aube_intime"],
+      "commentaire": "Produit demande mise en valeur nette du vêtement. Privilégier environnements contrôlés."
+    },
+    "p4_preuve": {
+      "ambiances_recommandees": ["studio_brut", "loft_organique", "aube_intime", "lumiere_sepia"],
+      "commentaire": "Preuve client peut se déployer dans tous environnements sauf extérieur sauvage (trop énergique)."
+    }
+  },
+
+  "regles_orchestration_hub": {
+    "axe_2_type_de_shot": "Chaque ambiance est compatible avec 3-5 types de shots (voir types_de_shots_compatibles par ambiance)",
+    "axe_3_mannequin": "Chaque ambiance a une liste de mannequins recommandés par ID (MAN-PXX ou MAN-SXX)",
+    "axe_4_prompt_template": "Les keywords EN de chaque ambiance s'injectent dans les prompts de la prompts_library",
+    "regle_distribution_pack": "Voir regle_distribution_universelle ci-dessus : 40% Studio Brut + 40% Loft Organique + 20% autres par pack"
+  }
+}
