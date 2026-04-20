@@ -1,9 +1,13 @@
 {
   "_meta": {
-    "schema_version": "2.0",
-    "last_updated": "2026-04-19",
+    "schema_version": "2.1",
+    "last_updated": "2026-04-20",
     "template_status": "master_template_validated",
-    "notes_version": "v2 - aligné sur référentiels officiels (palette_fils_broderie, palette_supports_vetements, assets_produits). Les codes YP-xxx inventés et les IDs awdis_jhxxx ont été remplacés. La logique 'couleurs_recommandees/deconseilees' est remplacée par 'couleurs_iconiques_brand' (pilotage shooting) + 'combinaisons_iconiques_brand' (visuels hero). Les règles de contraste sont externalisées dans regles_combinaisons_shooting.json."
+    "notes_version": "v2.1 (2026-04-20) - Alignement sur casting 21 D1_BEAUTE_INCARNEE v2.0. Ajout direction_modeles_override (regard hors champ contemplatif). Remplacement de mannequins_type (descriptions libres) par mannequins_compatibles_casting_v2 (IDs structurés). v2.0 (2026-04-19) - aligné sur référentiels officiels (palette_fils_broderie, palette_supports_vetements, assets_produits). Les codes YP-xxx inventés et les IDs awdis_jhxxx ont été remplacés. La logique 'couleurs_recommandees/deconseilees' est remplacée par 'couleurs_iconiques_brand' (pilotage shooting) + 'combinaisons_iconiques_brand' (visuels hero). Les règles de contraste sont externalisées dans regles_combinaisons_shooting.json.",
+    "changelog": {
+      "v2.0_2026-04-19": "Alignement référentiels officiels (palettes, supports, assets)",
+      "v2.1_2026-04-20": "Alignement casting 21 D1_BEAUTE_INCARNEE v2.0 + override contemplatif"
+    }
   },
 
   "identite": {
@@ -263,12 +267,41 @@
     "ton_interdit": ["exuberant", "publicitaire", "hallmark", "maternaliste", "commercial"]
   },
 
+  "direction_modeles_override": {
+    "_nouveau_2026_04_20": true,
+    "id": "OVERRIDE_BRIGITTE_CONTEMPLATIF",
+    "reference_doc": "direction_artistique_hero.json > direction_modeles_globale > override_possible_par_motif",
+    "raison_override": "La sobriété épurée de Brigitte (cœur + initiale) demande une attitude contemplative, intime, pudique. Les règles globales D1_BEAUTE_INCARNEE v2.0 (regard vivant et présent, sourire franc ou en coin) ne s'appliquent PAS pour ce motif. Brigitte vit dans le registre de l'émotion retenue.",
+    "overrides_actifs": {
+      "regard": "Hors champ pensif. JAMAIS regard direct caméra. Regard vers une fenêtre, un objet, un souvenir. Le regard raconte une absence ou une présence intérieure.",
+      "expression": "Contemplative, pudique, émotion retenue. Sourire infime ou pas de sourire. JAMAIS rire franc, JAMAIS sourire large.",
+      "attitude_corporelle": "Posture posée, gestes lents, contact avec un objet qui compte (tasse, livre, photo). Main sur la poitrine — sur la broderie — acceptée si naturelle."
+    },
+    "cadrages_privilegies": [
+      "Portrait 3/4 assis·e près d'une fenêtre, regard vers l'extérieur",
+      "Plan taille de profil (pas face caméra), tête légèrement inclinée",
+      "Détail main posée sur la broderie, visage hors champ ou flou",
+      "Plan large dans intérieur calme, mannequin petit dans le cadre"
+    ],
+    "ambiances_privilegiees_override": {
+      "rang_1": "aube_intime",
+      "rang_2": "loft_organique (lumière douce de fenêtre)",
+      "rang_3": "lumiere_sepia (pour registre souvenir/transmission)"
+    },
+    "ambiances_a_eviter_override": [
+      "studio_brut (trop clinique pour le registre Brigitte)",
+      "echappee_sauvage (trop dynamique)"
+    ],
+    "test_de_validation_specifique": "Regarder la photo et se demander : 'Cette personne pense à quelqu'un ou à quelque chose ?' Si oui : OK. Si la personne 'performe' pour la caméra : NON, rééquilibrer."
+  },
+
   "direction_artistique_shooting": {
     "ambiances_recommandees": [
       "studio_brut",
       "aube_intime",
       "lumiere_sepia"
     ],
+    "_note_ambiances": "Ambiances recommandees conservees pour retro-compat. Voir direction_modeles_override > ambiances_privilegiees_override pour le pilotage v2.1 (aube_intime prio 1, studio_brut deconseille).",
     "ambiances_deconseilees": [
       "echappee_sauvage",
       "loft_organique"
@@ -280,13 +313,58 @@
     ],
     "lumiere_type": "naturelle_douce_diffuse",
     "ambiance_emotionnelle": "calme_et_delicat",
-    "mannequins_type": [
-      "femme 30-45 cheveux chatains mi-longs peau claire ou matifiee",
-      "homme 30-45 cheveux courts barbe discrete",
-      "duo couple complicite sobre pas de demonstration",
-      "duo femmes complicite amicale (vu en hero sweat marine)",
-      "duo maman-enfant lien tendre (vu en hero hoodie enfant)"
-    ],
+
+    "mannequins_compatibles_casting_v2": {
+      "_nouveau_2026_04_20": true,
+      "_reference": "referentiels/shooting/mannequins_recurrents.json v3.1 — casting 21 D1_BEAUTE_INCARNEE",
+      "_note_migration": "Remplace l'ancien champ 'mannequins_type' (descriptions libres du type 'femme 30-45 cheveux chatains'). Les mannequins sont maintenant identifies par IDs du casting officiel.",
+
+      "principaux_recommandes": [
+        {
+          "id": "MAN-P01",
+          "prenom": "Camille",
+          "pourquoi": "Profil 'mere de famille passionnee', registre contemplatif naturel, taches de rousseur et rides d'expression parfaites pour gros plan broderie"
+        },
+        {
+          "id": "MAN-P02",
+          "prenom": "Anna",
+          "pourquoi": "Provencale moderne, regard souvent hors champ (matche parfaitement l'override), lumiere doree privilegiee — ideale pour ambiance Aube Intime"
+        },
+        {
+          "id": "MAN-P10",
+          "prenom": "Marie-Helene",
+          "pourquoi": "Rousse elegante de campagne, port altier, emotion retenue naturelle. Ajoute le registre transmission (Brigitte offert mere-fille, grand-mere-petite-fille)"
+        }
+      ],
+
+      "secondaires_acceptables": [
+        {
+          "id": "MAN-S17",
+          "prenom": "Cesaria",
+          "pourquoi": "Registre classique francais intemporel, serenite posee, lumiere douce qui unifie (vitiligo non thematise)"
+        },
+        {
+          "id": "MAN-P04",
+          "prenom": "Lila",
+          "pourquoi": "Parisienne sophistiquee, registre pose et pudique, regard direct pose compatible avec override si hors champ"
+        }
+      ],
+
+      "duos_recommandes_pour_combinaisons_hero": {
+        "duo_femmes_complicite_sobre": "Camille + Aicha (MAN-P01 + MAN-P03) OU Anna + Lila (MAN-P02 + MAN-P04). Registre epaule contre epaule, regards croises, pas de demonstration.",
+        "duo_couple_brigitte_initiales": "DUO_HENRI_JOSEPHINE (le plus sobre, 40 ans de mariage, tendresse posee). Eviter DUO_LEA_SARAH pour Brigitte (registre plus urbain, moins contemplatif).",
+        "duo_maman_enfant": "Camille + Felicie (MAN-P01 + MAN-P08) OU Marie-Helene + Felicie (MAN-P10 + MAN-P08). Lien tendre sobre."
+      },
+
+      "mannequins_a_eviter_pour_brigitte": [
+        "MAN-P12 Brune (22, Gen Z dynamique) — registre trop vivant pour Brigitte",
+        "MAN-S13 Priya (16, ado sportive) — idem",
+        "MAN-S14 Gaspard (23, skateur) — idem",
+        "MAN-S21 Hugo (30, jeune papa energie fatigue-heureuse) — registre moins contemplatif",
+        "Enfants solo (Gabin 5, Noe 1) — Brigitte est un motif adulte/introspectif"
+      ]
+    },
+
     "poses_preferees": [
       "main_posee_sur_coeur_brode",
       "regard_hors_champ_pensif",

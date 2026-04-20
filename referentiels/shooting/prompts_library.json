@@ -1,0 +1,1168 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "prompts_library",
+    "last_updated": "2026-04-20",
+    "directive_artistique": "D1_BEAUTE_INCARNEE v2.0",
+    "description": "Bibliothèque des templates de prompts Ypersoa pour génération Gemini/Claude. 37 templates legacy (extraits de prompt_shooting_Site.docx) + 3 nouveaux FV-xx pour famille_vivante.",
+    "nb_templates": 40,
+    "variables_universelles": {
+      "[MOTIF]": "Description courte du motif + image jointe (ex: 'un petit cœur plein avec une initiale en dessous')",
+      "[COULEUR FIL]": "Nom exact de la palette officielle 20 fils (ex: 'fil_vert_jade', 'fil_ivoire_creme')",
+      "[COULEUR SWEAT]": "Nom exact de la couleur support (ex: 'beige naturel brut', 'bleu marine foncé', 'vert sauge doux')"
+    },
+    "nettoyage_applique": {
+      "ancien_nom": "vert forêt / vert anglais foncé / dark forest green",
+      "nouveau_nom": "fil_vert_jade (palette officielle 20 fils)",
+      "niveau_application": "Les templates utilisent [COULEUR FIL] variable — le nettoyage est à appliquer au niveau des INSTANCIATIONS (XLSX ypersoa_gemini_prompts_complets.xlsx)."
+    },
+    "source_legacy": [
+      "archives/shooting_legacy/prompt_shooting_Site.docx (37 templates FR)",
+      "ypersoa_gemini_prompts_complets.xlsx (~160 prompts instanciés, 5 onglets)"
+    ],
+    "suffix_universel_ia": "Voir direction_artistique_hero.json > specifications_techniques_par_defaut > prompt_suffix_universel pour le suffix Beauté Incarnée v2.0 à appender à tous les prompts."
+  },
+  "sections": {
+    "PP": "Packshot Produit (ghost, flat lay, macro, crop, cocooning)",
+    "SA": "Studio Adulte (portraits, lifestyle studio solo)",
+    "DC": "Duo / Couple",
+    "FA": "Famille legacy (studio/rue/plein air)",
+    "EN": "Enfant (portraits, lifestyle)",
+    "AM": "Ambiance (cocooning, lifestyle porté, détails)",
+    "FV": "Famille Vivante (nouveaux, 2026-04-20, scènes vivantes 3+ personnes)"
+  },
+  "templates": [
+    {
+      "code": "PP-H01",
+      "label_fr": "Flat lay éditorial",
+      "section": "Packshot Produit — Hoodie",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode flat lay professionnelle d'un sweat à capuche oversize en [COULEUR SWEAT], avec un [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche, posé sur un drap de lit froissé en lin blanc cassé. Lumière dorée du matin entrant par la gauche. Stylisé avec une petite branche d'eucalyptus séché et une tasse de café en céramique. Prise de vue en plongée verticale directe, Canon EOS R5, objectif 35mm, f/2.8, lumière naturelle douce et diffuse, tons chauds et discrets, photographie de mode éditoriale, esthétique scandinave minimaliste, 4K ultra net.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 3 ou galerie",
+        "produits_compatibles": "YP001 · YP004",
+        "mutualisable": "Oui",
+        "usage": "Shot lifestyle statique mutualisable par couleur."
+      }
+    },
+    {
+      "code": "PP-H02",
+      "label_fr": "Ghost mannequin / packshot épuré",
+      "section": "Packshot Produit — Hoodie",
+      "type_de_shot_ref": "ghost",
+      "prompt_template_fr": "Photographie produit e-commerce épurée d'un sweat à capuche oversize en [COULEUR SWEAT], présenté sur un mannequin fantôme invisible devant un fond blanc pur. [MOTIF] brodé en fil [COULEUR FIL] visible sur la poitrine gauche. Éclairage studio parfaitement doux, sans ombres marquées, rendu fidèle aux couleurs réelles. Vue de face symétrique, packshot commercial mode, style minimaliste haut de gamme similaire aux fiches produit Maison Labiche, 4K ultra détaillé.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 1 — hero PDP",
+        "produits_compatibles": "YP001 · YP004",
+        "mutualisable": "Non",
+        "usage": "Photo principale de chaque listing Hoodie. 1 par motif × couleur hero."
+      }
+    },
+    {
+      "code": "PP-H03",
+      "label_fr": "Close-up macro broderie",
+      "section": "Packshot Produit — Hoodie",
+      "type_de_shot_ref": "macro_broderie",
+      "prompt_template_fr": "Photographie macro extrêmement serrée sur une broderie en fil [COULEUR FIL] représentant [MOTIF] sur un sweat à capuche oversize en [COULEUR SWEAT]. Texture du fil et trame du tissu visibles dans les moindres détails. Éclairage latéral doux et directionnel créant de légères ombres sur les points de broderie. Objectif macro Canon 100mm, f/4, mise au point ultra nette sur la broderie avec bokeh crémeux en arrière-plan, photographie produit mode luxe, détail artisanal haute couture, tons neutres et chauds.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": true,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 2",
+        "produits_compatibles": "YP001 · YP004",
+        "mutualisable": "Non",
+        "usage": "Gros plan fil et texture. 1 par motif × couleur hero."
+      }
+    },
+    {
+      "code": "PP-H04",
+      "label_fr": "Crop serré poitrine",
+      "section": "Packshot Produit — Hoodie",
+      "type_de_shot_ref": "crop_poitrine",
+      "prompt_template_fr": "Photographie mode recadrée très serrée sur la zone poitrine d'un sweat à capuche oversize en [COULEUR SWEAT] porté par un modèle. Le [MOTIF] brodé en fil [COULEUR FIL] est le point focal, visible sur la poitrine gauche. Sweat légèrement oversize, tombé naturel du tissu. Menton du modèle à peine visible en haut du cadre, mains partiellement visibles en bas. Fond blanc cassé uni, éclairage studio plat et doux, netteté sur les points de broderie et la texture du tissu. Objectif 90mm macro, f/3.5, détail produit mode commercial, esthétique close-up A.P.C. et Maison Labiche, sobre et minimal.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 2 ou 3",
+        "produits_compatibles": "YP001 · YP004",
+        "mutualisable": "Non",
+        "usage": "Alternative au macro — montre le motif porté en serré."
+      }
+    },
+    {
+      "code": "PP-H05",
+      "label_fr": "Ambiance cocooning / brand storytelling",
+      "section": "Packshot Produit — Hoodie",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle cosy d'un sweat à capuche oversize en [COULEUR SWEAT] posé négligemment sur l'accoudoir d'un canapé en lin crème dans un intérieur minimaliste et lumineux. Une bougie parfumée allumée, un livre ouvert et un plaid en maille torsadée sont disposés à proximité. Lumière naturelle douce d'un jour couvert filtrant par de grandes fenêtres. Le [MOTIF] brodé en fil [COULEUR FIL] est visible sur la poitrine. Palette de tons ivoire, sable et [COULEUR SWEAT]. Objectif 35mm, f/2.2, faible profondeur de champ, univers visuel Émoï-Émoï et Sœur, atmosphère hygge, accessible et aspirationnel.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 4 ou galerie",
+        "produits_compatibles": "YP001 · YP004",
+        "mutualisable": "Oui",
+        "usage": "Image ambiance — mutualisée par couleur."
+      }
+    },
+    {
+      "code": "PP-Z01",
+      "label_fr": "Ghost mannequin zoodie",
+      "section": "Packshot Produit — Zoodie",
+      "type_de_shot_ref": "ghost",
+      "prompt_template_fr": "Photographie produit e-commerce épurée d'un zoodie oversize — sweat à capuche avec fermeture éclair centrale et grande poche kangourou — en [COULEUR SWEAT], présenté sur mannequin fantôme invisible devant fond blanc pur. Fermeture éclair légèrement entrouverte pour montrer la coupe. [MOTIF] brodé en fil [COULEUR FIL] visible sur la poitrine gauche. Éclairage studio doux et uniforme, rendu fidèle aux matières et couleurs. Vue de face symétrique, packshot commercial haut de gamme, esthétique Maison Labiche, 4K ultra net.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "PP-Z02",
+      "label_fr": "Flat lay zoodie détail zip",
+      "section": "Packshot Produit — Zoodie",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie flat lay éditoriale d'un zoodie oversize en [COULEUR SWEAT] posé ouvert à plat sur un fond en bois clair vieilli. Fermeture éclair dorée ou argentée mise en valeur par un éclairage latéral rasant doux. [MOTIF] brodé en fil [COULEUR FIL] visible sur la poitrine. Stylisé avec une paire de lunettes rondes en écaille, un carnet en cuir et un stylo plume. Prise de vue en plongée directe, objectif 35mm, f/3.2, tons chauds et neutres, éclairage naturel doux du matin, rendu artisanal et éditorial.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "PP-Z03",
+      "label_fr": "Porté lifestyle zoodie (adulte)",
+      "section": "Packshot Produit — Zoodie",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle mode d'un jeune homme debout contre un mur en béton ciré gris clair dans un loft parisien lumineux. Il porte un zoodie oversize en [COULEUR SWEAT] avec fermeture éclair à moitié ouverte, laissant voir un t-shirt blanc dessous. [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche. Jean brut non lavé et baskets en toile écrue. Posture décontractée, une main dans la poche, regard légèrement hors champ. Objectif 85mm f/2, lumière naturelle zénithale depuis une verrière, tons neutres désaturés, grain de film argentique, esthétique AMI Paris et A.P.C. automne.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "PP-T01",
+      "label_fr": "Ghost mannequin t-shirt",
+      "section": "Packshot Produit — T-Shirt",
+      "type_de_shot_ref": "ghost",
+      "prompt_template_fr": "Photographie produit e-commerce épurée d'un t-shirt unisexe légèrement oversize en [COULEUR SWEAT], présenté sur mannequin fantôme invisible devant fond blanc pur. [MOTIF] brodé en fil [COULEUR FIL] visible sur la poitrine gauche. Col rond légèrement tombant, tissu coton doux visible. Éclairage studio parfaitement uniforme, sans ombres, rendu fidèle aux matières. Vue de face symétrique, packshot commercial mode minimaliste, esthétique Maison Labiche et Jacquemus basique, 4K ultra détaillé.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 1 — hero PDP",
+        "produits_compatibles": "YP019",
+        "mutualisable": "Non",
+        "usage": "Photo principale de chaque listing T-Shirt."
+      }
+    },
+    {
+      "code": "PP-T02",
+      "label_fr": "Flat lay t-shirt éditorial",
+      "section": "Packshot Produit — T-Shirt",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie flat lay éditoriale d'un t-shirt légèrement oversize en [COULEUR SWEAT] posé soigneusement plié en deux sur un fond de marbre blanc veiné gris. [MOTIF] brodé en fil [COULEUR FIL] centré et mis en valeur. Stylisé avec un petit bouquet de fleurs séchées et un ruban de soie. Lumière naturelle latérale douce, ombres très légères, objectif 35mm, f/2.8, prise de vue en plongée directe. Tons purs et épurés, rendu minimaliste luxe, esthétique campagne Jacquemus ou Sézane basiques été.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "PP-T03",
+      "label_fr": "Crop serré poitrine t-shirt",
+      "section": "Packshot Produit — T-Shirt",
+      "type_de_shot_ref": "crop_poitrine",
+      "prompt_template_fr": "Photographie mode recadrée très serrée sur la zone poitrine d'un t-shirt légèrement oversize en [COULEUR SWEAT] porté par un modèle. Le [MOTIF] brodé en fil [COULEUR FIL] est le point focal, bien visible sur la poitrine gauche. Tissu coton doux, tombé naturel. Menton à peine visible en haut du cadre. Fond blanc cassé uni, éclairage studio plat et doux. Objectif 90mm macro, f/3.5, mise au point nette sur les points de broderie et la texture coton. Esthétique détail produit Maison Labiche, Armor Lux, sobre et précis.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 2",
+        "produits_compatibles": "YP019",
+        "mutualisable": "Non",
+        "usage": "Plan serré broderie sur T-Shirt."
+      }
+    },
+    {
+      "code": "PP-T04",
+      "label_fr": "Porté lifestyle t-shirt (femme, extérieur)",
+      "section": "Packshot Produit — T-Shirt",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle mode d'une jeune femme marchant dans une ruelle pavée d'une ville côtière française, portant un t-shirt légèrement oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Associé à un jean brut taille haute et des espadrilles en toile naturelle. Elle se retourne légèrement vers l'objectif avec un sourire naturel et décontracté. Lumière de fin d'après-midi en contre-jour, légère flare lumineuse, tons chauds et terreux. Objectif 50mm f/1.8, composition plein corps, profondeur de champ cinématographique, esthétique Hoalen, Septembre September, style français sans effort.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 3",
+        "produits_compatibles": "YP019",
+        "mutualisable": "Oui",
+        "usage": "Lifestyle mutualisé couleur T-Shirt."
+      }
+    },
+    {
+      "code": "PP-C01",
+      "label_fr": "Ghost mannequin crewneck",
+      "section": "Packshot Produit — Crewneck",
+      "type_de_shot_ref": "ghost",
+      "prompt_template_fr": "Photographie produit e-commerce épurée d'un sweat col rond oversize en [COULEUR SWEAT], présenté sur mannequin fantôme invisible devant fond blanc pur. [MOTIF] brodé en fil [COULEUR FIL] visible sur la poitrine gauche. Col côtelé, poignets et bas de sweat côtelés bien visibles. Éclairage studio parfaitement doux et uniforme, rendu fidèle aux matières et couleurs. Vue de face symétrique, packshot commercial haut de gamme, esthétique Colorful Standard et A.P.C., 4K ultra détaillé.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 1 — hero PDP",
+        "produits_compatibles": "YP005",
+        "mutualisable": "Non",
+        "usage": "Photo principale de chaque listing Sweat."
+      }
+    },
+    {
+      "code": "PP-C02",
+      "label_fr": "Flat lay crewneck automnal",
+      "section": "Packshot Produit — Crewneck",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie flat lay éditoriale d'un sweat col rond oversize en [COULEUR SWEAT] posé légèrement froissé sur une surface en béton ciré clair. [MOTIF] brodé en fil [COULEUR FIL] visible sur la poitrine. Stylisé avec des feuilles d'automne séchées, une petite courge décorative et une bougie de cire brute. Lumière naturelle froide et douce de journée automnale, légères ombres portées. Objectif 35mm, f/3.2, prise de vue en plongée directe. Tons terreux et sourds, ambiance Émoï-Émoï automne-hiver, chaleureux et éditorial.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 3 ou galerie",
+        "produits_compatibles": "YP005",
+        "mutualisable": "Oui",
+        "usage": "Shot ambiance mutualisé couleur Sweat."
+      }
+    },
+    {
+      "code": "PP-C03",
+      "label_fr": "Porté lifestyle crewneck (femme, intérieur)",
+      "section": "Packshot Produit — Crewneck",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle mode d'une jeune femme assise en tailleur sur un parquet en bois clair dans un appartement parisien lumineux, portant un sweat col rond oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Associé à un jean brut et des chaussettes épaisses en laine naturelle. Elle tient un livre ouvert, regard baissé, expression sereine. Lumière matinale douce depuis une fenêtre hors champ, murs blancs, plantes vertes en arrière-plan flou. Objectif 85mm f/1.8, faible profondeur de champ, palette désaturée chaude, grain argentique, esthétique Sézane intérieur automnal.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": false,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 3",
+        "produits_compatibles": "YP005",
+        "mutualisable": "Oui",
+        "usage": "Lifestyle mutualisé par couleur × produit Sweat."
+      }
+    },
+    {
+      "code": "SA-01",
+      "label_fr": "Portrait buste éditorial (femme)",
+      "section": "Studio Adulte",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode éditoriale en buste d'une jeune femme portant un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Elle regarde directement l'objectif avec une expression subtile et confiante, mains dans la poche du sweat. Fond de studio crème uni et chaud. Cadrage de la taille jusqu'au-dessus de la tête, composition centrée. Objectif Contax 645, 80mm f/2, carnation naturelle et lumineuse, éclairage studio doux avec légère ombre directionnelle, palette chaude désaturée, qualité film argentique, cool français sans effort, esthétique campagne Sézane x A.P.C.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P01 Camille",
+        "MAN-P02 Anna",
+        "MAN-P03 Aïcha",
+        "MAN-P04 Lila",
+        "MAN-S17 Césaria"
+      ],
+      "shopify_integration": {
+        "position": "Image 3 — lifestyle",
+        "produits_compatibles": "YP001 · YP005 · YP019",
+        "mutualisable": "Oui",
+        "usage": "Mutualisé : 1 par couleur × produit. Réutilisé sur tous les motifs."
+      }
+    },
+    {
+      "code": "SA-02",
+      "label_fr": "Portrait buste éditorial (homme)",
+      "section": "Studio Adulte",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode éditoriale en buste d'un jeune homme portant un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Regard légèrement hors champ vers le bas, expression calme et naturelle, une main glissée dans la poche. Fond de studio gris clair très doux. Cadrage de la taille jusqu'au-dessus de la tête. Objectif 85mm f/2, éclairage studio plat avec très légère ombre latérale, palette froide et désaturée, grain de film argentique. Esthétique campagne AMI Paris, APC homme, masculin et sobre.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P06 Mathieu",
+        "MAN-P07 Nicolas",
+        "MAN-S16 Hiroshi",
+        "MAN-S21 Hugo"
+      ],
+      "shopify_integration": {
+        "position": "Image 3 — lifestyle",
+        "produits_compatibles": "YP001 · YP005 · YP019",
+        "mutualisable": "Oui",
+        "usage": "Mutualisé par couleur × produit."
+      }
+    },
+    {
+      "code": "SA-03",
+      "label_fr": "Packshot porté e-commerce (femme)",
+      "section": "Studio Adulte",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie mode e-commerce d'une jeune femme portant un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche, associé à une jupe en denim brut sombre. Modèle cadrée du menton jusqu'aux mi-cuisses, visage non entièrement visible. Bras détendus le long du corps, posture droite face à l'objectif. Fond de studio gris très clair, éclairage studio diffus et doux, sans ombres marquées, rendu fidèle aux couleurs du vêtement. Objectif 50mm f/5.6, mise au point nette sur les détails du vêtement, post-traitement minimal, esthétique fiche produit A.P.C.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P01 Camille",
+        "MAN-P02 Anna",
+        "MAN-P03 Aïcha",
+        "MAN-P04 Lila",
+        "MAN-S17 Césaria"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "SA-04",
+      "label_fr": "Full body intérieur curé (homme)",
+      "section": "Studio Adulte",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode éditoriale d'un jeune homme appuyé nonchalamment contre un mur en lambris vert sauge dans un appartement parisien soigneusement décoré. Il porte un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine, associé à un chino crème et des Converse blanc cassé. Parquet en bois sombre, accessoires vintage en arrière-plan : vieille valise, gravures botaniques encadrées, plante verte, chapeaux et écharpes accrochés. Plein corps, pose décontractée et confiante, jambe légèrement croisée. Hasselblad moyen format, 80mm f/4, éclairage ambiant intérieur doux, tons terreux chauds, esthétique campagne Maison Labiche.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P06 Mathieu",
+        "MAN-P07 Nicolas",
+        "MAN-S16 Hiroshi",
+        "MAN-S21 Hugo"
+      ],
+      "shopify_integration": {
+        "position": "Image 3 — lifestyle",
+        "produits_compatibles": "YP001 · YP005",
+        "mutualisable": "Oui",
+        "usage": "Lifestyle studio — mutualisé couleur × produit."
+      }
+    },
+    {
+      "code": "SA-05",
+      "label_fr": "Studio minimaliste (femme, solo)",
+      "section": "Studio Adulte",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode éditoriale en studio, fond uni blanc cassé légèrement texturé. Jeune femme portant un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL], ceinturé d'une lanière en cuir fin, bottines en cuir fauve. Posture assurée, légèrement de trois-quarts, regard hors champ. Éclairage studio doux et plat sans ombres marquées. Tons entièrement désaturés — [COULEUR SWEAT], écru, nude, brun. Objectif 85mm f/2, grain argentique fin, cadrage mi-cuisse. Esthétique campagne Sézane printemps, sobriété A.P.C., féminité douce Émoï-Émoï.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P01 Camille",
+        "MAN-P02 Anna",
+        "MAN-P03 Aïcha",
+        "MAN-P04 Lila",
+        "MAN-S17 Césaria"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "SA-06",
+      "label_fr": "Lifestyle intérieur assis (homme)",
+      "section": "Studio Adulte",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle mode d'un jeune homme assis sur le bord d'un canapé Chesterfield en cuir usé dans un appartement haussmannien aux murs vert sauge. Il porte un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine, associé à un pantalon marine sombre et des chaussettes blanches. Il lit un livre, regard baissé. Parquet en bois sombre, livres empilés, lampe en laiton vintage et plaid en laine à proximité. Cadrage trois-quarts, humeur contemplative et détendue. Objectif 50mm f/1.8, lumière ambiante dorée depuis une fenêtre proche, tons terreux riches, lifestyle intellectuel français, photographie campagne éditoriale.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P06 Mathieu",
+        "MAN-P07 Nicolas",
+        "MAN-S16 Hiroshi",
+        "MAN-S21 Hugo"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "DC-01",
+      "label_fr": "Duo crop serré studio",
+      "section": "Duo / Couple",
+      "type_de_shot_ref": "crop_poitrine",
+      "prompt_template_fr": "Photographie de mode éditoriale recadrée serrée d'un jeune couple se tenant proches l'un de l'autre devant un fond de studio blanc cassé uni. Tous deux portent des sweats oversize assortis en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. L'homme a les bras croisés, la femme pose son bras sur son épaule, tous deux regardent légèrement hors champ avec des expressions confiantes et minimalistes. Cadrage de mi-cuisse jusqu'au-dessus des têtes, cadrage intimiste. Objectif 85mm f/2, faible profondeur de champ, éclairage studio plat et uniforme, tons neutres désaturés, attitude brute et sans effort, esthétique campagne A.P.C., rendu sans retouche, grain de film argentique.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_LEA_SARAH",
+        "DUO_HENRI_JOSEPHINE"
+      ],
+      "shopify_integration": {
+        "position": "Image 4 — galerie",
+        "produits_compatibles": "YP001 · YP005",
+        "mutualisable": "Oui",
+        "usage": "Motifs cœur (AMB, BRI, CON, TIG) — mutualisé."
+      }
+    },
+    {
+      "code": "DC-02",
+      "label_fr": "Couple rue parisienne (outdoor)",
+      "section": "Duo / Couple",
+      "type_de_shot_ref": "duo_couple",
+      "prompt_template_fr": "Photographie de mode éditoriale intimiste d'un jeune couple parisien debout dans une rue pavée légèrement floue en arrière-plan. Elle porte un manteau en laine camel légèrement oversize, un col roulé crème et un pantalon tailleur tabac. Lui, un trench beige, pull en maille naturelle et jean brut non lavé. Tous deux arborent des sweats ou pièces en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] comme détail discret. Posture décontractée, regards légèrement détournés, sourire retenu. Lumière naturelle de fin d'après-midi parisien, tons chauds et dorés, légèrement sous-exposé. Objectif 85mm f/1.8, grain de film argentique, aucune retouche apparente. Esthétique Sézane automne-hiver, esprit Émoï-Émoï, chic parisien sans effort.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_LEA_SARAH",
+        "DUO_MATHIEU_GABIN (version couple parent-enfant)"
+      ],
+      "shopify_integration": {
+        "position": "Image 4 — galerie",
+        "produits_compatibles": "YP001 · YP005",
+        "mutualisable": "Oui",
+        "usage": "Lifestyle extérieur couple — mutualisé couleur."
+      }
+    },
+    {
+      "code": "DC-03",
+      "label_fr": "Couple studio fond coloré",
+      "section": "Duo / Couple",
+      "type_de_shot_ref": "duo_couple",
+      "prompt_template_fr": "Photographie de mode éditoriale d'un jeune couple debout côte à côte devant un fond de studio en lin naturel légèrement texturé. Ils portent des sweats assortis oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Elle regarde l'objectif, lui regarde légèrement de côté — poses naturelles et non construites. Cadrage mi-cuisses à mi-tête. Objectif 85mm f/2.2, éclairage studio doux avec lumière de remplissage sur les côtés, aucune ombre dure. Palette neutre et désaturée, rendu film argentique, esthétique catalogue Émoï-Émoï, douceur du quotidien partagé.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_LEA_SARAH",
+        "DUO_HENRI_JOSEPHINE"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "FA-01",
+      "label_fr": "Famille studio serré (3 personnes)",
+      "section": "Famille",
+      "type_de_shot_ref": "famille_vivante",
+      "prompt_template_fr": "Photographie de mode éditoriale au cadrage serré d'une jeune famille de trois personnes — une mère, un père et un jeune enfant entre eux — debout très proches les uns des autres devant un fond de studio uni blanc cassé. Tous les trois portent des sweats à capuche oversize assortis en [COULEUR SWEAT], avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. L'enfant est porté dans les bras du père, la mère se penche légèrement vers eux, les deux parents regardent légèrement hors champ avec des expressions calmes et confiantes, l'enfant jette un regard naturel vers l'objectif. Cadrage de mi-cuisse jusqu'au-dessus des têtes, atmosphère intime et chaleureuse. Objectif 85mm f/2, faible profondeur de champ, éclairage studio plat et uniforme, tons neutres désaturés, attitude familiale brute et sans effort, esthétique campagne A.P.C.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_BEATRICE_FELICIE + Camille",
+        "DUO_MATHIEU_GABIN + Camille + 2e enfant",
+        "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
+      ],
+      "shopify_integration": {
+        "position": "Image 4 — galerie",
+        "produits_compatibles": "YP001 · YP004 · YP005",
+        "mutualisable": "Oui",
+        "usage": "Priorité motifs Famille : ANN, PAL, DEP, SIG. Mutualisé."
+      }
+    },
+    {
+      "code": "FA-02",
+      "label_fr": "Famille rue parisienne (bannière hero site)",
+      "section": "Famille",
+      "type_de_shot_ref": "famille_vivante",
+      "prompt_template_fr": "Photographie de mode éditoriale d'une jeune famille parisienne décontractée — mère, père et enfant en bas âge — marchant ensemble sur un trottoir légèrement flou en arrière-plan, capturé dans un instant volé et naturel. La mère porte un manteau mi-long en laine naturelle écrue et un jean brut. Le père, un trench beige structuré et pull col roulé en maille douce. L'enfant en salopette en velours côtelé terracotta avec un petit sweat en [COULEUR SWEAT] arborant [MOTIF] brodé en fil [COULEUR FIL]. Lumière naturelle de journée parisienne, ciel blanc laiteux, tons neutres beige-blanc cassé-terracotta. Objectif 85mm f/2, faible profondeur de champ, légèrement sous-exposé, grain de film argentique, aucune retouche. Cadrage large horizontal pour bannière hero avec espace négatif à gauche pour texte. Esprit Sézane, Émoï-Émoï, A.P.C.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_BEATRICE_FELICIE + Camille",
+        "DUO_MATHIEU_GABIN + Camille + 2e enfant",
+        "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
+      ],
+      "shopify_integration": {
+        "position": "Hero site + Image 4",
+        "produits_compatibles": "YP001 · YP004 · YP005",
+        "mutualisable": "Non",
+        "usage": "Bannière hero site + galerie listing motifs Famille."
+      }
+    },
+    {
+      "code": "FA-03",
+      "label_fr": "Famille plein air, weekend",
+      "section": "Famille",
+      "type_de_shot_ref": "famille_vivante",
+      "prompt_template_fr": "Photographie lifestyle éditoriale d'une jeune famille — mère, père et deux enfants en bas âge — marchant dans un parc aux allées de gravier, en fin de matinée. Tous portent des pièces en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] de manière coordonnée mais non uniforme. Les enfants courent légèrement devant, les parents se tiennent la main. Lumière naturelle de matinée légèrement voilée, feuilles d'automne au sol, arbres flous en arrière-plan. Objectif 85mm f/2, profondeur de champ cinématographique, tons chauds et terreux légèrement sous-exposés, grain de film argentique, instant de vie familiale authentique et non mis en scène. Esthétique Émoï-Émoï, Caramel Baby, famille parisienne chic et naturelle.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_BEATRICE_FELICIE + Camille",
+        "DUO_MATHIEU_GABIN + Camille + 2e enfant",
+        "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "EN-01",
+      "label_fr": "Portrait studio enfant (fond blanc)",
+      "section": "Enfant",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode éditoriale au cadrage serré d'un enfant de 3 à 6 ans debout devant un fond de studio uni blanc cassé. Il porte un sweat à capuche oversize légèrement grand en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche. Expression naturelle, regard légèrement hors champ ou vers l'objectif selon le moment. Cadrage des genoux jusqu'au-dessus de la tête. Éclairage studio plat et très doux, sans ombre marquée. Objectif 85mm f/2, faible profondeur de champ, tons neutres désaturés, rendu argentique sans retouche. Esthétique Émoï-Émoï enfant, Bobo Choses, petit Bateau éditorial, douceur et authenticité.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P08 Félicie",
+        "MAN-P09 Gabin",
+        "MAN-S15 Bébé Noé"
+      ],
+      "shopify_integration": {
+        "position": "Image 1 ou 3",
+        "produits_compatibles": "YP004",
+        "mutualisable": "Non",
+        "usage": "Image hero ou lifestyle Hoodie Enfant."
+      }
+    },
+    {
+      "code": "EN-02",
+      "label_fr": "Portrait studio enfant (fond texturé lin)",
+      "section": "Enfant",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode éditoriale d'un enfant de 2 à 5 ans assis par terre les jambes croisées devant un fond en lin naturel légèrement texturé couleur sable. Il porte un sweat col rond oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Associé à un jogging en velours côtelé doux. Regard baissé ou dirigé de côté, naturel et non posé. Éclairage studio très doux avec lumière de remplissage légère. Objectif 85mm f/2, grains argentiques fins, tons chauds désaturés, esthétique catalogue Émoï-Émoï ou Bobo Choses, enfance douce et artisanale.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P08 Félicie",
+        "MAN-P09 Gabin",
+        "MAN-S15 Bébé Noé"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "EN-03",
+      "label_fr": "Lifestyle enfant (intérieur matin)",
+      "section": "Enfant",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle éditoriale d'un enfant de 3 à 7 ans assis sur un lit en lin froissé blanc cassé dans une chambre d'enfant minimaliste lumineuse. Il porte un sweat à capuche oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Il feuillette un livre illustré ou joue avec un jouet en bois, totalement absorbé, naturel. Lumière matinale douce depuis une fenêtre hors champ, tons blanc cassé et [COULEUR SWEAT], herbes séchées dans un vase, détails décoratifs naturels. Objectif 85mm f/1.8, faible profondeur de champ, grain argentique, aucune retouche. Esthétique Émoï-Émoï, chambre enfant Smallable, matin d'automne paisible.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P08 Félicie",
+        "MAN-P09 Gabin",
+        "MAN-S15 Bébé Noé"
+      ],
+      "shopify_integration": {
+        "position": "Image 3",
+        "produits_compatibles": "YP004",
+        "mutualisable": "Oui",
+        "usage": "Mutualisé couleur Hoodie Enfant."
+      }
+    },
+    {
+      "code": "EN-04",
+      "label_fr": "Lifestyle enfant (extérieur, parc)",
+      "section": "Enfant",
+      "type_de_shot_ref": "lifestyle_outdoor",
+      "prompt_template_fr": "Photographie lifestyle éditoriale d'un enfant de 4 à 8 ans courant ou sautant dans un parc aux allées de gravier, capturé dans un instant volé. Il porte un sweat à capuche oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine, associé à un jean brut et des mocassins en cuir naturel. Expression joyeuse et complètement naturelle, mouvement flou léger. Lumière dorée de fin de matinée, arbres légèrement flous en arrière-plan, tons chauds terreux, légèrement sous-exposé. Objectif 85mm f/2, grain argentique, moment de vie capturé sans mise en scène. Esthétique Caramel Baby & Child, Buho, enfance parisienne libre et authentique.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P08 Félicie",
+        "MAN-P09 Gabin",
+        "MAN-S15 Bébé Noé"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "EN-05",
+      "label_fr": "Packshot porté enfant (e-commerce)",
+      "section": "Enfant",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie mode e-commerce d'un enfant de 3 à 6 ans portant un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche, associé à un jogging en coton gratté écru. Modèle debout, face à l'objectif, bras légèrement écartés du corps de manière naturelle. Fond de studio gris très clair, éclairage studio doux et uniforme, rendu fidèle aux couleurs et matières. Objectif 50mm f/5.6, mise au point nette sur le vêtement et la broderie, post-traitement minimal. Esthétique fiche produit Émoï-Émoï ou Bobo Choses, propre et commercial.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P08 Félicie",
+        "MAN-P09 Gabin",
+        "MAN-S15 Bébé Noé"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "EN-06",
+      "label_fr": "Close-up broderie (version enfant)",
+      "section": "Enfant",
+      "type_de_shot_ref": "macro_broderie",
+      "prompt_template_fr": "Photographie macro extrêmement serrée sur une broderie en fil [COULEUR FIL] représentant [MOTIF] sur un sweat enfant oversize en [COULEUR SWEAT]. Petites mains d'enfant partiellement visibles de chaque côté du motif, ajoutant une échelle de douceur. Texture du fil et trame du tissu coton doux visibles dans les moindres détails. Éclairage latéral doux créant de légères ombres sur les points de broderie. Objectif macro 100mm, f/4, bokeh crémeux en arrière-plan, tons neutres et chauds, artisanat et soin visibles. Esthétique détail produit Émoï-Émoï, petite enfance et savoir-faire broderie.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P08 Félicie",
+        "MAN-P09 Gabin",
+        "MAN-S15 Bébé Noé"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "AM-01",
+      "label_fr": "Cocooning sofa",
+      "section": "Ambiance",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle cosy d'un sweat oversize en [COULEUR SWEAT] posé négligemment sur l'accoudoir d'un canapé en lin crème dans un intérieur minimaliste et lumineux. Le [MOTIF] brodé en fil [COULEUR FIL] est visible sur la poitrine. Une bougie parfumée allumée, un livre ouvert et un plaid en maille torsadée sont disposés à proximité. Lumière naturelle douce d'un jour couvert filtrant par de grandes fenêtres. Palette de tons ivoire, sable et [COULEUR SWEAT]. Objectif 35mm, f/2.2, faible profondeur de champ, univers visuel Émoï-Émoï et Sœur, atmosphère hygge et accessible.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": false,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "position": "Image 4 — galerie",
+        "produits_compatibles": "YP001 · YP005",
+        "mutualisable": "Oui",
+        "usage": "Brand storytelling — mutualisé par couleur."
+      }
+    },
+    {
+      "code": "AM-02",
+      "label_fr": "Porté lifestyle intérieur (femme assise)",
+      "section": "Ambiance",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie lifestyle mode d'une jeune femme portant un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Elle est assise en tailleur sur un parquet en bois vintage dans un appartement parisien, tenant une boisson chaude, regardant hors champ. Lumière matinale douce depuis une fenêtre, murs blancs, rideaux en lin se soulevant légèrement. Objectif 85mm f/1.4, faible profondeur de champ, palette de couleurs chauds et désaturés, esthétique campagne Sézane et AMI Paris, chic sans effort, qualité éditoriale.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": false,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P01 Camille",
+        "MAN-P02 Anna",
+        "MAN-P03 Aïcha",
+        "MAN-P04 Lila",
+        "MAN-S17 Césaria"
+      ],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "AM-03",
+      "label_fr": "Porté outdoor rue côtière (femme)",
+      "section": "Ambiance",
+      "type_de_shot_ref": "lifestyle_outdoor",
+      "prompt_template_fr": "Photographie de mode éditoriale d'une femme marchant dans une ruelle pavée d'une ville côtière française, portant un sweat oversize en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL]. Elle se retourne légèrement vers l'objectif avec un sourire naturel et décontracté. Lumière de fin d'après-midi en contre-jour, légère flare lumineuse, tons chauds et terreux. Objectif 50mm f/1.8, composition plein corps, profondeur de champ cinématographique, esthétique Hoalen, style français sans effort et brut.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": false,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "MAN-P01 Camille",
+        "MAN-P02 Anna",
+        "MAN-P03 Aïcha",
+        "MAN-P04 Lila",
+        "MAN-S17 Césaria"
+      ],
+      "shopify_integration": {
+        "position": "Image 4 — galerie",
+        "produits_compatibles": "YP019",
+        "mutualisable": "Oui",
+        "usage": "Lifestyle T-shirt extérieur mutualisé."
+      }
+    },
+    {
+      "code": "AM-04",
+      "label_fr": "Détail porté (mains + broderie)",
+      "section": "Ambiance",
+      "type_de_shot_ref": "lifestyle_studio",
+      "prompt_template_fr": "Photographie de mode éditoriale très serrée sur les mains d'une femme tenant le bas de son sweat oversize en [COULEUR SWEAT] entre ses doigts, révélant le tissu coton et le [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine. Ongles non vernis, mains naturelles. Fond neutre hors focus. Éclairage naturel doux et latéral, ombres légères. Objectif 85mm f/2, mise au point sur la broderie et les mains, bokeh doux. Tons neutres et chaleureux, grain argentique, poésie du geste quotidien et du savoir-faire artisanal.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": false,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [],
+      "shopify_integration": {
+        "statut": "non prioritaire dans le mapping Shopify actuel, template disponible pour usage éditorial"
+      }
+    },
+    {
+      "code": "FV-01",
+      "label_fr": "Tablée familiale dressée",
+      "section": "Famille Vivante",
+      "type_de_shot_ref": "famille_vivante",
+      "prompt_template_fr": "Photographie éditoriale d'une scène de vie familiale, 3 à 5 personnes réunies autour d'une table dressée (brunch dominical, dîner du soir, anniversaire). Chaque personne porte un vêtement Ypersoa en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche. Lumière chaude et enveloppante (lumière de fenêtre intérieur OU golden hour extérieur terrasse). Regards croisés entre les personnes, rires partagés, mouvements naturels. Aucune personne ne regarde frontalement la caméra (max 1 sur 5). Objectif 35mm f/5, tout le groupe net ou presque. Palette colorée (terracotta, ocre, bleu, vert) avec accents chauds. Esthétique Bonpoint × Gamin Gamine × Make My Lemonade. Grain argentique, pas de retouche apparente. L'énergie du groupe est le sujet principal.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_BEATRICE_FELICIE + Camille",
+        "DUO_MATHIEU_GABIN + Camille + 2e enfant (Félicie)",
+        "Aïcha + Anna + Lila + Camille (trio amies élargi)"
+      ],
+      "shopify_integration": {
+        "position": "Image 4 — galerie (secondaire) ou hero campagne saison",
+        "produits_compatibles": "YP001 Hoodie Adulte · YP004 Hoodie Enfant · YP005 Sweat Adulte · YP019 T-Shirt Adulte",
+        "mutualisable": "Oui (scène famille mutualisable par motif hero famille)",
+        "usage": "Motifs hero famille prioritaires (YPM-010 La Ronde, YPM-003 Le Club, YPM-004 Notre Héritage). Complète duo_couple dans le pack hero 8 shots."
+      },
+      "regle_critique_particularites_physiques": "Voir types_de_shots.json > famille_vivante > regle_critique_particularites_physiques. Test de validation : si le shot peut être légendé 'photo inclusive', il est raté."
+    },
+    {
+      "code": "FV-02",
+      "label_fr": "3 générations vivantes",
+      "section": "Famille Vivante",
+      "type_de_shot_ref": "famille_vivante",
+      "prompt_template_fr": "Photographie éditoriale d'une scène de vie 3 générations : grand-parent, parent, enfant. Tous portent des vêtements Ypersoa assortis mais pas identiques, en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche. Scène quotidienne : cuisine familiale, promenade dans un parc, salon avec cheminée, cueillette au jardin. Contacts physiques tendres (main sur épaule, enfant sur les genoux, bras entrelacés). Lumière naturelle douce, fin d'après-midi. Objectif 35mm f/4.5. Regards vers l'enfant ou vers l'action, pas vers la caméra. Composition en plan moyen ou américain large. Esthétique campagne Maison Kitsuné × Emoi Emoi campagne famille. Grain argentique, tons chauds, pas de saturation excessive.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_BEATRICE_FELICIE + Camille",
+        "Marie-Hélène + Anna + Gabin/Félicie",
+        "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
+      ],
+      "shopify_integration": {
+        "position": "Image 4 — galerie (secondaire) ou hero campagne saison",
+        "produits_compatibles": "YP001 Hoodie Adulte · YP004 Hoodie Enfant · YP005 Sweat Adulte · YP019 T-Shirt Adulte",
+        "mutualisable": "Oui (scène famille mutualisable par motif hero famille)",
+        "usage": "Motifs hero famille prioritaires (YPM-010 La Ronde, YPM-003 Le Club, YPM-004 Notre Héritage). Complète duo_couple dans le pack hero 8 shots."
+      },
+      "regle_critique_particularites_physiques": "Voir types_de_shots.json > famille_vivante > regle_critique_particularites_physiques. Test de validation : si le shot peut être légendé 'photo inclusive', il est raté."
+    },
+    {
+      "code": "FV-03",
+      "label_fr": "Couple + tribu élargie",
+      "section": "Famille Vivante",
+      "type_de_shot_ref": "famille_vivante",
+      "prompt_template_fr": "Photographie éditoriale d'une scène couple + ami·e·s (3 à 4 personnes au total). Tous portent des vêtements Ypersoa en [COULEUR SWEAT] avec [MOTIF] brodé en fil [COULEUR FIL] sur la poitrine gauche. Contexte : brunch en terrasse, apéro intérieur, vernissage, dîner entre amis. Complicité adulte sans enfants, discussions animées, rires, verres partagés. Le couple (LGBTQ+ ou mixte) est intégré au groupe, pas mis en scène comme couple. Lumière naturelle franche, intérieur lumineux ou terrasse golden hour. Objectif 35mm f/5. Composition qui montre l'énergie collective, pas de hiérarchie visuelle entre les personnes. Esthétique Frankie Shop × Totême campagne × Emoi Emoi. Grain argentique, tons urbains chauds.",
+      "variables": [
+        "[MOTIF]",
+        "[COULEUR FIL]",
+        "[COULEUR SWEAT]"
+      ],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": true
+      },
+      "mannequins_suggeres_casting_v2": [
+        "DUO_LEA_SARAH + Camille + Nicolas",
+        "DUO_LEA_SARAH + Aïcha + Gaspard",
+        "Camille + Mathieu + Aïcha + Anna (2 couples amis)"
+      ],
+      "shopify_integration": {
+        "position": "Image 4 — galerie (secondaire) ou hero campagne saison",
+        "produits_compatibles": "YP001 Hoodie Adulte · YP004 Hoodie Enfant · YP005 Sweat Adulte · YP019 T-Shirt Adulte",
+        "mutualisable": "Oui (scène famille mutualisable par motif hero famille)",
+        "usage": "Motifs hero famille prioritaires (YPM-010 La Ronde, YPM-003 Le Club, YPM-004 Notre Héritage). Complète duo_couple dans le pack hero 8 shots."
+      },
+      "regle_critique_particularites_physiques": "Voir types_de_shots.json > famille_vivante > regle_critique_particularites_physiques. Test de validation : si le shot peut être légendé 'photo inclusive', il est raté."
+    }
+  ],
+  "index_par_type_de_shot": {
+    "ghost": [
+      "PP-H02",
+      "PP-Z01",
+      "PP-T01",
+      "PP-C01"
+    ],
+    "crop_poitrine": [
+      "PP-H04",
+      "PP-T03",
+      "DC-01"
+    ],
+    "macro_broderie": [
+      "PP-H03",
+      "EN-06"
+    ],
+    "lifestyle_studio": [
+      "PP-H01",
+      "PP-H05",
+      "PP-Z02",
+      "PP-Z03",
+      "PP-T02",
+      "PP-T04",
+      "PP-C02",
+      "PP-C03",
+      "SA-01",
+      "SA-02",
+      "SA-03",
+      "SA-04",
+      "SA-05",
+      "SA-06",
+      "EN-01",
+      "EN-02",
+      "EN-03",
+      "EN-05",
+      "AM-01",
+      "AM-02",
+      "AM-04"
+    ],
+    "lifestyle_outdoor": [
+      "EN-04",
+      "AM-03"
+    ],
+    "duo_couple": [
+      "DC-02",
+      "DC-03"
+    ],
+    "famille_vivante": [
+      "FA-01",
+      "FA-02",
+      "FA-03",
+      "FV-01",
+      "FV-02",
+      "FV-03"
+    ]
+  },
+  "liens_systeme": {
+    "instanciations_pretes_a_emploi": {
+      "fichier": "ypersoa_gemini_prompts_complets.xlsx",
+      "contenu": "~160 prompts déjà instanciés pour motifs × couleurs × produits. 5 onglets : Mapping, Image 1 hero (~70), Image 2 macro (~70), Image 3 lifestyle (~12), Famille & Duo (~7).",
+      "note": "Ce fichier XLSX reste la source opérationnelle pour la production. prompts_library.json est la RÉFÉRENCE DES TEMPLATES, pas des instanciations."
+    },
+    "direction_artistique_hero": "referentiels/shooting/direction_artistique_hero.json (suffix_universel_ia v2.0 beauté incarnée)",
+    "types_de_shots": "referentiels/shooting/types_de_shots.json (7 types dont famille_vivante)",
+    "mannequins_recurrents": "referentiels/shooting/mannequins_recurrents.json (casting 21 + index lots)",
+    "mapping_legacy_couleurs": "referentiels/_mapping_legacy.json (pour nettoyage couleurs dans instanciations XLSX)"
+  },
+  "todos_j3c": [
+    "Nettoyer les instanciations du XLSX : remplacer 'vert anglais foncé' / 'dark forest green' par 'fil_vert_jade' dans les ~160 prompts instanciés (action séparée sur le XLSX, pas sur ce JSON).",
+    "Appender le prompt_suffix_universel v2.0 (beauté incarnée) à toutes les instanciations qui tournent dans Gemini. Actuellement les prompts contiennent l'ancien suffix 'visible imperfections' (supermodel).",
+    "Éventuellement : migrer les 160 instanciations du XLSX vers un plan_shooting_systematique.json (session dédiée, ~2h)."
+  ]
+}
