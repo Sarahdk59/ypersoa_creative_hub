@@ -1,0 +1,497 @@
+{
+  "meta": {
+    "lot": 4,
+    "version": "1.0",
+    "date": "2026-04-20",
+    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "fiches_contenues": ["MAN-S13", "MAN-S14", "MAN-S15", "MAN-S16", "MAN-S18", "MAN-S19-HENRI", "MAN-S19-JOSEPHINE", "MAN-S21"],
+    "_note_cesaria": "MAN-S17 Césaria déjà détaillée en Lot 1 (mannequins_lot1_5fiches.json)",
+    "choix_directionnels_sarah": {
+      "MAN-S13_Priya": "C - Ado danseuse/sport, joggers élégants, silhouette tonique",
+      "MAN-S14_Gaspard": "C - Skateur élégant, pantalons larges + T-shirts blancs + Vans usées",
+      "MAN-S15_Noé": "Fiche minimale (1 an, pas de style_wear détaillé)",
+      "MAN-S16_Hiroshi": "A - Architecte parisien, total look noir/gris, Comme des Garçons/Yohji",
+      "MAN-S18_Hassan": "C - Patriarche algérois à Paris, chemises blanches + cardigans",
+      "MAN-S19_Henri": "A - Ancien médecin/architecte classique",
+      "MAN-S19_Joséphine": "B - Élégante parisienne métissée, tailleurs + bijoux fins + chignon",
+      "MAN-S21_Hugo": "A - Papa nouveau-né urbain, sweats + chinos + baskets + porte-bébé"
+    }
+  },
+  "mannequins": [
+    {
+      "id": "MAN-S13",
+      "prenom": "Priya",
+      "age": 16,
+      "genre": "F",
+      "ethnicite": "sud-asiatique (sri-lankaise)",
+      "ancrage_geographique": "Paris 14e ou Villejuif, famille d'ingénieurs ou médecins immigrée 2e génération",
+      "apparence_physique": {
+        "silhouette": "1m68, silhouette tonique de danseuse/sportive, posture droite et ancrée",
+        "cheveux": "Noirs très longs, naturellement lisses, souvent en queue de cheval haute serrée ou chignon de danseuse",
+        "visage": "Traits fins et forts, pommettes hautes, grands yeux noirs expressifs, sourcils marqués naturels",
+        "peau": "Mate dorée, lumineuse, grain de peau jeune"
+      },
+      "personnalite_role_narratif": "Ado de 16 ans, danseuse contemporaine ou gymnaste, concentrée, ambitieuse. Porte Ypersoa pour des occasions (fête de famille, cadeau reçu d'un·e proche). Incarne la nouvelle génération sud-asiatique française — assumée, sportive, intégrée sans être effacée culturellement.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Direct et intense, ou concentré sur geste (danse, étirement), rarement sourire large",
+        "expressions_privilegiees": ["concentration intense", "sourire retenu", "sérieux calme"],
+        "eviter": "Poses 'exotisantes', mise en scène culturelle appuyée, sourires forcés ado",
+        "cadrages_type": ["portrait 3/4 studio danse", "plan américain en studio/parc", "détail mains sur broderie"],
+        "lumiere_signature": "Lumière naturelle franche, studio de danse, parc parisien"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Ado sportwear élégant à la française — joggers coupe droite, brassières/débardeurs techniques, sweats oversize, baskets minimalistes. Le style d'une ado qui va entre le dojo et le lycée.",
+        "pieces_favorites": [
+          "Jogger coupe droite noir ou kaki",
+          "Sweat-shirt oversize gris chiné",
+          "Brassière technique noire ou blanche",
+          "T-shirt coton épais col rond blanc",
+          "Nike Cortez ou Adidas Samba usées",
+          "Sweatpants taille basse Adidas 3 bandes",
+          "Doudoune sans manches noire"
+        ],
+        "couleurs_de_predilection": [
+          "noir",
+          "blanc",
+          "gris chiné",
+          "kaki",
+          "marine"
+        ],
+        "styles_francais_refs": [
+          "campagnes Adidas Originals x Gen Z",
+          "lycéennes Make My Lemonade",
+          "ado sport-chic Nike ACG",
+          "Tina Kunakey jeune"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : brassière noire + jogger + sweat Ypersoa brodé oversize à la taille",
+          "week-end : T-shirt blanc + jogger + Nike Cortez + T-shirt Ypersoa en dessous visible au col",
+          "mariage : robe noire simple + sneakers propres + sweat Ypersoa tricoté sur les épaules",
+          "champ coquelicots : T-shirt Ypersoa + short sport + baskets, étirements dans l'herbe"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "tenues 'exotisantes' mises en scène",
+          "bijoux indiens stéréotypés",
+          "robes traditionnelles hors contexte",
+          "sur-maquillage",
+          "talons hauts",
+          "tenues 'petite fille modèle'"
+        ]
+      }
+    },
+    {
+      "id": "MAN-S14",
+      "prenom": "Gaspard",
+      "age": 23,
+      "genre": "H",
+      "ethnicite": "blanc",
+      "ancrage_geographique": "Paris 20e ou banlieue sud-est, étudiant en archi/beaux-arts/communication",
+      "apparence_physique": {
+        "silhouette": "1m83, silhouette fine, posture relâchée, s'assoit en tailleur partout",
+        "cheveux": "Châtains mi-longs en bataille, parfois rassemblés en chignon bas lâche ou à moitié attachés",
+        "visage": "Traits doux, yeux verts ou noisette, fin duvet ou barbe de quelques jours mal taillée, sourire discret",
+        "peau": "Claire légèrement marquée (traces d'acné passées), grain de peau vivant"
+      },
+      "personnalite_role_narratif": "Étudiant en archi ou beaux-arts, pratique le skate, la musique, photographe amateur. Porte Ypersoa reçu de sa mère ou acheté pour offrir à sa sœur. Incarne la jeune masculinité française décomplexée — pas macho, pas blasé, observant.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Souvent hors champ ou de biais, rarement caméra directe — timidité urbaine",
+        "expressions_privilegiees": ["sourire en coin discret", "concentration pensive", "rire bref"],
+        "eviter": "Poses viriles, regards intenses, poses mannequin",
+        "cadrages_type": ["plan américain rue", "portrait 3/4 atelier/skate park", "plan moyen café terrasse"],
+        "lumiere_signature": "Lumière urbaine brute, métro, skate park, café, atelier — moins léchée que les autres"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Skateur élégant à la française — pantalons larges, T-shirts blancs épais, Vans usées jusqu'à la corde, pulls oversize, chemises ouvertes par-dessus",
+        "pieces_favorites": [
+          "Pantalon de travail en toile beige ou kaki oversize",
+          "Jean large brut (Carhartt ou Dickies)",
+          "T-shirt blanc col rond épais",
+          "Vans Old Skool usées",
+          "Sweat-shirt à capuche gris chiné",
+          "Chemise à carreaux flanelle vintage",
+          "Veste en velours côtelé vintage chinée"
+        ],
+        "couleurs_de_predilection": [
+          "écru",
+          "kaki",
+          "marine",
+          "denim",
+          "gris chiné",
+          "marron chiné"
+        ],
+        "styles_francais_refs": [
+          "Carhartt WIP Paris",
+          "skaters Place de la République",
+          "Our Legacy × Stüssy soft",
+          "étudiants beaux-arts Paris"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : jean large + T-shirt blanc + sweat Ypersoa brodé oversize, bar avec amis",
+          "week-end : pantalon travail + chemise flanelle ouverte + T-shirt Ypersoa en dessous + Vans",
+          "mariage : chemise blanche + pantalon chino + baskets minimalistes + T-shirt Ypersoa brodé discret",
+          "champ coquelicots : T-shirt Ypersoa + jean large + Vans + chemise flanelle nouée à la taille"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "costume classique",
+          "chaussures de ville pointues",
+          "streetwear logos criards",
+          "total look black méchant",
+          "montres de luxe",
+          "vêtements trop neufs"
+        ]
+      }
+    },
+    {
+      "id": "MAN-S15",
+      "prenom": "Bébé Noé",
+      "age": 1,
+      "genre": "indéterminé (présentation non genrée)",
+      "ethnicite": "blanc",
+      "apparence_physique": {
+        "silhouette": "Bébé marchant, 76 cm environ, joues pleines, cheveux fins clairs",
+        "cheveux": "Blonds très fins",
+        "yeux": "Bleus ou verts",
+        "peau": "Très claire, rosée"
+      },
+      "personnalite_role_narratif": "Bébé de 1 an, à peine marchant. Présent dans scènes famille_vivante, portés par un parent, assis sur les genoux d'un grand-parent. Utilisé pour incarner 'premier cadeau de naissance' (bodies brodés, bavoirs) ou présence symbolique dans scènes famille multigéneration.",
+      "piliers_compatibles": ["P2_Emotion"],
+      "direction_photo": {
+        "regard": "Jamais caméra caler, toujours naturel — regard qui suit un parent ou un objet",
+        "expressions_privilegiees": ["expression naturelle bébé", "émerveillement sur objet", "rire spontané"],
+        "eviter": "Poses forcées, mises en scène 'bébé mignon'",
+        "cadrages_type": ["dans les bras d'un parent", "assis sur les genoux d'un grand-parent", "détail main de bébé sur broderie"],
+        "lumiere_signature": "Lumière douce et chaude, jamais flash"
+      },
+      "duo": null,
+      "_note_style_wear": "Pas de style_wear détaillé (bébé). Tenues : body brodé Ypersoa, pyjamas coton, salopettes jersey, bavoirs brodés. Palette écru/bleu ciel/rose pâle/jaune pâle.",
+      "pieces_ypersoa_typiques": [
+        "Body manches longues brodé motif au cœur",
+        "Bavoir brodé (cadeau de naissance)",
+        "Pyjama coton avec broderie discrète"
+      ]
+    },
+    {
+      "id": "MAN-S16",
+      "prenom": "Hiroshi",
+      "age": 55,
+      "genre": "H",
+      "ethnicite": "asiatique est (japonais)",
+      "ancrage_geographique": "Paris 3e/11e, architecte installé en France depuis 25 ans",
+      "apparence_physique": {
+        "silhouette": "1m76, silhouette fine et nette, posture droite contrôlée, gestes précis",
+        "cheveux": "Noirs devenus argentés (tempes et racines blanches), coupe courte et structurée, parfois complètement gris/blanc selon shot",
+        "visage": "Traits nets, pommettes hautes, yeux en amande, barbe rasée de près, rides d'expression discrètes",
+        "peau": "Claire légèrement dorée, grain lisse, vivant"
+      },
+      "personnalite_role_narratif": "Architecte franco-japonais de 55 ans, père d'ados, marié. Installé en France depuis 25 ans, exprime une élégance minimaliste rigoureuse. Offre des cadeaux intentionnels à sa femme et sa fille. Incarne l'élégance japonaise-parisienne — silence, précision, intentionnalité.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P3_Usage", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et posé, très calme, presque frontal Wabi-Sabi",
+        "expressions_privilegiees": ["sérénité posée", "sourire infime", "concentration silencieuse"],
+        "eviter": "Poses expressives, gestuelle ample, maquillage visible",
+        "cadrages_type": ["portrait frontal serré", "plan moyen assis atelier/bureau", "détail mains sur objet"],
+        "lumiere_signature": "Lumière de fenêtre latérale contrôlée, contrastes nets, épure Vermeer"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Architecte parisien minimaliste — total look noir/gris/crème, coupes japonaises architecturales (Comme des Garçons, Yohji Yamamoto, Issey Miyake), matières nobles, silhouettes pensées",
+        "pieces_favorites": [
+          "Chemise ample en coton noir col rond (Yohji)",
+          "Pantalon ample en laine grise (Comme des Garçons)",
+          "Veste kimono-inspirée noire",
+          "Pull col roulé noir en laine mérinos",
+          "Chaussures en cuir noir minimalistes (Common Projects ou Lemaire)",
+          "T-shirt épais blanc col rond",
+          "Écharpe laine anthracite"
+        ],
+        "couleurs_de_predilection": [
+          "noir",
+          "gris anthracite",
+          "crème",
+          "marine profond",
+          "blanc cassé"
+        ],
+        "styles_francais_refs": [
+          "Comme des Garçons Homme Plus",
+          "Yohji Yamamoto pour Homme",
+          "Lemaire minimaliste",
+          "Tadao Ando version civile"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : chemise noire ample + pantalon laine + T-shirt Ypersoa brodé discret en dessous",
+          "week-end : pull col roulé noir + pantalon large + sweat Ypersoa minimaliste sur les épaules",
+          "mariage : costume noir coupe japonaise + T-shirt Ypersoa brodé en dessous",
+          "champ coquelicots : chemise crème ample + pantalon large + T-shirt Ypersoa blanc brodé"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "couleurs vives",
+          "imprimés voyants",
+          "coupes serrées préppy",
+          "costumes italiens colorés",
+          "streetwear logos",
+          "tenues 'costume traditionnel japonais mis en scène'"
+        ]
+      }
+    },
+    {
+      "id": "MAN-S18",
+      "prenom": "Hassan",
+      "age": 68,
+      "genre": "H",
+      "ethnicite": "maghrébin (algérien)",
+      "ancrage_geographique": "Paris 18e ou 20e, appartement familial depuis 40 ans, photos de famille partout",
+      "apparence_physique": {
+        "silhouette": "1m74, silhouette solide, posture droite malgré l'âge, utilise une canne en bois sculpté",
+        "cheveux": "Blanc argenté, coupe courte classique, moustache blanche taillée",
+        "visage": "Traits forts, regard doux, rides d'expression marquées aux yeux (rides de sourire), peau mate",
+        "peau": "Mate olive, grain habité, taches de vieillesse visibles"
+      },
+      "personnalite_role_narratif": "Patriarche algérois installé en France depuis les années 70, retraité (ancien contremaître, ouvrier qualifié, ou commerçant). Photos d'enfants et petits-enfants partout dans l'appart. Aime recevoir, offrir, raconter. Incarne la dignité de la génération immigrée qui a construit — chaleureux, fier, offrant. La canne est un compagnon, pas un symbole.",
+      "piliers_compatibles": ["P2_Emotion", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et chaleureux, sourire franc, souvent vers un petit-enfant ou la caméra",
+        "expressions_privilegiees": ["sourire franc généreux", "rire complice avec enfant", "dignité calme"],
+        "eviter": "Cadrages qui zoomeraient sur la canne, poses 'vieux monsieur' stéréotypées, mise en scène 'immigration digne'",
+        "cadrages_type": ["portrait 3/4 assis fauteuil avec enfant sur genoux", "plan moyen cuisine familiale", "détail mains offrant objet"],
+        "lumiere_signature": "Lumière chaude d'intérieur familial, lumière de fenêtre douce"
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Patriarche algérois parisien — chemises blanches ou bleu ciel, pantalons chino taille haute, cardigans laine, mocassins cuir. Soigné sans recherche mode, digne sans affectation.",
+        "pieces_favorites": [
+          "Chemise blanche à col italien",
+          "Pantalon chino taille haute beige ou marine",
+          "Cardigan laine mérinos gris ou camel",
+          "Mocassins en cuir marron",
+          "Gilet sans manches en laine",
+          "Pull col V marine ou bordeaux",
+          "Chemise bleu ciel"
+        ],
+        "couleurs_de_predilection": [
+          "blanc optique",
+          "bleu ciel",
+          "beige",
+          "gris souris",
+          "bordeaux",
+          "marine"
+        ],
+        "styles_francais_refs": [
+          "patriarches cafés du 20e",
+          "esthétique des photos de famille algéroises 1980",
+          "élégance du dimanche des grands-pères maghrébins",
+          "Omar Sharif classe âgé"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : chemise blanche + cardigan + pantalon chino + T-shirt Ypersoa brodé en dessous visible au col",
+          "week-end : pull marine + chemise blanche col ouvert + pantalon beige + sweat Ypersoa sur le canapé près de lui",
+          "mariage : costume gris laine + chemise blanche + T-shirt Ypersoa brodé en dessous, mariage d'un petit-fils",
+          "champ coquelicots : chemise bleu ciel + pantalon chino + cardigan posé, assis sur banc de pique-nique"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "djellaba mise en scène",
+          "chapelet tape-à-l'œil",
+          "accessoires 'folkloriques' stéréotypés",
+          "streetwear",
+          "total look noir austère",
+          "costumes brillants"
+        ]
+      }
+    },
+    {
+      "id": "MAN-S19-HENRI",
+      "prenom": "Henri (du couple Henri & Joséphine)",
+      "age": 72,
+      "genre": "H",
+      "ethnicite": "blanc français",
+      "ancrage_geographique": "Paris 6e ou 7e, appartement classique rive gauche, maison de famille en Bourgogne",
+      "apparence_physique": {
+        "silhouette": "1m78, silhouette fine, posture très droite, maintien classique français",
+        "cheveux": "Blanc argenté, coupe courte classique avec raie sur le côté, toujours propre",
+        "visage": "Traits fins et nobles, yeux clairs, rides marquées mais harmonieuses, barbe rasée de près",
+        "peau": "Claire, grain lisse pour son âge"
+      },
+      "personnalite_role_narratif": "Ancien médecin ou architecte retraité, marié à Joséphine depuis 40 ans. Vie culturelle riche (concerts, expos, lectures). Offre à sa femme des cadeaux qui durent. Incarne la bourgeoisie parisienne éclairée et mixte — ouverte, cultivée, élégante sans ostentation.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et chaleureux, ou croisé avec celui de Joséphine, tendresse de 40 ans de couple",
+        "expressions_privilegiees": ["sourire retenu élégant", "tendresse complice", "concentration sur lecture"],
+        "eviter": "Poses 'monsieur distingué' appuyées, maquillage visible, sourires larges forcés",
+        "cadrages_type": ["portrait 3/4 avec Joséphine sur canapé", "plan moyen assis bibliothèque", "détail mains entrelacées avec Joséphine"],
+        "lumiere_signature": "Lumière de fenêtre classique rive gauche, lumière ambrée d'intérieur bourgeois"
+      },
+      "duo": "DUO_HENRI_JOSEPHINE",
+      "style_wear": {
+        "signature_vestimentaire": "Ancien médecin/architecte classique — chemises blanches ou rayées, pantalons laine, blazers marine, mocassins cuir patinés. L'uniforme de la bourgeoisie cultivée parisienne.",
+        "pieces_favorites": [
+          "Chemise blanche à col italien",
+          "Chemise rayée bleu ciel/blanc",
+          "Pantalon laine grise Prince de Galles",
+          "Blazer marine en laine",
+          "Mocassins cuir bordeaux (Weston)",
+          "Pull cachemire col V camel",
+          "Écharpe cachemire gris"
+        ],
+        "couleurs_de_predilection": [
+          "marine",
+          "blanc",
+          "gris anthracite",
+          "bordeaux",
+          "camel"
+        ],
+        "styles_francais_refs": [
+          "Jean d'Ormesson civil",
+          "Hubert de Givenchy âgé",
+          "bourgeoisie cultivée rive gauche",
+          "élégance Cifonelli classique"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : pull cachemire + chemise blanche + pantalon laine + T-shirt Ypersoa brodé en dessous",
+          "week-end : chemise rayée + pull V camel + chino + mocassins, lecture avec Joséphine",
+          "mariage : costume marine + chemise blanche + T-shirt Ypersoa brodé en dessous",
+          "champ coquelicots : chemise blanche + pantalon laine + mocassins + cardigan posé, pique-nique avec Joséphine"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "streetwear",
+          "sneakers",
+          "logos",
+          "costumes brillants",
+          "couleurs vives flashy",
+          "bijoux masculins ostentatoires"
+        ]
+      }
+    },
+    {
+      "id": "MAN-S19-JOSEPHINE",
+      "prenom": "Joséphine (du couple Henri & Joséphine)",
+      "age": 70,
+      "genre": "F",
+      "ethnicite": "afro-caribéenne",
+      "ancrage_geographique": "Paris 6e/7e avec Henri, retours réguliers en Martinique (famille)",
+      "apparence_physique": {
+        "silhouette": "1m67, silhouette fine élégante, posture altière et légère, gestes gracieux",
+        "cheveux": "Gris-blancs naturels, afro court sculpté ou chignon bas strict selon occasion",
+        "visage": "Traits nobles, pommettes hautes, rides d'expression harmonieuses, regard vif et intelligent",
+        "peau": "Noire profonde, lumineuse, grain habité superbe"
+      },
+      "personnalite_role_narratif": "Ancienne psychanalyste ou avocate, mariée à Henri depuis 40 ans. Élégance parisienne métissée — a intégré les codes bourgeois français tout en gardant sa culture caribéenne (voyages réguliers en famille en Martinique). Offre des cadeaux symboliques et précieux. Incarne une bourgeoisie française mixte qui existe mais se voit trop peu.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Direct et intelligent, sourire posé, ou tendresse vers Henri",
+        "expressions_privilegiees": ["sourire noble retenu", "concentration pensive", "tendresse complice"],
+        "eviter": "Cadrages qui exotiseraient (foulards wax mis en scène, bijoux 'tribaux' exagérés), poses 'mamie noire' stéréotypées",
+        "cadrages_type": ["portrait 3/4 avec Henri", "plan moyen assise fauteuil lecture", "détail main portant bague discrète"],
+        "lumiere_signature": "Lumière douce d'intérieur bourgeois, lumière qui unifie et sublime la peau noire"
+      },
+      "duo": "DUO_HENRI_JOSEPHINE",
+      "style_wear": {
+        "signature_vestimentaire": "Élégante parisienne métissée — tailleurs fluides, chemises soie, bijoux fins en or, chignon strict. Codes de la bourgeoisie française parfaitement maîtrisés avec touches discrètes de couleur.",
+        "pieces_favorites": [
+          "Chemisier en soie crème ou bordeaux",
+          "Pantalon cigarette laine noire",
+          "Tailleur jupe midi laine grise",
+          "Escarpins bas en cuir noir (Roger Vivier)",
+          "Trench beige ceinturé",
+          "Pull cachemire col rond anthracite",
+          "Bijoux or fin : créoles moyennes, chaîne, bague signet"
+        ],
+        "couleurs_de_predilection": [
+          "crème",
+          "noir",
+          "bordeaux",
+          "gris anthracite",
+          "camel",
+          "marine"
+        ],
+        "styles_francais_refs": [
+          "Aïssa Maïga élégante",
+          "Firmine Richard classe",
+          "bourgeoisie métissée 6e/7e arrondissement",
+          "Phoebe Philo Céline vibe âgée"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : chemisier soie + pantalon cigarette + T-shirt Ypersoa brodé discret en dessous, dîner avec Henri",
+          "week-end : pull cachemire + jupe midi + mocassins + sweat Ypersoa noué aux épaules, promenade dimanche",
+          "mariage : tailleur laine + chemisier soie + bijoux or fin + blouse Ypersoa brodée col rond",
+          "champ coquelicots : robe midi soie + cardigan + T-shirt Ypersoa brodé en dessous"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "tenues 'folkloriques caribéennes' mises en scène",
+          "turbans wax statement",
+          "bijoux volumineux exagérés",
+          "streetwear",
+          "couleurs criardes",
+          "maquillage coloré tape-à-l'œil"
+        ]
+      }
+    },
+    {
+      "id": "MAN-S21",
+      "prenom": "Hugo",
+      "age": 30,
+      "genre": "H",
+      "ethnicite": "blanc français",
+      "ancrage_geographique": "Paris 18e/19e ou Lyon Croix-Rousse, nouveau papa, famille jeune",
+      "apparence_physique": {
+        "silhouette": "1m80, silhouette fine sportive (court en famille, vélo urbain), posture légèrement voûtée de jeune papa fatigué",
+        "cheveux": "Châtains courts avec mèches blondes naturelles, souvent dépeignés par les mains d'un bébé",
+        "visage": "Traits doux, barbe courte bien taillée de 3-5 jours, yeux fatigués mais heureux, sourire facile",
+        "peau": "Claire, grain vivant, quelques cernes de jeune parent"
+      },
+      "personnalite_role_narratif": "Jeune papa de 30 ans, ingénieur ou chef de projet digital, congé parentalité en cours ou retour de congé. Porte-bébé vissé sur le ventre. Offre à sa femme pour la fête des mères, offre à sa propre mère pour célébrer la grand-parentalité. Incarne le jeune papa français 2026 — présent, tendre, bousculé.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Souvent vers le bébé (Noé MAN-S15), parfois complice caméra, sourire doux fatigué",
+        "expressions_privilegiees": ["tendresse paternelle", "fatigue heureuse", "éclat de rire avec bébé"],
+        "eviter": "Poses 'jeune cadre dynamique', photos business, regards intenses",
+        "cadrages_type": ["plan américain avec bébé en porte-bébé", "plan moyen canapé avec bébé endormi", "détail main de père sur dos de bébé"],
+        "lumiere_signature": "Lumière douce matin/fin de journée, scènes de vie intérieure, lumière d'appartement lumineux"
+      },
+      "duo": null,
+      "_note_narrative": "Peut former un duo informel avec MAN-S15 (Bébé Noé) dans scènes famille_vivante type 'jeune papa + bébé'",
+      "style_wear": {
+        "signature_vestimentaire": "Papa nouveau-né urbain — sweats doux, chinos confortables, baskets blanches minimalistes, porte-bébé Ergobaby ou Physiocarrier intégré au look",
+        "pieces_favorites": [
+          "Sweat-shirt gris chiné ou marine col rond",
+          "Chino beige ou bleu marine",
+          "Sweat molleton en coton bio",
+          "Baskets blanches minimalistes (Common Projects, Veja)",
+          "T-shirt blanc col rond épais",
+          "Chemise oxford bleu ciel (pour les jours où il essaie)",
+          "Porte-bébé noir ou écru (accessoire permanent)"
+        ],
+        "couleurs_de_predilection": [
+          "gris chiné",
+          "marine",
+          "écru",
+          "beige",
+          "blanc",
+          "kaki"
+        ],
+        "styles_francais_refs": [
+          "jeunes papas Jeanne Damas + Adrien Rovero",
+          "campagnes Asphalte × Le Slip Français version papa",
+          "papas Gamin Gamine",
+          "Pierre Niney papa civil"
+        ],
+        "occasions_ypersoa_typiques": [
+          "soir : sweat molleton + jogger détendu + T-shirt Ypersoa brodé en dessous, bébé qui dort contre lui",
+          "week-end : T-shirt blanc + chino + baskets + porte-bébé avec bébé + T-shirt Ypersoa visible",
+          "mariage : chemise oxford + pantalon laine + baskets propres + T-shirt Ypersoa brodé en dessous (bébé gardé par grands-parents)",
+          "champ coquelicots : sweat écru + chino + porte-bébé avec Noé + T-shirt Ypersoa brodé"
+        ],
+        "pieces_qui_ne_vont_pas": [
+          "costume de ville strict (il est en congé parentalité)",
+          "streetwear logos",
+          "baskets techniques de running",
+          "chemises fantaisie",
+          "total look noir austère",
+          "vêtements trop serrés ou inconfortables (il porte un bébé)"
+        ]
+      }
+    }
+  ]
+}
