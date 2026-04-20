@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "version": "2.0",
+    "date_maj": "2026-04-20",
+    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "total_mannequins": 21,
+    "principe": "Beauté incarnée à la française — ni supermodel, ni réalité crue"
+  },
+  "repartition_demographique": {
+    "total_individus": 22,
+    "commentaire": "22 individus pour 21 entrées car MAN-P11 est un couple (Léa + Sarah). Cible clientèle française CSP+ urbaine.",
+    "categories": {
+      "blancs": { "nb": 14, "pct": 64, "ids": ["MAN-P01", "MAN-P02", "MAN-P06", "MAN-P07", "MAN-P08", "MAN-P09", "MAN-P10", "MAN-P11-SARAH", "MAN-P12", "MAN-S14", "MAN-S15", "MAN-S19-HENRI", "MAN-S20", "MAN-S21"] },
+      "maghrebins": { "nb": 2, "pct": 9, "ids": ["MAN-P04", "MAN-S18"] },
+      "afro": { "nb": 3, "pct": 14, "ids": ["MAN-P03", "MAN-S17", "MAN-S19-JOSEPHINE"] },
+      "metisses": { "nb": 2, "pct": 9, "ids": ["MAN-P05", "MAN-P11-LEA"] },
+      "asiatiques": { "nb": 2, "pct": 9, "ids": ["MAN-S13", "MAN-S16"] }
+    },
+    "tranches_age": {
+      "enfants_0_12": ["MAN-P08 Félicie 7", "MAN-P09 Gabin 5", "MAN-S15 Noé 1"],
+      "ados_13_20": ["MAN-S13 Priya 16"],
+      "jeunes_adultes_21_34": ["MAN-P12 Brune 22", "MAN-S14 Gaspard 23", "MAN-S21 Hugo 30"],
+      "adultes_35_50": ["MAN-P01 Camille 40", "MAN-P02 Anna 35", "MAN-P03 Aïcha 40", "MAN-P04 Lila 45", "MAN-P06 Mathieu 40", "MAN-P07 Nicolas 45", "MAN-P11 Léa&Sarah 35-37", "MAN-S17 Césaria 40", "MAN-S20 Coline 35"],
+      "seniors_51_70": ["MAN-P05 Béatrice 55", "MAN-P10 Marie-Hélène 65", "MAN-S16 Hiroshi 55", "MAN-S18 Hassan 68", "MAN-S19 Henri&Joséphine 70-72"]
+    }
+  },
+  "mannequins": [
+    { "id": "MAN-P01", "prenom": "Camille", "age": 40, "genre": "F", "ethnicite": "blanche française", "particularite": "taches de rousseur, rides naturelles", "duo": null, "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P02", "prenom": "Anna", "age": 35, "genre": "F", "ethnicite": "blanche (sud de la France)", "particularite": "peau légèrement hâlée, cheveux bruns épais", "duo": null, "statut_fiche": "A_DETAILLER_LOT2" },
+    { "id": "MAN-P03", "prenom": "Aïcha", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": null, "duo": null, "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P04", "prenom": "Lila", "age": 45, "genre": "F", "ethnicite": "maghrébine", "particularite": null, "duo": null, "statut_fiche": "A_DETAILLER_LOT2" },
+    { "id": "MAN-P05", "prenom": "Béatrice", "age": 55, "genre": "F", "ethnicite": "métisse noir-blanc", "particularite": "cheveux argentés élégants", "duo": "DUO_BEATRICE_FELICIE", "statut_fiche": "A_DETAILLER_LOT3" },
+    { "id": "MAN-P06", "prenom": "Mathieu", "age": 40, "genre": "H", "ethnicite": "blanc français", "particularite": "barbe brune, cheveux bruns", "duo": "DUO_MATHIEU_GABIN", "statut_fiche": "A_DETAILLER_LOT3" },
+    { "id": "MAN-P07", "prenom": "Nicolas", "age": 45, "genre": "H", "ethnicite": "blanc français", "particularite": "cheveux poivre-sel, traits réguliers", "duo": null, "statut_fiche": "A_DETAILLER_LOT3", "_note_remplacement": "Remplace l'ancien Karim (retiré : eczéma mains incompatible avec cadrage produit broderie)" },
+    { "id": "MAN-P08", "prenom": "Félicie", "age": 7, "genre": "F", "ethnicite": "blanche", "particularite": "taches de rousseur, fossettes", "duo": "DUO_BEATRICE_FELICIE", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P09", "prenom": "Gabin", "age": 5, "genre": "H", "ethnicite": "blanc", "particularite": null, "duo": "DUO_MATHIEU_GABIN", "statut_fiche": "A_DETAILLER_LOT3" },
+    { "id": "MAN-P10", "prenom": "Marie-Hélène", "age": 65, "genre": "F", "ethnicite": "blanche française rousse", "particularite": "cheveux roux argentés, port altier", "duo": null, "statut_fiche": "A_DETAILLER_LOT3" },
+    { "id": "MAN-P11", "prenom": "Léa & Sarah", "age": "35-37", "genre": "F/F", "ethnicite": "métisse (Léa) + nordique (Sarah)", "particularite": "couple lesbien marié", "duo": "DUO_LEA_SARAH", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P12", "prenom": "Brune", "age": 22, "genre": "F", "ethnicite": "blanche", "particularite": "cheveux bruns longs, silhouette élancée", "duo": null, "statut_fiche": "A_DETAILLER_LOT3" },
+    { "id": "MAN-S13", "prenom": "Priya", "age": 16, "genre": "F", "ethnicite": "sud-asiatique (sri-lankaise)", "particularite": null, "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
+    { "id": "MAN-S14", "prenom": "Gaspard", "age": 23, "genre": "H", "ethnicite": "blanc", "particularite": "cheveux châtains mi-longs, style urbain", "duo": null, "statut_fiche": "A_DETAILLER_LOT4", "_note_remplacement": "Remplace l'ancien Marcus" },
+    { "id": "MAN-S15", "prenom": "Bébé Noé", "age": 1, "genre": "indéf", "ethnicite": "blanc", "particularite": null, "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
+    { "id": "MAN-S16", "prenom": "Hiroshi", "age": 55, "genre": "H", "ethnicite": "asiatique est (japonais)", "particularite": "cheveux argentés", "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
+    { "id": "MAN-S17", "prenom": "Césaria", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": "vitiligo discret (mains, cou)", "duo": null, "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-S18", "prenom": "Hassan", "age": 68, "genre": "H", "ethnicite": "maghrébin", "particularite": "canne élégante (bois)", "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
+    { "id": "MAN-S19", "prenom": "Henri & Joséphine", "age": "70-72", "genre": "H/F", "ethnicite": "blanc (Henri) + afro-caribéenne (Joséphine)", "particularite": "couple senior mixte", "duo": "DUO_HENRI_JOSEPHINE", "statut_fiche": "A_DETAILLER_LOT4" },
+    { "id": "MAN-S20", "prenom": "Coline", "age": 35, "genre": "F", "ethnicite": "blanche", "particularite": "fauteuil roulant", "duo": null, "statut_fiche": "A_DETAILLER_LOT4" },
+    { "id": "MAN-S21", "prenom": "Hugo", "age": 30, "genre": "H", "ethnicite": "blanc", "particularite": "jeune père, barbe courte", "duo": null, "statut_fiche": "A_DETAILLER_LOT4", "_note_ajout": "Ajouté 2026-04-20 pour combler trou démographique 25-35 H (cible jeune papa qui offre)" }
+  ],
+  "duos": [
+    {
+      "id": "DUO_BEATRICE_FELICIE",
+      "membres": ["MAN-P05", "MAN-P08"],
+      "nature": "grand-mère + petite-fille",
+      "types_shots_compatibles": ["parent_enfant", "grand_parent_parent", "famille_vivante"],
+      "_renomme_depuis": "DUO_BEATRICE_LILA (Lila MAN-P08 renommée Félicie le 2026-04-20)"
+    },
+    {
+      "id": "DUO_MATHIEU_GABIN",
+      "membres": ["MAN-P06", "MAN-P09"],
+      "nature": "père + fils",
+      "types_shots_compatibles": ["parent_enfant", "famille_vivante"],
+      "_renomme_depuis": "DUO_MATHIEU_THEO (Théo MAN-P09 renommé Gabin le 2026-04-20)"
+    },
+    {
+      "id": "DUO_LEA_SARAH",
+      "membres": ["MAN-P11-LEA", "MAN-P11-SARAH"],
+      "nature": "couple lesbien marié",
+      "types_shots_compatibles": ["couple", "famille_vivante"]
+    },
+    {
+      "id": "DUO_HENRI_JOSEPHINE",
+      "membres": ["MAN-S19-HENRI", "MAN-S19-JOSEPHINE"],
+      "nature": "couple senior mixte",
+      "types_shots_compatibles": ["couple"]
+    }
+  ],
+  "mapping_legacy_renommages_2026_04_20": {
+    "Lucia_22_metisse": "Brune_22_blanche (MAN-P12)",
+    "Sofia_35_mediterraneenne": "Anna_35_blanche (MAN-P02)",
+    "Yasmine_45_maghrebine": "Lila_45_maghrebine (MAN-P04)",
+    "Lila_7_metisse": "Félicie_7_blanche (MAN-P08)",
+    "Fatou_40_afrocarib": "Césaria_40_afrocarib (MAN-S17)",
+    "Théo_5_metisse": "Gabin_5_blanc (MAN-P09)",
+    "Anaïs_35_metisse": "Coline_35_blanche (MAN-S20)",
+    "Karim_45_metisse_eczema": "SUPPRIMÉ → remplacé par Nicolas_45_blanc (MAN-P07)",
+    "Marcus_23_afro_dreadlocks": "SUPPRIMÉ → remplacé par Gaspard_23_blanc (MAN-S14)",
+    "_ajouts": "MAN-S21 Hugo_30_blanc (nouveau, 21ème mannequin)"
+  },
+  "regles_distribution": {
+    "_statut": "À DÉTAILLER EN LOT 5",
+    "_placeholder": "Règles de pondération des apparitions par mannequin selon type de shot et pilier à formaliser."
+  }
+}

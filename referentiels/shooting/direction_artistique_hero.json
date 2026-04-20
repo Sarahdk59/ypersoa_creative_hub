@@ -1,27 +1,32 @@
 {
   "_meta": {
-    "schema_version": "1.0",
+    "schema_version": "2.0",
     "referentiel": "direction_artistique_hero",
     "last_updated": "2026-04-20",
-    "description": "Grammaire visuelle globale Ypersoa. Règles de direction artistique applicables à TOUS les shootings et toutes les communications visuelles. Intègre les 4 directives stratégiques Sarah de J3.A. Override possible au niveau motif.",
+    "description": "Grammaire visuelle globale Ypersoa. Règles de direction artistique applicables à TOUS les shootings et toutes les communications visuelles. Intègre les 4 directives stratégiques Sarah (version 2.0 du 2026-04-20 : Directive 1 réécrite en 'beauté incarnée à la française'). Override possible au niveau motif.",
     "statut": "REFERENTIEL_META_STRATEGIQUE",
     "autorite": "Ce document fait foi pour toute décision de direction artistique. En cas de conflit avec les règles spécifiques à un motif, la règle motif prévaut POUR ce motif. La direction artistique globale prévaut pour tout le reste.",
     "directives_strategiques_integrees": [
-      "Humanité visible OBLIGATOIRE (anti-supermodel renforcé)",
+      "Beauté incarnée et authentique à la française (ni supermodel, ni réalité crue)",
       "Distribution ambiances 80% Studio Brut + Loft Organique (40/40), 20% autres",
       "Duo systématique par pack avec rotation cyclique sur 4 types",
-      "Casting fixé à 20 mannequins récurrents (12 principaux + 8 secondaires)"
+      "Casting fixé à 21 mannequins récurrents (12 principaux + 9 secondaires)"
     ],
     "sources": [
       "archives/aistudio_legacy/shooting_director/src/services/gemini.ts (univers signature)",
-      "archives/aistudio_legacy/atelier_social/src/lib/gemini.ts (direction modèles anti-supermodel)",
+      "archives/aistudio_legacy/atelier_social/src/lib/gemini.ts (direction modèles)",
       "referentiels/charte_editoriale.json (charte graphique + ton de voix)",
-      "decisions_strategiques_sarah_J3A (4 directives)"
-    ]
+      "decisions_strategiques_sarah_J3A (4 directives initiales)",
+      "decisions_strategiques_sarah_J3B_2026-04-20 (Directive 1 réécrite + casting 21)"
+    ],
+    "changelog": {
+      "v1.0_2026-04-19": "Humanité visible obligatoire, défauts physiques REVENDIQUÉS comme identité brand, casting 20",
+      "v2.0_2026-04-20": "Beauté incarnée à la française, particularités distribuées avec grâce (non exhibées), casting 21, répartition démographique re-calibrée (64% blancs cible clientèle française CSP+)"
+    }
   },
 
   "univers_signature": {
-    "description": "L'univers visuel signature Ypersoa est constant à travers toute la communication. C'est le 'decor principal' dans lequel se déploient toutes les scènes lifestyle.",
+    "description": "L'univers visuel signature Ypersoa est constant à travers toute la communication. C'est le 'décor principal' dans lequel se déploient toutes les scènes lifestyle.",
     
     "decor_principal": {
       "lieu_type": "appartement éditorial parisien",
@@ -62,49 +67,85 @@
   "direction_modeles_globale": {
     "description": "Règles de casting et direction des modèles. S'applique à TOUS les modèles générés, sauf override explicite par motif.",
     "statut": "REGLE_ABSOLUE",
+    "directive_source": "D1_BEAUTE_INCARNEE v2.0",
 
-    "philosophie": "Pro-humanité visible. Les défauts physiques ne sont pas tolérés mais REVENDIQUÉS comme partie intégrante de l'identité brand. Une image Ypersoa doit montrer une personne qui pourrait être ta voisine, ta mère, ta tante. Jamais une supermodel.",
+    "philosophie": {
+      "principe_directeur": "Chaque mannequin doit être quelqu'un qu'on trouve BEAU, pas quelqu'un qu'on trouve cassé et réel. Belle et vraie, pas miroir déprimant.",
+      "positionnement_vs_marches": {
+        "ni_sezane_froide": "On ne vend pas un fantasme esthétique lisse et homogène",
+        "ni_aerie_statement": "On ne met pas la diversité en statement militant",
+        "cible_vivante": "Emoi Emoi, Make My Lemonade, Gamin Gamine — beauté française incarnée, vivante, habitée"
+      },
+      "references_visuelles_casting": [
+        "Jeanne Damas",
+        "Caroline de Maigret",
+        "Clémentine Desseaux",
+        "Mélodie Vaxelaire",
+        "Louise Follain",
+        "Louise de Chevigny",
+        "Tina Kunakey",
+        "Adèle Farine"
+      ],
+      "principe_diversite": "La diversité est un FAIT du casting, pas le SUJET du shooting."
+    },
 
     "casting_fixe": {
       "reference": "referentiels/shooting/mannequins_recurrents.json",
-      "principe": "20 personnages récurrents (12 principaux + 8 secondaires) réutilisés sur tous les shootings pour créer une reconnaissance brand sur la durée."
+      "principe": "21 personnages récurrents (12 principaux MAN-P01 à MAN-P12 + 9 secondaires MAN-S13 à MAN-S21) réutilisés sur tous les shootings pour créer une reconnaissance brand sur la durée."
     },
 
     "specifications_physiques": {
-      "age_cible_par_defaut": "30 à 60 ans (étendu pour inclure cheveux gris et signes de l'âge)",
-      "tranches_age_autorisees": ["5-10 ans (enfants)", "15-25 ans (jeunes adultes)", "30-50 ans (cœur)", "55-75 ans (seniors)"],
+      "age_cible_par_defaut": "30 à 60 ans (étendu pour inclure enfants, jeunes adultes et seniors)",
+      "tranches_age_autorisees": [
+        "1-12 ans (enfants)",
+        "15-25 ans (jeunes adultes)",
+        "30-50 ans (cœur)",
+        "55-75 ans (seniors)"
+      ],
       
-      "physique_obligatoire_au_choix": {
-        "description": "Au MOINS UN défaut physique visible par modèle. Souvent plusieurs.",
-        "liste_non_exhaustive": [
-          "rides et lignes d'expression naturelles (yeux, bouche, front)",
-          "cheveux gris, blancs ou poivre-et-sel",
-          "taches de rousseur visibles (visage, bras, épaules)",
-          "morphologies non-standard (curvy, plus-size, petites)",
-          "eczéma, vitiligo visible",
-          "cicatrices (visage, corps)",
-          "vergetures",
-          "acné ou marques d'acné",
-          "dents imparfaites",
-          "calvitie naissante ou totale",
-          "cernes naturels"
-        ]
+      "regles_casting_beaute_incarnee": {
+        "corps": "Corps variés incluant non-standards. Jamais de zoom-statement sur les rondeurs ou la minceur — les corps existent, ils ne sont pas le sujet.",
+        "peaux": "Peaux habitées, vivantes. Ni lissées par post-prod, ni accentuées par lumière dure.",
+        "rides": "Rides naturelles. Ni accentuées par la direction photo (gros plan rasant, contre-jour dur), ni effacées en post-prod.",
+        "cheveux_gris": "Argentés assumés et élégants. Jamais présentés comme marque du temps qui passe.",
+        "taches_de_rousseur": "Visibles et conservées. Grain de peau vivant.",
+        "particularites_physiques": {
+          "principe": "Présentes dans le casting, distribuées avec grâce. JAMAIS au centre du cadrage, JAMAIS sujet principal d'une photo.",
+          "cas_par_cas": {
+            "vitiligo_MAN-S17_Cesaria": "Visible mais discret. Lumière douce qui unifie. Cadrages qui ne zooment pas sur les zones de vitiligo. Style_wear classique français intemporel (PAS de statement encolures dégagées).",
+            "canne_MAN-S18_Hassan": "Présente, jamais sujet. Cadrages 'assis élégant' ou buste majoritaires.",
+            "fauteuil_MAN-S20_Coline": "Présent, jamais sujet. Cadrages buste majoritaires, scènes quotidiennes non-thématisées (café, lecture, couture)."
+          }
+        }
       },
 
-      "regard_par_defaut": "directement dans l'objectif",
-      "expression_par_defaut": "sourire authentique, vraie vie, émotion palpable, regard qui sourit aussi",
+      "regard_par_defaut": "vivant et présent — directement caméra OU hors champ pensif selon contexte du shot",
+      "expression_par_defaut": "authentique, émotion retenue, sourire franc ou sourire en coin, jamais pose figée mannequin",
 
       "interdictions_absolues": [
-        "mannequins lisses ou retouchés",
-        "perfection plastique",
+        "mannequins lisses ou retouchés numériquement",
+        "perfection plastique type supermodel",
         "expressions figées style catalogue",
         "skin smoothing (filtre lissant la peau)",
         "filtre beauté",
         "retouches Photoshop sur le visage",
-        "maquillage professionnel visible",
         "dents ultra-blanchies",
-        "corps athlétiques standardisés"
+        "corps athlétiques standardisés homogènes",
+        "maquillage professionnel visible trop marqué",
+        "mise en scène militante autour d'une particularité physique",
+        "cadrages qui thématisent le handicap/vitiligo/âge comme sujet principal"
       ]
+    },
+
+    "test_de_validation": {
+      "description": "Avant validation finale d'une photo, se poser cette question",
+      "question": "Est-ce que cette personne pourrait être l'égérie d'Emoi Emoi ou Make My Lemonade ?",
+      "interpretation": {
+        "oui": "OK, photo validée",
+        "photo_militante": "NON, rééquilibrer",
+        "photo_catalogue_medical": "NON, rééquilibrer",
+        "photo_supermodel_froide": "NON, rééquilibrer"
+      }
     },
 
     "override_possible_par_motif": {
@@ -115,36 +156,37 @@
           "motif": "YPM-001 La Brigitte",
           "override_regard": "hors champ pensif (pas le sourire caméra)",
           "override_expression": "contemplative, intime, pudique",
-          "raison": "La sobriété épurée de Brigitte (cœur + initiale) demande une attitude plus contemplative que joyeuse. Les règles globales 'sourire caméra' ne s'appliquent PAS pour ce motif."
+          "raison": "La sobriété épurée de Brigitte (cœur + initiale) demande une attitude plus contemplative que joyeuse. Les règles globales 'regard vivant caméra' ne s'appliquent PAS pour ce motif."
         }
       ]
     }
   },
 
   "casting_diversite": {
-    "description": "Règles de diversité dans le casting global Ypersoa, reflétant la démographie française réelle.",
+    "description": "Règles de diversité dans le casting global Ypersoa, re-calibrées 2026-04-20 pour refléter la démographie de la clientèle française CSP+ urbaine cible.",
     
     "repartition_demographique_globale": {
-      "source": "referentiels/shooting/mannequins_recurrents.json > repartition_demographique_visee",
-      "blanc_he_s": 6,
-      "noir_e_s": 3,
-      "metisses": 6,
-      "maghrebin_e_s_moyen_orient": 2,
-      "afro_caribeen_ne": 1,
-      "sud_asiatique": 1,
-      "asiatique_est": 1,
-      "mediterraneen_ne": 1,
-      "total": 20
+      "source": "referentiels/shooting/mannequins_recurrents.json > repartition_demographique",
+      "logique_recalibrage": "Cliente-type Emoi Emoi / Make My Lemonade / Gamin Gamine à Lille/Paris/Lyon majoritairement blanche (55-65% selon zones). Casting doit refléter cette réalité sans tomber dans l'homogène.",
+      "total_entrees_mannequins": 21,
+      "total_individus": 22,
+      "commentaire_total": "22 individus pour 21 entrées car MAN-P11 est un couple (Léa + Sarah)",
+      "repartition": {
+        "blancs": { "nb": 14, "pct": 64 },
+        "maghrebins": { "nb": 2, "pct": 9 },
+        "afro_caribeens": { "nb": 3, "pct": 14 },
+        "metisses": { "nb": 2, "pct": 9 },
+        "asiatiques": { "nb": 2, "pct": 9 }
+      }
     },
 
     "interactions_obligatoires_par_collection": {
       "description": "Chaque collection (ensemble de shootings pour une saison/campagne) doit inclure minimum ces types d'interactions pour garantir la diversité narrative",
       "interactions": [
-        "couple adulte hétéro",
-        "couple adulte LGBTQ+ (duo femme/femme ou homme/homme)",
-        "duo mère-fille",
-        "duo père-fils",
-        "duo grand-parent/petit-enfant",
+        "couple adulte hétéro (DUO_HENRI_JOSEPHINE)",
+        "couple adulte LGBTQ+ (DUO_LEA_SARAH)",
+        "duo parent-enfant (DUO_MATHIEU_GABIN)",
+        "duo grand-parent/petit-enfant (DUO_BEATRICE_FELICIE)",
         "interactions adulte-enfant non-parents (tante/oncle/ami proche)",
         "solos adulte (tous genres)",
         "solos enfant",
@@ -154,12 +196,14 @@
     },
 
     "particularites_physiques_distribuees": {
-      "description": "Les particularités physiques (handicap, vitiligo, canne...) sont distribuées sur profils NON-BLANCS pour éviter le biais 'le handicap visible sur peau claire'.",
+      "description": "Les particularités physiques (vitiligo, canne, fauteuil) sont présentes dans le casting mais jamais thématisées. Distribuées pour éviter tout biais — la présence d'un fauteuil sur une mannequin blanche et d'un vitiligo sur une mannequin afro-caribéenne ne fait plus 'statement' mais représente simplement la diversité des corps.",
       "distribution": {
-        "vitiligo": "MAN-S17 Fatou (afro-caribéenne, vitiligo très visible sur peau foncée)",
+        "vitiligo": "MAN-S17 Césaria (afro-caribéenne, vitiligo discret sur mains/cou/tempe)",
         "canne_marche": "MAN-S18 Hassan (maghrébin senior)",
-        "fauteuil_roulant": "MAN-S20 Anaïs (métisse)",
-        "eczema_mains": "MAN-P07 Karim (métisse maghrébin-européen)"
+        "fauteuil_roulant": "MAN-S20 Coline (blanche 35 ans)"
+      },
+      "_particularites_supprimees_vs_v1": {
+        "eczema_mains_Karim": "Retiré 2026-04-20 (collision avec cadrage produit broderie mains). Mannequin Karim remplacé par Nicolas (blanc 45 ans, sans particularité)."
       }
     }
   },
@@ -186,13 +230,19 @@
       "rotation_cyclique_obligatoire": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
       "logique_rotation": "Chaque nouveau pack avance d'un cran dans la liste. Pack 1 = parent_enfant, Pack 2 = grand_parent_parent, Pack 3 = adultes_amis, Pack 4 = couple, Pack 5 = retour parent_enfant, etc.",
       "tracking_rotation": "Le Hub doit maintenir un compteur de rotation pour éviter la répétition du même type de duo sur plusieurs packs consécutifs",
+      "duos_disponibles": {
+        "DUO_MATHIEU_GABIN": "parent_enfant (père/fils)",
+        "DUO_BEATRICE_FELICIE": "grand_parent_parent (grand-mère/petite-fille)",
+        "DUO_LEA_SARAH": "couple (lesbien marié)",
+        "DUO_HENRI_JOSEPHINE": "couple (senior mixte)"
+      },
       "raison": "Le duo incarne la dimension affective du motif (offert à quelqu'un qu'on aime). La rotation garantit une représentation équilibrée des liens familiaux et amicaux sur la durée de la communication brand."
     },
 
     "casting_par_pack": {
       "regle": "Chaque pack utilise 2-3 mannequins maximum (cohérence visuelle)",
       "rotation_long_terme": "Sur 6 mois, chaque mannequin principal (MAN-P01 à MAN-P12) doit apparaître dans minimum 30 shots",
-      "mannequins_secondaires_quota": "Les secondaires (MAN-S13 à MAN-S20) apparaissent 5-10 fois maximum sur tout le catalogue (gardés pour occasions précises)"
+      "mannequins_secondaires_quota": "Les secondaires (MAN-S13 à MAN-S21) apparaissent 5-10 fois maximum sur tout le catalogue (gardés pour occasions précises)"
     },
 
     "placement_motif_universel": {
@@ -253,8 +303,9 @@
     },
 
     "prompt_suffix_universel": {
-      "description": "Suffixe à ajouter à TOUS les prompts d'image IA pour garantir la cohérence brand",
-      "suffixe_a_appender": "Real human model with visible imperfections (wrinkles, gray hair, freckles, scars, eczema, body diversity, age marks). No retouching, no skin smoothing, no perfection plastic, no beauty filter. Embroidered design on the LEFT CHEST (not centered). 35mm film photography aesthetic, soft cinematic natural lighting, analog film grain, raw editorial feel."
+      "description": "Suffixe à ajouter à TOUS les prompts d'image IA pour garantir la cohérence brand et D1_BEAUTE_INCARNEE v2.0",
+      "suffixe_a_appender": "Real human model with lived-in skin and natural features. Diverse beauty, French elegance aesthetic. Natural wrinkles, freckles, real skin texture conserved (not smoothed, not emphasized). Body diversity included but never as statement. Authentic expression, present gaze. No retouching, no skin smoothing, no beauty filter, no plastic perfection. Embroidered design on the LEFT CHEST (not centered). 35mm film photography aesthetic, soft cinematic natural lighting, analog film grain, raw editorial feel. Reference style: Emoi Emoi, Make My Lemonade, Gamin Gamine campaigns.",
+      "_ancien_suffixe_v1_deprecie": "Real human model with visible imperfections (wrinkles, gray hair, freckles, scars, eczema, body diversity, age marks). No retouching, no skin smoothing, no perfection plastic, no beauty filter. Embroidered design on the LEFT CHEST (not centered). 35mm film photography aesthetic, soft cinematic natural lighting, analog film grain, raw editorial feel."
     }
   },
 

@@ -1,0 +1,220 @@
+{
+  "meta": {
+    "lot": 1,
+    "version": "2.0",
+    "date": "2026-04-20",
+    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "fiches_contenues": ["MAN-P01", "MAN-P03", "MAN-P08", "MAN-P11", "MAN-S17"],
+    "_changelog_vs_v1": "Alignement beauté incarnée : rides naturelles (pas marquées), Félicie remplace Lila (blanche au lieu de métisse), Césaria remplace Fatou (style_wear réécrit sans statement vitiligo)"
+  },
+  "mannequins": [
+    {
+      "id": "MAN-P01",
+      "prenom": "Camille",
+      "age": 40,
+      "genre": "F",
+      "ethnicite": "blanche française",
+      "apparence_physique": {
+        "silhouette": "Fine, taille moyenne (1m68), posture naturelle et droite",
+        "cheveux": "Châtain miel mi-longs, légèrement ondulés, raie au milieu, souvent derrière les oreilles",
+        "visage": "Traits doux et expressifs, taches de rousseur discrètes sur les pommettes et le nez, rides naturelles aux yeux quand elle sourit",
+        "peau": "Claire habitée, grain de peau vivant, légèrement bronzée en été"
+      },
+      "personnalite_role_narratif": "La mère de famille passionnée qui offre avec sens. Femme de 40 ans épanouie, active, qui aime recevoir, jardiner, offrir. Elle incarne la cliente Ypersoa type : sensible, cultivée, exigeante sur la qualité sans être snob.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P3_Usage", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Chaleureux, souvent vers un enfant ou hors champ, parfois caméra directe (pilier P4)",
+        "expressions_privilegiees": ["sourire retenu", "regard pensif", "rire doux"],
+        "eviter": "Poses frontales figées, regards caméra appuyés",
+        "cadrages_type": ["portrait buste 3/4", "plan américain dans scène de vie", "détail main sur détail brodé"]
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Vintage français brut, comme si elle avait hérité du dressing de sa mère des années 70 et l'assumait aujourd'hui",
+        "pieces_favorites": [
+          "Jupe en jean midi taille haute, patinée",
+          "Chemise en lin blanc cassé oversize",
+          "Pull col rond laine écrue",
+          "Sabots en cuir",
+          "Robe chemise ceinturée imprimé fleuri fané",
+          "Pantalon en velours côtelé camel",
+          "Grand foulard carré (Hermès vintage ou chiné)"
+        ],
+        "couleurs_de_predilection": ["écru", "camel", "bleu jean délavé", "terracotta", "vert sauge"],
+        "styles_francais_refs": ["Caroline de Maigret", "Jeanne Damas époque jardin", "Lou Doillon décontractée"],
+        "occasions_ypersoa_typiques": [
+          "soir : chemise lin + jean + mules + T-shirt Ypersoa brodé sous la chemise ouverte",
+          "week-end : robe chemise fleurie + sweat Ypersoa noué aux épaules en terrasse",
+          "mariage : tailleur lin écru + blouse Ypersoa brodée délicatement au col",
+          "champ coquelicots : robe midi fleurie + panier osier + T-shirt enfant brodé sur le bras"
+        ],
+        "pieces_qui_ne_vont_pas": ["escarpins pointus", "logos voyants", "streetwear", "total look noir", "jean skinny"]
+      }
+    },
+    {
+      "id": "MAN-P03",
+      "prenom": "Aïcha",
+      "age": 40,
+      "genre": "F",
+      "ethnicite": "afro-caribéenne",
+      "apparence_physique": {
+        "silhouette": "Grande (1m74), élancée, posture altière et décontractée à la fois",
+        "cheveux": "Naturels, afro court sculpté ou braids fines tirées en chignon bas selon occasion",
+        "visage": "Pommettes hautes, sourire large, regard vif, grain de peau impeccable et lumineux",
+        "peau": "Noire profonde, éclatante"
+      },
+      "personnalite_role_narratif": "L'amie de toujours, parisienne-caribéenne, DA dans une agence de com ou galeriste. Elle incarne l'élégance sans effort, la femme qui reçoit à dîner le vendredi soir et offre des cadeaux qui marquent.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Direct et confiant, ou regard de complicité avec une autre femme du cadre",
+        "expressions_privilegiees": ["sourire éclatant", "mi-sérieux mi-amusé", "concentration douce"],
+        "eviter": "Angles qui la rapetissent, lumière blafarde qui efface le grain de peau",
+        "cadrages_type": ["plan américain debout", "portrait serré sur sourire", "scène dîner entre amies"]
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Élégance parisienne-caribéenne : coupes sobres, matières nobles, bijoux statement hérités",
+        "pieces_favorites": [
+          "Chemise blanche en popeline oversize",
+          "Pantalon lin large taille haute",
+          "Robe longue fluide imprimé wax modernisé",
+          "Trench camel",
+          "Grandes créoles en or",
+          "Mules plates en cuir noir",
+          "Pull cachemire col V"
+        ],
+        "couleurs_de_predilection": ["blanc optique", "noir", "camel", "rouille", "bleu marine"],
+        "styles_francais_refs": ["Clémentine Desseaux", "Tina Kunakey élégante", "Adèle Farine"],
+        "occasions_ypersoa_typiques": [
+          "soir : robe longue noire + T-shirt Ypersoa brodé en dessous + créoles",
+          "week-end : chemise blanche oversize + jean droit + sweat Ypersoa noué à la taille",
+          "mariage : combinaison lin rouille + blouse Ypersoa brodée discrète",
+          "champ coquelicots : robe wax fluide + espadrilles + pull Ypersoa sur les épaules"
+        ],
+        "pieces_qui_ne_vont_pas": ["pastels fades", "imprimés petits-pois mièvres", "total look beige sans contraste"]
+      }
+    },
+    {
+      "id": "MAN-P08",
+      "prenom": "Félicie",
+      "age": 7,
+      "genre": "F",
+      "ethnicite": "blanche",
+      "apparence_physique": {
+        "silhouette": "Fine, élancée pour son âge, énergie vive",
+        "cheveux": "Blonds vénitiens longs, ondulés naturels, souvent demi-queue ou tresse lâche",
+        "visage": "Taches de rousseur denses sur le nez et les pommettes, fossettes quand elle sourit, yeux bleu-vert",
+        "peau": "Très claire, rosée aux joues"
+      },
+      "personnalite_role_narratif": "Petite-fille de Béatrice (DUO_BEATRICE_FELICIE). Vive, rêveuse, imaginative, le genre d'enfant qui raconte des histoires à ses peluches et qui court pieds nus dans le jardin de sa grand-mère.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage"],
+      "direction_photo": {
+        "regard": "Souvent hors champ (émerveillement, concentration), rarement caméra",
+        "expressions_privilegiees": ["émerveillement", "rire franc d'enfant", "concentration sur détail"],
+        "eviter": "Poses 'mignonnes' forcées, sourires commandés, regards caméra factices",
+        "cadrages_type": ["plan moyen avec grand-mère", "détail mains de l'enfant sur broderie", "plan large dans scène jardin/cuisine"]
+      },
+      "duo": "DUO_BEATRICE_FELICIE",
+      "style_wear": {
+        "signature_vestimentaire": "Mini-vintage français, garde-robe d'enfant qui jouit d'être enfant — pas de déguisement 'petite fille modèle'",
+        "pieces_favorites": [
+          "Salopette en jean patinée",
+          "Robe Vichy bleu ciel",
+          "Pull marin rayé marine-écru",
+          "Sabots Birkenstock enfant",
+          "Collants épais colorés",
+          "T-shirt blanc tout simple",
+          "Cardigan tricoté main"
+        ],
+        "couleurs_de_predilection": ["écru", "bleu ciel", "rouge brique", "marine", "vert mousse"],
+        "styles_francais_refs": ["Petit Bateau × Bonpoint vintage", "enfants Gamin Gamine", "Amaia Kids"],
+        "occasions_ypersoa_typiques": [
+          "soir : pyjama en coton + doudou brodé Ypersoa sur le lit",
+          "week-end : salopette + T-shirt Ypersoa brodé petit motif au cœur",
+          "mariage : robe Vichy + cardigan écru + blouse Ypersoa col Claudine brodé",
+          "champ coquelicots : robe fleurie + bottes caoutchouc + sweat Ypersoa"
+        ],
+        "pieces_qui_ne_vont_pas": ["tenues trop 'princess'", "logos dessins animés", "strass", "baskets lumineuses"]
+      }
+    },
+    {
+      "id": "MAN-P11",
+      "prenom": "Léa & Sarah",
+      "age": "35-37",
+      "genre": "F/F",
+      "ethnicite": "métisse (Léa) + nordique (Sarah)",
+      "apparence_physique": {
+        "Lea": "37 ans, métisse noir-blanc, 1m70, cheveux bruns bouclés courts, regard intense, sourire franc, grain de peau habité",
+        "Sarah": "35 ans, nordique (cheveux blond cendré courts, yeux bleu pâle), 1m72, traits fins et droits, silhouette androgyne élégante"
+      },
+      "personnalite_role_narratif": "Couple marié depuis 3 ans. Léa est prof de danse contemporaine, Sarah est architecte. Elles vivent à Lille dans un appartement lumineux, aiment recevoir, voyager, et offrir des cadeaux qui durent. Elles incarnent un couple d'aujourd'hui sans militantisme mis en scène : leur couple est un fait, pas un statement.",
+      "piliers_compatibles": ["P2_Emotion", "P3_Usage", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Regards croisés entre elles privilégiés (complicité), parfois l'une vers l'autre pendant que l'autre regarde ailleurs",
+        "expressions_privilegiees": ["complicité silencieuse", "rire partagé", "main sur la main"],
+        "eviter": "Baiser frontal démonstratif (pas le code Ypersoa), poses 'couple iconique' appuyées",
+        "cadrages_type": ["plan taille côte à côte sur canapé", "main dans la main détail", "portrait en miroir"]
+      },
+      "duo": "DUO_LEA_SARAH",
+      "style_wear": {
+        "Lea_signature_vestimentaire": "Canadian tuxedo denim, style rock-folk décontracté, la plus 'wear and tear' du duo",
+        "Lea_pieces_favorites": ["Jean droit patiné", "Chemise en denim délavé", "Bottines en cuir noir", "T-shirt blanc col rond", "Veste en peau retournée"],
+        "Sarah_signature_vestimentaire": "Minimalisme nordique, coupes nettes, palette sobre, accessoires rares mais précis",
+        "Sarah_pieces_favorites": ["Chemise blanche à col italien", "Pantalon laine grise tombé parfait", "Mocassins en cuir noir", "Pull cachemire gris anthracite", "Lunettes acétate fines"],
+        "couleurs_de_predilection_duo": ["denim", "blanc", "gris anthracite", "noir", "écru"],
+        "styles_francais_refs": ["Louise Follain × Mélodie Vaxelaire", "couple esthétique Make My Lemonade déstaturé"],
+        "occasions_ypersoa_typiques": [
+          "soir : Léa en jean + T-shirt Ypersoa / Sarah en chemise blanche + blouse Ypersoa, dîner à la maison",
+          "week-end : brunch en terrasse, sweats Ypersoa assortis mais pas identiques",
+          "mariage : Léa en costume velours / Sarah en chemise blanche × pantalon large, broderies discrètes",
+          "champ coquelicots : Léa en robe chemise denim / Sarah en chemise blanche × pantalon large écru, T-shirts Ypersoa"
+        ],
+        "pieces_qui_ne_vont_pas": ["tenues identiques matchy", "looks ultra-féminins pour l'une ou l'autre", "couleurs vives flashy"]
+      }
+    },
+    {
+      "id": "MAN-S17",
+      "prenom": "Césaria",
+      "age": 40,
+      "genre": "F",
+      "ethnicite": "afro-caribéenne",
+      "apparence_physique": {
+        "silhouette": "1m71, silhouette en sablier, port altier, énergie calme",
+        "cheveux": "Naturels, twists serrés ou afro puff haut selon occasion",
+        "visage": "Traits forts et beaux, pommettes hautes, regard profond",
+        "peau": "Noire profonde avec taches de vitiligo discrètes (quelques taches sur les mains, le cou, légère décoloration à la tempe droite). Vitiligo présent mais JAMAIS mis en valeur par cadrage ou lumière — c'est une partie d'elle, pas son identité."
+      },
+      "personnalite_role_narratif": "Femme de 40 ans, prof de lettres, élégante et posée. Offre des cadeaux pensés, aime recevoir ses amies, transmet une certaine idée de la classe française. Elle incarne la beauté assumée et l'élégance discrète.",
+      "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P4_Preuve"],
+      "direction_photo": {
+        "regard": "Calme, posé, souvent direct caméra ou pensif hors champ",
+        "expressions_privilegiees": ["sérénité", "sourire en coin", "concentration lecture"],
+        "eviter": "Cadrages qui zoomeraient sur les zones de vitiligo, lumière dure qui les surexpose",
+        "cadrages_type": ["portrait 3/4 classique", "plan taille assise bibliothèque", "buste direct caméra"],
+        "_note_vitiligo": "Lumière douce qui unifie. Vitiligo visible mais non accentué. Jamais plan détail sur main si ce n'est pas pour la broderie."
+      },
+      "duo": null,
+      "style_wear": {
+        "signature_vestimentaire": "Classique français intemporel revisité — la prof de lettres qui a du goût, coupes nettes et matières belles",
+        "pieces_favorites": [
+          "Chemisier en soie crème",
+          "Pantalon cigarette laine noire",
+          "Trench beige ceinturé",
+          "Escarpins bas en cuir patiné",
+          "Cardigan cachemire camel",
+          "Jupe midi plissée",
+          "Foulard en soie (Hermès vintage ou Inoui Éditions)"
+        ],
+        "couleurs_de_predilection": ["crème", "noir", "camel", "bordeaux", "vert bouteille"],
+        "styles_francais_refs": ["Inès de la Fressange intemporelle", "prof de la Sorbonne chic", "Adèle Farine élégante"],
+        "occasions_ypersoa_typiques": [
+          "soir : chemisier soie + jupe midi + T-shirt Ypersoa sous le chemisier",
+          "week-end : pull cachemire camel + jean droit + sweat Ypersoa noué aux épaules",
+          "mariage : tailleur laine crème + blouse Ypersoa brodée délicate au col",
+          "champ coquelicots : robe midi imprimée + cardigan + T-shirt Ypersoa col rond"
+        ],
+        "pieces_qui_ne_vont_pas": ["statement encolures dégagées forcées (ancien style_wear déprécié)", "tenues qui cherchent à mettre en valeur le vitiligo", "streetwear", "imprimés criards"]
+      }
+    }
+  ]
+}
