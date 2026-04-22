@@ -1,0 +1,385 @@
+{
+  "_meta": {
+    "schema_version": "2.0",
+    "last_updated": "2026-04-19",
+    "template_status": "master_template_validated",
+    "notes_version": "v2 - aligné sur référentiels officiels (palette_fils_broderie, palette_supports_vetements, assets_produits). Les codes YP-xxx inventés et les IDs awdis_jhxxx ont été remplacés. La logique 'couleurs_recommandees/deconseilees' est remplacée par 'couleurs_iconiques_brand' (pilotage shooting) + 'combinaisons_iconiques_brand' (visuels hero). Les règles de contraste sont externalisées dans regles_combinaisons_shooting.json."
+  },
+
+  "identite": {
+    "code": "YPM-001",
+    "nom_commercial": "La Brigitte",
+    "famille": "Cœurs",
+    "snippet_liquid": "perso-minimal",
+    "rang_catalogue": 1,
+    "statut": "best-seller",
+    "tagline": "Un cœur, une initiale. C'est tout, c'est assez.",
+    "description_courte": "Minimaliste. Puissant. Un cœur brodé et ton initiale — c'est tout, c'est assez.",
+    "description_longue": "La Brigitte est le motif fondateur d'Ypersoa. Un cœur brodé net et dense, surmontant une initiale en typographie serif. Rien de plus. C'est le motif qui dit l'essentiel sans bavardage — une déclaration silencieuse, un signe de reconnaissance entre ceux qui comptent."
+  },
+
+  "visuel_motif": {
+    "composition": "Cœur plein brodé + une lettre majuscule serif en dessous, alignement vertical centré",
+    "taille_motif_cm": {
+      "largeur": 4.5,
+      "hauteur": 6.0,
+      "plage_acceptable": "2 à 4 cm (adaptée à la lettre)"
+    },
+    "placement_standard": "poitrine_gauche",
+    "placements_autorises": ["poitrine_gauche", "poignet_gauche", "dos_centre_haut"],
+    "placements_interdits": ["poitrine_centre", "dos_plein", "manche_longue"],
+    "typographie_initiale": "serif",
+    "densite_broderie": "pleine",
+    "style_coeur": "plein_classique",
+    "fichier_png_reference": "ypm_001_brigitte_motif.png",
+    "fichier_dst": "ypm_001_brigitte.dst"
+  },
+
+  "palette_autorisee": {
+    "systeme": "20 couleurs officielles Ypersoa (référentiel palette_fils_broderie.json)",
+    "nb_couleurs_motif": 1,
+    "notes": "Le cœur et l'initiale prennent la MÊME couleur (solidaires). 1 seule couleur de fil par commande.",
+
+    "toutes_couleurs_client": true,
+    "commentaire_client": "Le configurateur Shopify présente les 20 couleurs de fils sans aucune restriction. Le client choisit librement.",
+
+    "couleurs_iconiques_brand": [
+      {
+        "fil_id": "fil_vert_jade",
+        "usage": "iconique_masculin_feminin_toute_saison",
+        "priorite": 1
+      },
+      {
+        "fil_id": "fil_ivoire",
+        "usage": "iconique_sur_supports_fonces_marine_noir",
+        "priorite": 2
+      },
+      {
+        "fil_id": "fil_noir",
+        "usage": "polyvalent_puissant_supports_clairs",
+        "priorite": 3
+      },
+      {
+        "fil_id": "fil_rouge",
+        "usage": "saint_valentin_fete_des_meres",
+        "priorite": 4
+      },
+      {
+        "fil_id": "fil_terracotta",
+        "usage": "supports_blancs_zoodie_hero",
+        "priorite": 5
+      },
+      {
+        "fil_id": "fil_canard",
+        "usage": "tons_terreux_sages_vu_configurateur",
+        "priorite": 6
+      }
+    ],
+
+    "regles_contraste_shooting": {
+      "reference_externe": "referentiels/regles_combinaisons_shooting.json",
+      "override_specifique_motif": null,
+      "commentaire": "Brigitte suit les règles universelles de contraste support/fil. Pas d'override spécifique."
+    }
+  },
+
+  "combinaisons_iconiques_brand": [
+    {
+      "nom": "Sweat adulte marine + cœur ivoire",
+      "support_id": "YP005",
+      "support_couleur": "marine",
+      "fil_id": "fil_ivoire",
+      "placement": "poitrine_gauche",
+      "usage": "hero_catalogue_sweat_adulte",
+      "prix_ttc": 49,
+      "casting_associe": "duo_femmes_complicite_sobre"
+    },
+    {
+      "nom": "Hoodie enfant beige + cœur vert jade",
+      "support_id": "YP004",
+      "support_couleur": "beige",
+      "fil_id": "fil_vert_jade",
+      "placement": "poitrine_gauche",
+      "usage": "hero_catalogue_hoodie_enfant",
+      "prix_ttc": 39,
+      "casting_associe": "maman_enfant_lien_tendre"
+    },
+    {
+      "nom": "Zoodie blanc + cœur terracotta",
+      "support_id": "YP021",
+      "support_couleur": "blanc",
+      "fil_id": "fil_terracotta",
+      "placement": "poitrine_gauche",
+      "usage": "hero_catalogue_zoodie",
+      "prix_ttc": 69,
+      "casting_associe": "femme_seule_serre_botanique"
+    },
+    {
+      "nom": "T-shirt marine + cœur ivoire",
+      "support_id": "YP019",
+      "support_couleur": "marine",
+      "fil_id": "fil_ivoire",
+      "placement": "poitrine_gauche",
+      "usage": "hero_catalogue_tshirt",
+      "prix_ttc": 29,
+      "casting_associe": "packshot_produit_seul"
+    }
+  ],
+
+  "personnalisation": {
+    "champs": [
+      {
+        "id": "initiale",
+        "label": "Initiale",
+        "type": "text",
+        "max_chars": 1,
+        "validation_regex": "^[A-Z]$",
+        "casse": "majuscule_auto",
+        "obligatoire": true,
+        "defaut": null,
+        "aide": "1 lettre majuscule — prend la couleur du cœur"
+      },
+      {
+        "id": "couleur_fil",
+        "label": "Couleur du fil",
+        "type": "color_picker",
+        "source_options": "referentiels/palette_fils_broderie.json",
+        "obligatoire": true,
+        "defaut": "fil_vert_jade",
+        "aide": "Le cœur et l'initiale sont brodés dans la même couleur (solidaires)"
+      }
+    ],
+    "add_ons_compatibles": ["ypersoa-poignet-addon"]
+  },
+
+  "supports_compatibles": {
+    "YP001": {
+      "nom": "Hoodie adulte",
+      "compatible": true,
+      "iconique": true,
+      "placements_valides": ["poitrine_gauche", "poignet_gauche"],
+      "couleurs_support_recommandees": ["beige", "pierre_naturelle", "marine", "vert_sauge"],
+      "note": "Support iconique du motif, celui des premiers shootings Brigitte"
+    },
+    "YP004": {
+      "nom": "Hoodie enfant",
+      "compatible": true,
+      "iconique": true,
+      "placements_valides": ["poitrine_gauche"],
+      "couleurs_support_recommandees": ["beige", "pierre_naturelle", "marine"],
+      "note": "Idéal pour duo parent-enfant (voir combinaison iconique)"
+    },
+    "YP005": {
+      "nom": "Sweat adulte",
+      "compatible": true,
+      "iconique": true,
+      "placements_valides": ["poitrine_gauche", "poignet_gauche"],
+      "couleurs_support_recommandees": ["marine", "beige", "vert_sauge", "noir"],
+      "note": "Visuel hero catalogue (marine + ivoire)"
+    },
+    "YP019": {
+      "nom": "T-shirt adulte",
+      "compatible": true,
+      "iconique": false,
+      "placements_valides": ["poitrine_gauche"],
+      "couleurs_support_recommandees": ["marine", "blanc", "beige", "noir"],
+      "note": "Version été du motif, pas de poignet car manches courtes"
+    },
+    "YP021": {
+      "nom": "Zoodie (sweat zippé)",
+      "compatible": true,
+      "iconique": true,
+      "placements_valides": ["poitrine_gauche"],
+      "couleurs_support_recommandees": ["blanc", "beige", "marine"],
+      "note": "Visuel hero catalogue (blanc + terracotta)"
+    }
+  },
+
+  "univers_semantique": {
+    "mots_cles_positifs": [
+      "minimaliste", "essentiel", "intime", "signé", "sobre",
+      "élégant", "discret", "intemporel", "silencieux", "reconnaissance",
+      "lien", "pudeur", "évidence", "épure"
+    ],
+    "angles_narratifs": [
+      "le cadeau qu'on offre sans en dire trop",
+      "la discrétion comme forme d'élégance",
+      "le lien qui n'a pas besoin d'être crié",
+      "le luxe du moins, du juste assez",
+      "un signe de reconnaissance entre deux personnes",
+      "le motif qui traverse les saisons et les modes"
+    ],
+    "occasions_pertinentes": [
+      "saint_valentin",
+      "fete_des_meres",
+      "fete_des_peres",
+      "anniversaire",
+      "couple",
+      "famille",
+      "amitie_forte",
+      "cadeau_soi",
+      "noel"
+    ],
+    "occasions_non_pertinentes": [
+      "naissance",
+      "bapteme",
+      "evjf",
+      "graduation"
+    ],
+    "profils_clientes": [
+      "femme 30-50 qui cherche un cadeau discret et chargé de sens",
+      "homme qui offre à sa compagne (Saint-Valentin, Fête des Mères)",
+      "mère qui s'offre quelque chose à son nom",
+      "couple qui cherche un duo sweat/hoodie avec leurs initiales",
+      "parent qui offre à son enfant (hoodie enfant beige + vert jade)"
+    ]
+  },
+
+  "charte_editoriale_motif": {
+    "obligatoires": [
+      "tutoiement systematique",
+      "parler du motif comme d'un objet deja pose (pas du process de fabrication)",
+      "nommer Ypersoa comme studio, pas comme marque artisanale",
+      "mentionner brode sur metier Tajima uniquement si contexte technique"
+    ],
+    "interdits_absolus": [
+      "brode a la main",
+      "fait main",
+      "artisanal",
+      "vouvoiement (vous, votre, offrez, decouvrez)",
+      "references Etsy ou marketplace",
+      "soin",
+      "amour de mere (trop kitsch pour Brigitte)",
+      "cadeau unique (formule creuse)",
+      "broderie personnalisee (trop generique)"
+    ],
+    "formulations_signatures": [
+      "Un coeur, une initiale. C'est tout, c'est assez.",
+      "Brode sur metier Tajima, dans notre atelier du Nord.",
+      "Le motif qui dit l'essentiel sans bavardage.",
+      "Pour celles et ceux qui aiment les signes discrets."
+    ],
+    "ton_autorise": ["intime", "pudique", "sobre", "poetique_minimal"],
+    "ton_interdit": ["exuberant", "publicitaire", "hallmark", "maternaliste", "commercial"]
+  },
+
+  "direction_artistique_shooting": {
+    "ambiances_recommandees": [
+      "studio_brut",
+      "aube_intime",
+      "lumiere_sepia"
+    ],
+    "ambiances_deconseilees": [
+      "echappee_sauvage",
+      "loft_organique"
+    ],
+    "cadrages_preferes": [
+      "gros_plan_broderie_1_1",
+      "plan_poitrine_porte_4_5",
+      "duo_mannequins_plein_pied_4_5"
+    ],
+    "lumiere_type": "naturelle_douce_diffuse",
+    "ambiance_emotionnelle": "calme_et_delicat",
+    "mannequins_type": [
+      "femme 30-45 cheveux chatains mi-longs peau claire ou matifiee",
+      "homme 30-45 cheveux courts barbe discrete",
+      "duo couple complicite sobre pas de demonstration",
+      "duo femmes complicite amicale (vu en hero sweat marine)",
+      "duo maman-enfant lien tendre (vu en hero hoodie enfant)"
+    ],
+    "poses_preferees": [
+      "main_posee_sur_coeur_brode",
+      "regard_hors_champ_pensif",
+      "duo_epaule_contre_epaule",
+      "vue_3_4_profil"
+    ],
+    "poses_interdites": [
+      "sourire_exagere",
+      "pose_publicite",
+      "gestuelle_commerciale"
+    ]
+  },
+
+  "interdits_visuels_absolus": {
+    "vetement": [
+      "embouts plastique sur cordons",
+      "oeillets metalliques visibles",
+      "zip contraste colore",
+      "logo marque autre que broderie Ypersoa",
+      "couture contrastee",
+      "effet vintage delave non demande"
+    ],
+    "broderie": [
+      "fils qui depassent",
+      "coeur asymetrique",
+      "initiale non alignee sous le coeur",
+      "plusieurs couleurs dans la broderie (Brigitte est monochrome)",
+      "effet 3D ou relief excessif"
+    ],
+    "scene": [
+      "machine Tajima sauf si plan atelier explicite",
+      "cercle a broder (tambour) visible",
+      "fils bobines en decor (trop Etsy)",
+      "toile tendue en process"
+    ]
+  },
+
+  "formats_editoriaux_types": {
+    "post_simple": {
+      "angles_proposes": [
+        "hommage_discret",
+        "declaration_silencieuse",
+        "duo_couple_initiales_entrelacees"
+      ]
+    },
+    "carrousel": {
+      "structures_types": [
+        {
+          "nom": "declinaison_couleurs",
+          "slides": ["hook_texte", "fil_vert_jade", "fil_noir", "fil_rouge", "fil_marine", "cta_configurateur"]
+        },
+        {
+          "nom": "une_histoire",
+          "slides": ["hook_citation", "gros_plan_broderie", "plan_porte_1", "plan_porte_2", "detail_initiale", "cta"]
+        }
+      ]
+    },
+    "reel_15s": {
+      "scenarios": [
+        "zoom_lent_sur_broderie_vers_plan_porte",
+        "duo_couple_revelation_initiales",
+        "epure_studio_rotation_mannequin"
+      ],
+      "rythme_musical": "calme_et_delicat",
+      "transitions": "douces_pas_de_cut_brutal"
+    },
+    "article_blog": {
+      "angles_seo": [
+        "pourquoi choisir un motif coeur brode pour la fete des meres",
+        "initiale brodee : l'art du cadeau discret",
+        "hoodie brode minimaliste : comment porter La Brigitte"
+      ],
+      "mots_cles_cibles": [
+        "hoodie brode personnalise",
+        "cadeau fete des meres brode",
+        "sweat coeur initiale",
+        "broderie minimaliste France"
+      ],
+      "mots_cles_longue_traine": [
+        "hoodie brode coeur initiale personnalisee",
+        "cadeau saint valentin brode sur mesure France"
+      ]
+    }
+  },
+
+  "assets_references": {
+    "photos_reference_produit": [
+      "SWEAT_BRODE_LA_BRIGITTE_marine_ivoire.jpg",
+      "HOODIE_ENFANT_BRODE_LA_BRIGITTE_beige_vert_jade.jpg",
+      "ZOODIE_BRODE_LA_BRIGITTE_blanc_terracotta.jpg",
+      "TSHIRT_BRODE_LA_BRIGITTE_marine_ivoire.jpg"
+    ],
+    "photos_interdites_reference": [],
+    "png_motif_source": "ypm_001_brigitte_motif_hd.png"
+  }
+}

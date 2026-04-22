@@ -1,0 +1,291 @@
+{
+  "_meta": {
+    "schema_version": "3.0",
+    "last_updated": "2026-04-21",
+    "template_status": "master_template_v3_paramétrable",
+    "notes_version": "v3.0 (2026-04-21) — REFONTE MAJEURE : Le Club devient un TEMPLATE PARAMÉTRABLE, plus un motif simple. Ajout structure 'zones_editables' (4 zones typées), 'symboles_autorises' (6 options du Liquid), 'variantes_canoniques_shopify' (5 suggestions PDP) + pointer vers référentiel 'variantes/le_club/'. Source de vérité : snippets/perso-ypm003.liquid. Typographie Arial Rounded confirmée par Sarah. v2.x conservé dans archives/ pour référence historique.",
+    "source_de_verite_primaire": "snippets/perso-ypm003.liquid (configurateur Shopify)",
+    "changelog": {
+      "v2.x": "Motif traité comme fiche unique",
+      "v3.0_2026-04-21": "Template paramétrable, 4 zones éditables, 6 symboles, palette externalisée, séparation canon Shopify / variantes éditoriales hub"
+    }
+  },
+
+  "identite": {
+    "code": "YPM-003",
+    "nom_template": "Le Club",
+    "type_template": "badge_circulaire_paramétrable",
+    "famille_broderie": "Cœurs",
+    "snippet_liquid": "perso-ypm003",
+    "rang_catalogue": 3,
+    "statut": "best-seller",
+    "tagline": "Ton club. Ton blason.",
+    "description_courte": "Un badge brodé rond — ton mot en haut, un symbole au centre, ton mot en bas. Une typographie nette, tout dans une couleur, sur le buste gauche.",
+    "description_longue": "Il y a les clubs officiels. Et il y a le tien. Le Club est un template paramétrable qui transforme deux mots de ton choix en blason brodé — mot du haut sur l'arc supérieur du cercle, symbole au centre (cœur par défaut, ou étoile, trèfle, fleur, infini, patte), mot du bas sur l'arc inférieur. Typographie Arial Rounded nette, broderie dense, une seule couleur de fil solidaire (cercle + symbole + textes).",
+    "tagline_produit_shopify": "Parfait pour créer des looks coordonnés famille, EVJF, ou squad."
+  },
+
+  "zones_editables": [
+    {
+      "id": "mot_haut",
+      "label_fr": "Mot du haut",
+      "position_broderie": "arc_supérieur_cercle",
+      "type": "text",
+      "max_chars": 7,
+      "casse": "majuscule_auto",
+      "typographie": "Arial Rounded",
+      "obligatoire": true,
+      "shopify_property_name": "Mot haut buste",
+      "suggestions_shopify_canoniques": ["MAMA", "SISTA", "TEAM", "AMOUR", "FAMILLE"],
+      "note_adriana": "Dimensions indicatives — Adriana adapte la taille à la typo et au nombre de caractères pour un rendu harmonieux."
+    },
+    {
+      "id": "mot_bas",
+      "label_fr": "Mot du bas",
+      "position_broderie": "arc_inférieur_cercle",
+      "type": "text",
+      "max_chars": 7,
+      "casse": "majuscule_auto",
+      "typographie": "Arial Rounded",
+      "obligatoire": true,
+      "shopify_property_name": "Mot bas buste",
+      "suggestions_shopify_canoniques": ["CLUB", "TEAM", "FAMILY", "2024", "FOREVER"],
+      "note_solidarite": "Même couleur que le mot du haut — cercle, cœur et textes sont solidaires (1 seule couleur fil)."
+    },
+    {
+      "id": "symbole_central",
+      "label_fr": "Symbole du badge",
+      "position_broderie": "centre_cercle",
+      "type": "enum_symboles",
+      "obligatoire": true,
+      "valeur_default": "Cœur",
+      "shopify_property_name": "Symbole buste",
+      "options_autorisees": ["Cœur", "Étoile", "Trèfle", "Fleur", "Infini", "Patte"]
+    },
+    {
+      "id": "couleur_fil",
+      "label_fr": "Couleur de fils",
+      "position_broderie": "ensemble_du_badge (cercle + symbole + 2 mots)",
+      "type": "palette_reference",
+      "source_referentiel": "referentiels/palette_fils_broderie.json",
+      "obligatoire": true,
+      "valeur_default": "Blanc",
+      "shopify_property_name": "Couleur fil buste",
+      "principe_solidarite": "S'applique à l'ensemble du badge — cercle, symbole et les deux mots prennent la même couleur"
+    }
+  ],
+
+  "symboles_autorises": {
+    "description": "6 symboles interchangeables extraits du configurateur Liquid. Par défaut tous les designs Ypersoa actuels utilisent le Cœur. Le hub peut proposer d'autres symboles selon la thématique de la variante (Patte pour Team Chiens, Trèfle pour Lucky Club, Étoile pour Star Mama, Fleur pour Bride Team, Infini pour Couple, etc.).",
+    "liste": [
+      {
+        "id": "coeur",
+        "label_fr": "Cœur",
+        "default": true,
+        "thematiques_suggérées": ["amour", "famille", "maternel", "paternel", "amitié forte"],
+        "svg_source": "perso-ypm003.liquid (path cœur)"
+      },
+      {
+        "id": "etoile",
+        "label_fr": "Étoile",
+        "default": false,
+        "thematiques_suggérées": ["admiration", "mérite", "enfant modèle", "célébration"],
+        "svg_source": "perso-ypm003.liquid (path étoile)"
+      },
+      {
+        "id": "trefle",
+        "label_fr": "Trèfle",
+        "default": false,
+        "thematiques_suggérées": ["chance", "lucky", "irlandais", "jeu", "superstition positive"],
+        "svg_source": "perso-ypm003.liquid (path trèfle 3 cercles + tige)"
+      },
+      {
+        "id": "fleur",
+        "label_fr": "Fleur",
+        "default": false,
+        "thematiques_suggérées": ["bride team", "féminin", "printemps", "bouquet mariage", "douceur"],
+        "svg_source": "perso-ypm003.liquid (path fleur 5 pétales)"
+      },
+      {
+        "id": "infini",
+        "label_fr": "Infini",
+        "default": false,
+        "thematiques_suggérées": ["couple", "amour éternel", "anniversaire mariage", "amitié indéfectible"],
+        "svg_source": "perso-ypm003.liquid (path infini)"
+      },
+      {
+        "id": "patte",
+        "label_fr": "Patte",
+        "default": false,
+        "thematiques_suggérées": ["team chiens", "team chats", "animal mom", "vétérinaire", "éleveur"],
+        "svg_source": "perso-ypm003.liquid (path patte 4 orteils + coussinet)"
+      }
+    ]
+  },
+
+  "specifications_techniques_broderie": {
+    "dimensions_cm": {
+      "hauteur_cible": "8 à 10 cm",
+      "largeur_cible": "8 à 10 cm (badge circulaire)",
+      "note_adaptation": "Adriana adapte la taille finale à la typo et au nombre de caractères pour un rendu harmonieux."
+    },
+    "placement_par_defaut": "poitrine_gauche (côté cœur)",
+    "placements_autorises": ["poitrine_gauche", "poignet_gauche (add-on +6€)"],
+    "placements_interdits": ["poitrine_centre", "dos_plein"],
+    "typographie": {
+      "nom": "Arial Rounded",
+      "style": "sans_serif_arrondi",
+      "graisse": "Bold",
+      "alignement_arc_supérieur": "texte suit la courbe interne du cercle, lisible de gauche à droite",
+      "alignement_arc_inférieur": "texte suit la courbe interne du cercle, lisible de gauche à droite (retourné pour rester lisible)"
+    },
+    "densite_broderie": "pleine (fond cercle continu + points serrés textes et symbole)",
+    "nb_couleurs_fil": 1,
+    "principe_solidarite_couleur": "cercle + symbole + 2 mots = 1 seule couleur de fil"
+  },
+
+  "add_on_poignet_compatible": {
+    "activable": true,
+    "snippet_liquid_addon": "ypersoa-poignet-addon",
+    "style_broderie_poignet": "template_libre_A_B_C_D (style YPM-002)",
+    "placement_poignet": "poignet gauche, intérieur",
+    "prix_ttc_supplement": 6,
+    "note": "L'add-on poignet n'est PAS le même template que le buste. Il utilise le système YPM-002 (2 couleurs, 3 lignes max 10 car). À ne pas confondre dans la production."
+  },
+
+  "variantes_canoniques_shopify": {
+    "description": "Les 5 suggestions pré-codées dans le configurateur Liquid pour accélérer le choix des clients les plus fréquents. Visibles sous le champ 'mot du haut' de la fiche produit Shopify. Ces suggestions touchent le volume le plus large de clients.",
+    "liste": [
+      {
+        "code_variante": "VAR-003-CANON-MAMA-CLUB",
+        "mot_haut": "MAMA",
+        "mot_bas": "CLUB",
+        "fichier_detaille": "referentiels/variantes/le_club/var_canon_mama_club.json",
+        "axes_shopify_principaux": ["Fête des Mères", "Pour Maman"]
+      },
+      {
+        "code_variante": "VAR-003-CANON-SISTA-CLUB",
+        "mot_haut": "SISTA",
+        "mot_bas": "CLUB",
+        "fichier_detaille": "referentiels/variantes/le_club/var_canon_sista_club.json",
+        "axes_shopify_principaux": ["Anniversaire", "EVJF & Mariage"]
+      },
+      {
+        "code_variante": "VAR-003-CANON-TEAM",
+        "mot_haut": "TEAM",
+        "mot_bas": "[libre]",
+        "fichier_detaille": "referentiels/variantes/le_club/var_canon_team.json",
+        "axes_shopify_principaux": ["Anniversaire", "EVJF & Mariage", "Cadeau"]
+      },
+      {
+        "code_variante": "VAR-003-CANON-AMOUR-CLUB",
+        "mot_haut": "AMOUR",
+        "mot_bas": "CLUB",
+        "fichier_detaille": "referentiels/variantes/le_club/var_canon_amour_club.json",
+        "axes_shopify_principaux": ["Anniversaire", "Couple", "EVJF & Mariage"]
+      },
+      {
+        "code_variante": "VAR-003-CANON-FAMILLE-CLUB",
+        "mot_haut": "FAMILLE",
+        "mot_bas": "CLUB",
+        "fichier_detaille": "referentiels/variantes/le_club/var_canon_famille_club.json",
+        "axes_shopify_principaux": ["Fête des Mères", "Fête des Pères", "Grands-parents", "Famille"]
+      }
+    ]
+  },
+
+  "variantes_editoriales_hub": {
+    "description": "Variantes éditoriales générées par le hub pour enrichir la narration brand sur les RS et landing pages. PAS de PDP Shopify dédiée : le client qui veut ces variantes utilise le configurateur libre (texte libre sur PDP unique Le Club). Rôle : inspirer, montrer la flexibilité du template, toucher des niches (Team Chiens, Team Mai, Bride Team...).",
+    "index_fichier": "referentiels/variantes/le_club/_index.json",
+    "exemples_connus": [
+      "VAR-003-EDITO-BRIDE-TEAM (EVJF)",
+      "VAR-003-EDITO-TEAM-MAI (anniversaire mois, cas réel client mariage mai)",
+      "VAR-003-EDITO-MAMIE-GATEAU (grands-parents)",
+      "VAR-003-EDITO-PAPI-CHERI (grands-parents)",
+      "VAR-003-EDITO-TEAM-DOG (animal, symbole Patte)",
+      "VAR-003-EDITO-TEAM-CAT (animal, symbole Patte)",
+      "VAR-003-EDITO-LUCKY-CLUB (symbole Trèfle)",
+      "VAR-003-EDITO-STAR-MAMA (symbole Étoile)",
+      "VAR-003-EDITO-TATA-COOL (famille élargie)",
+      "VAR-003-EDITO-TONTON-STYLE (famille élargie)"
+    ],
+    "note_scalabilite": "À terme 20-40 variantes éditoriales par template, générées par le hub selon axes Shopify et saison. Cible 150 nouveaux motifs (templates + variantes) par an."
+  },
+
+  "supports_compatibles": {
+    "YP001": { "nom": "Hoodie adulte", "compatible": true, "iconique": true, "placements_valides": ["poitrine_gauche", "poignet_gauche"] },
+    "YP004": { "nom": "Hoodie enfant", "compatible": true, "iconique": true, "placements_valides": ["poitrine_gauche"] },
+    "YP005": { "nom": "Sweat adulte", "compatible": true, "iconique": true, "placements_valides": ["poitrine_gauche", "poignet_gauche"] },
+    "YP019": { "nom": "T-shirt adulte", "compatible": true, "iconique": true, "placements_valides": ["poitrine_gauche"] },
+    "YP021": { "nom": "Zoodie", "compatible": true, "iconique": false, "placements_valides": ["poitrine_gauche"] }
+  },
+
+  "univers_semantique_template": {
+    "description": "Registre sémantique du template en tant que FORME (badge-blason), indépendamment des variantes. Chaque variante surcharge avec ses propres angles.",
+    "mots_cles_forme": ["badge", "blason", "club", "team", "appartenance", "coordonné", "tribe", "squad", "collectif"],
+    "angles_narratifs_forme": [
+      "l'appartenance qui se porte",
+      "le signe de reconnaissance du clan",
+      "se dire 'on est ensemble' sans le dire",
+      "le blason moderne, brodé",
+      "le club privé qu'on crée nous-même"
+    ],
+    "occasions_forme": [
+      "moments_collectifs",
+      "célébrations_groupe",
+      "transmission_famille",
+      "evjf_enterrement_vie",
+      "cadeaux_coordonnes"
+    ]
+  },
+
+  "charte_editoriale_template": {
+    "obligatoires": [
+      "tutoiement systématique",
+      "nommer 'badge' ou 'blason' (pas 'logo' ni 'écusson')",
+      "mentionner 'solidaires' pour décrire l'unité cercle + symbole + textes",
+      "parler du motif comme d'un objet déjà posé (pas du process)",
+      "mentionner brodé sur métier Tajima uniquement si contexte technique atelier"
+    ],
+    "interdits_absolus": [
+      "brodé à la main",
+      "fait main",
+      "artisanal",
+      "vouvoiement",
+      "references Etsy ou marketplace",
+      "broderie personnalisée (trop générique)",
+      "écusson (pas le bon registre)",
+      "logo (industriel/corporate)"
+    ],
+    "formulations_signatures": [
+      "Ton club. Ton blason.",
+      "Deux mots, un symbole, une couleur. C'est le tien.",
+      "Il y a les clubs officiels. Et il y a le tien.",
+      "Brodé sur métier Tajima, dans notre atelier du Nord."
+    ],
+    "ton_autorise": ["complice", "inclusif", "joueur", "fédérateur", "sobre"],
+    "ton_interdit": ["corporate", "hallmark", "publicitaire", "exclusif_snob"]
+  },
+
+  "liens_systeme": {
+    "palette_fils": "referentiels/palette_fils_broderie.json",
+    "palette_supports": "referentiels/palette_supports_vetements.json",
+    "variantes_index": "referentiels/variantes/le_club/_index.json",
+    "axes_shopify": "referentiels/axes_shopify.json",
+    "schema_variante": "referentiels/variantes/schema_variante_complete.json",
+    "direction_artistique_hero": "referentiels/shooting/direction_artistique_hero.json",
+    "snippet_liquid_source_de_verite": "snippets/perso-ypm003.liquid"
+  },
+
+  "assets_references": {
+    "pngs_variantes_existantes": [
+      "YPM-003-CLUB.PNG (template neutre)",
+      "YPM-003-CLUBv2.png",
+      "YPM-003-CLUB-famille_club.PNG (Famille Club marine)",
+      "YPM-003-CLUB-sista.PNG (Sista Club rose)",
+      "YPM-003-Club_Amour_PXF.PNG (Amour Club rose)",
+      "YPM-003-Club_Bride.PNG (Bride Team rose)"
+    ],
+    "_note_team_mai": "Team Mai existe en production (cas client réel), PNG à archiver."
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "last_updated": "2026-04-21",
+    "nom": "schema_variante_complete",
+    "description": "Schéma structurant d'une variante de template Ypersoa. Une variante = le livrable complet d'une agence de 10 personnes pour un produit donné. Ce schéma définit TOUTES les sections que chaque variante doit contenir pour être exploitable par le hub et déployable sur Shopify + RS + landing pages.",
+    "note_critique": "Ce fichier est le CONTRAT entre le hub et les variantes. Tout nouveau moteur (shooting, carrousel, reel, posts...) lit ce schéma pour savoir où injecter sa production. Toute modification du schéma impacte TOUTES les variantes.",
+
+    "modules_agence_couverts": [
+      "Identité + paramètres techniques (zones remplies, symbole, fils)",
+      "Copywriter produit Shopify (fiche PDP : titre SEO, méta, description, bullets, tags)",
+      "Directeur artistique + Styliste shooting (pack 8 shots avec casting, ambiance, mannequins)",
+      "Designer carrousel IG (10 slides storytelling)",
+      "Video editor / Reels (script + storyboard 15-25s)",
+      "Community manager (3-5 posts récurrents variés)",
+      "Editorial / hooks (accroches virales)",
+      "Sondages / stories (engagement)",
+      "Tags RS (hashtags par plateforme)"
+    ],
+
+    "modules_agence_non_inclus_ce_schema": [
+      "Content strategist calendrier (transverse, géré au niveau hub pas variante)",
+      "Marketing saisonnier (transverse, géré via axes_shopify.campagnes_saisonnieres)"
+    ]
+  },
+
+  "_type_schema": "contrat_structure_variante",
+  "_usage": "Ce fichier définit la FORME attendue. Les fichiers var_*.json concrets (var_mama_club.json, var_team_dog.json, etc.) instancient ce schéma avec des valeurs réelles.",
+
+  "schema_variante": {
+
+    "identite": {
+      "_required": true,
+      "_description": "Identification de la variante dans le système Ypersoa.",
+      "code_variante": "STRING — Format : VAR-[code_template_sans_YPM]-[CANON|EDITO]-[SLUG-DESCRIPTIF]. Ex: VAR-003-CANON-MAMA-CLUB, VAR-003-EDITO-TEAM-DOG",
+      "nom_commercial": "STRING — Nom humain lisible. Ex: 'Mama Club', 'Team Dog'",
+      "template_parent": "STRING — Code du template parent. Ex: YPM-003",
+      "template_parent_fichier": "STRING — Chemin vers fichier template. Ex: referentiels/motifs/ypm_003_le_club.json",
+      "type_variante": "ENUM — 'canonique_shopify' (suggérée dans configurateur PDP) | 'editoriale_hub' (générée par hub pour RS/landing)",
+      "statut": "ENUM — 'production' | 'draft' | 'archivee' | 'test'",
+      "date_creation": "ISO DATE",
+      "date_derniere_maj": "ISO DATE",
+      "auteur": "STRING — 'canon_shopify' | 'hub_ia' | 'sarah' | 'client_[prénom]'",
+      "tagline_variante": "STRING — Une phrase qui capture l'essence de cette variante. Ex: 'Le badge officiel des mamans complices'"
+    },
+
+    "parametres_techniques_broderie": {
+      "_required": true,
+      "_description": "Valeurs des zones éditables du template parent. Le hub utilise ces paramètres pour générer preview SVG + brief production Adriana.",
+      "zones_remplies": {
+        "mot_haut": "STRING — Mot du haut (max 7 car selon template Le Club)",
+        "mot_bas": "STRING — Mot du bas (max 7 car)",
+        "symbole": "ENUM — Cœur | Étoile | Trèfle | Fleur | Infini | Patte (selon symboles_autorises du template)",
+        "couleur_fil_default_suggestion": "STRING — fil_id de palette_fils_broderie.json, couleur la plus emblématique pour cette variante (ex: fil_marine pour Famille Club, fil_rose pour Sista Club). Le client final reste libre sur les 20 fils."
+      },
+      "fils_recommandes_hero": {
+        "_description": "3-5 couleurs de fil les plus iconiques pour cette variante, utilisées en priorité sur le shooting photo et les contenus RS.",
+        "type": "ARRAY de fil_id",
+        "exemple": ["fil_marine", "fil_ivoire", "fil_terracotta"]
+      },
+      "brief_adriana_production": {
+        "_description": "Brief textuel à transmettre à Adriana pour la numérisation de la broderie (DST). Adriana ajuste la taille selon caractères.",
+        "texte": "STRING — Ex: 'Badge YPM-003 Le Club. Mot haut: MAMA (4 car). Mot bas: CLUB (4 car). Symbole: Cœur. Dimensions cibles 8-10cm. Typographie Arial Rounded. 1 couleur fil solidaire. Format PDP hoodie/sweat/t-shirt.'"
+      }
+    },
+
+    "positionnement_marche": {
+      "_required": true,
+      "_description": "Positionnement commercial et narratif de la variante. Utilisé par tous les modules contenu pour adapter le ton.",
+      "axes_shopify_principal": "STRING — ID de axes_shopify.json (1 seul axe principal). Ex: 'axe_cadeau_fete_des_meres'",
+      "axes_shopify_secondaires": "ARRAY STRING — 1 à 3 axes secondaires. Ex: ['axe_cadeau_pour_maman', 'axe_broderies_coeurs']",
+      "cible_cliente": {
+        "_description": "Profil de la cliente-type qui achète OU qui reçoit cette variante.",
+        "age_tranche": "STRING — Ex: '25-40 ans'",
+        "genre": "STRING — Ex: 'majoritairement féminin'",
+        "situation_vie": "STRING — Ex: 'mère de jeunes enfants', 'témoin EVJF', 'jeune couple'",
+        "pouvoir_achat": "ENUM — 'premium_accessible' | 'premium' | 'luxe_democratique'",
+        "sensibilites": "ARRAY STRING — Ex: ['émotion transmise', 'élégance discrète', 'humour bienveillant']"
+      },
+      "occasions_offre": "ARRAY STRING — Moments où ce cadeau s'offre. Ex: ['Fête des Mères', 'anniversaire maman', 'naissance bébé avec hommage à la maman']",
+      "saisonnalite": "ENUM — 'evergreen' | 'saison_pic_[mois]' | 'evenement_ponctuel'"
+    },
+
+    "module_1_fiche_shopify": {
+      "_required": true,
+      "_description": "Module 'Copywriter produit Shopify'. Produit toutes les données nécessaires à créer OU enrichir la PDP. Pour les variantes canoniques, alimente la fiche unique du template. Pour les éditoriales, alimente landing pages/articles dédiés.",
+      "application_sur_shopify": "ENUM — 'enrichit_fiche_template_unique' (canon) | 'landing_page_dediee' (edito) | 'article_blog_dedie' (edito)",
+
+      "titre_seo": {
+        "_description": "Titre SEO 50-60 caractères.",
+        "texte": "STRING",
+        "contraintes": "50 à 60 car, mot-clé principal en tête, nom brand en fin si place"
+      },
+      "meta_description": {
+        "_description": "Meta description 140-160 caractères.",
+        "texte": "STRING"
+      },
+      "description_produit_longue": {
+        "_description": "Description markdown affichée sur la PDP sous le configurateur.",
+        "texte": "STRING (markdown OK — titres H2/H3, bullets, italique)",
+        "structure_recommandee": [
+          "Hook émotionnel (2-3 phrases)",
+          "Description motif / usage (1 paragraphe)",
+          "Liste bullets specs (motif, placement, dimensions, couleurs)",
+          "Phrase signature brand (ex: 'Brodé sur métier Tajima, dans notre atelier du Nord')",
+          "CTA inspiration cadeau (1 phrase)"
+        ]
+      },
+      "bullet_points_specs": {
+        "_description": "Liste puces courtes pour lisibilité mobile.",
+        "type": "ARRAY STRING",
+        "exemples": ["Motif : badge rond · cercle + cœur + 2 mots · 1 couleur · 8 à 10 cm", "Mot haut : MAMA (ou texte libre max 7 car)", "Mot bas : CLUB (ou texte libre max 7 car)", "Placement : buste gauche", "20 couleurs de fil disponibles"]
+      },
+      "tags_shopify_collections": {
+        "_description": "Tags pour alimenter les collections Shopify automatiques (smart collections).",
+        "type": "ARRAY STRING",
+        "exemples": ["fete-des-meres", "pour-maman", "coeurs", "bestseller", "club-mama"]
+      },
+      "url_handle_suggere": "STRING — Slug URL. Ex: 'mama-club' pour /products/mama-club (uniquement pour éditoriales avec landing)",
+      "alt_texts_images": {
+        "_description": "Textes alternatifs des images PDP pour SEO + accessibilité.",
+        "type": "ARRAY STRING",
+        "exemples": ["Sweat marine brodé badge Mama Club fil ivoire", "Gros plan broderie badge cercle Mama Club"]
+      }
+    },
+
+    "module_2_shooting_pack": {
+      "_required": true,
+      "_description": "Module 'Directeur artistique + Styliste shooting'. Produit le pack de 8 shots Gemini prêts à lancer. Applique D1_BEAUTE_INCARNEE v2.0 + casting 21 + règles distribution.",
+      "reference_direction_artistique": "referentiels/shooting/direction_artistique_hero.json",
+      "reference_casting": "referentiels/shooting/mannequins_recurrents.json",
+      "reference_types_de_shots": "referentiels/shooting/types_de_shots.json",
+
+      "pack_structure": "ENUM — 'pack_standard_6_shots' | 'pack_hero_famille_8_shots'",
+
+      "shots": {
+        "_description": "Tableau de 6 à 8 shots. Chacun est une carte 'Shooter' prête à être lancée dans Studio Photo (Gemini).",
+        "type": "ARRAY d'objets shot",
+        "structure_shot": {
+          "code_shot": "STRING — Ex: 'VAR-003-MAMA-CLUB-S01'",
+          "titre_humain": "STRING — Ex: 'Camille contemplative canapé Loft Organique'",
+          "type_de_shot": "ENUM — ghost | crop_poitrine | lifestyle_studio | lifestyle_outdoor | macro_broderie | duo_couple | famille_vivante",
+          "ambiance": "ENUM — studio_brut | loft_organique | aube_intime | echappee_sauvage | lumiere_sepia",
+          "mannequins_assignes": "ARRAY — IDs du casting (ex: ['MAN-P01 Camille', 'DUO_BEATRICE_FELICIE'])",
+          "support_produit": {
+            "produit_id": "STRING — YP001|YP004|YP005|YP019|YP021",
+            "couleur_support": "STRING — nom couleur support (ex: 'marine', 'beige naturel')"
+          },
+          "fil_broderie": "STRING — fil_id de palette_fils_broderie.json",
+          "pilier_contenu": "ENUM — P1_process | P2_emotion | P3_produit | P4_preuve",
+          "aspect_ratio": "ENUM — '1:1' | '3:4' | '4:5' | '4:3' | '16:9' | '9:16'",
+          "prompt_en_complet": "STRING — Prompt Gemini complet EN avec suffix universel v2.0 appliqué. Inclut description mannequin détaillée (D1 beauté incarnée), support produit, placement motif LEFT CHEST, ambiance, lumière, objectif, esthétique Emoi Emoi/Make My Lemonade",
+          "override_motif_applique": "STRING | null — ID override si applicable (ex: 'OVERRIDE_BRIGITTE_CONTEMPLATIF' pour Brigitte)",
+          "notes_styliste": "STRING — Notes additionnelles pour le photographe IA (gestures, détails)"
+        }
+      },
+
+      "rotation_cyclique_duo_position": "ENUM — parent_enfant | grand_parent_parent | adultes_amis | couple (pour tracker la rotation sur les packs consécutifs)"
+    },
+
+    "module_3_carrousel_ig_10slides": {
+      "_required": true,
+      "_description": "Module 'Designer carrousel'. Produit un carrousel Instagram 10 slides storytelling. Chaque slide = 1 visuel + 1 texte court.",
+      "format": "10 slides carrées 1:1",
+      "objectif_engagement": "ENUM — save (sauvegarde) | share (partage) | comment (conversation) | click (traffic)",
+
+      "structure_narrative": {
+        "_description": "Structure recommandée 10 slides, adaptable.",
+        "slide_01_hook": "STRING — Accroche visuelle + texte court qui fait stopper le scroll",
+        "slide_02_probleme_ou_insight": "STRING — Énonce un insight émotionnel",
+        "slides_03_07_developpement": "ARRAY STRING — 5 slides qui déroulent l'histoire, les cas d'usage, les combinaisons",
+        "slide_08_preuve": "STRING — Preuve sociale OU detail savoir-faire",
+        "slide_09_offre": "STRING — Produit en contexte avec prix/CTA léger",
+        "slide_10_cta_final": "STRING — CTA clair (lien bio, question, swipe up)"
+      },
+
+      "slides_detaillees": {
+        "type": "ARRAY de 10 objets",
+        "structure_slide": {
+          "numero": "INT 1-10",
+          "titre_slide": "STRING — Titre court",
+          "texte_slide": "STRING — 10 à 30 mots max",
+          "visuel_suggere": "STRING — Référence shot du shooting_pack (ex: 'S01') OU description visuelle autre",
+          "notes_design": "STRING — Hiérarchie typo, emplacement texte"
+        }
+      },
+
+      "hashtags_suggeres": "ARRAY STRING — 10-15 hashtags mix grande audience + niche"
+    },
+
+    "module_4_reel_20s": {
+      "_required": true,
+      "_description": "Module 'Video editor / Reels'. Script + storyboard Reel 15-25s. Format vertical 9:16.",
+      "duree_cible_secondes": "INT — 15 à 25",
+      "format": "9:16 vertical",
+
+      "hook_3_premieres_secondes": {
+        "_description": "Les 3 premières secondes sont critiques pour retenir.",
+        "texte_hook": "STRING — Texte punchline",
+        "visuel_hook": "STRING — Description visuel 3 premières secondes",
+        "son_hook": "ENUM — 'trending_audio' | 'voix_off_sarah' | 'silence_textuel' | 'musique_douce'"
+      },
+
+      "storyboard": {
+        "_description": "Plan shot-by-shot du Reel.",
+        "type": "ARRAY de shots_reel",
+        "structure_shot_reel": {
+          "t_start": "FLOAT — seconde de début",
+          "t_end": "FLOAT — seconde de fin",
+          "description_visuelle": "STRING",
+          "texte_incruste": "STRING",
+          "transition_vers_shot_suivant": "STRING"
+        }
+      },
+
+      "son_musique": {
+        "type_son": "ENUM — 'trending' | 'original_voix_off' | 'licensed'",
+        "suggestions_trending": "ARRAY STRING — Références sons TikTok/IG tendances",
+        "voix_off_script": "STRING | null"
+      },
+
+      "cta_fin": "STRING — CTA incrusté dernier shot",
+      "hashtags_reel": "ARRAY STRING"
+    },
+
+    "module_5_posts_recurrents": {
+      "_required": true,
+      "_description": "Module 'Community manager'. 3 à 5 posts Instagram/TikTok/Facebook variés, réutilisables dans le calendrier éditorial.",
+      "type": "ARRAY de 3 à 5 posts",
+      "structure_post": {
+        "code_post": "STRING — Ex: 'VAR-003-MAMA-CLUB-P01'",
+        "angle_narratif": "ENUM — 'avant_apres' | 'coulisses_atelier' | 'temoignage_client' | 'question_communaute' | 'produit_en_contexte' | 'humour_bienveillant' | 'emotion_pure'",
+        "pilier_contenu": "ENUM — P1_process | P2_emotion | P3_produit | P4_preuve",
+        "plateformes_cibles": "ARRAY — 'instagram' | 'facebook' | 'tiktok' | 'pinterest'",
+        "visuel_suggere": "STRING — Référence shot du shooting_pack OU description",
+        "texte_caption": "STRING — Caption complet (100-300 mots selon plateforme)",
+        "hashtags": "ARRAY STRING",
+        "cta": "STRING",
+        "moment_publication_recommande": "STRING — Ex: 'J-10 avant Fête des Mères, 19h mardi'"
+      }
+    },
+
+    "module_6_hooks_editoriaux": {
+      "_required": true,
+      "_description": "Module 'Editorial / hooks'. Banque d'accroches virales réutilisables pour Reels, posts, blog, emails.",
+      "type": "ARRAY de 8-15 hooks",
+      "categories_hooks": [
+        "hook_emotionnel (provoque empathie)",
+        "hook_question_ouverte (engage conversation)",
+        "hook_revelation (surprise / insight)",
+        "hook_humour (décalé)",
+        "hook_preuve_sociale (nombre de clientes, témoignage)",
+        "hook_contexte_saisonnier (ancre dans actu / saison)"
+      ],
+      "structure_hook": {
+        "texte": "STRING",
+        "categorie": "ENUM voir categories_hooks",
+        "usages_recommandes": "ARRAY — 'reel_opening' | 'post_titre' | 'story_sondage' | 'email_subject' | 'blog_intro'"
+      }
+    },
+
+    "module_7_sondages_stories": {
+      "_required": false,
+      "_description": "Module 'Community manager — engagement stories'. Idées de sondages/quiz/questions pour stories Instagram. Engage la communauté.",
+      "type": "ARRAY de 3-5 sondages",
+      "structure_sondage": {
+        "type_interaction": "ENUM — 'sondage_2_choix' | 'quiz_4_choix' | 'question_ouverte' | 'curseur_emoji' | 'countdown'",
+        "question": "STRING",
+        "options": "ARRAY STRING | null",
+        "suivi_editorial": "STRING — Ce qu'on fait avec les réponses (post suivi, reveal, etc.)"
+      }
+    },
+
+    "module_8_tags_rs_par_plateforme": {
+      "_required": true,
+      "_description": "Banques de hashtags organisées par plateforme, avec mix audience large + niche.",
+      "instagram": {
+        "hashtags_large_audience": "ARRAY STRING — 500k+ posts (ex: #fetedesmeres #cadeaumaman)",
+        "hashtags_moyen": "ARRAY STRING — 50k-500k posts (ex: #brodeuse #broderiefrance)",
+        "hashtags_niche": "ARRAY STRING — <50k posts, très qualifiés (ex: #broderiesurmesure #ypersoa)",
+        "combinaison_recommandee": "STRING — Recommandation nb total + répartition"
+      },
+      "tiktok": {
+        "hashtags_viraux": "ARRAY STRING",
+        "hashtags_niche_fr": "ARRAY STRING"
+      },
+      "pinterest": {
+        "mots_cles_seo": "ARRAY STRING",
+        "categories_pinterest": "ARRAY STRING"
+      },
+      "facebook": {
+        "hashtags": "ARRAY STRING",
+        "groupes_partage_suggeres": "ARRAY STRING"
+      }
+    },
+
+    "notes_internes": {
+      "_required": false,
+      "_description": "Notes pour Sarah / Maï / équipe, pas destinées au client final.",
+      "contexte_creation": "STRING — Pourquoi cette variante a été créée (ex: 'Demande client mariage mai 2026')",
+      "performances_attendues": "STRING — Volume de ventes attendu, ciblage publicitaire",
+      "risques_brand": "STRING — Points de vigilance (ex: 'Ne pas sur-promouvoir en dehors période EVJF')",
+      "todos": "ARRAY STRING"
+    }
+  },
+
+  "liens_systeme": {
+    "templates_parents": "referentiels/motifs/ypm_XXX.json",
+    "axes_shopify": "referentiels/axes_shopify.json",
+    "palette_fils": "referentiels/palette_fils_broderie.json",
+    "direction_artistique": "referentiels/shooting/direction_artistique_hero.json",
+    "casting_mannequins": "referentiels/shooting/mannequins_recurrents.json",
+    "types_de_shots": "referentiels/shooting/types_de_shots.json",
+    "prompts_library": "referentiels/shooting/prompts_library.json",
+    "charte_editoriale": "referentiels/charte_editoriale.json"
+  },
+
+  "validation_variante_checklist": [
+    "✓ identite.code_variante respecte format VAR-XXX-CANON|EDITO-SLUG",
+    "✓ parametres_techniques_broderie.zones_remplies cohérents avec template parent",
+    "✓ positionnement_marche.axes_shopify_principal existe dans axes_shopify.json",
+    "✓ module_2_shooting_pack a 6 ou 8 shots selon pack_structure",
+    "✓ module_2_shooting_pack.shots tous avec prompt_en_complet contenant suffix v2.0 beauté incarnée",
+    "✓ module_2 mannequins_assignes sont des IDs valides du casting 21",
+    "✓ module_3_carrousel_ig a 10 slides",
+    "✓ module_4_reel hook dans les 3 premières secondes",
+    "✓ module_5_posts au moins 3 posts avec angles_narratifs différents",
+    "✓ module_6_hooks au moins 8 hooks avec catégories variées",
+    "✓ module_8_tags_rs au moins Instagram rempli"
+  ]
+}

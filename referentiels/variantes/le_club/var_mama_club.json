@@ -1,0 +1,366 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "conforme_schema": "referentiels/variantes/schema_variante_complete.json v1.0",
+    "niveau_remplissage": "SQUELETTE_COMPLET + module_2_shooting_pack détaillé à 80%",
+    "note_statut": "GOLDEN_STANDARD — cette variante sert de référence format pour toutes les futures variantes générées par le hub. Les modules 3-8 sont en esquisse pour valider le format ; ils seront complétés quand les moteurs correspondants tourneront (Phase 3).",
+    "last_updated": "2026-04-21"
+  },
+
+  "identite": {
+    "code_variante": "VAR-003-CANON-MAMA-CLUB",
+    "nom_commercial": "Mama Club",
+    "template_parent": "YPM-003",
+    "template_parent_fichier": "referentiels/motifs/ypm_003_le_club.json",
+    "type_variante": "canonique_shopify",
+    "statut": "production",
+    "date_creation": "2025-06-15",
+    "date_derniere_maj": "2026-04-21",
+    "auteur": "canon_shopify",
+    "tagline_variante": "Le badge officiel des mamans du quotidien. Le tien, en un mot."
+  },
+
+  "parametres_techniques_broderie": {
+    "zones_remplies": {
+      "mot_haut": "MAMA",
+      "mot_bas": "CLUB",
+      "symbole": "Cœur",
+      "couleur_fil_default_suggestion": "fil_marine"
+    },
+    "fils_recommandes_hero": ["fil_marine", "fil_ivoire", "fil_vert_jade", "fil_terracotta", "fil_rose_pale"],
+    "brief_adriana_production": {
+      "texte": "Badge YPM-003 Le Club. Mot haut: MAMA (4 car). Mot bas: CLUB (4 car). Symbole central: Cœur plein. Dimensions cibles 8-10cm diamètre. Typographie Arial Rounded Bold. 1 couleur fil solidaire (cercle + cœur + textes). Format PDP hoodie/sweat/t-shirt/zoodie buste gauche. Rendu typographique : les deux mots MAMA et CLUB ont 4 caractères chacun, bon équilibre visuel automatique."
+    }
+  },
+
+  "positionnement_marche": {
+    "axes_shopify_principal": "axe_cadeau_fete_des_meres",
+    "axes_shopify_secondaires": ["axe_cadeau_pour_maman", "axe_broderies_coeurs", "axe_broderies_arobase_famille", "axe_broderies_les_best"],
+    "cible_cliente": {
+      "age_tranche": "30-55 ans (acheteuse : mère de famille qui s'offre ou reçoit) · 25-45 ans (offreur : enfant adulte, conjoint)",
+      "genre": "acheteuse majoritairement féminine (65%), offreurs mixtes",
+      "situation_vie": "mère de jeunes enfants ou ados, active, cherche un signe de reconnaissance sobre qui célèbre sa maternité sans tomber dans le kitsch",
+      "pouvoir_achat": "premium_accessible",
+      "sensibilites": ["émotion transmise sans démonstration", "humour bienveillant", "qualité de fabrication", "anti-bibi-kitsch"]
+    },
+    "occasions_offre": ["Fête des Mères", "anniversaire maman", "Noël", "naissance du premier enfant (hommage à la nouvelle maman)", "retour de congé maternité"],
+    "saisonnalite": "evergreen avec pic fort Fête des Mères (mai)"
+  },
+
+  "module_1_fiche_shopify": {
+    "_statut_remplissage": "ESQUISSE_30% — à compléter par le moteur Copywriter produit (Phase 4)",
+    "application_sur_shopify": "enrichit_fiche_template_unique",
+
+    "titre_seo": {
+      "texte": "Sweat brodé Mama Club — Personnalisé Ypersoa",
+      "contraintes_respectees": "55 car — mot-clé 'Mama Club' en tête + nom brand en fin"
+    },
+    "meta_description": {
+      "texte": "Ton badge Mama Club brodé main sur métier Tajima. Deux mots, un cœur, une couleur. Sweat, hoodie, t-shirt. Atelier Nord France. Livraison 5-7j."
+    },
+    "description_produit_longue": {
+      "texte": "_[TODO Phase 4 — texte markdown complet : hook + description + bullets + phrase signature + CTA]_",
+      "_brief_redaction": "Hook : 'Il y a les clubs officiels. Et il y a le tien.' — déroulé : qu'est-ce que le Mama Club + sobriété du motif + solidarité couleur. Phrase signature 'Brodé sur métier Tajima'. CTA 'Compose ton Mama Club.'"
+    },
+    "bullet_points_specs": [
+      "Motif : badge rond · cercle + cœur + 2 mots · 1 couleur · 8 à 10 cm",
+      "Mot haut : MAMA (ou texte libre max 7 car)",
+      "Mot bas : CLUB (ou texte libre max 7 car)",
+      "Placement : buste gauche",
+      "20 couleurs de fil disponibles",
+      "Brodé sur métier Tajima dans notre atelier du Nord"
+    ],
+    "tags_shopify_collections": ["fete-des-meres", "pour-maman", "coeurs", "bestseller", "le-club", "famille"],
+    "url_handle_suggere": null,
+    "alt_texts_images": [
+      "Sweat marine brodé Mama Club fil ivoire crème Ypersoa",
+      "Gros plan broderie badge Mama Club cercle cœur",
+      "Mère et fille portant sweats assortis Mama Club"
+    ]
+  },
+
+  "module_2_shooting_pack": {
+    "_statut_remplissage": "DETAILLE_80% — ce module est le plus détaillé du golden standard pour valider la structure shot-par-shot avec prompts EN complets v2.0 beauté incarnée",
+    "reference_direction_artistique": "referentiels/shooting/direction_artistique_hero.json v2.0",
+    "reference_casting": "referentiels/shooting/mannequins_recurrents.json v3.1",
+    "reference_types_de_shots": "referentiels/shooting/types_de_shots.json v2.0",
+
+    "pack_structure": "pack_hero_famille_8_shots",
+    "rotation_cyclique_duo_position": "parent_enfant",
+
+    "shots": [
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S01",
+        "titre_humain": "Ghost packshot sweat marine fil ivoire",
+        "type_de_shot": "ghost",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "marine foncé"},
+        "fil_broderie": "fil_ivoire",
+        "pilier_contenu": "P3_produit",
+        "aspect_ratio": "1:1",
+        "prompt_en_complet": "Clean e-commerce product photography, ghost mannequin invisible display, pure white background, oversized unisex crewneck sweatshirt in deep navy blue. Embroidered circular badge design on the LEFT CHEST (not centered) — the badge shows the word 'MAMA' on the upper arc, a filled heart in the center, the word 'CLUB' on the lower arc, all in cream ivory thread, sans-serif rounded bold typography (Arial Rounded style), circle outline + heart + both words all in the same ivory color (solidarity principle). Badge diameter approximately 8-10 cm. Ribbed collar, cuffs and hem visible. Perfectly lit with soft studio lighting, no harsh shadows, true-to-color representation. Symmetrical front view. Commercial fashion packshot, high-end minimalist style similar to Maison Labiche and Colorful Standard product pages. 4K ultra detailed. --ar 1:1",
+        "override_motif_applique": null,
+        "notes_styliste": "Produit iconique hero de la PDP Mama Club. Priorité absolue sur la lisibilité du badge + fidélité couleur marine profond."
+      },
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S02",
+        "titre_humain": "Macro broderie badge fil ivoire sur marine",
+        "type_de_shot": "macro_broderie",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "marine foncé"},
+        "fil_broderie": "fil_ivoire",
+        "pilier_contenu": "P1_process",
+        "aspect_ratio": "1:1",
+        "prompt_en_complet": "Extreme close-up macro photography of embroidered circular badge on navy blue sweatshirt fabric. The badge shows 'MAMA' on upper arc, a filled heart in center, 'CLUB' on lower arc — all embroidered in cream ivory thread, Arial Rounded bold typography. Visible thread texture, stitch density, fabric weave details. Soft directional side lighting creating subtle shadows on the stitching. Canon 100mm macro lens f/4, ultra sharp focus on embroidery with creamy bokeh background. Luxury fashion product photography, artisan craftsmanship detail shot showcasing Tajima machine embroidery quality, warm neutral tones. --ar 1:1",
+        "override_motif_applique": null,
+        "notes_styliste": "Hero 'savoir-faire' — met en avant la densité broderie Tajima + solidarité couleur. Mentionner 'metier Tajima' si copy associé."
+      },
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S03",
+        "titre_humain": "Camille portée lifestyle studio vert sauge",
+        "type_de_shot": "lifestyle_studio",
+        "ambiance": "loft_organique",
+        "mannequins_assignes": ["MAN-P01 Camille"],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "marine foncé"},
+        "fil_broderie": "fil_ivoire",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Editorial fashion photography, 40-year-old Camille, a beautiful French woman with chestnut honey mid-length wavy hair parted in the middle, freckles across her nose and cheeks, natural expression wrinkles around her eyes when she smiles, lived-in skin texture (no smoothing), standing relaxed in a curated Parisian apartment. Sage green paneled wall, dark wooden parquet floor, vintage props: old leather suitcase, framed botanical prints, potted eucalyptus. She wears an oversized navy blue crewneck sweatshirt with the embroidered Mama Club badge visible on the LEFT CHEST — cream ivory thread, circular badge with 'MAMA' on top arc, heart center, 'CLUB' on bottom arc, 8-10cm diameter. Paired with raw denim jeans and cream leather sabots. Relaxed confident pose, hand near the embroidery, soft smile, warm gaze off-frame. Medium format Hasselblad, 80mm f/4, soft ambient interior lighting, warm muted earth tones with sage green accents. French heritage brand campaign aesthetic, Emoi Emoi × Make My Lemonade editorial. Real human features with natural imperfections, no retouching, no skin smoothing, no beauty filter. Analog film grain, raw editorial feel. Reference: Maison Labiche lookbook style. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Hero lifestyle femme adulte — Camille = profil iconique 'mère de famille complice'. Garder son grain de peau naturel."
+      },
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S04",
+        "titre_humain": "Crop poitrine badge fil marine sur sweat écru",
+        "type_de_shot": "crop_poitrine",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": ["MAN-P02 Anna"],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "beige naturel brut"},
+        "fil_broderie": "fil_marine",
+        "pilier_contenu": "P3_produit",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Tight cropped fashion editorial photograph focusing on chest area of a 35-year-old woman wearing an oversized crewneck sweatshirt in natural raw beige. Embroidered circular Mama Club badge clearly visible on the LEFT CHEST in dark navy thread — 'MAMA' upper arc, heart center, 'CLUB' lower arc, Arial Rounded bold, 8-10cm diameter, single-color solidarity (circle + heart + text all navy). Chin barely visible at top of frame, hands partially visible at bottom resting on the fabric. Plain off-white studio background, flat soft studio lighting, sharp detail on embroidery stitching and fabric texture. Shot on 90mm macro lens, f/3.5. A.P.C. and Maison Labiche product close-up style, clean and minimal. Lived-in skin, natural hands, no retouching. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Montre la combinaison fil_marine sur support écru (combinaison hero secondaire)."
+      },
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S05",
+        "titre_humain": "Duo Camille + Félicie mère-fille sweats Mama Club assortis",
+        "type_de_shot": "duo_couple",
+        "ambiance": "loft_organique",
+        "mannequins_assignes": ["MAN-P01 Camille", "MAN-P08 Félicie"],
+        "support_produit": {"produit_id": "YP005_et_YP004", "couleur_support": "marine foncé (les deux)"},
+        "fil_broderie": "fil_ivoire",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Tight cropped fashion editorial photograph, mother-daughter duo standing close together in front of a soft cream interior wall. Mother: Camille, 40, chestnut honey wavy hair, freckles, natural smile lines, wearing oversized navy blue adult crewneck sweatshirt. Daughter: Félicie, 7, blond vénitien long wavy hair, dense freckles across nose and cheeks, dimples when she smiles, wearing matching child navy blue hoodie. Both garments feature the embroidered circular Mama Club badge on the LEFT CHEST in cream ivory thread (MAMA top arc, heart center, CLUB bottom arc). Mother's arm around daughter's shoulder, daughter leaning into mother, both looking slightly off-camera with authentic complicity, no forced smiles. Intimate framing cropped from mid-thigh to just above heads. Soft window light from left, warm cream wall background. Shot on 85mm f/2, shallow depth of field keeping both faces sharp. A.P.C. × Emoi Emoi campaign aesthetic, French elegance, tender without demonstration. Real humans with natural features, lived-in skin conserved, no retouching, no beauty filter, analog film grain, raw editorial feel. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Pivot émotionnel du pack. Rotation cyclique position = parent_enfant. La tendresse doit être évidente sans dramatisation."
+      },
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S06",
+        "titre_humain": "Famille vivante 3 générations (Béatrice + Camille + Félicie)",
+        "type_de_shot": "famille_vivante",
+        "ambiance": "loft_organique",
+        "mannequins_assignes": ["MAN-P05 Béatrice", "MAN-P01 Camille", "MAN-P08 Félicie"],
+        "support_produit": {"produit_id": "YP005_YP001_YP004", "couleur_support": "variés marine et écru"},
+        "fil_broderie": "fil_ivoire",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "4:3",
+        "prompt_en_complet": "Lively family editorial photograph, three generations sharing a Sunday breakfast moment around a wooden kitchen table in a sunlit Normandy countryside home. Grandmother Béatrice, 55, métisse (black-white heritage), silver-gray hair loosely tied back, natural wrinkles, pouring tea, wearing cream crewneck sweatshirt. Mother Camille, 40, chestnut wavy hair, freckles, laughing at something her daughter said, wearing navy crewneck sweatshirt. Daughter Félicie, 7, blonde vénitienne, dense freckles, reaching for a piece of bread, wearing navy hoodie. All three garments feature the embroidered Mama Club badge on the LEFT CHEST in cream ivory thread. Warm morning window light from large kitchen window, rustic wooden table with ceramic mugs and fresh bread, green plants visible. Authentic interaction — mother-daughter laughing together, grandmother attentive, child reaching — no one staged looking at the camera (maybe Félicie glances briefly). Shot on 35mm f/5, everyone in focus, group composition. Bonpoint × Gamin Gamine family campaign aesthetic, real French family life, warm saturated color palette with terracotta/ochre accents from props. Real humans with natural features, lived-in skin, no retouching, analog film grain. The scene reads as 'Sunday morning joy' first, 'mixed-heritage family' only as secondary observation. --ar 4:3",
+        "override_motif_applique": null,
+        "notes_styliste": "Shot hero famille 3 générations — teste la règle famille_vivante. Particularité ethnicité de Béatrice présente mais pas centrée. Test validation: est-ce qu'on décrit la scène par 'joie familiale du dimanche' ou 'famille inclusive' ? Réponse attendue: le premier."
+      },
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S07",
+        "titre_humain": "Lifestyle outdoor Aïcha dans parc automnal",
+        "type_de_shot": "lifestyle_outdoor",
+        "ambiance": "echappee_sauvage",
+        "mannequins_assignes": ["MAN-P03 Aïcha"],
+        "support_produit": {"produit_id": "YP001", "couleur_support": "marine foncé"},
+        "fil_broderie": "fil_ivoire",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "16:9",
+        "prompt_en_complet": "Fashion editorial photograph, Aïcha, 40, afro-caribéenne Parisian woman with sculpted short natural afro, tall elegant posture, luminous deep skin, walking through a quiet autumn park path with tall trees. Wearing an oversized navy blue hoodie, hood resting on her shoulders, with the embroidered Mama Club badge on the LEFT CHEST in cream ivory thread (MAMA upper arc, heart center, CLUB lower arc). Paired with camel wide-leg linen trousers and black leather mules. Slightly turning back toward the camera with a confident warm smile, direct gaze, hand tucked into front pocket of hoodie. Golden hour backlight through trees, soft lens flare, muted earthy autumn color grading (burnt orange, forest green, cream). Shot on 35mm f/2.8, full body composition. Hoalen × October brand aesthetic, effortless French-Caribbean elegance. Cinematic depth of field. Real lived-in skin with visible grain, no retouching, no smoothing. --ar 16:9",
+        "override_motif_applique": null,
+        "notes_styliste": "Format panoramique 16:9 pour hero banner Shopify. Couleur afro-caribéenne profonde magnifiée par lumière dorée, jamais aplatie. Hoodie porté = montre le produit en contexte urbain."
+      },
+      {
+        "code_shot": "VAR-003-MAMA-CLUB-S08",
+        "titre_humain": "Flat lay cocooning fil terracotta écru",
+        "type_de_shot": "lifestyle_studio",
+        "ambiance": "aube_intime",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "beige naturel brut"},
+        "fil_broderie": "fil_terracotta",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "1:1",
+        "prompt_en_complet": "Cozy lifestyle flat lay photography of a natural raw beige crewneck sweatshirt casually folded on a crumpled cream linen bedsheet. The embroidered circular Mama Club badge is clearly visible on the LEFT CHEST in warm terracotta thread — 'MAMA' upper arc, filled heart center, 'CLUB' lower arc, Arial Rounded bold, solidarity of color (circle + heart + textes all terracotta). Morning golden hour light streaming from the left creating soft warm shadows. Styled with a small dried eucalyptus branch, a handmade ceramic coffee mug with morning coffee, an open book pages down, a knitted wool throw in cream. Shot from directly above with slight natural tilt, Canon EOS R5, 35mm lens, f/2.8, soft diffused natural light, warm muted tones (cream, ivory, terracotta, forest green eucalyptus). Editorial fashion photography, minimalist Scandinavian × French aesthetic, Emoi Emoi × Sœur brand visual universe, hygge atmosphere, aspirational yet accessible. 4K ultra sharp. --ar 1:1",
+        "override_motif_applique": null,
+        "notes_styliste": "Cocooning brand storytelling — montre combinaison fil_terracotta en secondaire. Idéal galerie PDP + carrousel IG."
+      }
+    ]
+  },
+
+  "module_3_carrousel_ig_10slides": {
+    "_statut_remplissage": "ESQUISSE — à compléter par moteur Designer carrousel (Phase 3)",
+    "format": "10 slides carrées 1:1",
+    "objectif_engagement": "save + share",
+    "structure_narrative": {
+      "slide_01_hook": "[TODO] Hook visuel : gros plan macro broderie + texte 'Il y a les clubs officiels...'",
+      "slide_02_probleme_ou_insight": "[TODO] Insight : 'Et il y a le tien.' — seuil émotionnel",
+      "slides_03_07_developpement": [
+        "[TODO Slide 3] Le concept Mama Club en image (Camille + Félicie)",
+        "[TODO Slide 4] Déclinaisons couleurs de fils (5 variations)",
+        "[TODO Slide 5] Les 5 mots suggérés (MAMA/SISTA/TEAM/AMOUR/FAMILLE)",
+        "[TODO Slide 6] Métier Tajima en action (savoir-faire)",
+        "[TODO Slide 7] Témoignage client ou scène 3 générations"
+      ],
+      "slide_08_preuve": "[TODO] Preuve sociale : 'Des milliers de Mama Clubs dans nos ateliers' OU gros plan Tajima",
+      "slide_09_offre": "[TODO] Produit en contexte : sweat marine porté Camille + prix + CTA léger",
+      "slide_10_cta_final": "[TODO] CTA 'Compose ton Mama Club' + lien bio"
+    },
+    "slides_detaillees": "[TODO Phase 3 — 10 objets slide avec titre, texte, visuel, notes design]",
+    "hashtags_suggeres": "[voir module_8_tags_rs_par_plateforme.instagram]"
+  },
+
+  "module_4_reel_20s": {
+    "_statut_remplissage": "ESQUISSE — à compléter par moteur Video editor (Phase 3)",
+    "duree_cible_secondes": 18,
+    "format": "9:16 vertical",
+    "hook_3_premieres_secondes": {
+      "texte_hook": "[TODO] Proposition : 'Tu crois que le club est officiel. Non, il est brodé.'",
+      "visuel_hook": "[TODO] Macro badge Mama Club qui se dévoile progressivement sur sweat en mouvement",
+      "son_hook": "voix_off_sarah"
+    },
+    "storyboard": "[TODO Phase 3 — shots détaillés t_start, t_end, description, texte incrusté, transition]",
+    "son_musique": {
+      "type_son": "trending",
+      "suggestions_trending": "[TODO — rechercher sons tendance Reels FR, registre doux-émotion]",
+      "voix_off_script": null
+    },
+    "cta_fin": "Compose ton Mama Club en bio",
+    "hashtags_reel": "[voir module_8]"
+  },
+
+  "module_5_posts_recurrents": {
+    "_statut_remplissage": "ESQUISSE — squelette de 3 angles variés à compléter Phase 3",
+    "posts": [
+      {
+        "code_post": "VAR-003-MAMA-CLUB-P01",
+        "angle_narratif": "produit_en_contexte",
+        "pilier_contenu": "P2_emotion",
+        "plateformes_cibles": ["instagram", "facebook"],
+        "visuel_suggere": "Shot S05 (duo Camille + Félicie)",
+        "texte_caption": "[TODO] Caption ton tendre, 150 mots, évoque la complicité mère-fille sans surjouer",
+        "hashtags": "[voir module_8]",
+        "cta": "Commande ton Mama Club — lien bio",
+        "moment_publication_recommande": "J-10 avant Fête des Mères, 19h mardi (pic engagement féminin)"
+      },
+      {
+        "code_post": "VAR-003-MAMA-CLUB-P02",
+        "angle_narratif": "coulisses_atelier",
+        "pilier_contenu": "P1_process",
+        "plateformes_cibles": ["instagram", "tiktok"],
+        "visuel_suggere": "Vidéo Tajima en action OU shot S02 macro broderie",
+        "texte_caption": "[TODO] Caption 'Un Mama Club, c'est 8 minutes de broderie sur métier Tajima. 120 000 points. 1 seule couleur solidaire.' — registre savoir-faire",
+        "hashtags": "[voir module_8]",
+        "cta": "Découvre notre atelier — lien bio",
+        "moment_publication_recommande": "Jeudi midi (pic curiosité coulisses)"
+      },
+      {
+        "code_post": "VAR-003-MAMA-CLUB-P03",
+        "angle_narratif": "question_communaute",
+        "pilier_contenu": "P2_emotion",
+        "plateformes_cibles": ["instagram"],
+        "visuel_suggere": "Shot S08 flat lay cocooning",
+        "texte_caption": "[TODO] 'Et toi, si tu étais un Mama Club, quelle serait ta couleur ?' — engagement commentaires",
+        "hashtags": "[voir module_8]",
+        "cta": "Dis-le nous en commentaires",
+        "moment_publication_recommande": "Dimanche 11h (pic engagement cocooning)"
+      }
+    ]
+  },
+
+  "module_6_hooks_editoriaux": {
+    "_statut_remplissage": "ESQUISSE — 4 hooks pour valider le format, banque complète Phase 3",
+    "hooks": [
+      {
+        "texte": "Il y a les clubs officiels. Et il y a le tien.",
+        "categorie": "hook_revelation",
+        "usages_recommandes": ["reel_opening", "post_titre", "blog_intro"]
+      },
+      {
+        "texte": "Le seul club où ta seule cotisation, c'est l'amour.",
+        "categorie": "hook_emotionnel",
+        "usages_recommandes": ["post_titre", "email_subject"]
+      },
+      {
+        "texte": "Deux mots, un cœur, une couleur. Ton Mama Club.",
+        "categorie": "hook_revelation",
+        "usages_recommandes": ["reel_opening", "story_sondage"]
+      },
+      {
+        "texte": "Maman, c'est pas une fonction. C'est un club.",
+        "categorie": "hook_humour",
+        "usages_recommandes": ["post_titre", "reel_opening"]
+      }
+    ],
+    "todo_hooks_supplementaires_phase3": "Viser 8-15 hooks avec couverture complète des 6 catégories"
+  },
+
+  "module_7_sondages_stories": {
+    "_statut_remplissage": "ESQUISSE",
+    "sondages": [
+      {
+        "type_interaction": "sondage_2_choix",
+        "question": "Ton Mama Club, c'est plutôt...",
+        "options": ["Classique : fil marine", "Doux : fil rose pâle"],
+        "suivi_editorial": "Post suivant : 'Vous avez choisi le fil X — le voici sur 3 looks'"
+      },
+      {
+        "type_interaction": "question_ouverte",
+        "question": "Quel mot tu broderais sous MAMA ?",
+        "options": null,
+        "suivi_editorial": "Reprendre les 5 meilleures propositions clientes dans un carrousel inspiration"
+      }
+    ]
+  },
+
+  "module_8_tags_rs_par_plateforme": {
+    "_statut_remplissage": "ESQUISSE — à enrichir Phase 3 après analyse hashtags performants",
+    "instagram": {
+      "hashtags_large_audience": ["#fetedesmeres", "#cadeaumaman", "#broderie", "#mamanpoule", "#cadeaupersonnalise"],
+      "hashtags_moyen": ["#brodeusefrancaise", "#broderiefrance", "#cadeaumainmade", "#ypersoa"],
+      "hashtags_niche": ["#mamaclub", "#broderiesurmesure", "#metiertajima", "#atelierdunord"],
+      "combinaison_recommandee": "15-20 hashtags total : 5 large + 5 moyen + 5 niche + 2-5 saisonniers (#fetedesmeres2026 etc)"
+    },
+    "tiktok": {
+      "hashtags_viraux": ["#fetedesmeres", "#maman", "#cadeauxfaitmain"],
+      "hashtags_niche_fr": ["#broderiefrance", "#ypersoa", "#mamaclub"]
+    },
+    "pinterest": {
+      "mots_cles_seo": ["cadeau fête des mères brodé", "sweat maman personnalisé", "idée cadeau maman", "broderie mama club"],
+      "categories_pinterest": ["Mode éthique", "Cadeaux fait main", "Fête des Mères"]
+    },
+    "facebook": {
+      "hashtags": ["#fetedesmeres", "#ypersoa", "#mamaclub"],
+      "groupes_partage_suggeres": ["Groupes maternité FR", "Groupes cadeaux faits main", "Groupes DIY Nord France"]
+    }
+  },
+
+  "notes_internes": {
+    "contexte_creation": "Variante canonique depuis juin 2025. L'une des 5 suggestions pré-codées du configurateur Le Club. Top 3 des variantes vendues toute l'année, pic spectaculaire en Fête des Mères (x8 volume moyen).",
+    "performances_attendues": "Evergreen 100-200 ventes/mois, pic 800-1200 en mai. Taux de conversion PDP élevé (cliente qui tombe dessus via Fête des Mères achète souvent).",
+    "risques_brand": "Éviter la sur-exploitation Fête des Mères — le hub doit diversifier les angles (pas que 'offrir à maman') pour préserver evergreen (anniversaire, naissance, just because).",
+    "todos": [
+      "Compléter module_1 avec texte description longue définitif (moteur Copywriter Phase 4)",
+      "Compléter module_3 carrousel 10 slides rédigées (moteur Designer carrousel Phase 3)",
+      "Compléter module_4 storyboard reel complet (moteur Video editor Phase 3)",
+      "Valider tous les prompts EN shooting en les testant sur Gemini",
+      "Benchmark hashtags performants à J+30 après premier post"
+    ]
+  }
+}

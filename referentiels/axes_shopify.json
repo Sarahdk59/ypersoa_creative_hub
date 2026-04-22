@@ -1,0 +1,254 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "last_updated": "2026-04-21",
+    "description": "Référentiel des axes de navigation Shopify Ypersoa. Extrait des menus 'LES BRODERIES' et 'UN CADEAU POUR' du site ypersoa.fr. Utilisé par les variantes pour se positionner narrativement dans l'expérience client, et par les modules RS pour caler les campagnes saisonnières.",
+    "source": "Menus ypersoa.fr (captures 2026-04-21)",
+    "nb_axes": 14
+  },
+
+  "menus_site": {
+    "LES BRODERIES": "Navigation par FORME de motif (esthétique)",
+    "UN CADEAU POUR": "Navigation par OCCASION / DESTINATAIRE (usage)"
+  },
+
+  "axes": [
+    {
+      "id": "axe_broderies_coeurs",
+      "label": "Cœurs",
+      "menu_parent": "LES BRODERIES",
+      "type": "forme_motif",
+      "description": "Tous les motifs avec cœur(s) comme élément graphique principal ou central.",
+      "motifs_inclus": ["YPM-001 Brigitte", "YPM-002 L'Ambre", "YPM-003 Le Club", "YPM-006 Le Câlin", "YPM-007 Le Chouchou", "YPM-008 La Féline (cœur plein)", "YPM-009 La Palette (petit cœur)", "YPM-011 La Confidence", "YPM-012 La Meute (petit cœur)", "YPM-014 La Tigresse (cœur plein)", "YPM-015 La Déclaration"],
+      "cible_cliente_type": "polyvalente (axe esthétique, pas d'occasion spécifique)",
+      "saisonnalite": "toute_saison",
+      "priorite_commerciale": 1
+    },
+    {
+      "id": "axe_broderies_script",
+      "label": "Script",
+      "menu_parent": "LES BRODERIES",
+      "type": "forme_motif",
+      "description": "Motifs avec typographie scripte / cursive (fluide, manuelle, élégante).",
+      "motifs_inclus": ["YPM-007 Le Chouchou", "YPM-015 La Déclaration"],
+      "cible_cliente_type": "clientèle sensibilité émotionnelle, registre lettre d'amour",
+      "saisonnalite": "toute_saison",
+      "priorite_commerciale": 3
+    },
+    {
+      "id": "axe_broderies_aa_typo",
+      "label": "Aa Typo",
+      "menu_parent": "LES BRODERIES",
+      "type": "forme_motif",
+      "description": "Motifs dont l'élément principal est une initiale / lettre typographique structurée.",
+      "motifs_inclus": ["YPM-001 Brigitte", "YPM-003 Le Club"],
+      "cible_cliente_type": "clientèle exigeante graphique, valorise l'épure typographique",
+      "saisonnalite": "toute_saison",
+      "priorite_commerciale": 2
+    },
+    {
+      "id": "axe_broderies_arobase_famille",
+      "label": "@ Famille",
+      "menu_parent": "LES BRODERIES",
+      "type": "forme_motif",
+      "description": "Motifs dont la composition implique plusieurs éléments familiaux (prénoms multiples, dates, liens).",
+      "motifs_inclus": ["YPM-004 Notre Héritage", "YPM-009 La Palette", "YPM-010 La Ronde"],
+      "cible_cliente_type": "famille nucléaire ou élargie, parents, grands-parents",
+      "saisonnalite": "pic Fête Mères/Pères + Noël",
+      "priorite_commerciale": 1
+    },
+    {
+      "id": "axe_broderies_nouveautes",
+      "label": "Nouveautés",
+      "menu_parent": "LES BRODERIES",
+      "type": "temporalite",
+      "description": "Motifs ajoutés au catalogue dans les 30-60 derniers jours. Rotation dynamique.",
+      "motifs_inclus": "DYNAMIQUE (dépend date)",
+      "cible_cliente_type": "cliente fidèle qui revient voir les nouveautés",
+      "saisonnalite": "permanent",
+      "priorite_commerciale": 2
+    },
+    {
+      "id": "axe_broderies_les_best",
+      "label": "Les Best",
+      "menu_parent": "LES BRODERIES",
+      "type": "popularite",
+      "description": "Motifs best-sellers. Rotation selon ventes réelles.",
+      "motifs_inclus": "DYNAMIQUE (dépend ventes — actuellement YPM-001 Brigitte, YPM-003 Le Club, YPM-015 La Déclaration)",
+      "cible_cliente_type": "nouvelle cliente qui découvre la marque",
+      "saisonnalite": "permanent",
+      "priorite_commerciale": 1
+    },
+
+    {
+      "id": "axe_cadeau_fete_des_meres",
+      "label": "Fête des Mères",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "occasion_saisonniere",
+      "description": "Cadeaux pour la Fête des Mères (dernier dimanche de mai en France).",
+      "date_cle": "Dernier dimanche de mai",
+      "pic_vente": "30 avril — 20 mai",
+      "motifs_pertinents": ["YPM-002 L'Ambre (Maman d'amour)", "YPM-003 Le Club (MAMA CLUB)", "YPM-013 La Tigresse", "YPM-008 La Féline", "YPM-006 Le Câlin", "YPM-009 La Palette"],
+      "cible_cliente_type": "enfants adultes (30-50 ans) offrant à leur mère OU maris offrant à leur compagne",
+      "priorite_commerciale": 1,
+      "regles_contenu_rs": "Mentionner 'Fête des Mères' sans trop appuyer 'maman' — Ypersoa valorise tous les types de maternité"
+    },
+    {
+      "id": "axe_cadeau_pour_maman",
+      "label": "Pour Maman",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "destinataire",
+      "description": "Cadeaux pour sa mère, toute l'année (anniversaire, Noël, juste parce que).",
+      "motifs_pertinents": ["YPM-002 L'Ambre", "YPM-003 Le Club (MAMA)", "YPM-013 La Tigresse", "YPM-008 La Féline", "YPM-009 La Palette"],
+      "cible_cliente_type": "enfants adultes, tous âges",
+      "saisonnalite": "toute_saison + pic Fête Mères",
+      "priorite_commerciale": 1
+    },
+    {
+      "id": "axe_cadeau_pour_papa",
+      "label": "Pour Papa",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "destinataire",
+      "description": "Cadeaux pour son père. Fête des Pères + anniversaires.",
+      "date_cle": "3e dimanche de juin",
+      "motifs_pertinents": ["YPM-003 Le Club (PAPA CLUB, TEAM PAPA)", "YPM-009 La Palette (Papa de X · Y)", "YPM-004 Notre Héritage"],
+      "cible_cliente_type": "enfants adultes + compagnes/conjointes",
+      "saisonnalite": "toute_saison + pic Fête Pères juin",
+      "priorite_commerciale": 2,
+      "_note_segment_masculin": "Segment moins développé que maman — enjeu hub : produire plus de variantes édito pour Papa (TEAM PAPA, PAPI CHÉRI, etc.)"
+    },
+    {
+      "id": "axe_cadeau_anniversaire",
+      "label": "Anniversaire",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "occasion",
+      "description": "Cadeaux d'anniversaire — amis, famille, collègues.",
+      "motifs_pertinents": ["YPM-003 Le Club (TEAM + mois de naissance, ex: TEAM MAI)", "YPM-004 Notre Héritage (date)", "YPM-001 Brigitte (initiale)"],
+      "cible_cliente_type": "large — tous âges tous profils",
+      "saisonnalite": "permanent",
+      "priorite_commerciale": 2
+    },
+    {
+      "id": "axe_cadeau_evjf_mariage",
+      "label": "EVJF & Mariage",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "occasion",
+      "description": "Enterrement de vie de jeune fille, préparatifs mariage, cadeaux témoin, invité.",
+      "motifs_pertinents": ["YPM-003 Le Club (BRIDE TEAM, SISTA CLUB, TEAM [prénom])", "YPM-007 Le Chouchou", "YPM-015 La Déclaration"],
+      "cible_cliente_type": "femmes 25-40 ans, témoins de mariage, amies proches",
+      "saisonnalite": "pic avril-septembre",
+      "priorite_commerciale": 1,
+      "_note_marche": "Marché EVJF très actif sur Instagram — hub doit pousser variantes BRIDE TEAM, SISTA CLUB, TEAM [prénom mariée] en contenu RS"
+    },
+    {
+      "id": "axe_cadeau_grands_parents",
+      "label": "Grands-parents",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "destinataire",
+      "description": "Cadeaux pour grand-mère, grand-père, mamie, papi. Cadeaux de petits-enfants ou de parents aux grands-parents.",
+      "motifs_pertinents": ["YPM-003 Le Club (MAMIE GATEAU, PAPI CHERI, TEAM MAMIE)", "YPM-004 Notre Héritage (dates/prénoms petits-enfants)", "YPM-009 La Palette (prénoms petits-enfants)"],
+      "cible_cliente_type": "enfants adultes qui offrent + petits-enfants (via parents)",
+      "saisonnalite": "Noël + Fête Grands-Parents (1er dim. octobre) + anniversaires",
+      "priorite_commerciale": 2,
+      "_note_segment_à_developper": "Segment sous-exploité — vraie opportunité pour variantes édito hub"
+    },
+    {
+      "id": "axe_cadeau_naissance",
+      "label": "Naissance",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "occasion",
+      "description": "Cadeaux de naissance — bodies bébé, sweats pour jeunes parents, date de naissance brodée.",
+      "motifs_pertinents": ["YPM-004 Notre Héritage (date naissance)", "YPM-009 La Palette (prénom bébé)", "YPM-003 Le Club (BABY CLUB, TEAM [prénom bébé])"],
+      "cible_cliente_type": "amis/famille des jeunes parents + jeunes parents eux-mêmes",
+      "saisonnalite": "permanent",
+      "priorite_commerciale": 2
+    },
+    {
+      "id": "axe_cadeau_merci_nounou_maitresse",
+      "label": "Merci Nounou Maitresse",
+      "menu_parent": "UN CADEAU POUR",
+      "type": "occasion",
+      "description": "Cadeaux de fin d'année scolaire pour les nounous, maîtresses, maîtres. Mot de remerciement personnalisé.",
+      "date_cle": "Fin juin (fin d'année scolaire)",
+      "pic_vente": "1-25 juin",
+      "motifs_pertinents": ["YPM-003 Le Club (MERCI + prénom, TEAM MAITRESSE)", "YPM-007 Le Chouchou (Ma Nounou, Ma Maitresse)"],
+      "cible_cliente_type": "parents d'enfants en crèche / maternelle / primaire",
+      "saisonnalite": "pic concentré juin",
+      "priorite_commerciale": 3
+    }
+  ],
+
+  "regles_usage_par_variante": {
+    "description": "Règles de tag axes_shopify pour les variantes.",
+    "obligations": [
+      "Chaque variante DOIT être taggée avec au moins 1 axe principal (axe_shopify_principal)",
+      "Chaque variante PEUT être taggée avec 1-3 axes secondaires (axe_shopify_secondaires)",
+      "Les axes BRODERIES (forme) ET les axes CADEAU POUR (occasion) peuvent coexister sur une même variante",
+      "Une variante saisonnière (ex: 'TEAM MAI' pour anniversaire mai) doit toujours être taggée 'Anniversaire'"
+    ],
+    "exemples": {
+      "VAR-003-CANON-MAMA-CLUB": {
+        "principal": "Fête des Mères",
+        "secondaires": ["Pour Maman", "Cœurs", "@ Famille"]
+      },
+      "VAR-003-EDITO-BRIDE-TEAM": {
+        "principal": "EVJF & Mariage",
+        "secondaires": ["Cœurs"]
+      },
+      "VAR-003-EDITO-TEAM-DOG": {
+        "principal": "Anniversaire",
+        "secondaires": ["Cadeau soi", "Cœurs"]
+      }
+    }
+  },
+
+  "campagnes_saisonnieres_calendrier_fr": {
+    "_statut": "TODO_SESSION_DEDIEE",
+    "_note_sarah_2026-04-21": "Marketing saisonnier à réfléchir en profondeur avec Sarah. Ne pas figer un calendrier spéculatif avant discussion. Ce bloc sera complété lors d'une session Phase 5 'Marketing saisonnier'.",
+
+    "regle_critique_production_2026-04-22": {
+      "principe": "BUFFER 15 JOURS OBLIGATOIRE entre date de commande cliente ET date événement.",
+      "decomposition_15j": {
+        "production_broderie_atelier_adriana": "7 à 10 jours",
+        "expedition_transporteur": "2 à 5 jours selon zone"
+      },
+      "implication_campagnes_rs": "Toute campagne saisonnière doit commencer au MINIMUM 1 MOIS AVANT l'événement réel pour laisser aux clients le temps de découvrir + décider + commander + recevoir à temps.",
+      "consequences_calendrier": [
+        "Fête des Mères (dernier dim. mai) → campagne démarre AU PLUS TARD le 1er mai (idéalement 20-25 avril)",
+        "Fête des Pères (3e dim. juin) → campagne démarre AU PLUS TARD le 20 mai",
+        "Noël (25 déc) → campagne démarre AU PLUS TARD le 25 novembre",
+        "Saint-Valentin (14 fév) → campagne démarre AU PLUS TARD le 15 janvier"
+      ],
+      "deadline_commande_a_afficher_shopify": "J-15 avant événement — après cette date, afficher badge 'Livraison non garantie pour [ÉVÉNEMENT]' sur la PDP",
+      "_note_strategique": "Cette règle doit apparaître dans le moteur Content Strategist (Phase 5) ET dans les posts/reels RS en fin de campagne (rappel deadline commande)."
+    },
+
+    "_donnees_de_travail_a_discuter": {
+      "saisons_france_a_considerer": [
+        "Saint-Valentin (14 février)",
+        "Fête des Grands-Mères (1er dim. mars)",
+        "Fête des Mères (dernier dim. mai)",
+        "Saison EVJF (avril à septembre)",
+        "Fête des Pères (3e dim. juin)",
+        "Fin année scolaire / Nounou-Maîtresse (juin)",
+        "Fête des Grands-Pères (1er dim. octobre)",
+        "Halloween (31 oct) — à voir si pertinent Ypersoa",
+        "Black Friday (fin novembre)",
+        "Noël (25 décembre)",
+        "Saint Nicolas / pic Nord France (6 décembre)"
+      ],
+      "questions_ouvertes": [
+        "Quel ratio saisonnier vs evergreen dans le mix contenu ?",
+        "Quelle anticipation J-X pour chaque saison ?",
+        "Quels motifs activer exclusivement en saison, lesquels sont evergreen ?",
+        "Peut-on lier variantes éditoriales hub aux saisons (ex: TEAM MAI uniquement poussée en mai) ?"
+      ]
+    }
+  },
+
+  "liens_systeme": {
+    "templates": "referentiels/motifs/ (YPM-001 à YPM-017)",
+    "variantes": "referentiels/variantes/",
+    "direction_artistique": "referentiels/shooting/direction_artistique_hero.json"
+  }
+}

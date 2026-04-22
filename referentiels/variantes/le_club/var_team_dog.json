@@ -1,0 +1,340 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "conforme_schema": "referentiels/variantes/schema_variante_complete.json v1.0",
+    "niveau_remplissage": "SQUELETTE_COMPLET + module_2_shooting_pack détaillé à 80%",
+    "note_statut": "GOLDEN_STANDARD ÉDITORIAL — cette variante valide le scénario 'hub propose une innovation narrative'. Démontre : (1) symbole non-default (Patte au lieu de Cœur), (2) variante édito sans PDP dédiée (vit sur RS + landing), (3) cible niche qualifiée (team animal).",
+    "last_updated": "2026-04-21"
+  },
+
+  "identite": {
+    "code_variante": "VAR-003-EDITO-TEAM-DOG",
+    "nom_commercial": "Team Dog",
+    "template_parent": "YPM-003",
+    "template_parent_fichier": "referentiels/motifs/ypm_003_le_club.json",
+    "type_variante": "editoriale_hub",
+    "statut": "draft",
+    "date_creation": "2026-04-21",
+    "date_derniere_maj": "2026-04-21",
+    "auteur": "hub_ia",
+    "tagline_variante": "Parce qu'un chien, c'est pas un animal. C'est une famille."
+  },
+
+  "parametres_techniques_broderie": {
+    "zones_remplies": {
+      "mot_haut": "TEAM",
+      "mot_bas": "DOG",
+      "symbole": "Patte",
+      "couleur_fil_default_suggestion": "fil_camel"
+    },
+    "fils_recommandes_hero": ["fil_camel", "fil_terracotta", "fil_marine", "fil_anthracite", "fil_blanc"],
+    "brief_adriana_production": {
+      "texte": "Badge YPM-003 Le Club variante Team Dog. Mot haut: TEAM (4 car). Mot bas: DOG (3 car). Symbole central: Patte (4 orteils + coussinet, SVG déjà présent dans perso-ypm003.liquid). Dimensions cibles 8-10cm diamètre. Typographie Arial Rounded Bold. 1 couleur fil solidaire (cercle + patte + textes). Attention: dimension symbole Patte vs Cœur — tester sur échantillon avant prod série. La Patte doit être aussi lisible que le cœur à distance."
+    }
+  },
+
+  "positionnement_marche": {
+    "axes_shopify_principal": "axe_cadeau_anniversaire",
+    "axes_shopify_secondaires": ["axe_cadeau_pour_maman", "axe_broderies_coeurs"],
+    "cible_cliente": {
+      "age_tranche": "25-45 ans",
+      "genre": "mixte, léger surindex féminin (55%)",
+      "situation_vie": "propriétaire d'un chien qui considère son chien comme membre de la famille — urbain CSP+, seul·e·s ou couple sans enfants OU jeunes parents avec premier enfant 'pré-bébé'",
+      "pouvoir_achat": "premium_accessible",
+      "sensibilites": ["humour bienveillant autour du statut 'parent de chien'", "anti-kitsch animalier (pas d'empreintes colorées criardes, pas de 'I love my dog' )", "qualité de fabrication", "appartenance à une tribe moderne (#dogmom, #dogdad)"]
+    },
+    "occasions_offre": ["anniversaire d'un·e ami·e dog-mom/dog-dad", "cadeau auto-offert", "Noël entre amis chiens", "journée internationale du chien (26 août)", "adoption d'un nouveau chien"],
+    "saisonnalite": "evergreen avec pic été (sorties chien, chiens adoptés en mai-juin)"
+  },
+
+  "module_1_fiche_shopify": {
+    "_statut_remplissage": "ESQUISSE_30% — pas de PDP dédiée pour éditoriale, alimente landing page blog dédiée + fiche produit template via variante suggérée dans collection 'Team'",
+    "application_sur_shopify": "article_blog_dedie",
+
+    "titre_seo": {
+      "texte": "Team Dog — Le badge brodé pour les vrais dog-parents",
+      "contraintes_respectees": "52 car — mot-clé 'Team Dog' en tête"
+    },
+    "meta_description": {
+      "texte": "Un sweat Team Dog brodé avec la patte de ton chien sur le cœur. Badge rond personnalisable, 20 couleurs de fil. Pour les dog-parents qui assument."
+    },
+    "description_produit_longue": {
+      "texte": "_[TODO Phase 4 — article blog dédié 800-1200 mots]_",
+      "_brief_redaction": "Angle : 'Parce qu'un chien, c'est pas un animal. C'est une famille.' Tonalité humour bienveillant sans kitsch. Structure : hook émotionnel → pourquoi un badge plutôt qu'une photo de chien imprimée (sobriété, solidité, signe entre dog-parents) → description motif (Patte + TEAM + DOG, variante libre : TEAM CATS, TEAM [nom chien]) → CTA configurateur PDP Le Club avec suggestion Patte."
+    },
+    "bullet_points_specs": [
+      "Motif : badge rond · cercle + patte + TEAM/DOG · 1 couleur · 8 à 10 cm",
+      "Variante du configurateur Le Club — texte libre possible (ex: TEAM CATS, TEAM [nom animal])",
+      "Symbole : Patte (ou Cœur, Étoile, Trèfle, Fleur, Infini au choix)",
+      "Placement : buste gauche",
+      "20 couleurs de fil disponibles",
+      "Brodé sur métier Tajima dans notre atelier du Nord"
+    ],
+    "tags_shopify_collections": ["le-club", "coeurs", "team", "dog-mom", "cadeau", "humour"],
+    "url_handle_suggere": "team-dog-badge-brode",
+    "alt_texts_images": [
+      "Sweat camel brodé Team Dog badge patte fil terracotta",
+      "Duo femme et chien golden retriever sweat Team Dog",
+      "Badge brodé Team Dog gros plan broderie patte"
+    ]
+  },
+
+  "module_2_shooting_pack": {
+    "_statut_remplissage": "DETAILLE_80%",
+    "reference_direction_artistique": "referentiels/shooting/direction_artistique_hero.json v2.0",
+    "reference_casting": "referentiels/shooting/mannequins_recurrents.json v3.1",
+    "reference_types_de_shots": "referentiels/shooting/types_de_shots.json v2.0",
+
+    "pack_structure": "pack_standard_6_shots",
+    "rotation_cyclique_duo_position": "non_applicable_variante_edito",
+
+    "_note_casting_specifique": "Shoot avec chien — utiliser un chien de type golden retriever, labrador ou border collie (registre famille-friendly, non menaçant). Interdire : chiens de race 'statement' (rottweiler, bulldog français mise en scène hipster). Le chien est présent mais n'est pas le sujet — le sujet est la relation humain-chien sereine.",
+
+    "shots": [
+      {
+        "code_shot": "VAR-003-TEAM-DOG-S01",
+        "titre_humain": "Ghost packshot sweat camel Team Dog fil terracotta",
+        "type_de_shot": "ghost",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "beige camel"},
+        "fil_broderie": "fil_terracotta",
+        "pilier_contenu": "P3_produit",
+        "aspect_ratio": "1:1",
+        "prompt_en_complet": "Clean e-commerce product photography, ghost mannequin invisible display, pure white background, oversized unisex crewneck sweatshirt in warm camel beige color. Embroidered circular badge design on the LEFT CHEST (not centered) — the badge shows the word 'TEAM' on the upper arc, a stylized DOG PAW PRINT (4 toe pads + 1 central pad, clean geometric embroidered) in the center, the word 'DOG' on the lower arc, all in terracotta brick-red thread, sans-serif rounded bold typography (Arial Rounded style). Circle outline + paw + both words all in the same terracotta color (solidarity principle). Badge diameter approximately 8-10 cm. Ribbed collar, cuffs and hem visible. Perfectly lit with soft studio lighting, no harsh shadows, true-to-color representation. Symmetrical front view. Commercial fashion packshot, high-end minimalist style similar to Maison Labiche and Colorful Standard product pages. 4K ultra detailed. --ar 1:1",
+        "override_motif_applique": null,
+        "notes_styliste": "Premier packshot Team Dog — critique de bien rendre le symbole Patte (pas confondre avec empreinte écrasée kitsch). Géométrie propre, brodée dense."
+      },
+      {
+        "code_shot": "VAR-003-TEAM-DOG-S02",
+        "titre_humain": "Macro broderie badge Patte fil terracotta",
+        "type_de_shot": "macro_broderie",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "beige camel"},
+        "fil_broderie": "fil_terracotta",
+        "pilier_contenu": "P1_process",
+        "aspect_ratio": "1:1",
+        "prompt_en_complet": "Extreme close-up macro photography of embroidered circular Team Dog badge on camel beige sweatshirt fabric. The badge shows 'TEAM' on upper arc, a clean geometric DOG PAW shape in center (oval pad + 4 toe pads arranged naturally), 'DOG' on lower arc — all embroidered in terracotta brick-red thread, Arial Rounded bold typography. Visible thread texture, stitch density, fabric weave details. Soft directional side lighting creating subtle shadows on the stitching. Canon 100mm macro lens f/4, ultra sharp focus on embroidery with creamy bokeh background. Luxury fashion product photography, artisan craftsmanship detail shot showcasing Tajima machine embroidery quality, warm neutral tones. --ar 1:1",
+        "override_motif_applique": null,
+        "notes_styliste": "Shot 'savoir-faire' + preuve que le symbole Patte rend bien brodé (critique pour convaincre les prospects)."
+      },
+      {
+        "code_shot": "VAR-003-TEAM-DOG-S03",
+        "titre_humain": "Camille + chien golden retriever sur canapé Loft Organique",
+        "type_de_shot": "lifestyle_studio",
+        "ambiance": "loft_organique",
+        "mannequins_assignes": ["MAN-P01 Camille"],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "beige camel"},
+        "fil_broderie": "fil_terracotta",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Editorial lifestyle fashion photography, 40-year-old Camille, French woman with chestnut honey mid-length wavy hair parted in the middle, freckles across her nose, natural expression wrinkles when she smiles, lived-in skin, sitting relaxed on a cream linen sofa in a curated Parisian apartment. Sage green paneled wall background, dark wooden parquet, morning sunlight from large window on the left. A calm golden retriever (warm honey coat, soft expression, not staged) is lying next to her with head on her lap. Camille wears an oversized camel beige crewneck sweatshirt with the embroidered Team Dog badge clearly visible on the LEFT CHEST in terracotta thread (TEAM upper arc, paw symbol center, DOG lower arc, 8-10cm diameter). Paired with raw denim jeans. Her hand rests gently on the dog's head, she looks softly at the dog (not at camera), slight smile. Warm ambient interior lighting, soft muted earth tones. Shot on 85mm f/2, shallow depth of field. Emoi Emoi × Soeur aesthetic, tender without over-staging the animal. The relationship is the subject, not the dog as prop. Lived-in skin conserved, no retouching, no beauty filter, analog film grain. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Ne pas sur-mettre en scène le chien. Moment de calme partagé. La complicité humaine-animal est discrète et évidente. ÉVITER : chien qui pose pour la photo, chien avec accessoire ridicule."
+      },
+      {
+        "code_shot": "VAR-003-TEAM-DOG-S04",
+        "titre_humain": "Crop poitrine sur Mathieu en extérieur Team Dog marine",
+        "type_de_shot": "crop_poitrine",
+        "ambiance": "echappee_sauvage",
+        "mannequins_assignes": ["MAN-P06 Mathieu"],
+        "support_produit": {"produit_id": "YP001", "couleur_support": "marine foncé"},
+        "fil_broderie": "fil_ivoire",
+        "pilier_contenu": "P3_produit",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Tight cropped fashion editorial photograph focusing on chest area of a 40-year-old man wearing an oversized navy blue hoodie. Embroidered circular Team Dog badge clearly visible on the LEFT CHEST in cream ivory thread — 'TEAM' upper arc, paw print symbol center, 'DOG' lower arc, Arial Rounded bold, 8-10cm diameter, single-color solidarity. Chin barely visible at top of frame (trimmed brown beard, lived-in skin), hands partially visible at bottom — one hand holds a dog leash (leather camel leash, slight tension visible). Outdoor context with soft autumn backlight from behind, trees slightly blurred in background. 90mm lens, f/3.5, sharp embroidery detail. Editorial dog-parent brand campaign aesthetic, effortless masculine style. No retouching. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Le chien n'est pas visible mais suggéré (laisse en main). Masculinité douce dog-dad. Shot de 'preuve produit en contexte réel' sans être lifestyle complet."
+      },
+      {
+        "code_shot": "VAR-003-TEAM-DOG-S05",
+        "titre_humain": "Lifestyle outdoor Aïcha promenade parc avec chien",
+        "type_de_shot": "lifestyle_outdoor",
+        "ambiance": "echappee_sauvage",
+        "mannequins_assignes": ["MAN-P03 Aïcha"],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "beige camel"},
+        "fil_broderie": "fil_marine",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "16:9",
+        "prompt_en_complet": "Fashion editorial photograph, Aïcha, 40, afro-caribéenne Parisian woman with sculpted short natural afro, elegant tall posture, luminous deep skin, walking through a quiet Parisian park path with a calm border collie on a simple leather leash. Wearing an oversized camel beige crewneck sweatshirt with the embroidered Team Dog badge on the LEFT CHEST in dark navy thread (TEAM upper arc, paw symbol center, DOG lower arc). Paired with wide-leg cream linen trousers and simple black leather mules. Natural walking gesture, hand holding leash loosely, dog walking calmly beside her (not pulling, not dramatic), her gaze forward and relaxed, soft smile. Golden hour backlight through trees, soft lens flare, muted earthy color grading. Shot on 35mm f/2.8, full body horizontal composition for hero banner. Hoalen × October aesthetic, effortless French-Caribbean elegance with dog. The bond is visible through proximity and calm, not through posing. No retouching, lived-in skin conserved. --ar 16:9",
+        "override_motif_applique": null,
+        "notes_styliste": "Format 16:9 pour hero landing page article blog. Le chien marche, pas de pose. La relation sereine est le sujet. ÉVITER : regard fixe du chien vers caméra."
+      },
+      {
+        "code_shot": "VAR-003-TEAM-DOG-S06",
+        "titre_humain": "Flat lay cocooning Team Dog fil camel sur écru",
+        "type_de_shot": "lifestyle_studio",
+        "ambiance": "aube_intime",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "beige naturel brut"},
+        "fil_broderie": "fil_camel",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "1:1",
+        "prompt_en_complet": "Cozy lifestyle flat lay photography of a natural raw beige crewneck sweatshirt casually folded on a crumpled cream linen bedsheet. The embroidered circular Team Dog badge is clearly visible on the LEFT CHEST in warm camel brown thread — 'TEAM' upper arc, clean geometric paw print center, 'DOG' lower arc, Arial Rounded bold, single-color solidarity. Morning golden hour light from the left. Styled with: a simple leather dog leash (camel, coiled loosely), a small wooden dog brush, a ceramic bowl with fresh water visible, one fallen dried leaf, a linen throw in cream. Shot from directly above with slight natural tilt, Canon EOS R5, 35mm lens, f/2.8, soft diffused natural light, warm muted tones (cream, camel, terracotta accents from the leash). Editorial lifestyle, 'dog-parent home' aesthetic, Emoi Emoi × Soeur brand universe with subtle dog-mom cues that don't fall into kitsch territory. 4K ultra sharp. --ar 1:1",
+        "override_motif_applique": null,
+        "notes_styliste": "Props dog-parent sobres : laisse cuir, brosse bois, gamelle céramique. PAS de jouets couineurs, PAS de bandana à pois, PAS d'empreintes décoratives sur le linge."
+      }
+    ]
+  },
+
+  "module_3_carrousel_ig_10slides": {
+    "_statut_remplissage": "ESQUISSE — à compléter par moteur Designer carrousel (Phase 3)",
+    "format": "10 slides carrées 1:1",
+    "objectif_engagement": "save + comment",
+    "structure_narrative": {
+      "slide_01_hook": "[TODO] Hook visuel : gros plan badge Team Dog + texte 'Parce qu'un chien, c'est pas un animal.'",
+      "slide_02_probleme_ou_insight": "[TODO] Reveal : 'C'est une famille.'",
+      "slides_03_07_developpement": [
+        "[TODO Slide 3] Démo : 6 variantes possibles (TEAM DOG, TEAM CATS, TEAM [nom], DOG MAMA, etc.)",
+        "[TODO Slide 4] Le symbole Patte rendu broderie (gros plan)",
+        "[TODO Slide 5] 5 combinaisons couleurs hero (camel/terracotta, marine/ivoire, etc.)",
+        "[TODO Slide 6] Scène Aïcha + chien promenade",
+        "[TODO Slide 7] Scène Mathieu en extérieur (masculinité dog-dad)"
+      ],
+      "slide_08_preuve": "[TODO] 'Plus de 300 Team Dog déjà dans les armoires de la communauté' (quand pertinent)",
+      "slide_09_offre": "[TODO] CTA configurateur 'Compose ton Team [ton chien]' avec prix",
+      "slide_10_cta_final": "[TODO] 'Montre-nous ton chien en commentaire → on t'inspire ton badge'"
+    },
+    "slides_detaillees": "[TODO Phase 3]",
+    "hashtags_suggeres": "[voir module_8]"
+  },
+
+  "module_4_reel_20s": {
+    "_statut_remplissage": "ESQUISSE",
+    "duree_cible_secondes": 18,
+    "format": "9:16 vertical",
+    "hook_3_premieres_secondes": {
+      "texte_hook": "[TODO] Proposition : 'POV: tu es officiellement dans le Team Dog' OU 'Ton chien mérite un badge brodé, pas un pull à pois'",
+      "visuel_hook": "[TODO] Chien qui regarde caméra + zoom sur badge Team Dog sur sweat du maître",
+      "son_hook": "trending_audio"
+    },
+    "storyboard": "[TODO Phase 3]",
+    "son_musique": {
+      "type_son": "trending",
+      "suggestions_trending": "[TODO — rechercher sons dog-mom tendance FR]",
+      "voix_off_script": null
+    },
+    "cta_fin": "Compose ton Team [ton chien] — configurateur en bio",
+    "hashtags_reel": "[voir module_8]"
+  },
+
+  "module_5_posts_recurrents": {
+    "_statut_remplissage": "ESQUISSE",
+    "posts": [
+      {
+        "code_post": "VAR-003-TEAM-DOG-P01",
+        "angle_narratif": "humour_bienveillant",
+        "pilier_contenu": "P2_emotion",
+        "plateformes_cibles": ["instagram", "tiktok"],
+        "visuel_suggere": "Shot S03 (Camille + golden retriever)",
+        "texte_caption": "[TODO] Caption registre humour dog-mom, 120 mots, évoque la vie avec son chien sans en faire trop",
+        "hashtags": "[voir module_8]",
+        "cta": "Compose ton Team [son nom] — lien bio",
+        "moment_publication_recommande": "Samedi 10h (dog-parents sortent promener, scrollent)"
+      },
+      {
+        "code_post": "VAR-003-TEAM-DOG-P02",
+        "angle_narratif": "produit_en_contexte",
+        "pilier_contenu": "P3_produit",
+        "plateformes_cibles": ["instagram"],
+        "visuel_suggere": "Shot S06 (flat lay avec laisse)",
+        "texte_caption": "[TODO] Caption registre inspiration cadeau — 'Tu cherches le cadeau pour la/le vrai·e dog-parent de ton entourage ?'",
+        "hashtags": "[voir module_8]",
+        "cta": "Compose le sien — lien bio",
+        "moment_publication_recommande": "Dimanche 11h (moment cadeau/navigation)"
+      },
+      {
+        "code_post": "VAR-003-TEAM-DOG-P03",
+        "angle_narratif": "question_communaute",
+        "pilier_contenu": "P2_emotion",
+        "plateformes_cibles": ["instagram"],
+        "visuel_suggere": "Shot S02 (macro patte brodée)",
+        "texte_caption": "[TODO] 'Quel mot tu broderais sous TEAM pour ton chien ? (le nom, la race, l'attitude... on prend tout en commentaires)'",
+        "hashtags": "[voir module_8]",
+        "cta": "Dis-nous tout en commentaires — on sélectionne les plus beaux pour les prochains shoots",
+        "moment_publication_recommande": "Mercredi 19h (pic engagement animaux)"
+      }
+    ]
+  },
+
+  "module_6_hooks_editoriaux": {
+    "_statut_remplissage": "ESQUISSE",
+    "hooks": [
+      {
+        "texte": "Parce qu'un chien, c'est pas un animal. C'est une famille.",
+        "categorie": "hook_revelation",
+        "usages_recommandes": ["reel_opening", "post_titre", "blog_intro"]
+      },
+      {
+        "texte": "POV : tu es officiellement dans le Team Dog.",
+        "categorie": "hook_humour",
+        "usages_recommandes": ["reel_opening", "post_titre"]
+      },
+      {
+        "texte": "Ton chien mérite un badge brodé, pas un pull à pois kitsch.",
+        "categorie": "hook_humour",
+        "usages_recommandes": ["reel_opening", "post_titre"]
+      },
+      {
+        "texte": "La tribu dog-parents a un blason, maintenant. Le tien.",
+        "categorie": "hook_emotionnel",
+        "usages_recommandes": ["blog_intro", "email_subject"]
+      }
+    ],
+    "todo_hooks_supplementaires_phase3": "Viser 8-15 hooks"
+  },
+
+  "module_7_sondages_stories": {
+    "_statut_remplissage": "ESQUISSE",
+    "sondages": [
+      {
+        "type_interaction": "sondage_2_choix",
+        "question": "Team Dog, c'est plutôt...",
+        "options": ["Discret : camel sur camel", "Statement : terracotta sur marine"],
+        "suivi_editorial": "Révéler la couleur la plus choisie + lancer prévente de cette combinaison"
+      },
+      {
+        "type_interaction": "question_ouverte",
+        "question": "Team [le nom de ton chien] — dis-nous !",
+        "options": null,
+        "suivi_editorial": "Reprendre 5-8 prénoms de chiens clients dans un carrousel 'inspiration Team [Prénom]'"
+      }
+    ]
+  },
+
+  "module_8_tags_rs_par_plateforme": {
+    "_statut_remplissage": "ESQUISSE",
+    "instagram": {
+      "hashtags_large_audience": ["#dogmom", "#dogdad", "#chien", "#dogsofinstagram", "#cadeauchien"],
+      "hashtags_moyen": ["#teamdog", "#doglover", "#dogparent", "#brodeusefrancaise", "#ypersoa"],
+      "hashtags_niche": ["#dogmomfrance", "#dogdadlife", "#broderiesurmesure", "#metiertajima", "#teamdogypersoa"],
+      "combinaison_recommandee": "15 hashtags total : 5 large + 5 moyen + 5 niche"
+    },
+    "tiktok": {
+      "hashtags_viraux": ["#dogmom", "#dogtok", "#dogsoftiktok"],
+      "hashtags_niche_fr": ["#dogmomfrance", "#ypersoa", "#teamdog"]
+    },
+    "pinterest": {
+      "mots_cles_seo": ["cadeau dog-mom brodé", "sweat chien personnalisé", "idée cadeau amoureux des chiens", "broderie patte chien"],
+      "categories_pinterest": ["Mode éthique", "Cadeaux fait main", "Chiens & animaux"]
+    },
+    "facebook": {
+      "hashtags": ["#teamdog", "#ypersoa", "#dogmom"],
+      "groupes_partage_suggeres": ["Groupes propriétaires chiens FR", "Groupes dog-mom/dog-dad France", "Groupes race spécifique (golden/border/etc.)"]
+    }
+  },
+
+  "notes_internes": {
+    "contexte_creation": "Variante éditoriale GÉNÉRÉE PAR LE HUB en Phase 1 pour tester la flexibilité du template Le Club avec symbole non-default (Patte). Première preuve que le hub peut proposer des innovations narratives au-delà des 5 canoniques.",
+    "performances_attendues": "Cible niche mais très qualifiée — engagement RS supérieur à la moyenne sur hashtags dog-mom, taux de conversion PDP Le Club via landing attendu 2-3x le taux moyen (audience chaude).",
+    "risques_brand": "Attention à ne pas tomber dans kitsch animalier (empreintes colorées criardes, slogans 'I love my dog', photos chiens déguisés). Rester sur registre 'partenaire de vie sobre' façon A.P.C. × Sézane.",
+    "todos": [
+      "Tester rendu broderie Patte sur échantillon physique (Adriana)",
+      "Valider shooting avec golden retriever ou border collie spécifiquement",
+      "Sourcer laisses cuir camel pour props shooting",
+      "Écrire article blog dédié 1200 mots (Phase 4 Copywriter)",
+      "Créer landing page /collections/team-dog avec CTA vers PDP Le Club suggérant symbole Patte par défaut (config pré-remplie)"
+    ]
+  }
+}
