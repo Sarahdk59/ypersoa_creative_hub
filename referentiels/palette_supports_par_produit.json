@@ -1,0 +1,664 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "palette_supports_par_produit",
+    "last_updated": "2026-04-22",
+    "description": "Sous-catalogue des couleurs disponibles par produit support Ypersoa. Construit par croisement des 5 fiches produit (assets_produits/YPxxx/YPxxx_fiche_produit.json) avec palette_supports_vetements.json.",
+    "source_de_verite": "assets_produits/YPxxx/YPxxx_fiche_produit.json (variantes_couleurs)",
+    "usage_par_le_hub": "Le moteur shooting Phase 2 DOIT consulter ce fichier pour valider toute combinaison (produit, couleur). Les goldens existants ont été audités le 2026-04-22 : tout conforme.",
+    "nb_produits": 5,
+    "changelog": [
+      "v1.0 (2026-04-22) - Création suite au bug Team Dog ('beige camel' inventé). Audit goldens existants : tout conforme."
+    ]
+  },
+  "produits": {
+    "YP001": {
+      "nom_commercial": "Hoodie Adulte",
+      "type_produit": "hoodie",
+      "public_cible": "adulte_unisexe",
+      "fournisseur": "Awdis",
+      "nb_couleurs_disponibles": 12,
+      "ids_couleurs_dispo_quick_check": [
+        "beige",
+        "blanc",
+        "vert_sauge",
+        "noir",
+        "rose_pale",
+        "pierre_naturelle",
+        "lilas",
+        "marine",
+        "bleu_petrole",
+        "citron",
+        "bleu_clair",
+        "vert_terre"
+      ],
+      "particularite_couleurs": "12 couleurs — le plus large catalogue. Inclut citron (jaune solaire) et bleu_petrole, exclusifs à ce produit.",
+      "couleurs_detaillees": [
+        {
+          "id_palette": "beige",
+          "nom_ypersoa": "Beige",
+          "hex_palette_officiel": "#F5F0E0",
+          "nom_fournisseur": "Vanilla Milkshake",
+          "packshot_reference": "YP001_packshot_beige.webp"
+        },
+        {
+          "id_palette": "blanc",
+          "nom_ypersoa": "Blanc",
+          "hex_palette_officiel": "#FFFFFF",
+          "nom_fournisseur": "Artic White",
+          "packshot_reference": "YP001_packshot_blanc.webp"
+        },
+        {
+          "id_palette": "vert_sauge",
+          "nom_ypersoa": "Vert sauge",
+          "hex_palette_officiel": "#7A9E7E",
+          "nom_fournisseur": "Dusty Green",
+          "packshot_reference": "YP001_packshot_vert_sauge.png"
+        },
+        {
+          "id_palette": "noir",
+          "nom_ypersoa": "Noir",
+          "hex_palette_officiel": "#1A1A1A",
+          "nom_fournisseur": "Deep Black",
+          "packshot_reference": "YP001_packshot_noir.webp"
+        },
+        {
+          "id_palette": "rose_pale",
+          "nom_ypersoa": "Rose pâle",
+          "hex_palette_officiel": "#F0B8C0",
+          "nom_fournisseur": "Baby pink",
+          "packshot_reference": "YP001_packshot_rose_pale.webp"
+        },
+        {
+          "id_palette": "pierre_naturelle",
+          "nom_ypersoa": "Pierre naturelle",
+          "hex_palette_officiel": "#C4B89A",
+          "nom_fournisseur": "Natural Stone",
+          "packshot_reference": "YP001_packshot_pierre_naturelle.webp"
+        },
+        {
+          "id_palette": "lilas",
+          "nom_ypersoa": "Lilas",
+          "hex_palette_officiel": "#C4A8D4",
+          "nom_fournisseur": "Lilac",
+          "packshot_reference": "YP001_packshot_lilas.png"
+        },
+        {
+          "id_palette": "marine",
+          "nom_ypersoa": "Marine",
+          "hex_palette_officiel": "#1E2D4A",
+          "nom_fournisseur": "New French Navy",
+          "packshot_reference": "YP001_packshot_marine.webp"
+        },
+        {
+          "id_palette": "bleu_petrole",
+          "nom_ypersoa": "Bleu pétrole",
+          "hex_palette_officiel": "#1A6670",
+          "nom_fournisseur": "Ink Blue",
+          "packshot_reference": "YP001_packshot_bleu_petrole.webp"
+        },
+        {
+          "id_palette": "citron",
+          "nom_ypersoa": "Citron",
+          "hex_palette_officiel": "#E8D84A",
+          "nom_fournisseur": "Sherbet Lemon",
+          "packshot_reference": "YP001_packshot_citron.webp"
+        },
+        {
+          "id_palette": "bleu_clair",
+          "nom_ypersoa": "Bleu clair",
+          "hex_palette_officiel": "#A8C8D8",
+          "nom_fournisseur": "Ice Blue",
+          "packshot_reference": "YP001_packshot_bleu_clair.webp"
+        },
+        {
+          "id_palette": "vert_terre",
+          "nom_ypersoa": "Vert terre",
+          "hex_palette_officiel": "#616D55",
+          "nom_fournisseur": "Earthy Green",
+          "packshot_reference": "YP001_packshot_vert_terre.png"
+        }
+      ]
+    },
+    "YP004": {
+      "nom_commercial": "Hoodie Enfant",
+      "type_produit": "hoodie",
+      "public_cible": "enfant",
+      "fournisseur": "Awdis",
+      "nb_couleurs_disponibles": 9,
+      "ids_couleurs_dispo_quick_check": [
+        "beige",
+        "blanc",
+        "vert_sauge",
+        "noir",
+        "rose_pale",
+        "pierre_naturelle",
+        "lilas",
+        "marine",
+        "bleu_clair"
+      ],
+      "particularite_couleurs": "9 couleurs. Pas de cordons capuche (norme EN 14682). Pas de vert_terre/citron/bleu_petrole. Couleur lilas dispo (rare dans le catalogue).",
+      "couleurs_detaillees": [
+        {
+          "id_palette": "beige",
+          "nom_ypersoa": "Beige",
+          "hex_palette_officiel": "#F5F0E0",
+          "nom_fournisseur": "Vanilla Milkshake",
+          "packshot_reference": "YP004_packshot_beige.png"
+        },
+        {
+          "id_palette": "blanc",
+          "nom_ypersoa": "Blanc",
+          "hex_palette_officiel": "#FFFFFF",
+          "nom_fournisseur": "Artic White",
+          "packshot_reference": "YP004_packshot_blanc.png"
+        },
+        {
+          "id_palette": "vert_sauge",
+          "nom_ypersoa": "Vert sauge",
+          "hex_palette_officiel": "#7A9E7E",
+          "nom_fournisseur": "Dusty Green",
+          "packshot_reference": "YP004_packshot_vert_sauge.png"
+        },
+        {
+          "id_palette": "noir",
+          "nom_ypersoa": "Noir",
+          "hex_palette_officiel": "#1A1A1A",
+          "nom_fournisseur": "Deep Black",
+          "packshot_reference": "YP004_packshot_noir.png"
+        },
+        {
+          "id_palette": "rose_pale",
+          "nom_ypersoa": "Rose pâle",
+          "hex_palette_officiel": "#F0B8C0",
+          "nom_fournisseur": "Baby pink",
+          "packshot_reference": "YP004_packshot_rose_pale.png"
+        },
+        {
+          "id_palette": "pierre_naturelle",
+          "nom_ypersoa": "Pierre naturelle",
+          "hex_palette_officiel": "#C4B89A",
+          "nom_fournisseur": "Natural Stone",
+          "packshot_reference": "YP004_packshot_pierre_naturelle.png"
+        },
+        {
+          "id_palette": "lilas",
+          "nom_ypersoa": "Lilas",
+          "hex_palette_officiel": "#C4A8D4",
+          "nom_fournisseur": "Lilac",
+          "packshot_reference": "YP004_packshot_lilas.png"
+        },
+        {
+          "id_palette": "marine",
+          "nom_ypersoa": "Marine",
+          "hex_palette_officiel": "#1E2D4A",
+          "nom_fournisseur": "New French Navy",
+          "packshot_reference": "YP004_packshot_marine.png"
+        },
+        {
+          "id_palette": "bleu_clair",
+          "nom_ypersoa": "Bleu clair",
+          "hex_palette_officiel": "#A8C8D8",
+          "nom_fournisseur": "Ice Blue",
+          "packshot_reference": "YP004_packshot_bleu_clair.png"
+        }
+      ]
+    },
+    "YP005": {
+      "nom_commercial": "Sweat Adulte",
+      "type_produit": "sweat_col_rond",
+      "public_cible": "adulte_unisexe",
+      "fournisseur": "Awdis",
+      "nb_couleurs_disponibles": 9,
+      "ids_couleurs_dispo_quick_check": [
+        "beige",
+        "blanc",
+        "vert_sauge",
+        "noir",
+        "rose_pale",
+        "pierre_naturelle",
+        "marine",
+        "bleu_clair",
+        "vert_terre"
+      ],
+      "particularite_couleurs": "9 couleurs. Pas de capuche (col rond). Pas de lilas/citron/bleu_petrole. Vert_terre dispo (Earthy Green Awdis).",
+      "couleurs_detaillees": [
+        {
+          "id_palette": "beige",
+          "nom_ypersoa": "Beige",
+          "hex_palette_officiel": "#F5F0E0",
+          "nom_fournisseur": "Vanilla Milkshake",
+          "packshot_reference": "YP005_packshot_beige.png"
+        },
+        {
+          "id_palette": "blanc",
+          "nom_ypersoa": "Blanc",
+          "hex_palette_officiel": "#FFFFFF",
+          "nom_fournisseur": "Artic White",
+          "packshot_reference": "YP005_packshot_blanc.png"
+        },
+        {
+          "id_palette": "vert_sauge",
+          "nom_ypersoa": "Vert sauge",
+          "hex_palette_officiel": "#7A9E7E",
+          "nom_fournisseur": "Dusty Green",
+          "packshot_reference": "YP005_packshot_vert_sauge.png"
+        },
+        {
+          "id_palette": "noir",
+          "nom_ypersoa": "Noir",
+          "hex_palette_officiel": "#1A1A1A",
+          "nom_fournisseur": "Deep Black",
+          "packshot_reference": "YP005_packshot_noir.png"
+        },
+        {
+          "id_palette": "rose_pale",
+          "nom_ypersoa": "Rose pâle",
+          "hex_palette_officiel": "#F0B8C0",
+          "nom_fournisseur": "Baby pink",
+          "packshot_reference": "YP005_packshot_rose_pale.png"
+        },
+        {
+          "id_palette": "pierre_naturelle",
+          "nom_ypersoa": "Pierre naturelle",
+          "hex_palette_officiel": "#C4B89A",
+          "nom_fournisseur": "Natural Stone",
+          "packshot_reference": "YP005_packshot_pierre_naturelle.png"
+        },
+        {
+          "id_palette": "marine",
+          "nom_ypersoa": "Marine",
+          "hex_palette_officiel": "#1E2D4A",
+          "nom_fournisseur": "New French Navy",
+          "packshot_reference": "YP005_packshot_marine.png"
+        },
+        {
+          "id_palette": "bleu_clair",
+          "nom_ypersoa": "Bleu clair",
+          "hex_palette_officiel": "#A8C8D8",
+          "nom_fournisseur": "Ice Blue",
+          "packshot_reference": "YP005_packshot_bleu_clair.png"
+        },
+        {
+          "id_palette": "vert_terre",
+          "nom_ypersoa": "Vert terre",
+          "hex_palette_officiel": "#616D55",
+          "nom_fournisseur": "Earthy Green",
+          "packshot_reference": "YP005_packshot_vert_terre.png"
+        }
+      ]
+    },
+    "YP019": {
+      "nom_commercial": "T-Shirt Epais Adulte",
+      "type_produit": "tshirt",
+      "public_cible": "adulte_unisexe",
+      "fournisseur": "B&C",
+      "nb_couleurs_disponibles": 10,
+      "ids_couleurs_dispo_quick_check": [
+        "blanc",
+        "offwhite",
+        "mastic",
+        "rose_orchidee",
+        "bleu_pastel",
+        "canard",
+        "marine",
+        "noir",
+        "gris_fonce",
+        "kaki"
+      ],
+      "particularite_couleurs": "Premier produit non-Awdis du catalogue. Marque B&C avec dialecte de couleurs propre. Couleurs uniques YP019 : offwhite, mastic, rose_orchidee, bleu_pastel, canard, gris_fonce, kaki. Le packshot fait foi (écarts notables sur Lake Blue et Teal).",
+      "couleurs_detaillees": [
+        {
+          "id_palette": "blanc",
+          "nom_ypersoa": "Blanc",
+          "hex_palette_officiel": "#FFFFFF",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_blanc.png",
+          "hex_packshot_reel": "#ECECEC",
+          "ecart_visuel": "leger (compression photo, blanc casse vs blanc pur)"
+        },
+        {
+          "id_palette": "offwhite",
+          "nom_ypersoa": "Offwhite",
+          "hex_palette_officiel": "#F4EFEA",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_offwhite.png",
+          "hex_packshot_reel": "#EAE2D5",
+          "ecart_visuel": "moyen (B&C plus chaud/jaune que Awdis)"
+        },
+        {
+          "id_palette": "mastic",
+          "nom_ypersoa": "Mastic",
+          "hex_palette_officiel": "#C5C0B3",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_mastic.png",
+          "hex_packshot_reel": "#ACA18F",
+          "ecart_visuel": "moyen (B&C plus brun-bronze que la palette officielle)"
+        },
+        {
+          "id_palette": "rose_orchidee",
+          "nom_ypersoa": "Rose orchidée",
+          "hex_palette_officiel": "#FAD0D5",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_rose_orchidee.png",
+          "hex_packshot_reel": "#FAD0D5",
+          "ecart_visuel": "aucun (palette officielle alignee sur la vraie couleur B&C en v1.4)",
+          "note": "Visuellement tres proche du rose_pale (#F0B8C0) mais reference produit distincte chez B&C."
+        },
+        {
+          "id_palette": "bleu_pastel",
+          "nom_ypersoa": "Bleu pastel",
+          "hex_palette_officiel": "#8AAFD4",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_bleu_pastel.png",
+          "hex_packshot_reel": "#5887C6",
+          "ecart_visuel": "GROS ECART — B&C 'Lake Blue' est nettement plus sature et plus fonce que le bleu_pastel officiel. Le packshot fait foi pour l'IA."
+        },
+        {
+          "id_palette": "canard",
+          "nom_ypersoa": "Canard",
+          "hex_palette_officiel": "#1A5A69",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_canard.png",
+          "hex_packshot_reel": "#3B4A4F",
+          "ecart_visuel": "GROS ECART — B&C 'Teal' est plus gris-bleu sombre, palette canard plus turquoise lumineux. Le packshot fait foi pour l'IA."
+        },
+        {
+          "id_palette": "marine",
+          "nom_ypersoa": "Marine",
+          "hex_palette_officiel": "#1E2D4A",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_marine.png",
+          "hex_packshot_reel": "#202634",
+          "ecart_visuel": "leger (B&C marine legerement plus gris que palette)"
+        },
+        {
+          "id_palette": "noir",
+          "nom_ypersoa": "Noir",
+          "hex_palette_officiel": "#1A1A1A",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_noir.png",
+          "hex_packshot_reel": "#292728",
+          "ecart_visuel": "leger (compression photo)"
+        },
+        {
+          "id_palette": "gris_fonce",
+          "nom_ypersoa": "Gris foncé",
+          "hex_palette_officiel": "#404040",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_gris_fonce.png",
+          "hex_packshot_reel": "#4B4A50",
+          "ecart_visuel": "leger"
+        },
+        {
+          "id_palette": "kaki",
+          "nom_ypersoa": "Kaki",
+          "hex_palette_officiel": "#5C614B",
+          "nom_fournisseur": "?",
+          "packshot_reference": "YP019_packshot_kaki.png",
+          "hex_packshot_reel": "#575145",
+          "ecart_visuel": "leger"
+        }
+      ]
+    },
+    "YP021": {
+      "nom_commercial": "Zoodie Adulte",
+      "type_produit": "hoodie_zip",
+      "public_cible": "adulte_unisexe",
+      "fournisseur": "Awdis",
+      "nb_couleurs_disponibles": 7,
+      "ids_couleurs_dispo_quick_check": [
+        "blanc",
+        "bleu_ciel",
+        "vert_sauge",
+        "noir",
+        "rose_pale",
+        "pierre_naturelle",
+        "marine"
+      ],
+      "particularite_couleurs": "7 couleurs (le moins large). Bleu_ciel et rose_pale via L-Shop-Team. Pas de citron/lilas/bleu_petrole.",
+      "couleurs_detaillees": [
+        {
+          "id_palette": "blanc",
+          "nom_ypersoa": "Blanc",
+          "hex_palette_officiel": "#FFFFFF",
+          "nom_fournisseur": "Artic White",
+          "packshot_reference": "YP021_packshot_blanc.png"
+        },
+        {
+          "id_palette": "bleu_ciel",
+          "nom_ypersoa": "Bleu ciel",
+          "hex_palette_officiel": "#8BA0B0",
+          "nom_fournisseur": "[A_CONFIRMER]",
+          "packshot_reference": "YP021_packshot_bleu_ciel.webp",
+          "note": "Approvisionne L-Shop-Team. Ajoute palette en v1.3 sous nom 'Bleu ciel' (#8BA0B0)"
+        },
+        {
+          "id_palette": "vert_sauge",
+          "nom_ypersoa": "Vert sauge",
+          "hex_palette_officiel": "#7A9E7E",
+          "nom_fournisseur": "Dusty Green",
+          "packshot_reference": "YP021_packshot_vert_sauge.png"
+        },
+        {
+          "id_palette": "noir",
+          "nom_ypersoa": "Noir",
+          "hex_palette_officiel": "#1A1A1A",
+          "nom_fournisseur": "Deep Black",
+          "packshot_reference": "YP021_packshot_noir.webp"
+        },
+        {
+          "id_palette": "rose_pale",
+          "nom_ypersoa": "Rose pâle",
+          "hex_palette_officiel": "#F0B8C0",
+          "nom_fournisseur": "Baby pink",
+          "packshot_reference": "YP021_packshot_rose_pale.png",
+          "note": "Approvisionne L-Shop-Team"
+        },
+        {
+          "id_palette": "pierre_naturelle",
+          "nom_ypersoa": "Pierre naturelle",
+          "hex_palette_officiel": "#C4B89A",
+          "nom_fournisseur": "Natural Stone",
+          "packshot_reference": "YP021_packshot_pierre_naturelle.webp"
+        },
+        {
+          "id_palette": "marine",
+          "nom_ypersoa": "Marine",
+          "hex_palette_officiel": "#1E2D4A",
+          "nom_fournisseur": "New French Navy",
+          "packshot_reference": "YP021_packshot_marine.jpg"
+        }
+      ]
+    }
+  },
+  "couleurs_cross_reference": {
+    "_description": "Vue inverse : pour chaque couleur, sur quels produits ? Utile pour le moteur quand il veut une couleur précise.",
+    "couleurs": {
+      "beige": {
+        "nom_ypersoa": "Beige",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005"
+        ],
+        "nb_produits": 3
+      },
+      "blanc": {
+        "nom_ypersoa": "Blanc",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005",
+          "YP019",
+          "YP021"
+        ],
+        "nb_produits": 5
+      },
+      "bleu_ciel": {
+        "nom_ypersoa": "Bleu ciel",
+        "disponible_sur": [
+          "YP021"
+        ],
+        "nb_produits": 1
+      },
+      "bleu_clair": {
+        "nom_ypersoa": "Bleu clair",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005"
+        ],
+        "nb_produits": 3
+      },
+      "bleu_pastel": {
+        "nom_ypersoa": "Bleu pastel",
+        "disponible_sur": [
+          "YP019"
+        ],
+        "nb_produits": 1
+      },
+      "bleu_petrole": {
+        "nom_ypersoa": "Bleu pétrole",
+        "disponible_sur": [
+          "YP001"
+        ],
+        "nb_produits": 1
+      },
+      "canard": {
+        "nom_ypersoa": "Canard",
+        "disponible_sur": [
+          "YP019"
+        ],
+        "nb_produits": 1
+      },
+      "citron": {
+        "nom_ypersoa": "Citron",
+        "disponible_sur": [
+          "YP001"
+        ],
+        "nb_produits": 1
+      },
+      "gris_fonce": {
+        "nom_ypersoa": "Gris foncé",
+        "disponible_sur": [
+          "YP019"
+        ],
+        "nb_produits": 1
+      },
+      "kaki": {
+        "nom_ypersoa": "Kaki",
+        "disponible_sur": [
+          "YP019"
+        ],
+        "nb_produits": 1
+      },
+      "lilas": {
+        "nom_ypersoa": "Lilas",
+        "disponible_sur": [
+          "YP001",
+          "YP004"
+        ],
+        "nb_produits": 2
+      },
+      "marine": {
+        "nom_ypersoa": "Marine",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005",
+          "YP019",
+          "YP021"
+        ],
+        "nb_produits": 5
+      },
+      "mastic": {
+        "nom_ypersoa": "Mastic",
+        "disponible_sur": [
+          "YP019"
+        ],
+        "nb_produits": 1
+      },
+      "noir": {
+        "nom_ypersoa": "Noir",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005",
+          "YP019",
+          "YP021"
+        ],
+        "nb_produits": 5
+      },
+      "offwhite": {
+        "nom_ypersoa": "Offwhite",
+        "disponible_sur": [
+          "YP019"
+        ],
+        "nb_produits": 1
+      },
+      "pierre_naturelle": {
+        "nom_ypersoa": "Pierre naturelle",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005",
+          "YP021"
+        ],
+        "nb_produits": 4
+      },
+      "rose_orchidee": {
+        "nom_ypersoa": "Rose orchidée",
+        "disponible_sur": [
+          "YP019"
+        ],
+        "nb_produits": 1
+      },
+      "rose_pale": {
+        "nom_ypersoa": "Rose pâle",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005",
+          "YP021"
+        ],
+        "nb_produits": 4
+      },
+      "vert_sauge": {
+        "nom_ypersoa": "Vert sauge",
+        "disponible_sur": [
+          "YP001",
+          "YP004",
+          "YP005",
+          "YP021"
+        ],
+        "nb_produits": 4
+      },
+      "vert_terre": {
+        "nom_ypersoa": "Vert terre",
+        "disponible_sur": [
+          "YP001",
+          "YP005"
+        ],
+        "nb_produits": 2
+      }
+    }
+  },
+  "couleurs_palette_indispo_aucun_produit": {
+    "_alerte": "Ces couleurs existent dans palette_supports_vetements.json mais ne sont disponibles sur AUCUN produit. Pourquoi sont-elles dans la palette ? Couleurs candidates pour futur produit ? À vérifier.",
+    "liste": [
+      "gris",
+      "vert_olive"
+    ]
+  },
+  "validation_goldens_existants_2026-04-22": {
+    "_description": "Audit croisé effectué le 2026-04-22 des 2 goldens existants vs catalogue produit/couleur. Toutes les combinaisons utilisées sont valides.",
+    "var_mama_club_status": "✓ TOUT CONFORME (11 combinaisons produit/couleur, toutes existent réellement)",
+    "var_team_dog_status": "✓ TOUT CONFORME (6 combinaisons, toutes existent réellement, y compris vert_terre sur YP005)"
+  },
+  "liens_systeme": {
+    "palette_couleurs": "referentiels/palette_supports_vetements.json (palette officielle 21 couleurs)",
+    "fiches_produits": "assets_produits/YPxxx/YPxxx_fiche_produit.json (source de vérité par produit)",
+    "schema_variante": "referentiels/variantes/schema_variante_complete.json (consommateur de ce référentiel via module_2_shooting_pack)"
+  }
+}
