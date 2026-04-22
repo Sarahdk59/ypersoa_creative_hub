@@ -1,0 +1,360 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "conforme_schema": "referentiels/variantes/schema_variante_complete.json v1.0",
+    "niveau_remplissage": "SQUELETTE_COMPLET + module_2_shooting_pack détaillé à 80%",
+    "note_statut": "GOLDEN STANDARD #3 — variante canonique Sista Club. Construite directement avec couleurs officielles (palette_supports_par_produit.json) et standard formats v2 (4:5 par défaut). Pas besoin de patch correctif post-création.",
+    "last_updated": "2026-04-22"
+  },
+
+  "_corrections_pre_appliquees_2026-04-22": {
+    "contexte": "Variante construite après le patch correctif des 2 premiers goldens (Mama Club + Team Dog). Toutes les leçons apprises sont déjà intégrées dès la création.",
+    "leçons_appliquees_des_le_depart": [
+      "Couleurs supports : uniquement ids officiels validés via palette_supports_par_produit.json (YP005: beige, blanc, vert_sauge, noir, rose_pale, pierre_naturelle, marine, bleu_clair, vert_terre)",
+      "Format 4:5 par défaut (PDP), 1:1 et 16:9 réservés aux exceptions justifiées (animation site / hero banner)",
+      "Mention explicite des hex officiels dans chaque prompt EN (ex: 'Ypersoa marine #1E2D4A')",
+      "Brief Adriana production explicite et complet"
+    ]
+  },
+
+  "identite": {
+    "code_variante": "VAR-003-CANON-SISTA-CLUB",
+    "nom_commercial": "Sista Club",
+    "template_parent": "YPM-003",
+    "template_parent_fichier": "referentiels/motifs/ypm_003_le_club.json",
+    "type_variante": "canonique_shopify",
+    "statut": "production",
+    "date_creation": "2025-06-15",
+    "date_derniere_maj": "2026-04-22",
+    "auteur": "canon_shopify",
+    "tagline_variante": "Pour celles qui ne sont pas sœurs de sang. Mais sœurs de cœur."
+  },
+
+  "parametres_techniques_broderie": {
+    "zones_remplies": {
+      "mot_haut": "SISTA",
+      "mot_bas": "CLUB",
+      "symbole": "Cœur",
+      "couleur_fil_default_suggestion": "fil_rose_pale"
+    },
+    "fils_recommandes_hero": ["fil_rose_pale", "fil_framboise", "fil_lilas", "fil_marine", "fil_ivoire"],
+    "brief_adriana_production": {
+      "texte": "Badge YPM-003 Le Club. Mot haut: SISTA (5 car). Mot bas: CLUB (4 car). Symbole central: Cœur plein. Dimensions cibles 8-10cm diamètre. Typographie Arial Rounded Bold. 1 couleur fil solidaire (cercle + cœur + textes). Format PDP hoodie/sweat/t-shirt buste gauche. Léger asymétrie textuelle 5/4 caractères → Adriana ajuste l'espacement entre lettres pour équilibre visuel."
+    }
+  },
+
+  "positionnement_marche": {
+    "axes_shopify_principal": "axe_cadeau_evjf_mariage",
+    "axes_shopify_secondaires": ["axe_cadeau_anniversaire", "axe_broderies_coeurs", "axe_broderies_les_best", "axe_broderies_arobase_famille"],
+    "cible_cliente": {
+      "age_tranche": "22-40 ans",
+      "genre": "féminin (98%)",
+      "situation_vie": "3 sous-cibles distinctes : (1) EVJF — mariée + témoins/copines proches qui veulent porter un signe de squad ; (2) Best friends — meilleures amies qui s'offrent un cadeau anniversaire/Noël ; (3) Sœurs réelles — sœurs biologiques qui veulent matérialiser leur lien adulte (fini les chambres d'enfant, place à la connivence d'adulte)",
+      "pouvoir_achat": "premium_accessible",
+      "sensibilites": ["sororité moderne sans pathos", "humour complice entre filles", "registre 'on a toutes besoin d'une sista'", "anti-girlboss caricaturale", "esthétique qui matche IG soft-girl / clean-girl"]
+    },
+    "occasions_offre": ["EVJF (cadeau pour les copines de la mariée)", "anniversaire de meilleure amie", "Noël entre sœurs", "fête des sœurs (le 6 août en France, peu connue mais hub peut activer)", "remise de diplôme + sœur fière", "cadeau auto-offert entre meilleures amies (acheté ensemble)"],
+    "saisonnalite": "evergreen avec pic EVJF (avril-sept) + pic Noël (cadeau sœurs)"
+  },
+
+  "module_1_fiche_shopify": {
+    "_statut_remplissage": "ESQUISSE_30% — à compléter par moteur Copywriter (Phase 4)",
+    "application_sur_shopify": "enrichit_fiche_template_unique",
+
+    "titre_seo": {
+      "texte": "Sweat brodé Sista Club — Cadeau sœurs et amies — Ypersoa",
+      "contraintes_respectees": "59 car — mot-clé 'Sista Club' + intention cadeau"
+    },
+    "meta_description": {
+      "texte": "Le badge des sœurs de cœur. Brodé Sista Club, sweat ou hoodie personnalisé pour ta copine, ta sœur, ton EVJF. 20 couleurs de fil. Atelier Nord France."
+    },
+    "description_produit_longue": {
+      "texte": "_[TODO Phase 4 — texte markdown complet : hook + 3 sous-cibles + bullets + signature + CTA]_",
+      "_brief_redaction": "Hook : 'Pour celles qui ne sont pas sœurs de sang. Mais sœurs de cœur.' Déroulé : 3 angles courts pour les 3 sous-cibles (EVJF / best friend / sœur réelle) — chacune en 2 phrases. Phrase signature 'Brodé sur métier Tajima'. CTA : 'Compose ton Sista Club.'"
+    },
+    "bullet_points_specs": [
+      "Motif : badge rond · cercle + cœur + 2 mots · 1 couleur · 8 à 10 cm",
+      "Mot haut : SISTA (ou texte libre max 7 car)",
+      "Mot bas : CLUB (ou texte libre max 7 car)",
+      "Placement : buste gauche",
+      "20 couleurs de fil disponibles",
+      "Brodé sur métier Tajima dans notre atelier du Nord"
+    ],
+    "tags_shopify_collections": ["evjf", "mariage", "anniversaire", "coeurs", "bestseller", "le-club", "sista", "amitie"],
+    "url_handle_suggere": null,
+    "alt_texts_images": [
+      "Sweat marine brodé Sista Club fil rose pâle Ypersoa",
+      "Trio amies portant sweats Sista Club rue parisienne",
+      "Badge brodé Sista Club gros plan broderie cœur"
+    ]
+  },
+
+  "module_2_shooting_pack": {
+    "_statut_remplissage": "DETAILLE_80% — module structurant du golden, prompts EN complets v2.0 beauté incarnée",
+    "reference_direction_artistique": "referentiels/shooting/direction_artistique_hero.json v2.0",
+    "reference_casting": "referentiels/shooting/mannequins_recurrents.json v3.1",
+    "reference_types_de_shots": "referentiels/shooting/types_de_shots.json v2.0",
+    "reference_palette_supports": "referentiels/palette_supports_par_produit.json v1.0 (toutes combinaisons produit/couleur validées)",
+
+    "pack_structure": "pack_standard_6_shots",
+    "rotation_cyclique_duo_position": "adultes_amies",
+
+    "shots": [
+      {
+        "code_shot": "VAR-003-SISTA-CLUB-S01",
+        "titre_humain": "Ghost packshot sweat marine fil rose pâle",
+        "type_de_shot": "ghost",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "marine"},
+        "fil_broderie": "fil_rose_pale",
+        "pilier_contenu": "P3_produit",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Clean e-commerce product photography, ghost mannequin invisible display, pure white background, oversized unisex crewneck sweatshirt YP005 in Ypersoa marine #1E2D4A. Embroidered circular badge design on the LEFT CHEST (not centered) — the badge shows the word 'SISTA' on the upper arc, a filled heart in the center, the word 'CLUB' on the lower arc, all in soft pale pink thread (Ypersoa fil_rose_pale), sans-serif rounded bold typography (Arial Rounded style), circle outline + heart + both words all in the same pale pink color (solidarity principle). Badge diameter approximately 8-10 cm. Ribbed collar, cuffs and hem visible. Perfectly lit with soft studio lighting, no harsh shadows, true-to-color representation. Symmetrical front view, vertical 4:5 framing optimized for Shopify PDP gallery. Commercial fashion packshot, high-end minimalist style similar to Maison Labiche and Colorful Standard. 4K ultra detailed. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Hero packshot PDP. Combinaison marine + rose pâle = signature Sista Club (féminité douce sur fond statement). Couleur YP005/marine validée via palette_supports_par_produit."
+      },
+      {
+        "code_shot": "VAR-003-SISTA-CLUB-S02",
+        "titre_humain": "Macro broderie badge fil rose pâle sur marine",
+        "type_de_shot": "macro_broderie",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "marine"},
+        "fil_broderie": "fil_rose_pale",
+        "pilier_contenu": "P1_process",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Extreme close-up macro photography of embroidered circular Sista Club badge on Ypersoa marine #1E2D4A sweatshirt YP005 fabric. The badge shows 'SISTA' on upper arc, a filled heart in center, 'CLUB' on lower arc — all embroidered in soft pale pink thread (Ypersoa fil_rose_pale), Arial Rounded bold typography. Visible thread texture, stitch density, fabric weave details. Soft directional side lighting creating subtle shadows on the stitching. Canon 100mm macro lens f/4, ultra sharp focus on embroidery with creamy bokeh background. Luxury fashion product photography, artisan craftsmanship detail showcasing Tajima machine embroidery quality, warm romantic tones. Vertical 4:5 framing. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Hero 'savoir-faire' — contraste rose pâle / marine très lisible en macro. Perfect pour storytelling broderie."
+      },
+      {
+        "code_shot": "VAR-003-SISTA-CLUB-S03",
+        "titre_humain": "Trio amies Anna + Camille + Aïcha lifestyle studio",
+        "type_de_shot": "lifestyle_studio",
+        "ambiance": "loft_organique",
+        "mannequins_assignes": ["MAN-P02 Anna", "MAN-P01 Camille", "MAN-P03 Aïcha"],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "vert_sauge"},
+        "fil_broderie": "fil_framboise",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Editorial lifestyle fashion photography, three close adult female friends together in a sunlit Parisian apartment with cream walls and dark wooden parquet. Anna, 35, French Provençale woman with sun-streaked dark blonde mid-length wavy hair, freckles, tanned skin, natural smile lines. Camille, 40, French woman with chestnut honey wavy hair, freckles, lived-in skin. Aïcha, 40, afro-caribéenne Parisian woman with sculpted short natural afro, luminous deep skin, elegant tall posture. All three wear matching oversized crewneck sweatshirts YP005 in Ypersoa vert_sauge #7A9E7E (dusty sage green). Each garment features the embroidered Sista Club badge clearly visible on the LEFT CHEST in raspberry pink thread (Ypersoa fil_framboise) — 'SISTA' upper arc, heart center, 'CLUB' lower arc. Authentic interaction: Anna sitting on the arm of a vintage cream linen sofa, Camille leaning against the back, Aïcha standing beside, all three laughing at something off-frame, real candid moment, no one staged looking at the camera. Soft window light from the left, warm interior tones with green plants visible. Shot on 50mm f/3.5, all three in focus, group composition. Émoï-Émoï × Sézane campaign aesthetic, French best friends energy, tender complicity without performativity. Real humans with natural features, lived-in skin conserved, no retouching, no beauty filter, analog film grain, raw editorial feel. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Pivot émotionnel du pack. Trio amies représente la diversité de la sororité Ypersoa (Anna provençale + Camille classique française + Aïcha afro-caribéenne). Combinaison vert_sauge + framboise = duo couleurs frais et féminin. Couleur YP005/vert_sauge validée via palette_supports_par_produit."
+      },
+      {
+        "code_shot": "VAR-003-SISTA-CLUB-S04",
+        "titre_humain": "Crop poitrine Lila sweat marine fil lilas",
+        "type_de_shot": "crop_poitrine",
+        "ambiance": "studio_brut",
+        "mannequins_assignes": ["MAN-P04 Lila"],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "marine"},
+        "fil_broderie": "fil_lilas",
+        "pilier_contenu": "P3_produit",
+        "aspect_ratio": "4:5",
+        "prompt_en_complet": "Tight cropped fashion editorial photograph focusing on chest area of Lila, 28-year-old Parisian sophisticated woman with long straight dark brown hair, olive skin, refined features, wearing an oversized crewneck sweatshirt YP005 in Ypersoa marine #1E2D4A. Embroidered circular Sista Club badge clearly visible on the LEFT CHEST in soft lilac thread (Ypersoa fil_lilas) — 'SISTA' upper arc, heart center, 'CLUB' lower arc, Arial Rounded bold, 8-10cm diameter, single-color solidarity. Chin barely visible at top of frame, hands partially visible at bottom resting on the fabric (delicate fingers, neutral nail polish). Plain off-white studio background, flat soft studio lighting, sharp detail on embroidery stitching and fabric texture. 90mm macro lens f/3.5. A.P.C. and Maison Labiche product close-up style, clean and minimal, refined feminine. Lived-in skin, no retouching. --ar 4:5",
+        "override_motif_applique": null,
+        "notes_styliste": "Combinaison marine + lilas = registre plus sophistiqué pour cliente Sista Club mature/exigeante. Lila parisienne sophistiquée = match parfait avec ce registre."
+      },
+      {
+        "code_shot": "VAR-003-SISTA-CLUB-S05",
+        "titre_humain": "Hero banner outdoor trio amies rue parisienne",
+        "type_de_shot": "lifestyle_outdoor",
+        "ambiance": "echappee_sauvage",
+        "mannequins_assignes": ["MAN-P03 Aïcha", "MAN-P02 Anna", "MAN-P01 Camille"],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "marine"},
+        "fil_broderie": "fil_rose_pale",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "16:9",
+        "prompt_en_complet": "Editorial fashion photograph, three adult female friends walking together on a quiet Parisian cobblestone street in golden hour. Aïcha, 40, afro-caribéenne with sculpted short natural afro, elegant tall posture. Anna, 35, French Provençale with sun-streaked dark blonde wavy hair, freckles, tanned. Camille, 40, French with chestnut honey wavy hair, freckles. All three wear matching oversized crewneck sweatshirts YP005 in Ypersoa marine #1E2D4A, each with the embroidered Sista Club badge on the LEFT CHEST in soft pale pink thread (Ypersoa fil_rose_pale). Paired with raw denim jeans and various leather flat shoes (sabots, mules, loafers). Walking in a loose row of three, shoulders slightly touching, mid-conversation, one of them tilting her head back laughing. Golden hour backlight from behind creating warm rim light on hair, soft long shadows on cobblestones, autumn Parisian Haussmann buildings slightly blurred in background. Shot on 35mm f/4, full body horizontal composition for hero banner. Sézane × Émoï-Émoï campaign aesthetic, effortless French best friends squad energy. Cinematic depth of field. Real lived-in skin with visible grain, no retouching, no smoothing, analog film grain. --ar 16:9",
+        "override_motif_applique": null,
+        "notes_styliste": "Format 16:9 conservé : exception justifiée (hero banner Shopify pour collection EVJF/Mariage saisonnière). Trio en marine + rose pâle = signature Sista Club portable au quotidien. Casting volontairement diversifié sans tomber dans le tokenisme — c'est la complicité d'amies qui prime visuellement."
+      },
+      {
+        "code_shot": "VAR-003-SISTA-CLUB-S06",
+        "titre_humain": "Flat lay cocooning sweat rose pâle fil framboise",
+        "type_de_shot": "lifestyle_studio",
+        "ambiance": "aube_intime",
+        "mannequins_assignes": [],
+        "support_produit": {"produit_id": "YP005", "couleur_support": "rose_pale"},
+        "fil_broderie": "fil_framboise",
+        "pilier_contenu": "P2_emotion",
+        "aspect_ratio": "1:1",
+        "prompt_en_complet": "Cozy lifestyle flat lay photography of an Ypersoa rose_pale #F0B8C0 (soft pale pink) crewneck sweatshirt YP005 casually folded on a crumpled cream linen bedsheet. The embroidered circular Sista Club badge is clearly visible on the LEFT CHEST in raspberry pink thread (Ypersoa fil_framboise) — 'SISTA' upper arc, filled heart center, 'CLUB' lower arc, Arial Rounded bold, single-color solidarity. Morning golden hour light from the left creating soft warm shadows. Styled with: a small dried peony branch, two ceramic cups with morning coffee (suggesting two friends sharing breakfast), an open paperback book pages down, a knitted wool throw in cream, small gold delicate hoop earrings nearby. Shot from directly above with slight natural tilt, Canon EOS R5, 35mm lens, f/2.8, soft diffused natural light, warm romantic tones (cream, blush pink, raspberry, gold accents). Editorial lifestyle, 'best friends slow morning' aesthetic, Sézane × Émoï-Émoï brand visual universe, hygge feminine atmosphere. 4K ultra sharp. --ar 1:1",
+        "override_motif_applique": null,
+        "notes_styliste": "Format 1:1 conservé : exception justifiée (flat lay pour animation site et posts IG feed). Combinaison rose_pale + framboise = ton-sur-ton sophistiqué (rose plus clair sur rose plus saturé). Storytelling 'matin entre copines'. Couleur YP005/rose_pale validée."
+      }
+    ]
+  },
+
+  "module_3_carrousel_ig_10slides": {
+    "_statut_remplissage": "ESQUISSE — à compléter par moteur Designer carrousel (Phase 3)",
+    "format": "10 slides carrées 1:1",
+    "objectif_engagement": "save + share (les filles taggent leurs sistas dans les commentaires)",
+    "structure_narrative": {
+      "slide_01_hook": "[TODO] Hook : 'Pour celles qui ne sont pas sœurs de sang...'",
+      "slide_02_probleme_ou_insight": "[TODO] Reveal : 'Mais sœurs de cœur.'",
+      "slides_03_07_developpement": [
+        "[TODO Slide 3] 3 sous-cibles : EVJF / best friends / sœurs",
+        "[TODO Slide 4] Variantes textes possibles (TEAM [prénom], BEST SISTA, MA SISTA)",
+        "[TODO Slide 5] Combinaisons couleurs hero (marine/rose, vert/framboise, lilas/marine)",
+        "[TODO Slide 6] Trio amies S03 ou S05",
+        "[TODO Slide 7] Témoignage cliente (mariée + témoins)"
+      ],
+      "slide_08_preuve": "[TODO] Preuve sociale : 'Plus de 500 squads EVJF déjà brodées chez nous'",
+      "slide_09_offre": "[TODO] Produit en contexte + prix + CTA léger",
+      "slide_10_cta_final": "[TODO] 'Tague ta sista en commentaire ↓'"
+    },
+    "slides_detaillees": "[TODO Phase 3]",
+    "hashtags_suggeres": "[voir module_8]"
+  },
+
+  "module_4_reel_20s": {
+    "_statut_remplissage": "ESQUISSE",
+    "duree_cible_secondes": 20,
+    "format": "9:16 vertical",
+    "hook_3_premieres_secondes": {
+      "texte_hook": "[TODO] Proposition : 'POV : ta sista, c'est ta personne.' OU 'Témoin de mariage ? Ta sista mérite mieux qu'un mug.'",
+      "visuel_hook": "[TODO] Trio amies qui rigolent + zoom sur badge Sista Club",
+      "son_hook": "trending_audio"
+    },
+    "storyboard": "[TODO Phase 3]",
+    "son_musique": {
+      "type_son": "trending",
+      "suggestions_trending": "[TODO — sons sororité/EVJF tendance Reels FR]",
+      "voix_off_script": null
+    },
+    "cta_fin": "Compose ton Sista Club — lien bio",
+    "hashtags_reel": "[voir module_8]"
+  },
+
+  "module_5_posts_recurrents": {
+    "_statut_remplissage": "ESQUISSE",
+    "posts": [
+      {
+        "code_post": "VAR-003-SISTA-CLUB-P01",
+        "angle_narratif": "emotion_pure",
+        "pilier_contenu": "P2_emotion",
+        "plateformes_cibles": ["instagram", "facebook"],
+        "visuel_suggere": "Shot S03 (trio amies vert sauge framboise)",
+        "texte_caption": "[TODO] Caption registre amitié sincère, 150 mots, évoque les amies qui sont devenues famille",
+        "hashtags": "[voir module_8]",
+        "cta": "Tague ta sista — lien bio",
+        "moment_publication_recommande": "Vendredi 18h (pic engagement girls' night)"
+      },
+      {
+        "code_post": "VAR-003-SISTA-CLUB-P02",
+        "angle_narratif": "produit_en_contexte",
+        "pilier_contenu": "P3_produit",
+        "plateformes_cibles": ["instagram", "tiktok"],
+        "visuel_suggere": "Shot S05 (hero outdoor trio rue parisienne)",
+        "texte_caption": "[TODO] Caption EVJF — 'Plus jamais témoin de mariage avec un t-shirt cheap'",
+        "hashtags": "[voir module_8]",
+        "cta": "Compose ton EVJF — lien bio",
+        "moment_publication_recommande": "Mercredi 19h (pic préparation EVJF)"
+      },
+      {
+        "code_post": "VAR-003-SISTA-CLUB-P03",
+        "angle_narratif": "question_communaute",
+        "pilier_contenu": "P2_emotion",
+        "plateformes_cibles": ["instagram"],
+        "visuel_suggere": "Shot S06 (flat lay rose pâle)",
+        "texte_caption": "[TODO] 'Ta sista, tu l'as rencontrée comment ? (école / boulot / soirée / hasard)'",
+        "hashtags": "[voir module_8]",
+        "cta": "Raconte en commentaire — on lit tout",
+        "moment_publication_recommande": "Dimanche 11h (pic engagement réflexif)"
+      }
+    ]
+  },
+
+  "module_6_hooks_editoriaux": {
+    "_statut_remplissage": "ESQUISSE",
+    "hooks": [
+      {
+        "texte": "Pour celles qui ne sont pas sœurs de sang. Mais sœurs de cœur.",
+        "categorie": "hook_emotionnel",
+        "usages_recommandes": ["reel_opening", "post_titre", "blog_intro", "email_subject"]
+      },
+      {
+        "texte": "Plus jamais témoin de mariage avec un t-shirt cheap.",
+        "categorie": "hook_humour",
+        "usages_recommandes": ["reel_opening", "post_titre"]
+      },
+      {
+        "texte": "POV : ta sista, c'est ta personne.",
+        "categorie": "hook_emotionnel",
+        "usages_recommandes": ["reel_opening", "story_sondage"]
+      },
+      {
+        "texte": "Tu vas te marier ? On a le badge des copines.",
+        "categorie": "hook_revelation",
+        "usages_recommandes": ["post_titre", "email_subject"]
+      },
+      {
+        "texte": "Le club le plus exclusif du monde : le tien et celui de ta sista.",
+        "categorie": "hook_emotionnel",
+        "usages_recommandes": ["blog_intro", "post_titre"]
+      }
+    ],
+    "todo_hooks_supplementaires_phase3": "Viser 8-15 hooks"
+  },
+
+  "module_7_sondages_stories": {
+    "_statut_remplissage": "ESQUISSE",
+    "sondages": [
+      {
+        "type_interaction": "sondage_2_choix",
+        "question": "Sista Club, c'est plutôt...",
+        "options": ["Romantique : marine + rose pâle", "Statement : vert sauge + framboise"],
+        "suivi_editorial": "Reveal de la combinaison gagnante + carrousel inspiration look"
+      },
+      {
+        "type_interaction": "question_ouverte",
+        "question": "C'est qui, ta sista ? Décris-la en 3 mots.",
+        "options": null,
+        "suivi_editorial": "Reprendre les 5 plus belles descriptions clientes dans un post 'Portrait de sistas'"
+      },
+      {
+        "type_interaction": "sondage_2_choix",
+        "question": "Pour ton EVJF, tu mises sur...",
+        "options": ["Sweat assorti pour toutes les copines", "Sweat unique juste pour la mariée"],
+        "suivi_editorial": "Adapter l'offre pack EVJF selon réponses"
+      }
+    ]
+  },
+
+  "module_8_tags_rs_par_plateforme": {
+    "_statut_remplissage": "ESQUISSE",
+    "instagram": {
+      "hashtags_large_audience": ["#evjf", "#bff", "#besties", "#cadeauamie", "#mariage2026"],
+      "hashtags_moyen": ["#evjfideecadeau", "#sistercrew", "#bridesquad", "#cadeauoriginal", "#ypersoa"],
+      "hashtags_niche": ["#sistaclub", "#broderieevjf", "#metiertajima", "#brodeusefrancaise", "#ateliernord"],
+      "combinaison_recommandee": "15 hashtags total : 5 large + 5 moyen + 5 niche"
+    },
+    "tiktok": {
+      "hashtags_viraux": ["#evjf", "#bff", "#bestfriendgoals", "#mariagetiktok"],
+      "hashtags_niche_fr": ["#evjfideecadeau", "#ypersoa", "#sistaclub"]
+    },
+    "pinterest": {
+      "mots_cles_seo": ["cadeau EVJF brodé", "sweat témoin mariage", "idée cadeau meilleure amie", "broderie sista club"],
+      "categories_pinterest": ["Mariage", "Cadeaux", "EVJF idées"]
+    },
+    "facebook": {
+      "hashtags": ["#evjf", "#sistaclub", "#ypersoa"],
+      "groupes_partage_suggeres": ["Groupes EVJF FR", "Groupes mariage 2026", "Groupes témoins de mariage"]
+    }
+  },
+
+  "notes_internes": {
+    "contexte_creation": "3ème variante canonique générée le 2026-04-22 pour valider le format de production des goldens après corrections couleurs/formats. Première variante construite directement avec les bons standards (palette validée + 4:5 par défaut + ids officiels) — pas besoin de patch correctif.",
+    "performances_attendues": "Top 3 vente Le Club avec Mama Club et Famille Club. Pic exceptionnel saison EVJF (avril-sept) — viser x5 du volume mensuel moyen sur cette période.",
+    "risques_brand": "Éviter le registre 'girlboss' ou 'féministe statement' — Sista Club est sur la sororité douce, pas sur le combat. Ne pas tomber dans le rose pétard caricatural — privilégier rose pâle, framboise, lilas (sophistiqués).",
+    "todos": [
+      "Compléter module_1 description longue (Phase 4 Copywriter)",
+      "Compléter modules 3-7 (Phase 3 moteurs RS)",
+      "Lancer test pré-production : générer S01 et S03 sur Gemini, valider rendu",
+      "Sourcer mannequins trio amies (Anna + Camille + Aïcha déjà au casting, organiser shoot groupé)",
+      "Benchmark hashtags EVJF performants en avril-mai pour pic saison"
+    ]
+  }
+}
