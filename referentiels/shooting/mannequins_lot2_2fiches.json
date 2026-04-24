@@ -1,13 +1,17 @@
 {
   "meta": {
     "lot": 2,
-    "version": "1.0",
-    "date": "2026-04-20",
+    "version": "1.1",
+    "date": "2026-04-24",
     "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
     "fiches_contenues": ["MAN-P02", "MAN-P04"],
     "choix_directionnels_sarah": {
       "MAN-P02_Anna": "A - Provençale moderne (Sessùn/Soeur, lin naturel, palette ocre/terracotta)",
       "MAN-P04_Lila": "A - Parisienne maghrébine sophistiquée (Leïla Bekhti élégante, tailleurs fluides, or fin)"
+    },
+    "changelog": {
+      "v1.0_2026-04-20": "Version initiale",
+      "v1.1_2026-04-24": "Correction Anna suite canonique : cheveux châtain doré méchés → brun chaud provençal. Redondance visuelle avec Camille (châtain miel) évitée. Peau précisée olive-chaude méditerranéenne."
     }
   },
   "mannequins": [
@@ -20,9 +24,9 @@
       "ancrage_geographique": "Aix-en-Provence / Arles / arrière-pays varois",
       "apparence_physique": {
         "silhouette": "1m70, silhouette détendue et ancrée, posture relâchée mais droite — le port d'une femme qui ne court pas",
-        "cheveux": "Châtain doré mi-longs, ondulations naturelles marquées (cheveux méchés par le soleil en été), souvent attachés en chignon bas lâche ou demi-queue",
+        "cheveux": "Brun chaud châtain foncé, mi-longs, ondulations naturelles marquées, portés LIBRES (pas d'attaches, pas de chignons en ref canonique — le chignon bas appartient aux shots en contexte), quelques mèches devant le visage",
         "visage": "Traits réguliers et doux, yeux noisette, quelques taches de rousseur sur le nez et les épaules (dues au soleil), sourire paisible",
-        "peau": "Hâlée naturellement (pas bronzée cabine), grain de peau habité, quelques ridules autour des yeux"
+        "peau": "Olive-chaude méditerranéenne naturellement hâlée (pas bronzée cabine), grain de peau habité, quelques ridules autour des yeux"
       },
       "personnalite_role_narratif": "Céramiste ou architecte d'intérieur installée dans une maison en pierre de l'arrière-pays. Reçoit ses amis en terrasse sous la glycine, offre des cadeaux en vacances, incarne la douceur provençale contemporaine. Client type : gens qui fuient Paris mais gardent l'exigence.",
       "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P3_Usage"],
