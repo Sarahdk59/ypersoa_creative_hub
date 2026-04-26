@@ -105,8 +105,14 @@ L'approche JSON 8-modules détaillé pour briefer Nano Banana 2 produit des rés
 - **9:16** pour stories / reels uniquement
 - **Écarté** : 4:3, 3:4, ratios libres (interdits PDP Shopify).
 
-### Buffer 15 jours production + expédition
-Toute campagne saisonnière démarre **J-30 minimum**. Composition : 7-10j production atelier Adriana + 2-5j expédition transporteur. Deadline commande client affichée à J-15 sur PDP.
+### Buffer campagne saisonnière (J-45 minimum)
+Toute campagne saisonnière démarre **J-45 minimum** par rapport à l'événement (Fête des Mères, Pères, Noël, etc.). Décomposition :
+- **J-45 → J-15** : 30 jours de campagne active (teaser → reveal → push → urgency → close)
+- **J-15 → J-7** : 7-10j production atelier Adriana
+- **J-7 → J-0** : 2-5j expédition transporteur
+- **Deadline commande client affichée à J-15 sur PDP** (au-delà, on ne peut plus garantir la livraison)
+
+⚠️ **Règle d'or** : J-30 est INSUFFISANT (ne laisse que 15j de campagne, impossible de monter une vraie séquence éditoriale). Toujours penser J-45.
 
 ### Schéma variante = 8 modules d'agence
 Une variante doit produire 8 livrables structurés :
@@ -130,9 +136,10 @@ Une variante doit produire 8 livrables structurés :
 ## 2. RÈGLES BRAND ET ÉDITORIALES (absolues)
 
 ### Lexique technique vs client (immuable)
-- **Contexte client / PDP** : "brodé à la commande"
-- **Contexte savoir-faire / atelier / blog** : "brodé sur métier Tajima"
-- **INTERDIT ABSOLU** : "brodé à la main", "fait main", "artisanal", "Tajima TMEZ" (jargon technique banni)
+- **Contexte client par défaut** (PDP, RS, copywriting général, captions, emails, hooks, taglines) : **"brodé à la commande"** ou **"brodé à la demande"** (synonymes, alterner pour rythme)
+- **Contexte ultra-niche uniquement** (articles blog "visite atelier", vidéos process où on filme la machine, fiches produit backend Hub) : "brodé sur métier Tajima" autorisé
+- **Règle de doute** : si tu hésites, c'est "à la commande". Tajima est l'exception, pas la norme.
+- **INTERDIT ABSOLU** : "brodé à la main", "fait main", "artisanal", "Tajima TMEZ" (jargon technique banni partout, même atelier)
 - **INTERDIT ABSOLU** : référence Etsy, "marketplace", autres canaux passés
 
 ### Tutoiement systématique
@@ -729,9 +736,11 @@ serene confident presence — Mélodie Vaxelaire / Louise Follain register
 ### Phrasé brand pour copywriting RS / Shopify (FR)
 - Tutoiement systématique
 - "Pour celle qui..." / "Pour celui qui..."
-- "Brodé sur métier Tajima dans notre atelier de Wattrelos"
+- "Brodé à la commande dans notre atelier de Wattrelos"
+- "Brodé à la demande, dans le Nord"
 - "Un cadeau qui dure" / "Un cadeau chargé de sens"
 - Pas de "fait main" / "artisanal" / "Etsy"
+- ⚠️ "Brodé sur métier Tajima" UNIQUEMENT en contexte article blog atelier ou vidéo process — JAMAIS en copy PDP, captions IG, hooks ou tagline
 
 ### Taglines templates / variantes
 - **Le Club** : *"Ton club. Ton blason."* / *"Deux mots, un symbole, une couleur. C'est le tien."* / *"Il y a les clubs officiels. Et il y a le tien."*
