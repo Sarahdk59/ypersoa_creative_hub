@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Josefin Sans", sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-bg: #F5F0E8;
+  --color-brand-rose: #A76059;
+  --color-brand-rose-light: #b8746d;
+  --color-brand-sage: #8A9E8C;
+  --color-brand-text: #2c2c2c;
+  --color-brand-muted: #9a9a9a;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-serif {
+  font-family: var(--font-serif);
+}
+
+.primary-button {
+  background-color: var(--color-brand-rose);
+  color: white;
+  border-radius: 9999px;
+  padding: 12px 24px;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.primary-button:hover:not(:disabled) {
+  background-color: var(--color-brand-rose-light);
+  transform: translateY(-1px);
+}
+
+.primary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-muted);
+  border-radius: 10px;
+}

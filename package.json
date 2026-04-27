@@ -1,22 +1,14 @@
 {
-  "name": "ypersoa_creative_hub",
-  "version": "1.0.0",
-  "description": "Structure du dossier créée le 19 avril 2026.",
-  "main": "index.js",
+  "name": "ypersoa-creative-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hub Ypersoa - Système d'automatisation des métiers de la communication",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:atelier": "pnpm --filter @ypersoa/atelier-social dev",
+    "build:atelier": "pnpm --filter @ypersoa/atelier-social build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.90.0",
-    "@google/genai": "^1.50.1"
-  },
-  "devDependencies": {
-    "@types/node": "^25.6.0",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.3"
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
   }
 }

@@ -1,0 +1,36 @@
+{
+  "name": "@ypersoa/atelier-social",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Atelier Social - Module Hub Ypersoa pour génération de contenus IG/Pinterest brand-safe",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^1.29.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.546.0",
+    "next": "^15.0.3",
+    "openai": "^4.77.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-dropzone": "^15.0.0",
+    "react-markdown": "^10.1.0",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.14",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.0.3",
+    "tailwindcss": "^4.1.14",
+    "typescript": "~5.8.2"
+  }
+}

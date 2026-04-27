@@ -1,0 +1,22 @@
+{
+  "name": "ypersoa_creative_hub",
+  "version": "1.0.0",
+  "description": "Structure du dossier créée le 19 avril 2026.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.90.0",
+    "@google/genai": "^1.50.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
