@@ -322,8 +322,8 @@
       "principaux_recommandes": [
         {
           "id": "MAN-P01",
-          "prenom": "Camille",
-          "pourquoi": "Profil 'mere de famille passionnee', registre contemplatif naturel, taches de rousseur et rides d'expression parfaites pour gros plan broderie"
+          "prenom": "Clemence",
+          "pourquoi": "Antiquaire Honfleur, registre contemplatif naturel (regard pensif sur objet ou fenetre du port), frange Bardot et bordeaux MAC Diva — taches de rousseur denses et rides d'expression discretes parfaites pour gros plan broderie. Famille esthetique 2 (maquillee chic), elle apporte une signature visuelle distinctive a Brigitte."
         },
         {
           "id": "MAN-P02",
@@ -351,9 +351,9 @@
       ],
 
       "duos_recommandes_pour_combinaisons_hero": {
-        "duo_femmes_complicite_sobre": "Camille + Aicha (MAN-P01 + MAN-P03) OU Anna + Lila (MAN-P02 + MAN-P04). Registre epaule contre epaule, regards croises, pas de demonstration.",
+        "duo_femmes_complicite_sobre": "Clemence + Aicha (MAN-P01 + MAN-P03) OU Anna + Lila (MAN-P02 + MAN-P04). Registre epaule contre epaule, regards croises, pas de demonstration.",
         "duo_couple_brigitte_initiales": "DUO_HENRI_JOSEPHINE (le plus sobre, 40 ans de mariage, tendresse posee). Eviter DUO_LEA_SARAH pour Brigitte (registre plus urbain, moins contemplatif).",
-        "duo_maman_enfant": "Camille + Felicie (MAN-P01 + MAN-P08) OU Marie-Helene + Felicie (MAN-P10 + MAN-P08). Lien tendre sobre."
+        "duo_maman_enfant": "Anna + Felicie (MAN-P02 + MAN-P08) OU Marie-Helene + Felicie (MAN-P10 + MAN-P08). Lien tendre sobre."
       },
 
       "mannequins_a_eviter_pour_brigitte": [

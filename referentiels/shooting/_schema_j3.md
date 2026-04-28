@@ -268,7 +268,7 @@ Casting FIXE de 20 personnages récurrents qui apparaissent sur tous les shootin
   "mannequins_principaux": [
     {
       "id": "MAN-P01",
-      "prenom_brand": "Camille",
+      "prenom_brand": "Clémence",
       "tier": "principal",
       "age": 40,
       "genre": "femme",
@@ -279,7 +279,7 @@ Casting FIXE de 20 personnages récurrents qui apparaissent sur tous les shootin
       "personnalite_visuelle": "lumineuse, complice, accessible",
       "scenes_recommandees": ["lifestyle_studio", "duo_couple", "lifestyle_outdoor"],
       "pilier_affinite": ["p2_emotion", "p3_produit"],
-      "image_reference_a_generer": "mannequins/MAN-P01_camille_reference.png",
+      "image_reference_a_generer": "mannequins/MAN-P01_clemence_reference.png",
       "prompt_en_signature": "A 40-year-old French woman, curvy figure, brown wavy shoulder-length hair, freckles on face, deep laugh lines around eyes and mouth, luminous and warm expression"
     },
     {

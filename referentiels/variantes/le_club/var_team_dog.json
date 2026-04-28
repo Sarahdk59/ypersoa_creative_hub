@@ -182,11 +182,11 @@
       },
       {
         "code_shot": "VAR-003-TEAM-DOG-S03",
-        "titre_humain": "Camille + chien golden retriever sur canapé Loft Organique",
+        "titre_humain": "Clémence + chien golden retriever sur canapé Loft Organique",
         "type_de_shot": "lifestyle_studio",
         "ambiance": "loft_organique",
         "mannequins_assignes": [
-          "MAN-P01 Camille"
+          "MAN-P01 Clémence"
         ],
         "support_produit": {
           "produit_id": "YP005",
@@ -195,7 +195,7 @@
         "fil_broderie": "fil_terracotta",
         "pilier_contenu": "P2_emotion",
         "aspect_ratio": "4:5",
-        "prompt_en_complet": "Editorial lifestyle fashion photography, 40-year-old Camille, French woman with chestnut honey mid-length wavy hair parted in the middle, freckles across her nose, natural expression wrinkles when she smiles, lived-in skin, sitting relaxed on a cream linen sofa in a curated Parisian apartment. Sage green paneled wall background, dark wooden parquet, morning sunlight from large window on the left. A calm golden retriever (warm honey coat, soft expression, not staged) is lying next to her with head on her lap. Camille wears an oversized Ypersoa beige #F5F0E0 crewneck sweatshirt YP005 with the embroidered Team Dog badge clearly visible on the LEFT CHEST in terracotta thread (TEAM upper arc, paw symbol center, DOG lower arc, 8-10cm diameter). Paired with raw denim jeans. Her hand rests gently on the dog's head, she looks softly at the dog (not at camera), slight smile. Warm ambient interior lighting, soft muted earth tones. Shot on 85mm f/2, shallow depth of field. Emoi Emoi × Soeur aesthetic, tender without over-staging the animal. The relationship is the subject, not the dog as prop. Lived-in skin conserved, no retouching, no beauty filter, analog film grain. --ar 4:5",
+        "prompt_en_complet": "Editorial lifestyle fashion photography, 38-year-old Clémence, French woman with long flowing dark chocolate brown wavy hair to mid-chest with curtain bangs Bardot (parted in the middle, framing the face at eyebrow level — her signature feature), full natural lips painted in deep bordeaux red lipstick (MAC Diva matte finish, never glossy — her signature), grey-green eyes, dense freckles across her nose and cheeks, natural expression wrinkles when she smiles softly, lived-in skin, sitting relaxed on a cream linen sofa in a curated Parisian apartment. Sage green paneled wall background, dark wooden parquet, morning sunlight from large window on the left. A calm golden retriever (warm honey coat, soft expression, not staged) is lying next to her with head on her lap. Clémence wears an oversized Ypersoa beige #F5F0E0 crewneck sweatshirt YP005 with the embroidered Team Dog badge clearly visible on the LEFT CHEST in terracotta thread (TEAM upper arc, paw symbol center, DOG lower arc, 8-10cm diameter). Paired with raw denim jeans, several antique silver oxidized rings on her hands. Her hand rests gently on the dog's head, she looks softly at the dog (not at camera), slight asymmetric smile at the corner of her mouth. Warm ambient interior lighting, soft muted earth tones. Shot on 85mm f/2, shallow depth of field. Reference: Charlotte Gainsbourg adult, Audrey Tautou Parisienne with bordeaux signature. Emoi Emoi × Soeur aesthetic, tender without over-staging the animal. The relationship is the subject, not the dog as prop. Lived-in skin conserved, no retouching, no beauty filter, analog film grain. --ar 4:5",
         "override_motif_applique": null,
         "notes_styliste": "Ne pas sur-mettre en scène le chien. Moment de calme partagé. La complicité humaine-animal est discrète et évidente. ÉVITER : chien qui pose pour la photo, chien avec accessoire ridicule."
       },
@@ -306,7 +306,7 @@
           "instagram",
           "tiktok"
         ],
-        "visuel_suggere": "Shot S03 (Camille + golden retriever)",
+        "visuel_suggere": "Shot S03 (Clémence + golden retriever)",
         "texte_caption": "[TODO] Caption registre humour dog-mom, 120 mots, évoque la vie avec son chien sans en faire trop",
         "hashtags": "[voir module_8]",
         "cta": "Compose ton Team [son nom] — lien bio",

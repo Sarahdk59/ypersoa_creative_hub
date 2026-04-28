@@ -256,7 +256,7 @@
         "exemples_mannequins": {
           "parent_enfant": "DUO_MATHIEU_GABIN (MAN-P06 + MAN-P09) ou autres combinaisons",
           "grand_parent_parent": "DUO_BEATRICE_FELICIE (MAN-P05 + MAN-P08) ou variantes avec MAN-P10",
-          "adultes_amis": "Combinaisons libres entre mannequins principaux adultes (ex: Camille + Aïcha, Anna + Lila, Césaria + Marie-Hélène)",
+          "adultes_amis": "Combinaisons libres entre mannequins principaux adultes (ex: Clémence + Aïcha, Anna + Lila, Césaria + Marie-Hélène)",
           "couple": "DUO_LEA_SARAH (MAN-P11 couple LGBTQ+) ou DUO_HENRI_JOSEPHINE (MAN-S19 senior mixte)"
         }
       },
@@ -302,11 +302,11 @@
       "nb_personnes_shot": "3 à 6 (typique : 3 ou 4)",
 
       "configurations_privilegiees": {
-        "3_generations": "DUO_BEATRICE_FELICIE + 1 adulte médiateur (Camille ou Anna) — scène grand-mère/mère/fille",
-        "famille_nucleaire": "Couple + 1 ou 2 enfants (ex: DUO_MATHIEU_GABIN + Camille + un autre enfant)",
+        "3_generations": "DUO_BEATRICE_FELICIE + 1 adulte médiateur (Anna ou Marie-Hélène) — scène grand-mère/mère/fille",
+        "famille_nucleaire": "Couple + 1 ou 2 enfants (ex: DUO_MATHIEU_GABIN + Aïcha + un autre enfant)",
         "couple_et_tribu": "DUO_LEA_SARAH + ami·e·s à dîner — scène couple+tribu (3 ou 4 personnes)",
         "seniors_et_petits_enfants": "DUO_HENRI_JOSEPHINE + petits-enfants (Félicie, Gabin) — scène 3 générations",
-        "trio_femmes_amies": "Camille + Aïcha + Anna (ou Lila) — scène brunch/apéro",
+        "trio_femmes_amies": "Clémence + Aïcha + Anna (ou Lila) — scène brunch/apéro",
         "famille_recomposee": "Composition libre avec enfants de différents mannequins"
       },
 

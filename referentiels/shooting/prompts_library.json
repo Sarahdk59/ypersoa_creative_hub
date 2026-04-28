@@ -413,7 +413,7 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "MAN-P01 Camille",
+        "MAN-P01 Clémence",
         "MAN-P02 Anna",
         "MAN-P03 Aïcha",
         "MAN-P04 Lila",
@@ -474,7 +474,7 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "MAN-P01 Camille",
+        "MAN-P01 Clémence",
         "MAN-P02 Anna",
         "MAN-P03 Aïcha",
         "MAN-P04 Lila",
@@ -532,7 +532,7 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "MAN-P01 Camille",
+        "MAN-P01 Clémence",
         "MAN-P02 Anna",
         "MAN-P03 Aïcha",
         "MAN-P04 Lila",
@@ -668,8 +668,8 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "DUO_BEATRICE_FELICIE + Camille",
-        "DUO_MATHIEU_GABIN + Camille + 2e enfant",
+        "DUO_BEATRICE_FELICIE + Anna",
+        "DUO_MATHIEU_GABIN + Aïcha + 2e enfant",
         "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
       ],
       "shopify_integration": {
@@ -697,8 +697,8 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "DUO_BEATRICE_FELICIE + Camille",
-        "DUO_MATHIEU_GABIN + Camille + 2e enfant",
+        "DUO_BEATRICE_FELICIE + Anna",
+        "DUO_MATHIEU_GABIN + Aïcha + 2e enfant",
         "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
       ],
       "shopify_integration": {
@@ -726,8 +726,8 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "DUO_BEATRICE_FELICIE + Camille",
-        "DUO_MATHIEU_GABIN + Camille + 2e enfant",
+        "DUO_BEATRICE_FELICIE + Anna",
+        "DUO_MATHIEU_GABIN + Aïcha + 2e enfant",
         "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
       ],
       "shopify_integration": {
@@ -939,7 +939,7 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "MAN-P01 Camille",
+        "MAN-P01 Clémence",
         "MAN-P02 Anna",
         "MAN-P03 Aïcha",
         "MAN-P04 Lila",
@@ -967,7 +967,7 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "MAN-P01 Camille",
+        "MAN-P01 Clémence",
         "MAN-P02 Anna",
         "MAN-P03 Aïcha",
         "MAN-P04 Lila",
@@ -1020,9 +1020,9 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "DUO_BEATRICE_FELICIE + Camille",
-        "DUO_MATHIEU_GABIN + Camille + 2e enfant (Félicie)",
-        "Aïcha + Anna + Lila + Camille (trio amies élargi)"
+        "DUO_BEATRICE_FELICIE + Anna",
+        "DUO_MATHIEU_GABIN + Aïcha + 2e enfant (Félicie)",
+        "Aïcha + Anna + Lila + Clémence (trio amies élargi)"
       ],
       "shopify_integration": {
         "position": "Image 4 — galerie (secondaire) ou hero campagne saison",
@@ -1050,7 +1050,7 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "DUO_BEATRICE_FELICIE + Camille",
+        "DUO_BEATRICE_FELICIE + Anna",
         "Marie-Hélène + Anna + Gabin/Félicie",
         "DUO_HENRI_JOSEPHINE + Félicie + Gabin"
       ],
@@ -1080,9 +1080,9 @@
         "p4_preuve": true
       },
       "mannequins_suggeres_casting_v2": [
-        "DUO_LEA_SARAH + Camille + Nicolas",
+        "DUO_LEA_SARAH + Clémence + Nicolas",
         "DUO_LEA_SARAH + Aïcha + Gaspard",
-        "Camille + Mathieu + Aïcha + Anna (2 couples amis)"
+        "Mathieu + Aïcha + Nicolas + Anna (2 couples amis)"
       ],
       "shopify_integration": {
         "position": "Image 4 — galerie (secondaire) ou hero campagne saison",

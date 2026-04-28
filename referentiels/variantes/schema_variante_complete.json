@@ -138,10 +138,10 @@
         "type": "ARRAY d'objets shot",
         "structure_shot": {
           "code_shot": "STRING — Ex: 'VAR-003-MAMA-CLUB-S01'",
-          "titre_humain": "STRING — Ex: 'Camille contemplative canapé Loft Organique'",
+          "titre_humain": "STRING — Ex: 'Clémence contemplative canapé Loft Organique'",
           "type_de_shot": "ENUM — ghost | crop_poitrine | lifestyle_studio | lifestyle_outdoor | macro_broderie | duo_couple | famille_vivante",
           "ambiance": "ENUM — studio_brut | loft_organique | aube_intime | echappee_sauvage | lumiere_sepia",
-          "mannequins_assignes": "ARRAY — IDs du casting (ex: ['MAN-P01 Camille', 'DUO_BEATRICE_FELICIE'])",
+          "mannequins_assignes": "ARRAY — IDs du casting (ex: ['MAN-P01 Clémence', 'DUO_BEATRICE_FELICIE'])",
           "support_produit": {
             "produit_id": "STRING — YP001|YP004|YP005|YP019|YP021",
             "couleur_support": "STRING — nom couleur support (ex: 'marine', 'beige naturel')"

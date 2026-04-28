@@ -1,54 +1,115 @@
 {
   "meta": {
     "lot": 1,
-    "version": "2.0",
-    "date": "2026-04-20",
-    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "version": "3.0",
+    "date": "2026-04-29",
+    "directive_casting": "D2_DEUX_FAMILLES_ESTHETIQUES v1.0 (succède à D1_BEAUTE_INCARNEE v2.0)",
     "fiches_contenues": ["MAN-P01", "MAN-P03", "MAN-P08", "MAN-P11", "MAN-S17"],
-    "_changelog_vs_v1": "Alignement beauté incarnée : rides naturelles (pas marquées), Félicie remplace Lila (blanche au lieu de métisse), Césaria remplace Fatou (style_wear réécrit sans statement vitiligo)"
+    "_changelog_vs_v2": "MAN-P01 : Camille (40 ans, châtain miel, mère vintage Caroline de Maigret) → REMPLACÉE par Clémence (38 ans, brune chocolat, antiquaire à Honfleur divorcée mère épanouie indépendante, frange rideau Bardot signature, lèvres bordeaux MAC Diva). Nouveau prénom car nouvelle identité brand. Inaugure la 2ème famille esthétique du casting ('maquillée chic assumée' face aux 'no-makeup naturelles'). Décision DA validée Sarah 29/04/2026 matin à tête fraîche, après cadrage 28/04 soir. Les 4 autres fiches (Aïcha, Félicie, Léa+Sarah, Césaria) ont reçu un nouveau champ 'famille_esthetique: no-makeup naturelle' pour cohérence avec la nouvelle directive."
   },
   "mannequins": [
     {
       "id": "MAN-P01",
-      "prenom": "Camille",
-      "age": 40,
+      "prenom": "Clémence",
+      "age": 38,
       "genre": "F",
       "ethnicite": "blanche française",
+      "famille_esthetique": "maquillée chic assumée",
       "apparence_physique": {
-        "silhouette": "Fine, taille moyenne (1m68), posture naturelle et droite",
-        "cheveux": "Châtain miel mi-longs, légèrement ondulés, raie au milieu, souvent derrière les oreilles",
-        "visage": "Traits doux et expressifs, taches de rousseur discrètes sur les pommettes et le nez, rides naturelles aux yeux quand elle sourit",
-        "peau": "Claire habitée, grain de peau vivant, légèrement bronzée en été"
+        "silhouette": "Fine, taille moyenne (1m70), posture droite et assumée, ni rigide ni avachie",
+        "cheveux": "Brune chocolat profond, longs et fluides descendant à mi-poitrine, naturellement ondulés mais soignés et lustrés. FRANGE RIDEAU / curtain bangs Bardot — séparée au milieu, encadrant le visage à hauteur des sourcils. Sa frange est sa signature visuelle distinctive (aucune autre canonique n'a de frange).",
+        "visage": "Ovale-allongé type Charlotte Gainsbourg. Yeux vert-gris (couleur eau de port Honfleur). Taches de rousseur denses sur le nez et les pommettes. Premières rides d'expression discrètes aux yeux. Lèvres pleines naturelles.",
+        "peau": "Claire habitée, grain de peau vivant, taches de rousseur visibles à travers tout maquillage léger. Pas de fond de teint épais."
       },
-      "personnalite_role_narratif": "La mère de famille passionnée qui offre avec sens. Femme de 40 ans épanouie, active, qui aime recevoir, jardiner, offrir. Elle incarne la cliente Ypersoa type : sensible, cultivée, exigeante sur la qualité sans être snob.",
+      "maquillage_signature": {
+        "rouge_a_levres": "Bordeaux profond MAC Diva — mat ou satiné, jamais glossy. Couleur signature de Clémence, élément distinctif du casting Ypersoa.",
+        "yeux": "Mascara léger, sourcils définis naturels. Pas de eyeliner, pas de smoky eye, pas de fard à paupières marqué.",
+        "teint": "Pas de fond de teint visible, peau naturelle préservée. Les taches de rousseur restent pleinement visibles.",
+        "principe": "Concentration sur la bouche. Le bordeaux est l'unique élément maquillage fort. Le reste reste naturel. Code de la Parisienne qui choisit un signe fort."
+      },
+      "personnalite_role_narratif": "Antiquaire à Honfleur, propriétaire de sa boutique sur les quais. 38 ans, divorcée, mère épanouie d'un ado de 14-16 ans. Forte et indépendante, ne demande jamais de validation. Se fait plaisir sans culpabilité — s'offre des bijoux, des objets, des broderies pour elle d'abord. A vécu son divorce comme libération, pas comme échec. Touche les matières avec gravité, connaît la valeur du temps long. Humour sec mais chaleureuse avec ceux qu'elle choisit. Lit, voyage seule, accueille son ado avec présence sans étouffer. Une Parisienne qui a déménagé en Normandie pour reprendre la boutique de sa grand-mère, et qui a fini par ne plus vouloir partir.",
       "piliers_compatibles": ["P1_Savoir-Faire", "P2_Emotion", "P3_Usage", "P4_Preuve"],
       "direction_photo": {
-        "regard": "Chaleureux, souvent vers un enfant ou hors champ, parfois caméra directe (pilier P4)",
-        "expressions_privilegiees": ["sourire retenu", "regard pensif", "rire doux"],
-        "eviter": "Poses frontales figées, regards caméra appuyés",
-        "cadrages_type": ["portrait buste 3/4", "plan américain dans scène de vie", "détail main sur détail brodé"]
+        "regard": "Direct frontal le plus souvent. Parfois pensif hors champ (touche un objet, regarde par la fenêtre du port). Jamais regard fuyant ou timide.",
+        "expressions_privilegiees": [
+          "sourire intériorisé bouche fermée",
+          "asymétrie subtile au coin de la bouche (humour sec)",
+          "concentration sereine quand elle examine un objet",
+          "regard direct calme quand elle pose"
+        ],
+        "eviter": [
+          "Sourires larges avec dents (casse le mystère du bordeaux)",
+          "Poses 'modèle qui pose pour vendre'",
+          "Maquillage corrigé / lèvres parfaitement dessinées",
+          "Cheveux sans frange visible (la frange est sa signature)",
+          "Lumière dure qui efface les taches de rousseur"
+        ],
+        "cadrages_type": [
+          "portrait chest-up frontal direct",
+          "plan taille avec mains visibles tenant un objet ancien",
+          "scène boutique antiquaire Honfleur",
+          "plan détail mains avec bagues argent sur broderie",
+          "plan moyen près d'une fenêtre boutique"
+        ]
       },
       "duo": null,
       "style_wear": {
-        "signature_vestimentaire": "Vintage français brut, comme si elle avait hérité du dressing de sa mère des années 70 et l'assumait aujourd'hui",
+        "signature_vestimentaire": "Parisienne assumée transplantée en Normandie. Coupes structurées mais détendues, matières belles, accessoires distinctifs. Le rouge à lèvres est le contraste fort dans une silhouette quiet.",
         "pieces_favorites": [
-          "Jupe en jean midi taille haute, patinée",
-          "Chemise en lin blanc cassé oversize",
-          "Pull col rond laine écrue",
-          "Sabots en cuir",
-          "Robe chemise ceinturée imprimé fleuri fané",
-          "Pantalon en velours côtelé camel",
-          "Grand foulard carré (Hermès vintage ou chiné)"
+          "Chemise blanche en popeline oversize",
+          "Cardigan vert sauge / camel en laine fine",
+          "Pantalon en lin écru large taille haute",
+          "Jean droit délavé patiné",
+          "Chemisier en soie crème ou bordeaux",
+          "Pull cachemire col rond gris ardoise",
+          "Trench beige ceinturé",
+          "Mules plates en cuir patiné",
+          "Plusieurs bagues anciennes en argent oxydé (4-5 bagues sur les deux mains)",
+          "Foulard vintage Hermès chiné"
         ],
-        "couleurs_de_predilection": ["écru", "camel", "bleu jean délavé", "terracotta", "vert sauge"],
-        "styles_francais_refs": ["Caroline de Maigret", "Jeanne Damas époque jardin", "Lou Doillon décontractée"],
+        "couleurs_de_predilection": [
+          "écru",
+          "blanc cassé",
+          "vert sauge",
+          "camel",
+          "gris ardoise",
+          "bordeaux (en accord avec rouge à lèvres)",
+          "marine",
+          "noir profond"
+        ],
+        "styles_francais_refs": [
+          "Charlotte Gainsbourg adulte",
+          "Sophie Marceau élégante",
+          "Audrey Tautou Parisienne",
+          "Caroline de Maigret bohème",
+          "Brigitte Bardot (curtain bangs uniquement)",
+          "Clara Luciani (brune longs raie milieu, lèvres pleines)"
+        ],
         "occasions_ypersoa_typiques": [
-          "soir : chemise lin + jean + mules + T-shirt Ypersoa brodé sous la chemise ouverte",
-          "week-end : robe chemise fleurie + sweat Ypersoa noué aux épaules en terrasse",
-          "mariage : tailleur lin écru + blouse Ypersoa brodée délicatement au col",
-          "champ coquelicots : robe midi fleurie + panier osier + T-shirt enfant brodé sur le bras"
+          "soir : chemise blanche oversize + jean droit + T-shirt Ypersoa brodé sous la chemise + bagues argent + bordeaux MAC Diva",
+          "week-end : cardigan vert sauge + chemisier soie crème + pantalon lin + sweat Ypersoa noué aux épaules + boutique antiquaire Honfleur en arrière-plan",
+          "mariage : tailleur lin écru + blouse Ypersoa brodée délicate au col + bordeaux assumé + bagues hérités",
+          "champ coquelicots : robe midi en lin + cardigan camel + T-shirt enfant Ypersoa brodé sur le bras + bordeaux signature même en plein air",
+          "atelier antiquaire : chemise lin + cardigan + bagues argent qui touchent objet ancien + sweat Ypersoa près du compas / lorgnon"
         ],
-        "pieces_qui_ne_vont_pas": ["escarpins pointus", "logos voyants", "streetwear", "total look noir", "jean skinny"]
+        "pieces_qui_ne_vont_pas": [
+          "Escarpins pointus",
+          "Logos voyants",
+          "Streetwear",
+          "Total look noir (étouffe le bordeaux)",
+          "Jean skinny",
+          "Tenues qui contrastent avec le bordeaux (oranges vifs, fuchsia)",
+          "Maquillage glamour complet (smoky eye + nude lips serait l'opposé exact de sa signature)"
+        ]
+      },
+      "_notes_techniques": {
+        "fichier_image_canonique": "MAN-P01_Clemence_canonique.jpg",
+        "format_image": "Portrait 3:4 vertical, fond cream/beige uni, cadrage chest-up identique aux autres canoniques (Aïcha, Marie-Hélène)",
+        "tshirt_canonique": "Heather grey crew-neck (cohérence avec autres canoniques)",
+        "outil_generation": "Nano Banana / Gemini Studio",
+        "version_validee": "Image 5 du test 29/04/2026 matin (5 candidats générés, sélection à tête fraîche)",
+        "differenciation_casting": "Frange rideau Bardot (signature unique, aucune autre canonique n'a de frange) + lèvres bordeaux MAC Diva (2ème famille esthétique 'maquillée chic')",
+        "famille_esthetique_partenaire": "À terme, 1 ou 2 autres canoniques pourront rejoindre la famille 'maquillée chic' pour l'équilibrer dans le casting (à décider session future)"
       }
     },
     {
@@ -57,6 +118,7 @@
       "age": 40,
       "genre": "F",
       "ethnicite": "afro-caribéenne",
+      "famille_esthetique": "no-makeup naturelle",
       "apparence_physique": {
         "silhouette": "Grande (1m74), élancée, posture altière et décontractée à la fois",
         "cheveux": "Naturels, afro court sculpté ou braids fines tirées en chignon bas selon occasion",
@@ -100,6 +162,7 @@
       "age": 7,
       "genre": "F",
       "ethnicite": "blanche",
+      "famille_esthetique": "no-makeup naturelle",
       "apparence_physique": {
         "silhouette": "Fine, élancée pour son âge, énergie vive",
         "cheveux": "Blonds vénitiens longs, ondulés naturels, souvent demi-queue ou tresse lâche",
@@ -143,6 +206,7 @@
       "age": "35-37",
       "genre": "F/F",
       "ethnicite": "métisse (Léa) + nordique (Sarah)",
+      "famille_esthetique": "no-makeup naturelle",
       "apparence_physique": {
         "Lea": "37 ans, métisse noir-blanc, 1m70, cheveux bruns bouclés courts, regard intense, sourire franc, grain de peau habité",
         "Sarah": "35 ans, nordique (cheveux blond cendré courts, yeux bleu pâle), 1m72, traits fins et droits, silhouette androgyne élégante"
@@ -162,7 +226,7 @@
         "Sarah_signature_vestimentaire": "Minimalisme nordique, coupes nettes, palette sobre, accessoires rares mais précis",
         "Sarah_pieces_favorites": ["Chemise blanche à col italien", "Pantalon laine grise tombé parfait", "Mocassins en cuir noir", "Pull cachemire gris anthracite", "Lunettes acétate fines"],
         "couleurs_de_predilection_duo": ["denim", "blanc", "gris anthracite", "noir", "écru"],
-        "styles_francais_refs": ["Louise Follain × Mélodie Vaxelaire", "couple esthétique Make My Lemonade déstaturé"],
+        "styles_francais_refs": ["Louise Follain × Mélodie Vaxelaire", "couple esthétique Make My Lemonade dé-saturé"],
         "occasions_ypersoa_typiques": [
           "soir : Léa en jean + T-shirt Ypersoa / Sarah en chemise blanche + blouse Ypersoa, dîner à la maison",
           "week-end : brunch en terrasse, sweats Ypersoa assortis mais pas identiques",
@@ -178,6 +242,7 @@
       "age": 40,
       "genre": "F",
       "ethnicite": "afro-caribéenne",
+      "famille_esthetique": "no-makeup naturelle",
       "apparence_physique": {
         "silhouette": "1m71, silhouette en sablier, port altier, énergie calme",
         "cheveux": "Naturels, twists serrés ou afro puff haut selon occasion",

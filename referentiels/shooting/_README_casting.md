@@ -22,7 +22,7 @@ Références visuelles : Jeanne Damas, Caroline de Maigret, Clémentine Desseaux
 
 | # | Prénom | Âge | Ethnicité | Style signature | Duo |
 |---|---|---|---|---|---|
-| P01 | Camille | 40 | blanche | Vintage français brut (Caroline de Maigret) | — |
+| P01 | Clémence ⭐ | 38 | blanche | Parisienne assumée Honfleur, frange Bardot + bordeaux MAC Diva (Charlotte Gainsbourg) — **famille maquillée chic** | — |
 | P02 | Anna | 35 | blanche sud | Provençale moderne (Sessùn/Soeur) | — |
 | P03 | Aïcha | 40 | afro-caribéenne | Élégance parisienne-caribéenne | — |
 | P04 | Lila | 45 | maghrébine | Parisienne sophistiquée (Leïla Bekhti) | — |
@@ -102,8 +102,8 @@ Références visuelles : Jeanne Damas, Caroline de Maigret, Clémentine Desseaux
 
 ### Combinaisons famille_vivante fortes
 
-- BEATRICE_FELICIE + Camille/Anna/Marie-Hélène = 3 générations féminines
-- MATHIEU_GABIN + Camille (conjointe) + 2ème enfant = famille nucléaire
+- BEATRICE_FELICIE + Anna/Marie-Hélène = 3 générations féminines
+- MATHIEU_GABIN + Aïcha (conjointe) + 2ème enfant = famille nucléaire
 - LEA_SARAH + 1-2 ami·e·s = couple + tribu
 - HENRI_JOSEPHINE + Félicie + Gabin = 3 générations mixtes
 
@@ -132,7 +132,7 @@ referentiels/shooting/
 ├── ambiances_shooting.json               ← 5 ambiances 80/20
 ├── mannequins_recurrents.json            ← CE DOCUMENT (index + vue d'ensemble)
 ├── duos_detailles_et_distribution.json   ← 4 duos détaillés + règles distribution
-├── mannequins_lot1_5fiches.json          ← Camille, Aïcha, Félicie, Léa&Sarah, Césaria
+├── mannequins_lot1_5fiches.json          ← Clémence, Aïcha, Félicie, Léa&Sarah, Césaria
 ├── mannequins_lot2_2fiches.json          ← Anna, Lila
 ├── mannequins_lot3_6fiches.json          ← Béatrice, Mathieu, Nicolas, Gabin, Marie-Hélène, Brune
 ├── mannequins_lot4_8fiches.json          ← Priya, Gaspard, Noé, Hiroshi, Hassan, Henri&Joséphine, Hugo

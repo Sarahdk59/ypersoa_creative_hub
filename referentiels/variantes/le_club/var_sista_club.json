@@ -130,17 +130,17 @@
       },
       {
         "code_shot": "VAR-003-SISTA-CLUB-S03",
-        "titre_humain": "Trio amies Anna + Camille + Aïcha lifestyle studio",
+        "titre_humain": "Trio amies Anna + Clémence + Aïcha lifestyle studio",
         "type_de_shot": "lifestyle_studio",
         "ambiance": "loft_organique",
-        "mannequins_assignes": ["MAN-P02 Anna", "MAN-P01 Camille", "MAN-P03 Aïcha"],
+        "mannequins_assignes": ["MAN-P02 Anna", "MAN-P01 Clémence", "MAN-P03 Aïcha"],
         "support_produit": {"produit_id": "YP005", "couleur_support": "vert_sauge"},
         "fil_broderie": "fil_framboise",
         "pilier_contenu": "P2_emotion",
         "aspect_ratio": "4:5",
-        "prompt_en_complet": "Editorial lifestyle fashion photography, three close adult female friends together in a sunlit Parisian apartment with cream walls and dark wooden parquet. Anna, 35, French Provençale woman with sun-streaked dark blonde mid-length wavy hair, freckles, tanned skin, natural smile lines. Camille, 40, French woman with chestnut honey wavy hair, freckles, lived-in skin. Aïcha, 40, afro-caribéenne Parisian woman with sculpted short natural afro, luminous deep skin, elegant tall posture. All three wear matching oversized crewneck sweatshirts YP005 in Ypersoa vert_sauge #7A9E7E (dusty sage green). Each garment features the embroidered Sista Club badge clearly visible on the LEFT CHEST in raspberry pink thread (Ypersoa fil_framboise) — 'SISTA' upper arc, heart center, 'CLUB' lower arc. Authentic interaction: Anna sitting on the arm of a vintage cream linen sofa, Camille leaning against the back, Aïcha standing beside, all three laughing at something off-frame, real candid moment, no one staged looking at the camera. Soft window light from the left, warm interior tones with green plants visible. Shot on 50mm f/3.5, all three in focus, group composition. Émoï-Émoï × Sézane campaign aesthetic, French best friends energy, tender complicity without performativity. Real humans with natural features, lived-in skin conserved, no retouching, no beauty filter, analog film grain, raw editorial feel. --ar 4:5",
+        "prompt_en_complet": "Editorial lifestyle fashion photography, three close adult female friends together in a sunlit Parisian apartment with cream walls and dark wooden parquet. Anna, 35, French Provençale woman with sun-streaked dark blonde mid-length wavy hair, freckles, tanned skin, natural smile lines. Clémence, 38, French woman with long dark chocolate brown wavy hair and curtain bangs Bardot, deep bordeaux MAC Diva lips (her signature), freckles, lived-in skin. Aïcha, 40, afro-caribéenne Parisian woman with sculpted short natural afro, luminous deep skin, elegant tall posture. All three wear matching oversized crewneck sweatshirts YP005 in Ypersoa vert_sauge #7A9E7E (dusty sage green). Each garment features the embroidered Sista Club badge clearly visible on the LEFT CHEST in raspberry pink thread (Ypersoa fil_framboise) — 'SISTA' upper arc, heart center, 'CLUB' lower arc. Authentic interaction: Anna sitting on the arm of a vintage cream linen sofa, Clémence leaning against the back, Aïcha standing beside, all three laughing at something off-frame, real candid moment, no one staged looking at the camera. Soft window light from the left, warm interior tones with green plants visible. Shot on 50mm f/3.5, all three in focus, group composition. Émoï-Émoï × Sézane campaign aesthetic, French best friends energy, tender complicity without performativity. Real humans with natural features, lived-in skin conserved, no retouching, no beauty filter, analog film grain, raw editorial feel. --ar 4:5",
         "override_motif_applique": null,
-        "notes_styliste": "Pivot émotionnel du pack. Trio amies représente la diversité de la sororité Ypersoa (Anna provençale + Camille classique française + Aïcha afro-caribéenne). Combinaison vert_sauge + framboise = duo couleurs frais et féminin. Couleur YP005/vert_sauge validée via palette_supports_par_produit."
+        "notes_styliste": "Pivot émotionnel du pack. Trio amies représente la diversité de la sororité Ypersoa (Anna provençale + Clémence Parisienne assumée famille 2 maquillée chic + Aïcha afro-caribéenne). Clémence garde son bordeaux MAC Diva même en pack mixte (règle famille 1+2). Combinaison vert_sauge + framboise = duo couleurs frais et féminin. Couleur YP005/vert_sauge validée via palette_supports_par_produit."
       },
       {
         "code_shot": "VAR-003-SISTA-CLUB-S04",
@@ -161,12 +161,12 @@
         "titre_humain": "Hero banner outdoor trio amies rue parisienne",
         "type_de_shot": "lifestyle_outdoor",
         "ambiance": "echappee_sauvage",
-        "mannequins_assignes": ["MAN-P03 Aïcha", "MAN-P02 Anna", "MAN-P01 Camille"],
+        "mannequins_assignes": ["MAN-P03 Aïcha", "MAN-P02 Anna", "MAN-P01 Clémence"],
         "support_produit": {"produit_id": "YP005", "couleur_support": "marine"},
         "fil_broderie": "fil_rose_pale",
         "pilier_contenu": "P2_emotion",
         "aspect_ratio": "16:9",
-        "prompt_en_complet": "Editorial fashion photograph, three adult female friends walking together on a quiet Parisian cobblestone street in golden hour. Aïcha, 40, afro-caribéenne with sculpted short natural afro, elegant tall posture. Anna, 35, French Provençale with sun-streaked dark blonde wavy hair, freckles, tanned. Camille, 40, French with chestnut honey wavy hair, freckles. All three wear matching oversized crewneck sweatshirts YP005 in Ypersoa marine #1E2D4A, each with the embroidered Sista Club badge on the LEFT CHEST in soft pale pink thread (Ypersoa fil_rose_pale). Paired with raw denim jeans and various leather flat shoes (sabots, mules, loafers). Walking in a loose row of three, shoulders slightly touching, mid-conversation, one of them tilting her head back laughing. Golden hour backlight from behind creating warm rim light on hair, soft long shadows on cobblestones, autumn Parisian Haussmann buildings slightly blurred in background. Shot on 35mm f/4, full body horizontal composition for hero banner. Sézane × Émoï-Émoï campaign aesthetic, effortless French best friends squad energy. Cinematic depth of field. Real lived-in skin with visible grain, no retouching, no smoothing, analog film grain. --ar 16:9",
+        "prompt_en_complet": "Editorial fashion photograph, three adult female friends walking together on a quiet Parisian cobblestone street in golden hour. Aïcha, 40, afro-caribéenne with sculpted short natural afro, elegant tall posture. Anna, 35, French Provençale with sun-streaked dark blonde wavy hair, freckles, tanned. Clémence, 38, French with long dark chocolate brown wavy hair and curtain bangs Bardot, deep bordeaux MAC Diva lips, freckles. All three wear matching oversized crewneck sweatshirts YP005 in Ypersoa marine #1E2D4A, each with the embroidered Sista Club badge on the LEFT CHEST in soft pale pink thread (Ypersoa fil_rose_pale). Paired with raw denim jeans and various leather flat shoes (sabots, mules, loafers). Walking in a loose row of three, shoulders slightly touching, mid-conversation, one of them tilting her head back laughing. Golden hour backlight from behind creating warm rim light on hair, soft long shadows on cobblestones, autumn Parisian Haussmann buildings slightly blurred in background. Shot on 35mm f/4, full body horizontal composition for hero banner. Sézane × Émoï-Émoï campaign aesthetic, effortless French best friends squad energy. Cinematic depth of field. Real lived-in skin with visible grain, no retouching, no smoothing, analog film grain. --ar 16:9",
         "override_motif_applique": null,
         "notes_styliste": "Format 16:9 conservé : exception justifiée (hero banner Shopify pour collection EVJF/Mariage saisonnière). Trio en marine + rose pâle = signature Sista Club portable au quotidien. Casting volontairement diversifié sans tomber dans le tokenisme — c'est la complicité d'amies qui prime visuellement."
       },
@@ -353,7 +353,7 @@
       "Compléter module_1 description longue (Phase 4 Copywriter)",
       "Compléter modules 3-7 (Phase 3 moteurs RS)",
       "Lancer test pré-production : générer S01 et S03 sur Gemini, valider rendu",
-      "Sourcer mannequins trio amies (Anna + Camille + Aïcha déjà au casting, organiser shoot groupé)",
+      "Sourcer mannequins trio amies (Anna + Clémence + Aïcha déjà au casting, organiser shoot groupé)",
       "Benchmark hashtags EVJF performants en avril-mai pour pic saison"
     ]
   }

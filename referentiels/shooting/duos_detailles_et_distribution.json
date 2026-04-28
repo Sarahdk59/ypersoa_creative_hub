@@ -74,7 +74,7 @@
 
       "types_de_shots_compatibles": [
         "duo_couple (rotation type 'grand_parent_parent')",
-        "famille_vivante (si +1 adulte ajouté, ex: Camille ou Anna)",
+        "famille_vivante (si +1 adulte ajouté, ex: Anna ou Marie-Hélène)",
         "lifestyle_studio",
         "lifestyle_outdoor"
       ],
@@ -316,9 +316,9 @@
       "reference": "types_de_shots.json > duo_couple > rotation_cyclique_obligatoire",
       "ordre": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
       "mapping_duos_vers_types": {
-        "parent_enfant": "DUO_MATHIEU_GABIN (principal) + autres combinaisons libres (ex: Camille + Felicie, Aïcha + Gabin)",
+        "parent_enfant": "DUO_MATHIEU_GABIN (principal) + autres combinaisons libres (ex: Anna + Felicie, Aïcha + Gabin)",
         "grand_parent_parent": "DUO_BEATRICE_FELICIE (principal) + variantes avec Marie-Hélène, Hassan, Hiroshi",
-        "adultes_amis": "Combinaisons libres entre adultes (ex: Camille + Aïcha, Anna + Lila, Césaria + Marie-Hélène, Nicolas + Mathieu)",
+        "adultes_amis": "Combinaisons libres entre adultes (ex: Clémence + Aïcha, Anna + Lila, Césaria + Marie-Hélène, Nicolas + Mathieu)",
         "couple": "DUO_LEA_SARAH OU DUO_HENRI_JOSEPHINE (alterner entre les 2 couples pour éviter la monotonie)"
       }
     },
@@ -326,9 +326,9 @@
     "regles_combinaison_famille_vivante": {
       "description": "Quand un duo établi est utilisé dans un shot famille_vivante (3+ personnes), quelles combinaisons sont privilégiées.",
       "combinaisons_fortes": [
-        "DUO_BEATRICE_FELICIE + Camille (ou Anna, ou Marie-Hélène) = 3 générations féminines",
-        "DUO_MATHIEU_GABIN + Camille (conjointe implicite) + 2ème enfant = famille nucléaire",
-        "DUO_LEA_SARAH + 1 ou 2 ami·e·s (Camille, Aïcha, Nicolas) = couple + tribu",
+        "DUO_BEATRICE_FELICIE + Anna (ou Marie-Hélène) = 3 générations féminines",
+        "DUO_MATHIEU_GABIN + Aïcha (conjointe implicite) + 2ème enfant = famille nucléaire",
+        "DUO_LEA_SARAH + 1 ou 2 ami·e·s (Clémence, Aïcha, Nicolas) = couple + tribu",
         "DUO_HENRI_JOSEPHINE + Félicie + Gabin (petits-enfants implicites) = 3 générations mixtes"
       ],
       "combinaisons_a_eviter": [

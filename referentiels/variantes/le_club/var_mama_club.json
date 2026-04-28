@@ -186,11 +186,11 @@
       },
       {
         "code_shot": "VAR-003-MAMA-CLUB-S03",
-        "titre_humain": "Camille portée lifestyle studio vert sauge",
+        "titre_humain": "Anna portée lifestyle studio vert sauge",
         "type_de_shot": "lifestyle_studio",
         "ambiance": "loft_organique",
         "mannequins_assignes": [
-          "MAN-P01 Camille"
+          "MAN-P02 Anna"
         ],
         "support_produit": {
           "produit_id": "YP005",
@@ -199,9 +199,9 @@
         "fil_broderie": "fil_ivoire",
         "pilier_contenu": "P2_emotion",
         "aspect_ratio": "4:5",
-        "prompt_en_complet": "Editorial fashion photography, 40-year-old Camille, a beautiful French woman with chestnut honey mid-length wavy hair parted in the middle, freckles across her nose and cheeks, natural expression wrinkles around her eyes when she smiles, lived-in skin texture (no smoothing), standing relaxed in a curated Parisian apartment. Sage green paneled wall, dark wooden parquet floor, vintage props: old leather suitcase, framed botanical prints, potted eucalyptus. She wears an oversized Ypersoa marine #1E2D4A crewneck sweatshirt YP005 with the embroidered Mama Club badge visible on the LEFT CHEST — cream ivory thread, circular badge with 'MAMA' on top arc, heart center, 'CLUB' on bottom arc, 8-10cm diameter. Paired with raw denim jeans and cream leather sabots. Relaxed confident pose, hand near the embroidery, soft smile, warm gaze off-frame. Medium format Hasselblad, 80mm f/4, soft ambient interior lighting, warm muted earth tones with sage green accents. French heritage brand campaign aesthetic, Emoi Emoi × Make My Lemonade editorial. Real human features with natural imperfections, no retouching, no skin smoothing, no beauty filter. Analog film grain, raw editorial feel. Reference: Maison Labiche lookbook style. --ar 4:5",
+        "prompt_en_complet": "Editorial fashion photography, 35-year-old Anna, a beautiful French Provençale woman with sun-streaked dark blonde mid-length wavy hair, freckles across her nose and shoulders, naturally tanned olive Mediterranean skin, natural expression wrinkles around her eyes when she smiles, lived-in skin texture (no smoothing), standing relaxed in a curated Parisian apartment. Sage green paneled wall, dark wooden parquet floor, vintage props: old leather suitcase, framed botanical prints, potted eucalyptus. She wears an oversized Ypersoa marine #1E2D4A crewneck sweatshirt YP005 with the embroidered Mama Club badge visible on the LEFT CHEST — cream ivory thread, circular badge with 'MAMA' on top arc, heart center, 'CLUB' on bottom arc, 8-10cm diameter. Paired with raw denim jeans and cream leather sabots. Relaxed confident pose, hand near the embroidery, soft smile, warm gaze off-frame. Medium format Hasselblad, 80mm f/4, soft ambient interior lighting, warm muted earth tones with sage green accents. French heritage brand campaign aesthetic, Emoi Emoi × Make My Lemonade editorial. Real human features with natural imperfections, no retouching, no skin smoothing, no beauty filter. Analog film grain, raw editorial feel. Reference: Maison Labiche lookbook style, Sessùn Provençale moderne. --ar 4:5",
         "override_motif_applique": null,
-        "notes_styliste": "Hero lifestyle femme adulte — Camille = profil iconique 'mère de famille complice'. Garder son grain de peau naturel."
+        "notes_styliste": "Hero lifestyle femme adulte — Anna (provençale moderne 35 ans, peau hâlée, no-makeup naturelle) = profil iconique 'mère de famille complice' pour Mother's Day. Garder son grain de peau naturel et ses taches de rousseur naturelles."
       },
       {
         "code_shot": "VAR-003-MAMA-CLUB-S04",
@@ -224,11 +224,11 @@
       },
       {
         "code_shot": "VAR-003-MAMA-CLUB-S05",
-        "titre_humain": "Duo Camille + Félicie mère-fille sweats Mama Club assortis",
+        "titre_humain": "Duo Anna + Félicie mère-fille sweats Mama Club assortis",
         "type_de_shot": "duo_couple",
         "ambiance": "loft_organique",
         "mannequins_assignes": [
-          "MAN-P01 Camille",
+          "MAN-P02 Anna",
           "MAN-P08 Félicie"
         ],
         "support_produit": {
@@ -238,31 +238,31 @@
         "fil_broderie": "fil_ivoire",
         "pilier_contenu": "P2_emotion",
         "aspect_ratio": "4:5",
-        "prompt_en_complet": "Tight cropped fashion editorial photograph, mother-daughter duo standing close together in front of a soft cream interior wall. Mother: Camille, 40, chestnut honey wavy hair, freckles, natural smile lines, wearing oversized Ypersoa marine #1E2D4A adult crewneck sweatshirt YP005. Daughter: Félicie, 7, blond vénitien long wavy hair, dense freckles across nose and cheeks, dimples when she smiles, wearing matching child Ypersoa marine #1E2D4A hoodie YP004. Both garments feature the embroidered circular Mama Club badge on the LEFT CHEST in cream ivory thread (MAMA top arc, heart center, CLUB bottom arc). Mother's arm around daughter's shoulder, daughter leaning into mother, both looking slightly off-camera with authentic complicity, no forced smiles. Intimate framing cropped from mid-thigh to just above heads. Soft window light from left, warm cream wall background. Shot on 85mm f/2, shallow depth of field keeping both faces sharp. A.P.C. × Emoi Emoi campaign aesthetic, French elegance, tender without demonstration. Real humans with natural features, lived-in skin conserved, no retouching, no beauty filter, analog film grain, raw editorial feel. --ar 4:5",
+        "prompt_en_complet": "Tight cropped fashion editorial photograph, mother-daughter duo standing close together in front of a soft cream interior wall. Mother: Anna, 35, sun-streaked dark blonde wavy hair, freckles, naturally tanned olive Mediterranean skin, natural smile lines, wearing oversized Ypersoa marine #1E2D4A adult crewneck sweatshirt YP005. Daughter: Félicie, 7, blond vénitien long wavy hair, dense freckles across nose and cheeks, dimples when she smiles, wearing matching child Ypersoa marine #1E2D4A hoodie YP004. Both garments feature the embroidered circular Mama Club badge on the LEFT CHEST in cream ivory thread (MAMA top arc, heart center, CLUB bottom arc). Mother's arm around daughter's shoulder, daughter leaning into mother, both looking slightly off-camera with authentic complicity, no forced smiles. Intimate framing cropped from mid-thigh to just above heads. Soft window light from left, warm cream wall background. Shot on 85mm f/2, shallow depth of field keeping both faces sharp. A.P.C. × Emoi Emoi campaign aesthetic, French elegance, tender without demonstration. Real humans with natural features, lived-in skin conserved, no retouching, no beauty filter, analog film grain, raw editorial feel. --ar 4:5",
         "override_motif_applique": null,
         "notes_styliste": "Pivot émotionnel du pack. Rotation cyclique position = parent_enfant. La tendresse doit être évidente sans dramatisation."
       },
       {
         "code_shot": "VAR-003-MAMA-CLUB-S06",
-        "titre_humain": "Famille vivante 3 générations (Béatrice + Camille + Félicie)",
+        "titre_humain": "Famille vivante 3 générations (Béatrice + Anna + Félicie)",
         "type_de_shot": "famille_vivante",
         "ambiance": "loft_organique",
         "mannequins_assignes": [
           "MAN-P05 Béatrice",
-          "MAN-P01 Camille",
+          "MAN-P02 Anna",
           "MAN-P08 Félicie"
         ],
         "support_produit": {
           "produit_id": "YP005_YP001_YP004",
-          "couleur_support": "Béatrice: beige · Camille: marine · Félicie: marine",
+          "couleur_support": "Béatrice: beige · Anna: marine · Félicie: marine",
           "note": "Variation chromatique pour rythmer la composition famille — 1 personne en clair (Béatrice) entre 2 en marine."
         },
         "fil_broderie": "fil_ivoire",
         "pilier_contenu": "P2_emotion",
         "aspect_ratio": "4:5",
-        "prompt_en_complet": "Lively family editorial photograph, three generations sharing a Sunday breakfast moment around a wooden kitchen table in a sunlit Normandy countryside home. Grandmother Béatrice, 55, métisse (black-white heritage), silver-gray hair loosely tied back, natural wrinkles, pouring tea, wearing Ypersoa beige #F5F0E0 crewneck sweatshirt YP005. Mother Camille, 40, chestnut wavy hair, freckles, laughing at something her daughter said, wearing Ypersoa marine #1E2D4A crewneck sweatshirt YP005. Daughter Félicie, 7, blonde vénitienne, dense freckles, reaching for a piece of bread, wearing Ypersoa marine #1E2D4A hoodie YP004. All three garments feature the embroidered Mama Club badge on the LEFT CHEST in cream ivory thread. Warm morning window light from large kitchen window, rustic wooden table with ceramic mugs and fresh bread, green plants visible. Authentic interaction — mother-daughter laughing together, grandmother attentive, child reaching — no one staged looking at the camera (maybe Félicie glances briefly). Shot on 35mm f/5, everyone in focus, group composition. Bonpoint × Gamin Gamine family campaign aesthetic, real French family life, warm saturated color palette with terracotta/ochre accents from props. Real humans with natural features, lived-in skin, no retouching, analog film grain. The scene reads as 'Sunday morning joy' first, 'mixed-heritage family' only as secondary observation. --ar 4:5",
+        "prompt_en_complet": "Lively family editorial photograph, three generations sharing a Sunday breakfast moment around a wooden kitchen table in a sunlit Normandy countryside home. Grandmother Béatrice, 55, métisse (black-white heritage), silver-gray hair loosely tied back, natural wrinkles, pouring tea, wearing Ypersoa beige #F5F0E0 crewneck sweatshirt YP005. Mother Anna, 35, sun-streaked dark blonde wavy hair, freckles, naturally tanned olive Mediterranean skin, laughing at something her daughter said, wearing Ypersoa marine #1E2D4A crewneck sweatshirt YP005. Daughter Félicie, 7, blonde vénitienne, dense freckles, reaching for a piece of bread, wearing Ypersoa marine #1E2D4A hoodie YP004. All three garments feature the embroidered Mama Club badge on the LEFT CHEST in cream ivory thread. Warm morning window light from large kitchen window, rustic wooden table with ceramic mugs and fresh bread, green plants visible. Authentic interaction — mother-daughter laughing together, grandmother attentive, child reaching — no one staged looking at the camera (maybe Félicie glances briefly). Shot on 35mm f/5, everyone in focus, group composition. Bonpoint × Gamin Gamine family campaign aesthetic, real French family life, warm saturated color palette with terracotta/ochre accents from props. Real humans with natural features, lived-in skin, no retouching, analog film grain. The scene reads as 'Sunday morning joy' first, 'mixed-heritage family' only as secondary observation. --ar 4:5",
         "override_motif_applique": null,
-        "notes_styliste": "Shot hero famille 3 générations — teste la règle famille_vivante. Particularité ethnicité de Béatrice présente mais pas centrée. Test validation: est-ce qu'on décrit la scène par 'joie familiale du dimanche' ou 'famille inclusive' ? Réponse attendue: le premier. [PATCH 2026-04-22] Format passé de 4:3 vers 4:5 (PDP). Couleurs précisées par personne (Béatrice beige, Camille+Félicie marine) au lieu de 'variés marine et écru'."
+        "notes_styliste": "Shot hero famille 3 générations — teste la règle famille_vivante. Particularité ethnicité de Béatrice présente mais pas centrée. Test validation: est-ce qu'on décrit la scène par 'joie familiale du dimanche' ou 'famille inclusive' ? Réponse attendue: le premier. [PATCH 2026-04-22] Format passé de 4:3 vers 4:5 (PDP). Couleurs précisées par personne (Béatrice beige, Anna+Félicie marine) au lieu de 'variés marine et écru'. [PATCH 2026-04-29] Camille → Anna pour cohérence Mother's Day no-makeup naturelle."
       },
       {
         "code_shot": "VAR-003-MAMA-CLUB-S07",
@@ -310,14 +310,14 @@
       "slide_01_hook": "[TODO] Hook visuel : gros plan macro broderie + texte 'Il y a les clubs officiels...'",
       "slide_02_probleme_ou_insight": "[TODO] Insight : 'Et il y a le tien.' — seuil émotionnel",
       "slides_03_07_developpement": [
-        "[TODO Slide 3] Le concept Mama Club en image (Camille + Félicie)",
+        "[TODO Slide 3] Le concept Mama Club en image (Anna + Félicie)",
         "[TODO Slide 4] Déclinaisons couleurs de fils (5 variations)",
         "[TODO Slide 5] Les 5 mots suggérés (MAMA/SISTA/TEAM/AMOUR/FAMILLE)",
         "[TODO Slide 6] Métier Tajima en action (savoir-faire)",
         "[TODO Slide 7] Témoignage client ou scène 3 générations"
       ],
       "slide_08_preuve": "[TODO] Preuve sociale : 'Des milliers de Mama Clubs dans nos ateliers' OU gros plan Tajima",
-      "slide_09_offre": "[TODO] Produit en contexte : sweat marine porté Camille + prix + CTA léger",
+      "slide_09_offre": "[TODO] Produit en contexte : sweat marine porté Anna + prix + CTA léger",
       "slide_10_cta_final": "[TODO] CTA 'Compose ton Mama Club' + lien bio"
     },
     "slides_detaillees": "[TODO Phase 3 — 10 objets slide avec titre, texte, visuel, notes design]",
@@ -352,7 +352,7 @@
           "instagram",
           "facebook"
         ],
-        "visuel_suggere": "Shot S05 (duo Camille + Félicie)",
+        "visuel_suggere": "Shot S05 (duo Anna + Félicie)",
         "texte_caption": "[TODO] Caption ton tendre, 150 mots, évoque la complicité mère-fille sans surjouer",
         "hashtags": "[voir module_8]",
         "cta": "Commande ton Mama Club — lien bio",

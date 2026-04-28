@@ -18,7 +18,7 @@
     "description": "Les fiches mannequins complètes (style_wear, direction photo, personnalité) sont réparties sur 4 fichiers par lots de production. Ce fichier-ci est l'index et la vue d'ensemble.",
     "lot_1": {
       "fichier": "referentiels/shooting/mannequins_lot1_5fiches.json",
-      "contient": ["MAN-P01 Camille", "MAN-P03 Aïcha", "MAN-P08 Félicie", "MAN-P11 Léa & Sarah", "MAN-S17 Césaria"]
+      "contient": ["MAN-P01 Clémence", "MAN-P03 Aïcha", "MAN-P08 Félicie", "MAN-P11 Léa & Sarah", "MAN-S17 Césaria"]
     },
     "lot_2": {
       "fichier": "referentiels/shooting/mannequins_lot2_2fiches.json",
@@ -58,7 +58,7 @@
       "enfants_0_12": ["MAN-P08 Félicie 7", "MAN-P09 Gabin 5", "MAN-S15 Bébé Noé 1"],
       "ados_13_20": ["MAN-S13 Priya 16"],
       "jeunes_adultes_21_34": ["MAN-P12 Brune 22", "MAN-S14 Gaspard 23", "MAN-S21 Hugo 30"],
-      "adultes_35_50": ["MAN-P01 Camille 40", "MAN-P02 Anna 35", "MAN-P03 Aïcha 40", "MAN-P04 Lila 45", "MAN-P06 Mathieu 40", "MAN-P07 Nicolas 45", "MAN-P11 Léa&Sarah 35-37", "MAN-S17 Césaria 40", "MAN-S20 Coline 35"],
+      "adultes_35_50": ["MAN-P01 Clémence 38", "MAN-P02 Anna 35", "MAN-P03 Aïcha 40", "MAN-P04 Lila 45", "MAN-P06 Mathieu 40", "MAN-P07 Nicolas 45", "MAN-P11 Léa&Sarah 35-37", "MAN-S17 Césaria 40", "MAN-S20 Coline 35"],
       "seniors_51_70": ["MAN-P05 Béatrice 55", "MAN-P10 Marie-Hélène 65", "MAN-S16 Hiroshi 55", "MAN-S18 Hassan 68", "MAN-S19 Henri&Joséphine 70-72"]
     }
   },
@@ -82,7 +82,7 @@
   },
 
   "mannequins": [
-    { "id": "MAN-P01", "prenom": "Camille", "age": 40, "genre": "F", "ethnicite": "blanche française", "particularite": "taches de rousseur, rides naturelles", "duo": null, "style_wear_signature": "Vintage français brut (Caroline de Maigret)", "statut_fiche": "DETAILLEE_LOT1" },
+    { "id": "MAN-P01", "prenom": "Clémence", "age": 38, "genre": "F", "ethnicite": "blanche française", "famille_esthetique": "maquillée chic assumée", "particularite": "frange rideau Bardot (signature unique), lèvres bordeaux MAC Diva, taches de rousseur denses", "duo": null, "style_wear_signature": "Parisienne assumée transplantée Normandie, antiquaire Honfleur (Charlotte Gainsbourg + Audrey Tautou + bordeaux signature)", "statut_fiche": "DETAILLEE_LOT1" },
     { "id": "MAN-P02", "prenom": "Anna", "age": 35, "genre": "F", "ethnicite": "blanche (sud de la France)", "particularite": "peau hâlée naturellement, taches de rousseur nez/épaules", "duo": null, "style_wear_signature": "Provençale moderne (Sessùn/Soeur)", "statut_fiche": "DETAILLEE_LOT2" },
     { "id": "MAN-P03", "prenom": "Aïcha", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": null, "duo": null, "style_wear_signature": "Élégance parisienne-caribéenne (Clémentine Desseaux)", "statut_fiche": "DETAILLEE_LOT1" },
     { "id": "MAN-P04", "prenom": "Lila", "age": 45, "genre": "F", "ethnicite": "maghrébine", "particularite": null, "duo": null, "style_wear_signature": "Parisienne maghrébine sophistiquée (Leïla Bekhti élégante, The Row × Khaite)", "statut_fiche": "DETAILLEE_LOT2" },
