@@ -139,6 +139,12 @@ referentiels/shooting/
 └── mannequins_coline_fiche.json          ← Coline (cloture J3.B)
 ```
 
+### Convention de nommage des canoniques
+
+- **Solo** : `MAN-PXX_Prénom_canonique.jpg` (ex : `MAN-P03_Aicha_canonique.jpg`)
+- **Duo** : chaque membre a son fichier dédié au format `MAN-PXX_Prénom_canonique.jpg` (ex : `MAN-P11_Lea_canonique.jpg` + `MAN-P11_Sarah_canonique.jpg`). L'identifiant `MAN-PXX` désigne le mannequin (solo ou duo) ; le suffixe `_Prénom_` distingue les deux membres d'un duo.
+- **Déprécié** : les canoniques remplacées suite à une refonte d'identité majeure sont déplacées dans `assets/canoniques/_deprecated/` avec un README qui documente date, raison et lien vers la nouvelle identité (ex : ancienne Camille MAN-P01 archivée 2026-04-29 → remplacée par Clémence MAN-P01).
+
 ---
 
 ## ⚠️ À faire en J3.C

@@ -82,7 +82,8 @@
           "Sophie Marceau élégante",
           "Audrey Tautou Parisienne",
           "Caroline de Maigret bohème",
-          "Brigitte Bardot (curtain bangs uniquement)"
+          "Brigitte Bardot (curtain bangs uniquement)",
+          "Clara Luciani (brune longs raie milieu, lèvres pleines)"
         ],
         "occasions_ypersoa_typiques": [
           "soir : chemise blanche oversize + jean droit + T-shirt Ypersoa brodé sous la chemise + bagues argent + bordeaux MAC Diva",
@@ -161,7 +162,7 @@
       "age": 7,
       "genre": "F",
       "ethnicite": "blanche",
-      "famille_esthetique": "no-makeup naturelle (enfant)",
+      "famille_esthetique": "no-makeup naturelle",
       "apparence_physique": {
         "silhouette": "Fine, élancée pour son âge, énergie vive",
         "cheveux": "Blonds vénitiens longs, ondulés naturels, souvent demi-queue ou tresse lâche",
@@ -205,7 +206,7 @@
       "age": "35-37",
       "genre": "F/F",
       "ethnicite": "métisse (Léa) + nordique (Sarah)",
-      "famille_esthetique": "no-makeup naturelle (couple)",
+      "famille_esthetique": "no-makeup naturelle",
       "apparence_physique": {
         "Lea": "37 ans, métisse noir-blanc, 1m70, cheveux bruns bouclés courts, regard intense, sourire franc, grain de peau habité",
         "Sarah": "35 ans, nordique (cheveux blond cendré courts, yeux bleu pâle), 1m72, traits fins et droits, silhouette androgyne élégante"

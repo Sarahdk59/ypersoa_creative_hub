@@ -164,7 +164,7 @@ export const CANONIQUES: Canonique[] = [
     type: "principal",
     description: "Nordique pixel cut cendré, minimalisme nordique (couple, v2 chaleureuse)",
     signature: "ash-blonde pixel cut, Nordic features with healthy pink undertones, warm pale eyes, subtle freckles, gentle warm presence",
-    filename: "MAN-P11-Sarah_canonique.jpg",
+    filename: "MAN-P11_Sarah_canonique.jpg",
     duo: "DUO_LEA_SARAH",
   },
   {
@@ -259,7 +259,7 @@ export const CANONIQUES: Canonique[] = [
     type: "secondaire",
     description: "Afro-caribéenne, boucles argentées, bourgeoisie rive gauche",
     signature: "silver natural curls, deep Afro-Caribbean skin tone, warm dark eyes, refined Left-Bank elegance, dignified senior smile",
-    filename: "MAN-S19-Josephine_canonique.jpg",
+    filename: "MAN-S19_Josephine_canonique.jpg",
     duo: "DUO_HENRI_JOSEPHINE",
   },
   {

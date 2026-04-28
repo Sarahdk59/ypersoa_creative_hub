@@ -257,7 +257,7 @@ Structure `mannequins_lot1_5fiches.json` :
 | MAN-P08 | Félicie | 7 ans, blonde vénitienne longs ondulés taches rousseur denses, petite-fille de Béatrice |
 | MAN-P09 | Gabin | 5 ans, blanc, cheveux noirs longs, mini-sportswear |
 | MAN-P10 | Marie-Hélène ⭐ | 38-42 ans, rousse cheveux longs ondulés, t-shirt gris (canonique de référence sublime du 28/04) |
-| MAN-P11 | Léa & Sarah | Couple — Léa 37 métisse cheveux bouclés courts + Sarah 35 nordique blonde cendrée androgyne (DUO_LEA_SARAH) |
+| MAN-P11 | Léa & Sarah | Couple — Léa 37 métisse cheveux bruns bouclés courts + Sarah 35 nordique blonde cendrée androgyne (DUO_LEA_SARAH) |
 | MAN-P12 | Brune ⭐ | (à documenter) |
 
 **Secondaires (S13-S21)**
