@@ -1,7 +1,5 @@
 /**
- * API Client front -> Next.js API routes (proxy backend)
- *
- * Ne contient AUCUNE clé API. Les clés sont côté serveur uniquement.
+ * API Client front -> Next.js API routes
  */
 
 export interface GenerateImageInput {
@@ -11,6 +9,7 @@ export interface GenerateImageInput {
   angle: string;
   customPrompt?: string;
   canoniqueIds?: string[];
+  aspectRatio?: "1:1" | "4:5" | "2:3";
 }
 
 export interface GenerateCopyInput {
@@ -20,7 +19,7 @@ export interface GenerateCopyInput {
   vibeLabel: string;
   occasionContext: string;
   customPrompt?: string;
-  canoniqueContext?: string; // Contexte canoniques pour enrichir le copy
+  canoniqueContext?: string;
 }
 
 export async function generateImageVariation(input: GenerateImageInput): Promise<string> {
