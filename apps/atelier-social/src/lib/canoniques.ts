@@ -22,15 +22,34 @@ export interface Canonique {
 
 export const CANONIQUES: Canonique[] = [
   // PRINCIPAUX (P01-P12)
+  // =============================================================================
+  // CLÉMENCE MAN-P01 — Bloc TypeScript ALIGNÉ sur le format existant
+  // =============================================================================
+  // REMPLACE le bloc Camille MAN-P01 ci-dessous :
+  //
+  //   {
+  //     id: "MAN-P01",
+  //     prenom: "Camille",
+  //     age: 40,
+  //     genre: "femme",
+  //     type: "principal",
+  //     description: "Blanche française, châtain miel ondulé, freckles, mère vintage Caroline de Maigret",
+  //     signature: "chestnut-honey mid-length wavy hair parted in the middle, freckles across her nose and cheekbones, lived-in skin with a glow, warm hazel eyes, half-smile",
+  //     filename: "MAN-P01_Camille_canonique.jpg",
+  //     favorite: true,
+  //   },
+  //
+  // =============================================================================
+
   {
     id: "MAN-P01",
-    prenom: "Camille",
-    age: 40,
+    prenom: "Clémence",
+    age: 38,
     genre: "femme",
     type: "principal",
-    description: "Blanche française, châtain miel ondulé, freckles, mère vintage Caroline de Maigret",
-    signature: "chestnut-honey mid-length wavy hair parted in the middle, freckles across her nose and cheekbones, lived-in skin with a glow, warm hazel eyes, half-smile",
-    filename: "MAN-P01_Camille_canonique.jpg",
+    description: "Blanche française, antiquaire à Honfleur divorcée mère épanouie, brune chocolat longs fluides + frange rideau Bardot, lèvres bordeaux MAC Diva, taches de rousseur denses, indépendante",
+    signature: "long flowing dark chocolate brown hair to mid-chest with curtain bangs / fringe Bardot parted in the middle at eyebrow level, dense freckles scattered across her nose and high cheekbones, vert-gris eyes (soft greenish-grey harbor water color), full natural lips painted in deep bordeaux red lipstick (MAC Diva matte reference), light defined eyebrows soft mascara no heavy foundation, lived skin with real pores and soft expression lines, closed-mouth composed expression with quiet self-possession, slight asymmetry at corner of mouth suggesting dry humor, naturally wavy hair brushed and lustrous never messy, antiquaire bohemian-Parisian style transplanted to coastal Normandy",
+    filename: "MAN-P01_Clemence_canonique.jpg",
     favorite: true,
   },
   {
