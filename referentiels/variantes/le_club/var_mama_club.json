@@ -113,7 +113,7 @@
       "contraintes_respectees": "55 car — mot-clé 'Mama Club' en tête + nom brand en fin"
     },
     "meta_description": {
-      "texte": "Ton badge Mama Club brodé main sur métier Tajima. Deux mots, un cœur, une couleur. Sweat, hoodie, t-shirt. Atelier Nord France. Livraison 5-7j."
+      "texte": "Ton badge Mama Club brodé sur métier Tajima. Deux mots, un cœur, une couleur. Sweat, hoodie, t-shirt. Atelier Nord France. Livraison 5-7j."
     },
     "description_produit_longue": {
       "texte": "_[TODO Phase 4 — texte markdown complet : hook + description + bullets + phrase signature + CTA]_",
@@ -491,7 +491,6 @@
       ],
       "categories_pinterest": [
         "Mode éthique",
-        "Cadeaux fait main",
         "Fête des Mères"
       ]
     },
