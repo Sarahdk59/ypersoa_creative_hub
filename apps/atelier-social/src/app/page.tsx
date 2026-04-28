@@ -79,11 +79,23 @@ export default function Home() {
     const base64Data = selectedImage.split(",")[1];
     const canoniqueContext = buildCanoniqueContext();
 
-    // 3 angles narratifs - Art Direction D1 Beauté Incarnée
+    // === 5 ANGLES NARRATIFS - Mix éditorial Émoï-Émoï × Sézane ===
+    // Logique : Stop-scroll → Motif brille → Tactile → Storytelling → Art de vivre
     const angles = [
-      "L'ÉMOTION (Porté) : Portrait shot, head and shoulders. Looking directly at the camera, smiling warmly. Emotion palpable, deeply human.",
-      "LE SAVOIR-FAIRE (Détail) : Intimate close-up on the embroidery while the item is being worn. Focus on the tactile quality of the fabric and a subtle human element. Sensual, refined, cinematic.",
-      "L'ART DE VIVRE (Lifestyle) : Wider lifestyle angle, person wearing the garment in their natural environment, looking at the camera with a genuine smile. Lived-in, authentic, minimalist composition.",
+      // 1. PORTRAIT FRONTAL — la slide d'accroche
+      "PORTRAIT FRONTAL : Head and shoulders shot, looking directly into the camera lens with a warm, genuine, deeply human smile. Eyes connect with the viewer. Natural three-quarter face composition. The embroidered detail on the garment is visible at the bottom of the frame. This is the stop-scroll image — must communicate immediate emotional warmth.",
+
+      // 2. DEMI-FIGURE 3/4 — le motif brille avec l'humain
+      "DEMI-FIGURE 3/4 : Medium shot framed from the top of the head to mid-torso, slight 3/4 angle (slightly turned to one side, not pure front). The embroidered design on the left chest is sharp, well-lit, and clearly visible — this is THE shot where the motif gets its moment. The face remains visible (at least 2/3) with a calm, confident, slightly half-smiling expression. Composition: rule of thirds, embroidery in the lower third.",
+
+      // 3. DÉTAIL INTIMISTE — sensualité tactile
+      "DÉTAIL INTIMISTE : Close-up shot focused on the embroidered design, but ALWAYS including a fragment of human presence — a hand gently touching the fabric, fingers grazing the embroidery, a partial chin or cheek visible at the edge of the frame, a glimpse of hair. NEVER a pure flat lay or product shot. The texture of the thread, the depth of the embroidery, the weave of the fabric must be tangible. Macro film grain feel. This conveys 'I want to touch this'.",
+
+      // 4. SCÈNE NARRATIVE — storytelling instant
+      "SCÈNE NARRATIVE : Medium shot capturing a candid everyday moment — the person doing something simple and authentic: holding a coffee cup, adjusting their collar with one hand, looking thoughtfully out a window, walking with a slight movement, tying their hair back, reaching for a book. The person is NOT posing for the camera — they are caught in a moment. Cinematic still feel. The garment with embroidery is naturally part of the scene, not the focal point. This conveys 'this is my life, this piece is part of it'.",
+
+      // 5. LIFESTYLE WIDE — respiration et contexte
+      "LIFESTYLE WIDE : Wide environmental shot, person in full body or 3/4 length, integrated naturally into a rich context that matches the vibe (interior, exterior, garden, café, atelier — coherent with the chosen ambiance). Architecture, light, materials, plants — the environment breathes around the person. The garment is visible but integrated, not centered. The person looks at ease, at home in this space. This conveys 'I see myself living here, wearing this'. Composition: golden ratio.",
     ];
 
     try {
@@ -102,7 +114,7 @@ export default function Home() {
         }),
       });
 
-      // Génère les images séquentiellement (rate limit Gemini)
+      // Génère les 5 images séquentiellement (rate limit Gemini + meilleur character ref consistency)
       const successfulImages: string[] = [];
       for (const angle of angles) {
         try {
@@ -117,7 +129,7 @@ export default function Home() {
           successfulImages.push(img);
           setGeneratedImages([...successfulImages]);
         } catch (e) {
-          console.error("Failed to generate image for angle:", angle, e);
+          console.error("Failed to generate image for angle:", angle.substring(0, 60), e);
         }
       }
 
@@ -294,15 +306,20 @@ export default function Home() {
                 {isGeneratingImage || isGeneratingText ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Création en cours...
+                    Création en cours... (5-7 min)
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5" />
-                    Générer mon carrousel
+                    Générer mon carrousel (5 slides)
                   </>
                 )}
               </button>
+              {isGeneratingImage && generatedImages.length > 0 && (
+                <p className="text-xs text-brand-muted mt-2 text-center">
+                  {generatedImages.length}/5 images générées...
+                </p>
+              )}
             </div>
           </div>
 
