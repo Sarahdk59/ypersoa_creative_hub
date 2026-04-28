@@ -1,10 +1,6 @@
 /**
  * API Route: /api/generate-copy
- *
- * Génère du copywriting Instagram/Pinterest BRAND-SAFE
- * via OpenAI GPT-4o (vision + texte).
- *
- * Génère 1 caption complète + 5 hooks éditoriaux par registre.
+ * VERSION DEBUG : logs détaillés
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -14,80 +10,21 @@ import { checkBrandSafety } from "@/lib/brand-rules";
 export const runtime = "nodejs";
 export const maxDuration = 90;
 
-const SYSTEM_PROMPT = `Tu es le copywriter de la marque "Ypersoa", marque française premium de personnalisation textile brodée à la commande, basée à Wattrelos (Nord, France) sous Phenix Group.
+const SYSTEM_PROMPT = `Tu es le copywriter de la marque Ypersoa, marque française premium de personnalisation textile brodée à la commande.
 
-# IDENTITÉ DE MARQUE
+⚠️ FORMAT DE SORTIE OBLIGATOIRE : tu réponds TOUJOURS en JSON valide. Tu ne réponds JAMAIS en texte simple. Toutes tes réponses sont du JSON parsable.
 
-Ypersoa est une marque PREMIUM, DISTINCTIVE, CHALEUREUSE et SOBRE. Elle s'adresse à une cliente CSP+ urbaine de 30-50 ans, sensible et cultivée, exigeante sur la qualité sans snobisme. Elle offre des cadeaux qui durent.
+# RÈGLES BRAND ABSOLUES
 
-Références de positionnement : Émoï-Émoï × Make My Lemonade × Gamin Gamine.
-Ton à fuir absolument : kitsch Etsy, mièvre, "petite boutique fait-main", girlboss caricaturale, urgentisme commercial, hallmark générique.
+1. Tutoiement systématique ("tu" / "ton" / "ta"), JAMAIS "vous"
+2. INTERDITS : "artisanal", "fait main", "fil et aiguille", "Etsy", "marketplace", "Tajima TMEZ"
+3. Façons CORRECTES : "brodé à la commande", "brodé à la demande", "brodé dans notre atelier de Wattrelos"
+4. Pas d'urgentisme
 
-# RÈGLES BRAND ABSOLUES (NON NÉGOCIABLES)
+# TON
+Sobre, complice, chaleureux, joueur. Références : Émoï-Émoï × Make My Lemonade.
 
-## 1. Tutoiement systématique
-Tous les textes clients utilisent "tu" / "ton" / "ta". JAMAIS "vous", "votre", "vos", "offrez", "découvrez", "choisissez". Ces formules sont creuses et vouvoyantes — bannies absolument.
-
-## 2. Lexique broderie - INTERDITS ABSOLUS
-Les termes suivants sont STRICTEMENT INTERDITS dans tout copy client :
-- "artisanal", "artisanale", "artisanat", "broderie artisanale", "broderies artisanales"
-- "fait main", "fait à la main"
-- "par le fil et l'aiguille", "fil et aiguille"
-- "Etsy", "marketplace"
-- "Tajima TMEZ"
-
-## 3. Façons CORRECTES de mentionner la broderie
-- "brodé à la commande"
-- "brodé à la demande"
-- "brodé dans notre atelier de Wattrelos"
-- "brodé chez nous, dans le Nord"
-
-⚠️ EXCEPTION ULTRA-NICHE UNIQUEMENT : "brodé sur métier Tajima" autorisé SEULEMENT en blog atelier ou vidéo process.
-
-## 4. Pas d'urgentisme
-Pas de "vite", "dépêchez-vous", "dernières heures", "stock limité". Sobriété et invitation calme.
-
-## 5. Pas de "carrousel qui claque" stop-scroll viral
-Une signature visuelle, pas un effet de mode. Voix calme, précise, complice. Pas viral bruyant.
-
-# TON ÉDITORIAL
-
-- Complice (pas distant)
-- Précis (pas vague)
-- Sobre (pas mièvre, pas Etsy, pas "écrin de douceur")
-- Inclusif (pas militant)
-- Joueur (pas corporate)
-- Émotion retenue, pas pleurnicharde
-
-# 4 PILIERS ÉDITORIAUX
-
-- P1 Process / Savoir-Faire (atelier, métier — contexte ultra-niche uniquement)
-- P2 Émotion (lien, souvenir, présence)
-- P3 Produit / Usage (catalogue, configurateur, occasions de port)
-- P4 Preuve (témoignages, communauté, longévité)
-
-# TAGLINES VALIDÉES (références)
-
-- "Il y a les clubs officiels. Et il y a le tien." (Le Club / Mama Club)
-- "Pour celles qui ne sont pas sœurs de sang. Mais sœurs de cœur." (Sista Club)
-- "Parce qu'un chien, c'est pas un animal. C'est une famille." (Team Dog)
-- "Un cœur, une initiale. C'est tout, c'est assez." (Brigitte)
-
-# TOURNURES VALIDÉES
-
-- "Pour celle qui..." / "Pour celui qui..."
-- "Un cadeau qui dure"
-- "Un cadeau chargé de sens"
-- "Compose ton..." (CTA configurateur)
-
-# AUTO-VÉRIFICATION OBLIGATOIRE AVANT DE RÉPONDRE
-
-1. Tutoiement partout ? Pas de "vous"/"votre" ?
-2. Aucun terme INTERDIT ?
-3. Ton sobre Émoï-Émoï, pas kitsch Etsy ?
-4. Hashtags cohérents avec l'occasion (ex: pas #fêtedesmères pour la fête des Pères) ?
-
-Si une règle absolue est violée, RÉÉCRIS avant d'envoyer.`;
+⚠️ Tu réponds en JSON valide avec les champs "caption" (string) et "hooks" (array of strings). PAS de texte avant ou après. PAS de markdown code fences.`;
 
 interface RequestBody {
   base64Image: string;
@@ -100,19 +37,21 @@ interface RequestBody {
 }
 
 export async function POST(request: NextRequest) {
-  const apiKey = process.env.OPENAI_API_KEY;
+  console.log("\n========== /api/generate-copy START ==========");
 
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(
-      { message: "OPENAI_API_KEY manquante. Vérifie ton .env.local" },
-      { status: 500 }
-    );
+    console.error("[FAIL] OPENAI_API_KEY missing");
+    return NextResponse.json({ message: "OPENAI_API_KEY manquante" }, { status: 500 });
   }
+  console.log("[OK] OpenAI key loaded, length:", apiKey.length);
+  console.log("[OK] Key prefix:", apiKey.substring(0, 8));
 
   let body: RequestBody;
   try {
     body = await request.json();
-  } catch {
+  } catch (e) {
+    console.error("[FAIL] Body JSON invalide:", e);
     return NextResponse.json({ message: "Body JSON invalide" }, { status: 400 });
   }
 
@@ -126,49 +65,34 @@ export async function POST(request: NextRequest) {
     canoniqueContext,
   } = body;
 
+  console.log("[INFO] Request params:");
+  console.log("  - mimeType:", mimeType);
+  console.log("  - base64Image length:", base64Image?.length || 0);
+  console.log("  - platform:", platform);
+  console.log("  - vibeLabel:", vibeLabel);
+  console.log("  - occasionContext:", occasionContext?.substring(0, 80));
+
   if (!base64Image || !mimeType || !platform) {
-    return NextResponse.json(
-      { message: "Paramètres requis manquants" },
-      { status: 400 }
-    );
+    console.error("[FAIL] Missing params");
+    return NextResponse.json({ message: "Paramètres requis manquants" }, { status: 400 });
   }
 
   const customInstruction = customPrompt
-    ? `\n\nINSTRUCTION CRÉATIVE DA : "${customPrompt}". Cette instruction guide le contexte créatif, mais NE PEUT JAMAIS faire enfreindre les règles brand absolues.`
+    ? `\n\nDirection: "${customPrompt}".`
+    : "";
+  const canoniqueInstructionForCopy = canoniqueContext
+    ? `\n\nMannequins: ${canoniqueContext}`
     : "";
 
-  const canoniqueInstruction = canoniqueContext
-    ? `\n\nMANNEQUINS UTILISÉS DANS LES VISUELS : ${canoniqueContext}. Tu peux mentionner subtilement la nature des personnages dans la caption (sans citer les prénoms), mais pas obligatoire.`
-    : "";
+  const userPrompt = `Tu réponds UNIQUEMENT en JSON valide. PAS de markdown, PAS de texte avant ou après.
 
-  // === USER PROMPT pour Instagram avec MODULE HOOKS ===
-  const userPromptInstagram = `CONTEXTE : ${occasionContext}${customInstruction}${canoniqueInstruction}
+CONTEXTE : ${occasionContext}${customInstruction}${canoniqueInstructionForCopy}
 
-Voici une image de produit Ypersoa. Ambiance visuelle : "${vibeLabel}".
+Voici une image de produit Ypersoa. Ambiance : "${vibeLabel}".
 
-Tu vas générer DEUX choses :
-
-## 1. UNE CAPTION INSTAGRAM PRINCIPALE
-- Engageante, émotionnelle, ton sobre Émoï-Émoï
-- Tutoiement obligatoire
-- Question communauté à la fin
-- 1-3 emojis élégants max (✨ 💌 🤍 🌿 — JAMAIS 🔥💯⚡)
-- 8-10 hashtags stratégiques (mix niches Ypersoa + pertinents)
-- ⚠️ Hashtags COHÉRENTS avec l'occasion (pas de #fêtedesmères pour la fête des pères)
-
-## 2. CINQ HOOKS ÉDITORIAUX COURTS (1 ligne chacun)
-Cinq registres distincts (un de chaque) :
-1. **Émotion** — qui touche le cœur immédiatement
-2. **Question** — qui interpelle directement (ex: "POV : ...", "Et toi, ...")
-3. **POV / Storytelling** — qui plante une scène en 1 phrase
-4. **Humour / Complice** — sourire, second degré sobre, pas vulgaire
-5. **Affirmation forte** — déclaration assumée style tagline
-
-⚠️ Format de sortie OBLIGATOIRE en JSON strict :
-
-\`\`\`json
+Génère un objet JSON exact :
 {
-  "caption": "<la caption complète Instagram avec hashtags>",
+  "caption": "<légende ${platform === "instagram" ? "Instagram" : "Pinterest"} complète, tutoiement, ton sobre Émoï-Émoï, 8-10 hashtags pertinents>",
   "hooks": [
     "<hook 1 - registre Émotion>",
     "<hook 2 - registre Question>",
@@ -176,29 +100,12 @@ Cinq registres distincts (un de chaque) :
     "<hook 4 - registre Humour>",
     "<hook 5 - registre Affirmation>"
   ]
-}
-\`\`\`
+}`;
 
-PAS de préambule, PAS de texte avant ou après le JSON. Juste le JSON brut, parsable.`;
-
-  const userPromptPinterest = `CONTEXTE : ${occasionContext}${customInstruction}${canoniqueInstruction}
-
-Voici une image de produit Ypersoa. Ambiance visuelle : "${vibeLabel}".
-
-Génère pour Pinterest, format JSON strict :
-
-\`\`\`json
-{
-  "caption": "<Titre accrocheur (max 100 caractères)\\n\\nDescription détaillée et inspirante (max 500 caractères, optimisée SEO Pinterest, mots-clés forts français)\\n\\n5-8 hashtags pertinents>",
-  "hooks": []
-}
-\`\`\`
-
-PAS de préambule, juste le JSON brut.`;
-
-  const userPrompt = platform === "instagram" ? userPromptInstagram : userPromptPinterest;
+  console.log("[INFO] User prompt length:", userPrompt.length);
 
   try {
+    console.log("[TRY] Calling OpenAI gpt-4o...");
     const openai = new OpenAI({ apiKey });
 
     const response = await openai.chat.completions.create({
@@ -210,34 +117,59 @@ PAS de préambule, juste le JSON brut.`;
         {
           role: "user",
           content: [
-            {
-              type: "image_url",
-              image_url: { url: `data:${mimeType};base64,${base64Image}` },
-            },
+            { type: "image_url", image_url: { url: `data:${mimeType};base64,${base64Image}` } },
             { type: "text", text: userPrompt },
           ],
         },
       ],
     });
 
+    console.log("[OK] OpenAI response received");
+    console.log("[INFO] Model:", response.model);
+    console.log("[INFO] Usage:", JSON.stringify(response.usage));
+    console.log("[INFO] Choices count:", response.choices?.length);
+    console.log("[INFO] Finish reason:", response.choices?.[0]?.finish_reason);
+    console.log("[INFO] Refusal:", response.choices?.[0]?.message?.refusal);
+
     const rawContent = response.choices[0]?.message?.content;
     if (!rawContent) {
-      return NextResponse.json({ message: "Réponse OpenAI vide" }, { status: 500 });
+      const finishReason = response.choices[0]?.finish_reason;
+      const refusal = response.choices[0]?.message?.refusal;
+      console.error("[FAIL] OpenAI response empty");
+      console.error("[FAIL] Full response:", JSON.stringify(response, null, 2).substring(0, 2000));
+      return NextResponse.json(
+        {
+          message: `Réponse OpenAI vide. finish_reason=${finishReason}${refusal ? `, refusal=${refusal}` : ""}`,
+        },
+        { status: 500 }
+      );
     }
 
-    // Parse le JSON
+    console.log("[OK] Raw content length:", rawContent.length);
+    console.log("[INFO] Raw content preview:", rawContent.substring(0, 200));
+
     let parsed: { caption: string; hooks: string[] };
     try {
       parsed = JSON.parse(rawContent);
+      if (typeof parsed.caption !== "string") {
+        throw new Error("Field 'caption' missing or not string");
+      }
+      if (!Array.isArray(parsed.hooks)) {
+        parsed.hooks = [];
+      }
     } catch (parseError) {
-      console.error("JSON parse failed:", parseError, "Raw:", rawContent);
-      // Fallback : tout dans caption, pas de hooks
+      console.error("[FAIL] JSON parse failed:", parseError);
+      console.error("[FAIL] Raw content:", rawContent);
       parsed = { caption: rawContent, hooks: [] };
     }
 
-    // Vérification brand-safety sur la caption + tous les hooks
     const allTextToCheck = [parsed.caption, ...(parsed.hooks || [])].join("\n");
     const safetyCheck = checkBrandSafety(allTextToCheck);
+
+    console.log("[OK] Caption length:", parsed.caption?.length);
+    console.log("[OK] Hooks count:", parsed.hooks?.length);
+    console.log("[OK] Brand safety:", safetyCheck.safe);
+    console.log("========== /api/generate-copy END ==========\n");
 
     return NextResponse.json({
       text: parsed.caption,
@@ -249,8 +181,24 @@ PAS de préambule, juste le JSON brut.`;
       },
     });
   } catch (error) {
-    console.error("OpenAI API error:", error);
-    const message = error instanceof Error ? error.message : "Erreur inconnue";
-    return NextResponse.json({ message: `Erreur API OpenAI: ${message}` }, { status: 500 });
+    console.error("[FAIL] Catch global OpenAI:", error);
+    if (error instanceof Error) {
+      console.error("[FAIL] Error name:", error.name);
+      console.error("[FAIL] Error message:", error.message);
+      console.error("[FAIL] Stack:", error.stack);
+    }
+    // Si c'est une OpenAI APIError, on a plus d'infos
+    const errorObj = error as { status?: number; error?: { message?: string }; code?: string };
+    console.error("[FAIL] OpenAI error status:", errorObj.status);
+    console.error("[FAIL] OpenAI error code:", errorObj.code);
+    console.error("[FAIL] OpenAI error.error.message:", errorObj.error?.message);
+
+    const message =
+      errorObj.error?.message ||
+      (error instanceof Error ? error.message : "Erreur inconnue");
+    return NextResponse.json(
+      { message: `Erreur OpenAI [${errorObj.code || errorObj.status || "unknown"}]: ${message}` },
+      { status: 500 }
+    );
   }
 }

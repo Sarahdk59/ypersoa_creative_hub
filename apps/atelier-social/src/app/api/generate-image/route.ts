@@ -1,8 +1,6 @@
 /**
  * API Route: /api/generate-image
- *
- * Génère un visuel éditorial via Gemini 3 Pro Image (Nano Banana 2)
- * avec character reference (canoniques uploadées + prompt aligné CLAUDE.md).
+ * VERSION DEBUG : logs détaillés pour diagnostic
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -15,63 +13,66 @@ export const runtime = "nodejs";
 export const maxDuration = 120;
 
 interface RequestBody {
-  base64Image: string; // image du produit Ypersoa
+  base64Image: string;
   mimeType: string;
   vibePrompt: string;
   angle: string;
   customPrompt?: string;
-  canoniqueIds?: string[]; // 0 à 3 mannequins canoniques sélectionnés
+  canoniqueIds?: string[];
 }
 
 async function loadCanoniqueImage(id: string): Promise<{ data: string; mimeType: string } | null> {
   const canonique = CANONIQUES.find((c) => c.id === id);
   if (!canonique) return null;
-
   const repoRoot = join(process.cwd(), "..", "..");
   const filePath = join(repoRoot, "assets", "canoniques", canonique.filename);
-
   try {
     const buffer = await readFile(filePath);
-    return {
-      data: buffer.toString("base64"),
-      mimeType: "image/jpeg",
-    };
+    return { data: buffer.toString("base64"), mimeType: "image/jpeg" };
   } catch (error) {
-    console.error(`Failed to load canonique ${id}:`, error);
+    console.error(`[FAIL] Failed to load canonique ${id}:`, error);
     return null;
   }
 }
 
 export async function POST(request: NextRequest) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  console.log("\n========== /api/generate-image START ==========");
 
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(
-      { message: "GEMINI_API_KEY manquante. Vérifie ton .env.local" },
-      { status: 500 }
-    );
+    console.error("[FAIL] GEMINI_API_KEY missing");
+    return NextResponse.json({ message: "GEMINI_API_KEY manquante" }, { status: 500 });
   }
+  console.log("[OK] Gemini key loaded, length:", apiKey.length);
 
   let body: RequestBody;
   try {
     body = await request.json();
-  } catch {
+  } catch (e) {
+    console.error("[FAIL] Body JSON invalide:", e);
     return NextResponse.json({ message: "Body JSON invalide" }, { status: 400 });
   }
 
   const { base64Image, mimeType, vibePrompt, angle, customPrompt, canoniqueIds = [] } = body;
 
+  console.log("[INFO] Request params:");
+  console.log("  - mimeType:", mimeType);
+  console.log("  - base64Image length:", base64Image?.length || 0);
+  console.log("  - vibePrompt:", vibePrompt?.substring(0, 80));
+  console.log("  - angle:", angle?.substring(0, 80));
+  console.log("  - canoniqueIds:", canoniqueIds);
+  console.log("  - customPrompt:", customPrompt?.substring(0, 80));
+
   if (!base64Image || !mimeType || !vibePrompt || !angle) {
-    return NextResponse.json(
-      { message: "Paramètres requis manquants" },
-      { status: 400 }
-    );
+    console.error("[FAIL] Missing params");
+    return NextResponse.json({ message: "Paramètres requis manquants" }, { status: 400 });
   }
 
-  // Charger les canoniques sélectionnées (1-3)
   const canoniques = canoniqueIds
     .map((id) => CANONIQUES.find((c) => c.id === id))
     .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
+  console.log("[INFO] Canoniques resolved:", canoniques.map((c) => c.id));
 
   const canoniqueImages: Array<{ data: string; mimeType: string }> = [];
   for (const id of canoniqueIds) {
@@ -79,120 +80,98 @@ export async function POST(request: NextRequest) {
     if (img) canoniqueImages.push(img);
   }
 
-  // === CONSTRUCTION DU PROMPT ===
-  const customInstruction = customPrompt
-    ? `\n\nCRITICAL USER DIRECTION: The Art Director (Sarah) requested: "${customPrompt}". Incorporate while strictly respecting brand guidelines.`
-    : "";
+  console.log("[INFO] Canonique images loaded:", canoniqueImages.length);
 
-  // Section canoniques (CLAUDE.md formule magique)
-  let canoniqueSection = "";
-  if (canoniques.length > 0) {
-    const isMultiple = canoniques.length > 1;
-    const characterRefDescription = canoniques
-      .map((c, i) => {
-        const refIndex = i + 1; // image 2, 3, 4 (image 1 = produit)
-        return `- Reference image ${refIndex + 1}: This is ${c.prenom} (${c.age} years old). Physical signature: ${c.signature}.`;
-      })
-      .join("\n");
+  // === Prompt minimal pour debug ===
+  const prompt = `Create an ultra-realistic editorial fashion photograph in the style of Sézane × A.P.C. campaign.
 
-    canoniqueSection = `
-
-# CRITICAL CHARACTER REFERENCE — MANDATORY FACE FIDELITY
-
-${
-  isMultiple
-    ? `The following ${canoniques.length} reference portraits define the EXACT face identities to use. EACH person in the generated image MUST match their corresponding reference portrait — same face, same features, same age, same skin tone preserved with 90-95% fidelity.`
-    : `The following reference portrait defines the EXACT face identity to use. The person in the generated image MUST match this reference portrait — same face, same features, exact same features preserved with 90-95% fidelity.`
-}
-
-${characterRefDescription}
-
-⚠️ DO NOT replace these characters with generic models. The face fidelity is non-negotiable. Use the uploaded reference portrait${isMultiple ? "s" : ""} as the character${isMultiple ? "s'" : "'s"} face identity.`;
-  }
-
-  // === PROMPT FINAL ALIGNÉ CLAUDE.md v1.1 ===
-  const prompt = `You are a visionary Art Director for Ypersoa, a French premium custom embroidery brand based in Wattrelos, North France.
-
-Create an ultra-realistic, emotional, sober editorial photograph in the style of Sézane × A.P.C. × Maison Labiche campaign aesthetic. The image must feature this exact embroidered textile item from the FIRST reference image — an Ypersoa premium garment (t-shirt, hoodie, crewneck sweatshirt, or zip-up hoodie / zoodie).
-${canoniqueSection}
-
-# CRITICAL ART DIRECTION — D1 Beauté Incarnée v2.0
+The image must feature the exact embroidered garment shown in the first reference image.
 
 ${
   canoniques.length > 0
-    ? `The garment must be worn by the canonical character${canoniques.length > 1 ? "s" : ""} described above. NOT generic models, NOT supermodels, NOT random faces.`
-    : `The garment must be worn by a highly realistic, everyday person ("madame ou monsieur tout le monde"), around 30-40 years old. NOT supermodels.`
+    ? `The model is ${canoniques.map((c) => c.prenom).join(" and ")}. Match their face exactly from the reference portraits provided.`
+    : "The model is a real-looking person around 35-40 years old, NOT a supermodel."
 }
 
-The model${canoniques.length > 1 ? "s" : ""} must have:
-- Real skin texture, lived-in skin preserved
-- Natural expression lines (laugh lines, subtle imperfections)
-- Healthy pink undertones on lighter skin (NOT pale, NOT sickly, NOT vampire-looking)
-- Warm flush on cheeks and nose bridge
-- Looking directly into the camera lens with deep authentic connection
-- Smiling naturally, laughing warmly, or with serene composed half-smile (NEVER cold, NEVER ethereal)
+Vibe: ${vibePrompt}
+Composition: ${angle}
+${customPrompt ? `Direction: ${customPrompt}` : ""}
 
-# CONTEXT
-${customInstruction}
-Vibe/Mood: ${vibePrompt}
-Shot composition: ${angle}
+Style: 35mm film photography, soft natural lighting, French quiet luxury, raw editorial feel.
 
-# STYLE
-- 35mm film photography, medium format camera feel
-- Soft cinematic natural lighting
-- Minimalist composition, sober editorial
-- Reference aesthetics: Sézane × A.P.C. × Maison Labiche
-- Warm human presence, NOT cold, NOT clinical
-- French quiet luxury, effortless
+ABSOLUTE: NO text, NO signs, NO posters, NO writing in the background. Only the embroidery on the garment, which must match exactly the reference.`;
 
-# EMBROIDERY FIDELITY
-Keep the embroidered design, the specific garment type (from FIRST reference image), and the fabric texture EXACTLY as in the original product image. The embroidery must be rendered sharp and accurate, with visible thread texture and stitch detail. Industrial Tajima machine embroidery quality. Always placed on the LEFT CHEST of the garment (heart side).
+  console.log("[INFO] Prompt length:", prompt.length);
 
-# ABSOLUTE CONSTRAINTS
-- NO retouching, NO skin smoothing, NO beauty filter
-- NO plastic supermodel look
-- NO cold/clinical/ethereal tone
-- Analog film grain subtle, raw editorial feel`;
-
-  // === CONSTRUCTION DES PARTS POUR GEMINI ===
-  // Image 1 = produit Ypersoa (toujours en premier)
-  // Images 2-4 = canoniques (si sélectionnées)
   const parts: Array<{ inlineData?: { data: string; mimeType: string }; text?: string }> = [
     { inlineData: { data: base64Image, mimeType } },
   ];
-
   for (const canImg of canoniqueImages) {
     parts.push({ inlineData: { data: canImg.data, mimeType: canImg.mimeType } });
   }
-
   parts.push({ text: prompt });
+
+  console.log("[INFO] Total parts (1 product + N canoniques + 1 text):", parts.length);
 
   try {
     const ai = new GoogleGenAI({ apiKey });
 
     let response;
-    try {
-      response = await ai.models.generateContent({
-        model: "gemini-3.1-flash-image-preview",
-        contents: { parts },
-        config: {
-          imageConfig: {
-            aspectRatio: "1:1",
-            imageSize: "2K",
-          },
-        },
-      });
-    } catch (primaryError) {
-      console.warn("Failed with 3.1-flash-image-preview, falling back to 2.5-flash-image:", primaryError);
-      response = await ai.models.generateContent({
-        model: "gemini-2.5-flash-image",
-        contents: { parts },
-      });
+    let modelUsed = "";
+
+    // Try the latest model first, fallback to known stable
+    const modelsToTry = [
+      "gemini-3.1-flash-image-preview",
+      "gemini-2.5-flash-image",
+      "gemini-2.0-flash-exp-image-generation",
+    ];
+
+    let lastError: unknown = null;
+    for (const model of modelsToTry) {
+      try {
+        console.log(`[TRY] Calling Gemini with model: ${model}`);
+        response = await ai.models.generateContent({
+          model,
+          contents: { parts },
+          ...(model === "gemini-3.1-flash-image-preview"
+            ? { config: { imageConfig: { aspectRatio: "1:1", imageSize: "2K" } } }
+            : {}),
+        });
+        modelUsed = model;
+        console.log(`[OK] Model ${model} succeeded`);
+        break;
+      } catch (err) {
+        console.error(`[FAIL] Model ${model} threw:`, err instanceof Error ? err.message : err);
+        lastError = err;
+      }
     }
 
-    if (response.candidates?.[0]?.finishReason === "SAFETY") {
+    if (!response) {
+      const errMsg = lastError instanceof Error ? lastError.message : String(lastError);
+      console.error("[FAIL] All models failed. Last error:", errMsg);
       return NextResponse.json(
-        { message: "L'image a été bloquée par les filtres de sécurité Gemini." },
+        { message: `Tous les modèles Gemini ont échoué. Dernière erreur : ${errMsg}` },
+        { status: 500 }
+      );
+    }
+
+    console.log("[INFO] Response received from", modelUsed);
+    console.log("[INFO] Candidates count:", response.candidates?.length);
+    console.log("[INFO] Finish reason:", response.candidates?.[0]?.finishReason);
+    console.log(
+      "[INFO] Parts in candidate:",
+      response.candidates?.[0]?.content?.parts?.map((p) => ({
+        hasText: Boolean(p.text),
+        hasInlineData: Boolean(p.inlineData),
+        mimeType: p.inlineData?.mimeType,
+      }))
+    );
+
+    if (response.candidates?.[0]?.finishReason === "SAFETY") {
+      const safetyRatings = response.candidates[0].safetyRatings;
+      console.error("[FAIL] BLOCKED BY SAFETY. Ratings:", JSON.stringify(safetyRatings));
+      return NextResponse.json(
+        { message: "Image bloquée par filtres de sécurité Gemini" },
         { status: 400 }
       );
     }
@@ -200,13 +179,26 @@ Keep the embroidered design, the specific garment type (from FIRST reference ima
     for (const part of response.candidates?.[0]?.content?.parts || []) {
       if (part.inlineData) {
         const imageDataUrl = `data:${part.inlineData.mimeType || "image/png"};base64,${part.inlineData.data}`;
+        console.log("[OK] Image generated. Size:", part.inlineData.data?.length || 0, "chars base64");
+        console.log("========== /api/generate-image END ==========\n");
         return NextResponse.json({ imageDataUrl });
       }
     }
 
-    return NextResponse.json({ message: "Aucune image générée par Gemini" }, { status: 500 });
+    // Aucune image dans la réponse — log tout pour comprendre
+    console.error("[FAIL] No image in response. Full response:");
+    console.error(JSON.stringify(response, null, 2).substring(0, 2000));
+    return NextResponse.json(
+      {
+        message: `Aucune image dans la réponse Gemini. Modèle: ${modelUsed}, finish_reason: ${response.candidates?.[0]?.finishReason}`,
+      },
+      { status: 500 }
+    );
   } catch (error) {
-    console.error("Gemini API error:", error);
+    console.error("[FAIL] Catch global:", error);
+    if (error instanceof Error) {
+      console.error("[FAIL] Stack:", error.stack);
+    }
     const message = error instanceof Error ? error.message : "Erreur inconnue";
     return NextResponse.json({ message: `Erreur API Gemini: ${message}` }, { status: 500 });
   }
