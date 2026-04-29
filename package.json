@@ -5,7 +5,9 @@
   "description": "Hub Ypersoa - Système d'automatisation des métiers de la communication",
   "scripts": {
     "dev:atelier": "pnpm --filter @ypersoa/atelier-social dev",
-    "build:atelier": "pnpm --filter @ypersoa/atelier-social build"
+    "build:atelier": "pnpm --filter @ypersoa/atelier-social build",
+    "dev:atelier-shooting": "pnpm --filter @ypersoa/atelier-shooting dev",
+    "build:atelier-shooting": "pnpm --filter @ypersoa/atelier-shooting build"
   },
   "engines": {
     "node": ">=20.0.0",
