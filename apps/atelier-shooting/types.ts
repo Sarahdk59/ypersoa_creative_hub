@@ -17,7 +17,8 @@ export interface FamilyConfig {
   childrenCount: number;
 }
 
-export type AspectRatio = '1:1' | '3:4' | '4:3' | '9:16' | '16:9';
+// 4:5 = standard PDP Shopify (default Hub) ; 1:1 carrousel/feed ; 16:9 hero/banner ; 9:16 stories/reels ; 3:4 legacy
+export type AspectRatio = '4:5' | '1:1' | '16:9' | '9:16' | '3:4';
 
 export type Ethnicity = 'diverse' | 'black' | 'white' | 'asian' | 'hispanic' | 'middle-eastern' | 'south-asian';
 export type AgeRange = 'diverse' | 'young' | 'middle-aged' | 'senior' | 'child';

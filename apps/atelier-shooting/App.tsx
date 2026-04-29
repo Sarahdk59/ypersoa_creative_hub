@@ -16,7 +16,7 @@ const App: React.FC = () => {
       coupleType: 'random',
       childrenCount: 1
     },
-    aspectRatio: '3:4',
+    aspectRatio: '4:5',
     diversity: {
       ethnicity: 'diverse',
       age: 'diverse',

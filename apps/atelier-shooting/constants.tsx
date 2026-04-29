@@ -12,12 +12,14 @@ export const PRODUCTS: ProductType[] = [
 
 export const SIZES: EmbroiderySize[] = [2, 4, 6, 8, 12, 20];
 
+// Aligné sur charte Hub : 4:5 = standard PDP Shopify, 1:1 = carrousel/feed, 16:9 = hero, 9:16 = story/reel.
+// 3:4 conservé en legacy (rétro-compat). 4:3 supprimé (non utilisé dans aucune variante Hub, interdit pour PDP).
 export const ASPECT_RATIOS: { value: AspectRatio; label: string; icon: string }[] = [
-  { value: '1:1', label: 'Carré (PDP)', icon: 'fa-square' },
-  { value: '3:4', label: 'Portrait (Standard)', icon: 'fa-rectangle-portrait' },
-  { value: '4:3', label: 'Paysage', icon: 'fa-rectangle-landscape' },
+  { value: '4:5', label: 'Portrait (standard PDP)', icon: 'fa-rectangle-portrait' },
+  { value: '1:1', label: 'Carré (carrousel / feed IG)', icon: 'fa-square' },
+  { value: '16:9', label: 'Hero / Banner', icon: 'fa-panorama' },
   { value: '9:16', label: 'Story / Reel', icon: 'fa-mobile-screen' },
-  { value: '16:9', label: 'Hero / Banner', icon: 'fa-panorama' }
+  { value: '3:4', label: 'Portrait alternatif (legacy)', icon: 'fa-rectangle-portrait' }
 ];
 
 export const ETHNICITIES: { value: Ethnicity; label: string }[] = [
