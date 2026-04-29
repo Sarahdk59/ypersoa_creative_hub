@@ -269,8 +269,8 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
             </button>
           </div>
 
-          {/* Mannequin Casting Options (Diversity ↔ Canonique Hub) */}
-          {settings.mode === 'mannequin' && (
+          {/* Mannequin Casting Options (Diversity ↔ Canonique Hub) — actif aussi en mode 'full' */}
+          {(settings.mode === 'mannequin' || settings.mode === 'full') && (
             <div className="space-y-4 p-4 bg-yp-linen/50 rounded-xl border border-yp-sable/30 animate-in fade-in slide-in-from-top-2">
               {/* Toggle casting mode */}
               <div>

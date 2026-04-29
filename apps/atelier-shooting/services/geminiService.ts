@@ -97,7 +97,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     label = shot.label;
     const emplacement = settings.size >= 20 ? "centre du vêtement" : "côté cœur";
     const dimension = `${settings.size} cm`;
-    
+
     promptText = shot.prompt
       .replace(/\[PRODUIT\]/g, productDescription)
       .replace(/\[COULEUR SWEAT\]/g, garmentColorText)
@@ -105,6 +105,17 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       .replace(/\[EMPLACEMENT\]/g, emplacement)
       .replace(/\[DIMENSION\]/g, dimension)
       .replace(/\[MATERIAL\]/g, material);
+
+    // Hook 1 — étendu au mode 'full' : si castingMode === 'canonique', on injecte la
+    // signature character reference au prompt full pack (les images canoniques sont
+    // injectées en parts[] plus bas, comme pour le mode 'mannequin').
+    if (settings.castingMode === 'canonique' && settings.canoniqueIds.length > 0) {
+      const canoniques = settings.canoniqueIds
+        .map(id => getCanoniqueById(id))
+        .filter((c): c is Canonique => Boolean(c));
+      const canoniqueContext = buildCanoniqueContext(canoniques);
+      promptText = canoniqueContext + "\n\n" + promptText;
+    }
   } else {
     const shot = SHOTS_CONFIG[shotType as keyof typeof SHOTS_CONFIG];
     label = shot.label;
