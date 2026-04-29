@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ProductType, EmbroiderySize, AspectRatio, Ethnicity, AgeRange, BodyType, DisabilityType } from './types';
+import { ProductType, EmbroiderySize, AspectRatio, Ethnicity, AgeRange, BodyType, DisabilityType, DecorStyle } from './types';
 import { HUB_FILS, HUB_GARMENTS, HUB_PRODUITS } from './lib/hub-data';
 
 // 5 produits YPxxx du Hub (lus depuis referentiels/palette_supports_par_produit.json).
@@ -54,6 +54,52 @@ export const DISABILITIES: { value: DisabilityType; label: string }[] = [
   { value: 'hearing-aid', label: 'Appareil auditif' },
   { value: 'visible-disability', label: 'Handicap visible' }
 ];
+
+// 7 décors / ambiances disponibles (UI sélecteur).
+// Visible en mode 'mannequin' + 'full'. En mode 'family' le décor est imposé par le couple.
+export const DECOR_STYLES: { value: DecorStyle; label: string; sublabel: string; icon: string }[] = [
+  { value: 'minimalist',  label: 'Studio Brut Minimaliste',  sublabel: 'Fond blanc cassé, A.P.C.',          icon: 'fa-square' },
+  { value: 'parisien',    label: 'Appart Parisien',           sublabel: 'Sage green + chevron, Sézane',       icon: 'fa-couch' },
+  { value: 'loft',        label: 'Loft Architectural',        sublabel: 'Béton clair + verrière',             icon: 'fa-warehouse' },
+  { value: 'serre',       label: 'Serre Atelier Botanique',   sublabel: 'Verrière + plantes denses',          icon: 'fa-leaf' },
+  { value: 'aube',        label: "L'Aube Intime",             sublabel: 'Lumière matinale, slow living',      icon: 'fa-mug-hot' },
+  { value: 'sauvage',     label: 'Échappée Sauvage',          sublabel: 'Vent, falaise, golden hour',         icon: 'fa-mountain' },
+  { value: 'sepia',       label: 'Lumière Sépia',             sublabel: 'Heure dorée 35mm nostalgique',       icon: 'fa-cloud-sun' }
+];
+
+// Descripteurs de scène EN injectés dans PROMPT_BASE et SHOTS_CONFIG.LIFESTYLE via [DECOR].
+// `short` = ligne unique pour PROMPT_BASE (champ DÉCOR).
+// `full` = description plus riche pour LIFESTYLE.promptSuffix (mode mannequin LIFESTYLE).
+export const DECOR_DESCRIPTIONS: Record<DecorStyle, { short: string; full: string }> = {
+  minimalist: {
+    short: "Pure cream-white textured studio backdrop, no environment, no props, soft diffused studio light, A.P.C. minimalism.",
+    full:  "Pure cream-white seamless studio backdrop with subtle paper texture, soft diffused studio light, no shadows, no environment, no props. Aesthetic A.P.C. and Octobre Éditions minimalist studio."
+  },
+  parisien: {
+    short: "Editorial Parisian apartment with sage green molded walls, chevron parquet floor, vintage decor (stylish sofa).",
+    full:  "Editorial Parisian apartment, sage green molded walls, chevron parquet floor, vintage curated decor (stylish velvet sofa, brass details, antique mirror), warm morning window light, Sézane × Maison Labiche aesthetic."
+  },
+  loft: {
+    short: "Architectural loft, light concrete walls, industrial glass roof (verrière), natural wood floor, a few green plants.",
+    full:  "Architectural loft / contemporary atelier with light concrete walls, industrial glass roof (verrière) flooding the space with diffused zenith light, natural wood floor, a few green plants in raw terracotta pots. Aesthetic A.P.C., AMI Paris, Maison Labiche."
+  },
+  serre: {
+    short: "Botanical greenhouse atelier, dense lush plants (monstera, ferns), iron-framed glass walls, dappled green-tinted light.",
+    full:  "Botanical greenhouse / atelier serre, dense lush tropical plants (monstera, ferns, palms) framing the model, iron-framed glass walls, terracotta floor tiles, dappled green-tinted natural light filtering through foliage, vintage rattan or wicker accents. Slow living, garden-of-Eden Sézane × La Double J aesthetic."
+  },
+  aube: {
+    short: "Intimate bedroom at dawn, rumpled white linen sheets, warm gold morning light through sheer curtains, slow living mood.",
+    full:  "Intimate bedroom or quiet kitchen at dawn, rumpled white linen sheets and pillows, sheer curtains diffusing warm gold morning light, a steaming ceramic coffee mug nearby, an open book, slow living quiet hour. Soft melancholic intimacy, Émoï-Émoï × The Frankie Shop morning aesthetic."
+  },
+  sauvage: {
+    short: "Raw natural outdoor scene, windswept cliff or wild meadow, golden hour backlight, motion in the hair and fabric.",
+    full:  "Raw natural outdoor scene — windswept cliff edge, wild meadow or untamed beach — natural movement, hair and fabric caught by the wind, golden hour low backlight creating slight lens flare, dramatic but never staged. Carine Roitfeld × Vanessa Bruno wild French nature aesthetic."
+  },
+  sepia: {
+    short: "Sun-drenched golden hour scene, pronounced 35mm film grain, long warm shadows, sepia-toned nostalgia.",
+    full:  "Sun-drenched golden hour scene — could be a sunlit Provençal courtyard, an old village square, a vintage café terrace — pronounced 35mm film grain, long warm shadows, sepia-toned palette, slight halation around highlights. Nostalgic 1970s French cinema aesthetic, Éric Rohmer × Sofia Coppola."
+  }
+};
 
 // Mapping YPxxx → matières techniques précises (descriptions transposées de l'ancien
 // mapping Awdis JH001/JH030/etc. vers les codes commerciaux Ypersoa du Hub).
@@ -135,7 +181,7 @@ export const PROMPT_BASE = `Generate an image of:
 Hyper-realistic digital mockup of a fashion editorial concept. 
 QUALITÉ : Rendu 3D hyper-réaliste 2K ultra-détaillé, cinématographique, grain de pellicule argentique (analog film quality), mise au point macro d'une précision absolue.
 STYLE : Photographie professionnelle premium, niveau campagne publicitaire haut de gamme. Effortless French cool, chic, émotionnel et ultra-authentique. Ambiance A.P.C., Octobre Éditions, Sézane, et émoi émoi.
-DÉCOR : Editorial apartment with sage green molded walls, chevron parquet floor, and vintage decor (like a stylish sofa).
+DÉCOR : [DECOR]
 LUMIÈRE : Lumière naturelle zénithale, morning window light ou golden hour douce.
 PALETTE : Tons neutres désaturés, beige "natural raw", sable, crème, avec des touches de [THREAD_COLOR].
 PRODUIT : Un [PRODUCT] de couleur unie et constante [GARMENT_COLOR] confectionné en [MATERIAL]. Le vêtement est vierge à l'intérieur, sans aucune étiquette ou label de marque visible au niveau du col. La texture du tissu doit être parfaitement visible au niveau des mailles.
@@ -160,7 +206,7 @@ export const SHOTS_CONFIG = {
   },
   LIFESTYLE: {
     label: "Lifestyle Mode",
-    promptSuffix: "Editorial fashion photography. Model standing against a sage green molded wall or sitting on a vintage sofa, chevron parquet floor visible. Soft natural light, warm morning light, warm and authentic mood. Premium professional photoshoot, A.P.C., Octobre Éditions, Sézane, émoi émoi vibe. Photos lifestyle très émotionnelles, vivantes et ultra-réalistes. Le mannequin doit être imparfait, humain, avec une texture de peau naturelle, des cheveux naturels/en bataille, pas une star parfaite. IMPORTANT : AUCUN zoom sur la broderie, elle doit rester un détail discret à l'échelle du vêtement.",
+    promptSuffix: "Editorial fashion photography. [DECOR] Soft natural light, warm and authentic mood. Premium professional photoshoot. Photos lifestyle très émotionnelles, vivantes et ultra-réalistes. Le mannequin doit être imparfait, humain, avec une texture de peau naturelle, des cheveux naturels/en bataille, pas une star parfaite. IMPORTANT : AUCUN zoom sur la broderie, elle doit rester un détail discret à l'échelle du vêtement.",
     packshotSuffix: "Vue de trois-quarts du vêtement sur le mannequin invisible, mettant en valeur le volume et le tombé du tissu. Présentation produit seul sans modèle.",
     familySuffix: "Scène de vie de groupe dans un salon lumineux ou un atelier. Les modèles virtuels partagent un moment authentique. IMPORTANT : Plan d'ensemble, AUCUN zoom sur la broderie."
   },
@@ -258,6 +304,114 @@ export const FULL_PACK_LOFT = {
   MACRO_PORTEE: {
     label: "Macro Broderie Portée",
     prompt: `Generate an image of: Hyper-realistic editorial macro photograph showing the embroidered detail WORN by a real human model. Tight close-up framing on the LEFT CHEST embroidery area of a [PRODUIT] in [COULEUR SWEAT] ([MATERIAL]). The attached motif is embroidered in [COULEUR FIL] thread on the [EMPLACEMENT] ([DIMENSION] max). The shot MUST include a fragment of the model — a partial face (cheek, jawline, mouth corner, OR chin), a strand of hair softly falling on the fabric, OR a hand gently grazing the embroidery edge — but the embroidery itself remains the focal point in sharp focus. THIS IS NOT A FLAT LAY, THIS IS NOT A NATURE MORTE — the garment is worn on a human body, in motion or resting, with visible skin texture and natural fabric folds anchoring the scene in real life. Décor : espace architectural lumineux et minimaliste, verrière industrielle, mur en béton clair, parquet en bois naturel, ambiance loft ou serre contemporaine. Soft diffused natural light from a glass roof. Palette neutre et élégante : beige, sable, béton clair, bois, vert végétal. Objectif Canon 100mm macro, f/3.5, ultra-sharp focus on embroidery stitching with creamy bokeh on the model fragment. Esthétique inspirationnelle mode française contemporaine, intimist editorial close-up, esprit A.P.C., AMI Paris, Maison Labiche. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Rendu 100% plat, lisse et ultra-réaliste, intégré au tissu sans surépaisseur.\${COPYRIGHT_DISCLAIMER}`
+  }
+};
+
+export const FULL_PACK_SERRE = {
+  PLEIN_PIED: {
+    label: "Plein Pied Serre",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste, imparfait et naturel portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Le modèle est photographié en plein pied, posture naturelle, debout au cœur d'une serre atelier botanique : plantes tropicales denses (monstera, fougères, palmes), parois de verre sur structure métallique noire, sol en tomette terracotta, lumière naturelle filtrée à travers le feuillage avec teintes vertes douces. Ambiance Sézane × La Double J, slow living, jardin d'Eden. Palette terracotta, vert végétal profond, écru, sable. Objectif 50mm, profondeur de champ douce. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  PLAN_AMERICAIN: {
+    label: "Plan Américain Serre",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste, imparfait et naturel portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan américain (mi-cuisse), modèle assis sur un fauteuil en rotin vintage ou un banc en bois brut, entouré de plantes tropicales denses dans une serre atelier. Parois de verre sur structure métallique noire, lumière zénithale filtrée par les feuilles. Ambiance jardin botanique, slow living, Sézane × La Double J. Palette terracotta, vert végétal, écru. Objectif 85mm, profondeur de champ douce. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  BUSTE: {
+    label: "Buste Verdure",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste, imparfait et naturel portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Cadrage en buste, le modèle entouré de feuillages denses (monstera, fougères) qui encadrent doucement le visage. Lumière diffuse verdâtre filtrant à travers les feuilles, ambiance serre atelier botanique. Palette terracotta, vert végétal profond. Objectif 85mm, profondeur de champ douce. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  RAPPROCHE: {
+    label: "Rapproché Plantes",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan rapproché sur le torse et la broderie, le modèle tient un arrosoir en métal patiné ou caresse une feuille de monstera. Décor serre atelier botanique, plantes denses en arrière-plan flou. Lumière naturelle filtrée. Palette terracotta, vert profond, écru. Objectif 50mm macro, profondeur de champ douce. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MOUVEMENT: {
+    label: "Mouvement Verrière",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Modèle marchant lentement entre les plantes tropicales d'une serre atelier botanique, légère brise faisant bouger les feuillages, dynamique. Parois de verre sur structure métallique noire en arrière-plan, lumière zénithale verdâtre filtrée. Palette terracotta, vert profond. Objectif 50mm. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MACRO_PORTEE: {
+    label: "Macro Broderie Verdure",
+    prompt: `Generate an image of: Hyper-realistic editorial macro photograph showing the embroidered detail WORN by a real human model. Tight close-up framing on the LEFT CHEST embroidery area of a [PRODUIT] in [COULEUR SWEAT] ([MATERIAL]). The attached motif is embroidered in [COULEUR FIL] thread on the [EMPLACEMENT] ([DIMENSION] max). The shot MUST include a fragment of the model — partial face, hand grazing the embroidery edge, or a strand of hair. THIS IS NOT A FLAT LAY. Soft monstera leaves blurred in the background, dappled green-tinted natural light from a glass roof. Botanical greenhouse atelier mood. Objectif Canon 100mm macro, f/3.5, ultra-sharp on embroidery with creamy bokeh on foliage. Aesthetic Sézane × La Double J slow living. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  }
+};
+
+export const FULL_PACK_AUBE = {
+  PLEIN_PIED: {
+    label: "Plein Pied Aube",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste, imparfait et naturel portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Le modèle photographié en plein pied dans une chambre intime à l'aube : draps en lin blanc froissés sur un lit en bois clair, rideaux voilés diffusant une lumière dorée matinale, parquet en bois brut, ambiance slow living mélancolique douce. Palette ivoire, lin, gold matinal, sable. Objectif 50mm, profondeur de champ douce. Ambiance Émoï-Émoï × The Frankie Shop. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  PLAN_AMERICAIN: {
+    label: "Plan Américain Lit",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan américain (mi-cuisse), modèle assis au bord d'un lit avec draps en lin blanc froissés, ou debout près d'une fenêtre voilée. Lumière dorée matinale rasante. Une tasse en céramique fume sur la table de chevet. Palette ivoire, lin, gold matinal. Objectif 85mm, profondeur de champ douce. Ambiance slow living intime. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  BUSTE: {
+    label: "Buste Fenêtre",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Cadrage en buste, le modèle près d'une fenêtre voilée, contre-jour matinal doré sur le visage et le vêtement, expression sereine légèrement songeuse. Décor : chambre intime, lin blanc froissé en arrière-plan flou. Palette ivoire, lin, gold matinal. Objectif 85mm. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  RAPPROCHE: {
+    label: "Rapproché Café",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan rapproché sur le torse et la broderie, le modèle tient une grande tasse en céramique artisanale fumante (café ou thé), un livre ouvert visible à proximité. Décor : chambre ou cuisine intime à l'aube, lumière dorée matinale tendre, draps en lin blanc en arrière-plan flou. Palette ivoire, lin, gold. Objectif 50mm macro. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MOUVEMENT: {
+    label: "Mouvement Aube",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Modèle marchant pieds nus sur un parquet en bois brut, vers une fenêtre voilée à l'aube, contre-jour doré matinal créant un léger flare, draps en lin blanc froissés visibles. Léger flou de mouvement. Palette ivoire, lin, gold. Ambiance slow living mélancolique. Objectif 50mm. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MACRO_PORTEE: {
+    label: "Macro Broderie Aube",
+    prompt: `Generate an image of: Hyper-realistic editorial macro photograph showing the embroidered detail WORN by a real human model. Tight close-up framing on the LEFT CHEST embroidery area of a [PRODUIT] in [COULEUR SWEAT] ([MATERIAL]). The attached motif is embroidered in [COULEUR FIL] thread on the [EMPLACEMENT] ([DIMENSION] max). The shot MUST include a fragment of the model — partial face (cheek, jawline), or a hand holding the fabric, or hair softly falling. THIS IS NOT A FLAT LAY. Background : crumpled white linen sheets blurred, soft golden morning light from a sheer-curtained window. Slow living dawn intimacy. Objectif Canon 100mm macro, f/3.5. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  }
+};
+
+export const FULL_PACK_SAUVAGE = {
+  PLEIN_PIED: {
+    label: "Plein Pied Sauvage",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste, imparfait et naturel portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plein pied en extérieur, falaise venteuse face à la mer, prairie sauvage d'herbes hautes ou plage déserte. Cheveux et vêtement en mouvement avec le vent. Contre-jour de golden hour bas créant un léger flare. Posture vivante, naturelle, jamais posée. Palette océan gris-vert, sable doré, ciel chaud. Objectif 50mm. Ambiance Carine Roitfeld × Vanessa Bruno nature française sauvage. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  PLAN_AMERICAIN: {
+    label: "Plan Américain Vent",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan américain (mi-cuisse), modèle debout sur une falaise venteuse ou au milieu d'herbes hautes ondulant, regard vers l'horizon. Cheveux balayés par le vent. Contre-jour golden hour, palette océan, sable, ciel chaud. Objectif 85mm. Ambiance nature française sauvage. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  BUSTE: {
+    label: "Buste Horizon",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Cadrage en buste, en extérieur sauvage, regard légèrement de profil vers l'horizon. Cheveux en mouvement avec le vent. Contre-jour golden hour doux, palette océan gris-vert, sable, ciel chaud. Objectif 85mm. Ambiance nature française sauvage. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  RAPPROCHE: {
+    label: "Rapproché Galets",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan rapproché sur le torse et la broderie, modèle assis sur un rocher ou des galets en bord de mer, mains tenant un galet poli ou une coquille. Lumière golden hour rasante, vent léger dans les cheveux. Palette océan, sable, gris-vert. Objectif 50mm macro. Ambiance nature sauvage. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MOUVEMENT: {
+    label: "Mouvement Sauvage",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Modèle marchant ou courant légèrement le long d'une falaise, d'une plage ou à travers un champ d'herbes hautes. Flou de mouvement très léger, cheveux et vêtement happés par le vent. Contre-jour golden hour avec léger flare. Palette océan, sable doré, ciel chaud. Objectif 50mm. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MACRO_PORTEE: {
+    label: "Macro Broderie Vent",
+    prompt: `Generate an image of: Hyper-realistic editorial macro photograph showing the embroidered detail WORN by a real human model OUTDOORS. Tight close-up framing on the LEFT CHEST embroidery area of a [PRODUIT] in [COULEUR SWEAT] ([MATERIAL]). The attached motif is embroidered in [COULEUR FIL] thread on the [EMPLACEMENT] ([DIMENSION] max). The shot MUST include a fragment of the model — wind-swept strand of hair across the embroidery, partial jawline, or a hand. THIS IS NOT A FLAT LAY. Background : blurred wild meadow or sea horizon, golden hour low backlight with slight lens flare. Wild French nature mood. Objectif Canon 100mm macro, f/3.5. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  }
+};
+
+export const FULL_PACK_SEPIA = {
+  PLEIN_PIED: {
+    label: "Plein Pied Sépia",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste, imparfait et naturel portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plein pied dans une cour pavée provençale ensoleillée à l'heure dorée, ou place de village avec mur en pierre claire chauffé par le soleil. Ombres longues et chaudes. Grain argentique 35mm prononcé, halation douce sur les hautes lumières, palette sépia chaude, ocre, terre. Objectif 50mm film. Ambiance Éric Rohmer × Sofia Coppola, cinéma français des années 70. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  PLAN_AMERICAIN: {
+    label: "Plan Américain Terrasse",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan américain (mi-cuisse), modèle assis sur une chaise en métal de bistrot vintage devant un mur en pierre claire, terrasse de café provençale à l'heure dorée. Grain argentique 35mm, palette sépia, ocre, terre. Objectif 85mm film. Ambiance cinéma français nostalgique 70s. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  BUSTE: {
+    label: "Buste Lumière Sépia",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Cadrage en buste, le modèle baigné d'une lumière dorée latérale rasante, ombres chaudes. Mur en pierre claire ou volet bleu pâle écaillé en arrière-plan flou. Grain argentique 35mm appuyé, palette sépia, ocre, terre, halation douce. Objectif 85mm film. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  RAPPROCHE: {
+    label: "Rapproché Verre Vin",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Plan rapproché sur le torse et la broderie, le modèle tient un verre de vin rosé ou une tasse en céramique vintage sur une table de bistrot ensoleillée. Grain argentique 35mm prononcé, palette sépia, ocre, terre. Objectif 50mm macro film. Ambiance nostalgie 70s. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MOUVEMENT: {
+    label: "Mouvement Sépia",
+    prompt: `Generate an image of: Photographie lifestyle éditoriale d'un modèle ultra-réaliste portant un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) avec le motif joint brodé en fil [COULEUR FIL] sur l'[EMPLACEMENT] ([DIMENSION] max). Modèle marchant lentement dans une ruelle pavée provençale ensoleillée à l'heure dorée, ombres longues, léger flou de mouvement. Grain argentique 35mm prononcé, palette sépia chaude, ocre, terre. Objectif 50mm film. Ambiance Sofia Coppola, cinéma français nostalgique. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
+  },
+  MACRO_PORTEE: {
+    label: "Macro Broderie Sépia",
+    prompt: `Generate an image of: Hyper-realistic editorial macro photograph showing the embroidered detail WORN by a real human model in golden hour. Tight close-up framing on the LEFT CHEST embroidery area of a [PRODUIT] in [COULEUR SWEAT] ([MATERIAL]). The attached motif is embroidered in [COULEUR FIL] thread on the [EMPLACEMENT] ([DIMENSION] max). The shot MUST include a fragment of the model — partial face, hand, or hair. THIS IS NOT A FLAT LAY. Background : warm sun-drenched stone wall blurred, long warm shadows, pronounced 35mm film grain, slight halation. Sépia nostalgic 70s mood. Objectif Canon 100mm macro film. ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.\${COPYRIGHT_DISCLAIMER}`
   }
 };
 

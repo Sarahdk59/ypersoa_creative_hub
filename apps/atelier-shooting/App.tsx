@@ -25,7 +25,7 @@ const App: React.FC = () => {
     },
     threadColor: '',                // 'Comme sur l'image' par défaut
     garmentColor: 'beige',          // ID Hub officiel
-    fullPackStyle: 'parisien',
+    decorStyle: 'parisien',
     // Hook 1 — défauts compatibles avec workflow legacy (diversity random)
     castingMode: 'diversity',
     canoniqueIds: []

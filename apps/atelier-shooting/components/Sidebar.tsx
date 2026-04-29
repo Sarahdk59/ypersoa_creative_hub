@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { GenerationSettings, ProductType } from '../types';
-import { PRODUCTS_HUB, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISABILITIES, THREAD_COLORS } from '../constants';
+import { PRODUCTS_HUB, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISABILITIES, THREAD_COLORS, DECOR_STYLES } from '../constants';
 import { getCanoniquesSorted, getCanoniqueById } from '../lib/canoniques';
 import { getColorsForProduct, isFilGarmentIncompatible } from '../lib/hub-data';
 
@@ -453,34 +453,38 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
               </div>
             </div>
           )}
-          {/* Full Pack Options */}
-          {settings.mode === 'full' && (
-            <div className="space-y-4 p-4 bg-yp-linen/50 rounded-xl border border-yp-sable/30 animate-in fade-in slide-in-from-top-2">
-              <div>
-                <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Style du Pack</label>
-                <div className="flex flex-col gap-2">
-                  {[
-                    { id: 'minimalist', label: 'Minimaliste (Studio A.P.C.)' },
-                    { id: 'parisien', label: 'Premium Parisien (Sézane x Labiche)' },
-                    { id: 'loft', label: 'Loft Brut & Serre Botanique' }
-                  ].map(s => (
-                    <button
-                      key={s.id}
-                      onClick={() => setSettings(prev => ({ ...prev, fullPackStyle: s.id as any }))}
-                      className={`py-2 px-3 rounded-md text-xs border transition-all text-left ${
-                        settings.fullPackStyle === s.id
-                          ? 'bg-yp-olive text-white border-yp-olive'
-                          : 'bg-white text-slate-500 border-slate-200 hover:border-yp-sable'
-                      }`}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
         </section>
+
+        {/* Step 7: Décor — visible en mode mannequin + full uniquement.
+            Family : décor imposé par le couple. Packshot : pas de décor (fond blanc). */}
+        {(settings.mode === 'mannequin' || settings.mode === 'full') && (
+          <section>
+            <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
+              7. Décor / Ambiance
+            </label>
+            <div className="grid grid-cols-1 gap-2">
+              {DECOR_STYLES.map(d => (
+                <button
+                  key={d.value}
+                  onClick={() => setSettings(prev => ({ ...prev, decorStyle: d.value }))}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs border transition-all text-left ${
+                    settings.decorStyle === d.value
+                      ? 'bg-yp-olive text-white border-yp-olive shadow-md'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-yp-sable'
+                  }`}
+                >
+                  <i className={`fa-solid ${d.icon} w-4 text-base`}></i>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold truncate">{d.label}</div>
+                    <div className={`text-[10px] truncate ${
+                      settings.decorStyle === d.value ? 'text-white/70' : 'text-slate-400'
+                    }`}>{d.sublabel}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
       <div className="mt-10 pt-6 border-t border-yp-sable">

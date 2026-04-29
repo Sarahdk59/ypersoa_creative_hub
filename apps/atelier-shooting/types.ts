@@ -29,7 +29,10 @@ export interface ModelDiversity {
   disability: DisabilityType;
 }
 
-export type FullPackStyle = 'minimalist' | 'parisien' | 'loft';
+// 7 décors disponibles. Sélecteur visible en mode 'mannequin' et 'full'.
+// En mode 'family' le décor est imposé par le couple choisi (DUO_*/TRIO_* du référentiel).
+// En mode 'packshot' pas de décor (fond blanc studio).
+export type DecorStyle = 'minimalist' | 'parisien' | 'loft' | 'serre' | 'aube' | 'sauvage' | 'sepia';
 
 // Hook 1 (29-30/04/2026) : casting peut être 'diversity' (random visages) ou 'canonique' (mannequins persistants Hub).
 // Quand castingMode = 'canonique', canoniqueIds[] contient les IDs (ex: ['MAN-P02']) à utiliser
@@ -46,7 +49,7 @@ export interface GenerationSettings {
   diversity: ModelDiversity;
   threadColor: string;
   garmentColor: string;
-  fullPackStyle: FullPackStyle;
+  decorStyle: DecorStyle;
   // Hook 1 — Casting Hub
   castingMode: CastingMode;
   canoniqueIds: string[];

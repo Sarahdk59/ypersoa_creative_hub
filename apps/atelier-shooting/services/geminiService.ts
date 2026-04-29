@@ -1,7 +1,8 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { GenerationSettings } from "../types";
-import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT } from "../constants";
+import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT, FULL_PACK_SERRE, FULL_PACK_AUBE, FULL_PACK_SAUVAGE, FULL_PACK_SEPIA, DECOR_DESCRIPTIONS } from "../constants";
+import { DecorStyle } from "../types";
 import { fetchCanoniqueAsBase64, getCanoniqueById, Canonique } from "../lib/canoniques";
 import { getGarmentById } from "../lib/hub-data";
 
@@ -70,8 +71,20 @@ type FullPackMap = Record<string, FullPackShot>;
 
 function getFullPackPrompts(style: string): FullPackMap {
   if (style === 'minimalist') return FULL_PACK_MINIMALIST as FullPackMap;
-  if (style === 'loft') return FULL_PACK_LOFT as FullPackMap;
+  if (style === 'loft')       return FULL_PACK_LOFT as FullPackMap;
+  if (style === 'serre')      return FULL_PACK_SERRE as FullPackMap;
+  if (style === 'aube')       return FULL_PACK_AUBE as FullPackMap;
+  if (style === 'sauvage')    return FULL_PACK_SAUVAGE as FullPackMap;
+  if (style === 'sepia')      return FULL_PACK_SEPIA as FullPackMap;
   return FULL_PACK_PARISIEN as FullPackMap;
+}
+
+/**
+ * Récupère les descripteurs de décor (short pour PROMPT_BASE, full pour LIFESTYLE)
+ * selon le DecorStyle sélectionné. Fallback `parisien` si valeur inattendue.
+ */
+function getDecorDescription(style: DecorStyle | string): { short: string; full: string } {
+  return DECOR_DESCRIPTIONS[style as DecorStyle] || DECOR_DESCRIPTIONS.parisien;
 }
 
 async function generateSingleShot(settings: GenerationSettings, shotType: string, seedOffset: number): Promise<{url: string, label: string}> {
@@ -92,7 +105,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   let label = "";
 
   if (settings.mode === 'full') {
-    const packPrompts = getFullPackPrompts(settings.fullPackStyle);
+    const packPrompts = getFullPackPrompts(settings.decorStyle);
     const shot = packPrompts[shotType as keyof typeof packPrompts];
     label = shot.label;
     const emplacement = settings.size >= 20 ? "centre du vêtement" : "côté cœur";
@@ -175,13 +188,21 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
           .replace("[MATERIAL]", material);
       }
 
+      // [DECOR] : injecté en mode 'mannequin' selon settings.decorStyle.
+      // En mode 'family' le décor reste imposé par le couple choisi (FAMILY_DESCRIPTION
+      // ne contient pas [DECOR]) — pas d'injection ici.
+      const decor = getDecorDescription(settings.decorStyle);
       promptText = PROMPT_BASE
         .replace("[PRODUCT]", productDescription)
         .replace("[MATERIAL]", material)
         .replace("[SIZE]", settings.size.toString())
         .replace(/\[THREAD_COLOR\]/g, threadColorText)
         .replace("[GARMENT_COLOR]", garmentColorText)
-        + context + " " + variation.replace(/\[THREAD_COLOR\]/g, threadColorText);
+        .replace("[DECOR]", settings.mode === 'mannequin' ? decor.short : DECOR_DESCRIPTIONS.parisien.short)
+        + context + " "
+        + variation
+            .replace(/\[THREAD_COLOR\]/g, threadColorText)
+            .replace("[DECOR]", settings.mode === 'mannequin' ? decor.full : DECOR_DESCRIPTIONS.parisien.full);
     }
   }
 
@@ -347,7 +368,7 @@ export async function generateYpersoaPack(settings: GenerationSettings): Promise
 
   let shotKeys: string[] = [];
   if (settings.mode === 'full') {
-    const packPrompts = getFullPackPrompts(settings.fullPackStyle);
+    const packPrompts = getFullPackPrompts(settings.decorStyle);
     shotKeys = Object.keys(packPrompts);
   } else {
     shotKeys = Object.keys(SHOTS_CONFIG);
