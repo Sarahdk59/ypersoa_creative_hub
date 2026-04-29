@@ -123,7 +123,13 @@ export const COPYRIGHT_DISCLAIMER = `\n\nIMPORTANT SAFETY AND COPYRIGHT NOTICE: 
   • The embroidery is the FIRST visual hero of every shot — sharp focus, equally crisp or crisper than the model's face if any model is present.
   • Machine-made artisanal precision — like a high-end Émoï-Émoï, Sézane, Octobre Éditions or Maison Labiche embroidered piece, not a fast-fashion print.
   • Flat into the fabric (no 3D bulge) but TEXTURED with stitch dimensionality — the eye must read 'real embroidery' instantly.
-ABSOLUTELY AVOID : printed-on look, vinyl sticker effect, screen-print appearance, digital flat overlay, blurry stitches, fuzzy letter edges, washed-out colors. The embroidery is the SOUL of the shot.`;
+ABSOLUTELY AVOID : printed-on look, vinyl sticker effect, screen-print appearance, digital flat overlay, blurry stitches, fuzzy letter edges, washed-out colors. The embroidery is the SOUL of the shot.
+
+📏 PROPORTIONALITY (ABSOLUTE) : The embroidered badge is a REAL physical embroidery of fixed dimension on the garment (the specific size in cm is given in the prompt above). It MUST appear at a CONSISTENT relative size across ALL shots in the pack — same physical size on the body, ONLY the camera distance changes between shots.
+  • Full body shot : badge is a small focused detail on the chest (~5-10% of frame width).
+  • Crop poitrine / portrait : badge is medium-sized (~15-25% of frame width).
+  • Macro broderie : intentional zoom-in (the EXCEPTION, badge fills frame).
+NEVER render a giant badge on a full-body shot, NEVER render a tiny badge on a chest crop. Consistency is critical — the user must see the SAME real product across all shots of the pack.`;
 
 export const PROMPT_BASE = `Generate an image of:
 Hyper-realistic digital mockup of a fashion editorial concept. 
