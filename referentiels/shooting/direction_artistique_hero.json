@@ -226,17 +226,41 @@
     },
 
     "duo_obligatoire_par_pack": {
-      "regle": "Minimum 1 shot duo par pack complet",
+      "regle": "Minimum 1 shot duo OU trio par pack complet (étendu v2.0 2026-04-30)",
       "rotation_cyclique_obligatoire": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
       "logique_rotation": "Chaque nouveau pack avance d'un cran dans la liste. Pack 1 = parent_enfant, Pack 2 = grand_parent_parent, Pack 3 = adultes_amis, Pack 4 = couple, Pack 5 = retour parent_enfant, etc.",
-      "tracking_rotation": "Le Hub doit maintenir un compteur de rotation pour éviter la répétition du même type de duo sur plusieurs packs consécutifs",
-      "duos_disponibles": {
+      "tracking_rotation": "Le Hub doit maintenir un compteur de rotation pour éviter la répétition du même type de dispositif sur plusieurs packs consécutifs",
+      "_note_v2": "Étendu 2026-04-30 avec 8 nouveaux dispositifs (4 duos + 4 trios). La rotation cyclique reste sur 4 types — les nouveaux dispositifs s'insèrent dans le type qui colle à leur dominante narrative. Une évolution Phase 2 vers 6 types cycliques (+ trio_3_generations + famille_nucleaire_jeune) est documentée dans duos_detailles_et_distribution.json > regles_distribution_par_collection > regle_rotation_cyclique_par_pack > ordre_v2_etendu_propose.",
+      "dispositifs_disponibles": {
+        "parent_enfant": {
+          "DUO_MATHIEU_GABIN": "père + fils blanc (principal historique)",
+          "DUO_NICOLAS_GABIN": "père + fils blanc (alt narratif vs Mathieu — autonomie narrative pour Gabin)",
+          "DUO_HUGO_NOE": "jeune père + bébé blanc (principal_forte_rotation, motif central)",
+          "TRIO_COLINE_HUGO_NOE": "jeune famille nucléaire 3 personnages blanche (Coline en fauteuil jamais sujet)"
+        },
+        "grand_parent_parent": {
+          "DUO_BEATRICE_FELICIE": "grand-mère métisse + petite-fille blanche (principal historique)",
+          "TRIO_AICHA_CESARIA_JOSEPHINE": "3 générations féminines afro-caribéennes (transmission_rare, Joséphine mère bio + Aïcha et Césaria filles)",
+          "TRIO_HENRI_NICOLAS_GABIN": "3 générations masculines blanches (transmission_rare, Henri père de Nicolas, Nicolas père de Gabin)"
+        },
+        "adultes_amis": {
+          "DUO_MATHIEU_NICOLAS": "amitié masculine adulte (deux papas blancs)",
+          "TRIO_COPINES_ANNA_AICHA_LILA": "girl gang adulte multiculturel (provençale + afro-caribéenne + maghrébine, groupes_amis)"
+        },
+        "couple": {
+          "DUO_LEA_SARAH": "couple lesbien marié (iconique_rare, métisse + nordique)",
+          "DUO_HENRI_JOSEPHINE": "couple senior mixte 40 ans de mariage (transmission_rare, blanc + afro-caribéenne)",
+          "DUO_GASPARD_BRUNE": "jeune couple Gen Z étudiants créatifs (iconique_rare, blanc + blanche)"
+        }
+      },
+      "_legacy_duos_disponibles_v1": {
+        "_deprecated_2026-04-30": "Conservé pour compatibilité ascendante. Utiliser dispositifs_disponibles ci-dessus.",
         "DUO_MATHIEU_GABIN": "parent_enfant (père/fils)",
         "DUO_BEATRICE_FELICIE": "grand_parent_parent (grand-mère/petite-fille)",
         "DUO_LEA_SARAH": "couple (lesbien marié)",
         "DUO_HENRI_JOSEPHINE": "couple (senior mixte)"
       },
-      "raison": "Le duo incarne la dimension affective du motif (offert à quelqu'un qu'on aime). La rotation garantit une représentation équilibrée des liens familiaux et amicaux sur la durée de la communication brand."
+      "raison": "Le dispositif (duo ou trio) incarne la dimension affective du motif (offert à quelqu'un qu'on aime). La rotation garantit une représentation équilibrée des liens familiaux et amicaux sur la durée de la communication brand. L'extension v2.0 multiplie les angles narratifs sans diluer la cohérence."
     },
 
     "casting_par_pack": {

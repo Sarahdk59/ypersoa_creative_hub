@@ -107,11 +107,20 @@
 
   "duos_resume": {
     "_reference_complete": "referentiels/shooting/duos_detailles_et_distribution.json",
+    "_note_v2": "Étendu 2026-04-30 avec 8 nouveaux dispositifs (4 duos + 4 trios). Format unifié 'duos[]' avec champ 'type' (duo|trio) et 'nb_membres'.",
     "duos": [
-      { "id": "DUO_BEATRICE_FELICIE", "nature": "grand-mère + petite-fille", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse intergénérationnelle campagne normande" },
-      { "id": "DUO_MATHIEU_GABIN", "nature": "père + fils", "categorie_usage": "principal_forte_rotation", "phrase": "Complicité masculine tendre et ludique. Masculinité française douce." },
-      { "id": "DUO_LEA_SARAH", "nature": "couple lesbien marié", "categorie_usage": "iconique_rare", "phrase": "Complicité quotidienne d'un couple établi. Le couple est un fait, pas un statement." },
-      { "id": "DUO_HENRI_JOSEPHINE", "nature": "couple senior mixte", "categorie_usage": "seniors_rare_transmission", "phrase": "Tendresse posée d'un long amour. Élégance rive gauche éclairée." }
+      { "id": "DUO_BEATRICE_FELICIE", "type": "duo", "nb_membres": 2, "nature": "grand-mère + petite-fille", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse intergénérationnelle campagne normande" },
+      { "id": "DUO_MATHIEU_GABIN", "type": "duo", "nb_membres": 2, "nature": "père + fils", "categorie_usage": "principal_forte_rotation", "phrase": "Complicité masculine tendre et ludique. Masculinité française douce." },
+      { "id": "DUO_LEA_SARAH", "type": "duo", "nb_membres": 2, "nature": "couple lesbien marié", "categorie_usage": "iconique_rare", "phrase": "Complicité quotidienne d'un couple établi. Le couple est un fait, pas un statement." },
+      { "id": "DUO_HENRI_JOSEPHINE", "type": "duo", "nb_membres": 2, "nature": "couple senior mixte", "categorie_usage": "transmission_rare", "phrase": "Tendresse posée d'un long amour. Élégance rive gauche éclairée. (Henri = beau-père d'Aïcha et Césaria, 2e mariage de Joséphine)" },
+      { "id": "DUO_GASPARD_BRUNE", "type": "duo", "nb_membres": 2, "nature": "jeune couple étudiants créatifs", "categorie_usage": "iconique_rare", "phrase": "Premier amour adulte d'étudiants créatifs. Insouciance solaire mais lucide." },
+      { "id": "DUO_HUGO_NOE", "type": "duo", "nb_membres": 2, "nature": "jeune père + bébé", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse absolue d'un jeune père porteur. Masculinité paternelle nouvelle génération." },
+      { "id": "DUO_NICOLAS_GABIN", "type": "duo", "nb_membres": 2, "nature": "père + fils (alt narratif vs DUO_MATHIEU_GABIN)", "categorie_usage": "principal_forte_rotation", "phrase": "Père attentionné posé. Transmission posée et calme. Paternité tardive choisie." },
+      { "id": "DUO_MATHIEU_NICOLAS", "type": "duo", "nb_membres": 2, "nature": "amis adultes (deux papas)", "categorie_usage": "principal_forte_rotation", "phrase": "Amitié masculine adulte française. Pudeur masculine douce, complicité de longue date." },
+      { "id": "TRIO_AICHA_CESARIA_JOSEPHINE", "type": "trio", "nb_membres": 3, "nature": "3 générations féminines afro-caribéennes (mère + 2 filles adultes)", "categorie_usage": "transmission_rare", "phrase": "Transmission matriarcale élégante. Joséphine mère biologique, Aïcha et Césaria filles. Henri beau-père hors champ." },
+      { "id": "TRIO_HENRI_NICOLAS_GABIN", "type": "trio", "nb_membres": 3, "nature": "3 générations masculines (grand-père + père + petit-fils)", "categorie_usage": "transmission_rare", "phrase": "Transmission masculine pudique. Henri grand-père, Nicolas père de Gabin (alt narratif)." },
+      { "id": "TRIO_COLINE_HUGO_NOE", "type": "trio", "nb_membres": 3, "nature": "jeune famille nucléaire (mère + père + bébé)", "categorie_usage": "principal_forte_rotation", "phrase": "Jeune parentalité moderne posée. Coline solo dans son shot solo, jeune mère dans le trio (autonomie narrative). Fauteuil jamais sujet." },
+      { "id": "TRIO_COPINES_ANNA_AICHA_LILA", "type": "trio", "nb_membres": 3, "nature": "trio d'amies adultes CSP+ multiculturel", "categorie_usage": "groupes_amis", "phrase": "Girl gang adulte établi. Diversité comme fait, jamais comme statement." }
     ]
   },
 

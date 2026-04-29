@@ -1,21 +1,28 @@
 {
   "meta": {
     "lot": 5,
-    "version": "1.0",
-    "date": "2026-04-20",
-    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "version": "2.0",
+    "date": "2026-04-30",
+    "directive_casting": "D2_DEUX_FAMILLES_ESTHETIQUES v1.0",
     "contenu": [
-      "4 duos détaillés avec dynamiques relationnelles",
-      "Direction photo par duo",
-      "Scènes types par duo",
-      "Règles de distribution sur collections"
+      "12 dispositifs détaillés (4 duos historiques + 4 nouveaux duos + 4 trios)",
+      "Direction photo par dispositif",
+      "Scènes types par dispositif",
+      "Règles de distribution sur collections étendues"
     ],
-    "_note_integration": "Ce document est le complément de mannequins_recurrents.json > duos. À référencer depuis les motifs et les prompts de génération image."
+    "_note_integration": "Ce document est le complément de mannequins_recurrents.json > duos. À référencer depuis les motifs et les prompts de génération image. Couvre duos (2 membres) et trios (3 membres) sous une clé unique 'duos[]' avec champs 'type' et 'nb_membres' pour distinguer.",
+    "principe_autonomie_narrative": "Chaque dispositif (duo/trio) est narrativement autonome. Un même mannequin peut tenir plusieurs rôles narratifs selon le dispositif (ex: Gabin = fils de Mathieu dans DUO_MATHIEU_GABIN ET fils de Nicolas dans DUO_NICOLAS_GABIN ; Coline = solo épanouie dans son shot solo ET jeune mère dans TRIO_COLINE_HUGO_NOE). Les arbres généalogiques implicites se construisent au shot, pas au global.",
+    "changelog": {
+      "v1.0_2026-04-20": "Version initiale 4 duos historiques (Béatrice+Félicie, Mathieu+Gabin, Léa+Sarah, Henri+Joséphine)",
+      "v2.0_2026-04-30": "Ajout 8 nouveaux dispositifs : DUO_GASPARD_BRUNE, DUO_HUGO_NOE, DUO_NICOLAS_GABIN, DUO_MATHIEU_NICOLAS, TRIO_AICHA_CESARIA_JOSEPHINE, TRIO_HENRI_NICOLAS_GABIN, TRIO_COLINE_HUGO_NOE, TRIO_COPINES_ANNA_AICHA_LILA. Ajout champs 'type' (duo|trio) et 'nb_membres' sur toutes les entrées. Restructuration regles_distribution_par_collection : ajout catégories 'transmission_rare' (3 dispositifs) et 'groupes_amis' (1 dispositif). Migration directive D1 → D2."
+    }
   },
 
   "duos": [
     {
       "id": "DUO_BEATRICE_FELICIE",
+      "type": "duo",
+      "nb_membres": 2,
       "membres": ["MAN-P05 Béatrice", "MAN-P08 Félicie"],
       "nature": "grand-mère + petite-fille",
       "ages": "55 + 7 = écart 48 ans",
@@ -43,7 +50,7 @@
         ],
         "regards": "Béatrice vers Félicie > Félicie vers Béatrice > rare direct caméra (shots d'autorité P4 uniquement)",
         "contact_physique": "fréquent et naturel : main sur épaule, bras autour des épaules, Félicie assise sur les genoux ou tout contre",
-        "ambiances_prioritaires": ["Loft Organique", "Lumière Sépia"],
+        "ambiances_prioritaires": ["Serre Atelier", "Lumière Sépia"],
         "decors_type": [
           "cuisine de maison de famille (table bois brut, céramiques, cuivres)",
           "jardin normand (pommiers, herbes aromatiques)",
@@ -84,6 +91,8 @@
 
     {
       "id": "DUO_MATHIEU_GABIN",
+      "type": "duo",
+      "nb_membres": 2,
       "membres": ["MAN-P06 Mathieu", "MAN-P09 Gabin"],
       "nature": "père + fils",
       "ages": "40 + 5 = écart 35 ans",
@@ -111,7 +120,7 @@
         ],
         "regards": "Mathieu vers Gabin > Gabin hors champ (jeu) > rare caméra directe",
         "contact_physique": "très fréquent : porter, enlacer, main sur la tête, chatouilles. Masculinité tendre assumée.",
-        "ambiances_prioritaires": ["Studio Brut", "Loft Organique", "Échappée Sauvage"],
+        "ambiances_prioritaires": ["Studio Brut", "Serre Atelier", "Échappée Sauvage"],
         "decors_type": [
           "appartement lumineux parisien avec parquet",
           "rue parisienne calme (11e, 20e, Canal Saint-Martin)",
@@ -152,6 +161,8 @@
 
     {
       "id": "DUO_LEA_SARAH",
+      "type": "duo",
+      "nb_membres": 2,
       "membres": ["MAN-P11-LEA Léa (métisse 37)", "MAN-P11-SARAH Sarah (nordique 35)"],
       "nature": "couple lesbien marié",
       "ages": "37 + 35 = écart 2 ans",
@@ -181,7 +192,7 @@
         ],
         "regards": "Léa vers Sarah > Sarah hors champ > croisés > rare direct caméra",
         "contact_physique": "discret mais constant : main sur main, épaules qui se touchent, poings sur hanches l'une contre l'autre",
-        "ambiances_prioritaires": ["Studio Brut", "Loft Organique"],
+        "ambiances_prioritaires": ["Studio Brut", "Serre Atelier", "Loft Brut Architectural"],
         "decors_type": [
           "appartement lillois ou parisien lumineux (Lille pour ancrage Sarah)",
           "atelier de danse (pour Léa)",
@@ -223,11 +234,13 @@
 
     {
       "id": "DUO_HENRI_JOSEPHINE",
+      "type": "duo",
+      "nb_membres": 2,
       "membres": ["MAN-S19-HENRI Henri (blanc 72)", "MAN-S19-JOSEPHINE Joséphine (afro 70)"],
       "nature": "couple senior mixte, marié",
       "ages": "72 + 70 = écart 2 ans",
       "ethnicites": "blanc français + afro-caribéenne",
-      "anciennete_relation": "mariés depuis 40 ans",
+      "anciennete_relation": "mariés depuis 40 ans (2e mariage pour Joséphine — Henri est beau-père bienveillant d'Aïcha et Césaria)",
 
       "dynamique_relationnelle": {
         "phrase_directrice": "Tendresse posée d'un long amour. Lecture côte à côte, thé partagé, regards complices de ceux qui se connaissent par cœur. L'élégance rive gauche éclairée.",
@@ -251,7 +264,7 @@
         ],
         "regards": "Henri vers Joséphine > Joséphine direct caméra (posture assumée) > regards croisés",
         "contact_physique": "posé et naturel : main de Henri sur la sienne, bras entrelacés en promenade, genoux qui se touchent",
-        "ambiances_prioritaires": ["Loft Organique", "Lumière Sépia"],
+        "ambiances_prioritaires": ["Serre Atelier", "Lumière Sépia"],
         "decors_type": [
           "appartement rive gauche (6e/7e) : bibliothèque, parquet, œuvres d'art discrètes",
           "café rive gauche (Flore, Café de l'Industrie)",
@@ -287,53 +300,653 @@
       ],
 
       "motifs_prioritaires": ["YPM-004 Notre Héritage", "YPM-015 La Déclaration", "YPM-014 Le Depuis", "YPM-010 La Ronde"]
+    },
+
+    {
+      "id": "DUO_GASPARD_BRUNE",
+      "type": "duo",
+      "nb_membres": 2,
+      "membres": ["MAN-S14 Gaspard (blanc 23)", "MAN-P12 Brune (blanche 22)"],
+      "nature": "jeune couple d'étudiants créatifs",
+      "ages": "23 + 22 = écart 1 an",
+      "ethnicites": "blanc + blanche",
+      "anciennete_relation": "ensemble depuis 2-3 ans, premier amour adulte sérieux",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Premier amour adulte d'étudiants créatifs. Insouciance solaire mais lucide. Le couple en construction qui ne joue pas couple — naturel, désordonné, en mouvement.",
+        "mode_relationnel": "jeune complicité Gen Z",
+        "attitudes_type": [
+          "Brune assise contre Gaspard sur un canapé en coloc, jambes mêlées",
+          "Partage d'écouteurs en marche dans la rue, Brune chante une syllabe",
+          "Fous rires sur un banc Buttes-Chaumont, Gaspard prend un Polaroid",
+          "Brune lit pendant que Gaspard dessine, accoudés à une table",
+          "Danse improvisée dans la cuisine pendant qu'on prépare un café"
+        ],
+        "_attention_direction": "JAMAIS poses 'jeune couple parfait Pinterest', JAMAIS regards énamourés caméra. Le but : qu'on sente la vraie vie de coloc, l'imperfection chaleureuse, pas la fiction marketing."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan moyen sur canapé coloc, ambiance désordonnée habitée",
+          "plan américain en marche rue parisienne (10e/11e/20e)",
+          "détail mains entrelacées sur table café",
+          "portrait taille en terrasse soleil rasant",
+          "plan large en mouvement (danse, marche, vélo)"
+        ],
+        "regards": "vers l'autre majoritaire > hors champ jeu > rares regards caméra mi-amusés mi-sérieux (la Gen Z sait qu'elle est photographiée)",
+        "contact_physique": "constant et désordonné : épaules collées, main dans la poche arrière de l'autre, tête sur épaule, jambes mêlées",
+        "ambiances_prioritaires": ["Studio Brut", "Loft Brut Architectural", "Échappée Sauvage"],
+        "decors_type": [
+          "appartement coloc 11e/20e (livres empilés, plantes, posters)",
+          "rue parisienne calme golden hour",
+          "café terrasse 10e/11e",
+          "skate park ou friche urbaine",
+          "atelier beaux-arts ou archi"
+        ],
+        "lumiere_signature": "Lumière naturelle vive et désordonnée, golden hour assumé, contre-jours acceptés",
+        "post_production": "tons frais légèrement saturés, grain argentique présent, look 35mm spontané"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Coloc dimanche matin",
+          "description": "Cuisine ouverte de coloc, Brune en T-shirt Ypersoa brodé + crop, Gaspard en T-shirt Ypersoa + jean large, café partagé, plantes en arrière-plan.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Vélo Canal Saint-Martin",
+          "description": "Plan moyen en mouvement, Gaspard sur vélo, Brune debout sur les pédales arrière, sweats Ypersoa brodés assortis-pas-assortis, lumière dorée.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Premier appart symbolique",
+          "description": "Couple emménagé dans premier appart partagé, cartons en arrière-plan, Brune assise au sol, Gaspard installe une étagère, T-shirts Ypersoa brodés visibles.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'couple')",
+        "famille_vivante (couple + 1-2 ami·e·s coloc)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-003 Le Club", "YPM-016 La Signature", "YPM-002 L'Ambre", "YPM-009 La Palette"]
+    },
+
+    {
+      "id": "DUO_HUGO_NOE",
+      "type": "duo",
+      "nb_membres": 2,
+      "membres": ["MAN-S21 Hugo (blanc 30)", "MAN-S15 Bébé Noé (blanc 1)"],
+      "nature": "jeune père + bébé",
+      "ages": "30 + 1 = écart 29 ans",
+      "ethnicites": "blanc + blanc",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Tendresse absolue d'un jeune père porteur. Bébé contre lui, geste sûr, attention totale. Masculinité paternelle nouvelle génération — présente, douce, bousculée.",
+        "mode_relationnel": "tendresse paternelle absolue",
+        "attitudes_type": [
+          "Noé en porte-bébé contre le ventre d'Hugo, Hugo regarde un détail à mi-distance",
+          "Hugo allongé sur canapé, Noé endormi sur sa poitrine, main sur le dos",
+          "Hugo donne un biberon, Noé dans le creux de son bras, regard concentré",
+          "Hugo en train de plier du linge, Noé qui rampe à ses pieds",
+          "Promenade Hugo qui pousse une poussette, Noé qui regarde par-dessus"
+        ]
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan taille avec Noé en porte-bébé",
+          "plan moyen canapé avec Noé endormi contre Hugo",
+          "détail main de père sur dos de bébé",
+          "portrait 3/4 Hugo regardant Noé qui regarde ailleurs",
+          "plan large balade poussette dans parc"
+        ],
+        "regards": "Hugo vers Noé > Noé hors champ (curieux) > rares regards caméra fatigués-heureux",
+        "contact_physique": "permanent et tendre : porte-bébé, bras berceur, main qui caresse les cheveux fins, baiser sur la tête",
+        "ambiances_prioritaires": ["Serre Atelier", "L'Aube Intime", "Studio Brut"],
+        "decors_type": [
+          "appartement parisien lumineux (parquet, plantes, livres)",
+          "parc urbain (Buttes-Chaumont, Belleville, Croix-Rousse)",
+          "café terrasse calme matin de semaine",
+          "marché du dimanche",
+          "salle de bain/chambre bébé pour scène intime aube"
+        ],
+        "lumiere_signature": "Lumière douce d'aube ou fin d'après-midi, fenêtres ouvertes, scènes intimes lumière de chambre",
+        "post_production": "tons chauds doux, grain argentique fin, légère désaturation cocooning"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Sieste papa-bébé",
+          "description": "Canapé lumineux, Hugo allongé en T-shirt Ypersoa brodé, Noé endormi sur sa poitrine en body Ypersoa brodé assorti, lumière de fin d'après-midi.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Café papa solo avec bébé",
+          "description": "Terrasse café, Hugo assis avec Noé en porte-bébé, lit le journal d'une main, sweat Ypersoa brodé. Scène 'jeune papa congé parentalité'.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Naissance — premier mois",
+          "description": "Chambre lumineuse, Hugo torse nu en peau-à-peau avec Noé, bavoir/body Ypersoa brodé prénom + date, lumière douce d'aube.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'parent_enfant')",
+        "famille_vivante (avec Coline = TRIO_COLINE_HUGO_NOE OU avec grands-parents)",
+        "lifestyle_studio",
+        "lifestyle_outdoor",
+        "macro_broderie (sur body/bavoir Noé)"
+      ],
+
+      "motifs_prioritaires": ["YPM-014 Le Depuis (date naissance)", "YPM-006 Le Câlin", "YPM-007 Le Chouchou", "YPM-010 La Ronde"]
+    },
+
+    {
+      "id": "DUO_NICOLAS_GABIN",
+      "type": "duo",
+      "nb_membres": 2,
+      "membres": ["MAN-P07 Nicolas (blanc 45)", "MAN-P09 Gabin (blanc 5)"],
+      "nature": "père + fils (alternative narrative à DUO_MATHIEU_GABIN)",
+      "ages": "45 + 5 = écart 40 ans",
+      "ethnicites": "blanc + blanc",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Père attentionné posé. Moins ludique que Mathieu, plus structuré : c'est le papa qui apprend à faire les lacets, qui explique calmement le monde, qui montre un livre. Paternité tardive choisie.",
+        "mode_relationnel": "transmission posée et calme",
+        "attitudes_type": [
+          "Nicolas assis avec Gabin sur les genoux, lit un livre à voix basse",
+          "Nicolas accroupi qui rattache une chaussure, Gabin appuyé sur son épaule",
+          "Marche calme main dans la main au parc, conversation à hauteur d'enfant",
+          "Nicolas explique un objet à Gabin (musée, librairie, jardin botanique)",
+          "Café père-fils au comptoir, Gabin avec un chocolat chaud et des yeux ronds"
+        ],
+        "_note_autonomie": "Nicolas et Mathieu sont 2 papas narratifs alternatifs pour Gabin. Le shot détermine. Cohérence vérifiée par le shot, pas par l'arbre généalogique global."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "portrait 3/4 Nicolas assis bibliothèque, Gabin sur genoux",
+          "plan moyen Nicolas accroupi à hauteur d'enfant",
+          "détail main de père guidant petite main",
+          "plan américain en marche calme",
+          "plan moyen comptoir café père-fils"
+        ],
+        "regards": "Nicolas vers Gabin > Gabin concentré sur livre/objet > rares regards caméra calmes",
+        "contact_physique": "posé et constant : main sur épaule, accroupi à hauteur d'enfant, tient la main, petit baiser sur le front",
+        "ambiances_prioritaires": ["Studio Brut", "Serre Atelier", "Loft Brut Architectural"],
+        "decors_type": [
+          "appartement classique parisien/lyonnais (parquet, bibliothèque, fauteuil club)",
+          "café traditionnel comptoir zinc",
+          "librairie pour enfants (L'Ours et la Vieille Grille, Chantelivre)",
+          "jardin botanique / muséum",
+          "balade dimanche bord de Seine ou Croix-Rousse"
+        ],
+        "lumiere_signature": "Lumière latérale douce d'intérieur Vermeer, contrastes modérés, calme",
+        "post_production": "tons chauds bourgeois, grain fin, sobriété éditoriale"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Lecture du soir",
+          "description": "Fauteuil club, Nicolas en pull marin Ypersoa brodé + chino, Gabin en pyjama Ypersoa brodé sur ses genoux, livre album ouvert, lampe à abat-jour.",
+          "piliers": ["P2_Emotion", "P1_Savoir-Faire"]
+        },
+        {
+          "titre": "Café-comptoir père-fils",
+          "description": "Comptoir zinc, Nicolas en chemise oxford + chino + sweat Ypersoa, Gabin sur tabouret avec chocolat chaud + T-shirt Ypersoa, regard complice avec serveur.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Apprentissage des lacets",
+          "description": "Plan rapproché Nicolas accroupi, Gabin assis sur banc, mains de Nicolas guident celles de Gabin sur lacets de Veja, T-shirts Ypersoa brodés.",
+          "piliers": ["P2_Emotion", "P1_Savoir-Faire"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'parent_enfant')",
+        "famille_vivante (TRIO_HENRI_NICOLAS_GABIN ou + 1 conjointe implicite)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-004 Notre Héritage", "YPM-014 Le Depuis", "YPM-006 Le Câlin", "YPM-010 La Ronde"]
+    },
+
+    {
+      "id": "DUO_MATHIEU_NICOLAS",
+      "type": "duo",
+      "nb_membres": 2,
+      "membres": ["MAN-P06 Mathieu (blanc 40)", "MAN-P07 Nicolas (blanc 45)"],
+      "nature": "amis adultes (deux papas qui se retrouvent)",
+      "ages": "40 + 45 = écart 5 ans",
+      "ethnicites": "blanc + blanc",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Amitié masculine adulte française. Deux papas qui se retrouvent au café après le dépose-école. Pudeur masculine douce, complicité de longue date — on ne se voit pas assez et on s'en rend compte à chaque fois.",
+        "mode_relationnel": "amitié adulte de longue date",
+        "attitudes_type": [
+          "Café partagé silence sur zinc, deux journaux ouverts",
+          "Rire complice sur un souvenir d'études partagé",
+          "Main sur l'épaule en se quittant, accolade brève",
+          "Marche côte à côte dans Paris, conversation animée",
+          "Conseil amical autour d'un livre ou d'un projet pro"
+        ],
+        "_attention_direction": "Pudeur masculine assumée — pas d'embrassades démonstratives, pas de poses 'meilleurs amis pour toujours'. Les regards parlent, les gestes restent discrets. Type Édouard Baer × Pierre Niney en civil."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan américain au comptoir café",
+          "plan moyen en marche dans Paris",
+          "portrait 3/4 sur banc, conversation",
+          "détail mains/tasse sur zinc",
+          "plan taille assis terrasse brunch"
+        ],
+        "regards": "vers l'autre en discussion > hors champ pensif > rares regards caméra calmes",
+        "contact_physique": "rare et précis : main sur épaule, accolade brève, coude sur comptoir qui se touche",
+        "ambiances_prioritaires": ["Studio Brut", "Serre Atelier", "Loft Brut Architectural"],
+        "decors_type": [
+          "café traditionnel parisien (zinc, banquette skaï rouge)",
+          "rue parisienne marche conversation",
+          "librairie ou galerie d'art",
+          "brunch dimanche terrasse 11e/3e",
+          "appartement de l'un, salon canapé"
+        ],
+        "lumiere_signature": "Lumière naturelle franche, café matin lumière de vitrine, terrasse soleil rasant",
+        "post_production": "tons chauds clairs, grain argentique présent, look 35mm street"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Café après l'école",
+          "description": "Comptoir zinc 9h du matin, Mathieu en marinière + veste denim + sweat Ypersoa brodé, Nicolas en pull marin + chino + sweat Ypersoa brodé, deux espressos.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Brunch dominical",
+          "description": "Terrasse 11e arr., Mathieu et Nicolas assis face à face, T-shirts Ypersoa brodés, chacun lit son journal, pichet d'eau et cafés au milieu.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Conseil amical",
+          "description": "Salon appartement, deux fauteuils, Nicolas écoute Mathieu qui explique un projet, sweats Ypersoa brodés, lampe Tolomeo, lumière de fin de journée.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'adultes_amis')",
+        "famille_vivante (avec leurs enfants respectifs Gabin + un autre)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-003 Le Club", "YPM-009 La Palette", "YPM-016 La Signature", "YPM-002 L'Ambre"]
+    },
+
+    {
+      "id": "TRIO_AICHA_CESARIA_JOSEPHINE",
+      "type": "trio",
+      "nb_membres": 3,
+      "membres": ["MAN-P03 Aïcha (afro-caribéenne 40)", "MAN-S17 Césaria (afro-caribéenne 40)", "MAN-S19-JOSEPHINE Joséphine (afro-caribéenne 70)"],
+      "nature": "trois générations féminines afro-caribéennes — mère + 2 filles adultes",
+      "ages": "40 + 40 + 70 (deux filles 40, mère 70, écart générationnel 30 ans)",
+      "ethnicites": "3 afro-caribéennes",
+      "lien_familial": "Joséphine est mère biologique d'Aïcha et Césaria. Aïcha et Césaria sont sœurs (jumelles ou très proches). Henri (mari actuel de Joséphine, DUO_HENRI_JOSEPHINE) est beau-père bienveillant hors champ.",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Trois générations afro-caribéennes féminines. Joséphine matriarche posée, Aïcha et Césaria filles adultes complémentaires. Transmission noble qui ne s'affiche pas — l'élégance d'une famille qui n'a rien à prouver.",
+        "mode_relationnel": "transmission matriarcale élégante",
+        "attitudes_type": [
+          "Joséphine sert le thé aux 2 filles, geste posé, regard fier sans le montrer",
+          "Aïcha et Césaria assises côte à côte sur canapé, en miroir, écoutent leur mère",
+          "Détail main de Joséphine posée sur celle de Césaria, alliances visibles",
+          "Lecture d'une lettre de famille (Martinique), 3 femmes attentives",
+          "Joséphine ajuste un foulard sur les épaules de Césaria, Aïcha sourit en regardant"
+        ],
+        "_attention_direction": "JAMAIS cadrage 'femmes noires fortes' militant — c'est une famille bourgeoise française qui se réunit, point. Le vitiligo de Césaria reste discret comme dans sa fiche solo. Pas de mise en scène 'racines caribéennes' folklorique."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan large salon bibliothèque, 3 femmes en triangle assis",
+          "plan moyen 3 femmes côte à côte canapé",
+          "portrait 3/4 Joséphine au centre, filles de chaque côté",
+          "détail 3 mains entrelacées (jeune adulte 40 / jeune adulte 40 / âgée 70)",
+          "plan américain promenade Luxembourg, 3 femmes bras dessus bras dessous"
+        ],
+        "regards": "vers Joséphine privilégiés > regards croisés entre sœurs > Joséphine direct caméra parfois (matriarche posée)",
+        "contact_physique": "élégant et constant : épaules qui se touchent, mains posées, foulards ajustés, baisers sur la joue à l'arrivée",
+        "ambiances_prioritaires": ["Serre Atelier", "Lumière Sépia", "Loft Brut Architectural"],
+        "decors_type": [
+          "appartement Joséphine rive gauche (6e/7e) : bibliothèque, parquet, art africain discret",
+          "jardin du Luxembourg banc",
+          "café rive gauche (Flore, Café de la Mairie)",
+          "salon thé maison de famille (Bourgogne ou Martinique de transition)",
+          "table dressée famille dimanche"
+        ],
+        "lumiere_signature": "Lumière douce d'intérieur bourgeois qui sublime la peau noire, lumière ambrée fin d'après-midi, lumière qui unifie sans lisser",
+        "post_production": "tons chauds dorés, grain argentique fin, subtile désaturation patine bourgeoise"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Thé du dimanche 3 générations",
+          "description": "Salon bibliothèque, Joséphine sert le thé, Aïcha et Césaria sur canapé en pulls cachemire Ypersoa brodés assortis-pas-assortis, scène de transmission tranquille.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        },
+        {
+          "titre": "Promenade Luxembourg trois femmes",
+          "description": "Plan large allée du Luxembourg, Joséphine au centre bras dessus bras dessous avec Aïcha et Césaria, T-shirts Ypersoa brodés sous trenchs, rentrée d'automne.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Anniversaire de Joséphine",
+          "description": "Table dressée appartement, gâteau anniversaire, Aïcha et Césaria entourent leur mère, blouses Ypersoa brodées au col, photo souvenir spontanée.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'grand_parent_parent' adapté en 'mère_filles')",
+        "famille_vivante (3-4 personnes si +1 petit-enfant ajouté)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-004 Notre Héritage", "YPM-010 La Ronde", "YPM-014 Le Depuis", "YPM-007 Le Chouchou"]
+    },
+
+    {
+      "id": "TRIO_HENRI_NICOLAS_GABIN",
+      "type": "trio",
+      "nb_membres": 3,
+      "membres": ["MAN-S19-HENRI Henri (blanc 72)", "MAN-P07 Nicolas (blanc 45)", "MAN-P09 Gabin (blanc 5)"],
+      "nature": "trois générations masculines — grand-père, père, petit-fils",
+      "ages": "72 + 45 + 5 (écarts 27 + 40 ans, paternité tardive plausible)",
+      "ethnicites": "3 blancs français",
+      "lien_familial": "Henri est père biologique de Nicolas (premier mariage d'Henri avant Joséphine). Nicolas est père de Gabin (alt narratif vs DUO_MATHIEU_GABIN).",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Trois générations masculines françaises bourgeoises. Henri grand-père distingué (rive gauche cultivée), Nicolas père posé, Gabin petit-fils vif. Transmission silencieuse de l'allure, du soin, du temps long.",
+        "mode_relationnel": "transmission masculine pudique",
+        "attitudes_type": [
+          "Henri montre un livre ancien à Gabin, Nicolas regarde tendrement",
+          "3 générations assis sur canapé bibliothèque, Gabin au milieu",
+          "Henri qui montre un geste (cirer une chaussure, planter une herbe), Nicolas et Gabin observent",
+          "Marche dans Luxembourg, Henri et Nicolas devant, Gabin court devant ou tenant la main d'un des 2",
+          "Détail 3 mains posées sur table (jeune / adulte / âgée) — la transmission par les gestes"
+        ],
+        "_attention_direction": "Pudeur masculine bourgeoise française — pas d'embrassades démonstratives, pas de larmes de fierté. Le geste, le regard, le silence partagé suffisent. Type Hubert de Givenchy × Jean d'Ormesson en famille."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan large salon bibliothèque rive gauche, 3 générations assises",
+          "plan moyen Henri et Gabin sur canapé livre ouvert, Nicolas en arrière-plan flou",
+          "portrait 3/4 Henri au centre, Nicolas + Gabin de chaque côté",
+          "détail 3 mains entrelacées ou posées",
+          "plan américain promenade Luxembourg ou Bourgogne"
+        ],
+        "regards": "Henri vers Gabin > Nicolas vers les deux > Gabin vers livre/objet > rares regards caméra calmes",
+        "contact_physique": "posé et précis : main d'Henri sur épaule de Nicolas, main de Nicolas sur tête de Gabin, Gabin qui prend la main d'Henri",
+        "ambiances_prioritaires": ["Serre Atelier", "Lumière Sépia"],
+        "decors_type": [
+          "appartement Henri rive gauche : bibliothèque, parquet, fauteuils club, lampes Tolomeo",
+          "jardin du Luxembourg",
+          "maison de famille Bourgogne (jardin, salon avec cheminée)",
+          "café rive gauche traditionnel",
+          "muséum d'histoire naturelle (transmission savoir)"
+        ],
+        "lumiere_signature": "Lumière de fenêtre classique rive gauche, ambre du soir, patine dorée bourgeoise",
+        "post_production": "tons chauds bourgeois, grain argentique fin, désaturation discrète style portrait de famille"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Bibliothèque 3 générations",
+          "description": "Henri en pull cachemire Ypersoa brodé + chemise blanche, Nicolas en pull marin Ypersoa, Gabin en T-shirt Ypersoa, livre ancien sur les genoux d'Henri, Gabin assis à côté.",
+          "piliers": ["P1_Savoir-Faire", "P2_Emotion", "P4_Preuve"]
+        },
+        {
+          "titre": "Luxembourg dimanche",
+          "description": "Plan large allée, Henri et Nicolas marchent côte à côte, Gabin court devant et revient, T-shirts Ypersoa brodés sous trenchs, lumière dorée fin d'après-midi.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Cadeau de Noël transmis",
+          "description": "Salon avec sapin discret, Henri tend un objet ancien à Gabin (montre, stylo, broderie), Nicolas observe avec émotion retenue, sweats/T-shirts Ypersoa brodés.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'grand_parent_parent' en version masculine)",
+        "famille_vivante (TRIO étendu avec Joséphine + Mathieu + autres)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-004 Notre Héritage", "YPM-010 La Ronde", "YPM-014 Le Depuis"]
+    },
+
+    {
+      "id": "TRIO_COLINE_HUGO_NOE",
+      "type": "trio",
+      "nb_membres": 3,
+      "membres": ["MAN-S20 Coline (blanche 35, fauteuil)", "MAN-S21 Hugo (blanc 30)", "MAN-S15 Bébé Noé (blanc 1)"],
+      "nature": "jeune famille nucléaire — mère + père + bébé",
+      "ages": "35 + 30 + 1",
+      "ethnicites": "3 blancs",
+      "lien_familial": "Coline et Hugo sont conjoints. Noé est leur enfant. Coline reste solo épanouie dans son shot solo (autonomie narrative — fiche solo MAN-S20 garde sa narrative célibataire pour usage solo). Le fauteuil de Coline fait partie d'elle, jamais sujet.",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Jeune famille parisienne contemporaine. Couple jeune trentenaire + bébé. Coline solo épanouie devient mère apaisée. Famille moderne posée — pas de mise en scène 'famille parfaite', pas de mise en scène 'famille avec parent en fauteuil'. Juste une famille.",
+        "mode_relationnel": "jeune parentalité moderne posée",
+        "attitudes_type": [
+          "Noé en porte-bébé sur Hugo, Coline tend les bras pour le récupérer",
+          "Échanges de regards parents quand Noé fait quelque chose de drôle",
+          "Coline avec Noé sur les genoux dans son fauteuil, Hugo prépare un biberon",
+          "Hugo lit à Noé sur le canapé pendant que Coline travaille dans le même salon",
+          "Promenade au parc, Hugo pousse poussette, Coline avance dans son fauteuil, Noé regarde les arbres"
+        ],
+        "_attention_direction": "Le fauteuil de Coline est présent, JAMAIS sujet. Cadrages buste majoritaires. Pas de plongée. Pas de cadrage 'famille avec parent en fauteuil' militant. JAMAIS le mot ou l'idée 'courageuse'. Test de validation : si on décrit cette famille par 'inspirante' ou 'inclusive', le shot est raté."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan moyen salon, 3 personnages, fauteuil partiel ou hors cadre",
+          "portrait serré buste 3 visages",
+          "détail 3 mains (parent / parent / bébé)",
+          "plan américain dans cuisine ouverte, 3 personnages",
+          "plan large promenade parc 3 personnages en mouvement"
+        ],
+        "regards": "vers Noé majoritaires > échanges parents > rares regards caméra ensemble",
+        "contact_physique": "tendre et naturel : Noé porté/tenu, Coline et Hugo qui se touchent l'épaule, baisers sur la tête de Noé",
+        "ambiances_prioritaires": ["Serre Atelier", "Studio Brut", "L'Aube Intime"],
+        "decors_type": [
+          "appartement parisien lumineux accessible (rez-de-chaussée ou ascenseur, pensé en amont)",
+          "parc urbain (Buttes-Chaumont, Jardin des Plantes)",
+          "café terrasse calme",
+          "marché du dimanche",
+          "balade quartier 10e/19e ou Croix-Rousse Lyon"
+        ],
+        "lumiere_signature": "Lumière douce d'intérieur lumineux, fenêtres grandes ouvertes, golden hour urbain extérieur",
+        "post_production": "tons doux frais, grain fin, look reportage famille moderne (pas catalogue, pas militant)"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Brunch dominical jeune famille",
+          "description": "Cuisine ouverte, Hugo en sweat Ypersoa brodé prépare café, Coline assise à table en chemise blanche + T-shirt Ypersoa brodé tient Noé en body brodé, lumière de fenêtre.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Promenade parc 3 personnages",
+          "description": "Plan large allée parc, Hugo avec Noé en porte-bébé, Coline avance dans fauteuil à côté, T-shirts Ypersoa brodés visibles, lumière dorée.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Premier anniversaire de Noé",
+          "description": "Salon, gâteau bougie 1, Hugo et Coline encadrent Noé en body Ypersoa brodé prénom + date, scène cocooning, lumière douce.",
+          "piliers": ["P2_Emotion", "P4_Preuve"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'famille_nucleaire')",
+        "famille_vivante (avec grands-parents si +2 mannequins)",
+        "lifestyle_studio",
+        "lifestyle_outdoor",
+        "macro_broderie (sur body/bavoir Noé)"
+      ],
+
+      "motifs_prioritaires": ["YPM-014 Le Depuis (date naissance Noé)", "YPM-006 Le Câlin", "YPM-007 Le Chouchou", "YPM-015 La Déclaration"]
+    },
+
+    {
+      "id": "TRIO_COPINES_ANNA_AICHA_LILA",
+      "type": "trio",
+      "nb_membres": 3,
+      "membres": ["MAN-P02 Anna (blanche provençale 35)", "MAN-P03 Aïcha (afro-caribéenne 40)", "MAN-P04 Lila (maghrébine 45)"],
+      "nature": "trio d'amies adultes CSP+ — girl gang multiculturel",
+      "ages": "35 + 40 + 45",
+      "ethnicites": "blanche provençale + afro-caribéenne + maghrébine (diversité comme fait, pas comme statement)",
+      "lien_amical": "Amies de longue date — se connaissent depuis ~10-15 ans. Vernissages, dîners, voyages communs. Anna débarque de Provence quand elle est à Paris, Aïcha et Lila sont parisiennes. Réunions chez l'une ou l'autre.",
+
+      "dynamique_relationnelle": {
+        "phrase_directrice": "Trio d'amies adultes CSP+ — la Provençale, la Parisienne afro-caribéenne, la Parisienne maghrébine. Vernissages, dîners, voyages. Diversité comme fait, jamais comme statement.",
+        "mode_relationnel": "girl gang adulte établi",
+        "attitudes_type": [
+          "3 verres trinqués sur terrasse, fou rire général",
+          "Conversation animée table dressée, Aïcha au milieu d'une histoire, Anna et Lila l'écoutent",
+          "Photo souvenir spontanée selfie ou par serveur, regards complices",
+          "Deux qui écoutent une troisième attentivement (conseil amical ou potin)",
+          "Câlin à 3 spontané au moment des au revoir (sans pose)"
+        ],
+        "_attention_direction": "Diversité comme fait, jamais sujet. Pas de cadrage 'amies multiculturelles' Aerie. Pas de mise en scène 'sisterhood' militante. Juste 3 femmes qui s'aiment depuis 15 ans et ont du goût en commun."
+      },
+
+      "direction_photo": {
+        "cadrages_privilegies": [
+          "plan large terrasse parisienne 3 femmes attablées",
+          "plan moyen 3 femmes en marche dans une rue / vernissage",
+          "portrait 3/4 trois visages collés sourire",
+          "détail 3 verres trinqués / 3 mains posées sur table",
+          "plan américain salon dîner appart"
+        ],
+        "regards": "vers l'une qui parle > regards croisés > rares regards caméra mi-amusés",
+        "contact_physique": "chaleureux et libre : épaules collées, main sur bras, baisers sur joue arrivée/départ, câlin à 3 spontané",
+        "ambiances_prioritaires": ["Studio Brut", "Serre Atelier", "Lumière Sépia"],
+        "decors_type": [
+          "terrasse parisienne 3e/11e (Le Mary Celeste, Café Charlot)",
+          "appartement Lila ou Aïcha pour dîner",
+          "vernissage galerie d'art (Marais)",
+          "week-end Provence chez Anna (terrasse glycine)",
+          "boutique chic / concept store (Centre Commercial, Merci)"
+        ],
+        "lumiere_signature": "Lumière naturelle vive de terrasse, lumière de table dressée le soir avec bougies, golden hour Provence en weekend",
+        "post_production": "tons chauds clairs, grain fin, look reportage lifestyle haut de gamme"
+      },
+
+      "scenes_types": [
+        {
+          "titre": "Dîner chez l'une",
+          "description": "Table dressée chez Lila, 3 femmes attablées en chemisiers Ypersoa brodés discrets au col, vin servi, conversation animée, lumière chaude.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        },
+        {
+          "titre": "Vernissage galerie",
+          "description": "Galerie Marais, 3 femmes debout verre à la main, T-shirts Ypersoa brodés sous blazers, regards complices dans une foule chic.",
+          "piliers": ["P2_Emotion"]
+        },
+        {
+          "titre": "Week-end Provence",
+          "description": "Terrasse maison Anna sous glycine, 3 femmes en lin, sweats Ypersoa brodés noués aux épaules, table petit-déjeuner avec figues et café, lumière dorée du Sud.",
+          "piliers": ["P2_Emotion", "P3_Usage"]
+        }
+      ],
+
+      "types_de_shots_compatibles": [
+        "duo_couple (rotation type 'adultes_amis' étendue à 3)",
+        "famille_vivante (3 amies + leurs enfants/conjoints)",
+        "lifestyle_studio",
+        "lifestyle_outdoor"
+      ],
+
+      "motifs_prioritaires": ["YPM-003 Le Club", "YPM-016 La Signature", "YPM-009 La Palette", "YPM-002 L'Ambre"]
     }
   ],
 
   "regles_distribution_par_collection": {
-    "description": "Règles de dosage d'usage de chaque duo sur les collections pour garantir rotation équilibrée et préserver la force symbolique des duos rares.",
-    "logique_generale": "Rotation cyclique obligatoire sur 4 packs (parent_enfant → grand_parent_parent → adultes_amis → couple) + quotas par duo pour équilibrer force narrative et usure symbolique.",
+    "description": "Règles de dosage d'usage de chaque dispositif sur les collections pour garantir rotation équilibrée et préserver la force symbolique des dispositifs rares. Mises à jour v2.0 pour intégrer les 8 nouveaux dispositifs.",
+    "logique_generale": "Rotation cyclique obligatoire sur 4 packs (parent_enfant → grand_parent_parent → adultes_amis → couple) + nouvelles catégories pour trios 3 générations et groupes d'amis. Quotas par dispositif pour équilibrer force narrative et usure symbolique.",
 
-    "categories_duos": {
+    "categories_dispositifs": {
       "principaux_forte_rotation": {
-        "duos": ["DUO_BEATRICE_FELICIE", "DUO_MATHIEU_GABIN"],
-        "usage_cible_par_collection": "4 à 6 shots par collection chacun",
-        "justification": "Duos quotidiens, narratifs forts, utilisables sur la majorité des motifs. Pilier émotion structurant."
+        "dispositifs": ["DUO_BEATRICE_FELICIE", "DUO_MATHIEU_GABIN", "DUO_NICOLAS_GABIN", "DUO_HUGO_NOE", "DUO_MATHIEU_NICOLAS", "TRIO_COLINE_HUGO_NOE"],
+        "usage_cible_par_collection": "3 à 6 shots par collection chacun",
+        "justification": "Dispositifs quotidiens, narratifs forts, utilisables sur la majorité des motifs. Pilier émotion structurant. DUO_NICOLAS_GABIN et DUO_MATHIEU_GABIN en alternance pour Gabin (autonomie narrative). TRIO_COLINE_HUGO_NOE = jeune famille moderne, motif central Ypersoa."
       },
       "iconique_rare": {
-        "duos": ["DUO_LEA_SARAH"],
-        "usage_cible_par_collection": "1 à 2 shots par collection maximum",
-        "justification": "Couple lesbien marié = statement narratif fort. Sur-usage = dilution symbolique. Rareté = force. Préférer des motifs premium (La Déclaration, Le Club) plutôt qu'un saupoudrage léger."
+        "dispositifs": ["DUO_LEA_SARAH", "DUO_GASPARD_BRUNE"],
+        "usage_cible_par_collection": "1 à 2 shots par collection maximum chacun",
+        "justification": "Statements narratifs forts (couple lesbien établi / jeune couple Gen Z créatif). Sur-usage = dilution symbolique. Rareté = force. Préférer des motifs premium (La Déclaration, Le Club, La Signature) plutôt qu'un saupoudrage léger."
       },
-      "seniors_rare_transmission": {
-        "duos": ["DUO_HENRI_JOSEPHINE"],
-        "usage_cible_par_collection": "1 à 3 shots par collection, uniquement sur motifs hero famille/transmission",
-        "justification": "Couple senior mixte = représentation rare et précieuse. Réserver aux motifs Notre Héritage, La Ronde, Le Depuis, La Déclaration où leur présence densifie l'ADN transmission."
+      "transmission_rare": {
+        "dispositifs": ["DUO_HENRI_JOSEPHINE", "TRIO_AICHA_CESARIA_JOSEPHINE", "TRIO_HENRI_NICOLAS_GABIN"],
+        "usage_cible_par_collection": "1 à 3 shots par collection chacun, uniquement sur motifs hero famille/transmission",
+        "justification": "Dispositifs de transmission générationnelle = représentation rare et précieuse. Réserver aux motifs Notre Héritage, La Ronde, Le Depuis, La Déclaration où leur présence densifie l'ADN transmission. Les 2 trios étendent la palette hors du couple senior unique."
+      },
+      "groupes_amis": {
+        "dispositifs": ["TRIO_COPINES_ANNA_AICHA_LILA"],
+        "usage_cible_par_collection": "1 à 3 shots par collection",
+        "justification": "Trio d'amies adultes multiculturel. Motifs lifestyle / club / signature. Évite la fatigue du duo classique et apporte une dimension 'tribu choisie' complémentaire des liens familiaux."
       }
     },
 
     "regle_rotation_cyclique_par_pack": {
       "reference": "types_de_shots.json > duo_couple > rotation_cyclique_obligatoire",
-      "ordre": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
-      "mapping_duos_vers_types": {
-        "parent_enfant": "DUO_MATHIEU_GABIN (principal) + autres combinaisons libres (ex: Anna + Felicie, Aïcha + Gabin)",
-        "grand_parent_parent": "DUO_BEATRICE_FELICIE (principal) + variantes avec Marie-Hélène, Hassan, Hiroshi",
-        "adultes_amis": "Combinaisons libres entre adultes (ex: Clémence + Aïcha, Anna + Lila, Césaria + Marie-Hélène, Nicolas + Mathieu)",
-        "couple": "DUO_LEA_SARAH OU DUO_HENRI_JOSEPHINE (alterner entre les 2 couples pour éviter la monotonie)"
+      "ordre_v1_legacy": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple"],
+      "ordre_v2_etendu_propose": ["parent_enfant", "grand_parent_parent", "adultes_amis", "couple", "trio_3_generations", "famille_nucleaire_jeune"],
+      "_note_evolution": "L'ordre v1 reste autoritaire pour les packs minimum 6 shots. L'ordre v2 étendu sera activé en Phase 2 du Hub quand le système supportera 6 types cycliques. En attendant, les nouveaux trios prennent place dans 'grand_parent_parent' (TRIO_AICHA_CESARIA_JOSEPHINE, TRIO_HENRI_NICOLAS_GABIN) ou 'parent_enfant' (TRIO_COLINE_HUGO_NOE) selon leur dominante narrative.",
+      "mapping_dispositifs_vers_types": {
+        "parent_enfant": "DUO_MATHIEU_GABIN (principal) | DUO_NICOLAS_GABIN (alt) | DUO_HUGO_NOE (jeune papa) | TRIO_COLINE_HUGO_NOE (jeune famille) + autres combinaisons libres (ex: Anna + Felicie, Aïcha + Gabin)",
+        "grand_parent_parent": "DUO_BEATRICE_FELICIE (principal) | TRIO_AICHA_CESARIA_JOSEPHINE (transmission féminine) | TRIO_HENRI_NICOLAS_GABIN (transmission masculine) + variantes avec Marie-Hélène, Hassan, Hiroshi",
+        "adultes_amis": "DUO_MATHIEU_NICOLAS (papas amis) | TRIO_COPINES_ANNA_AICHA_LILA (girl gang) + combinaisons libres (ex: Clémence + Aïcha, Anna + Lila, Césaria + Marie-Hélène)",
+        "couple": "DUO_LEA_SARAH OU DUO_HENRI_JOSEPHINE OU DUO_GASPARD_BRUNE (alterner les 3 couples pour éviter la monotonie — couple établi / couple senior / jeune couple)"
       }
     },
 
     "regles_combinaison_famille_vivante": {
-      "description": "Quand un duo établi est utilisé dans un shot famille_vivante (3+ personnes), quelles combinaisons sont privilégiées.",
+      "description": "Quand un dispositif établi est utilisé dans un shot famille_vivante (3+ personnes au total), quelles combinaisons sont privilégiées.",
       "combinaisons_fortes": [
-        "DUO_BEATRICE_FELICIE + Anna (ou Marie-Hélène) = 3 générations féminines",
+        "DUO_BEATRICE_FELICIE + Anna (ou Marie-Hélène) = 3 générations féminines blanches/métissées",
         "DUO_MATHIEU_GABIN + Aïcha (conjointe implicite) + 2ème enfant = famille nucléaire",
+        "DUO_NICOLAS_GABIN + Henri = TRIO_HENRI_NICOLAS_GABIN (transmission masculine pure)",
+        "DUO_HUGO_NOE + Coline = TRIO_COLINE_HUGO_NOE (jeune famille nucléaire)",
         "DUO_LEA_SARAH + 1 ou 2 ami·e·s (Clémence, Aïcha, Nicolas) = couple + tribu",
-        "DUO_HENRI_JOSEPHINE + Félicie + Gabin (petits-enfants implicites) = 3 générations mixtes"
+        "DUO_HENRI_JOSEPHINE + Félicie + Gabin (petits-enfants implicites) = 3 générations mixtes",
+        "DUO_HENRI_JOSEPHINE + Aïcha + Césaria = famille recomposée (Henri beau-père d'Aïcha et Césaria)",
+        "DUO_GASPARD_BRUNE + 1-2 ami·e·s coloc = jeune tribu créative",
+        "DUO_MATHIEU_NICOLAS + Gabin + autre enfant = 2 papas + leurs enfants au parc",
+        "TRIO_COPINES_ANNA_AICHA_LILA + 1 enfant (Félicie ou Gabin) = girl gang + filleul·e",
+        "TRIO_AICHA_CESARIA_JOSEPHINE + Henri = famille recomposée 4 personnes (rare, motif transmission premium)",
+        "TRIO_COLINE_HUGO_NOE + grand-parent (Béatrice ou Marie-Hélène) = 4 personnes 3 générations"
       ],
       "combinaisons_a_eviter": [
-        "2 duos établis ensemble dans un même shot (confusion narrative)",
-        "DUO_LEA_SARAH + enfants propres (pas de famille nucléaire enfantée pour ce couple dans l'univers brand actuel)"
+        "2 dispositifs établis ensemble dans un même shot (confusion narrative — sauf cas combinaisons fortes documentées ci-dessus)",
+        "DUO_LEA_SARAH + enfants propres (pas de famille nucléaire enfantée pour ce couple dans l'univers brand actuel)",
+        "Mathieu + Nicolas + Gabin + autre adulte = ambiguïté père de Gabin (préférer un seul des 2 dans le shot, sauf TRIO_HENRI_NICOLAS_GABIN qui clarifie Nicolas comme père)",
+        "Gabin présent dans un shot avec Mathieu ET Nicolas simultanément hors TRIO_HENRI_NICOLAS_GABIN",
+        "Coline présente dans un shot solo épanouie ET un shot famille avec Hugo dans le même pack (préserver l'autonomie narrative en alternant les packs)"
       ]
     },
 
@@ -343,13 +956,22 @@
       "secondaires_max_shots_6mois": 10,
       "couple_LEA_SARAH_max_shots_6mois": 12,
       "couple_HENRI_JOSEPHINE_max_shots_6mois": 15,
-      "_note": "Les quotas couples (12 et 15) sont des plafonds pour préserver leur force narrative."
+      "couple_GASPARD_BRUNE_max_shots_6mois": 10,
+      "trio_AICHA_CESARIA_JOSEPHINE_max_shots_6mois": 8,
+      "trio_HENRI_NICOLAS_GABIN_max_shots_6mois": 10,
+      "trio_COLINE_HUGO_NOE_max_shots_6mois": 20,
+      "trio_COPINES_max_shots_6mois": 15,
+      "duo_MATHIEU_NICOLAS_max_shots_6mois": 12,
+      "duo_NICOLAS_GABIN_max_shots_6mois": 18,
+      "duo_HUGO_NOE_max_shots_6mois": 22,
+      "_note": "Les quotas trios transmission rare (8-10) sont des plafonds pour préserver leur force narrative. TRIO_COLINE_HUGO_NOE et DUO_HUGO_NOE ont des quotas plus élevés car la jeune parentalité = motif central. Les quotas DUO_NICOLAS_GABIN et DUO_MATHIEU_GABIN se complètent (alternance pour Gabin)."
     }
   },
 
   "liens_systeme": {
     "mannequins_recurrents": "referentiels/shooting/mannequins_recurrents.json",
     "types_de_shots": "referentiels/shooting/types_de_shots.json",
-    "direction_artistique_hero": "referentiels/shooting/direction_artistique_hero.json"
+    "direction_artistique_hero": "referentiels/shooting/direction_artistique_hero.json",
+    "ambiances_shooting": "referentiels/shooting/ambiances_shooting.json"
   }
 }
