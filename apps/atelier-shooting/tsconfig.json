@@ -22,8 +22,12 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@hub/*": [
+        "../../*"
       ]
     },
+    "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true
   }

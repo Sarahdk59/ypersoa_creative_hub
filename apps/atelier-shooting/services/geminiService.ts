@@ -1,8 +1,29 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { GenerationSettings } from "../types";
-import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT } from "../constants";
+import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT } from "../constants";
 import { fetchCanoniqueAsBase64, getCanoniqueById, Canonique } from "../lib/canoniques";
+import { getGarmentById } from "../lib/hub-data";
+
+/**
+ * Convertit l'id Hub d'une couleur fil ('fil_framboise') en label human-readable ('Framboise')
+ * pour insertion dans les prompts EN. Si threadColor === '' (Comme sur l'image), retourne
+ * une instruction qui dit à Gemini de respecter la couleur du PNG source.
+ */
+function threadColorLabel(threadColorId: string): string {
+  if (!threadColorId) return "identique à l'image fournie (preserve the source PNG embroidery color)";
+  const fil = THREAD_COLORS.find(c => c.value === threadColorId);
+  return fil?.label || threadColorId;
+}
+
+/**
+ * Convertit l'id Hub d'une couleur vêtement ('beige') en label human-readable ('Beige')
+ * pour insertion dans les prompts EN.
+ */
+function garmentColorLabel(garmentColorId: string): string {
+  const garment = getGarmentById(garmentColorId);
+  return garment?.nom || garmentColorId;
+}
 
 /**
  * Hook 1 — Build le bloc "context" canonique pour remplacer MODEL_DESCRIPTION
@@ -60,15 +81,12 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   const base64Data = settings.embroideryImage!.split(',')[1] || settings.embroideryImage!;
   
   const material = PRODUCT_MATERIALS[settings.product] || "textile de qualité";
-  const threadColorText = settings.threadColor || "identique à l'image fournie";
-  
-  const productDescription = {
-    'JH001 Hoodie cordons ronds sans embout': 'sweat à capuche (hoodie) avec cordons ronds sans embout',
-    'Zoodie JH050 cordons ronds sans embout': 'sweat zippé à capuche (zoodie) avec cordons ronds sans embout',
-    'JH030': 'sweat à col rond classique (crewneck), col ras du cou, SANS AUCUNE CAPUCHE ET SANS POCHE KANGOUROU',
-    'T-shirt Epais': 't-shirt épais à manches courtes. ATTENTION : C\'EST UN T-SHIRT, IL N\'Y A ABSOLUMENT AUCUNE POCHE KANGOUROU SUR LE VENTRE.',
-    'JH01J Hoodie Junior sans cordon': 'sweat à capuche petite taille sans aucun cordon'
-  }[settings.product] || settings.product;
+  // Couleur fil : label human-readable ('Framboise') pour Gemini, pas l'id Hub ('fil_framboise')
+  const threadColorText = threadColorLabel(settings.threadColor);
+  // Couleur vêtement : label ('Beige') pour Gemini, pas l'id ('beige')
+  const garmentColorText = garmentColorLabel(settings.garmentColor);
+  // Description produit YPxxx (lecture du mapping Hub-aligné dans constants.tsx)
+  const productDescription = PRODUCT_DESCRIPTION_FR[settings.product] || settings.product;
   
   let promptText = "";
   let label = "";
@@ -82,7 +100,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     
     promptText = shot.prompt
       .replace(/\[PRODUIT\]/g, productDescription)
-      .replace(/\[COULEUR SWEAT\]/g, settings.garmentColor)
+      .replace(/\[COULEUR SWEAT\]/g, garmentColorText)
       .replace(/\[COULEUR FIL\]/g, threadColorText)
       .replace(/\[EMPLACEMENT\]/g, emplacement)
       .replace(/\[DIMENSION\]/g, dimension)
@@ -97,7 +115,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       
       promptText = PACKSHOT_PROMPT
         .replace(/\[PRODUIT\]/g, productDescription)
-        .replace(/\[COULEUR SWEAT\]/g, settings.garmentColor)
+        .replace(/\[COULEUR SWEAT\]/g, garmentColorText)
         .replace(/\[COULEUR FIL\]/g, threadColorText)
         .replace(/\[EMPLACEMENT\]/g, emplacement)
         .replace(/\[DIMENSION\]/g, dimension);
@@ -151,7 +169,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
         .replace("[MATERIAL]", material)
         .replace("[SIZE]", settings.size.toString())
         .replace(/\[THREAD_COLOR\]/g, threadColorText)
-        .replace("[GARMENT_COLOR]", settings.garmentColor)
+        .replace("[GARMENT_COLOR]", garmentColorText)
         + context + " " + variation.replace(/\[THREAD_COLOR\]/g, threadColorText);
     }
   }
@@ -195,7 +213,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     if (candidate.finishReason === 'IMAGE_OTHER' || candidate.finishReason === 'SAFETY' || candidate.finishReason === 'BLOCKLIST') {
       console.warn(`Blocked by ${candidate.finishReason}, retrying with safe fallback prompt...`);
       
-      const safePrompt = `Generate a simple, safe, and generic 3D mockup of a ${settings.product} in color ${settings.garmentColor}. The garment is floating on a pure white background. The attached image is a simple graphic design to be embroidered on the chest. Do not generate any people, faces, or text. This is a safe, conceptual product visualization.`;
+      const safePrompt = `Generate a simple, safe, and generic 3D mockup of a ${settings.product} in color ${garmentColorText}. The garment is floating on a pure white background. The attached image is a simple graphic design to be embroidered on the chest. Do not generate any people, faces, or text. This is a safe, conceptual product visualization.`;
       
       try {
         const retryResponse = await ai.models.generateContent({
@@ -222,7 +240,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
         console.error("First fallback retry failed, trying without input image:", retryError);
         
         // Second fallback: Remove the input image entirely
-        const noImagePrompt = `Generate a simple, safe, and generic 3D mockup of a ${settings.product} in color ${settings.garmentColor}. The garment is floating on a pure white background. Do not generate any people, faces, or text. This is a safe, conceptual product visualization.`;
+        const noImagePrompt = `Generate a simple, safe, and generic 3D mockup of a ${settings.product} in color ${garmentColorText}. The garment is floating on a pure white background. Do not generate any people, faces, or text. This is a safe, conceptual product visualization.`;
         
         try {
           const secondRetryResponse = await ai.models.generateContent({

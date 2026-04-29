@@ -8,7 +8,7 @@ import { SHOTS_CONFIG } from './constants';
 const App: React.FC = () => {
   const [hasApiKey, setHasApiKey] = useState<boolean | null>(null);
   const [settings, setSettings] = useState<GenerationSettings>({
-    product: 'JH001 Hoodie cordons ronds sans embout',
+    product: 'YP001',  // Hoodie Adulte (le plus large catalogue couleurs : 12)
     size: 4,
     embroideryImage: null,
     mode: 'mannequin',
@@ -23,8 +23,8 @@ const App: React.FC = () => {
       bodyType: 'diverse',
       disability: 'none'
     },
-    threadColor: '',
-    garmentColor: 'blanc',
+    threadColor: '',                // 'Comme sur l'image' par défaut
+    garmentColor: 'beige',          // ID Hub officiel
     fullPackStyle: 'parisien',
     // Hook 1 — défauts compatibles avec workflow legacy (diversity random)
     castingMode: 'diversity',

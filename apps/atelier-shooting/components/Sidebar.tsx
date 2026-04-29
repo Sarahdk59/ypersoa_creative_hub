@@ -1,8 +1,9 @@
 
-import React, { useRef } from 'react';
-import { GenerationSettings } from '../types';
-import { PRODUCTS, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISABILITIES, THREAD_COLORS, GARMENT_COLORS } from '../constants';
+import React, { useRef, useEffect } from 'react';
+import { GenerationSettings, ProductType } from '../types';
+import { PRODUCTS_HUB, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISABILITIES, THREAD_COLORS } from '../constants';
 import { getCanoniquesSorted, getCanoniqueById } from '../lib/canoniques';
+import { getColorsForProduct, isFilGarmentIncompatible } from '../lib/hub-data';
 
 interface SidebarProps {
   settings: GenerationSettings;
@@ -14,6 +15,17 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, isLoading }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Couleurs vêtement réellement disponibles pour le produit sélectionné (filtrage Hub)
+  const availableGarmentColors = getColorsForProduct(settings.product);
+
+  // Si le produit change et la couleur sélectionnée n'est plus dispo, reset silencieux à la 1ère couleur dispo
+  useEffect(() => {
+    const isCurrentColorAvailable = availableGarmentColors.some(c => c.id === settings.garmentColor);
+    if (!isCurrentColorAvailable && availableGarmentColors.length > 0) {
+      setSettings(prev => ({ ...prev, garmentColor: availableGarmentColors[0].id }));
+    }
+  }, [settings.product, settings.garmentColor, availableGarmentColors, setSettings]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -23,6 +35,11 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleProductChange = (productId: ProductType) => {
+    setSettings(prev => ({ ...prev, product: productId }));
+    // useEffect ci-dessus s'occupe du reset automatique de la couleur si elle devient indispo
   };
 
   return (
@@ -69,17 +86,25 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
             2. Produit
           </label>
           <div className="grid grid-cols-1 gap-2">
-            {PRODUCTS.map(p => (
+            {PRODUCTS_HUB.map(p => (
               <button
-                key={p}
-                onClick={() => setSettings(prev => ({ ...prev, product: p }))}
+                key={p.id}
+                onClick={() => handleProductChange(p.id as ProductType)}
                 className={`text-left px-4 py-3 rounded-lg text-sm transition-all border ${
-                  settings.product === p 
-                    ? 'bg-yp-olive text-white border-yp-olive shadow-md' 
+                  settings.product === p.id
+                    ? 'bg-yp-olive text-white border-yp-olive shadow-md'
                     : 'bg-white text-slate-600 border-slate-200 hover:border-yp-sable'
                 }`}
               >
-                {p}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium">{p.nom_commercial}</span>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                    settings.product === p.id ? 'bg-white/20' : 'bg-yp-linen text-yp-olive'
+                  }`}>{p.id}</span>
+                </div>
+                <div className={`text-[10px] mt-0.5 ${
+                  settings.product === p.id ? 'text-white/70' : 'text-slate-400'
+                }`}>{p.nb_couleurs_disponibles} couleurs · {p.fournisseur}</div>
               </button>
             ))}
           </div>
@@ -114,51 +139,60 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           </label>
           <div className="space-y-6">
             <div>
-              <label className="block text-[10px] font-bold text-yp-olive uppercase mb-3">Couleur du fil</label>
+              <label className="block text-[10px] font-bold text-yp-olive uppercase mb-3">
+                Couleur du fil <span className="text-slate-400 font-normal normal-case">— {THREAD_COLORS.length - 1} fils Hub + "comme sur l'image"</span>
+              </label>
               <div className="flex flex-wrap gap-3">
-                {THREAD_COLORS.map(color => (
-                  <button
-                    key={color.value}
-                    onClick={() => setSettings(prev => ({ ...prev, threadColor: color.value }))}
-                    title={color.label}
-                    className={`w-8 h-8 rounded-full border-2 transition-all flex items-center justify-center ${
-                      settings.threadColor === color.value 
-                        ? 'border-yp-olive scale-110 shadow-md' 
-                        : 'border-transparent hover:scale-105 shadow-sm'
-                    } ${color.value === '' ? 'bg-slate-100' : ''}`}
-                    style={color.value !== '' ? { backgroundColor: color.hex } : {
-                      background: 'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)',
-                      backgroundSize: '8px 8px',
-                      backgroundPosition: '0 0, 4px 4px',
-                      backgroundColor: '#fff'
-                    }}
-                  />
-                ))}
+                {THREAD_COLORS.map(color => {
+                  const isIncompatible = color.value !== '' && isFilGarmentIncompatible(color.value, settings.garmentColor);
+                  return (
+                    <button
+                      key={color.value}
+                      onClick={() => setSettings(prev => ({ ...prev, threadColor: color.value }))}
+                      title={`${color.label}${isIncompatible ? ' — peu lisible sur ce vêtement' : ''}`}
+                      className={`w-8 h-8 rounded-full border-2 transition-all flex items-center justify-center relative ${
+                        settings.threadColor === color.value
+                          ? 'border-yp-olive scale-110 shadow-md'
+                          : 'border-transparent hover:scale-105 shadow-sm'
+                      } ${color.value === '' ? 'bg-slate-100' : ''} ${isIncompatible ? 'opacity-40' : ''}`}
+                      style={color.value !== '' ? { backgroundColor: color.hex } : {
+                        background: 'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)',
+                        backgroundSize: '8px 8px',
+                        backgroundPosition: '0 0, 4px 4px',
+                        backgroundColor: '#fff'
+                      }}
+                    >
+                      {isIncompatible && <span className="absolute text-[8px] -top-1 -right-1 bg-amber-400 text-white rounded-full w-3 h-3 flex items-center justify-center" title="incompatible">!</span>}
+                    </button>
+                  );
+                })}
               </div>
               <div className="mt-2 text-xs text-slate-500 italic">
                 {THREAD_COLORS.find(c => c.value === settings.threadColor)?.label || settings.threadColor}
               </div>
             </div>
-            
+
             <div>
-              <label className="block text-[10px] font-bold text-yp-olive uppercase mb-3">Couleur du vêtement</label>
+              <label className="block text-[10px] font-bold text-yp-olive uppercase mb-3">
+                Couleur du vêtement <span className="text-slate-400 font-normal normal-case">— {availableGarmentColors.length} dispos pour {settings.product}</span>
+              </label>
               <div className="flex flex-wrap gap-3">
-                {GARMENT_COLORS.map(color => (
+                {availableGarmentColors.map(color => (
                   <button
-                    key={color.value}
-                    onClick={() => setSettings(prev => ({ ...prev, garmentColor: color.value }))}
-                    title={color.label}
+                    key={color.id}
+                    onClick={() => setSettings(prev => ({ ...prev, garmentColor: color.id }))}
+                    title={color.nom}
                     className={`w-8 h-8 rounded-full border-2 transition-all ${
-                      settings.garmentColor === color.value 
-                        ? 'border-yp-olive scale-110 shadow-md' 
+                      settings.garmentColor === color.id
+                        ? 'border-yp-olive scale-110 shadow-md'
                         : 'border-transparent hover:scale-105 shadow-sm'
-                    }`}
+                    } ${(color.hex.toLowerCase() === '#ffffff' || color.hex.toLowerCase() === '#fff') ? 'border-slate-200' : ''}`}
                     style={{ backgroundColor: color.hex }}
                   />
                 ))}
               </div>
               <div className="mt-2 text-xs text-slate-500 italic">
-                {GARMENT_COLORS.find(c => c.value === settings.garmentColor)?.label || settings.garmentColor}
+                {availableGarmentColors.find(c => c.id === settings.garmentColor)?.nom || settings.garmentColor}
               </div>
             </div>
           </div>

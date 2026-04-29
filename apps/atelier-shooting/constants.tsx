@@ -1,14 +1,13 @@
 
 import React from 'react';
 import { ProductType, EmbroiderySize, AspectRatio, Ethnicity, AgeRange, BodyType, DisabilityType } from './types';
+import { HUB_FILS, HUB_GARMENTS, HUB_PRODUITS } from './lib/hub-data';
 
-export const PRODUCTS: ProductType[] = [
-  'JH001 Hoodie cordons ronds sans embout',
-  'Zoodie JH050 cordons ronds sans embout',
-  'JH030',
-  'T-shirt Epais',
-  'JH01J Hoodie Junior sans cordon'
-];
+// 5 produits YPxxx du Hub (lus depuis referentiels/palette_supports_par_produit.json).
+// Chaque entrée : id (YP001…), nom_commercial (humainement lisible), nb couleurs.
+export const PRODUCTS_HUB = HUB_PRODUITS;
+// Compat legacy : array des id YPxxx
+export const PRODUCTS: ProductType[] = HUB_PRODUITS.map(p => p.id as ProductType);
 
 export const SIZES: EmbroiderySize[] = [2, 4, 6, 8, 12, 20];
 
@@ -56,48 +55,52 @@ export const DISABILITIES: { value: DisabilityType; label: string }[] = [
   { value: 'visible-disability', label: 'Handicap visible' }
 ];
 
-// Mapping products to their specific technical materials for realism
+// Mapping YPxxx → matières techniques précises (descriptions transposées de l'ancien
+// mapping Awdis JH001/JH030/etc. vers les codes commerciaux Ypersoa du Hub).
 export const PRODUCT_MATERIALS: Record<ProductType, string> = {
-  'JH001 Hoodie cordons ronds sans embout': 'coton mélangé (80% coton / 20% polyester) de 280g/m², texture douce. DÉTAIL CRUCIAL ET IMPÉRATIF : le sweat possède des cordons de serrage RONDS en coton, SANS AUCUN EMBOUT PLASTIQUE ni métallique (le bout du cordon est juste noué ou coupé net). Ne générez AUCUN embout sur les cordons.',
-  'Zoodie JH050 cordons ronds sans embout': 'coton mélangé (80% coton / 20% polyester) de 280g/m², avec fermeture éclair métallique. DÉTAIL CRUCIAL ET IMPÉRATIF : le zoodie possède des cordons de serrage RONDS en coton, SANS AUCUN EMBOUT PLASTIQUE ni métallique (le bout du cordon est juste noué ou coupé net). Ne générez AUCUN embout sur les cordons.',
-  'JH030': 'coton mélangé premium (80% coton / 20% polyester) de 280g/m², fini lisse et intérieur brossé. DÉTAIL CRUCIAL : AUCUNE POCHE KANGOUROU.',
-  'T-shirt Epais': 'jersey de coton épais et lourd, maille dense et structurée. DÉTAIL CRUCIAL : AUCUNE POCHE KANGOUROU.',
-  'JH01J Hoodie Junior sans cordon': 'coton mélangé (80% coton / 20% polyester) de 280g/m², coupe petite taille sécurisée sans aucun cordon de serrage à la capuche'
+  'YP001': 'coton mélangé (80% coton / 20% polyester) de 280g/m², texture douce, hoodie adulte (Awdis JH001). DÉTAIL CRUCIAL ET IMPÉRATIF : le sweat possède des cordons de serrage RONDS en coton, SANS AUCUN EMBOUT PLASTIQUE ni métallique (le bout du cordon est juste noué ou coupé net). Ne générez AUCUN embout sur les cordons.',
+  'YP004': 'coton mélangé (80% coton / 20% polyester) de 280g/m², coupe petite taille enfant sécurisée sans aucun cordon de serrage à la capuche (norme EN 14682, Awdis JH01J).',
+  'YP005': 'coton mélangé premium (80% coton / 20% polyester) de 280g/m², fini lisse et intérieur brossé, sweat adulte col rond (Awdis JH030). DÉTAIL CRUCIAL : AUCUNE POCHE KANGOUROU, col rond ras-du-cou, AUCUNE CAPUCHE.',
+  'YP019': 'jersey de coton épais et lourd, maille dense et structurée, t-shirt adulte (B&C). DÉTAIL CRUCIAL : AUCUNE POCHE KANGOUROU, t-shirt manches courtes simple.',
+  'YP021': 'coton mélangé (80% coton / 20% polyester) de 280g/m², avec fermeture éclair métallique, zoodie adulte (Awdis JH050). DÉTAIL CRUCIAL ET IMPÉRATIF : le zoodie possède des cordons de serrage RONDS en coton, SANS AUCUN EMBOUT PLASTIQUE ni métallique (le bout du cordon est juste noué ou coupé net). Ne générez AUCUN embout sur les cordons.'
 };
 
+/**
+ * Description longue d'un YPxxx pour insérer dans les prompts EN Gemini.
+ * Remplace l'ancien hardcoded inline dans geminiService.ts.
+ */
+export const PRODUCT_DESCRIPTION_FR: Record<ProductType, string> = {
+  'YP001': 'sweat à capuche (hoodie) adulte avec cordons ronds sans embout',
+  'YP004': 'sweat à capuche (hoodie) enfant sans cordon de serrage (norme sécurité enfant)',
+  'YP005': 'sweat à col rond classique (crewneck) adulte, col ras du cou, SANS AUCUNE CAPUCHE ET SANS POCHE KANGOUROU',
+  'YP019': 't-shirt épais à manches courtes adulte. ATTENTION : C\'EST UN T-SHIRT, IL N\'Y A ABSOLUMENT AUCUNE POCHE KANGOUROU SUR LE VENTRE.',
+  'YP021': 'sweat zippé à capuche (zoodie) adulte avec cordons ronds sans embout et fermeture éclair métallique'
+};
+
+// 20 fils Hub (lus depuis referentiels/palette_fils_broderie.json) + swatch
+// "Comme sur l'image" gardé en premier (si Sarah veut laisser le PNG décider).
+// Format : value = id Hub (ex 'fil_framboise'). Pour le prompt EN, on utilise label (ex 'Framboise').
 export const THREAD_COLORS = [
-  { label: 'Comme sur l\'image', value: '', hex: 'transparent' },
-  { label: 'Charbon', value: 'charbon', hex: '#36454F' },
-  { label: 'Ivoire', value: 'ivoire', hex: '#FFFFF0' },
-  { label: 'Blanc', value: 'blanc', hex: '#ffffff' },
-  { label: 'Bordeaux', value: 'bordeaux', hex: '#800020' },
-  { label: 'Vert Sauge', value: 'vert sauge', hex: '#9DC183' },
-  { label: 'Marine', value: 'marine', hex: '#1a2b4c' },
-  { label: 'Framboise', value: 'framboise', hex: '#c72c48' },
-  { label: 'Pétrole', value: 'pétrole', hex: '#005f6a' },
-  { label: 'Canard', value: 'canard', hex: '#048b9a' },
-  { label: 'Lilas', value: 'lilas', hex: '#c8a2c8' },
-  { label: 'Rose pâle', value: 'rose pâle', hex: '#f0d3d7' },
-  { label: 'Autre', value: 'autre', hex: '#808080' }
+  { label: "Comme sur l'image", value: '', hex: 'transparent' },
+  ...HUB_FILS.map(f => ({
+    label: f.nom,
+    value: f.id,           // 'fil_framboise', 'fil_marine', etc.
+    hex: f.hex,
+    famille: f.famille,
+    incompatibles: f.supports_incompatibles
+  }))
 ];
 
-export const GARMENT_COLORS = [
-  { label: 'Beige crème', value: 'beige creme', hex: '#fdf4e3' },
-  { label: 'Marine', value: 'marine', hex: '#1a2b4c' },
-  { label: 'Blanc', value: 'blanc', hex: '#ffffff' },
-  { label: 'Noir', value: 'noir', hex: '#111111' },
-  { label: 'Pierre naturelle', value: 'natural stone pierre naturelle', hex: '#d7d3c8' },
-  { label: 'Dusty green', value: 'dustygreen vert terre', hex: '#7b8976' },
-  { label: 'Ice blue', value: 'ice blue bleu clair', hex: '#a5c9d5' },
-  { label: 'Earthy green', value: 'earthygreen vert terre', hex: '#5a6b51' },
-  { label: 'Kaki', value: 'kaki', hex: '#8f8b66' },
-  { label: 'Teal', value: 'teal', hex: '#1d7074' },
-  { label: 'Lake blue', value: 'lake blue cornflower bleu bleu pastel', hex: '#8cbed6' },
-  { label: 'Ink blue', value: 'ink blue', hex: '#163b4c' },
-  { label: 'Rose pâle', value: 'rose pâle babypink', hex: '#f0d3d7' },
-  { label: 'Lilas', value: 'lilac lilas', hex: '#c8a2c8' },
-  { label: 'Sherbet lemonade', value: 'jaune citronnade pastel sherbet lemonade', hex: '#f4e5a1' }
-];
+// 21 couleurs vêtement Hub (lues depuis referentiels/palette_supports_vetements.json).
+// Format : value = id Hub (ex 'beige', 'marine'). Le filtrage par produit est fait
+// dans Sidebar.tsx via getColorsForProduct(productId).
+export const GARMENT_COLORS = HUB_GARMENTS.map(c => ({
+  label: c.nom,
+  value: c.id,             // 'beige', 'marine', 'vert_sauge', etc.
+  hex: c.hex,
+  famille: c.famille,
+  saison_signature: c.saison_signature
+}));
 
 export const BRAND_PALETTE = {
   linen: '#f8f5f2',
@@ -116,11 +119,11 @@ DÉCOR : Editorial apartment with sage green molded walls, chevron parquet floor
 LUMIÈRE : Lumière naturelle zénithale, morning window light ou golden hour douce.
 PALETTE : Tons neutres désaturés, beige "natural raw", sable, crème, avec des touches de [THREAD_COLOR].
 PRODUIT : Un [PRODUCT] de couleur unie et constante [GARMENT_COLOR] confectionné en [MATERIAL]. Le vêtement est vierge à l'intérieur, sans aucune étiquette ou label de marque visible au niveau du col. La texture du tissu doit être parfaitement visible au niveau des mailles.
-BRODERIE : Le motif joint est brodé en fil [THREAD_COLOR] côté cœur. ATTENTION PARTICULIÈRE : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Elle doit s'intégrer complètement au tissu comme une broderie fine et délicate, sans aucune surépaisseur. Si le motif contient du texte, les lettres brodées doivent être d'une lisibilité et d'une précision chirurgicale, sans aucune déformation. Les points de broderie (satin stitch, fill stitch) doivent être distincts et épouser parfaitement la tension et la maille du vêtement. Le rendu doit être 100% plat, lisse et ultra-réaliste.
+BRODERIE : Le motif joint est brodé en fil [THREAD_COLOR] côté cœur. ⚠️ COULEUR FIL OBLIGATOIRE : la broderie générée DOIT être en fil [THREAD_COLOR], même si l'image source PNG montre la broderie dans une autre couleur. RE-BRODE le motif dans la couleur [THREAD_COLOR] sur le vêtement final, en ignorant la couleur de référence du PNG source (qui n'est qu'une référence de forme et de typographie, pas de couleur). ATTENTION PARTICULIÈRE : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Elle doit s'intégrer complètement au tissu comme une broderie fine et délicate, sans aucune surépaisseur. Si le motif contient du texte, les lettres brodées doivent être d'une lisibilité et d'une précision chirurgicale, sans aucune déformation. Les points de broderie (satin stitch, fill stitch) doivent être distincts et épouser parfaitement la tension et la maille du vêtement. Le rendu doit être 100% plat, lisse et ultra-réaliste.
 TAILLE : La broderie mesure [SIZE] cm.\${COPYRIGHT_DISCLAIMER}
 `;
 
-export const PACKSHOT_PROMPT = `Generate an image of: Hyper-realistic digital 3D mockup of an e-commerce packshot d'un [PRODUIT] oversize de couleur unie et constante [COULEUR SWEAT], présenté sur un MANNEQUIN INVISIBLE (invisible mannequin effect). IMPORTANT : Le vêtement est présenté seul, sans modèle, flottant dans les airs avec un effet mannequin invisible. Le vêtement flotte seul devant un fond studio blanc pur. Le vêtement est vierge à l'intérieur, sans aucune étiquette ou label de marque visible au niveau du col. Motif brodé en fil [COULEUR FIL] visible sur l'[EMPLACEMENT] ([DIMENSION] maximum). ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Rendu 100% plat, lisse et ultra-réaliste, intégré au tissu sans surépaisseur. Éclairage studio parfaitement doux, sans ombres marquées, rendu fidèle aux couleurs réelles. Vue de face symétrique, packshot commercial mode premium, niveau vrai shooting photo professionnel, style minimaliste haut de gamme similaire aux fiches produit A.P.C., Octobre Éditions et Sézane, 4K ultra-réaliste.\${COPYRIGHT_DISCLAIMER}`;
+export const PACKSHOT_PROMPT = `Generate an image of: Hyper-realistic digital 3D mockup of an e-commerce packshot d'un [PRODUIT] oversize de couleur unie et constante [COULEUR SWEAT], présenté sur un MANNEQUIN INVISIBLE (invisible mannequin effect). IMPORTANT : Le vêtement est présenté seul, sans modèle, flottant dans les airs avec un effet mannequin invisible. Le vêtement flotte seul devant un fond studio blanc pur. Le vêtement est vierge à l'intérieur, sans aucune étiquette ou label de marque visible au niveau du col. Motif brodé en fil [COULEUR FIL] visible sur l'[EMPLACEMENT] ([DIMENSION] maximum). ⚠️ COULEUR FIL OBLIGATOIRE : la broderie DOIT être en fil [COULEUR FIL], même si l'image source PNG montre une autre couleur. RE-BRODE le motif dans cette couleur sur le vêtement final, en ignorant la couleur de référence du PNG source (forme et typographie uniquement). ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Rendu 100% plat, lisse et ultra-réaliste, intégré au tissu sans surépaisseur. Éclairage studio parfaitement doux, sans ombres marquées, rendu fidèle aux couleurs réelles. Vue de face symétrique, packshot commercial mode premium, niveau vrai shooting photo professionnel, style minimaliste haut de gamme similaire aux fiches produit A.P.C., Octobre Éditions et Sézane, 4K ultra-réaliste.\${COPYRIGHT_DISCLAIMER}`;
 
 export const SHOTS_CONFIG = {
   PORTRAIT: {
