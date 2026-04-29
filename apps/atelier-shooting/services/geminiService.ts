@@ -2,6 +2,47 @@
 import { GoogleGenAI } from "@google/genai";
 import { GenerationSettings } from "../types";
 import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT } from "../constants";
+import { fetchCanoniqueAsBase64, getCanoniqueById, Canonique } from "../lib/canoniques";
+
+/**
+ * Hook 1 — Build le bloc "context" canonique pour remplacer MODEL_DESCRIPTION
+ * quand l'utilisateur sélectionne un mannequin canonique du Hub.
+ * La signature EN courte (30-80 mots) est concaténée avec le préfixe character
+ * reference Gemini ("using the uploaded reference portrait as the character's face identity").
+ */
+function buildCanoniqueContext(canoniques: Canonique[]): string {
+  if (canoniques.length === 0) return "";
+  if (canoniques.length === 1) {
+    const c = canoniques[0];
+    return `MANNEQUIN (CHARACTER REFERENCE PERSISTANT) : Using the uploaded reference portrait as the character's face identity — same ${c.genre === 'homme' ? 'man' : c.genre === 'enfant' ? 'child' : 'woman'}, exact same face features preserved across all generations. ${c.prenom}, ${c.age} years old : ${c.signature}. Real human features with natural imperfections, no retouching, no skin smoothing, no beauty filter, no celebrity polish.`;
+  }
+  // Multi-canoniques (V2 famille) — pour V1 on s'arrête à 1 mais on prépare le terrain
+  const intro = `${canoniques.length} CHARACTERS (REFERENCE PERSISTANTS) : Using the uploaded reference portraits as the characters' face identities — exact same face features preserved across all generations.`;
+  const descriptions = canoniques.map(c => `- ${c.prenom}, ${c.age} : ${c.signature}`).join("\n");
+  return `${intro}\n${descriptions}\nReal humans with natural imperfections, no retouching, no skin smoothing.`;
+}
+
+/**
+ * Charge tous les canoniques sélectionnés et retourne leurs blocs inlineData
+ * prêts à injecter en parts[] AVANT l'image broderie.
+ */
+async function loadCanoniqueParts(canoniqueIds: string[]): Promise<Array<{ inlineData: { data: string; mimeType: string } }>> {
+  const parts: Array<{ inlineData: { data: string; mimeType: string } }> = [];
+  for (const id of canoniqueIds) {
+    const c = getCanoniqueById(id);
+    if (!c) {
+      console.warn(`Canonique introuvable : ${id}`);
+      continue;
+    }
+    try {
+      const { data, mimeType } = await fetchCanoniqueAsBase64(c.filename);
+      parts.push({ inlineData: { data, mimeType } });
+    } catch (err) {
+      console.error(`Erreur fetch canonique ${id}:`, err);
+    }
+  }
+  return parts;
+}
 
 type FullPackShot = { label: string; prompt: string };
 type FullPackMap = Record<string, FullPackShot>;
@@ -68,15 +109,25 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
 
       if (settings.mode === 'mannequin') {
         variation = shot.promptSuffix;
-        
-        const diversityParts = [];
-        if (settings.diversity.ethnicity !== 'diverse') diversityParts.push(`ethnie ${settings.diversity.ethnicity}`);
-        if (settings.diversity.age !== 'diverse') diversityParts.push(`âge ${settings.diversity.age}`);
-        if (settings.diversity.bodyType !== 'diverse') diversityParts.push(`morphologie ${settings.diversity.bodyType}`);
-        if (settings.diversity.disability !== 'none') diversityParts.push(`avec ${settings.diversity.disability}`);
-        
-        const diversityDesc = diversityParts.length > 0 ? diversityParts.join(', ') : "diversifiée et naturelle";
-        context = MODEL_DESCRIPTION.replace("[DIVERSITY_DESCRIPTION]", diversityDesc);
+
+        // Hook 1 — si castingMode === 'canonique' avec un mannequin sélectionné,
+        // on remplace le bloc MODEL_DESCRIPTION+diversity par une signature
+        // centrée sur le canonique persistant (les images sont injectées en parts[] plus bas).
+        if (settings.castingMode === 'canonique' && settings.canoniqueIds.length > 0) {
+          const canoniques = settings.canoniqueIds
+            .map(id => getCanoniqueById(id))
+            .filter((c): c is Canonique => Boolean(c));
+          context = buildCanoniqueContext(canoniques);
+        } else {
+          const diversityParts = [];
+          if (settings.diversity.ethnicity !== 'diverse') diversityParts.push(`ethnie ${settings.diversity.ethnicity}`);
+          if (settings.diversity.age !== 'diverse') diversityParts.push(`âge ${settings.diversity.age}`);
+          if (settings.diversity.bodyType !== 'diverse') diversityParts.push(`morphologie ${settings.diversity.bodyType}`);
+          if (settings.diversity.disability !== 'none') diversityParts.push(`avec ${settings.diversity.disability}`);
+
+          const diversityDesc = diversityParts.length > 0 ? diversityParts.join(', ') : "diversifiée et naturelle";
+          context = MODEL_DESCRIPTION.replace("[DIVERSITY_DESCRIPTION]", diversityDesc);
+        }
       } else if (settings.mode === 'family') {
         variation = shot.familySuffix;
         const coupleTypeLabel = {
@@ -105,10 +156,17 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     }
   }
 
+  // Hook 1 — si mode canonique, on charge les portraits canoniques et on les injecte
+  // en parts[] AVANT l'image broderie (ordre validé par passation 24/04 — 95% fidélité visage).
+  const canoniqueParts = (settings.castingMode === 'canonique' && settings.canoniqueIds.length > 0)
+    ? await loadCanoniqueParts(settings.canoniqueIds)
+    : [];
+
   const response = await ai.models.generateContent({
     model: 'gemini-3.1-flash-image-preview',
     contents: {
       parts: [
+        ...canoniqueParts,
         {
           inlineData: {
             data: base64Data,

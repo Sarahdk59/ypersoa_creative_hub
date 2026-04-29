@@ -25,7 +25,10 @@ const App: React.FC = () => {
     },
     threadColor: '',
     garmentColor: 'blanc',
-    fullPackStyle: 'parisien'
+    fullPackStyle: 'parisien',
+    // Hook 1 — défauts compatibles avec workflow legacy (diversity random)
+    castingMode: 'diversity',
+    canoniqueIds: []
   });
 
   const [isLoading, setIsLoading] = useState(false);

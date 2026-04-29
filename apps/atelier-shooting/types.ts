@@ -34,6 +34,11 @@ export interface ModelDiversity {
 
 export type FullPackStyle = 'minimalist' | 'parisien' | 'loft';
 
+// Hook 1 (29-30/04/2026) : casting peut être 'diversity' (random visages) ou 'canonique' (mannequins persistants Hub).
+// Quand castingMode = 'canonique', canoniqueIds[] contient les IDs (ex: ['MAN-P02']) à utiliser
+// comme character reference Gemini (parts[]).
+export type CastingMode = 'diversity' | 'canonique';
+
 export interface GenerationSettings {
   product: ProductType;
   size: EmbroiderySize;
@@ -45,6 +50,9 @@ export interface GenerationSettings {
   threadColor: string;
   garmentColor: string;
   fullPackStyle: FullPackStyle;
+  // Hook 1 — Casting Hub
+  castingMode: CastingMode;
+  canoniqueIds: string[];
 }
 
 export interface GeneratedImagePack {

@@ -1,7 +1,8 @@
 
 import React, { useRef } from 'react';
-import { GenerationSettings, ProductType, EmbroiderySize } from '../types';
+import { GenerationSettings } from '../types';
 import { PRODUCTS, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISABILITIES, THREAD_COLORS, GARMENT_COLORS } from '../constants';
+import { getCanoniquesSorted, getCanoniqueById } from '../lib/canoniques';
 
 interface SidebarProps {
   settings: GenerationSettings;
@@ -234,51 +235,132 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
             </button>
           </div>
 
-          {/* Mannequin Diversity Options */}
+          {/* Mannequin Casting Options (Diversity ↔ Canonique Hub) */}
           {settings.mode === 'mannequin' && (
             <div className="space-y-4 p-4 bg-yp-linen/50 rounded-xl border border-yp-sable/30 animate-in fade-in slide-in-from-top-2">
+              {/* Toggle casting mode */}
               <div>
-                <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Ethnie</label>
-                <select 
-                  value={settings.diversity.ethnicity}
-                  onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, ethnicity: e.target.value as any } }))}
-                  className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
-                >
-                  {ETHNICITIES.map(e => <option key={e.value} value={e.value}>{e.label}</option>)}
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Âge</label>
-                  <select 
-                    value={settings.diversity.age}
-                    onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, age: e.target.value as any } }))}
-                    className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
+                <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Casting</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSettings(prev => ({ ...prev, castingMode: 'diversity' }))}
+                    className={`py-2 rounded-md text-[10px] border transition-all flex items-center justify-center gap-1.5 ${
+                      settings.castingMode === 'diversity'
+                        ? 'bg-yp-olive text-white border-yp-olive'
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-yp-sable'
+                    }`}
                   >
-                    {AGES.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Morphologie</label>
-                  <select 
-                    value={settings.diversity.bodyType}
-                    onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, bodyType: e.target.value as any } }))}
-                    className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
+                    <span>🎲</span> Diversity (random)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSettings(prev => ({ ...prev, castingMode: 'canonique' }))}
+                    className={`py-2 rounded-md text-[10px] border transition-all flex items-center justify-center gap-1.5 ${
+                      settings.castingMode === 'canonique'
+                        ? 'bg-yp-olive text-white border-yp-olive'
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-yp-sable'
+                    }`}
                   >
-                    {BODY_TYPES.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
-                  </select>
+                    <span>👤</span> Canonique (Hub)
+                  </button>
                 </div>
               </div>
-              <div>
-                <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Inclusion / Handicap</label>
-                <select 
-                  value={settings.diversity.disability}
-                  onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, disability: e.target.value as any } }))}
-                  className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
-                >
-                  {DISABILITIES.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
-                </select>
-              </div>
+
+              {/* Mode Diversity (random visages) */}
+              {settings.castingMode === 'diversity' && (
+                <>
+                  <div>
+                    <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Ethnie</label>
+                    <select
+                      value={settings.diversity.ethnicity}
+                      onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, ethnicity: e.target.value as any } }))}
+                      className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
+                    >
+                      {ETHNICITIES.map(e => <option key={e.value} value={e.value}>{e.label}</option>)}
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Âge</label>
+                      <select
+                        value={settings.diversity.age}
+                        onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, age: e.target.value as any } }))}
+                        className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
+                      >
+                        {AGES.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Morphologie</label>
+                      <select
+                        value={settings.diversity.bodyType}
+                        onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, bodyType: e.target.value as any } }))}
+                        className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
+                      >
+                        {BODY_TYPES.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Inclusion / Handicap</label>
+                    <select
+                      value={settings.diversity.disability}
+                      onChange={(e) => setSettings(prev => ({ ...prev, diversity: { ...prev.diversity, disability: e.target.value as any } }))}
+                      className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
+                    >
+                      {DISABILITIES.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
+                    </select>
+                  </div>
+                </>
+              )}
+
+              {/* Mode Canonique (mannequin Hub persistant) */}
+              {settings.castingMode === 'canonique' && (
+                <>
+                  <div>
+                    <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Mannequin canonique</label>
+                    <select
+                      value={settings.canoniqueIds[0] || ''}
+                      onChange={(e) => setSettings(prev => ({ ...prev, canoniqueIds: e.target.value ? [e.target.value] : [] }))}
+                      className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
+                    >
+                      <option value="">— Choisir un mannequin —</option>
+                      {getCanoniquesSorted().map(c => (
+                        <option key={c.id} value={c.id}>
+                          {c.favorite ? '⭐ ' : ''}{c.id} — {c.prenom}, {c.age} ({c.genre})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {settings.canoniqueIds[0] && (() => {
+                    const c = getCanoniqueById(settings.canoniqueIds[0]);
+                    if (!c) return null;
+                    return (
+                      <div className="flex gap-3 items-start p-2 bg-white rounded-lg border border-yp-sable/30">
+                        <img
+                          src={`/canoniques/${c.filename}`}
+                          alt={c.prenom}
+                          className="w-20 h-24 rounded-md object-cover flex-shrink-0"
+                          onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[11px] font-bold text-yp-olive">
+                            {c.prenom} {c.favorite && '⭐'}
+                          </div>
+                          <div className="text-[9px] text-slate-400 mb-1">{c.id} · {c.age} ans · {c.genre}{c.duo ? ` · ${c.duo}` : ''}</div>
+                          <div className="text-[9px] text-slate-500 italic leading-snug">{c.description}</div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  <div className="text-[9px] text-slate-500 italic leading-relaxed border-t border-yp-sable/30 pt-3">
+                    Le canonique sera uploadé en référence Gemini pour préserver le visage du mannequin sur toutes les régénérations (~95% fidélité). Mode famille canonique multi-mannequins prévu en V2.
+                  </div>
+                </>
+              )}
             </div>
           )}
 
