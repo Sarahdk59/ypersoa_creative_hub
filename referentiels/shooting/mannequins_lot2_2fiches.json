@@ -1,9 +1,9 @@
 {
   "meta": {
     "lot": 2,
-    "version": "1.1",
-    "date": "2026-04-24",
-    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
+    "version": "1.2",
+    "date": "2026-04-30",
+    "directive_casting": "D2_DEUX_FAMILLES_ESTHETIQUES v1.0 (succède à D1_BEAUTE_INCARNEE v2.0)",
     "fiches_contenues": ["MAN-P02", "MAN-P04"],
     "choix_directionnels_sarah": {
       "MAN-P02_Anna": "A - Provençale moderne (Sessùn/Soeur, lin naturel, palette ocre/terracotta)",
@@ -11,7 +11,8 @@
     },
     "changelog": {
       "v1.0_2026-04-20": "Version initiale",
-      "v1.1_2026-04-24": "Correction Anna suite canonique : cheveux châtain doré méchés → brun chaud provençal. Redondance visuelle avec Camille (châtain miel) évitée. Peau précisée olive-chaude méditerranéenne."
+      "v1.1_2026-04-24": "Correction Anna suite canonique : cheveux châtain doré méchés → brun chaud provençal. Redondance visuelle avec Camille (châtain miel) évitée. Peau précisée olive-chaude méditerranéenne.",
+      "v1.2_2026-04-30": "Migration directive D1 → D2 : ajout du champ 'famille_esthetique: no-makeup naturelle' sur Anna et Lila pour cohérence avec D2_DEUX_FAMILLES_ESTHETIQUES v1.0. Aucune autre modification narrative."
     }
   },
   "mannequins": [
@@ -21,6 +22,7 @@
       "age": 35,
       "genre": "F",
       "ethnicite": "blanche française (sud de la France)",
+      "famille_esthetique": "no-makeup naturelle",
       "ancrage_geographique": "Aix-en-Provence / Arles / arrière-pays varois",
       "apparence_physique": {
         "silhouette": "1m70, silhouette détendue et ancrée, posture relâchée mais droite — le port d'une femme qui ne court pas",
@@ -85,6 +87,7 @@
       "age": 45,
       "genre": "F",
       "ethnicite": "maghrébine",
+      "famille_esthetique": "no-makeup naturelle",
       "ancrage_geographique": "Paris 3e / 11e / Montmartre",
       "apparence_physique": {
         "silhouette": "1m67, silhouette fine et élancée, posture droite et assurée — maintien d'une femme qui sait sa valeur",
