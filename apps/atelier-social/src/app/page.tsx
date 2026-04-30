@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { ImageUploader } from "@/components/ImageUploader";
 import { ImportedShotsPanel } from "@/components/ImportedShotsPanel";
+import { SavePackDialog } from "@/components/SavePackDialog";
+import { LibraryDrawer } from "@/components/LibraryDrawer";
+import { isSupabaseConfigured } from "@/lib/supabase";
+import { Heart, FolderOpen } from "lucide-react";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
 import { OccasionSelector, OCCASIONS } from "@/components/OccasionSelector";
 import { CanoniqueSelector } from "@/components/CanoniqueSelector";
@@ -88,6 +92,45 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const [rightPanelTab, setRightPanelTab] = useState<"text" | "overlay">("text");
+
+  // Hub : Sauvegarde des packs RS dans Supabase + bibliothèque collections.
+  const supabaseOn = isSupabaseConfigured();
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const [librarySaveBump, setLibrarySaveBump] = useState(0);
+  const [savedPackId, setSavedPackId] = useState<string | null>(null);
+
+  const canSavePack =
+    supabaseOn &&
+    generatedImages.length > 0 &&
+    !isGeneratingImage &&
+    !isGeneratingText;
+
+  const buildSavePayload = () => {
+    const captionHooks = HOOK_LABELS.reduce<Record<string, string>>((acc, lbl, i) => {
+      if (generatedHooks[i]) acc[lbl.toLowerCase()] = generatedHooks[i];
+      return acc;
+    }, {});
+    const dateLabel = new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+    const platformLabel = selectedPlatform === "instagram" ? "Insta" : "Pinterest";
+    return {
+      platform: selectedPlatform,
+      imageDataUrls: generatedImages,
+      captionText: generatedText,
+      captionHooks: Object.keys(captionHooks).length > 0 ? captionHooks : null,
+      pinterestTitle: pinterestTitle || null,
+      pinterestDescription: pinterestDescription || null,
+      pinterestTags,
+      brandSafety,
+      vibeId: selectedVibe,
+      occasionId: selectedOccasion,
+      canoniqueIds: selectedCanoniqueIds,
+      customPrompt: customPrompt || null,
+      withOverlay,
+      sourceShotId: null,
+      suggestedTitle: `${platformLabel} — ${dateLabel}`,
+    };
+  };
 
   const handleImageSelected = (file: File, base64: string) => {
     setSelectedFile(file);
@@ -248,16 +291,28 @@ export default function Home() {
             </div>
           </div>
 
-          {(isGeneratingImage || isGeneratingText) && (
-            <div className="flex items-center gap-2 text-xs text-brand-muted">
-              <div className="w-3 h-3 border-2 border-brand-rose/30 border-t-brand-rose rounded-full animate-spin" />
-              <span>
-                {isGeneratingImage && generatedImages.length > 0
-                  ? `${generatedImages.length}/${expectedImages} images...`
-                  : "Création en cours..."}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            {(isGeneratingImage || isGeneratingText) && (
+              <div className="flex items-center gap-2 text-xs text-brand-muted">
+                <div className="w-3 h-3 border-2 border-brand-rose/30 border-t-brand-rose rounded-full animate-spin" />
+                <span>
+                  {isGeneratingImage && generatedImages.length > 0
+                    ? `${generatedImages.length}/${expectedImages} images...`
+                    : "Création en cours..."}
+                </span>
+              </div>
+            )}
+            {supabaseOn && (
+              <button
+                onClick={() => setLibraryOpen(true)}
+                className="flex items-center gap-1.5 text-xs font-semibold text-brand-rose hover:bg-brand-rose/10 px-3 py-1.5 rounded-full border border-brand-rose/20 transition-all"
+                title="Bibliothèque des publications sauvegardées"
+              >
+                <FolderOpen className="w-3.5 h-3.5" />
+                Bibliothèque
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -422,6 +477,17 @@ export default function Home() {
                   </>
                 )}
               </button>
+
+              {canSavePack && (
+                <button
+                  type="button"
+                  onClick={() => setSaveDialogOpen(true)}
+                  className="w-full mt-2 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold transition-all"
+                >
+                  <Heart className="w-3.5 h-3.5" />
+                  {savedPackId ? "Sauvegarder à nouveau" : "Sauvegarder dans le hub"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -511,6 +577,26 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {supabaseOn && saveDialogOpen && (
+        <SavePackDialog
+          open={saveDialogOpen}
+          onClose={() => setSaveDialogOpen(false)}
+          payload={buildSavePayload()}
+          onSaved={(packId) => {
+            setSavedPackId(packId);
+            setLibrarySaveBump((v) => v + 1);
+          }}
+        />
+      )}
+
+      {supabaseOn && (
+        <LibraryDrawer
+          open={libraryOpen}
+          onClose={() => setLibraryOpen(false)}
+          refreshKey={librarySaveBump}
+        />
+      )}
 
       <style jsx global>{`
         .visible-scrollbar::-webkit-scrollbar {
