@@ -10,6 +10,8 @@ import {
   Instagram,
   Pin,
   ArrowLeft,
+  Download,
+  Package,
 } from "lucide-react";
 import {
   Collection,
@@ -20,6 +22,7 @@ import {
   togglePackFavorite,
   deleteSocialPack,
 } from "@/lib/social-packs";
+import { downloadPackAsZip, downloadSlide } from "@/lib/download-pack";
 
 interface Props {
   open: boolean;
@@ -251,6 +254,29 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  const collectionForPack = collections.find((c) => c.id === pack.collection_id) || null;
+
+  const handleDownloadAll = async () => {
+    setDownloading(true);
+    setError(null);
+    try {
+      await downloadPackAsZip(pack, collectionForPack);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const handleDownloadOne = async (idx: number) => {
+    try {
+      await downloadSlide(pack, collectionForPack?.name || null, idx, pack.image_urls.length);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -296,15 +322,36 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
     <div className="flex-1 overflow-y-auto">
       <div className="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
+          <button
+            onClick={handleDownloadAll}
+            disabled={downloading}
+            className="w-full mb-3 flex items-center justify-center gap-2 text-sm font-semibold py-2 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 disabled:opacity-50"
+          >
+            <Package className="w-4 h-4" />
+            {downloading
+              ? "Préparation du ZIP..."
+              : `Télécharger pack (.zip + caption + metadata)`}
+          </button>
           <div className="grid grid-cols-2 gap-2">
             {pack.image_urls.map((url, idx) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={idx}
-                src={url}
-                alt={`slide ${idx + 1}`}
-                className="w-full aspect-[4/5] object-cover rounded-lg shadow-sm"
-              />
+              <div key={idx} className="relative group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={url}
+                  alt={`slide ${idx + 1}`}
+                  className="w-full aspect-[4/5] object-cover rounded-lg shadow-sm"
+                />
+                <button
+                  onClick={() => handleDownloadOne(idx)}
+                  className="absolute top-2 right-2 bg-white/90 hover:bg-white text-slate-700 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                  title={`Télécharger slide ${idx + 1}`}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                </button>
+                <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+                  {idx + 1}/{pack.image_urls.length}
+                </div>
+              </div>
             ))}
           </div>
         </div>
