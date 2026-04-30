@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ImageUploader } from "@/components/ImageUploader";
+import { ImportedShotsPanel } from "@/components/ImportedShotsPanel";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
 import { OccasionSelector, OCCASIONS } from "@/components/OccasionSelector";
 import { CanoniqueSelector } from "@/components/CanoniqueSelector";
@@ -279,6 +280,7 @@ export default function Home() {
 
               <section>
                 <h2 className="font-serif text-sm font-medium mb-1">2. Ton produit</h2>
+                <ImportedShotsPanel onImport={handleImageSelected} />
                 <div className="h-28 max-h-28 overflow-hidden rounded-xl">
                   <ImageUploader
                     selectedImage={selectedImage}

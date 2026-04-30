@@ -4,6 +4,8 @@ import { GenerationSettings, GeneratedImagePack } from './types';
 import Sidebar from './components/Sidebar';
 import { generateYpersoaPack } from './services/geminiService';
 import { SHOTS_CONFIG } from './constants';
+import { isSupabaseConfigured } from './lib/supabase';
+import { likeShot, listLikedShots, unlikeShot, LikedShot } from './lib/liked-shots';
 
 const App: React.FC = () => {
   const [hasApiKey, setHasApiKey] = useState<boolean | null>(null);
@@ -36,6 +38,46 @@ const App: React.FC = () => {
   const [currentPack, setCurrentPack] = useState<string[] | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  // Favoris ❤️ — synchronisés avec Supabase (table liked_shots + bucket liked-shots).
+  // likedUrls = Set<dataUrl> pour optimistic UI sur le pack courant.
+  const supabaseOn = isSupabaseConfigured();
+  const [likedUrls, setLikedUrls] = useState<Set<string>>(new Set());
+  const [likedShots, setLikedShots] = useState<LikedShot[]>([]);
+  const [showLikedPanel, setShowLikedPanel] = useState(false);
+  const [likingNow, setLikingNow] = useState(false);
+
+  useEffect(() => {
+    if (!supabaseOn) return;
+    listLikedShots().then(setLikedShots).catch(err => console.warn('Lecture favoris échouée :', err));
+  }, [supabaseOn]);
+
+  const handleLikeCurrent = async () => {
+    if (!supabaseOn || !currentPack || likingNow) return;
+    const url = currentPack[selectedImageIndex];
+    const label = shotLabels[selectedImageIndex] || 'Shot';
+    setLikingNow(true);
+    setLikedUrls(prev => new Set(prev).add(url));
+    try {
+      const created = await likeShot(url, settings, label);
+      setLikedShots(prev => [created, ...prev]);
+    } catch (err: any) {
+      console.error(err);
+      setLikedUrls(prev => { const n = new Set(prev); n.delete(url); return n; });
+      setError(`Like échoué : ${err.message || err}`);
+    } finally {
+      setLikingNow(false);
+    }
+  };
+
+  const handleUnlike = async (shot: LikedShot) => {
+    try {
+      await unlikeShot(shot);
+      setLikedShots(prev => prev.filter(s => s.id !== shot.id));
+      setLikedUrls(prev => { const n = new Set(prev); n.delete(shot.image_url); return n; });
+    } catch (err: any) {
+      setError(`Unlike échoué : ${err.message || err}`);
+    }
+  };
 
   useEffect(() => {
     // Standalone check : la clé est lue depuis VITE_GEMINI_API_KEY (apps/atelier-shooting/.env.local)
@@ -139,7 +181,21 @@ const App: React.FC = () => {
             <div className="w-10 h-10 bg-yp-olive rounded-full flex items-center justify-center text-white font-bold italic shadow-lg">Y</div>
             <h1 className="text-3xl font-bold tracking-tight text-yp-olive">YPERSOA <span className="text-sm font-light uppercase tracking-[0.3em] ml-2">Studio</span></h1>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
+             {supabaseOn && (
+               <button
+                 onClick={() => setShowLikedPanel(v => !v)}
+                 className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all flex items-center gap-2 ${
+                   showLikedPanel
+                     ? 'bg-rose-500 text-white border-rose-500'
+                     : 'bg-white text-rose-500 border-rose-200 hover:bg-rose-50'
+                 }`}
+                 title="Mes favoris (synchronisés vers Atelier Social)"
+               >
+                 <i className="fa-solid fa-heart"></i>
+                 Favoris {likedShots.length > 0 && <span className="bg-white/20 px-1.5 rounded-full text-[10px]">{likedShots.length}</span>}
+               </button>
+             )}
              <div className="bg-yp-sable/30 px-4 py-2 rounded-full text-xs font-semibold text-yp-olive border border-yp-sable/50">
                 Ultra-Réalisme HD (x4)
              </div>
@@ -167,13 +223,28 @@ const App: React.FC = () => {
                   <div className="absolute top-6 left-6 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-yp-olive shadow-sm border border-yp-sable">
                     {shotLabels[selectedImageIndex]}
                   </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <button 
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
+                    <button
                       onClick={() => handleDownload(currentPack[selectedImageIndex], `ypersoa-${shotLabels[selectedImageIndex].toLowerCase().replace(/[^a-z0-9]/g, '-')}.png`)}
                       className="bg-white text-yp-olive px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2 hover:scale-105 transition-transform"
                     >
-                      <i className="fa-solid fa-download"></i> Télécharger cette vue
+                      <i className="fa-solid fa-download"></i> Télécharger
                     </button>
+                    {supabaseOn && (
+                      <button
+                        onClick={handleLikeCurrent}
+                        disabled={likingNow || likedUrls.has(currentPack[selectedImageIndex])}
+                        className={`px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2 hover:scale-105 transition-transform ${
+                          likedUrls.has(currentPack[selectedImageIndex])
+                            ? 'bg-rose-500 text-white'
+                            : 'bg-white text-rose-500'
+                        }`}
+                        title="Liker pour générer du contenu RS dans Atelier Social"
+                      >
+                        <i className={`fa-${likedUrls.has(currentPack[selectedImageIndex]) ? 'solid' : 'regular'} fa-heart`}></i>
+                        {likingNow ? 'Sync...' : likedUrls.has(currentPack[selectedImageIndex]) ? 'Liké' : 'Liker pour RS'}
+                      </button>
+                    )}
                   </div>
                 </>
               ) : (
@@ -235,6 +306,49 @@ const App: React.FC = () => {
               )}
             </div>
           </div>
+
+          {/* Favoris ❤️ — synchronisés Supabase, consommés par Atelier Social */}
+          {supabaseOn && showLikedPanel && (
+            <div className="w-full max-w-5xl mt-16 pb-8">
+              <div className="flex justify-between items-end mb-6 border-b border-rose-200 pb-4">
+                <div>
+                  <h3 className="text-2xl font-bold text-rose-500 flex items-center gap-2">
+                    <i className="fa-solid fa-heart"></i> Mes favoris
+                  </h3>
+                  <p className="text-sm text-slate-400 mt-1">
+                    Synchronisés vers <span className="font-semibold">Atelier Social</span> pour générer captions et posts RS
+                  </p>
+                </div>
+                <span className="text-xs text-slate-400">{likedShots.length} shot{likedShots.length > 1 ? 's' : ''}</span>
+              </div>
+              {likedShots.length === 0 ? (
+                <div className="text-center py-12 text-slate-400 text-sm">
+                  Aucun favori pour l'instant. Likez vos shots préférés pour les retrouver dans Atelier Social.
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {likedShots.map(shot => (
+                    <div key={shot.id} className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-md group">
+                      <img src={shot.image_url} alt={shot.shot_label || 'shot'} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-end p-3">
+                        <div className="flex flex-col gap-1 w-full opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-[10px] text-white font-semibold uppercase tracking-widest truncate">
+                            {shot.shot_label}
+                          </span>
+                          <button
+                            onClick={() => handleUnlike(shot)}
+                            className="bg-white/90 text-rose-500 text-[11px] py-1 px-2 rounded-full hover:bg-white transition-all"
+                          >
+                            <i className="fa-solid fa-heart-crack mr-1"></i> Unlike
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* History */}
           {history.length > 0 && (
