@@ -268,6 +268,13 @@ const App: React.FC = () => {
                         {likingNow ? 'Sync...' : likedUrls.has(currentPack[selectedImageIndex]) ? 'Liké' : 'Liker pour RS'}
                       </button>
                     )}
+                    <button
+                      onClick={() => handleRemoveAt(selectedImageIndex)}
+                      className="bg-white text-slate-500 hover:bg-red-500 hover:text-white px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2 hover:scale-105 transition-all"
+                      title="Supprimer ce shot raté du pack"
+                    >
+                      <i className="fa-solid fa-xmark"></i> Supprimer
+                    </button>
                   </div>
                 </>
               ) : (
