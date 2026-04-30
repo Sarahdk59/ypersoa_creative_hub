@@ -8,6 +8,12 @@ import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Heart, FolderOpen, X } from "lucide-react";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
+import {
+  ActiveLookbookAmbiance,
+  buildVibePromptFromLookbook,
+  listActiveLookbookAmbiances,
+  LOOKBOOK_VIBE_PREFIX,
+} from "@/lib/active-ambiances";
 import { OccasionSelector, OCCASIONS } from "@/components/OccasionSelector";
 import { CanoniqueSelector } from "@/components/CanoniqueSelector";
 import { OverlayPanel } from "@/components/OverlayPanel";
@@ -72,6 +78,10 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customPrompt, setCustomPrompt] = useState("");
   const [selectedVibe, setSelectedVibe] = useState<string>(VIBES[0].id);
+  const [activeAmbiances, setActiveAmbiances] = useState<ActiveLookbookAmbiance[]>([]);
+  useEffect(() => {
+    listActiveLookbookAmbiances().then(setActiveAmbiances).catch(() => undefined);
+  }, []);
   const [selectedOccasion, setSelectedOccasion] = useState<string>(OCCASIONS[0].id);
   const [selectedPlatform, setSelectedPlatform] = useState<"instagram" | "pinterest">("instagram");
   const [selectedCanoniqueIds, setSelectedCanoniqueIds] = useState<string[]>([]);
@@ -196,8 +206,16 @@ export default function Home() {
     setBestSlideIndices(new Set());
     setSavedPackId(null);
 
-    const vibePrompt = VIBES.find((v) => v.id === selectedVibe)?.prompt || "";
-    const vibeLabel = VIBES.find((v) => v.id === selectedVibe)?.label || "";
+    let vibePrompt = VIBES.find((v) => v.id === selectedVibe)?.prompt || "";
+    let vibeLabel = VIBES.find((v) => v.id === selectedVibe)?.label || "";
+    if (selectedVibe.startsWith(LOOKBOOK_VIBE_PREFIX)) {
+      const lbId = selectedVibe.slice(LOOKBOOK_VIBE_PREFIX.length);
+      const lb = activeAmbiances.find((a) => a.id === lbId);
+      if (lb) {
+        vibePrompt = buildVibePromptFromLookbook(lb);
+        vibeLabel = `Lookbook : ${lb.titre}`;
+      }
+    }
     const occasionContext = OCCASIONS.find((o) => o.id === selectedOccasion)?.context || "";
     const mimeType = selectedFile.type;
     const base64Data = selectedImage.split(",")[1];
