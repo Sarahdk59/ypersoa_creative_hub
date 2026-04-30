@@ -41,8 +41,6 @@ export function HubSidebar() {
         label="Atelier Shooting"
         href="/shooting"
         active={isActive("/shooting")}
-        disabled
-        disabledTooltip="À venir, prochaine session"
       />
       <HubSidebarIcon
         icon={<BookImage size={20} strokeWidth={1.6} />}

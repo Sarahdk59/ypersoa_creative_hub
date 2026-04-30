@@ -1,39 +1,35 @@
 /**
- * Placeholder Atelier Shooting — l'app vit pour l'instant en standalone
- * (apps/atelier-shooting, Vite). L'intégration shell est prévue prochaine
- * session. Tooltip sur la sidebar : "À venir, prochaine session".
+ * Intégration Atelier Shooting — option A (iframe), même pattern que lookbook.
+ *
+ * Atelier-shooting est un projet Vite standalone (port 3001). Le shell le
+ * consomme via iframe. Le merge dans la stack Next.js sera fait en session
+ * dédiée plus tard si besoin de partage d'état.
+ *
+ * Pré-requis runtime : `pnpm --filter @ypersoa/atelier-shooting dev` doit
+ * tourner en parallèle sur le port 3001.
  */
-export default function ShootingPlaceholderPage() {
+const SHOOTING_URL = process.env.NEXT_PUBLIC_SHOOTING_URL || "http://localhost:3001";
+
+export default function ShootingPage() {
   return (
     <div
-      className="flex items-center justify-center"
-      style={{ minHeight: "calc(100vh - var(--topbar-height) - var(--content-padding) * 2)" }}
+      style={{
+        margin: "calc(var(--content-padding) * -1)",
+        height: "calc(100vh - var(--topbar-height))",
+        background: "var(--hub-bg)",
+      }}
     >
-      <div className="text-center" style={{ maxWidth: 480 }}>
-        <h1
-          style={{
-            fontFamily: "var(--font-editorial)",
-            fontSize: 32,
-            fontWeight: 500,
-            letterSpacing: "-0.01em",
-            color: "var(--hub-foreground)",
-            marginBottom: 12,
-          }}
-        >
-          Atelier Shooting
-        </h1>
-        <p
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: 14,
-            color: "var(--hub-foreground)",
-            opacity: 0.6,
-            lineHeight: 1.6,
-          }}
-        >
-          Disponible prochainement.
-        </p>
-      </div>
+      <iframe
+        src={SHOOTING_URL}
+        title="Atelier Shooting"
+        style={{
+          width: "100%",
+          height: "100%",
+          border: 0,
+          display: "block",
+        }}
+        loading="eager"
+      />
     </div>
   );
 }
