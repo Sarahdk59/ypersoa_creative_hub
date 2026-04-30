@@ -58,19 +58,33 @@ OUTPUT: pure JSON, no markdown fences, no preamble, no comments.`;
 interface RequestBody {
   brief: string;
   count?: number; // default 20
+  pinned_canoniques?: string[]; // si présent, le LLM DOIT utiliser ces canoniques en priorité
 }
 
 function jsonError(status: number, message: string, extra?: Record<string, unknown>) {
   return NextResponse.json({ ok: false, message, ...extra }, { status });
 }
 
-async function callLLMDecomposition(openai: OpenAI, brief: string, count: number) {
+async function callLLMDecomposition(
+  openai: OpenAI,
+  brief: string,
+  count: number,
+  pinnedCanoniques: string[] = []
+) {
+  const pinnedBlock = pinnedCanoniques.length > 0
+    ? `\n\n⚠️ CANONIQUES ÉPINGLÉS PAR SARAH — tu DOIS utiliser ces canoniques (et uniquement ceux-ci) sur tous les prompts "canonique_humain". Distribue-les équitablement, ne mets pas le même 2 fois de suite. IDs imposés : ${pinnedCanoniques.join(", ")}.\n`
+    : "";
+
+  const canoniquesContext = pinnedCanoniques.length > 0
+    ? buildCanoniquesContextForLLM(pinnedCanoniques)
+    : buildCanoniquesContextForLLM();
+
   const userPrompt = `Brief poétique de Sarah : "${brief}"
 
-Décompose ce brief en ${count} prompts EN structurés pour générer un lookbook saisonnier Ypersoa.
+Décompose ce brief en ${count} prompts EN structurés pour générer un lookbook saisonnier Ypersoa.${pinnedBlock}
 
 CANONIQUES DISPONIBLES (use exact MAN-XXX id):
-${buildCanoniquesContextForLLM()}
+${canoniquesContext}
 
 Output strict JSON only.`;
 
@@ -183,6 +197,9 @@ export async function POST(req: NextRequest) {
       return jsonError(400, "Brief vide ou trop court (min 3 caractères).");
     }
     const count = Math.min(Math.max(body.count ?? 20, 4), 20);
+    const pinnedCanoniques = (body.pinned_canoniques ?? []).filter(
+      (id) => typeof id === "string" && id.length > 0
+    );
 
     const openaiKey = process.env.OPENAI_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
@@ -197,7 +214,12 @@ export async function POST(req: NextRequest) {
     const supabase = createClient(supabaseUrl, supabaseAnon);
 
     // 1. Décomposition LLM
-    const { parsed, model } = await callLLMDecomposition(openai, body.brief.trim(), count);
+    const { parsed, model } = await callLLMDecomposition(
+      openai,
+      body.brief.trim(),
+      count,
+      pinnedCanoniques
+    );
     const prompts = parsed.prompts.slice(0, count);
 
     // 2. Insert lookbook (statut = brouillon, slug unique check)

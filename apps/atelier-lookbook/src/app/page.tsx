@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, Heart, Loader2, AlertCircle, FolderOpen, Download, Package, X } from "lucide-react";
+import { Sparkles, Heart, Loader2, AlertCircle, FolderOpen, Download, Package, X, FolderOutput } from "lucide-react";
 import { AmbianceExtraite, Lookbook } from "@/lib/types";
-import { toggleLookbookFavorite, listRecentLookbooks } from "@/lib/lookbooks-client";
+import { setLookbookActiveAmbiance, listRecentLookbooks, getLookbookFull, isAmbianceActive, extendLookbookAmbiance } from "@/lib/lookbooks-client";
 import { setImageValide, deleteLookbookImage } from "@/lib/images-client";
 import { downloadSingleImage, downloadLookbookAsZip, buildImageFilename } from "@/lib/download";
+import { CastingPicker, CastingMode } from "@/components/CastingPicker";
 
 interface ResponseImage {
   image_id?: string;
@@ -47,8 +48,14 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<GenerateResponse | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [ambianceArchivageDate, setAmbianceArchivageDate] = useState<string | null>(null);
   const [recentLookbooks, setRecentLookbooks] = useState<Lookbook[]>([]);
   const [showLibrary, setShowLibrary] = useState(false);
+  const [castingMode, setCastingMode] = useState<CastingMode>("auto");
+  const [pinnedCanoniques, setPinnedCanoniques] = useState<string[]>([]);
+  const [selectedImageIds, setSelectedImageIds] = useState<Set<string>>(new Set());
+  const [reopeningId, setReopeningId] = useState<string | null>(null);
+  const [zippingId, setZippingId] = useState<string | null>(null);
 
   useEffect(() => {
     listRecentLookbooks(12).then(setRecentLookbooks).catch(() => undefined);
@@ -60,11 +67,16 @@ export default function Home() {
     setError(null);
     setResult(null);
     setIsFavorite(false);
+    setSelectedImageIds(new Set());
     try {
       const res = await fetch("/api/generate-lookbook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ brief: brief.trim(), count }),
+        body: JSON.stringify({
+          brief: brief.trim(),
+          count,
+          pinned_canoniques: castingMode === "pin" ? pinnedCanoniques : [],
+        }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.message || "Génération échouée");
@@ -76,11 +88,112 @@ export default function Home() {
     }
   };
 
+  const toggleImageSelected = (imageId: string | undefined) => {
+    if (!imageId) return;
+    setSelectedImageIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(imageId)) next.delete(imageId);
+      else next.add(imageId);
+      return next;
+    });
+  };
+
+  const handleReopenLookbook = async (id: string) => {
+    setReopeningId(id);
+    setError(null);
+    try {
+      const { lookbook, images } = await getLookbookFull(id);
+      const reconstructed: GenerateResponse = {
+        ok: true,
+        lookbook_id: lookbook.id,
+        titre: lookbook.titre,
+        slug: lookbook.slug,
+        tags: lookbook.tags,
+        ambiance_extraite: lookbook.ambiance_extraite as AmbianceExtraite,
+        canoniques_inclus: lookbook.canoniques_inclus,
+        images: images.map((img) => ({
+          image_id: img.id,
+          storage_path: img.image_storage_path || undefined,
+          position: img.position,
+          famille: img.famille,
+          url: img.image_url,
+          canonique_injecte: img.canonique_injecte,
+          prompt_en: img.prompt_en,
+          valide: img.valide,
+        })),
+        stats: {
+          requested: images.length,
+          succeeded: images.filter((i) => i.image_url).length,
+          failed: images.filter((i) => !i.image_url).length,
+        },
+        llm_model_used: lookbook.llm_model_used || "—",
+        duration_ms: 0,
+      };
+      setBrief(lookbook.brief_original);
+      setIsFavorite(isAmbianceActive(lookbook));
+      setAmbianceArchivageDate(
+        isAmbianceActive(lookbook) ? lookbook.date_archivage : null
+      );
+      setResult(reconstructed);
+      setSelectedImageIds(new Set());
+      setShowLibrary(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setReopeningId(null);
+    }
+  };
+
+  const handleDownloadFromLibrary = async (id: string) => {
+    setZippingId(id);
+    setError(null);
+    try {
+      const { lookbook, images } = await getLookbookFull(id);
+      await downloadLookbookAsZip({
+        titre: lookbook.titre,
+        slug: lookbook.slug,
+        brief: lookbook.brief_original,
+        tags: lookbook.tags,
+        ambiance: lookbook.ambiance_extraite as AmbianceExtraite | null,
+        canoniquesInclus: lookbook.canoniques_inclus,
+        llmModelUsed: lookbook.llm_model_used || "—",
+        images: images.map((img) => ({
+          position: img.position,
+          famille: img.famille,
+          url: img.image_url,
+          canonique_injecte: img.canonique_injecte,
+          prompt_en: img.prompt_en,
+          valide: img.valide,
+        })),
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setZippingId(null);
+    }
+  };
+
   const handleToggleFav = async () => {
     if (!result) return;
     try {
-      await toggleLookbookFavorite(result.lookbook_id, isFavorite);
-      setIsFavorite(!isFavorite);
+      const next = await setLookbookActiveAmbiance(result.lookbook_id, !isFavorite);
+      setIsFavorite(next.isActive);
+      setAmbianceArchivageDate(next.dateArchivage);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const formatActiveUntil = (iso: string | null): string => {
+    if (!iso) return "";
+    return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  };
+
+  const handleExtendAmbiance = async () => {
+    if (!result || !isFavorite) return;
+    try {
+      const next = await extendLookbookAmbiance(result.lookbook_id);
+      setAmbianceArchivageDate(next.dateArchivage);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     }
@@ -140,6 +253,28 @@ export default function Home() {
         canoniquesInclus: result.canoniques_inclus,
         llmModelUsed: result.llm_model_used,
         images: result.images,
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const handleDownloadSelection = async () => {
+    if (!result || selectedImageIds.size === 0) return;
+    setDownloading(true);
+    try {
+      const subset = result.images.filter((i) => i.image_id && selectedImageIds.has(i.image_id));
+      await downloadLookbookAsZip({
+        titre: `${result.titre} (sélection)`,
+        slug: `${result.slug}-selection-${subset.length}`,
+        brief,
+        tags: result.tags,
+        ambiance: result.ambiance_extraite,
+        canoniquesInclus: result.canoniques_inclus,
+        llmModelUsed: result.llm_model_used,
+        images: subset,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -211,6 +346,13 @@ export default function Home() {
               </div>
             </div>
 
+            <CastingPicker
+              mode={castingMode}
+              pinnedIds={pinnedCanoniques}
+              onModeChange={setCastingMode}
+              onPinnedChange={setPinnedCanoniques}
+            />
+
             {error && (
               <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
@@ -279,13 +421,24 @@ export default function Home() {
                   }`}
                   title={
                     isFavorite
-                      ? "Liké — ce lookbook apparaît comme décor dans Atelier Shooting"
-                      : "Liker pour exposer ce lookbook comme décor dans Atelier Shooting"
+                      ? "Cliquer pour désactiver — ce lookbook est ambiance de référence dans Shooting & Social"
+                      : "Activer cette ambiance comme référence pendant 7 jours dans Shooting & Social"
                   }
                 >
                   <Heart className={`w-4 h-4 ${isFavorite ? "fill-white" : ""}`} />
-                  {isFavorite ? "Liké (décor exposé)" : "Liker comme décor"}
+                  {isFavorite
+                    ? `Active${ambianceArchivageDate ? ` jusqu'au ${formatActiveUntil(ambianceArchivageDate)}` : ""}`
+                    : "Activer ambiance (7j)"}
                 </button>
+                {isFavorite && (
+                  <button
+                    onClick={handleExtendAmbiance}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-rose-200 bg-white text-rose-500 hover:bg-rose-50"
+                    title="Prolonger l'activation de 7 jours supplémentaires"
+                  >
+                    +7j
+                  </button>
+                )}
                 <button
                   onClick={handleDownloadZip}
                   disabled={downloading}
@@ -338,18 +491,52 @@ export default function Home() {
             )}
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {result.images.map((img) => (
+              {result.images.map((img) => {
+                const isSelected = img.image_id ? selectedImageIds.has(img.image_id) : false;
+                return (
                 <div
                   key={img.image_id || img.position}
                   className={`group relative aspect-[4/5] bg-white rounded-xl overflow-hidden border-2 shadow-sm ${
-                    img.valide ? "border-rose-500" : "border-brand-muted/10"
+                    isSelected
+                      ? "border-brand-rose ring-2 ring-brand-rose/30"
+                      : img.valide
+                      ? "border-rose-500"
+                      : "border-brand-muted/10"
                   }`}
                 >
                   {img.url && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={img.url} alt={`Slide ${img.position}`} className="w-full h-full object-cover" />
                   )}
-                  <div className="absolute top-2 left-2 flex flex-col gap-1">
+                  {/* Checkbox sélection (toujours visible) */}
+                  {img.image_id && (
+                    <label
+                      className="absolute top-2 left-2 z-10 flex items-center justify-center w-6 h-6 bg-white/95 rounded-full shadow cursor-pointer hover:scale-110 transition-transform"
+                      title={isSelected ? "Désélectionner" : "Sélectionner pour télécharger"}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleImageSelected(img.image_id)}
+                        className="sr-only"
+                      />
+                      <span
+                        className={`block w-3.5 h-3.5 rounded-sm border-2 ${
+                          isSelected
+                            ? "bg-brand-rose border-brand-rose"
+                            : "border-brand-muted/40"
+                        }`}
+                      >
+                        {isSelected && (
+                          <svg viewBox="0 0 12 12" className="w-full h-full text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M2.5 6.5L5 9L9.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </span>
+                    </label>
+                  )}
+                  <div className="absolute top-2 left-10 flex flex-col gap-1">
                     <div className="bg-white/90 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase text-brand-rose">
                       {FAMILLE_LABELS[img.famille] || img.famille}
                     </div>
@@ -397,8 +584,31 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
+
+            {selectedImageIds.size > 0 && (
+              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 bg-brand-text text-white rounded-full shadow-2xl px-5 py-3 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4">
+                <span className="text-sm font-semibold">
+                  {selectedImageIds.size} image{selectedImageIds.size > 1 ? "s" : ""} sélectionnée{selectedImageIds.size > 1 ? "s" : ""}
+                </span>
+                <button
+                  onClick={() => setSelectedImageIds(new Set())}
+                  className="text-xs text-white/70 hover:text-white"
+                >
+                  Tout désélectionner
+                </button>
+                <button
+                  onClick={handleDownloadSelection}
+                  disabled={downloading}
+                  className="flex items-center gap-1.5 bg-brand-rose hover:bg-brand-rose/90 px-4 py-2 rounded-full text-xs font-bold disabled:opacity-50"
+                >
+                  <Package className="w-3.5 h-3.5" />
+                  {downloading ? "Préparation..." : "Télécharger sélection (.zip)"}
+                </button>
+              </div>
+            )}
 
             <button
               onClick={() => {
@@ -413,33 +623,63 @@ export default function Home() {
           </section>
         )}
 
-        {showLibrary && recentLookbooks.length > 0 && (
+        {showLibrary && (
           <aside className="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl border-l border-brand-muted/10 p-5 overflow-y-auto z-20">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-serif text-lg font-semibold">Bibliothèque</h3>
               <button onClick={() => setShowLibrary(false)} className="text-brand-muted text-sm">Fermer</button>
             </div>
-            <div className="space-y-3">
-              {recentLookbooks.map((lb) => (
-                <div key={lb.id} className="p-3 rounded-lg border border-brand-muted/10 bg-brand-bg/50">
-                  <div className="flex items-start justify-between gap-2">
-                    <h4 className="font-semibold text-sm text-brand-text">{lb.titre}</h4>
-                    {lb.is_favorite && <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 shrink-0" />}
+            {recentLookbooks.length === 0 ? (
+              <p className="text-xs text-brand-muted italic">Aucun lookbook encore. Génère ton premier brief.</p>
+            ) : (
+              <div className="space-y-3">
+                {recentLookbooks.map((lb) => (
+                  <div key={lb.id} className="p-3 rounded-lg border border-brand-muted/10 bg-brand-bg/50">
+                    <div className="flex items-start justify-between gap-2">
+                      <h4 className="font-semibold text-sm text-brand-text">{lb.titre}</h4>
+                      {lb.is_favorite && <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 shrink-0" />}
+                    </div>
+                    <p className="text-[10px] text-brand-muted mt-1 italic line-clamp-2">« {lb.brief_original} »</p>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {lb.tags.slice(0, 3).map((t) => (
+                        <span key={t} className="text-[9px] uppercase bg-brand-sage/10 text-brand-sage px-1.5 py-0.5 rounded">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-[9px] text-brand-muted mt-1">
+                      {new Date(lb.created_at).toLocaleString("fr-FR")} · {lb.statut}
+                    </p>
+                    <div className="flex items-center gap-2 mt-3">
+                      <button
+                        onClick={() => handleReopenLookbook(lb.id)}
+                        disabled={reopeningId === lb.id}
+                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-bold bg-white border border-brand-rose/30 text-brand-rose hover:bg-brand-rose/5 disabled:opacity-50"
+                      >
+                        {reopeningId === lb.id ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <FolderOutput className="w-3 h-3" />
+                        )}
+                        Rouvrir
+                      </button>
+                      <button
+                        onClick={() => handleDownloadFromLibrary(lb.id)}
+                        disabled={zippingId === lb.id}
+                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-bold bg-brand-rose text-white hover:bg-brand-rose/90 disabled:opacity-50"
+                      >
+                        {zippingId === lb.id ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Package className="w-3 h-3" />
+                        )}
+                        .zip
+                      </button>
+                    </div>
                   </div>
-                  <p className="text-[10px] text-brand-muted mt-1 italic line-clamp-2">« {lb.brief_original} »</p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {lb.tags.slice(0, 3).map((t) => (
-                      <span key={t} className="text-[9px] uppercase bg-brand-sage/10 text-brand-sage px-1.5 py-0.5 rounded">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-[9px] text-brand-muted mt-1">
-                    {new Date(lb.created_at).toLocaleString("fr-FR")} · {lb.statut}
-                  </p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </aside>
         )}
       </main>
