@@ -5,6 +5,7 @@ import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SH
 import { DecorStyle } from "../types";
 import { fetchCanoniqueAsBase64, getCanoniqueById, Canonique } from "../lib/canoniques";
 import { getGarmentById } from "../lib/hub-data";
+import { buildDecorFromLookbookAmbiance, buildFullPackFromLookbook } from "../lib/active-ambiances";
 
 /**
  * Convertit l'id Hub d'une couleur fil ('fil_framboise') en label human-readable ('Framboise')
@@ -69,7 +70,15 @@ async function loadCanoniqueParts(canoniqueIds: string[]): Promise<Array<{ inlin
 type FullPackShot = { label: string; prompt: string };
 type FullPackMap = Record<string, FullPackShot>;
 
-function getFullPackPrompts(style: string): FullPackMap {
+function getFullPackPrompts(style: string, settings?: GenerationSettings): FullPackMap {
+  if (style === 'lookbook' && settings?.customLookbookAmbiance) {
+    // FULL_PACK custom : GHOST/CROP/MACRO repris du PARISIEN (fond blanc neutre),
+    // LIFESTYLE/DUO/PORTRAIT régénérés depuis l'ambiance_extraite du lookbook.
+    return buildFullPackFromLookbook(
+      settings.customLookbookAmbiance,
+      FULL_PACK_PARISIEN as FullPackMap
+    ) as FullPackMap;
+  }
   if (style === 'minimalist') return FULL_PACK_MINIMALIST as FullPackMap;
   if (style === 'loft')       return FULL_PACK_LOFT as FullPackMap;
   if (style === 'serre')      return FULL_PACK_SERRE as FullPackMap;
@@ -82,8 +91,17 @@ function getFullPackPrompts(style: string): FullPackMap {
 /**
  * Récupère les descripteurs de décor (short pour PROMPT_BASE, full pour LIFESTYLE)
  * selon le DecorStyle sélectionné. Fallback `parisien` si valeur inattendue.
+ *
+ * Si decorStyle === 'lookbook' et settings.customLookbookAmbiance fourni, on
+ * reconstitue le decor depuis l'ambiance_extraite du lookbook ❤️ actif.
  */
-function getDecorDescription(style: DecorStyle | string): { short: string; full: string } {
+function getDecorDescription(
+  style: DecorStyle | string,
+  settings?: GenerationSettings
+): { short: string; full: string } {
+  if (style === 'lookbook' && settings?.customLookbookAmbiance) {
+    return buildDecorFromLookbookAmbiance(settings.customLookbookAmbiance);
+  }
   return DECOR_DESCRIPTIONS[style as DecorStyle] || DECOR_DESCRIPTIONS.parisien;
 }
 
@@ -118,7 +136,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   let label = "";
 
   if (settings.mode === 'full') {
-    const packPrompts = getFullPackPrompts(settings.decorStyle);
+    const packPrompts = getFullPackPrompts(settings.decorStyle, settings);
     const shot = packPrompts[shotType as keyof typeof packPrompts];
     label = shot.label;
     const emplacement = buildEmplacement(settings.product, settings.size);
@@ -204,7 +222,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       // [DECOR] : injecté en mode 'mannequin' selon settings.decorStyle.
       // En mode 'family' le décor reste imposé par le couple choisi (FAMILY_DESCRIPTION
       // ne contient pas [DECOR]) — pas d'injection ici.
-      const decor = getDecorDescription(settings.decorStyle);
+      const decor = getDecorDescription(settings.decorStyle, settings);
       promptText = PROMPT_BASE
         .replace("[PRODUCT]", productDescription)
         .replace("[MATERIAL]", material)
@@ -381,7 +399,7 @@ export async function generateYpersoaPack(settings: GenerationSettings): Promise
 
   let shotKeys: string[] = [];
   if (settings.mode === 'full') {
-    const packPrompts = getFullPackPrompts(settings.decorStyle);
+    const packPrompts = getFullPackPrompts(settings.decorStyle, settings);
     shotKeys = Object.keys(packPrompts);
   } else {
     shotKeys = Object.keys(SHOTS_CONFIG);

@@ -32,7 +32,29 @@ export interface ModelDiversity {
 // 7 décors disponibles. Sélecteur visible en mode 'mannequin' et 'full'.
 // En mode 'family' le décor est imposé par le couple choisi (DUO_*/TRIO_* du référentiel).
 // En mode 'packshot' pas de décor (fond blanc studio).
-export type DecorStyle = 'minimalist' | 'parisien' | 'loft' | 'serre' | 'aube' | 'sauvage' | 'sepia';
+// 'lookbook' = ambiance custom issue d'un lookbook ❤️ actif (cf. customLookbookId).
+export type DecorStyle = 'minimalist' | 'parisien' | 'loft' | 'serre' | 'aube' | 'sauvage' | 'sepia' | 'lookbook';
+
+// Métadonnées d'un lookbook activé comme ambiance de référence (apps/atelier-lookbook).
+// Utilisé pour reconstituer un decor.short/full depuis ambiance_extraite (palette, lieux, lumière, grain, postures, références).
+export interface LookbookAmbianceExtraite {
+  palette: string[];
+  lieux: string[];
+  props: string[];
+  lumiere: string;
+  grain: string;
+  postures: string;
+  references_implicites: string[];
+}
+
+export interface ActiveLookbookAmbiance {
+  id: string;
+  titre: string;
+  slug: string;
+  date_archivage: string | null;
+  ambiance_extraite: LookbookAmbianceExtraite | null;
+  cover_image_url: string | null;
+}
 
 // Hook 1 (29-30/04/2026) : casting peut être 'diversity' (random visages) ou 'canonique' (mannequins persistants Hub).
 // Quand castingMode = 'canonique', canoniqueIds[] contient les IDs (ex: ['MAN-P02']) à utiliser
@@ -50,6 +72,9 @@ export interface GenerationSettings {
   threadColor: string;
   garmentColor: string;
   decorStyle: DecorStyle;
+  // Si decorStyle === 'lookbook' on stocke l'ambiance résolue côté client (pas
+  // de re-fetch dans le service Gemini). Sinon undefined.
+  customLookbookAmbiance?: ActiveLookbookAmbiance;
   // Hook 1 — Casting Hub
   castingMode: CastingMode;
   canoniqueIds: string[];

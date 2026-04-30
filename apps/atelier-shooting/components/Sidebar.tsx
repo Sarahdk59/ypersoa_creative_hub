@@ -1,9 +1,10 @@
 
-import React, { useRef, useEffect } from 'react';
-import { GenerationSettings, ProductType } from '../types';
+import React, { useRef, useEffect, useState } from 'react';
+import { GenerationSettings, ProductType, ActiveLookbookAmbiance } from '../types';
 import { PRODUCTS_HUB, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISABILITIES, THREAD_COLORS, DECOR_STYLES } from '../constants';
 import { getCanoniquesSorted, getCanoniqueById } from '../lib/canoniques';
 import { getColorsForProduct, isFilGarmentIncompatible } from '../lib/hub-data';
+import { listActiveLookbookAmbiances } from '../lib/active-ambiances';
 
 interface SidebarProps {
   settings: GenerationSettings;
@@ -17,6 +18,13 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
 
   // Couleurs vêtement réellement disponibles pour le produit sélectionné (filtrage Hub)
   const availableGarmentColors = getColorsForProduct(settings.product);
+
+  // Lookbooks ❤️ actifs comme ambiances de référence (cf. atelier-lookbook).
+  // Refetch à chaque ouverture de l'app — pas besoin de live update.
+  const [activeAmbiances, setActiveAmbiances] = useState<ActiveLookbookAmbiance[]>([]);
+  useEffect(() => {
+    listActiveLookbookAmbiances().then(setActiveAmbiances).catch(() => undefined);
+  }, []);
 
   // Si le produit change et la couleur sélectionnée n'est plus dispo, reset silencieux à la 1ère couleur dispo
   useEffect(() => {
@@ -466,7 +474,7 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
               {DECOR_STYLES.map(d => (
                 <button
                   key={d.value}
-                  onClick={() => setSettings(prev => ({ ...prev, decorStyle: d.value }))}
+                  onClick={() => setSettings(prev => ({ ...prev, decorStyle: d.value, customLookbookAmbiance: undefined }))}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs border transition-all text-left ${
                     settings.decorStyle === d.value
                       ? 'bg-yp-olive text-white border-yp-olive shadow-md'
@@ -483,6 +491,59 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                 </button>
               ))}
             </div>
+
+            {/* Lookbooks ❤️ actifs comme ambiance de référence (apps/atelier-lookbook) */}
+            {activeAmbiances.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-yp-sable/40">
+                <div className="flex items-center gap-2 mb-2">
+                  <i className="fa-solid fa-heart text-rose-500 text-xs"></i>
+                  <span className="text-[10px] font-bold text-yp-olive uppercase tracking-wider">
+                    Mes ambiances de référence
+                  </span>
+                  <span className="text-[9px] text-slate-400 italic">7j</span>
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {activeAmbiances.map(lb => {
+                    const isSelected = settings.decorStyle === 'lookbook' && settings.customLookbookAmbiance?.id === lb.id;
+                    const expires = lb.date_archivage
+                      ? new Date(lb.date_archivage).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+                      : null;
+                    return (
+                      <button
+                        key={lb.id}
+                        onClick={() => setSettings(prev => ({ ...prev, decorStyle: 'lookbook', customLookbookAmbiance: lb }))}
+                        className={`flex items-center gap-3 px-2 py-2 rounded-lg text-xs border transition-all text-left ${
+                          isSelected
+                            ? 'bg-yp-olive text-white border-yp-olive shadow-md'
+                            : 'bg-white text-slate-600 border-slate-200 hover:border-yp-sable'
+                        }`}
+                        title={`Active jusqu'au ${expires || '—'}`}
+                      >
+                        {lb.cover_image_url ? (
+                          <img
+                            src={lb.cover_image_url}
+                            alt={lb.titre}
+                            className="w-10 h-12 rounded object-cover flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-10 h-12 rounded bg-yp-sable/30 flex items-center justify-center flex-shrink-0">
+                            <i className="fa-solid fa-image text-slate-400"></i>
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold truncate">{lb.titre}</div>
+                          <div className={`text-[10px] truncate ${
+                            isSelected ? 'text-white/70' : 'text-slate-400'
+                          }`}>
+                            Actif{expires ? ` jusqu'au ${expires}` : ''}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </section>
         )}
       </div>
