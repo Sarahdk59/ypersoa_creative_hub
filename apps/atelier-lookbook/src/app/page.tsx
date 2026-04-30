@@ -287,19 +287,19 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 sticky top-0 z-10">
         <div className="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-brand-rose rounded-full flex items-center justify-center text-white">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div>
-              <h1 className="font-serif text-lg font-semibold tracking-tight text-brand-text leading-none">
-                Ypersoa
-              </h1>
-              <p className="text-[10px] text-brand-sage uppercase tracking-widest mt-0.5 font-bold">
-                Atelier Lookbook
-              </p>
-            </div>
-          </div>
+          <h1
+            style={{
+              fontFamily: "var(--font-editorial)",
+              fontSize: 24,
+              fontWeight: 500,
+              letterSpacing: "-0.01em",
+              color: "#1E2D4A",
+              lineHeight: 1,
+              margin: 0,
+            }}
+          >
+            Atelier Lookbook
+          </h1>
           <button
             onClick={() => setShowLibrary((v) => !v)}
             className="flex items-center gap-1.5 text-xs font-semibold text-brand-rose hover:bg-brand-rose/10 px-3 py-1.5 rounded-full border border-brand-rose/20"

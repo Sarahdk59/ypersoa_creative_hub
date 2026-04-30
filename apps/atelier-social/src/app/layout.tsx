@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { HubShell } from "@/components/HubShell";
 
 export const metadata: Metadata = {
-  title: "Ypersoa - Atelier Social Hub",
-  description: "Génération de contenus IG/Pinterest brand-safe pour Ypersoa",
+  title: "Ypersoa Hub",
+  description: "Studio textile premium — chrome unifiée pour les ateliers Ypersoa",
 };
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        <HubShell>{children}</HubShell>
+      </body>
     </html>
   );
 }
