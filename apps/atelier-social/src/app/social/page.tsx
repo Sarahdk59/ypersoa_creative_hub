@@ -324,19 +324,19 @@ export default function Home() {
     <div className="h-screen flex flex-col bg-brand-bg text-brand-text font-sans selection:bg-brand-rose/20 selection:text-brand-rose overflow-hidden">
       <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 shrink-0">
         <div className="max-w-[1920px] mx-auto px-6 h-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-brand-rose rounded-full flex items-center justify-center text-white">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div>
-              <h1 className="font-serif text-lg font-semibold tracking-tight text-brand-text leading-none">
-                Ypersoa
-              </h1>
-              <p className="text-[10px] text-brand-sage uppercase tracking-widest mt-0.5 font-bold">
-                Atelier Social — Hub
-              </p>
-            </div>
-          </div>
+          <h1
+            style={{
+              fontFamily: "var(--font-editorial)",
+              fontSize: 24,
+              fontWeight: 500,
+              letterSpacing: "-0.01em",
+              color: "var(--hub-foreground)",
+              lineHeight: 1,
+              margin: 0,
+            }}
+          >
+            Atelier Social
+          </h1>
 
           <div className="flex items-center gap-3">
             {(isGeneratingImage || isGeneratingText) && (
