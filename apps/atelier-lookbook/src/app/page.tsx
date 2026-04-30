@@ -1,9 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, Heart, Loader2, AlertCircle, FolderOpen } from "lucide-react";
+import { Sparkles, Heart, Loader2, AlertCircle, FolderOpen, Download, Package, X } from "lucide-react";
 import { AmbianceExtraite, Lookbook } from "@/lib/types";
 import { toggleLookbookFavorite, listRecentLookbooks } from "@/lib/lookbooks-client";
+import { setImageValide, deleteLookbookImage } from "@/lib/images-client";
+import { downloadSingleImage, downloadLookbookAsZip, buildImageFilename } from "@/lib/download";
+
+interface ResponseImage {
+  image_id?: string;
+  storage_path?: string;
+  position: number;
+  famille: string;
+  url: string | null;
+  canonique_injecte: string | null;
+  prompt_en: string;
+  valide: boolean;
+}
 
 interface GenerateResponse {
   ok: true;
@@ -13,13 +26,7 @@ interface GenerateResponse {
   tags: string[];
   ambiance_extraite: AmbianceExtraite;
   canoniques_inclus: string[];
-  images: Array<{
-    position: number;
-    famille: string;
-    url: string | null;
-    canonique_injecte: string | null;
-    prompt_en: string;
-  }>;
+  images: ResponseImage[];
   stats: { requested: number; succeeded: number; failed: number };
   llm_model_used: string;
   duration_ms: number;
@@ -76,6 +83,68 @@ export default function Home() {
       setIsFavorite(!isFavorite);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleToggleImageValide = async (img: ResponseImage) => {
+    if (!result || !img.image_id) return;
+    const newVal = !img.valide;
+    try {
+      await setImageValide(img.image_id, newVal);
+      setResult({
+        ...result,
+        images: result.images.map((i) =>
+          i.image_id === img.image_id ? { ...i, valide: newVal } : i
+        ),
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleDeleteImage = async (img: ResponseImage) => {
+    if (!result || !img.image_id) return;
+    if (!confirm(`Supprimer la slide #${img.position} ? Cette action est irréversible.`)) return;
+    try {
+      await deleteLookbookImage(img.image_id, img.storage_path || null);
+      setResult({
+        ...result,
+        images: result.images.filter((i) => i.image_id !== img.image_id),
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleDownloadOne = async (img: ResponseImage) => {
+    if (!result || !img.url) return;
+    const fn = buildImageFilename(result.slug, img.position, result.images.length, img.famille);
+    try {
+      await downloadSingleImage(img.url, fn);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const [downloading, setDownloading] = useState(false);
+  const handleDownloadZip = async () => {
+    if (!result) return;
+    setDownloading(true);
+    try {
+      await downloadLookbookAsZip({
+        titre: result.titre,
+        slug: result.slug,
+        brief,
+        tags: result.tags,
+        ambiance: result.ambiance_extraite,
+        canoniquesInclus: result.canoniques_inclus,
+        llmModelUsed: result.llm_model_used,
+        images: result.images,
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -200,22 +269,33 @@ export default function Home() {
                 </p>
               </div>
 
-              <button
-                onClick={handleToggleFav}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
-                  isFavorite
-                    ? "bg-rose-500 text-white border-rose-500"
-                    : "bg-white text-rose-500 border-rose-200 hover:bg-rose-50"
-                }`}
-                title={
-                  isFavorite
-                    ? "Liké — ce lookbook apparaît comme décor dans Atelier Shooting"
-                    : "Liker pour exposer ce lookbook comme décor dans Atelier Shooting"
-                }
-              >
-                <Heart className={`w-4 h-4 ${isFavorite ? "fill-white" : ""}`} />
-                {isFavorite ? "Liké (décor exposé)" : "Liker comme décor"}
-              </button>
+              <div className="flex flex-col gap-2 items-end">
+                <button
+                  onClick={handleToggleFav}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+                    isFavorite
+                      ? "bg-rose-500 text-white border-rose-500"
+                      : "bg-white text-rose-500 border-rose-200 hover:bg-rose-50"
+                  }`}
+                  title={
+                    isFavorite
+                      ? "Liké — ce lookbook apparaît comme décor dans Atelier Shooting"
+                      : "Liker pour exposer ce lookbook comme décor dans Atelier Shooting"
+                  }
+                >
+                  <Heart className={`w-4 h-4 ${isFavorite ? "fill-white" : ""}`} />
+                  {isFavorite ? "Liké (décor exposé)" : "Liker comme décor"}
+                </button>
+                <button
+                  onClick={handleDownloadZip}
+                  disabled={downloading}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-brand-rose/20 bg-white text-brand-rose hover:bg-brand-rose/5 disabled:opacity-50"
+                  title="Télécharger le lookbook complet (.zip avec images, ambiance, lookbook.html)"
+                >
+                  <Package className="w-4 h-4" />
+                  {downloading ? "Préparation..." : "Télécharger lookbook (.zip)"}
+                </button>
+              </div>
             </div>
 
             {result.ambiance_extraite && (
@@ -260,15 +340,24 @@ export default function Home() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {result.images.map((img) => (
                 <div
-                  key={img.position}
-                  className="group relative aspect-[4/5] bg-white rounded-xl overflow-hidden border border-brand-muted/10 shadow-sm"
+                  key={img.image_id || img.position}
+                  className={`group relative aspect-[4/5] bg-white rounded-xl overflow-hidden border-2 shadow-sm ${
+                    img.valide ? "border-rose-500" : "border-brand-muted/10"
+                  }`}
                 >
                   {img.url && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={img.url} alt={`Slide ${img.position}`} className="w-full h-full object-cover" />
                   )}
-                  <div className="absolute top-2 left-2 bg-white/90 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase text-brand-rose">
-                    {FAMILLE_LABELS[img.famille] || img.famille}
+                  <div className="absolute top-2 left-2 flex flex-col gap-1">
+                    <div className="bg-white/90 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase text-brand-rose">
+                      {FAMILLE_LABELS[img.famille] || img.famille}
+                    </div>
+                    {img.valide && (
+                      <div className="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[9px] font-bold uppercase flex items-center gap-1">
+                        <Heart className="w-2.5 h-2.5 fill-white" /> Validée
+                      </div>
+                    )}
                   </div>
                   {img.canonique_injecte && (
                     <div className="absolute top-2 right-2 bg-brand-sage/90 text-white px-2 py-0.5 rounded-full text-[9px] font-bold">
@@ -277,6 +366,35 @@ export default function Home() {
                   )}
                   <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
                     #{img.position}
+                  </div>
+
+                  {/* Actions au survol : ❤️ valider, ⬇ télécharger, ✕ supprimer */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                    <button
+                      onClick={() => handleToggleImageValide(img)}
+                      className={`p-2 rounded-full shadow-lg hover:scale-110 transition-all ${
+                        img.valide
+                          ? "bg-rose-500 text-white"
+                          : "bg-white/95 text-rose-500"
+                      }`}
+                      title={img.valide ? "Retirer la validation" : "Valider cette image"}
+                    >
+                      <Heart className={`w-4 h-4 ${img.valide ? "fill-white" : ""}`} />
+                    </button>
+                    <button
+                      onClick={() => handleDownloadOne(img)}
+                      className="p-2 rounded-full shadow-lg bg-white/95 text-brand-text hover:scale-110 transition-all"
+                      title="Télécharger cette image"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteImage(img)}
+                      className="p-2 rounded-full shadow-lg bg-white/95 text-slate-600 hover:bg-red-500 hover:text-white hover:scale-110 transition-all"
+                      title="Supprimer cette image"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               ))}

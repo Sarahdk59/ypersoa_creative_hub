@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
 import { createClient } from "@supabase/supabase-js";
-import { buildCanoniquesContextForLLM } from "@/lib/canoniques";
+import { readdirSync, readFileSync } from "fs";
+import { join } from "path";
+import { buildCanoniquesContextForLLM, CANONIQUES_LITE } from "@/lib/canoniques";
 import { DecompositionLLM, ImageFamille } from "@/lib/types";
 
 const OPENAI_MODEL_PRIMARY = "gpt-5";
@@ -95,14 +97,65 @@ Output strict JSON only.`;
   }
 }
 
+/**
+ * Lecture filesystem des canoniques JPG depuis apps/atelier-shooting/public/canoniques/
+ * (source de vérité partagée entre les deux apps). Le matching par préfixe
+ * MAN-XXX_ permet de tolérer les variations de prénom dans le filename.
+ */
+const CANONIQUES_DIR = join(process.cwd(), "..", "atelier-shooting", "public", "canoniques");
+
+function loadCanoniqueAsBase64(id: string): { data: string; mimeType: string } | null {
+  try {
+    const files = readdirSync(CANONIQUES_DIR);
+    const match = files.find((f) => f.startsWith(id + "_") && /\.(jpe?g|png)$/i.test(f));
+    if (!match) {
+      console.warn(`[lookbook] canonique introuvable : ${id} dans ${CANONIQUES_DIR}`);
+      return null;
+    }
+    const buffer = readFileSync(join(CANONIQUES_DIR, match));
+    const mimeType = match.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg";
+    return { data: buffer.toString("base64"), mimeType };
+  } catch (err) {
+    console.warn("[lookbook] canonique read error:", err);
+    return null;
+  }
+}
+
+/**
+ * Préfixe character reference EN injecté en tête du prompt pour fixer le visage
+ * du canonique (même pattern que atelier-shooting, ~95% fidélité validé).
+ */
+function buildCharacterRefPrefix(id: string): string {
+  const c = CANONIQUES_LITE.find((x) => x.id === id);
+  if (!c) return "";
+  const genderEn = c.genre === "H" ? "man" : c.genre === "enfant" ? "child" : "woman";
+  return `MANNEQUIN (CHARACTER REFERENCE PERSISTANT) : Using the uploaded reference portrait as the character's face identity — same ${genderEn}, exact same face features preserved across all generations. ${c.prenom}, ${c.age} years old : ${c.signature}. Real human features with natural imperfections, no retouching, no skin smoothing, no beauty filter, no celebrity polish.\n\n`;
+}
+
 async function generateImageWithGemini(
   ai: GoogleGenAI,
-  promptEn: string
+  promptEn: string,
+  canoniqueId: string | null
 ): Promise<{ data: string; mimeType: string } | null> {
   try {
+    const parts: Array<
+      | { inlineData: { data: string; mimeType: string } }
+      | { text: string }
+    > = [];
+
+    let finalPrompt = promptEn;
+    if (canoniqueId) {
+      const canoniqueImg = loadCanoniqueAsBase64(canoniqueId);
+      if (canoniqueImg) {
+        parts.push({ inlineData: canoniqueImg });
+        finalPrompt = buildCharacterRefPrefix(canoniqueId) + promptEn;
+      }
+    }
+    parts.push({ text: finalPrompt });
+
     const response = await ai.models.generateContent({
       model: GEMINI_MODEL,
-      contents: { parts: [{ text: promptEn }] },
+      contents: { parts },
       config: { imageConfig: { aspectRatio: "4:5", imageSize: "2K" } },
     });
     const candidate = response.candidates?.[0];
@@ -166,13 +219,12 @@ export async function POST(req: NextRequest) {
     });
     if (insertErr) return jsonError(500, `Insert lookbook échoué: ${insertErr.message}`);
 
-    // 3. Gemini × N en parallèle
+    // 3. Gemini × N en parallèle, avec injection canonique en parts[] si applicable
     const results = await Promise.all(
       prompts.map(async (p, idx) => {
-        const img = await generateImageWithGemini(gemini, p.prompt_en);
-        if (!img) return { ok: false, idx, prompt: p };
+        const img = await generateImageWithGemini(gemini, p.prompt_en, p.canonique_injecte);
+        if (!img) return { ok: false as const, idx, prompt: p };
 
-        // Upload bucket
         const path = `${lookbookId}/img-${String(idx + 1).padStart(2, "0")}.jpg`;
         const blob = Buffer.from(img.data, "base64");
         const up = await supabase.storage.from(BUCKET).upload(path, blob, {
@@ -182,22 +234,33 @@ export async function POST(req: NextRequest) {
         });
         if (up.error) {
           console.error("[lookbook] upload failed:", up.error.message);
-          return { ok: false, idx, prompt: p };
+          return { ok: false as const, idx, prompt: p };
         }
         const publicUrl = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 
-        // Insert image row
-        await supabase.from("lookbook_images").insert({
-          lookbook_id: lookbookId,
-          position: idx + 1,
-          famille: p.famille as ImageFamille,
-          canonique_injecte: p.canonique_injecte,
-          prompt_en: p.prompt_en,
-          image_url: publicUrl,
-          image_storage_path: path,
-        });
+        const { data: imgRow } = await supabase
+          .from("lookbook_images")
+          .insert({
+            lookbook_id: lookbookId,
+            position: idx + 1,
+            famille: p.famille as ImageFamille,
+            canonique_injecte: p.canonique_injecte,
+            prompt_en: p.prompt_en,
+            image_url: publicUrl,
+            image_storage_path: path,
+          })
+          .select("id")
+          .single();
 
-        return { ok: true, idx, url: publicUrl, famille: p.famille, prompt: p };
+        return {
+          ok: true as const,
+          idx,
+          url: publicUrl,
+          famille: p.famille,
+          prompt: p,
+          image_id: imgRow?.id as string | undefined,
+          storage_path: path,
+        };
       })
     );
 
@@ -223,13 +286,16 @@ export async function POST(req: NextRequest) {
       ambiance_extraite: parsed.ambiance_extraite,
       canoniques_inclus: canoniquesInclus,
       images: results
-        .filter((r) => r.ok)
+        .filter((r): r is Extract<typeof r, { ok: true }> => r.ok)
         .map((r) => ({
+          image_id: r.image_id,
+          storage_path: r.storage_path,
           position: r.idx + 1,
           famille: r.famille,
-          url: "url" in r ? r.url : null,
+          url: r.url,
           canonique_injecte: r.prompt.canonique_injecte,
           prompt_en: r.prompt.prompt_en,
+          valide: false,
         })),
       stats: { requested: prompts.length, succeeded, failed: prompts.length - succeeded },
       llm_model_used: model,
