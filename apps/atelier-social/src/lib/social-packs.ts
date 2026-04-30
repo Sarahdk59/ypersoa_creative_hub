@@ -190,7 +190,7 @@ export async function listSocialPacks(filters?: {
 
 export async function updatePackCaption(
   packId: string,
-  patch: Partial<Pick<SocialPack, 'caption_text' | 'pinterest_title' | 'pinterest_description' | 'pinterest_tags' | 'notes' | 'title' | 'collection_id'>>
+  patch: Partial<Pick<SocialPack, 'caption_text' | 'caption_hooks' | 'pinterest_title' | 'pinterest_description' | 'pinterest_tags' | 'notes' | 'title' | 'collection_id'>>
 ): Promise<void> {
   if (!supabase) throw new Error('Supabase non configuré');
   const { error } = await supabase.from('social_packs').update(patch).eq('id', packId);
@@ -204,6 +204,32 @@ export async function togglePackFavorite(packId: string, current: boolean): Prom
     .update({ is_favorite: !current })
     .eq('id', packId);
   if (error) throw new Error(`Toggle favorite échoué : ${error.message}`);
+}
+
+/**
+ * Supprime une slide du pack (image_urls[idx] + storage_paths[idx] + storage file).
+ * Le pack reste intact, seule cette image disparaît.
+ */
+export async function deleteSlideFromPack(pack: SocialPack, idx: number): Promise<SocialPack> {
+  if (!supabase) throw new Error('Supabase non configuré');
+  if (idx < 0 || idx >= pack.image_urls.length) throw new Error('Index hors borne');
+
+  const removedPath = pack.image_storage_paths[idx];
+  const newUrls = pack.image_urls.filter((_, i) => i !== idx);
+  const newPaths = pack.image_storage_paths.filter((_, i) => i !== idx);
+
+  const { data, error } = await supabase
+    .from('social_packs')
+    .update({ image_urls: newUrls, image_storage_paths: newPaths })
+    .eq('id', pack.id)
+    .select()
+    .single();
+  if (error) throw new Error(`Update slides échoué : ${error.message}`);
+
+  if (removedPath) {
+    await supabase.storage.from(BUCKET).remove([removedPath]);
+  }
+  return data as SocialPack;
 }
 
 export async function deleteSocialPack(pack: SocialPack): Promise<void> {

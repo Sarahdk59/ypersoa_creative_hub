@@ -6,7 +6,7 @@ import { ImportedShotsPanel } from "@/components/ImportedShotsPanel";
 import { SavePackDialog } from "@/components/SavePackDialog";
 import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { Heart, FolderOpen } from "lucide-react";
+import { Heart, FolderOpen, X } from "lucide-react";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
 import { OccasionSelector, OCCASIONS } from "@/components/OccasionSelector";
 import { CanoniqueSelector } from "@/components/CanoniqueSelector";
@@ -99,6 +99,33 @@ export default function Home() {
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [librarySaveBump, setLibrarySaveBump] = useState(0);
   const [savedPackId, setSavedPackId] = useState<string | null>(null);
+  // Best slides marquées dans le carrousel courant — persisté en notes au save.
+  const [bestSlideIndices, setBestSlideIndices] = useState<Set<number>>(new Set());
+
+  const handleToggleBestSlide = (idx: number) => {
+    setBestSlideIndices((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  };
+
+  const handleRemoveSlide = (idx: number) => {
+    setGeneratedImages((prev) => prev.filter((_, i) => i !== idx));
+    setBestSlideIndices((prev) => {
+      const next = new Set<number>();
+      prev.forEach((b) => {
+        if (b < idx) next.add(b);
+        else if (b > idx) next.add(b - 1);
+      });
+      return next;
+    });
+    setCurrentSlide((cur) => {
+      if (cur >= generatedImages.length - 1) return Math.max(0, generatedImages.length - 2);
+      return cur > idx ? cur - 1 : cur;
+    });
+  };
 
   const canSavePack =
     supabaseOn &&
@@ -166,6 +193,8 @@ export default function Home() {
     setPinterestDescription("");
     setPinterestTags([]);
     setCurrentSlide(0);
+    setBestSlideIndices(new Set());
+    setSavedPackId(null);
 
     const vibePrompt = VIBES.find((v) => v.id === selectedVibe)?.prompt || "";
     const vibeLabel = VIBES.find((v) => v.id === selectedVibe)?.label || "";
@@ -500,6 +529,9 @@ export default function Home() {
                 currentSlide={currentSlide}
                 setCurrentSlide={setCurrentSlide}
                 expectedCount={expectedImages}
+                bestIndices={bestSlideIndices}
+                onToggleBest={handleToggleBestSlide}
+                onRemove={handleRemoveSlide}
                 aspectClass={
                   selectedPlatform === "pinterest"
                     ? "aspect-[2/3]"
@@ -632,6 +664,9 @@ interface ResultPanelImagesOnlyProps {
   setCurrentSlide: (s: number) => void;
   expectedCount: number;
   aspectClass: string;
+  bestIndices?: Set<number>;
+  onToggleBest?: (idx: number) => void;
+  onRemove?: (idx: number) => void;
 }
 
 function ResultPanelImagesOnly({
@@ -641,6 +676,9 @@ function ResultPanelImagesOnly({
   setCurrentSlide,
   expectedCount,
   aspectClass,
+  bestIndices,
+  onToggleBest,
+  onRemove,
 }: ResultPanelImagesOnlyProps) {
   const handleDownload = (url: string, index: number) => {
     const a = document.createElement("a");
@@ -725,14 +763,47 @@ function ResultPanelImagesOnly({
               </>
             )}
 
-            <button
-              type="button"
-              onClick={() => handleDownload(imageUrls[currentSlide], currentSlide)}
-              className="absolute top-3 right-3 bg-white/90 backdrop-blur text-brand-text p-2 rounded-full shadow-lg hover:scale-105 transition-transform opacity-0 group-hover:opacity-100"
-              title="Télécharger cette image"
-            >
-              <Download className="w-4 h-4" />
-            </button>
+            <div className="absolute top-3 right-3 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                type="button"
+                onClick={() => handleDownload(imageUrls[currentSlide], currentSlide)}
+                className="bg-white/90 backdrop-blur text-brand-text p-2 rounded-full shadow-lg hover:scale-105 transition-transform"
+                title="Télécharger cette image"
+              >
+                <Download className="w-4 h-4" />
+              </button>
+              {onToggleBest && (
+                <button
+                  type="button"
+                  onClick={() => onToggleBest(currentSlide)}
+                  className={`p-2 rounded-full shadow-lg hover:scale-105 transition-transform ${
+                    bestIndices?.has(currentSlide)
+                      ? "bg-rose-500 text-white"
+                      : "bg-white/90 backdrop-blur text-rose-500"
+                  }`}
+                  title={bestIndices?.has(currentSlide) ? "Retirer des best" : "Marquer comme best"}
+                >
+                  <Heart className={`w-4 h-4 ${bestIndices?.has(currentSlide) ? "fill-white" : ""}`} />
+                </button>
+              )}
+              {onRemove && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm("Supprimer cette image du carrousel ?")) onRemove(currentSlide);
+                  }}
+                  className="bg-white/90 backdrop-blur text-slate-600 hover:bg-red-500 hover:text-white p-2 rounded-full shadow-lg hover:scale-105 transition-all"
+                  title="Supprimer cette image du carrousel"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            {bestIndices?.has(currentSlide) && (
+              <div className="absolute top-3 left-3 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                <Heart className="w-3 h-3 fill-white" /> Best
+              </div>
+            )}
           </>
         ) : null}
       </div>

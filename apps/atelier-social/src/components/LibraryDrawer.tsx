@@ -21,8 +21,17 @@ import {
   updatePackCaption,
   togglePackFavorite,
   deleteSocialPack,
+  deleteSlideFromPack,
 } from "@/lib/social-packs";
 import { downloadPackAsZip, downloadSlide } from "@/lib/download-pack";
+
+const HOOK_LABELS_FR: Record<string, string> = {
+  emotion: "Émotion",
+  question: "Question",
+  pov: "POV",
+  humour: "Humour",
+  affirmation: "Affirmation",
+};
 
 interface Props {
   open: boolean;
@@ -278,12 +287,28 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
     }
   };
 
+  const handleDeleteSlide = async (idx: number) => {
+    if (!confirm(`Supprimer la slide ${idx + 1}/${pack.image_urls.length} ? Cette action est irréversible.`)) return;
+    try {
+      const updated = await deleteSlideFromPack(pack, idx);
+      onChange({ image_urls: updated.image_urls, image_storage_paths: updated.image_storage_paths });
+      onSaved();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleCopyHook = (text: string) => {
+    navigator.clipboard.writeText(text).catch(() => undefined);
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setError(null);
     try {
       await updatePackCaption(pack.id, {
         caption_text: pack.caption_text,
+        caption_hooks: pack.caption_hooks,
         pinterest_title: pack.pinterest_title,
         pinterest_description: pack.pinterest_description,
         pinterest_tags: pack.pinterest_tags,
@@ -341,13 +366,22 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
                   alt={`slide ${idx + 1}`}
                   className="w-full aspect-[4/5] object-cover rounded-lg shadow-sm"
                 />
-                <button
-                  onClick={() => handleDownloadOne(idx)}
-                  className="absolute top-2 right-2 bg-white/90 hover:bg-white text-slate-700 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
-                  title={`Télécharger slide ${idx + 1}`}
-                >
-                  <Download className="w-3.5 h-3.5" />
-                </button>
+                <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => handleDownloadOne(idx)}
+                    className="bg-white/90 hover:bg-white text-slate-700 p-1.5 rounded-full shadow-md"
+                    title={`Télécharger slide ${idx + 1}`}
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteSlide(idx)}
+                    className="bg-white/90 hover:bg-red-500 hover:text-white text-slate-700 p-1.5 rounded-full shadow-md transition-colors"
+                    title={`Supprimer cette slide`}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
                 <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
                   {idx + 1}/{pack.image_urls.length}
                 </div>
@@ -407,6 +441,43 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
                 rows={8}
                 className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg font-mono focus:outline-none focus:ring-2 focus:ring-rose-200 resize-y"
               />
+            </div>
+          )}
+
+          {pack.caption_hooks && Object.keys(pack.caption_hooks).length > 0 && (
+            <div>
+              <label className="text-xs font-semibold text-slate-700 uppercase mb-2 block">
+                Hooks alternatifs
+              </label>
+              <div className="space-y-2">
+                {Object.entries(pack.caption_hooks).map(([registre, hook]) => (
+                  <div
+                    key={registre}
+                    className="flex items-start gap-2 p-2 bg-rose-50/50 border border-rose-100 rounded-lg group"
+                  >
+                    <span className="text-[9px] font-bold text-rose-500 uppercase tracking-wider px-2 py-0.5 bg-white rounded-full border border-rose-200 shrink-0">
+                      {HOOK_LABELS_FR[registre] || registre}
+                    </span>
+                    <textarea
+                      value={hook}
+                      onChange={(e) =>
+                        onChange({
+                          caption_hooks: { ...(pack.caption_hooks || {}), [registre]: e.target.value },
+                        })
+                      }
+                      rows={1}
+                      className="flex-1 text-xs bg-transparent border-none focus:outline-none resize-none text-slate-700"
+                    />
+                    <button
+                      onClick={() => handleCopyHook(hook)}
+                      className="text-[10px] text-rose-500 hover:underline opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                      title="Copier dans le presse-papiers"
+                    >
+                      Copier
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

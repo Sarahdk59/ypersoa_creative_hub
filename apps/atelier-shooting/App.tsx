@@ -137,6 +137,19 @@ const App: React.FC = () => {
     }
   };
 
+  /**
+   * Nommage propre des shots téléchargés — cohérent avec atelier-social.
+   * Format : ypersoa-{product}-{color}-{decor}-{shot-label-slug}.png
+   * Ex : ypersoa-yp019-beige-loft-portrait-editorial.png
+   */
+  const buildShotFilename = (label: string): string => {
+    const slugify = (s: string) => s
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const parts = ['ypersoa', settings.product, settings.garmentColor, settings.decorStyle, slugify(label)];
+    return parts.filter(Boolean).join('-') + '.png';
+  };
+
   const handleDownload = (dataUrl: string, filename: string) => {
     if (dataUrl.startsWith('data:image/png')) {
       const link = document.createElement('a');
@@ -248,7 +261,7 @@ const App: React.FC = () => {
                   </div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
                     <button
-                      onClick={() => handleDownload(currentPack[selectedImageIndex], `ypersoa-${shotLabels[selectedImageIndex].toLowerCase().replace(/[^a-z0-9]/g, '-')}.png`)}
+                      onClick={() => handleDownload(currentPack[selectedImageIndex], buildShotFilename(shotLabels[selectedImageIndex] || 'shot'))}
                       className="bg-white text-yp-olive px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2 hover:scale-105 transition-transform"
                     >
                       <i className="fa-solid fa-download"></i> Télécharger
