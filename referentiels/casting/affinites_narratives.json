@@ -1,0 +1,246 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "affinites_narratives",
+    "last_updated": "2026-04-30",
+    "principe": "Structuration des affinités narratives qualifiées entre canoniques : duos/trios formellement établis (pour scénarios cross-shoot) + affinités latentes (pour enrichir queryCasting). Source canonique des liens narratifs explicites — la `direction_photo` détaillée vit dans duos_detailles_et_distribution.json, ici on synthétise les qualifiers, thèmes et occasions clientes.",
+    "directive_usage": "1) atelier-casting consultera ce fichier pour proposer des regroupements pertinents pour un brief. 2) Les apps social/lookbook/shooting peuvent suggérer des duos pertinents quand Sarah pin un canonique seul. 3) Les `affinites_latentes` sont des hypothèses non encore tournées en duo formel — si Sarah valide une narration, on promote en `dispositifs_etablis`."
+  },
+
+  "dispositifs_etablis": [
+    {
+      "id": "DUO_BEATRICE_FELICIE",
+      "type": "duo",
+      "membres": ["MAN-P05", "MAN-P08"],
+      "nature": "transmission_intergenerationnelle",
+      "qualifiers": ["tendresse", "transmission", "savoir-faire-domestique", "matriarcat", "campagne-normande"],
+      "themes_compatibles": ["fete-meres", "fete-grand-meres", "noel-famille", "savoir-faire-broderie", "rentree-scolaire", "confitures-automne", "transmission-livres"],
+      "ambiances_recommandees": ["serre", "sepia", "aube"],
+      "occasions_clientes": ["fete-meres", "anniversaire-mamie", "noel", "rentree", "naissance-petite-fille"],
+      "ref_complete": "duos_detailles_et_distribution.json#DUO_BEATRICE_FELICIE"
+    },
+    {
+      "id": "DUO_MATHIEU_GABIN",
+      "type": "duo",
+      "membres": ["MAN-P06", "MAN-P09"],
+      "nature": "complicite_pere_fils",
+      "qualifiers": ["tendresse-masculine", "ludique", "papa-present", "vélo-cargo", "weekend-camping"],
+      "themes_compatibles": ["fete-peres", "anniversaire-papa", "rentree-maternelle", "vacances-famille", "cuisine-pere-fils"],
+      "ambiances_recommandees": ["loft", "aube", "sauvage"],
+      "occasions_clientes": ["fete-peres", "naissance-fils", "premier-velo", "weekend-aventure"],
+      "ref_complete": "duos_detailles_et_distribution.json#DUO_MATHIEU_GABIN"
+    },
+    {
+      "id": "DUO_LEA_SARAH",
+      "type": "duo",
+      "membres": ["MAN-P11-LEA", "MAN-P11-SARAH"],
+      "nature": "couple_etabli_lesbien",
+      "qualifiers": ["complicite-silencieuse", "couple-fait-pas-statement", "voyageuses", "esthetique-douce"],
+      "themes_compatibles": ["saint-valentin", "anniversaire-mariage", "co-living", "voyage-couple", "diner-recoit"],
+      "ambiances_recommandees": ["aube", "loft", "minimalist"],
+      "occasions_clientes": ["saint-valentin", "anniversaire-couple", "cadeau-couple-amies", "emmenagement"],
+      "ref_complete": "duos_detailles_et_distribution.json#DUO_LEA_SARAH"
+    },
+    {
+      "id": "DUO_HENRI_JOSEPHINE",
+      "type": "duo",
+      "membres": ["MAN-S19-HENRI", "MAN-S19-JOSEPHINE"],
+      "nature": "couple_senior_long_amour",
+      "qualifiers": ["tendresse-posee", "long-amour", "rive-gauche-eclairee", "bourgeoisie-mixte", "transmission"],
+      "themes_compatibles": ["anniversaire-mariage-40", "noel-famille-multigeneration", "transmission-cadeaux", "voyage-martinique"],
+      "ambiances_recommandees": ["sepia", "loft", "minimalist"],
+      "occasions_clientes": ["anniversaire-mariage", "noel", "cadeau-grand-parents", "fete-des-grands-meres"],
+      "ref_complete": "duos_detailles_et_distribution.json#DUO_HENRI_JOSEPHINE"
+    },
+    {
+      "id": "DUO_GASPARD_BRUNE",
+      "type": "duo",
+      "membres": ["MAN-S14", "MAN-P12"],
+      "nature": "premier_amour_etudiants_creatifs",
+      "qualifiers": ["insouciance-solaire", "lucide", "premier-amour-adulte", "skate-photo-mode", "creatifs"],
+      "themes_compatibles": ["saint-valentin-jeune", "rentree-universitaire", "premier-anniversaire-couple", "vie-coloc"],
+      "ambiances_recommandees": ["sauvage", "minimalist", "sepia"],
+      "occasions_clientes": ["saint-valentin", "premier-anniversaire-couple", "cadeau-jeune-couple"]
+    },
+    {
+      "id": "DUO_HUGO_NOE",
+      "type": "duo",
+      "membres": ["MAN-S21", "MAN-S15"],
+      "nature": "jeune_pere_bebe",
+      "qualifiers": ["tendresse-absolue", "porte-bebe-vissé", "masculinite-paternelle-2026", "présent", "bouscule"],
+      "themes_compatibles": ["fete-peres", "premier-cadeau-naissance", "conge-parentalite", "rentree-creche"],
+      "ambiances_recommandees": ["aube", "loft", "minimalist"],
+      "occasions_clientes": ["naissance", "fete-peres", "premier-noel-bebe"]
+    },
+    {
+      "id": "DUO_NICOLAS_GABIN",
+      "type": "duo",
+      "membres": ["MAN-P07", "MAN-P09"],
+      "nature": "pere_fils_paternite_tardive",
+      "qualifiers": ["paternite-tardive-choisie", "transmission-calme", "fiable-doux"],
+      "themes_compatibles": ["fete-peres", "rentree-scolaire", "transmission-savoir"],
+      "ambiances_recommandees": ["loft", "minimalist", "sepia"],
+      "occasions_clientes": ["fete-peres", "naissance-second-fils"],
+      "_note": "Alt narratif vs DUO_MATHIEU_GABIN — Gabin reste le même enfant, Nicolas alternative parentale plus posée."
+    },
+    {
+      "id": "DUO_MATHIEU_NICOLAS",
+      "type": "duo",
+      "membres": ["MAN-P06", "MAN-P07"],
+      "nature": "amitie_masculine_adulte",
+      "qualifiers": ["pudeur-masculine-douce", "complicite-longue-date", "deux-papas", "francais-adulte"],
+      "themes_compatibles": ["amitie-papas", "weekend-entre-papas", "cadeaux-mutuels-anniversaire"],
+      "ambiances_recommandees": ["loft", "aube"],
+      "occasions_clientes": ["anniversaire-ami", "noel-cadeau-ami"]
+    },
+    {
+      "id": "TRIO_AICHA_CESARIA_JOSEPHINE",
+      "type": "trio",
+      "membres": ["MAN-P03", "MAN-S17", "MAN-S19-JOSEPHINE"],
+      "nature": "trois_generations_femmes_afro_caribeennes",
+      "qualifiers": ["transmission-matriarcale", "elegance-mixte", "diaspora-assumee", "sans-statement"],
+      "themes_compatibles": ["fete-meres", "fete-grand-meres", "noel-famille", "voyage-martinique", "anniversaire-mere"],
+      "ambiances_recommandees": ["loft", "sepia", "minimalist"],
+      "occasions_clientes": ["fete-meres", "noel", "voyage-famille"],
+      "ref_complete": "duos_detailles_et_distribution.json#TRIO_AICHA_CESARIA_JOSEPHINE"
+    },
+    {
+      "id": "TRIO_HENRI_NICOLAS_GABIN",
+      "type": "trio",
+      "membres": ["MAN-S19-HENRI", "MAN-P07", "MAN-P09"],
+      "nature": "trois_generations_masculines",
+      "qualifiers": ["transmission-pudique", "masculinite-douce", "passation"],
+      "themes_compatibles": ["fete-peres", "noel", "anniversaire-grand-pere"],
+      "ambiances_recommandees": ["sepia", "loft", "minimalist"],
+      "occasions_clientes": ["fete-peres", "noel", "anniversaire-papi"],
+      "ref_complete": "duos_detailles_et_distribution.json#TRIO_HENRI_NICOLAS_GABIN",
+      "_note": "Henri grand-père, Nicolas père de Gabin (alt vs Mathieu)."
+    },
+    {
+      "id": "TRIO_COLINE_HUGO_NOE",
+      "type": "trio",
+      "membres": ["MAN-S20", "MAN-S21", "MAN-S15"],
+      "nature": "famille_nucleaire_jeune",
+      "qualifiers": ["jeune-parentalite-moderne", "fauteuil-jamais-sujet", "couple-recent", "naissance-recente"],
+      "themes_compatibles": ["fete-meres", "fete-peres", "naissance", "rentree-creche", "premier-noel"],
+      "ambiances_recommandees": ["aube", "loft", "minimalist"],
+      "occasions_clientes": ["naissance", "fete-meres-jeune", "fete-peres-jeune", "premier-noel"]
+    },
+    {
+      "id": "TRIO_COPINES_ANNA_AICHA_LILA",
+      "type": "trio",
+      "membres": ["MAN-P02", "MAN-P03", "MAN-P04"],
+      "nature": "trio_amies_adultes_csp_plus",
+      "qualifiers": ["girl-gang-etabli", "diversite-fait-pas-statement", "amitie-longue-duree", "csp-plus-multiculturel"],
+      "themes_compatibles": ["amitie-feminine-adulte", "anniversaires-mutuels", "weekend-amies", "evjf"],
+      "ambiances_recommandees": ["loft", "sauvage", "minimalist"],
+      "occasions_clientes": ["anniversaire-amie", "evjf", "weekend-amies", "cadeau-amie"]
+    }
+  ],
+
+  "affinites_latentes": [
+    {
+      "id": "LIEN_CLEMENCE_MARIE_HELENE",
+      "type": "duo_latent",
+      "membres": ["MAN-P01", "MAN-P10"],
+      "nature": "transmission_culturelle_femmes_independantes",
+      "qualifiers": ["antiquaire-jardiniere", "deux-femmes-seules-assumees", "cultivees", "ecrit-lettres-touche-objets"],
+      "themes_compatibles": ["transmission-savoir-faire-feminin", "amitie-intergenerationnelle"],
+      "ambiances_recommandees": ["sepia", "aube"],
+      "_propose_pour": "Brief 'femmes qui se choisissent', 'savoir-faire transmis sans famille de sang'",
+      "statut": "non-formalise — promote en duo si validé"
+    },
+    {
+      "id": "LIEN_CLEMENCE_LEA_SARAH",
+      "type": "trio_latent",
+      "membres": ["MAN-P01", "MAN-P11-LEA", "MAN-P11-SARAH"],
+      "nature": "femmes_etablies_lille_honfleur",
+      "qualifiers": ["valeurs-proches-esthetiques-opposees", "33-38-ans", "couples-et-solos-assumes"],
+      "themes_compatibles": ["weekend-amis-cote", "diner-amis-couples-mixed"],
+      "ambiances_recommandees": ["aube", "loft"],
+      "_propose_pour": "Brief 'amis qui ont 35-40 ans, mix couples + solos'",
+      "statut": "non-formalise"
+    },
+    {
+      "id": "LIEN_BRUNE_LEA_SARAH",
+      "type": "trio_latent",
+      "membres": ["MAN-P12", "MAN-P11-LEA", "MAN-P11-SARAH"],
+      "nature": "creatives_intergenerationnelles_lille",
+      "qualifiers": ["esthetique-creative", "Lille-Paris", "amitie-22-37-ans"],
+      "themes_compatibles": ["amitie-creative-multi-generations", "evjf"],
+      "ambiances_recommandees": ["loft", "minimalist"],
+      "_propose_pour": "Brief 'mentor/mentee créatives', 'jeune Brune et son couple-modèle'",
+      "statut": "non-formalise"
+    },
+    {
+      "id": "LIEN_PRIYA_LILA",
+      "type": "duo_latent",
+      "membres": ["MAN-S13", "MAN-P04"],
+      "nature": "mentor_ado_femme_exigeante",
+      "qualifiers": ["mentorat-feminin", "ado-adulte-exigeantes", "deux-cultures"],
+      "themes_compatibles": ["transmission-academique", "rentree-lycee"],
+      "ambiances_recommandees": ["loft", "minimalist"],
+      "_propose_pour": "Brief 'mentor académique', 'figure maternelle alternative'",
+      "statut": "non-formalise"
+    },
+    {
+      "id": "LIEN_HASSAN_HENRI",
+      "type": "duo_latent",
+      "membres": ["MAN-S18", "MAN-S19-HENRI"],
+      "nature": "deux_seniors_paris_voisinage",
+      "qualifiers": ["camaraderie-aines", "memoires-Paris", "differents-mondes-meme-ville"],
+      "themes_compatibles": ["amitie-aines", "histoire-Paris"],
+      "ambiances_recommandees": ["sepia", "loft"],
+      "_propose_pour": "Brief 'fraternité urbaine intergénérationnelle'",
+      "statut": "non-formalise"
+    },
+    {
+      "id": "LIEN_BEATRICE_MARIE_HELENE",
+      "type": "duo_latent",
+      "membres": ["MAN-P05", "MAN-P10"],
+      "nature": "deux_dames_campagne_amitie_long",
+      "qualifiers": ["amitie-de-toujours", "campagne", "55-65-ans", "femmes-seules"],
+      "themes_compatibles": ["amitie-feminine-aines", "transmission-jardin"],
+      "ambiances_recommandees": ["aube", "sepia"],
+      "_propose_pour": "Brief 'voisines de campagne', 'rituel café du dimanche'",
+      "statut": "non-formalise"
+    }
+  ],
+
+  "qualifiers_index": {
+    "_principe": "Inversement par qualifier pour permettre une recherche queryCasting('tendresse intergenerationnelle') → liste de dispositifs.",
+    "tendresse": ["DUO_BEATRICE_FELICIE", "DUO_HUGO_NOE", "DUO_HENRI_JOSEPHINE"],
+    "transmission": ["DUO_BEATRICE_FELICIE", "TRIO_AICHA_CESARIA_JOSEPHINE", "TRIO_HENRI_NICOLAS_GABIN", "DUO_HENRI_JOSEPHINE"],
+    "complicite-silencieuse": ["DUO_LEA_SARAH"],
+    "tendresse-masculine": ["DUO_MATHIEU_GABIN", "DUO_NICOLAS_GABIN", "DUO_HUGO_NOE", "TRIO_HENRI_NICOLAS_GABIN"],
+    "matriarcat": ["DUO_BEATRICE_FELICIE", "TRIO_AICHA_CESARIA_JOSEPHINE"],
+    "girl-gang": ["TRIO_COPINES_ANNA_AICHA_LILA"],
+    "long-amour": ["DUO_HENRI_JOSEPHINE", "DUO_LEA_SARAH"],
+    "premier-amour": ["DUO_GASPARD_BRUNE"],
+    "naissance": ["TRIO_COLINE_HUGO_NOE", "DUO_HUGO_NOE"],
+    "couple-fait-pas-statement": ["DUO_LEA_SARAH"],
+    "diversite-sans-statement": ["TRIO_COPINES_ANNA_AICHA_LILA", "TRIO_AICHA_CESARIA_JOSEPHINE"]
+  },
+
+  "themes_index": {
+    "_principe": "Inversement par thème commercial Ypersoa pour suggérer canoniques pertinents par occasion. Chaque thème → liste prioritaire de dispositifs.",
+    "fete-meres": ["DUO_BEATRICE_FELICIE", "TRIO_AICHA_CESARIA_JOSEPHINE", "TRIO_COLINE_HUGO_NOE", "MAN-P10"],
+    "fete-peres": ["DUO_MATHIEU_GABIN", "DUO_NICOLAS_GABIN", "DUO_HUGO_NOE", "TRIO_HENRI_NICOLAS_GABIN", "DUO_MATHIEU_NICOLAS"],
+    "saint-valentin": ["DUO_LEA_SARAH", "DUO_HENRI_JOSEPHINE", "DUO_GASPARD_BRUNE"],
+    "naissance": ["DUO_HUGO_NOE", "TRIO_COLINE_HUGO_NOE"],
+    "noel": ["DUO_HENRI_JOSEPHINE", "TRIO_AICHA_CESARIA_JOSEPHINE", "DUO_BEATRICE_FELICIE", "TRIO_HENRI_NICOLAS_GABIN", "TRIO_COLINE_HUGO_NOE"],
+    "rentree-scolaire": ["MAN-P08", "MAN-P09", "MAN-S13", "DUO_BEATRICE_FELICIE"],
+    "anniversaire-mariage": ["DUO_LEA_SARAH", "DUO_HENRI_JOSEPHINE"],
+    "evjf": ["TRIO_COPINES_ANNA_AICHA_LILA", "DUO_LEA_SARAH"],
+    "weekend-amies": ["TRIO_COPINES_ANNA_AICHA_LILA"],
+    "amitie-papas": ["DUO_MATHIEU_NICOLAS"],
+    "transmission-savoir-faire": ["DUO_BEATRICE_FELICIE", "TRIO_AICHA_CESARIA_JOSEPHINE", "TRIO_HENRI_NICOLAS_GABIN"]
+  },
+
+  "liens_systeme": {
+    "mannequins_recurrents": "referentiels/shooting/mannequins_recurrents.json",
+    "duos_detailles": "referentiels/shooting/duos_detailles_et_distribution.json",
+    "calendrier_canoniques": "referentiels/casting/calendrier_canoniques.json",
+    "spec_casting_intelligence": "_passations/IDEES_FUTURES/SPEC_casting_intelligence.md"
+  }
+}
