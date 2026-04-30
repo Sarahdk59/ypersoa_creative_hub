@@ -213,10 +213,19 @@ const App: React.FC = () => {
 
       <main className="flex-1 h-full overflow-y-auto bg-yp-linen flex flex-col">
         <header className="px-8 py-6 flex justify-between items-center border-b border-yp-sable bg-white/50 backdrop-blur-md sticky top-0 z-10">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-yp-olive rounded-full flex items-center justify-center text-white font-bold italic shadow-lg">Y</div>
-            <h1 className="text-3xl font-bold tracking-tight text-yp-olive">YPERSOA <span className="text-sm font-light uppercase tracking-[0.3em] ml-2">Studio</span></h1>
-          </div>
+          <h1
+            style={{
+              fontFamily: "'Cormorant Garamond', 'Cormorant', Georgia, serif",
+              fontSize: 24,
+              fontWeight: 500,
+              letterSpacing: '-0.01em',
+              color: '#1E2D4A',
+              lineHeight: 1,
+              margin: 0,
+            }}
+          >
+            Atelier Shooting
+          </h1>
           <div className="flex gap-3 items-center">
              {supabaseOn && (
                <button
