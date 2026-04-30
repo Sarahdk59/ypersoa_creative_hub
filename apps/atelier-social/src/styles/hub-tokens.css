@@ -1,0 +1,25 @@
+/**
+ * Hub Ypersoa — design tokens (cf. _passations/DESIGN_SYSTEM_hub.md)
+ *
+ * 3 couleurs SEULEMENT pour la chrome (bg / foreground / border).
+ * Les apps conservent leurs propres tokens accent (brand-rose,
+ * brand-sage…) qui ne doivent JAMAIS contaminer la chrome.
+ */
+:root {
+  --hub-bg:         #FAF7F2;
+  --hub-foreground: #1E2D4A;
+  --hub-border:     #E8E1D6;
+
+  --sidebar-width:    64px;
+  --sidebar-icon:     20px;
+  --topbar-height:    56px;
+  --content-padding:  32px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+}
