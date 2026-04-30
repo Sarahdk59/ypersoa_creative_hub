@@ -51,10 +51,11 @@ const App: React.FC = () => {
     listLikedShots().then(setLikedShots).catch(err => console.warn('Lecture favoris échouée :', err));
   }, [supabaseOn]);
 
-  const handleLikeCurrent = async () => {
+  const handleLikeAt = async (idx: number) => {
     if (!supabaseOn || !currentPack || likingNow) return;
-    const url = currentPack[selectedImageIndex];
-    const label = shotLabels[selectedImageIndex] || 'Shot';
+    const url = currentPack[idx];
+    if (!url || likedUrls.has(url)) return;
+    const label = shotLabels[idx] || 'Shot';
     setLikingNow(true);
     setLikedUrls(prev => new Set(prev).add(url));
     try {
@@ -67,6 +68,28 @@ const App: React.FC = () => {
     } finally {
       setLikingNow(false);
     }
+  };
+
+  const handleLikeCurrent = () => handleLikeAt(selectedImageIndex);
+
+  /**
+   * Supprime un shot du pack courant (raté/erreur de shooting).
+   * - Retire l'URL du currentPack et des labels
+   * - Réajuste selectedImageIndex
+   * - Synchronise l'entry du pack dans l'history
+   */
+  const handleRemoveAt = (idx: number) => {
+    if (!currentPack) return;
+    const newUrls = currentPack.filter((_, i) => i !== idx);
+    const newLabels = shotLabels.filter((_, i) => i !== idx);
+    setCurrentPack(newUrls.length > 0 ? newUrls : null);
+    if (idx < selectedImageIndex || selectedImageIndex >= newUrls.length) {
+      setSelectedImageIndex(Math.max(0, selectedImageIndex - (idx <= selectedImageIndex ? 1 : 0)));
+    }
+    // Sync history : si ce pack est dans l'history, mettre à jour son entry.
+    setHistory(prev => prev.map(p =>
+      p.urls === currentPack ? { ...p, urls: newUrls, labels: newLabels } : p
+    ));
   };
 
   const handleUnlike = async (shot: LikedShot) => {
@@ -283,22 +306,51 @@ const App: React.FC = () => {
             {/* Thumbnail Strip / Selection */}
             <div className={`w-full lg:w-48 flex flex-row lg:flex-col gap-4 ${currentPack && currentPack.length > 4 ? 'overflow-x-auto lg:overflow-y-auto' : ''}`}>
               {currentPack ? (
-                currentPack.map((url, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedImageIndex(idx)}
-                    className={`flex-1 min-w-[100px] lg:min-h-[120px] aspect-[3/4] lg:flex-none rounded-2xl overflow-hidden border-4 transition-all relative ${
-                      selectedImageIndex === idx ? 'border-yp-olive shadow-lg scale-105' : 'border-white/50 hover:border-yp-sable shadow-sm'
-                    }`}
-                  >
-                    <img src={url} alt={`View ${idx}`} className="w-full h-full object-cover" />
-                    <div className="absolute bottom-0 inset-x-0 bg-black/40 py-1 px-2">
-                       <p className="text-[8px] text-white font-bold uppercase tracking-tighter text-center truncate">
-                         {shotLabels[idx]}
-                       </p>
+                currentPack.map((url, idx) => {
+                  const isLiked = likedUrls.has(url);
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => setSelectedImageIndex(idx)}
+                      className={`group flex-1 min-w-[100px] lg:min-h-[120px] aspect-[3/4] lg:flex-none rounded-2xl overflow-hidden border-4 transition-all relative cursor-pointer ${
+                        selectedImageIndex === idx ? 'border-yp-olive shadow-lg scale-105' : 'border-white/50 hover:border-yp-sable shadow-sm'
+                      }`}
+                    >
+                      <img src={url} alt={`View ${idx}`} className="w-full h-full object-cover" />
+                      <div className="absolute bottom-0 inset-x-0 bg-black/40 py-1 px-2">
+                        <p className="text-[8px] text-white font-bold uppercase tracking-tighter text-center truncate">
+                          {shotLabels[idx]}
+                        </p>
+                      </div>
+                      {/* Actions ❤️ / ✕ — visibles au survol */}
+                      <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {supabaseOn && (
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); handleLikeAt(idx); }}
+                            disabled={isLiked || likingNow}
+                            title={isLiked ? "Déjà liké" : "Liker pour RS"}
+                            className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-md transition-all ${
+                              isLiked
+                                ? 'bg-rose-500 text-white'
+                                : 'bg-white/90 text-rose-500 hover:bg-rose-50 hover:scale-110'
+                            }`}
+                          >
+                            <i className={`fa-${isLiked ? 'solid' : 'regular'} fa-heart`}></i>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleRemoveAt(idx); }}
+                          title="Supprimer ce shot raté"
+                          className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] bg-white/90 text-slate-500 hover:bg-red-500 hover:text-white shadow-md hover:scale-110 transition-all"
+                        >
+                          <i className="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
                     </div>
-                  </button>
-                ))
+                  );
+                })
               ) : (
                 Array.from({ length: settings.mode === 'full' ? 6 : 4 }).map((_, i) => (
                   <div key={i} className="flex-1 min-w-[100px] lg:min-h-[120px] aspect-[3/4] lg:flex-none bg-white/50 rounded-2xl border-2 border-dashed border-yp-sable/30 animate-pulse" />
