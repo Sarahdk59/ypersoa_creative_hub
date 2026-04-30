@@ -116,11 +116,11 @@ export const PRODUCT_MATERIALS: Record<ProductType, string> = {
  * Remplace l'ancien hardcoded inline dans geminiService.ts.
  */
 export const PRODUCT_DESCRIPTION_FR: Record<ProductType, string> = {
-  'YP001': 'sweat à capuche (hoodie) adulte avec cordons ronds sans embout',
-  'YP004': 'sweat à capuche (hoodie) enfant sans cordon de serrage (norme sécurité enfant)',
-  'YP005': 'sweat à col rond classique (crewneck) adulte, col ras du cou, SANS AUCUNE CAPUCHE ET SANS POCHE KANGOUROU',
-  'YP019': 't-shirt épais à manches courtes adulte. ATTENTION : C\'EST UN T-SHIRT, IL N\'Y A ABSOLUMENT AUCUNE POCHE KANGOUROU SUR LE VENTRE.',
-  'YP021': 'sweat zippé à capuche (zoodie) adulte avec cordons ronds sans embout et fermeture éclair métallique'
+  'YP001': 'sweat à capuche (hoodie) adulte avec cordons ronds sans embout. ⚠️ SILHOUETTE OBLIGATOIRE : c\'est un PULLOVER hoodie (à enfiler par la tête), AUCUNE fermeture éclair, capuche avec cordons, poche kangourou frontale unique. JAMAIS de zip central.',
+  'YP004': 'sweat à capuche (hoodie) enfant sans cordon de serrage (norme sécurité enfant). ⚠️ SILHOUETTE OBLIGATOIRE : pullover hoodie enfant, AUCUNE fermeture éclair, AUCUN cordon à la capuche.',
+  'YP005': 'sweat à col rond classique (crewneck) adulte, col ras du cou. ⚠️ SILHOUETTE OBLIGATOIRE : sweat crewneck adulte, AUCUNE CAPUCHE, AUCUNE POCHE KANGOUROU, AUCUNE fermeture éclair, AUCUN cordon. C\'est un sweat ras du cou simple.',
+  'YP019': 't-shirt épais à manches courtes adulte. ⚠️ SILHOUETTE OBLIGATOIRE : C\'EST UN T-SHIRT classique col rond manches courtes, AUCUNE CAPUCHE, AUCUNE POCHE KANGOUROU, AUCUNE fermeture éclair, AUCUN cordon.',
+  'YP021': 'sweat zippé à capuche (zoodie) adulte avec cordons ronds sans embout. ⚠️ SILHOUETTE OBLIGATOIRE : ABSOLUMENT un ZIP-UP zoodie avec une FERMETURE ÉCLAIR MÉTALLIQUE CENTRALE VISIBLE allant du col au bas du vêtement. La fermeture éclair sépare le devant en DEUX PANNEAUX symétriques. JAMAIS un pullover. Capuche avec cordons. ⚠️ EMPLACEMENT BRODERIE pour ce produit zippé : la broderie côté cœur est positionnée sur le PANNEAU GAUCHE DU PORTEUR (= notre droite à l\'écran), CLAIREMENT À GAUCHE du zip central, JAMAIS sur le zip, JAMAIS chevauchant le zip, JAMAIS traversant le zip. Espace minimum 3 cm entre le bord droit de la broderie et le zip central.'
 };
 
 // 20 fils Hub (lus depuis referentiels/palette_fils_broderie.json) + swatch
@@ -223,7 +223,7 @@ export const SHOTS_CONFIG = {
   },
   DETAIL: {
     label: "Macro Broderie",
-    promptSuffix: "⚠️ CADRAGE MACRO ULTRA-SERRÉ : la broderie côté cœur DOIT remplir 60-80% du cadre. Le cadre EXCLUT EXPLICITEMENT : la capuche, le col, l'épaule, les cordons et leurs extrémités, le visage du modèle. Le cadre montre UNIQUEMENT la zone de broderie + un halo de tissu de 3-5 cm autour. Si une partie supérieure du sweat (capuche/col/cordons) apparaîtrait dans ce cadrage, RECADRE PLUS SERRÉ pour les exclure entièrement. Gros plan macro extrême (objectif 100mm macro, f/2.8-f/4) sur la broderie en fil [THREAD_COLOR] et le grain du tissu [MATERIAL]. Focus ultra-précis sur chaque point de couture (stitching) et sur la typographie brodée qui doit être parfaitement lisible. Lumière douce naturelle, bokeh crémeux sur les bords du cadre. ATTENTION : la broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ.",
+    promptSuffix: "⚠️ CADRAGE MACRO ULTRA-SERRÉ : la broderie côté cœur DOIT remplir 60-80% du cadre. Le cadre EXCLUT EXPLICITEMENT : la capuche, le col, l'épaule, les cordons et leurs extrémités, le visage du modèle. Le cadre montre UNIQUEMENT la zone de broderie + un halo de tissu de 3-5 cm autour. ⚠️ TEXTURE DU TISSU VISIBLE : la matière dans le halo autour de la broderie DOIT correspondre EXACTEMENT à la matière du [PRODUCT] : pour un hoodie/zoodie/sweat → molleton épais brossé 280g, maille tricot dense de coton mélangé visible (NEVER a thin jersey, NEVER a t-shirt fabric) ; pour un t-shirt → jersey de coton épais et lourd. ⚠️ Pour un zoodie, si une partie de la fermeture éclair métallique centrale apparaîtrait sur le bord droit du cadre (côté zip), elle DOIT être visible (légèrement floutée) — JAMAIS la broderie ne chevauche ou n'est sur le zip. Gros plan macro extrême (objectif 100mm macro, f/2.8-f/4) sur la broderie en fil [THREAD_COLOR]. Focus ultra-précis sur chaque point de couture (stitching) et sur la typographie brodée qui doit être parfaitement lisible. Lumière douce naturelle, bokeh crémeux sur les bords du cadre. ATTENTION : la broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF.",
     packshotSuffix: "Gros plan macro absolu sur la broderie et le grain du tissu. Détails microscopiques des fils de broderie soyeux, de la tension du tissu et de la netteté du texte.",
     familySuffix: "Gros plan émotionnel : une main touchant la broderie ultra-réaliste sur le vêtement porté par un modèle. Focus absolu sur la netteté des lettres brodées, l'aspect soyeux des fils et la texture."
   },

@@ -100,6 +100,19 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   const garmentColorText = garmentColorLabel(settings.garmentColor);
   // Description produit YPxxx (lecture du mapping Hub-aligné dans constants.tsx)
   const productDescription = PRODUCT_DESCRIPTION_FR[settings.product] || settings.product;
+
+  /**
+   * Emplacement broderie produit-aware. Pour le zoodie YP021 (zippé), 'côté cœur' doit
+   * explicitement préciser 'à gauche du zip central' pour éviter que Gemini place la
+   * broderie sur ou au travers du zip.
+   */
+  function buildEmplacement(productId: string, size: number): string {
+    const isZipped = productId === 'YP021';
+    if (size >= 20) {
+      return isZipped ? "centre poitrine, MAIS sur le panneau gauche du porteur clairement à gauche du zip central, JAMAIS sur ou chevauchant le zip" : "centre du vêtement";
+    }
+    return isZipped ? "côté cœur (panneau gauche du porteur, à gauche du zip central, jamais sur le zip)" : "côté cœur";
+  }
   
   let promptText = "";
   let label = "";
@@ -108,7 +121,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     const packPrompts = getFullPackPrompts(settings.decorStyle);
     const shot = packPrompts[shotType as keyof typeof packPrompts];
     label = shot.label;
-    const emplacement = settings.size >= 20 ? "centre du vêtement" : "côté cœur";
+    const emplacement = buildEmplacement(settings.product, settings.size);
     const dimension = `${settings.size} cm`;
 
     promptText = shot.prompt
@@ -134,7 +147,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     label = shot.label;
 
     if (settings.mode === 'packshot') {
-      const emplacement = settings.size >= 20 ? "centre du vêtement" : "côté cœur";
+      const emplacement = buildEmplacement(settings.product, settings.size);
       const dimension = `${settings.size} cm`;
       
       promptText = PACKSHOT_PROMPT
