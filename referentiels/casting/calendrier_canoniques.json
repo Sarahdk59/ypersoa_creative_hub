@@ -1,0 +1,123 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "calendrier_canoniques",
+    "last_updated": "2026-04-30",
+    "principe": "Calendrier annuel cyclique des dates clés du casting Ypersoa : anniversaires des 21 entrées (22 individus), dates de mariage des couples, événements biographiques marquants. Format MM-DD pour permettre une boucle annuelle (l'année n'est pas significative). Source : déductions plausibles depuis les fiches détaillées (lots 1-4 + Coline + duos), à valider Sarah.",
+    "directive_usage": "1) Permet à atelier-casting de proposer des canoniques quand Sarah brief avec un contexte temporel ('campagne anniversaire Marie-Hélène' = oct, 'rentrée Félicie' = sept, etc.). 2) Permet de générer automatiquement un fil narratif annuel (12 micro-campagnes par mois). 3) Source pour queryCasting(brief) qui interprète une date implicite dans le brief.",
+    "_note_validation": "Anniversaires INFÉRÉS pour cohérence narrative (signe/saison qui colle au tempérament). Sarah peut écraser via une session validation."
+  },
+
+  "anniversaires": [
+    { "date": "01-11", "id": "MAN-S19-HENRI", "prenom": "Henri", "age": 72, "saison": "hiver", "_inference": "Capricorne, sobriété rive gauche" },
+    { "date": "01-30", "id": "MAN-P09", "prenom": "Gabin", "age": 5, "saison": "hiver", "_inference": "Verseau hivernal, fils de Mathieu" },
+    { "date": "02-14", "id": "MAN-P11-SARAH", "prenom": "Sarah", "age": 35, "saison": "hiver", "_inference": "Saint-Valentin pour le couple Léa+Sarah, clin d'œil" },
+    { "date": "02-26", "id": "MAN-S17", "prenom": "Césaria", "age": 40, "saison": "hiver", "_inference": "Poissons, lectrice introspective" },
+    { "date": "03-08", "id": "MAN-S20", "prenom": "Coline", "age": 35, "saison": "printemps", "_inference": "Journée internationale des droits des femmes — clin d'œil pour 'solo assumée puis mère'" },
+    { "date": "03-15", "id": "MAN-P08", "prenom": "Félicie", "age": 7, "saison": "printemps", "_inference": "Poissons-Bélier, énergie de printemps" },
+    { "date": "04-12", "id": "MAN-P04", "prenom": "Lila", "age": 45, "saison": "printemps", "_inference": "Bélier, exigence silencieuse mais combative" },
+    { "date": "04-25", "id": "MAN-P12", "prenom": "Brune", "age": 22, "saison": "printemps", "_inference": "Taureau-Bélier, solaire et sensorielle" },
+    { "date": "05-04", "id": "MAN-P06", "prenom": "Mathieu", "age": 40, "saison": "printemps", "_inference": "Taureau, papa-vélo-cargo, terre" },
+    { "date": "05-22", "id": "MAN-S15", "prenom": "Bébé Noé", "age": 1, "saison": "printemps", "_inference": "Gémeaux, naissance 2025" },
+    { "date": "06-08", "id": "MAN-P02", "prenom": "Anna", "age": 35, "saison": "été", "_inference": "Gémeaux, glycine en fleur, terrasse provençale" },
+    { "date": "06-12", "id": "MAN-S21", "prenom": "Hugo", "age": 30, "saison": "été", "_inference": "Gémeaux, jeune papa porteur" },
+    { "date": "06-30", "id": "MAN-S19-JOSEPHINE", "prenom": "Joséphine", "age": 70, "saison": "été", "_inference": "Cancer, matriarche caribéenne" },
+    { "date": "07-02", "id": "MAN-S18", "prenom": "Hassan", "age": 68, "saison": "été", "_inference": "Cancer, patriarche raconteur" },
+    { "date": "07-15", "id": "MAN-P03", "prenom": "Aïcha", "age": 40, "saison": "été", "_inference": "Cancer, hôte estivale, vivacité" },
+    { "date": "08-07", "id": "MAN-S14", "prenom": "Gaspard", "age": 23, "saison": "été", "_inference": "Lion-Vierge, étudiant skate observant" },
+    { "date": "08-21", "id": "MAN-P11-LEA", "prenom": "Léa", "age": 37, "saison": "été", "_inference": "Lion, prof de danse contemporaine" },
+    { "date": "09-28", "id": "MAN-P05", "prenom": "Béatrice", "age": 55, "saison": "automne", "_inference": "Balance, matriarche moderne, équilibre" },
+    { "date": "10-09", "id": "MAN-P10", "prenom": "Marie-Hélène", "age": 65, "saison": "automne", "_inference": "Balance, élégance campagne, écrit lettres" },
+    { "date": "10-22", "id": "MAN-P01", "prenom": "Clémence", "age": 38, "saison": "automne", "_inference": "Balance-Scorpion, antiquaire Honfleur, indépendante" },
+    { "date": "11-03", "id": "MAN-S13", "prenom": "Priya", "age": 16, "saison": "automne", "_inference": "Scorpion, ado concentrée ambitieuse" },
+    { "date": "11-19", "id": "MAN-P07", "prenom": "Nicolas", "age": 45, "saison": "hiver", "_inference": "Scorpion, fiable, doux, présent" },
+    { "date": "12-11", "id": "MAN-S16", "prenom": "Hiroshi", "age": 55, "saison": "hiver", "_inference": "Sagittaire, minimalisme intentionnel" }
+  ],
+
+  "anniversaires_de_mariage": [
+    { "date": "06-18", "id": "DUO_LEA_SARAH", "annee_mariage": 2023, "saison": "été" },
+    { "date": "09-14", "id": "DUO_HENRI_JOSEPHINE", "annee_mariage": 1986, "saison": "automne" }
+  ],
+
+  "evenements_biographiques_marquants": [
+    {
+      "date": "01-13",
+      "id_canonique": "MAN-S20",
+      "evenement": "Annonce grossesse Coline (publique, ~hiver 2024)",
+      "categorie": "naissance"
+    },
+    {
+      "date": "05-22",
+      "id_canonique": "MAN-S15",
+      "evenement": "Naissance de Noé (fils de Hugo & Coline, 2025)",
+      "categorie": "naissance",
+      "lien": "TRIO_COLINE_HUGO_NOE"
+    },
+    {
+      "date": "06-18",
+      "id_canonique": "MAN-P11",
+      "evenement": "Mariage Léa & Sarah (2023)",
+      "categorie": "mariage"
+    },
+    {
+      "date": "08-15",
+      "id_canonique": "MAN-P08",
+      "evenement": "Confitures d'automne avec Béatrice (rituel annuel) — préparation",
+      "categorie": "rituel_familial",
+      "lien": "DUO_BEATRICE_FELICIE"
+    },
+    {
+      "date": "09-02",
+      "id_canonique": "MAN-P08",
+      "evenement": "Rentrée scolaire de Félicie (CE2 en 2026)",
+      "categorie": "scolaire"
+    },
+    {
+      "date": "09-02",
+      "id_canonique": "MAN-P09",
+      "evenement": "Rentrée scolaire de Gabin (Maternelle Grande Section en 2026)",
+      "categorie": "scolaire"
+    },
+    {
+      "date": "09-14",
+      "id_canonique": "MAN-S19",
+      "evenement": "40 ans de mariage Henri & Joséphine (en 2026)",
+      "categorie": "mariage_anniversaire",
+      "_note_calage": "À déterminer si on fête 40 ans ou laisse le rituel discret"
+    },
+    {
+      "date": "11-15",
+      "id_canonique": "MAN-S18",
+      "evenement": "Anniversaire d'arrivée de Hassan en France (années 70)",
+      "categorie": "immigration_marqueur"
+    }
+  ],
+
+  "fenetres_commerciales_ypersoa": {
+    "_principe": "Mapping des grandes fenêtres commerciales annuelles vers les canoniques les plus pertinents pour le narratif. Format date MM-DD.",
+    "fenetres": [
+      { "date": "02-14", "nom": "Saint-Valentin", "canoniques_pertinents": ["DUO_LEA_SARAH", "DUO_HENRI_JOSEPHINE", "DUO_GASPARD_BRUNE"], "angle": "amour qui dure" },
+      { "date": "03-08", "nom": "Journée des droits des femmes", "canoniques_pertinents": ["MAN-S20", "MAN-P03", "MAN-P05"], "angle": "matriarcat moderne" },
+      { "date": "05-25", "nom": "Fête des Mères (4e dim mai)", "canoniques_pertinents": ["DUO_BEATRICE_FELICIE", "TRIO_AICHA_CESARIA_JOSEPHINE", "TRIO_COLINE_HUGO_NOE", "MAN-P10"], "angle": "transmission féminine" },
+      { "date": "06-15", "nom": "Fête des Pères (3e dim juin)", "canoniques_pertinents": ["DUO_MATHIEU_GABIN", "DUO_NICOLAS_GABIN", "DUO_HUGO_NOE", "TRIO_HENRI_NICOLAS_GABIN"], "angle": "paternité douce nouvelle génération" },
+      { "date": "09-02", "nom": "Rentrée scolaire", "canoniques_pertinents": ["MAN-P08", "MAN-P09", "MAN-S13", "DUO_BEATRICE_FELICIE"], "angle": "rituel famille avant la rentrée" },
+      { "date": "11-25", "nom": "Black Friday week", "canoniques_pertinents": ["TRIO_COPINES_ANNA_AICHA_LILA", "MAN-P01", "MAN-S20"], "angle": "se faire plaisir, s'offrir" },
+      { "date": "12-15", "nom": "Cadeaux de Noël", "canoniques_pertinents": ["DUO_HENRI_JOSEPHINE", "TRIO_AICHA_CESARIA_JOSEPHINE", "DUO_BEATRICE_FELICIE", "TRIO_HENRI_NICOLAS_GABIN"], "angle": "Noël famille multigénération" }
+    ]
+  },
+
+  "saisons_calendaires": {
+    "_principe": "Mapping mois → saison française pour les requêtes saisonnières.",
+    "hiver": ["12", "01", "02"],
+    "printemps": ["03", "04", "05"],
+    "été": ["06", "07", "08"],
+    "automne": ["09", "10", "11"]
+  },
+
+  "liens_systeme": {
+    "mannequins_recurrents": "referentiels/shooting/mannequins_recurrents.json",
+    "duos_detailles": "referentiels/shooting/duos_detailles_et_distribution.json",
+    "affinites_narratives": "referentiels/casting/affinites_narratives.json",
+    "spec_casting_intelligence": "_passations/IDEES_FUTURES/SPEC_casting_intelligence.md"
+  }
+}

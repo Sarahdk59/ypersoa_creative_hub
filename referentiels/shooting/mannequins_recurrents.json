@@ -1,16 +1,18 @@
 {
   "_meta": {
-    "schema_version": "3.1",
+    "schema_version": "3.2",
     "referentiel": "mannequins_recurrents",
-    "last_updated": "2026-04-20",
-    "directive_casting": "D1_BEAUTE_INCARNEE v2.0",
-    "statut": "COMPLET — 21 fiches détaillées sur 21 (100%)",
-    "principe": "Beauté incarnée à la française — ni supermodel, ni réalité crue. Références: Jeanne Damas, Caroline de Maigret, Clémentine Desseaux, Tina Kunakey, Mélodie Vaxelaire.",
+    "last_updated": "2026-04-30",
+    "directive_casting": "D2_DEUX_FAMILLES_ESTHETIQUES v1.0 (succède à D1_BEAUTE_INCARNEE v2.0)",
+    "statut": "ENRICHI — 21 fiches détaillées + 5 nouveaux champs biographiques (date_anniversaire, saison_preferee, evenements_de_vie, traits_narratifs, affinites_qualifiees)",
+    "principe": "Beauté incarnée à la française — ni supermodel, ni réalité crue. Casting bicéphale 'no-makeup naturelle' (22) + 'maquillée chic assumée' (1 — Clémence MAN-P01).",
+    "_note_v3_2_2026_04_30_nuit": "Les 5 nouveaux champs (date_anniversaire, saison_preferee, evenements_de_vie, traits_narratifs, affinites_qualifiees) sont des INFÉRENCES PLAUSIBLES posées par Claude Code en session de nuit, déduites des fiches détaillées (lots 1-4 + Coline + duos). À VALIDER PAR SARAH au matin. Format date : MM-DD (ne pas exposer l'année, le calendrier tourne en boucle annuelle).",
     "changelog": {
       "v1.0_2026-04-19": "Casting 20 mannequins, directive 1 'humanité visible obligatoire'",
       "v2.0_2026-04-20_matin": "Casting 21 mannequins, directive 1 v2.0 'beauté incarnée', re-calibrage démographique (64% blancs)",
-      "v3.0_2026-04-20_soir": "Assemblage J3.B — 20/21 fiches détaillées (alerte Coline non détaillée)",
-      "v3.1_2026-04-20_soir": "Cloture J3.B — 21/21 fiches détaillées (Coline ajoutée en session finale)"
+      "v3.0_2026-04-20_soir": "Assemblage J3.B — 20/21 fiches détaillées",
+      "v3.1_2026-04-20_soir": "Cloture J3.B — 21/21 fiches détaillées (Coline ajoutée)",
+      "v3.2_2026-04-30_nuit": "5 champs biographiques ajoutés à chaque entrée mannequin (à valider Sarah)"
     }
   },
 
@@ -34,12 +36,19 @@
     },
     "lot_4_bis": {
       "fichier": "referentiels/shooting/mannequins_coline_fiche.json",
-      "contient": ["MAN-S20 Coline"],
-      "_note": "Fiche ajoutée en cloture J3.B (oubli initial Lot 4)"
+      "contient": ["MAN-S20 Coline"]
     },
     "lot_5_duos": {
       "fichier": "referentiels/shooting/duos_detailles_et_distribution.json",
       "contient": ["DUO_BEATRICE_FELICIE", "DUO_MATHIEU_GABIN", "DUO_LEA_SARAH", "DUO_HENRI_JOSEPHINE", "Règles distribution"]
+    },
+    "calendrier": {
+      "fichier": "referentiels/casting/calendrier_canoniques.json",
+      "contient": ["Anniversaires + événements biographiques marquants des 21 entrées"]
+    },
+    "affinites": {
+      "fichier": "referentiels/casting/affinites_narratives.json",
+      "contient": ["Duos/trios qualifiés + affinités latentes pour queryCasting()"]
     }
   },
 
@@ -68,7 +77,7 @@
     "distribution": {
       "vitiligo": {
         "mannequin": "MAN-S17 Césaria",
-        "traitement_photo": "Visible mais discret. Lumière douce qui unifie. Style_wear classique français intemporel (PAS de statement encolures dégagées)."
+        "traitement_photo": "Visible mais discret. Lumière douce qui unifie. Style_wear classique français intemporel."
       },
       "canne_marche": {
         "mannequin": "MAN-S18 Hassan",
@@ -82,31 +91,524 @@
   },
 
   "mannequins": [
-    { "id": "MAN-P01", "prenom": "Clémence", "age": 38, "genre": "F", "ethnicite": "blanche française", "famille_esthetique": "maquillée chic assumée", "particularite": "frange rideau Bardot (signature unique), lèvres bordeaux MAC Diva, taches de rousseur denses", "duo": null, "style_wear_signature": "Parisienne assumée transplantée Normandie, antiquaire Honfleur (Charlotte Gainsbourg + Audrey Tautou + bordeaux signature)", "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P02", "prenom": "Anna", "age": 35, "genre": "F", "ethnicite": "blanche (sud de la France)", "particularite": "peau hâlée naturellement, taches de rousseur nez/épaules", "duo": null, "style_wear_signature": "Provençale moderne (Sessùn/Soeur)", "statut_fiche": "DETAILLEE_LOT2" },
-    { "id": "MAN-P03", "prenom": "Aïcha", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": null, "duo": null, "style_wear_signature": "Élégance parisienne-caribéenne (Clémentine Desseaux)", "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P04", "prenom": "Lila", "age": 45, "genre": "F", "ethnicite": "maghrébine", "particularite": null, "duo": null, "style_wear_signature": "Parisienne maghrébine sophistiquée (Leïla Bekhti élégante, The Row × Khaite)", "statut_fiche": "DETAILLEE_LOT2" },
-    { "id": "MAN-P05", "prenom": "Béatrice", "age": 55, "genre": "F", "ethnicite": "métisse noir-blanc", "particularite": "cheveux argentés élégants", "duo": "DUO_BEATRICE_FELICIE", "style_wear_signature": "Bourgeoise campagne normande (Vanessa Seward)", "statut_fiche": "DETAILLEE_LOT3" },
-    { "id": "MAN-P06", "prenom": "Mathieu", "age": 40, "genre": "H", "ethnicite": "blanc français", "particularite": "barbe brune de 3 jours, cheveux bruns dépeignés", "duo": "DUO_MATHIEU_GABIN", "style_wear_signature": "Papa sportwear chic (marinière Saint James + Stan Smith)", "statut_fiche": "DETAILLEE_LOT3" },
-    { "id": "MAN-P07", "prenom": "Nicolas", "age": 45, "genre": "H", "ethnicite": "blanc français", "particularite": "cheveux poivre-sel", "duo": null, "style_wear_signature": "Mari attentionné classique (Octobre/Maison Labiche)", "statut_fiche": "DETAILLEE_LOT3", "_note_remplacement": "Remplace Karim (retiré 2026-04-20, eczéma mains incompatible cadrage produit broderie)" },
-    { "id": "MAN-P08", "prenom": "Félicie", "age": 7, "genre": "F", "ethnicite": "blanche", "particularite": "taches de rousseur, fossettes, cheveux blond vénitien", "duo": "DUO_BEATRICE_FELICIE", "style_wear_signature": "Mini-vintage français (Bonpoint × Petit Bateau)", "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P09", "prenom": "Gabin", "age": 5, "genre": "H", "ethnicite": "blanc", "particularite": "cheveux noirs plutôt longs", "duo": "DUO_MATHIEU_GABIN", "style_wear_signature": "Mini-sportwear chic (salopette + marinière + Veja)", "statut_fiche": "DETAILLEE_LOT3" },
-    { "id": "MAN-P10", "prenom": "Marie-Hélène", "age": 65, "genre": "F", "ethnicite": "blanche française rousse", "particularite": "rousse cuivrée + mèches argentées, taches de rousseur denses", "duo": null, "style_wear_signature": "Élégance campagne française (Inès de la Fressange campagne)", "statut_fiche": "DETAILLEE_LOT3" },
-    { "id": "MAN-P11", "prenom": "Léa & Sarah", "age": "35-37", "genre": "F/F", "ethnicite": "métisse (Léa) + nordique (Sarah)", "particularite": "couple lesbien marié", "duo": "DUO_LEA_SARAH", "style_wear_signature": "Léa Canadian tuxedo denim + Sarah minimalisme nordique", "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-P12", "prenom": "Brune", "age": 22, "genre": "F", "ethnicite": "blanche française", "particularite": "cheveux bruns longs, piercing discret", "duo": null, "style_wear_signature": "Créative mode décontractée Gen Z (Thylane Blondeau civile)", "statut_fiche": "DETAILLEE_LOT3" },
-    { "id": "MAN-S13", "prenom": "Priya", "age": 16, "genre": "F", "ethnicite": "sud-asiatique (sri-lankaise)", "particularite": null, "duo": null, "style_wear_signature": "Ado sportwear élégant (jogger + brassière + Nike Cortez)", "statut_fiche": "DETAILLEE_LOT4" },
-    { "id": "MAN-S14", "prenom": "Gaspard", "age": 23, "genre": "H", "ethnicite": "blanc", "particularite": "cheveux châtains mi-longs en bataille, barbe naissante", "duo": null, "style_wear_signature": "Skateur élégant étudiant archi (Carhartt + Vans usées)", "statut_fiche": "DETAILLEE_LOT4", "_note_remplacement": "Remplace Marcus (retiré 2026-04-20, re-calibrage démographique)" },
-    { "id": "MAN-S15", "prenom": "Bébé Noé", "age": 1, "genre": "indéf", "ethnicite": "blanc", "particularite": null, "duo": null, "style_wear_signature": "Bébé — body brodé, bavoirs brodés, pyjamas coton", "statut_fiche": "DETAILLEE_LOT4_MINIMALE" },
-    { "id": "MAN-S16", "prenom": "Hiroshi", "age": 55, "genre": "H", "ethnicite": "asiatique est (japonais)", "particularite": "cheveux argentés", "duo": null, "style_wear_signature": "Architecte parisien minimaliste (Yohji/CDG/Lemaire)", "statut_fiche": "DETAILLEE_LOT4" },
-    { "id": "MAN-S17", "prenom": "Césaria", "age": 40, "genre": "F", "ethnicite": "afro-caribéenne", "particularite": "vitiligo discret (mains/cou/tempe)", "duo": null, "style_wear_signature": "Classique français intemporel (Inès de la Fressange × prof Sorbonne chic)", "statut_fiche": "DETAILLEE_LOT1" },
-    { "id": "MAN-S18", "prenom": "Hassan", "age": 68, "genre": "H", "ethnicite": "maghrébin (algérien)", "particularite": "canne en bois sculpté", "duo": null, "style_wear_signature": "Patriarche algérois Paris (chemises blanches + cardigans)", "statut_fiche": "DETAILLEE_LOT4" },
-    { "id": "MAN-S19", "prenom": "Henri & Joséphine", "age": "72 + 70", "genre": "H/F", "ethnicite": "blanc (Henri) + afro-caribéenne (Joséphine)", "particularite": "couple senior mixte, 40 ans de mariage", "duo": "DUO_HENRI_JOSEPHINE", "style_wear_signature": "Henri bourgeoisie rive gauche (Weston+PdG) + Joséphine élégante métissée (tailleurs + or fin)", "statut_fiche": "DETAILLEE_LOT4" },
-    { "id": "MAN-S20", "prenom": "Coline", "age": 35, "genre": "F", "ethnicite": "blanche française", "particularite": "fauteuil roulant", "duo": null, "style_wear_signature": "Minimaliste urbaine (Emoi Emoi × The Row light, Totême/Arket)", "statut_fiche": "DETAILLEE_LOT4_BIS" },
-    { "id": "MAN-S21", "prenom": "Hugo", "age": 30, "genre": "H", "ethnicite": "blanc", "particularite": "jeune papa, barbe courte, porte-bébé permanent", "duo": null, "style_wear_signature": "Papa nouveau-né urbain (sweats + chinos + baskets blanches)", "statut_fiche": "DETAILLEE_LOT4" }
+    {
+      "id": "MAN-P01",
+      "prenom": "Clémence",
+      "age": 38,
+      "genre": "F",
+      "ethnicite": "blanche française",
+      "famille_esthetique": "maquillée chic assumée",
+      "particularite": "frange rideau Bardot (signature unique), lèvres bordeaux MAC Diva, taches de rousseur denses",
+      "duo": null,
+      "style_wear_signature": "Parisienne assumée transplantée Normandie, antiquaire Honfleur (Charlotte Gainsbourg + Audrey Tautou + bordeaux signature)",
+      "statut_fiche": "DETAILLEE_LOT1",
+      "date_anniversaire": "10-22",
+      "saison_preferee": "automne",
+      "evenements_de_vie": [
+        "Reprise de la boutique de sa grand-mère à Honfleur (2018)",
+        "Divorce assumé comme libération (2020)",
+        "Naissance de son ado (2010-2012, ~14-16 ans aujourd'hui)"
+      ],
+      "traits_narratifs": ["indépendante", "assumée", "instinctive", "humour-sec", "savoir-faire-temps-long"],
+      "affinites_qualifiees": {
+        "DUO_LEA_SARAH": "résonance générationnelle 35-38 ans, Lille/Honfleur, esthétique opposée mais valeurs proches",
+        "MAN-P10": "transmission antiquités/livres avec Marie-Hélène (45 ans + 27 d'écart, mentorat informel)",
+        "MAN-S17": "amitié culturelle Césaria (prof de lettres / antiquaire) — discussion bouquins"
+      }
+    },
+    {
+      "id": "MAN-P02",
+      "prenom": "Anna",
+      "age": 35,
+      "genre": "F",
+      "ethnicite": "blanche (sud de la France)",
+      "particularite": "peau hâlée naturellement, taches de rousseur nez/épaules",
+      "duo": null,
+      "style_wear_signature": "Provençale moderne (Sessùn/Soeur)",
+      "statut_fiche": "DETAILLEE_LOT2",
+      "date_anniversaire": "06-08",
+      "saison_preferee": "été",
+      "evenements_de_vie": [
+        "Quitté Paris pour l'arrière-pays provençal (~2020-2022)",
+        "Installation maison en pierre + atelier céramique"
+      ],
+      "traits_narratifs": ["solaire", "exigeante", "douce", "matières-vraies", "exode-parisien"],
+      "affinites_qualifiees": {
+        "TRIO_COPINES_ANNA_AICHA_LILA": "trio d'amies adultes CSP+ multiculturel — girl gang établi",
+        "MAN-P03": "amitié de longue date avec Aïcha (parisiennes restées proches malgré l'exode)",
+        "MAN-P04": "Lila, complice citadine — descend chez elle l'été"
+      }
+    },
+    {
+      "id": "MAN-P03",
+      "prenom": "Aïcha",
+      "age": 40,
+      "genre": "F",
+      "ethnicite": "afro-caribéenne",
+      "particularite": null,
+      "duo": null,
+      "style_wear_signature": "Élégance parisienne-caribéenne (Clémentine Desseaux)",
+      "statut_fiche": "DETAILLEE_LOT1",
+      "date_anniversaire": "07-15",
+      "saison_preferee": "été",
+      "evenements_de_vie": [
+        "Installation à Paris avec sa mère Joséphine (origine Martinique)",
+        "Carrière DA / galeriste à Paris (~2008-aujourd'hui)",
+        "Voyages réguliers Martinique en famille"
+      ],
+      "traits_narratifs": ["élégante-sans-effort", "hôte-née", "vivacité-du-rire", "diaspora-assumée", "matrimoniale"],
+      "affinites_qualifiees": {
+        "TRIO_AICHA_CESARIA_JOSEPHINE": "3 générations féminines afro-caribéennes (mère + 2 filles adultes)",
+        "MAN-S19-JOSEPHINE": "mère biologique",
+        "MAN-S17": "sœur (Césaria)",
+        "MAN-S19-HENRI": "beau-père (2e mariage de Joséphine)",
+        "TRIO_COPINES_ANNA_AICHA_LILA": "girl gang adulte"
+      }
+    },
+    {
+      "id": "MAN-P04",
+      "prenom": "Lila",
+      "age": 45,
+      "genre": "F",
+      "ethnicite": "maghrébine",
+      "particularite": null,
+      "duo": null,
+      "style_wear_signature": "Parisienne maghrébine sophistiquée (Leïla Bekhti élégante, The Row × Khaite)",
+      "statut_fiche": "DETAILLEE_LOT2",
+      "date_anniversaire": "04-12",
+      "saison_preferee": "printemps",
+      "evenements_de_vie": [
+        "Mère d'ados (premier enfant ~2010)",
+        "Carrière exigeante (architecte ou avocate d'affaires)",
+        "Statut marié/divorcée fluctuant selon shot — mère présente"
+      ],
+      "traits_narratifs": ["exigence-silencieuse", "cultivée", "cadeaux-réfléchis", "élégance-discrète", "ni-exotisée-ni-effacée"],
+      "affinites_qualifiees": {
+        "TRIO_COPINES_ANNA_AICHA_LILA": "girl gang adulte",
+        "MAN-S18": "filiation culturelle maghrébine indirecte (mais générations différentes)",
+        "MAN-P03": "amie de longue date"
+      }
+    },
+    {
+      "id": "MAN-P05",
+      "prenom": "Béatrice",
+      "age": 55,
+      "genre": "F",
+      "ethnicite": "métisse noir-blanc",
+      "particularite": "cheveux argentés élégants",
+      "duo": "DUO_BEATRICE_FELICIE",
+      "style_wear_signature": "Bourgeoise campagne normande (Vanessa Seward)",
+      "statut_fiche": "DETAILLEE_LOT3",
+      "date_anniversaire": "09-28",
+      "saison_preferee": "automne",
+      "evenements_de_vie": [
+        "Retraite récente (~2024) après carrière prof d'université ou notaire",
+        "Divorcée — autonomie pleinement assumée",
+        "Naissance de Félicie (sa petite-fille, 2019)"
+      ],
+      "traits_narratifs": ["matriarche-moderne", "cultivée", "sans-affectation", "transmission", "chaleureuse"],
+      "affinites_qualifiees": {
+        "DUO_BEATRICE_FELICIE": "petite-fille Félicie (transmission)",
+        "MAN-P10": "amitié de longue date avec Marie-Hélène (deux dames du même âge campagne)",
+        "MAN-S19-JOSEPHINE": "même génération matriarcale"
+      }
+    },
+    {
+      "id": "MAN-P06",
+      "prenom": "Mathieu",
+      "age": 40,
+      "genre": "H",
+      "ethnicite": "blanc français",
+      "particularite": "barbe brune de 3 jours, cheveux bruns dépeignés",
+      "duo": "DUO_MATHIEU_GABIN",
+      "style_wear_signature": "Papa sportwear chic (marinière Saint James + Stan Smith)",
+      "statut_fiche": "DETAILLEE_LOT3",
+      "date_anniversaire": "05-04",
+      "saison_preferee": "printemps",
+      "evenements_de_vie": [
+        "Naissance de Gabin (2021)",
+        "Mariage (~2018-2019)",
+        "Reconversion freelance / DA-ingé son (~2020)"
+      ],
+      "traits_narratifs": ["papa-présent", "cool-sans-être-branché", "stylé-sans-y-penser", "vélo-cargo", "weekend-camping"],
+      "affinites_qualifiees": {
+        "DUO_MATHIEU_GABIN": "fils Gabin (papa-fils)",
+        "DUO_MATHIEU_NICOLAS": "amitié masculine adulte avec Nicolas",
+        "TRIO_HENRI_NICOLAS_GABIN": "Mathieu absent du trio mais Gabin son fils — alt narratif"
+      }
+    },
+    {
+      "id": "MAN-P07",
+      "prenom": "Nicolas",
+      "age": 45,
+      "genre": "H",
+      "ethnicite": "blanc français",
+      "particularite": "cheveux poivre-sel",
+      "duo": null,
+      "style_wear_signature": "Mari attentionné classique (Octobre/Maison Labiche)",
+      "statut_fiche": "DETAILLEE_LOT3",
+      "_note_remplacement": "Remplace Karim (retiré 2026-04-20, eczéma mains incompatible cadrage produit broderie)",
+      "date_anniversaire": "11-19",
+      "saison_preferee": "hiver",
+      "evenements_de_vie": [
+        "Mariage (~2010, marié de longue date)",
+        "Paternité tardive choisie",
+        "Stabilité professionnelle (cadre / indépendant)"
+      ],
+      "traits_narratifs": ["fiable", "doux", "présent", "élégant-sans-recherche", "fidèle-à-ses-marques"],
+      "affinites_qualifiees": {
+        "DUO_NICOLAS_GABIN": "alt narratif père-fils (vs Mathieu — paternité tardive plus calme)",
+        "DUO_MATHIEU_NICOLAS": "amitié adulte Mathieu (les deux papas)",
+        "TRIO_HENRI_NICOLAS_GABIN": "transmission masculine 3 générations"
+      }
+    },
+    {
+      "id": "MAN-P08",
+      "prenom": "Félicie",
+      "age": 7,
+      "genre": "F",
+      "ethnicite": "blanche",
+      "particularite": "taches de rousseur, fossettes, cheveux blond vénitien",
+      "duo": "DUO_BEATRICE_FELICIE",
+      "style_wear_signature": "Mini-vintage français (Bonpoint × Petit Bateau)",
+      "statut_fiche": "DETAILLEE_LOT1",
+      "date_anniversaire": "03-15",
+      "saison_preferee": "printemps",
+      "evenements_de_vie": [
+        "Naissance (2019)",
+        "Entrée au CP (rentrée 2025)",
+        "Vacances longues chez sa grand-mère Béatrice en Normandie"
+      ],
+      "traits_narratifs": ["rêveuse", "imaginative", "vive", "pieds-nus-jardin", "raconte-histoires"],
+      "affinites_qualifiees": {
+        "DUO_BEATRICE_FELICIE": "grand-mère Béatrice",
+        "MAN-P09": "Gabin (cousin de cœur, même âge)",
+        "MAN-P10": "Marie-Hélène (figure grand-mère bis, amie de Béatrice)"
+      }
+    },
+    {
+      "id": "MAN-P09",
+      "prenom": "Gabin",
+      "age": 5,
+      "genre": "H",
+      "ethnicite": "blanc",
+      "particularite": "cheveux noirs plutôt longs",
+      "duo": "DUO_MATHIEU_GABIN",
+      "style_wear_signature": "Mini-sportwear chic (salopette + marinière + Veja)",
+      "statut_fiche": "DETAILLEE_LOT3",
+      "date_anniversaire": "01-30",
+      "saison_preferee": "hiver",
+      "evenements_de_vie": [
+        "Naissance (2021, Mathieu papa)",
+        "Premier vélo (2024)",
+        "Entrée en maternelle (2024)"
+      ],
+      "traits_narratifs": ["vif", "curieux", "constructeur-cabanes", "questions-mille", "cuisine-avec-papa"],
+      "affinites_qualifiees": {
+        "DUO_MATHIEU_GABIN": "papa Mathieu",
+        "DUO_NICOLAS_GABIN": "alt narratif père-fils Nicolas",
+        "TRIO_HENRI_NICOLAS_GABIN": "transmission masculine 3 générations",
+        "MAN-P08": "Félicie (cousin de cœur)"
+      }
+    },
+    {
+      "id": "MAN-P10",
+      "prenom": "Marie-Hélène",
+      "age": 65,
+      "genre": "F",
+      "ethnicite": "blanche française rousse",
+      "particularite": "rousse cuivrée + mèches argentées, taches de rousseur denses",
+      "duo": null,
+      "style_wear_signature": "Élégance campagne française (Inès de la Fressange campagne)",
+      "statut_fiche": "DETAILLEE_LOT3",
+      "date_anniversaire": "10-09",
+      "saison_preferee": "automne",
+      "evenements_de_vie": [
+        "Veuvage ou divorce (~2015)",
+        "Reprise jardin paysagiste / librairie héritée",
+        "Petits-enfants en visite régulière"
+      ],
+      "traits_narratifs": ["élégance-campagne", "écrit-lettres", "jardin-vrai", "sans-jouer-parisienne", "transmission-douce"],
+      "affinites_qualifiees": {
+        "MAN-P05": "amitié de longue date avec Béatrice",
+        "MAN-P08": "Félicie (figure grand-mère bis)",
+        "MAN-P01": "amitié intergénérationnelle Clémence (antiquaire/jardinière, Honfleur proche)"
+      }
+    },
+    {
+      "id": "MAN-P11",
+      "prenom": "Léa & Sarah",
+      "age": "35-37",
+      "genre": "F/F",
+      "ethnicite": "métisse (Léa) + nordique (Sarah)",
+      "particularite": "couple lesbien marié",
+      "duo": "DUO_LEA_SARAH",
+      "style_wear_signature": "Léa Canadian tuxedo denim + Sarah minimalisme nordique",
+      "statut_fiche": "DETAILLEE_LOT1",
+      "date_anniversaire_lea": "08-21",
+      "date_anniversaire_sarah": "02-14",
+      "date_mariage": "06-18",
+      "saison_preferee": "été",
+      "evenements_de_vie": [
+        "Rencontre à Lille (~2018)",
+        "Mariage (2023, 3 ans aujourd'hui)",
+        "Achat appartement lumineux (2024)"
+      ],
+      "traits_narratifs": ["complicité-silencieuse", "couple-fait-pas-statement", "voyageuses", "reçoivent", "esthétique-douce"],
+      "affinites_qualifiees": {
+        "DUO_LEA_SARAH": "couple",
+        "MAN-P01": "résonance Clémence (Lille/Honfleur, valeurs proches)",
+        "MAN-P12": "amie plus jeune Brune (groupe créatives Lille/Paris)"
+      }
+    },
+    {
+      "id": "MAN-P12",
+      "prenom": "Brune",
+      "age": 22,
+      "genre": "F",
+      "ethnicite": "blanche française",
+      "particularite": "cheveux bruns longs, piercing discret",
+      "duo": null,
+      "style_wear_signature": "Créative mode décontractée Gen Z (Thylane Blondeau civile)",
+      "statut_fiche": "DETAILLEE_LOT3",
+      "date_anniversaire": "04-25",
+      "saison_preferee": "printemps",
+      "evenements_de_vie": [
+        "Études en mode/beaux-arts (~2022 démarrage)",
+        "Vit en coloc ou chez ses parents selon période",
+        "Premier amour adulte avec Gaspard (~2024)"
+      ],
+      "traits_narratifs": ["solaire", "lucide", "Gen-Z-créative", "achète-pour-soi-et-mère", "moins-intello-que-Doillon"],
+      "affinites_qualifiees": {
+        "DUO_GASPARD_BRUNE": "couple étudiant créatif",
+        "MAN-P11": "amitié avec Léa+Sarah (groupe créatives plus âgées)",
+        "MAN-P10": "achète Ypersoa pour sa mère (Marie-Hélène-like figure)"
+      }
+    },
+    {
+      "id": "MAN-S13",
+      "prenom": "Priya",
+      "age": 16,
+      "genre": "F",
+      "ethnicite": "sud-asiatique (sri-lankaise)",
+      "particularite": null,
+      "duo": null,
+      "style_wear_signature": "Ado sportwear élégant (jogger + brassière + Nike Cortez)",
+      "statut_fiche": "DETAILLEE_LOT4",
+      "date_anniversaire": "11-03",
+      "saison_preferee": "automne",
+      "evenements_de_vie": [
+        "Compétition danse contemporaine ou gymnastique (~2025-2026)",
+        "Lycée — Bac dans 2 ans",
+        "Premier cadeau Ypersoa reçu d'un proche"
+      ],
+      "traits_narratifs": ["ambitieuse", "concentrée", "sportive", "intégrée-sans-effacée", "nouvelle-génération"],
+      "affinites_qualifiees": {
+        "MAN-P04": "résonance avec Lila (mère d'ados, figure de mentorat possible)",
+        "MAN-S16": "filiation culturelle asiatique (mais générations très différentes)"
+      }
+    },
+    {
+      "id": "MAN-S14",
+      "prenom": "Gaspard",
+      "age": 23,
+      "genre": "H",
+      "ethnicite": "blanc",
+      "particularite": "cheveux châtains mi-longs en bataille, barbe naissante",
+      "duo": null,
+      "style_wear_signature": "Skateur élégant étudiant archi (Carhartt + Vans usées)",
+      "statut_fiche": "DETAILLEE_LOT4",
+      "_note_remplacement": "Remplace Marcus (retiré 2026-04-20, re-calibrage démographique)",
+      "date_anniversaire": "08-07",
+      "saison_preferee": "été",
+      "evenements_de_vie": [
+        "Études archi/beaux-arts (~2021 démarrage)",
+        "Premier amour adulte avec Brune (~2024)",
+        "Photographe amateur — premier appareil reçu de sa sœur"
+      ],
+      "traits_narratifs": ["décomplexé", "observant", "skate-musique-photo", "pas-macho", "pas-blasé"],
+      "affinites_qualifiees": {
+        "DUO_GASPARD_BRUNE": "couple étudiant créatif",
+        "MAN-P12": "Brune copine"
+      }
+    },
+    {
+      "id": "MAN-S15",
+      "prenom": "Bébé Noé",
+      "age": 1,
+      "genre": "indéf",
+      "ethnicite": "blanc",
+      "particularite": null,
+      "duo": null,
+      "style_wear_signature": "Bébé — body brodé, bavoirs brodés, pyjamas coton",
+      "statut_fiche": "DETAILLEE_LOT4_MINIMALE",
+      "date_anniversaire": "05-22",
+      "saison_preferee": "été",
+      "evenements_de_vie": [
+        "Naissance (2025, fils de Hugo)",
+        "Premiers pas en cours"
+      ],
+      "traits_narratifs": ["premier-cadeau-naissance", "présence-symbolique", "famille-multigeneration"],
+      "affinites_qualifiees": {
+        "DUO_HUGO_NOE": "papa Hugo",
+        "TRIO_COLINE_HUGO_NOE": "famille nucléaire (mère Coline + papa Hugo + bébé Noé)"
+      }
+    },
+    {
+      "id": "MAN-S16",
+      "prenom": "Hiroshi",
+      "age": 55,
+      "genre": "H",
+      "ethnicite": "asiatique est (japonais)",
+      "particularite": "cheveux argentés",
+      "duo": null,
+      "style_wear_signature": "Architecte parisien minimaliste (Yohji/CDG/Lemaire)",
+      "statut_fiche": "DETAILLEE_LOT4",
+      "date_anniversaire": "12-11",
+      "saison_preferee": "hiver",
+      "evenements_de_vie": [
+        "Installation en France (1999, ~25 ans)",
+        "Mariage avec Française (~2002)",
+        "Naissance de ses ados (~2008-2010)"
+      ],
+      "traits_narratifs": ["minimalisme-rigoureux", "intentionnel", "silencieux", "élégance-japonaise-parisienne", "précision"],
+      "affinites_qualifiees": {
+        "MAN-S13": "filiation culturelle asiatique indirecte"
+      }
+    },
+    {
+      "id": "MAN-S17",
+      "prenom": "Césaria",
+      "age": 40,
+      "genre": "F",
+      "ethnicite": "afro-caribéenne",
+      "particularite": "vitiligo discret (mains/cou/tempe)",
+      "duo": null,
+      "style_wear_signature": "Classique français intemporel (Inès de la Fressange × prof Sorbonne chic)",
+      "statut_fiche": "DETAILLEE_LOT1",
+      "date_anniversaire": "02-26",
+      "saison_preferee": "hiver",
+      "evenements_de_vie": [
+        "Carrière prof de lettres Paris (~2010-aujourd'hui)",
+        "Voyages réguliers Martinique",
+        "Aînée des sœurs (Aïcha sa cadette)"
+      ],
+      "traits_narratifs": ["élégance-discrète", "lectrice", "posée", "transmet-classe-française", "beauté-assumée"],
+      "affinites_qualifiees": {
+        "TRIO_AICHA_CESARIA_JOSEPHINE": "3 générations matriarche",
+        "MAN-S19-JOSEPHINE": "mère biologique",
+        "MAN-P03": "sœur (Aïcha)",
+        "MAN-S19-HENRI": "beau-père",
+        "MAN-P01": "amie cultivée (résonance lecture/antiquités)"
+      }
+    },
+    {
+      "id": "MAN-S18",
+      "prenom": "Hassan",
+      "age": 68,
+      "genre": "H",
+      "ethnicite": "maghrébin (algérien)",
+      "particularite": "canne en bois sculpté",
+      "duo": null,
+      "style_wear_signature": "Patriarche algérois Paris (chemises blanches + cardigans)",
+      "statut_fiche": "DETAILLEE_LOT4",
+      "date_anniversaire": "07-02",
+      "saison_preferee": "été",
+      "evenements_de_vie": [
+        "Immigration France (années 70)",
+        "Carrière contremaître/ouvrier qualifié/commerçant",
+        "Retraite (~2018)",
+        "Petits-enfants partout dans l'appart"
+      ],
+      "traits_narratifs": ["dignité-immigré-construit", "chaleureux", "fier", "offrant", "raconteur"],
+      "affinites_qualifiees": {
+        "MAN-P04": "filiation culturelle maghrébine indirecte",
+        "MAN-S19-HENRI": "même génération seniors urbains"
+      }
+    },
+    {
+      "id": "MAN-S19",
+      "prenom": "Henri & Joséphine",
+      "age": "72 + 70",
+      "genre": "H/F",
+      "ethnicite": "blanc (Henri) + afro-caribéenne (Joséphine)",
+      "particularite": "couple senior mixte, 40 ans de mariage",
+      "duo": "DUO_HENRI_JOSEPHINE",
+      "style_wear_signature": "Henri bourgeoisie rive gauche (Weston+PdG) + Joséphine élégante métissée (tailleurs + or fin)",
+      "statut_fiche": "DETAILLEE_LOT4",
+      "date_anniversaire_henri": "01-11",
+      "date_anniversaire_josephine": "06-30",
+      "date_mariage": "09-14",
+      "saison_preferee": "automne",
+      "evenements_de_vie": [
+        "Mariage (~1986, 40 ans en 2026)",
+        "Henri médecin/architecte retraité (~2018)",
+        "Joséphine ancienne psychanalyste/avocate retraitée",
+        "2e mariage de Joséphine — beau-père d'Aïcha et Césaria"
+      ],
+      "traits_narratifs": ["bourgeoisie-éclairée", "mixte", "ouverte", "concerts-expos-lectures", "long-amour-posé"],
+      "affinites_qualifiees": {
+        "DUO_HENRI_JOSEPHINE": "couple",
+        "TRIO_AICHA_CESARIA_JOSEPHINE": "Joséphine mère biologique d'Aïcha et Césaria",
+        "TRIO_HENRI_NICOLAS_GABIN": "Henri grand-père dans transmission masculine",
+        "MAN-P03": "filles d'âge adulte (Aïcha, Césaria)",
+        "MAN-S17": "filles d'âge adulte (Aïcha, Césaria)"
+      }
+    },
+    {
+      "id": "MAN-S20",
+      "prenom": "Coline",
+      "age": 35,
+      "genre": "F",
+      "ethnicite": "blanche française",
+      "particularite": "fauteuil roulant",
+      "duo": null,
+      "style_wear_signature": "Minimaliste urbaine (Emoi Emoi × The Row light, Totême/Arket)",
+      "statut_fiche": "DETAILLEE_LOT4_BIS",
+      "date_anniversaire": "03-08",
+      "saison_preferee": "printemps",
+      "evenements_de_vie": [
+        "Carrière com/conseil indépendante (~2018-aujourd'hui)",
+        "Rencontre Hugo (~2023)",
+        "Naissance de Noé (2025)"
+      ],
+      "traits_narratifs": ["solo-assumée-puis-mère", "exigeante-goût", "vie-sociale-riche", "fauteuil-jamais-définit", "trentenaire-épanouie"],
+      "affinites_qualifiees": {
+        "TRIO_COLINE_HUGO_NOE": "famille nucléaire",
+        "MAN-S21": "compagnon Hugo",
+        "MAN-S15": "fils Noé"
+      }
+    },
+    {
+      "id": "MAN-S21",
+      "prenom": "Hugo",
+      "age": 30,
+      "genre": "H",
+      "ethnicite": "blanc",
+      "particularite": "jeune papa, barbe courte, porte-bébé permanent",
+      "duo": null,
+      "style_wear_signature": "Papa nouveau-né urbain (sweats + chinos + baskets blanches)",
+      "statut_fiche": "DETAILLEE_LOT4",
+      "date_anniversaire": "06-12",
+      "saison_preferee": "été",
+      "evenements_de_vie": [
+        "Carrière ingé/chef de projet digital",
+        "Rencontre Coline (~2023)",
+        "Naissance de Noé (2025) — congé parentalité en cours/retour"
+      ],
+      "traits_narratifs": ["papa-2026", "présent", "tendre", "bousculé", "porte-bébé-vissé"],
+      "affinites_qualifiees": {
+        "DUO_HUGO_NOE": "papa-fils",
+        "TRIO_COLINE_HUGO_NOE": "famille nucléaire",
+        "MAN-S20": "compagne Coline",
+        "MAN-S15": "fils Noé"
+      }
+    }
   ],
 
   "duos_resume": {
     "_reference_complete": "referentiels/shooting/duos_detailles_et_distribution.json",
+    "_reference_affinites": "referentiels/casting/affinites_narratives.json",
     "_note_v2": "Étendu 2026-04-30 avec 8 nouveaux dispositifs (4 duos + 4 trios). Format unifié 'duos[]' avec champ 'type' (duo|trio) et 'nb_membres'.",
     "duos": [
       { "id": "DUO_BEATRICE_FELICIE", "type": "duo", "nb_membres": 2, "nature": "grand-mère + petite-fille", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse intergénérationnelle campagne normande" },
@@ -142,6 +644,9 @@
     "types_de_shots": "referentiels/shooting/types_de_shots.json",
     "ambiances_shooting": "referentiels/shooting/ambiances_shooting.json",
     "duos_detailles": "referentiels/shooting/duos_detailles_et_distribution.json",
-    "fiches_mannequins": "Voir section index_fichiers_detailles ci-dessus"
+    "fiches_mannequins": "Voir section index_fichiers_detailles ci-dessus",
+    "calendrier_canoniques": "referentiels/casting/calendrier_canoniques.json",
+    "affinites_narratives": "referentiels/casting/affinites_narratives.json",
+    "spec_casting_intelligence": "_passations/IDEES_FUTURES/SPEC_casting_intelligence.md"
   }
 }

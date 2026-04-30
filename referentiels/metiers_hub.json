@@ -1,0 +1,148 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "metiers_hub",
+    "last_updated": "2026-04-30",
+    "principe": "Le Hub Ypersoa est positionné comme un AI orchestrator centralisant des AI Studio tools, conçu pour remplacer 14 métiers d'agence créative et permettre le batch deployment de 150 motifs/an sur Shopify avec full multi-channel content output. Cette table est la source canonique du mapping métier ↔ module/app du Hub. Source : décision Sarah cadrée 30/04/2026 (cf. CLAUDE.md citation gravée 'Le Hub remplace les 14 métiers de la communication').",
+    "directive_usage": "1) Pour la topbar Hub, exposer le métier de l'app active comme breadcrumb (cf. session 30/04 — piste A breadcrumb). 2) Pour toute proposition de feature, vérifier l'inscription dans ce mapping. 3) Tout ajout de 15ème métier nécessite recadrage avec Sarah."
+  },
+
+  "metiers_remplaces": [
+    {
+      "id": 1,
+      "metier": "Directeur Artistique (DA)",
+      "module_hub": "Choix ambiances, canoniques, angles narratifs",
+      "statut": "livré",
+      "apps_principales": ["atelier-lookbook", "shooting-director"]
+    },
+    {
+      "id": 2,
+      "metier": "Photographe shooting",
+      "module_hub": "Génération Gemini 3.1 (5 angles éditoriaux)",
+      "statut": "livré",
+      "apps_principales": ["atelier-shooting"]
+    },
+    {
+      "id": 3,
+      "metier": "Modèle / Mannequin",
+      "module_hub": "23 canoniques AI character ref",
+      "statut": "livré",
+      "apps_principales": ["atelier-shooting", "atelier-social", "atelier-lookbook"]
+    },
+    {
+      "id": 4,
+      "metier": "Maquilleuse / Coiffeuse",
+      "module_hub": "Signatures style_wear + maquillage_signature dans fiches mannequins",
+      "statut": "livré",
+      "apps_principales": ["atelier-shooting"]
+    },
+    {
+      "id": 5,
+      "metier": "Styliste shooting",
+      "module_hub": "style_wear par canonique avec pieces_favorites",
+      "statut": "livré",
+      "apps_principales": ["atelier-lookbook", "atelier-shooting"]
+    },
+    {
+      "id": 6,
+      "metier": "Décorateur / Régisseur",
+      "module_hub": "5 ambiances pré-définies (Studio Brut, Loft Organique, L'Aube Intime, Échappée Sauvage, Lumière Sépia)",
+      "statut": "livré",
+      "apps_principales": ["atelier-shooting", "atelier-social"]
+    },
+    {
+      "id": 7,
+      "metier": "Retoucheur photo",
+      "module_hub": "Sortie Gemini directe (pas de retouche manuelle)",
+      "statut": "livré",
+      "apps_principales": ["atelier-shooting"]
+    },
+    {
+      "id": 8,
+      "metier": "Copywriter",
+      "module_hub": "OpenAI gpt-4o (caption Insta + caption Pinterest)",
+      "statut": "livré",
+      "apps_principales": ["atelier-social"]
+    },
+    {
+      "id": 9,
+      "metier": "Community Manager",
+      "module_hub": "5 hooks éditoriaux par registre (Émotion, Question, POV, Humour, Affirmation)",
+      "statut": "livré",
+      "apps_principales": ["atelier-social"]
+    },
+    {
+      "id": 10,
+      "metier": "Brand Manager",
+      "module_hub": "Brand-safety regex + red lines automatiques (tutoiement, anti 'fait main', anti marketplaces)",
+      "statut": "livré",
+      "apps_principales": ["atelier-social"]
+    },
+    {
+      "id": 11,
+      "metier": "Graphiste mise en page",
+      "module_hub": "Module overlay 5 templates HTML/Canvas (title-bottom, quote-center, title-top-large, signature-corner, banner-bottom-color)",
+      "statut": "livré",
+      "apps_principales": ["atelier-social"]
+    },
+    {
+      "id": 12,
+      "metier": "Stratégiste contenu / Content planner",
+      "module_hub": "Mode Insta vs Pinterest avec formats spécifiques (1:1 / 4:5 / 2:3, 5 angles vs 3 angles)",
+      "statut": "livré",
+      "apps_principales": ["atelier-social"]
+    },
+    {
+      "id": 13,
+      "metier": "SEO manager",
+      "module_hub": "Caption Pinterest officielle (titre 100 chars + description SEO 500 chars + 8-10 tags)",
+      "statut": "livré",
+      "apps_principales": ["atelier-social"]
+    },
+    {
+      "id": 14,
+      "metier": "Traducteur",
+      "module_hub": "Multi-langue 6-7 langues prévue (FR/EN/DE/ES/IT/NL/JP)",
+      "statut": "prévu_2027",
+      "apps_principales": []
+    }
+  ],
+
+  "mapping_app_metiers": {
+    "atelier-social": {
+      "metiers_principaux": [9, 8],
+      "metiers_secondaires": [11, 12, 13, 10],
+      "label_chrome": "Community Manager",
+      "label_long": "Community Manager + Copywriter"
+    },
+    "atelier-shooting": {
+      "metiers_principaux": [2, 7],
+      "metiers_secondaires": [4, 5, 6, 3],
+      "label_chrome": "Photographe & Retouche",
+      "label_long": "Photographe + Retoucheur produit"
+    },
+    "atelier-lookbook": {
+      "metiers_principaux": [1, 5],
+      "metiers_secondaires": [6, 3],
+      "label_chrome": "Direction Artistique",
+      "label_long": "Directeur Artistique + Styliste"
+    },
+    "shooting-director": {
+      "metiers_principaux": [1],
+      "metiers_secondaires": [6],
+      "label_chrome": "Direction de Production",
+      "label_long": "Directeur de production / DA shooting",
+      "_statut_app": "à scaffolder"
+    },
+    "atelier-casting": {
+      "metiers_principaux": [3],
+      "metiers_secondaires": [],
+      "label_chrome": "Direction de Casting",
+      "label_long": "Directeur de casting",
+      "_statut_app": "à scaffolder — base de connaissance posée 30/04 nuit (mannequins enrichis + calendrier + affinites + SPEC_casting_intelligence.md)"
+    }
+  },
+
+  "label_chrome_default": "Hub",
+  "_note_chrome_topbar": "Le label_chrome est destiné au breadcrumb topbar : 'YPERSOA HUB › Direction Artistique' quand l'app active est lookbook par exemple. Cf. piste A discutée le 30/04. Implémentation en attente — un context React 'currentApp' lira ce fichier."
+}
