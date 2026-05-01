@@ -8,7 +8,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MessageCircle, Camera, BookImage } from "lucide-react";
+import { MessageCircle, Camera, BookImage, Compass } from "lucide-react";
 import { HubSidebarIcon } from "./HubSidebarIcon";
 
 export function HubSidebar() {
@@ -47,6 +47,12 @@ export function HubSidebar() {
         label="Atelier Lookbook"
         href="/lookbook"
         active={isActive("/lookbook")}
+      />
+      <HubSidebarIcon
+        icon={<Compass size={20} strokeWidth={1.6} />}
+        label="Atelier DA"
+        href="/atelier-da"
+        active={isActive("/atelier-da")}
       />
     </nav>
   );
