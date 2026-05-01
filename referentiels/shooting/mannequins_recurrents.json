@@ -107,9 +107,10 @@
       "evenements_de_vie": [
         "Reprise de la boutique de sa grand-mère à Honfleur (2018)",
         "Divorce assumé comme libération (2020)",
-        "Naissance de son ado (2010-2012, ~14-16 ans aujourd'hui)"
+        "Naissance de son fils (2010, 16 ans aujourd'hui)"
       ],
       "traits_narratifs": ["indépendante", "assumée", "instinctive", "humour-sec", "savoir-faire-temps-long"],
+      "_validation_sarah": "P01 ✓ 2026-05-01 (precision: fils né 2010)",
       "affinites_qualifiees": {
         "DUO_LEA_SARAH": "résonance générationnelle 35-38 ans, Lille/Honfleur, esthétique opposée mais valeurs proches",
         "MAN-P10": "transmission antiquités/livres avec Marie-Hélène (45 ans + 27 d'écart, mentorat informel)",
@@ -157,6 +158,7 @@
         "Voyages réguliers Martinique en famille"
       ],
       "traits_narratifs": ["élégante-sans-effort", "hôte-née", "vivacité-du-rire", "diaspora-assumée", "matrimoniale"],
+      "_validation_sarah": "P03 ✓ 2026-05-01",
       "affinites_qualifiees": {
         "TRIO_AICHA_CESARIA_JOSEPHINE": "3 générations féminines afro-caribéennes (mère + 2 filles adultes)",
         "MAN-S19-JOSEPHINE": "mère biologique",
@@ -226,11 +228,12 @@
       "date_anniversaire": "05-04",
       "saison_preferee": "printemps",
       "evenements_de_vie": [
-        "Naissance de Gabin (2021)",
-        "Mariage (~2018-2019)",
-        "Reconversion freelance / DA-ingé son (~2020)"
+        "Mariage (2019)",
+        "Reconversion ingé son (2020)",
+        "Naissance de Gabin (2021)"
       ],
       "traits_narratifs": ["papa-présent", "cool-sans-être-branché", "stylé-sans-y-penser", "vélo-cargo", "weekend-camping"],
+      "_validation_sarah": "P06 ✓ 2026-05-01 (precisions: mariage 2019, reconversion ingé son 2020)",
       "affinites_qualifiees": {
         "DUO_MATHIEU_GABIN": "fils Gabin (papa-fils)",
         "DUO_MATHIEU_NICOLAS": "amitié masculine adulte avec Nicolas",
@@ -324,11 +327,12 @@
       "date_anniversaire": "10-09",
       "saison_preferee": "automne",
       "evenements_de_vie": [
-        "Veuvage ou divorce (~2015)",
-        "Reprise jardin paysagiste / librairie héritée",
+        "Veuvage",
+        "Retraitée depuis 2021 — passion jardinière",
         "Petits-enfants en visite régulière"
       ],
       "traits_narratifs": ["élégance-campagne", "écrit-lettres", "jardin-vrai", "sans-jouer-parisienne", "transmission-douce"],
+      "_validation_sarah": "P10 ✓ 2026-05-01 (precisions: veuve, retraitée depuis 2021, passion jardinière)",
       "affinites_qualifiees": {
         "MAN-P05": "amitié de longue date avec Béatrice",
         "MAN-P08": "Félicie (figure grand-mère bis)",
@@ -374,11 +378,12 @@
       "date_anniversaire": "04-25",
       "saison_preferee": "printemps",
       "evenements_de_vie": [
-        "Études en mode/beaux-arts (~2022 démarrage)",
-        "Vit en coloc ou chez ses parents selon période",
-        "Premier amour adulte avec Gaspard (~2024)"
+        "Étudiante en mode/beaux-arts",
+        "Vit en coloc",
+        "Premier amour adulte avec Gaspard (18-10-2024)"
       ],
       "traits_narratifs": ["solaire", "lucide", "Gen-Z-créative", "achète-pour-soi-et-mère", "moins-intello-que-Doillon"],
+      "_validation_sarah": "P12 ✓ 2026-05-01 (precisions: étudiante, vit coloc, premier amour Gaspard 18-10-2024)",
       "affinites_qualifiees": {
         "DUO_GASPARD_BRUNE": "couple étudiant créatif",
         "MAN-P11": "amitié avec Léa+Sarah (groupe créatives plus âgées)",
