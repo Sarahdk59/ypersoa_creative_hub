@@ -23,6 +23,8 @@ export interface ShootingBriefInput {
   motif_ypm_nom?: string;
   occasion?: string;
   ambiances_preferees?: string[];
+  /** Lookbooks favoris ❤️ pinés comme ambiance custom — id Supabase. */
+  ambiances_lookbook_ids?: string[];
   exclusions?: string[];
   date_cible?: string;
   format_attendu?: "instagram" | "pinterest" | "lookbook" | "shooting" | "hero-banner";
@@ -304,6 +306,12 @@ export async function buildShootingPlan(input: ShootingBriefInput): Promise<Shoo
       type: "warning",
       message: "Match faible — aucun dispositif canonique ne correspond fortement au brief. Reformule ou pin un canonique manuellement.",
     });
+  }
+
+  // Ambiances lookbook pinées (custom) → ajoutées en tête des recommandées
+  if (input.ambiances_lookbook_ids?.length) {
+    const lookbookAmbiances = input.ambiances_lookbook_ids.map((id) => `lookbook:${id}`);
+    ambiances_recommandees.unshift(...lookbookAmbiances);
   }
 
   return {

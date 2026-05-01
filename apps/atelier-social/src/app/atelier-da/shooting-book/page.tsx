@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb } from "lucide-react";
+import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download } from "lucide-react";
 import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder";
+import { listActiveLookbookAmbiances, type ActiveLookbookAmbiance } from "@/lib/active-ambiances";
 
 const MOTIFS_YPM = [
   { id: "YPM-001", nom: "La Brigitte" },
@@ -45,10 +46,21 @@ export default function ShootingBookPage() {
   const [briefTexte, setBriefTexte] = useState("");
   const [motifId, setMotifId] = useState("");
   const [ambiances, setAmbiances] = useState<string[]>([]);
+  const [lookbookAmbianceIds, setLookbookAmbianceIds] = useState<string[]>([]);
   const [format, setFormat] = useState<string>("instagram");
   const [generating, setGenerating] = useState(false);
   const [plan, setPlan] = useState<ShootingPlanOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activeLookbookAmbiances, setActiveLookbookAmbiances] = useState<ActiveLookbookAmbiance[]>([]);
+
+  // Image hero
+  const [renderedImage, setRenderedImage] = useState<{ data_url: string; aspect_ratio: string } | null>(null);
+  const [renderingImage, setRenderingImage] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
+
+  useEffect(() => {
+    listActiveLookbookAmbiances().then(setActiveLookbookAmbiances).catch(() => undefined);
+  }, []);
 
   const motifNom = MOTIFS_YPM.find((m) => m.id === motifId)?.nom;
 
@@ -56,11 +68,17 @@ export default function ShootingBookPage() {
     setAmbiances((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
   };
 
+  const toggleLookbookAmbiance = (id: string) => {
+    setLookbookAmbianceIds((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
+  };
+
   const handleGenerate = async () => {
     if (!briefTexte.trim() || generating) return;
     setGenerating(true);
     setError(null);
     setPlan(null);
+    setRenderedImage(null);
+    setImageError(null);
     try {
       const res = await fetch("/api/da/shooting-plan", {
         method: "POST",
@@ -70,6 +88,7 @@ export default function ShootingBookPage() {
           motif_ypm_id: motifId || undefined,
           motif_ypm_nom: motifNom,
           ambiances_preferees: ambiances,
+          ambiances_lookbook_ids: lookbookAmbianceIds,
           format_attendu: format,
         }),
       });
@@ -81,6 +100,41 @@ export default function ShootingBookPage() {
     } finally {
       setGenerating(false);
     }
+  };
+
+  const handleRenderImage = async () => {
+    if (!plan || renderingImage) return;
+    setRenderingImage(true);
+    setImageError(null);
+    setRenderedImage(null);
+    try {
+      const res = await fetch("/api/da/shooting-plan/render", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan,
+          lookbook_ambiance_ids: lookbookAmbianceIds,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "Génération d'image échouée");
+      setRenderedImage(data.image);
+    } catch (err) {
+      setImageError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setRenderingImage(false);
+    }
+  };
+
+  const handleDownloadImage = () => {
+    if (!renderedImage) return;
+    const slug = (plan?.brief_resume || "ypersoa-hero").slice(0, 40).replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    const a = document.createElement("a");
+    a.href = renderedImage.data_url;
+    a.download = `ypersoa-shooting-book-${slug}-${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
@@ -258,6 +312,92 @@ export default function ShootingBookPage() {
             })}
           </div>
 
+          {/* Mes lookbooks ❤️ actifs */}
+          {activeLookbookAmbiances.length > 0 && (
+            <>
+              <label
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "var(--hub-foreground)",
+                  opacity: 0.6,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  marginTop: 16,
+                  marginBottom: 8,
+                }}
+              >
+                <Heart size={11} fill="#E2627C" stroke="#E2627C" /> Mes lookbooks (7j)
+              </label>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {activeLookbookAmbiances.map((lb) => {
+                  const sel = lookbookAmbianceIds.includes(lb.id);
+                  const expires = lb.date_archivage
+                    ? new Date(lb.date_archivage).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+                    : null;
+                  return (
+                    <button
+                      key={lb.id}
+                      type="button"
+                      onClick={() => toggleLookbookAmbiance(lb.id)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: 6,
+                        borderRadius: 10,
+                        border: sel ? "0.5px solid var(--hub-foreground)" : "0.5px solid var(--hub-border)",
+                        background: sel ? "var(--hub-bg)" : "white",
+                        cursor: "pointer",
+                        textAlign: "left",
+                      }}
+                    >
+                      {lb.cover_image_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={lb.cover_image_url}
+                          alt={lb.titre}
+                          style={{ width: 36, height: 42, objectFit: "cover", borderRadius: 6, flexShrink: 0 }}
+                        />
+                      ) : (
+                        <div style={{ width: 36, height: 42, background: "var(--hub-bg)", borderRadius: 6, flexShrink: 0 }} />
+                      )}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
+                          style={{
+                            fontFamily: "var(--font-editorial)",
+                            fontSize: 13,
+                            fontWeight: 500,
+                            color: "var(--hub-foreground)",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {lb.titre}
+                        </div>
+                        <div
+                          style={{
+                            fontFamily: "var(--font-sans)",
+                            fontSize: 10,
+                            color: "var(--hub-foreground)",
+                            opacity: 0.5,
+                          }}
+                        >
+                          {expires ? `actif jusqu'au ${expires}` : "actif"}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
           {/* Format attendu */}
           <label
             style={{
@@ -396,6 +536,184 @@ export default function ShootingBookPage() {
 
           {plan && (
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {/* Image hero rendue */}
+              <section
+                style={{
+                  background: "white",
+                  border: "0.5px solid var(--hub-border)",
+                  borderRadius: 16,
+                  padding: 24,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, gap: 12, flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <ImageIcon size={18} strokeWidth={1.6} />
+                    <h3 style={{ fontFamily: "var(--font-editorial)", fontSize: 18, fontWeight: 500, margin: 0 }}>
+                      Image hero du plan
+                    </h3>
+                  </div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {!renderedImage && (
+                      <button
+                        type="button"
+                        onClick={handleRenderImage}
+                        disabled={renderingImage}
+                        style={{
+                          padding: "8px 14px",
+                          borderRadius: 999,
+                          border: "none",
+                          background: "var(--hub-foreground)",
+                          color: "var(--hub-bg)",
+                          fontFamily: "var(--font-sans)",
+                          fontSize: 12,
+                          fontWeight: 500,
+                          letterSpacing: "0.05em",
+                          cursor: renderingImage ? "wait" : "pointer",
+                          opacity: renderingImage ? 0.5 : 1,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                        }}
+                      >
+                        {renderingImage ? (
+                          <>
+                            <Loader2 size={12} className="animate-spin" /> Génération…
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles size={12} /> Générer l&apos;image hero
+                          </>
+                        )}
+                      </button>
+                    )}
+                    {renderedImage && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={handleRenderImage}
+                          disabled={renderingImage}
+                          style={{
+                            padding: "8px 14px",
+                            borderRadius: 999,
+                            border: "0.5px solid var(--hub-border)",
+                            background: "white",
+                            color: "var(--hub-foreground)",
+                            fontFamily: "var(--font-sans)",
+                            fontSize: 12,
+                            cursor: renderingImage ? "wait" : "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
+                          }}
+                        >
+                          {renderingImage ? (
+                            <>
+                              <Loader2 size={12} className="animate-spin" /> Régénérer…
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles size={12} /> Régénérer
+                            </>
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleDownloadImage}
+                          style={{
+                            padding: "8px 14px",
+                            borderRadius: 999,
+                            border: "none",
+                            background: "var(--hub-foreground)",
+                            color: "var(--hub-bg)",
+                            fontFamily: "var(--font-sans)",
+                            fontSize: 12,
+                            fontWeight: 500,
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
+                          }}
+                        >
+                          <Download size={12} /> Télécharger PNG
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {imageError && (
+                  <div
+                    style={{
+                      padding: 12,
+                      borderRadius: 10,
+                      background: "#fff3f0",
+                      border: "1px solid #ffcfb6",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 12,
+                      color: "#a13a16",
+                      display: "flex",
+                      gap: 8,
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <AlertCircle size={14} style={{ marginTop: 2, flexShrink: 0 }} />
+                    <span>{imageError}</span>
+                  </div>
+                )}
+
+                {!renderedImage && !renderingImage && !imageError && (
+                  <div
+                    style={{
+                      padding: 40,
+                      textAlign: "center",
+                      background: "var(--hub-bg)",
+                      borderRadius: 12,
+                      border: "1px dashed var(--hub-border)",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 12,
+                      color: "var(--hub-foreground)",
+                      opacity: 0.55,
+                    }}
+                  >
+                    Clique sur <strong>Générer l&apos;image hero</strong> pour produire un visuel Gemini 2K basé sur le top dispositif casting + l&apos;ambiance + le motif YPM.
+                    <br />
+                    <span style={{ fontSize: 11 }}>~30-60 sec selon la charge Gemini.</span>
+                  </div>
+                )}
+
+                {renderingImage && !renderedImage && (
+                  <div
+                    style={{
+                      padding: 40,
+                      textAlign: "center",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 12,
+                      color: "var(--hub-foreground)",
+                      opacity: 0.65,
+                    }}
+                  >
+                    <Loader2 size={28} className="animate-spin" strokeWidth={1.4} style={{ marginBottom: 12 }} />
+                    <p style={{ margin: 0 }}>Gemini génère l&apos;image…</p>
+                  </div>
+                )}
+
+                {renderedImage && (
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={renderedImage.data_url}
+                      alt="Hero shot du plan"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: 720,
+                        borderRadius: 12,
+                        boxShadow: "0 8px 24px rgba(30,45,74,0.08)",
+                      }}
+                    />
+                  </div>
+                )}
+              </section>
+
               {/* Résumé */}
               <section
                 style={{
