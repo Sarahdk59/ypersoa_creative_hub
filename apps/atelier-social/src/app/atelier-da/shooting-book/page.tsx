@@ -56,14 +56,20 @@ export default function ShootingBookPage() {
   // PNG motif optionnel (référence broderie pour Gemini)
   const [motifPngDataUrl, setMotifPngDataUrl] = useState<string | null>(null);
   const [motifPngFilename, setMotifPngFilename] = useState<string | null>(null);
+  const [motifSize, setMotifSize] = useState<"petit" | "moyen" | "grand">("moyen");
 
   // Sélection manuelle d'un dispositif casting (radio-like, default top 1)
   const [selectedDispositifId, setSelectedDispositifId] = useState<string | null>(null);
 
-  // Image hero
+  // Image hero (legacy — premier shot)
   const [renderedImage, setRenderedImage] = useState<{ data_url: string; aspect_ratio: string } | null>(null);
   const [renderingImage, setRenderingImage] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
+
+  // Images par shot (shotlist) — index → image
+  const [shotImages, setShotImages] = useState<Record<number, { data_url: string; aspect_ratio: string }>>({});
+  const [renderingShotIndex, setRenderingShotIndex] = useState<number | null>(null);
+  const [shotErrors, setShotErrors] = useState<Record<number, string>>({});
 
   useEffect(() => {
     listActiveLookbookAmbiances().then(setActiveLookbookAmbiances).catch(() => undefined);
@@ -123,6 +129,9 @@ export default function ShootingBookPage() {
       if (!res.ok || !data.ok) throw new Error(data.error || "Génération du plan échouée");
       const newPlan = data.plan as ShootingPlanOutput;
       setPlan(newPlan);
+      // Reset les images shot et hero (nouveau plan)
+      setShotImages({});
+      setShotErrors({});
       // Auto-sélection du top 1 dispositif (Sarah peut écraser ensuite)
       setSelectedDispositifId(newPlan.casting_propose[0]?.id || null);
     } catch (err) {
@@ -146,6 +155,8 @@ export default function ShootingBookPage() {
           lookbook_ambiance_ids: lookbookAmbianceIds,
           selected_dispositif_id: selectedDispositifId,
           motif_png_data_url: motifPngDataUrl,
+          motif_size: motifSize,
+          shot_index: 0,
         }),
       });
       const data = await res.json();
@@ -158,12 +169,56 @@ export default function ShootingBookPage() {
     }
   };
 
+  const handleRenderShot = async (shotIndex: number) => {
+    if (!plan || renderingShotIndex !== null) return;
+    setRenderingShotIndex(shotIndex);
+    setShotErrors((prev) => {
+      const next = { ...prev };
+      delete next[shotIndex];
+      return next;
+    });
+    try {
+      const res = await fetch("/api/da/shooting-plan/render", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan,
+          lookbook_ambiance_ids: lookbookAmbianceIds,
+          selected_dispositif_id: selectedDispositifId,
+          motif_png_data_url: motifPngDataUrl,
+          motif_size: motifSize,
+          shot_index: shotIndex,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "Génération échouée");
+      setShotImages((prev) => ({ ...prev, [shotIndex]: data.image }));
+    } catch (err) {
+      setShotErrors((prev) => ({ ...prev, [shotIndex]: err instanceof Error ? err.message : String(err) }));
+    } finally {
+      setRenderingShotIndex(null);
+    }
+  };
+
   const handleDownloadImage = () => {
     if (!renderedImage) return;
     const slug = (plan?.brief_resume || "ypersoa-hero").slice(0, 40).replace(/[^a-z0-9]+/gi, "-").toLowerCase();
     const a = document.createElement("a");
     a.href = renderedImage.data_url;
     a.download = `ypersoa-shooting-book-${slug}-${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const handleDownloadShot = (shotIndex: number) => {
+    const img = shotImages[shotIndex];
+    if (!img || !plan) return;
+    const angle = plan.shotlist[shotIndex]?.angle || `shot-${shotIndex + 1}`;
+    const slug = (plan.brief_resume || "ypersoa").slice(0, 30).replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    const a = document.createElement("a");
+    a.href = img.data_url;
+    a.download = `ypersoa-${slug}-${angle.toLowerCase()}-${Date.now()}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -405,6 +460,59 @@ export default function ShootingBookPage() {
               </button>
             </div>
           )}
+
+          {/* Taille du motif */}
+          <label
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--hub-foreground)",
+              opacity: 0.6,
+              display: "block",
+              marginTop: 16,
+              marginBottom: 8,
+            }}
+          >
+            Taille du motif brodé
+          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4, padding: 4, background: "var(--hub-bg)", borderRadius: 10, border: "0.5px solid var(--hub-border)" }}>
+            {([
+              { v: "petit", label: "Petit", sub: "2-4cm" },
+              { v: "moyen", label: "Moyen", sub: "6-8cm" },
+              { v: "grand", label: "Grand", sub: "12-20cm" },
+            ] as const).map((s) => {
+              const active = motifSize === s.v;
+              return (
+                <button
+                  key={s.v}
+                  type="button"
+                  onClick={() => setMotifSize(s.v)}
+                  style={{
+                    padding: "8px 6px",
+                    border: "none",
+                    background: active ? "var(--hub-foreground)" : "transparent",
+                    color: active ? "var(--hub-bg)" : "var(--hub-foreground)",
+                    borderRadius: 6,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 11,
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    transition: "all 150ms ease",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
+                  <span style={{ fontWeight: 600 }}>{s.label}</span>
+                  <span style={{ fontSize: 9, opacity: 0.7 }}>{s.sub}</span>
+                </button>
+              );
+            })}
+          </div>
 
           {/* Ambiances préférées (multi-select chips) */}
           <label
@@ -1011,7 +1119,7 @@ export default function ShootingBookPage() {
                 </div>
               </section>
 
-              {/* Shotlist */}
+              {/* Shotlist enrichie : chaque shot a son bouton de génération + image individuelle */}
               <section
                 style={{
                   background: "white",
@@ -1020,21 +1128,177 @@ export default function ShootingBookPage() {
                   padding: 24,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                   <CameraIcon size={18} strokeWidth={1.6} />
                   <h3 style={{ fontFamily: "var(--font-editorial)", fontSize: 18, fontWeight: 500, margin: 0 }}>
                     Shotlist ({plan.shotlist.length} angles)
                   </h3>
                 </div>
-                <ol style={{ paddingLeft: 24, margin: 0, display: "flex", flexDirection: "column", gap: 12 }}>
-                  {plan.shotlist.map((s) => (
-                    <li key={s.ordre} style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.5 }}>
-                      <strong style={{ fontFamily: "var(--font-editorial)", fontSize: 14 }}>{s.angle}</strong>
-                      <p style={{ margin: "4px 0", opacity: 0.75 }}>{s.description}</p>
-                      <div style={{ fontSize: 11, opacity: 0.5, fontStyle: "italic" }}>{s.cadrage_type}</div>
-                    </li>
-                  ))}
-                </ol>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--hub-foreground)", opacity: 0.55, margin: "0 0 16px 0" }}>
+                  Génère chaque angle individuellement. Le casting et l&apos;ambiance sélectionnés s&apos;appliquent à toute la shotlist.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {plan.shotlist.map((s, idx) => {
+                    const img = shotImages[idx];
+                    const err = shotErrors[idx];
+                    const isRendering = renderingShotIndex === idx;
+                    const someoneElseRendering = renderingShotIndex !== null && renderingShotIndex !== idx;
+                    return (
+                      <div
+                        key={s.ordre}
+                        style={{
+                          padding: 16,
+                          borderRadius: 12,
+                          background: "var(--hub-bg)",
+                          border: "0.5px solid var(--hub-border)",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 8 }}>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
+                              <span
+                                style={{
+                                  fontFamily: "var(--font-sans)",
+                                  fontSize: 11,
+                                  fontWeight: 600,
+                                  padding: "2px 8px",
+                                  background: "var(--hub-foreground)",
+                                  color: "var(--hub-bg)",
+                                  borderRadius: 999,
+                                  letterSpacing: "0.1em",
+                                }}
+                              >
+                                #{s.ordre}
+                              </span>
+                              <strong style={{ fontFamily: "var(--font-editorial)", fontSize: 16, fontWeight: 500 }}>
+                                {s.angle}
+                              </strong>
+                            </div>
+                            <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, opacity: 0.75, margin: "4px 0", lineHeight: 1.5 }}>
+                              {s.description}
+                            </p>
+                            <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.5, fontStyle: "italic" }}>
+                              {s.cadrage_type}
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                            <button
+                              type="button"
+                              onClick={() => handleRenderShot(idx)}
+                              disabled={isRendering || someoneElseRendering}
+                              style={{
+                                padding: "6px 12px",
+                                borderRadius: 999,
+                                border: img ? "0.5px solid var(--hub-border)" : "none",
+                                background: img ? "white" : "var(--hub-foreground)",
+                                color: img ? "var(--hub-foreground)" : "var(--hub-bg)",
+                                fontFamily: "var(--font-sans)",
+                                fontSize: 11,
+                                fontWeight: 500,
+                                cursor: isRendering || someoneElseRendering ? "wait" : "pointer",
+                                opacity: someoneElseRendering ? 0.4 : 1,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 4,
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {isRendering ? (
+                                <>
+                                  <Loader2 size={11} className="animate-spin" /> Gen…
+                                </>
+                              ) : img ? (
+                                <>
+                                  <Sparkles size={11} /> Régénérer
+                                </>
+                              ) : (
+                                <>
+                                  <Sparkles size={11} /> Générer
+                                </>
+                              )}
+                            </button>
+                            {img && (
+                              <button
+                                type="button"
+                                onClick={() => handleDownloadShot(idx)}
+                                style={{
+                                  padding: "6px 12px",
+                                  borderRadius: 999,
+                                  border: "none",
+                                  background: "var(--hub-foreground)",
+                                  color: "var(--hub-bg)",
+                                  fontFamily: "var(--font-sans)",
+                                  fontSize: 11,
+                                  fontWeight: 500,
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 4,
+                                }}
+                              >
+                                <Download size={11} /> PNG
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {err && (
+                          <div
+                            style={{
+                              marginTop: 8,
+                              padding: 8,
+                              borderRadius: 8,
+                              background: "#fff3f0",
+                              border: "1px solid #ffcfb6",
+                              fontFamily: "var(--font-sans)",
+                              fontSize: 11,
+                              color: "#a13a16",
+                              display: "flex",
+                              gap: 6,
+                              alignItems: "flex-start",
+                            }}
+                          >
+                            <AlertCircle size={11} style={{ marginTop: 1, flexShrink: 0 }} /> {err}
+                          </div>
+                        )}
+
+                        {isRendering && !img && (
+                          <div
+                            style={{
+                              marginTop: 12,
+                              padding: 24,
+                              textAlign: "center",
+                              fontFamily: "var(--font-sans)",
+                              fontSize: 11,
+                              color: "var(--hub-foreground)",
+                              opacity: 0.55,
+                              borderRadius: 8,
+                              background: "white",
+                            }}
+                          >
+                            <Loader2 size={20} className="animate-spin" strokeWidth={1.4} />
+                          </div>
+                        )}
+
+                        {img && (
+                          <div style={{ marginTop: 12, display: "flex", justifyContent: "center" }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={img.data_url}
+                              alt={s.angle}
+                              style={{
+                                maxWidth: "100%",
+                                maxHeight: 480,
+                                borderRadius: 10,
+                                boxShadow: "0 4px 16px rgba(30,45,74,0.08)",
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </section>
 
               {/* Ambiances + planning */}

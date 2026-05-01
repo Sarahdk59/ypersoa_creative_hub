@@ -26,6 +26,10 @@ interface RenderInput {
   selected_dispositif_id?: string | null;
   /** PNG/JPG du motif réel uploadé par Sarah (data URL base64). Injecté en parts[] Gemini. */
   motif_png_data_url?: string | null;
+  /** Taille du motif brodé : impacte la dimension + l'emplacement (cœur discret / cœur lisible / centre poitrine) */
+  motif_size?: "petit" | "moyen" | "grand";
+  /** Index du shot dans plan.shotlist (0 = premier = hero). Default 0. */
+  shot_index?: number;
 }
 
 function loadCanoniqueAsBase64(id: string): { data: string; mimeType: string } | null {
@@ -82,23 +86,47 @@ function aspectRatioFromFormat(plan: ShootingPlanOutput): "1:1" | "4:5" | "2:3" 
   return "4:5";
 }
 
-function buildHeroPrompt(
-  plan: ShootingPlanOutput,
-  lookbookAmbiances: LookbookAmbianceFromSupabase[],
-  selectedDispositifId?: string | null,
-  hasMotifPng?: boolean
-): {
+interface BuildHeroPromptArgs {
+  plan: ShootingPlanOutput;
+  lookbookAmbiances: LookbookAmbianceFromSupabase[];
+  selectedDispositifId?: string | null;
+  hasMotifPng?: boolean;
+  motifSize?: "petit" | "moyen" | "grand";
+  shotIndex?: number;
+}
+
+const MOTIF_SIZE_DESCRIPTIONS: Record<"petit" | "moyen" | "grand", { dimension: string; placement: string }> = {
+  petit: {
+    dimension: "small embroidery (2-4 cm width)",
+    placement: "left chest position, discreet — the embroidery is subtle, an intimate detail at heart-side, NOT the visual focus of the garment",
+  },
+  moyen: {
+    dimension: "medium embroidery (6-8 cm width)",
+    placement: "left chest position, clearly readable — the embroidery is visible at heart-side, lisible without being central",
+  },
+  grand: {
+    dimension: "large embroidery (12-20 cm width)",
+    placement: "centered on the chest, visually dominant — the embroidery is the focal point of the garment, large statement",
+  },
+};
+
+function buildHeroPrompt(args: BuildHeroPromptArgs): {
   promptEn: string;
   canoniqueIds: string[];
 } {
+  const { plan, lookbookAmbiances, selectedDispositifId, hasMotifPng, motifSize = "moyen", shotIndex = 0 } = args;
+
   // Dispositif sélectionné par Sarah si présent, sinon top 1
   const topCasting =
     (selectedDispositifId && plan.casting_propose.find((c) => c.id === selectedDispositifId)) ||
     plan.casting_propose[0];
   const canoniqueIds = topCasting?.membres || (topCasting?.id ? [topCasting.id] : []);
 
-  // 1er angle de la shotlist (PORTRAIT_FRONTAL ou DEMI_FIGURE_VERTICAL)
-  const heroShot = plan.shotlist[0];
+  // Shot index choisi (default 0 = hero)
+  const safeIndex = Math.min(Math.max(shotIndex, 0), plan.shotlist.length - 1);
+  const heroShot = plan.shotlist[safeIndex];
+
+  const sizeDesc = MOTIF_SIZE_DESCRIPTIONS[motifSize];
 
   // Description ambiance — soit lookbook custom, soit ambiance préfaite, soit générique
   let ambianceDesc = "soft natural daylight, French quiet luxury, Sézane × A.P.C. × Octobre Éditions aesthetic, cream and ink tones";
@@ -114,14 +142,14 @@ function buildHeroPrompt(
   // Lieu
   const lieu = topCasting?.lieu || "France";
 
-  // Motif YPM
+  // Motif YPM avec taille + emplacement
   let motifLine: string;
   if (hasMotifPng) {
-    motifLine = `EMBROIDERY MOTIF FIDELITY: The first attached image is the EXACT embroidery motif design that must be reproduced verbatim on the garment (left chest position). Same shape, same letters, same colors, same proportions. Realized on Tajima industrial embroidery machine — precise, dense, EXTREMELY FLAT (no 3D, no relief, no embossing). DO NOT add, remove, modify, or invent any element of this motif. Brand: Ypersoa "${plan.motif_ypm?.nom || plan.motif_ypm?.id || "motif"}".`;
+    motifLine = `EMBROIDERY MOTIF FIDELITY: The first attached image is the EXACT embroidery motif design that must be reproduced verbatim on the garment. Same shape, same letters, same colors, same proportions. Size: ${sizeDesc.dimension}. Placement: ${sizeDesc.placement}. Realized on Tajima industrial embroidery machine — precise, dense, EXTREMELY FLAT (no 3D, no relief, no embossing). DO NOT add, remove, modify, or invent any element of this motif. Brand: Ypersoa "${plan.motif_ypm?.nom || plan.motif_ypm?.id || "motif"}".`;
   } else if (plan.motif_ypm?.id) {
-    motifLine = `The garment carries the embroidered motif "${plan.motif_ypm.nom || plan.motif_ypm.id}" (Ypersoa YPM-001 to YPM-017 collection), realized on Tajima industrial embroidery machine. The embroidery is precise, dense, EXTREMELY FLAT (no 3D, no relief). Visible at left chest position.`;
+    motifLine = `The garment carries the embroidered motif "${plan.motif_ypm.nom || plan.motif_ypm.id}" (Ypersoa YPM-001 to YPM-017 collection). Size: ${sizeDesc.dimension}. Placement: ${sizeDesc.placement}. Realized on Tajima industrial embroidery machine — precise, dense, EXTREMELY FLAT (no 3D, no relief).`;
   } else {
-    motifLine = `The garment carries an Ypersoa embroidered motif on Tajima industrial machine, EXTREMELY FLAT, visible at left chest.`;
+    motifLine = `The garment carries an Ypersoa embroidered motif on Tajima industrial machine, EXTREMELY FLAT. Size: ${sizeDesc.dimension}. Placement: ${sizeDesc.placement}.`;
   }
 
   const promptEn = `${heroShot.description}
@@ -159,12 +187,14 @@ export async function POST(req: NextRequest) {
 
     const lookbookAmbiances = await fetchLookbookAmbiances(body.lookbook_ambiance_ids || []);
     const hasMotifPng = Boolean(body.motif_png_data_url);
-    const { promptEn, canoniqueIds } = buildHeroPrompt(
-      body.plan,
+    const { promptEn, canoniqueIds } = buildHeroPrompt({
+      plan: body.plan,
       lookbookAmbiances,
-      body.selected_dispositif_id,
-      hasMotifPng
-    );
+      selectedDispositifId: body.selected_dispositif_id,
+      hasMotifPng,
+      motifSize: body.motif_size || "moyen",
+      shotIndex: body.shot_index ?? 0,
+    });
     const aspectRatio = aspectRatioFromFormat(body.plan);
 
     const ai = new GoogleGenAI({ apiKey });
@@ -231,6 +261,9 @@ export async function POST(req: NextRequest) {
         canoniques_charges: canoniquesLoaded,
         dispositif_utilise: body.selected_dispositif_id || body.plan.casting_propose[0]?.id || null,
         motif_png_inject: hasMotifPng,
+        motif_size: body.motif_size || "moyen",
+        shot_index: body.shot_index ?? 0,
+        shot_angle: body.plan.shotlist[body.shot_index ?? 0]?.angle || null,
         prompt_used: promptEn,
         lookbook_ambiances_resolved: lookbookAmbiances.map((l) => ({ id: l.id, titre: l.titre })),
       },
