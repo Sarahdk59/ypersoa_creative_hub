@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download } from "lucide-react";
+import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download, Upload, X, CheckCircle2 } from "lucide-react";
 import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder";
 import { listActiveLookbookAmbiances, type ActiveLookbookAmbiance } from "@/lib/active-ambiances";
 
@@ -53,6 +53,13 @@ export default function ShootingBookPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeLookbookAmbiances, setActiveLookbookAmbiances] = useState<ActiveLookbookAmbiance[]>([]);
 
+  // PNG motif optionnel (référence broderie pour Gemini)
+  const [motifPngDataUrl, setMotifPngDataUrl] = useState<string | null>(null);
+  const [motifPngFilename, setMotifPngFilename] = useState<string | null>(null);
+
+  // Sélection manuelle d'un dispositif casting (radio-like, default top 1)
+  const [selectedDispositifId, setSelectedDispositifId] = useState<string | null>(null);
+
   // Image hero
   const [renderedImage, setRenderedImage] = useState<{ data_url: string; aspect_ratio: string } | null>(null);
   const [renderingImage, setRenderingImage] = useState(false);
@@ -70,6 +77,26 @@ export default function ShootingBookPage() {
 
   const toggleLookbookAmbiance = (id: string) => {
     setLookbookAmbianceIds((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
+  };
+
+  const handleMotifPngUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image trop lourde (max 5 Mo)");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setMotifPngDataUrl(reader.result as string);
+      setMotifPngFilename(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const clearMotifPng = () => {
+    setMotifPngDataUrl(null);
+    setMotifPngFilename(null);
   };
 
   const handleGenerate = async () => {
@@ -94,7 +121,10 @@ export default function ShootingBookPage() {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || "Génération du plan échouée");
-      setPlan(data.plan as ShootingPlanOutput);
+      const newPlan = data.plan as ShootingPlanOutput;
+      setPlan(newPlan);
+      // Auto-sélection du top 1 dispositif (Sarah peut écraser ensuite)
+      setSelectedDispositifId(newPlan.casting_propose[0]?.id || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -114,6 +144,8 @@ export default function ShootingBookPage() {
         body: JSON.stringify({
           plan,
           lookbook_ambiance_ids: lookbookAmbianceIds,
+          selected_dispositif_id: selectedDispositifId,
+          motif_png_data_url: motifPngDataUrl,
         }),
       });
       const data = await res.json();
@@ -268,6 +300,111 @@ export default function ShootingBookPage() {
               </option>
             ))}
           </select>
+
+          {/* Upload PNG du motif (référence broderie pour Gemini) */}
+          <label
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--hub-foreground)",
+              opacity: 0.6,
+              display: "block",
+              marginTop: 12,
+              marginBottom: 8,
+            }}
+          >
+            PNG du motif (optionnel)
+          </label>
+          {!motifPngDataUrl ? (
+            <label
+              htmlFor="motif-png-upload"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                padding: "14px 12px",
+                borderRadius: 10,
+                border: "1px dashed var(--hub-border)",
+                background: "var(--hub-bg)",
+                fontFamily: "var(--font-sans)",
+                fontSize: 12,
+                color: "var(--hub-foreground)",
+                opacity: 0.7,
+                cursor: "pointer",
+              }}
+            >
+              <Upload size={14} strokeWidth={1.5} />
+              Glisser ou cliquer (PNG/JPG max 5 Mo)
+              <input
+                id="motif-png-upload"
+                type="file"
+                accept="image/png,image/jpeg"
+                onChange={handleMotifPngUpload}
+                style={{ display: "none" }}
+              />
+            </label>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: 8,
+                borderRadius: 10,
+                border: "0.5px solid var(--hub-border)",
+                background: "white",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={motifPngDataUrl}
+                alt="Motif"
+                style={{ width: 56, height: 56, objectFit: "contain", borderRadius: 6, background: "var(--hub-bg)", padding: 4 }}
+              />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: "var(--hub-foreground)",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {motifPngFilename || "motif.png"}
+                </div>
+                <div style={{ fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-foreground)", opacity: 0.6 }}>
+                  Référence broderie injectée Gemini
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={clearMotifPng}
+                style={{
+                  width: 28,
+                  height: 28,
+                  border: "none",
+                  background: "transparent",
+                  borderRadius: 999,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "var(--hub-foreground)",
+                  opacity: 0.5,
+                }}
+                aria-label="Retirer le motif"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
 
           {/* Ambiances préférées (multi-select chips) */}
           <label
@@ -782,23 +919,43 @@ export default function ShootingBookPage() {
                   padding: 24,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                   <Users size={18} strokeWidth={1.6} />
                   <h3 style={{ fontFamily: "var(--font-editorial)", fontSize: 18, fontWeight: 500, margin: 0 }}>
                     Casting proposé ({plan.casting_propose.length})
                   </h3>
                 </div>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--hub-foreground)", opacity: 0.55, margin: "0 0 16px 0" }}>
+                  Clique sur un dispositif pour le sélectionner — le rendu image hero utilisera le casting choisi.
+                </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {plan.casting_propose.map((c) => (
-                    <div
+                  {plan.casting_propose.map((c) => {
+                    const isSelected = selectedDispositifId === c.id;
+                    return (
+                    <button
                       key={c.id}
+                      type="button"
+                      onClick={() => setSelectedDispositifId(c.id)}
                       style={{
+                        textAlign: "left",
                         padding: 14,
                         borderRadius: 10,
-                        background: "var(--hub-bg)",
-                        border: "0.5px solid var(--hub-border)",
+                        background: isSelected ? "white" : "var(--hub-bg)",
+                        border: isSelected ? "1.5px solid var(--hub-foreground)" : "0.5px solid var(--hub-border)",
+                        boxShadow: isSelected ? "0 2px 8px rgba(30,45,74,0.08)" : "none",
+                        cursor: "pointer",
+                        transition: "all 150ms ease",
+                        position: "relative",
                       }}
                     >
+                      {isSelected && (
+                        <CheckCircle2
+                          size={16}
+                          fill="var(--hub-foreground)"
+                          stroke="var(--hub-bg)"
+                          style={{ position: "absolute", top: 12, right: 12 }}
+                        />
+                      )}
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
                         <div style={{ flex: 1 }}>
                           <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
@@ -838,17 +995,19 @@ export default function ShootingBookPage() {
                             fontSize: 11,
                             fontWeight: 600,
                             padding: "4px 10px",
-                            background: "white",
+                            background: isSelected ? "var(--hub-bg)" : "white",
                             border: "0.5px solid var(--hub-border)",
                             borderRadius: 999,
                             flexShrink: 0,
+                            marginRight: isSelected ? 24 : 0,
                           }}
                         >
                           {c.score} pts
                         </span>
                       </div>
-                    </div>
-                  ))}
+                    </button>
+                  );
+                  })}
                 </div>
               </section>
 

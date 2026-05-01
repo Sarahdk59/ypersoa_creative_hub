@@ -20,8 +20,12 @@ const CANONIQUES_DIR = join(process.cwd(), "..", "..", "assets", "canoniques");
 
 interface RenderInput {
   plan: ShootingPlanOutput;
-  // Pour les ambiances lookbook pinées : on charge depuis Supabase
+  /** Pour les ambiances lookbook pinées : on charge depuis Supabase */
   lookbook_ambiance_ids?: string[];
+  /** Dispositif casting sélectionné par Sarah (override le top 1 par défaut) */
+  selected_dispositif_id?: string | null;
+  /** PNG/JPG du motif réel uploadé par Sarah (data URL base64). Injecté en parts[] Gemini. */
+  motif_png_data_url?: string | null;
 }
 
 function loadCanoniqueAsBase64(id: string): { data: string; mimeType: string } | null {
@@ -78,12 +82,19 @@ function aspectRatioFromFormat(plan: ShootingPlanOutput): "1:1" | "4:5" | "2:3" 
   return "4:5";
 }
 
-function buildHeroPrompt(plan: ShootingPlanOutput, lookbookAmbiances: LookbookAmbianceFromSupabase[]): {
+function buildHeroPrompt(
+  plan: ShootingPlanOutput,
+  lookbookAmbiances: LookbookAmbianceFromSupabase[],
+  selectedDispositifId?: string | null,
+  hasMotifPng?: boolean
+): {
   promptEn: string;
   canoniqueIds: string[];
 } {
-  // 1er dispositif top score
-  const topCasting = plan.casting_propose[0];
+  // Dispositif sélectionné par Sarah si présent, sinon top 1
+  const topCasting =
+    (selectedDispositifId && plan.casting_propose.find((c) => c.id === selectedDispositifId)) ||
+    plan.casting_propose[0];
   const canoniqueIds = topCasting?.membres || (topCasting?.id ? [topCasting.id] : []);
 
   // 1er angle de la shotlist (PORTRAIT_FRONTAL ou DEMI_FIGURE_VERTICAL)
@@ -104,9 +115,14 @@ function buildHeroPrompt(plan: ShootingPlanOutput, lookbookAmbiances: LookbookAm
   const lieu = topCasting?.lieu || "France";
 
   // Motif YPM
-  const motifLine = plan.motif_ypm?.id
-    ? `The garment carries the embroidered motif "${plan.motif_ypm.nom || plan.motif_ypm.id}" (Ypersoa YPM-001 to YPM-017 collection), realized on Tajima industrial embroidery machine. The embroidery is precise, dense, EXTREMELY FLAT (no 3D, no relief). Visible at left chest position.`
-    : `The garment carries an Ypersoa embroidered motif on Tajima industrial machine, EXTREMELY FLAT, visible at left chest.`;
+  let motifLine: string;
+  if (hasMotifPng) {
+    motifLine = `EMBROIDERY MOTIF FIDELITY: The first attached image is the EXACT embroidery motif design that must be reproduced verbatim on the garment (left chest position). Same shape, same letters, same colors, same proportions. Realized on Tajima industrial embroidery machine — precise, dense, EXTREMELY FLAT (no 3D, no relief, no embossing). DO NOT add, remove, modify, or invent any element of this motif. Brand: Ypersoa "${plan.motif_ypm?.nom || plan.motif_ypm?.id || "motif"}".`;
+  } else if (plan.motif_ypm?.id) {
+    motifLine = `The garment carries the embroidered motif "${plan.motif_ypm.nom || plan.motif_ypm.id}" (Ypersoa YPM-001 to YPM-017 collection), realized on Tajima industrial embroidery machine. The embroidery is precise, dense, EXTREMELY FLAT (no 3D, no relief). Visible at left chest position.`;
+  } else {
+    motifLine = `The garment carries an Ypersoa embroidered motif on Tajima industrial machine, EXTREMELY FLAT, visible at left chest.`;
+  }
 
   const promptEn = `${heroShot.description}
 
@@ -142,22 +158,43 @@ export async function POST(req: NextRequest) {
     }
 
     const lookbookAmbiances = await fetchLookbookAmbiances(body.lookbook_ambiance_ids || []);
-    const { promptEn, canoniqueIds } = buildHeroPrompt(body.plan, lookbookAmbiances);
+    const hasMotifPng = Boolean(body.motif_png_data_url);
+    const { promptEn, canoniqueIds } = buildHeroPrompt(
+      body.plan,
+      lookbookAmbiances,
+      body.selected_dispositif_id,
+      hasMotifPng
+    );
     const aspectRatio = aspectRatioFromFormat(body.plan);
 
     const ai = new GoogleGenAI({ apiKey });
 
-    // Charger les canoniques en parts[] AVANT le prompt
+    // Charger les parts[] dans l'ordre Gemini :
+    //   1. PNG du motif (si fourni) — référence broderie EXACTE
+    //   2. Photos canoniques char ref
+    //   3. Prompt texte
     const parts: Array<{ inlineData: { data: string; mimeType: string } } | { text: string }> = [];
+
+    // 1) Motif PNG si fourni
+    if (hasMotifPng && body.motif_png_data_url) {
+      const match = body.motif_png_data_url.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
+      if (match) {
+        const [, mimeType, data] = match;
+        parts.push({ inlineData: { data, mimeType } });
+      }
+    }
+
+    // 2) Char refs canoniques (limite 3)
     const canoniquesLoaded: string[] = [];
     for (const id of canoniqueIds.slice(0, 3)) {
-      // limite 3 char refs pour rester dans les contraintes Gemini
       const img = loadCanoniqueAsBase64(id);
       if (img) {
         parts.push({ inlineData: img });
         canoniquesLoaded.push(id);
       }
     }
+
+    // 3) Prompt texte
     parts.push({ text: promptEn });
 
     const response = await ai.models.generateContent({
@@ -192,6 +229,8 @@ export async function POST(req: NextRequest) {
       },
       meta: {
         canoniques_charges: canoniquesLoaded,
+        dispositif_utilise: body.selected_dispositif_id || body.plan.casting_propose[0]?.id || null,
+        motif_png_inject: hasMotifPng,
         prompt_used: promptEn,
         lookbook_ambiances_resolved: lookbookAmbiances.map((l) => ({ id: l.id, titre: l.titre })),
       },
