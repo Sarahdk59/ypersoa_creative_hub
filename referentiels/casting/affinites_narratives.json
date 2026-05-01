@@ -20,7 +20,7 @@
       "nature": "couple_etabli_lesbien",
       "lieu": "Lille",
       "qualifiers": ["complicite-silencieuse", "couple-fait-pas-statement", "voyageuses", "esthetique-douce"],
-      "themes_compatibles": ["saint-valentin", "anniversaire-mariage", "co-living", "voyage-couple", "diner-recoit"],
+      "themes_compatibles": ["saint-valentin", "anniversaire-mariage", "co-living", "voyage-couple", "diner-recoit", "annonce-grossesse", "fiancailles"],
       "ambiances_recommandees": ["aube", "loft", "minimalist"],
       "occasions_clientes": ["saint-valentin", "anniversaire-couple", "cadeau-couple-amies", "emmenagement"],
       "ref_complete": "duos_detailles_et_distribution.json#DUO_LEA_SARAH"
@@ -44,7 +44,7 @@
       "nature": "premier_amour_etudiants_creatifs_longue_distance",
       "lieu": "Paris (Gaspard) ↔ Lyon (Brune)",
       "qualifiers": ["insouciance-solaire", "lucide", "premier-amour-adulte", "skate-photo-mode", "creatifs", "couple-longue-distance"],
-      "themes_compatibles": ["saint-valentin-jeune", "rentree-universitaire", "premier-anniversaire-couple", "vie-coloc", "weekend-retrouvailles"],
+      "themes_compatibles": ["saint-valentin", "saint-valentin-jeune", "rentree-universitaire", "premier-anniversaire-couple", "vie-coloc", "weekend-retrouvailles", "fiancailles"],
       "ambiances_recommandees": ["sauvage", "minimalist", "sepia"],
       "occasions_clientes": ["saint-valentin", "premier-anniversaire-couple", "cadeau-jeune-couple"]
     },
@@ -55,7 +55,7 @@
       "nature": "jeune_pere_bebe",
       "lieu": "Dunkerque",
       "qualifiers": ["tendresse-absolue", "porte-bebe-vissé", "masculinite-paternelle-2026", "présent", "bouscule"],
-      "themes_compatibles": ["fete-peres", "premier-cadeau-naissance", "conge-parentalite", "rentree-creche"],
+      "themes_compatibles": ["fete-peres", "premier-cadeau-naissance", "conge-parentalite", "rentree-creche", "annonce-grossesse", "naissance"],
       "ambiances_recommandees": ["aube", "loft", "minimalist"],
       "occasions_clientes": ["naissance", "fete-peres", "premier-noel-bebe"]
     },
@@ -77,7 +77,7 @@
       "nature": "couple_parents_provence",
       "lieu": "Arrière-pays provençal",
       "qualifiers": ["couple-installe-rural", "parents-jeunes", "esthetique-provençale-moderne", "maison-en-pierre-en-travaux", "atelier-ceramique"],
-      "themes_compatibles": ["fete-meres", "fete-peres", "anniversaire-couple", "vacances-famille", "rentree-scolaire-village"],
+      "themes_compatibles": ["fete-meres", "fete-peres", "anniversaire-couple", "anniversaire-mariage", "vacances-famille", "rentree-scolaire-village", "annonce-grossesse", "fiancailles", "saint-valentin"],
       "ambiances_recommandees": ["aube", "sepia", "sauvage"],
       "occasions_clientes": ["fete-meres", "fete-peres", "naissance-second-enfant", "anniversaire-couple"],
       "_v3_3": true
@@ -188,7 +188,7 @@
       "nature": "famille_nucleaire_jeune",
       "lieu": "Dunkerque",
       "qualifiers": ["jeune-parentalite-moderne", "fauteuil-jamais-sujet", "couple-recent", "naissance-recente", "teletravail-Dunkerque"],
-      "themes_compatibles": ["fete-meres", "fete-peres", "naissance", "rentree-creche", "premier-noel"],
+      "themes_compatibles": ["fete-meres", "fete-peres", "naissance", "rentree-creche", "premier-noel", "annonce-grossesse"],
       "ambiances_recommandees": ["aube", "loft", "minimalist"],
       "occasions_clientes": ["naissance", "fete-meres-jeune", "fete-peres-jeune", "premier-noel"]
     },
@@ -313,6 +313,9 @@
 
   "themes_index": {
     "_principe": "Inversement par thème commercial Ypersoa pour suggérer canoniques pertinents par occasion.",
+    "annonce-grossesse": ["TRIO_COLINE_HUGO_NOE", "DUO_HUGO_NOE", "DUO_ANNA_MATHIEU", "DUO_LEA_SARAH"],
+    "fiancailles": ["DUO_GASPARD_BRUNE", "DUO_LEA_SARAH", "DUO_ANNA_MATHIEU", "DUO_HENRI_JOSEPHINE"],
+    "paques": ["DUO_MARIEHELENE_FELICIE", "TRIO_ANNA_MATHIEU_FELICIE", "DUO_LILA_GABIN"],
     "fete-meres": ["DUO_MARIEHELENE_FELICIE", "TRIO_AICHA_CESARIA_JOSEPHINE", "TRIO_COLINE_HUGO_NOE", "DUO_LILA_GABIN", "TRIO_ANNA_MATHIEU_FELICIE", "TRIO_MARIEHELENE_ANNA_FELICIE"],
     "fete-peres": ["DUO_HUGO_NOE", "TRIO_HASSAN_LILA_GABIN", "TRIO_ANNA_MATHIEU_FELICIE", "DUO_HASSAN_LILA", "DUO_HASSAN_GABIN", "DUO_MATHIEU_NICOLAS"],
     "fete-grand-meres": ["DUO_MARIEHELENE_FELICIE", "TRIO_AICHA_CESARIA_JOSEPHINE", "TRIO_MARIEHELENE_ANNA_FELICIE"],

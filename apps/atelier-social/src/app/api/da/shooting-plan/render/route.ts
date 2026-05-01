@@ -28,9 +28,19 @@ interface RenderInput {
   motif_png_data_url?: string | null;
   /** Taille du motif brodé : impacte la dimension + l'emplacement (cœur discret / cœur lisible / centre poitrine) */
   motif_size?: "petit" | "moyen" | "grand";
+  /** Code produit Ypersoa (YP001 hoodie, YP004 hoodie enfant, YP005 sweat, YP019 t-shirt, YP021 zoodie). */
+  produit_yp_id?: string;
   /** Index du shot dans plan.shotlist (0 = premier = hero). Default 0. */
   shot_index?: number;
 }
+
+const PRODUITS_YP_DESCRIPTIONS: Record<string, { fr: string; en: string }> = {
+  YP001: { fr: "Hoodie adulte (sweat à capuche avec cordons)", en: "adult hoodie (cotton sweatshirt with hood and round drawstrings)" },
+  YP004: { fr: "Hoodie enfant", en: "kids hoodie (cotton sweatshirt with hood, no drawstrings)" },
+  YP005: { fr: "Sweat adulte col rond (crewneck)", en: "adult crewneck sweatshirt (round neck, no hood, premium cotton)" },
+  YP019: { fr: "T-shirt adulte épais (premium cotton)", en: "adult t-shirt (premium thick cotton, short sleeves, round neck)" },
+  YP021: { fr: "Zoodie (sweat à capuche zippé)", en: "adult zoodie (zip-up hooded sweatshirt with metal zipper)" },
+};
 
 function loadCanoniqueAsBase64(id: string): { data: string; mimeType: string } | null {
   try {
@@ -92,6 +102,7 @@ interface BuildHeroPromptArgs {
   selectedDispositifId?: string | null;
   hasMotifPng?: boolean;
   motifSize?: "petit" | "moyen" | "grand";
+  produitYpId?: string;
   shotIndex?: number;
 }
 
@@ -114,7 +125,8 @@ function buildHeroPrompt(args: BuildHeroPromptArgs): {
   promptEn: string;
   canoniqueIds: string[];
 } {
-  const { plan, lookbookAmbiances, selectedDispositifId, hasMotifPng, motifSize = "moyen", shotIndex = 0 } = args;
+  const { plan, lookbookAmbiances, selectedDispositifId, hasMotifPng, motifSize = "moyen", produitYpId = "YP019", shotIndex = 0 } = args;
+  const produitDesc = PRODUITS_YP_DESCRIPTIONS[produitYpId] || PRODUITS_YP_DESCRIPTIONS.YP019;
 
   // Dispositif sélectionné par Sarah si présent, sinon top 1
   const topCasting =
@@ -156,6 +168,7 @@ function buildHeroPrompt(args: BuildHeroPromptArgs): {
 
 CASTING: ${topCasting?.prenoms.join(" + ") || "natural French model"}.
 LOCATION: ${lieu}.
+GARMENT: ${produitDesc.en} (${produitYpId} from the Ypersoa catalog) — neutral natural color (heather grey, ecru, or black depending on the casting profile). The model wears this exact type of garment, NOT a different shape.
 ${ambianceDesc}.
 ${motifLine}
 
@@ -193,6 +206,7 @@ export async function POST(req: NextRequest) {
       selectedDispositifId: body.selected_dispositif_id,
       hasMotifPng,
       motifSize: body.motif_size || "moyen",
+      produitYpId: body.produit_yp_id || "YP019",
       shotIndex: body.shot_index ?? 0,
     });
     const aspectRatio = aspectRatioFromFormat(body.plan);
@@ -262,6 +276,7 @@ export async function POST(req: NextRequest) {
         dispositif_utilise: body.selected_dispositif_id || body.plan.casting_propose[0]?.id || null,
         motif_png_inject: hasMotifPng,
         motif_size: body.motif_size || "moyen",
+        produit_yp_id: body.produit_yp_id || "YP019",
         shot_index: body.shot_index ?? 0,
         shot_angle: body.plan.shotlist[body.shot_index ?? 0]?.angle || null,
         prompt_used: promptEn,

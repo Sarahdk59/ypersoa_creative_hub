@@ -7,6 +7,14 @@ import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder"
 import { listActiveLookbookAmbiances, type ActiveLookbookAmbiance } from "@/lib/active-ambiances";
 import { AMBIANCES_OFFICIELLES } from "@/lib/ambiances-officielles";
 
+const PRODUITS_YP = [
+  { id: "YP019", label: "T-shirt adulte", short: "T-shirt" },
+  { id: "YP005", label: "Sweat adulte (col rond)", short: "Sweat" },
+  { id: "YP001", label: "Hoodie adulte (capuche)", short: "Hoodie" },
+  { id: "YP021", label: "Zoodie (sweat zippé)", short: "Zoodie" },
+  { id: "YP004", label: "Hoodie enfant", short: "Hoodie enfant" },
+];
+
 const MOTIFS_YPM = [
   { id: "YPM-001", nom: "La Brigitte" },
   { id: "YPM-002", nom: "L'Ambre" },
@@ -40,6 +48,7 @@ const FORMATS = [
 
 export default function ShootingBookPage() {
   const [briefTexte, setBriefTexte] = useState("");
+  const [produitId, setProduitId] = useState<string>("YP019");
   const [motifId, setMotifId] = useState("");
   const [ambiances, setAmbiances] = useState<string[]>([]);
   const [lookbookAmbianceIds, setLookbookAmbianceIds] = useState<string[]>([]);
@@ -114,6 +123,7 @@ export default function ShootingBookPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           texte_libre: briefTexte.trim(),
+          produit_yp_id: produitId,
           motif_ypm_id: motifId || undefined,
           motif_ypm_nom: motifNom,
           ambiances_preferees: ambiances,
@@ -152,6 +162,7 @@ export default function ShootingBookPage() {
           selected_dispositif_id: selectedDispositifId,
           motif_png_data_url: motifPngDataUrl,
           motif_size: motifSize,
+          produit_yp_id: produitId,
           shot_index: 0,
         }),
       });
@@ -183,6 +194,7 @@ export default function ShootingBookPage() {
           selected_dispositif_id: selectedDispositifId,
           motif_png_data_url: motifPngDataUrl,
           motif_size: motifSize,
+          produit_yp_id: produitId,
           shot_index: shotIndex,
         }),
       });
@@ -311,6 +323,45 @@ export default function ShootingBookPage() {
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-foreground)", opacity: 0.5, textAlign: "right", marginTop: 4 }}>
             {briefTexte.length}/400
           </div>
+
+          {/* Produit Ypersoa */}
+          <label
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--hub-foreground)",
+              opacity: 0.6,
+              display: "block",
+              marginTop: 16,
+              marginBottom: 8,
+            }}
+          >
+            Produit Ypersoa
+          </label>
+          <select
+            value={produitId}
+            onChange={(e) => setProduitId(e.target.value)}
+            style={{
+              width: "100%",
+              padding: 10,
+              borderRadius: 10,
+              border: "1px solid var(--hub-border)",
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              outline: "none",
+              background: "var(--hub-bg)",
+              color: "var(--hub-foreground)",
+            }}
+          >
+            {PRODUITS_YP.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.id} · {p.label}
+              </option>
+            ))}
+          </select>
 
           {/* Motif YPM */}
           <label

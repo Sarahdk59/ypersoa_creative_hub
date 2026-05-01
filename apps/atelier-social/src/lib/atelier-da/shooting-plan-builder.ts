@@ -21,6 +21,8 @@ export interface ShootingBriefInput {
   texte_libre: string;
   motif_ypm_id?: string;
   motif_ypm_nom?: string;
+  /** Code produit Ypersoa (YP001 hoodie, YP004 hoodie enfant, YP005 sweat, YP019 t-shirt, YP021 zoodie). Default YP019. */
+  produit_yp_id?: string;
   occasion?: string;
   ambiances_preferees?: string[];
   /** Lookbooks favoris ❤️ pinés comme ambiance custom — id Supabase. */
@@ -114,21 +116,35 @@ const SHOTLIST_TEMPLATE_3_PINTEREST: Array<{ angle: string; description: string;
 
 function detectOccasion(brief: string): string | null {
   const lower = brief.toLowerCase();
+  // Ordre = priorité (premier match gagne) — patterns spécifiques avant patterns larges.
   const map: Array<[RegExp, string]> = [
-    [/\b(f[êe]te.*m[èe]re|mother|mama|maman)\b/i, "fete-meres"],
-    [/\b(f[êe]te.*p[èe]re|father|papa)\b/i, "fete-peres"],
+    // Pré-naissance / annonce grossesse
+    [/\b(annonce.*grossesse|grossesse|enceinte|future.*maman|future.*m[ée]re|baby.*bump|attendre.*enfant|expectations|expecting)\b/i, "annonce-grossesse"],
+    // Fiançailles / demande en mariage
+    [/\b(fian[çc]ailles|demande.*en.*mariage|demande.*mariage|proposal|se.*fiancer|se.*marier|engagement|mariage)\b/i, "fiancailles"],
+    // Anniversaire de mariage
+    [/\b(anniversaire.*mariage|noces|wedding[\s-]anniversary)\b/i, "anniversaire-mariage"],
+    // Weekend romantique / saint valentin
+    [/\b(weekend.*romantique|week-end.*romantique|escapade.*amoureuse|romantic.*getaway)\b/i, "saint-valentin"],
+    [/\b(saint[\s-]valentin|valentin|amour.*couple|jour.*amoureux)\b/i, "saint-valentin"],
+    // Naissance / bébé
+    [/\b(naissance|newborn|bapt[êe]me|christening|arriv[ée]e.*b[ée]b[ée])\b/i, "naissance"],
+    [/\b(b[ée]b[ée]|baby)\b/i, "naissance"],
+    // Fêtes calendaires
     [/\b(f[êe]te.*grand[\s-]m[èe]re|mamie|grand[\s-]mère)\b/i, "fete-grand-meres"],
     [/\b(f[êe]te.*grand[\s-]p[èe]re|papi|grand[\s-]père)\b/i, "fete-grand-peres"],
-    [/\b(saint[\s-]valentin|valentin|amour|couple)\b/i, "saint-valentin"],
-    [/\b(naissance|n[oô]el|newborn|baby|b[ée]b[ée])\b/i, "naissance"],
+    [/\b(f[êe]te.*m[èe]re|mother|mama\b|maman)\b/i, "fete-meres"],
+    [/\b(f[êe]te.*p[èe]re|father|papa)\b/i, "fete-peres"],
     [/\b(no[ëe]l|christmas)\b/i, "noel"],
+    [/\b(p[âa]ques|easter)\b/i, "paques"],
     [/\b(rentr[ée]e|back[\s-]to[\s-]school)\b/i, "rentree-scolaire"],
-    [/\b(anniversaire.*mariage|wedding[\s-]anniversary)\b/i, "anniversaire-mariage"],
+    // Amitiés / sorties
     [/\b(evjf|enterrement.*vie.*jeune.*fille)\b/i, "evjf"],
-    [/\b(weekend.*amies|girls)\b/i, "weekend-amies"],
-    [/\b(ramadan)\b/i, "ramadan"],
+    [/\b(weekend.*amies|girls.*weekend)\b/i, "weekend-amies"],
+    [/\b(ramadan|aid|eid)\b/i, "ramadan"],
+    // Géographies
     [/\b(martinique|antilles|caraibes)\b/i, "voyage-martinique"],
-    [/\b(bretagne|br[ée]ton)\b/i, "vacances-mer-bretonne"],
+    [/\b(bretagne|br[ée]ton|finist[èe]re)\b/i, "vacances-mer-bretonne"],
     [/\b(avignon|festival)\b/i, "festivals-Avignon"],
   ];
   for (const [re, occ] of map) {
