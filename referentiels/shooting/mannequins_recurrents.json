@@ -1,18 +1,37 @@
 {
   "_meta": {
-    "schema_version": "3.2",
+    "schema_version": "3.3",
     "referentiel": "mannequins_recurrents",
-    "last_updated": "2026-04-30",
+    "last_updated": "2026-05-01",
     "directive_casting": "D2_DEUX_FAMILLES_ESTHETIQUES v1.0 (succède à D1_BEAUTE_INCARNEE v2.0)",
-    "statut": "ENRICHI — 21 fiches détaillées + 5 nouveaux champs biographiques (date_anniversaire, saison_preferee, evenements_de_vie, traits_narratifs, affinites_qualifiees)",
-    "principe": "Beauté incarnée à la française — ni supermodel, ni réalité crue. Casting bicéphale 'no-makeup naturelle' (22) + 'maquillée chic assumée' (1 — Clémence MAN-P01).",
-    "_note_v3_2_2026_04_30_nuit": "Les 5 nouveaux champs (date_anniversaire, saison_preferee, evenements_de_vie, traits_narratifs, affinites_qualifiees) sont des INFÉRENCES PLAUSIBLES posées par Claude Code en session de nuit, déduites des fiches détaillées (lots 1-4 + Coline + duos). À VALIDER PAR SARAH au matin. Format date : MM-DD (ne pas exposer l'année, le calendrier tourne en boucle annuelle).",
+    "statut": "REFONTE NARRATIVE v3.3 — 3 lignées familiales 3 générations explicites (rousses françaises / maghrébines / afro-caribéennes) + parents canoniques pour les enfants",
+    "principe": "Beauté incarnée à la française — ni supermodel, ni réalité crue. Casting bicéphale 'no-makeup naturelle' (22) + 'maquillée chic assumée' (1 — Clémence MAN-P01). 3 lignées familiales explicites pour le storytelling.",
+    "lignees_familiales_3_generations": {
+      "rousses_françaises": "MAN-P10 Marie-Hélène (65, grand-mère, Bretagne) → MAN-P02 Anna (35, fille) + MAN-P06 Mathieu (40, gendre) Provence rurale → MAN-P08 Félicie (7, petite-fille)",
+      "maghrébines": "MAN-S18 Hassan (68, grand-père Paris) → MAN-P04 Lila (45, fille mère solo Paris) → MAN-P09 Gabin (5, petit-fils Paris) + son jumeau César hors casting",
+      "afro_caribéennes": "MAN-S19 Joséphine (70, mère, Avignon retraite) + MAN-S19 Henri (72, beau-père, Avignon) → MAN-P03 Aïcha (40, fille, Paris) + MAN-S17 Césaria (40, fille, Paris)"
+    },
+    "cartographie_regionale": {
+      "_principe": "Maillage France pour permettre des shoots variés. 9 régions/villes représentées + 1 lien international (voyages Martinique).",
+      "Paris": ["MAN-P03 Aïcha", "MAN-P04 Lila", "MAN-P05 Béatrice (résidence principale)", "MAN-P07 Nicolas", "MAN-P09 Gabin", "MAN-S14 Gaspard", "MAN-S16 Hiroshi", "MAN-S17 Césaria", "MAN-S18 Hassan"],
+      "Honfleur (Normandie)": ["MAN-P01 Clémence"],
+      "Lille": ["MAN-P11 Léa & Sarah"],
+      "Dunkerque (Hauts-de-France)": ["MAN-S20 Coline", "MAN-S21 Hugo", "MAN-S15 Bébé Noé"],
+      "Lyon": ["MAN-P12 Brune"],
+      "Bretagne (Finistère / Côtes d'Armor)": ["MAN-P10 Marie-Hélène"],
+      "Pays Basque": ["MAN-S13 Priya (résidence principale)", "MAN-P05 Béatrice (maison de famille)"],
+      "Avignon (Provence urbaine)": ["MAN-S19 Henri & Joséphine"],
+      "Arrière-pays provençal (Provence rurale)": ["MAN-P02 Anna", "MAN-P06 Mathieu", "MAN-P08 Félicie"],
+      "_couples_distance": "MAN-P12 Brune (Lyon) ↔ MAN-S14 Gaspard (Paris) — couple longue distance depuis 18-10-2024"
+    },
+    "_note_v3_3_2026_05_01": "REFONTE NARRATIVE structurelle validée par Sarah le 01/05/2026. Pivot : Béatrice perd son rôle de grand-mère de Félicie au profit de Marie-Hélène (transmission rousse cohérente). Anna + Mathieu deviennent couple parents de Félicie en Provence. Lila devient mère solo de Gabin (Mathieu n'est plus son père). Hassan devient père de Lila + grand-père de Gabin (3 gen maghrébines explicites). Béatrice devient solo + amitiés (Hassan urbain + Marie-Hélène campagne). Voir CASTING_ARBRE_GENEALOGIQUE.md pour visualisation.",
     "changelog": {
       "v1.0_2026-04-19": "Casting 20 mannequins, directive 1 'humanité visible obligatoire'",
       "v2.0_2026-04-20_matin": "Casting 21 mannequins, directive 1 v2.0 'beauté incarnée', re-calibrage démographique (64% blancs)",
       "v3.0_2026-04-20_soir": "Assemblage J3.B — 20/21 fiches détaillées",
       "v3.1_2026-04-20_soir": "Cloture J3.B — 21/21 fiches détaillées (Coline ajoutée)",
-      "v3.2_2026-04-30_nuit": "5 champs biographiques ajoutés à chaque entrée mannequin (à valider Sarah)"
+      "v3.2_2026-04-30_nuit": "5 champs biographiques ajoutés à chaque entrée mannequin (à valider Sarah)",
+      "v3.3_2026-05-01_matin": "Refonte narrative validée Sarah : 3 lignées familiales 3 gen (rousses, maghrébines, afro-caribéennes), parents canoniques pour Félicie+Gabin, Béatrice perd grand-mère devient solo, Hassan devient père+grand-père"
     }
   },
 
@@ -123,21 +142,39 @@
       "age": 35,
       "genre": "F",
       "ethnicite": "blanche (sud de la France)",
-      "particularite": "peau hâlée naturellement, taches de rousseur nez/épaules",
-      "duo": null,
+      "particularite": "peau hâlée naturellement, taches de rousseur nez/épaules (gène roux récessif hérité de Marie-Hélène)",
+      "duo": "DUO_ANNA_MATHIEU",
       "style_wear_signature": "Provençale moderne (Sessùn/Soeur)",
       "statut_fiche": "DETAILLEE_LOT2",
       "date_anniversaire": "06-08",
       "saison_preferee": "été",
+      "metier": "Architecte d'intérieur",
+      "passion": "Atelier céramique (passion, pas métier)",
+      "lieu_de_vie": "Arrière-pays provençal (maison en pierre)",
+      "statut_relationnel": "En couple avec Mathieu (P06), parents de Félicie (P08)",
+      "famille": {
+        "mere": "MAN-P10 Marie-Hélène (transmission rousseur)",
+        "compagnon": "MAN-P06 Mathieu",
+        "enfant": "MAN-P08 Félicie"
+      },
       "evenements_de_vie": [
-        "Quitté Paris pour l'arrière-pays provençal (~2020-2022)",
-        "Installation maison en pierre + atelier céramique"
+        "Quitté Paris en 2017 pour l'arrière-pays provençal",
+        "Naissance de Félicie en 2019",
+        "Installation maison en pierre depuis 2019 (toujours en travaux)",
+        "Mariage avec Mathieu en 2019"
       ],
       "traits_narratifs": ["solaire", "exigeante", "douce", "matières-vraies", "exode-parisien"],
+      "_validation_sarah": "P02 ✓ 2026-05-01 (refonte v3.3 : architecte intérieur, fille de Marie-Hélène, en couple avec Mathieu, mère de Félicie, en Provence)",
       "affinites_qualifiees": {
-        "TRIO_COPINES_ANNA_AICHA_LILA": "trio d'amies adultes CSP+ multiculturel — girl gang établi",
-        "MAN-P03": "amitié de longue date avec Aïcha (parisiennes restées proches malgré l'exode)",
-        "MAN-P04": "Lila, complice citadine — descend chez elle l'été"
+        "DUO_ANNA_MATHIEU": "couple parents de Félicie",
+        "TRIO_ANNA_MATHIEU_FELICIE": "famille nucléaire 3 personnes",
+        "TRIO_MARIEHELENE_ANNA_FELICIE": "3 générations rousses (transmission visuelle)",
+        "MAN-P10": "mère biologique Marie-Hélène",
+        "MAN-P06": "compagnon Mathieu",
+        "MAN-P08": "fille Félicie",
+        "TRIO_COPINES_ANNA_AICHA_LILA": "girl gang adulte (amitié parisienne préservée malgré l'exode)",
+        "MAN-P03": "amitié de longue date avec Aïcha",
+        "MAN-P04": "Lila, complice citadine"
       }
     },
     {
@@ -152,19 +189,28 @@
       "statut_fiche": "DETAILLEE_LOT1",
       "date_anniversaire": "07-15",
       "saison_preferee": "été",
+      "metier": "DA agence de com / galeriste",
+      "lieu_de_vie": "Paris",
+      "statut_relationnel": "Vit à Paris, allers-retours réguliers à Avignon (Provence) pour voir ses parents Joséphine + Henri en retraite. Hôte-née qui reçoit le vendredi soir.",
+      "famille": {
+        "mere": "MAN-S19-JOSEPHINE (mère biologique, vit à Avignon)",
+        "beau_pere": "MAN-S19-HENRI (2e mariage de Joséphine, vit à Avignon)",
+        "soeur": "MAN-S17 Césaria (aînée, vit à Paris)"
+      },
       "evenements_de_vie": [
         "Installation à Paris avec sa mère Joséphine (origine Martinique)",
         "Carrière DA / galeriste à Paris (~2008-aujourd'hui)",
+        "Parents en retraite à Avignon depuis ~2018",
         "Voyages réguliers Martinique en famille"
       ],
       "traits_narratifs": ["élégante-sans-effort", "hôte-née", "vivacité-du-rire", "diaspora-assumée", "matrimoniale"],
-      "_validation_sarah": "P03 ✓ 2026-05-01",
+      "_validation_sarah": "P03 ✓ 2026-05-01 (refonte v3.3 : Paris + parents en retraite Avignon)",
       "affinites_qualifiees": {
         "TRIO_AICHA_CESARIA_JOSEPHINE": "3 générations féminines afro-caribéennes (mère + 2 filles adultes)",
-        "MAN-S19-JOSEPHINE": "mère biologique",
-        "MAN-S17": "sœur (Césaria)",
-        "MAN-S19-HENRI": "beau-père (2e mariage de Joséphine)",
-        "TRIO_COPINES_ANNA_AICHA_LILA": "girl gang adulte"
+        "MAN-S19-JOSEPHINE": "mère biologique (Avignon)",
+        "MAN-S17": "sœur Césaria (Paris)",
+        "MAN-S19-HENRI": "beau-père (Avignon)",
+        "TRIO_COPINES_ANNA_AICHA_LILA": "girl gang adulte (Anna en Provence rurale, retrouvailles facilitées par les parents Avignon d'Aïcha)"
       }
     },
     {
@@ -172,23 +218,36 @@
       "prenom": "Lila",
       "age": 45,
       "genre": "F",
-      "ethnicite": "maghrébine",
+      "ethnicite": "maghrébine (2e génération, fille d'immigré algérien)",
       "particularite": null,
-      "duo": null,
+      "duo": "DUO_LILA_GABIN",
       "style_wear_signature": "Parisienne maghrébine sophistiquée (Leïla Bekhti élégante, The Row × Khaite)",
       "statut_fiche": "DETAILLEE_LOT2",
       "date_anniversaire": "04-12",
       "saison_preferee": "printemps",
+      "metier": "Avocate",
+      "lieu_de_vie": "Paris",
+      "statut_relationnel": "Mère solo de jumeaux Gabin & César (5 ans, visuellement identiques), séparée d'un ex amiable (père hors casting)",
+      "famille": {
+        "pere": "MAN-S18 Hassan (immigré algérien, années 70)",
+        "enfants_jumeaux": "MAN-P09 Gabin (canonique) + César (hors casting, visuellement identique à Gabin — pour shots fratrie, dupliquer la photo de Gabin via Gemini)"
+      },
       "evenements_de_vie": [
-        "Mère d'ados (premier enfant ~2010)",
-        "Carrière exigeante (architecte ou avocate d'affaires)",
-        "Statut marié/divorcée fluctuant selon shot — mère présente"
+        "Carrière exigeante d'avocate à Paris",
+        "Naissance des jumeaux Gabin & César (2021, mère solo à 40 ans)",
+        "Séparation amiable du père des jumeaux (avant ou peu après naissance)",
+        "Vit près de son père Hassan, qui aide avec les jumeaux"
       ],
       "traits_narratifs": ["exigence-silencieuse", "cultivée", "cadeaux-réfléchis", "élégance-discrète", "ni-exotisée-ni-effacée"],
+      "_validation_sarah": "P04 ✓ 2026-05-01 (refonte v3.3 : avocate, fille de Hassan, mère solo de jumeaux Gabin+César, séparée amiable. César = jumeau visuellement identique, hors casting photo, dupliqué via Gemini)",
       "affinites_qualifiees": {
+        "DUO_LILA_GABIN": "mère solo + fils, 40 ans d'écart",
+        "DUO_HASSAN_LILA": "père-fille adulte maghrébine",
+        "TRIO_HASSAN_LILA_GABIN": "3 générations maghrébines (immigration → 2e gen → 3e gen)",
+        "MAN-S18": "père Hassan",
+        "MAN-P09": "fils Gabin",
         "TRIO_COPINES_ANNA_AICHA_LILA": "girl gang adulte",
-        "MAN-S18": "filiation culturelle maghrébine indirecte (mais générations différentes)",
-        "MAN-P03": "amie de longue date"
+        "MAN-P03": "amie de longue date Aïcha"
       }
     },
     {
@@ -198,21 +257,33 @@
       "genre": "F",
       "ethnicite": "métisse noir-blanc",
       "particularite": "cheveux argentés élégants",
-      "duo": "DUO_BEATRICE_FELICIE",
+      "duo": null,
       "style_wear_signature": "Bourgeoise campagne normande (Vanessa Seward)",
       "statut_fiche": "DETAILLEE_LOT3",
       "date_anniversaire": "09-28",
       "saison_preferee": "automne",
+      "metier": "Notaire à la retraite (carrière notaire jusqu'en 2024)",
+      "lieu_de_vie": "Paris + maison de famille au Pays Basque (Béarn / Saint-Jean-de-Luz)",
+      "statut_relationnel": "Divorcée — solo assumée. Sans famille de sang dans le casting. Deux amitiés fortes : Hassan (urbain Paris) + Marie-Hélène (Bretagne). Marraine élective de Priya (filleule, famille de cœur — Priya vit aussi au Pays Basque)",
+      "famille": {
+        "filleule": "MAN-S13 Priya (famille de cœur via amitié avec les parents de Priya, hors casting)",
+        "_note": "Pas de famille génétique dans le casting. Possibles enfants/petits-enfants hors casting (laissés flous narrativement). Priya = transmission élective, pas génétique."
+      },
       "evenements_de_vie": [
-        "Retraite récente (~2024) après carrière prof d'université ou notaire",
-        "Divorcée — autonomie pleinement assumée",
-        "Naissance de Félicie (sa petite-fille, 2019)"
+        "Carrière notaire (jusqu'en 2024)",
+        "Retraite récente (2024)",
+        "Divorcée — autonomie pleinement assumée"
       ],
-      "traits_narratifs": ["matriarche-moderne", "cultivée", "sans-affectation", "transmission", "chaleureuse"],
+      "traits_narratifs": ["matriarche-moderne", "cultivée", "sans-cinéma", "transmission", "chaleureuse"],
+      "_validation_sarah": "P05 ✓ 2026-05-01 (refonte v3.3 : notaire retraitée 2024, perd grand-mère Félicie, devient solo + 2 amitiés + marraine de Priya, trait 'sans-cinéma' remplace 'sans-affectation')",
       "affinites_qualifiees": {
-        "DUO_BEATRICE_FELICIE": "petite-fille Félicie (transmission)",
-        "MAN-P10": "amitié de longue date avec Marie-Hélène (deux dames du même âge campagne)",
-        "MAN-S19-JOSEPHINE": "même génération matriarcale"
+        "DUO_BEATRICE_HASSAN": "amitié urbaine intellectuelle Paris (concerts, expos, brunchs rive gauche)",
+        "DUO_BEATRICE_MARIEHELENE": "amitié rurale campagne (visites week-end, jardin partagé Normandie)",
+        "DUO_BEATRICE_PRIYA": "marraine-filleule (famille de cœur, transmission élective intergénérationnelle)",
+        "MAN-S18": "Hassan, ami urbain Paris",
+        "MAN-P10": "Marie-Hélène, amie campagne",
+        "MAN-S13": "Priya, filleule (famille de cœur)",
+        "MAN-S19-JOSEPHINE": "même génération matriarcale (résonance d'âge)"
       }
     },
     {
@@ -222,22 +293,33 @@
       "genre": "H",
       "ethnicite": "blanc français",
       "particularite": "barbe brune de 3 jours, cheveux bruns dépeignés",
-      "duo": "DUO_MATHIEU_GABIN",
-      "style_wear_signature": "Papa sportwear chic (marinière Saint James + Stan Smith)",
+      "duo": "DUO_ANNA_MATHIEU",
+      "style_wear_signature": "Papa sportwear chic en Provence (marinière Saint James + Stan Smith + vélo-cargo village provençal)",
       "statut_fiche": "DETAILLEE_LOT3",
       "date_anniversaire": "05-04",
       "saison_preferee": "printemps",
+      "metier": "Ingé son freelance (reconversion 2020 — compatible vie rurale)",
+      "lieu_de_vie": "Arrière-pays provençal (avec Anna)",
+      "statut_relationnel": "Marié à Anna (P02) depuis 2019, papa de Félicie (P08, 7 ans)",
+      "famille": {
+        "compagne": "MAN-P02 Anna",
+        "enfant": "MAN-P08 Félicie"
+      },
       "evenements_de_vie": [
-        "Mariage (2019)",
-        "Reconversion ingé son (2020)",
-        "Naissance de Gabin (2021)"
+        "Rencontre Anna (~2017-2018)",
+        "Mariage avec Anna (2019)",
+        "Naissance de Félicie (2019)",
+        "Reconversion ingé son freelance (2020)",
+        "Migration Provence avec Anna (vélo-cargo dans le village)"
       ],
-      "traits_narratifs": ["papa-présent", "cool-sans-être-branché", "stylé-sans-y-penser", "vélo-cargo", "weekend-camping"],
-      "_validation_sarah": "P06 ✓ 2026-05-01 (precisions: mariage 2019, reconversion ingé son 2020)",
+      "traits_narratifs": ["papa-présent", "cool-sans-être-branché", "stylé-sans-y-penser", "vélo-cargo", "ingé-son-freelance-rural"],
+      "_validation_sarah": "P06 ✓ 2026-05-01 (refonte v3.3 : marié à Anna, papa de Félicie SEULEMENT, vit en Provence, plus père de Gabin)",
       "affinites_qualifiees": {
-        "DUO_MATHIEU_GABIN": "fils Gabin (papa-fils)",
-        "DUO_MATHIEU_NICOLAS": "amitié masculine adulte avec Nicolas",
-        "TRIO_HENRI_NICOLAS_GABIN": "Mathieu absent du trio mais Gabin son fils — alt narratif"
+        "DUO_ANNA_MATHIEU": "couple parents de Félicie",
+        "TRIO_ANNA_MATHIEU_FELICIE": "famille nucléaire 3 personnes Provence",
+        "MAN-P02": "compagne Anna",
+        "MAN-P08": "fille Félicie",
+        "DUO_MATHIEU_NICOLAS": "amitié masculine adulte avec Nicolas (deux papas, mais pas du même âge d'enfant)"
       }
     },
     {
@@ -253,16 +335,20 @@
       "_note_remplacement": "Remplace Karim (retiré 2026-04-20, eczéma mains incompatible cadrage produit broderie)",
       "date_anniversaire": "11-19",
       "saison_preferee": "hiver",
+      "metier": "Cadre / indépendant (Paris)",
+      "lieu_de_vie": "Paris",
+      "statut_relationnel": "Marié de longue date à une femme non-canonique. Sans enfant canonique (possibles enfants hors casting laissés flous)",
+      "famille": {
+        "_note": "Marié hors casting, sans enfant canonique. Reste figure du 'mari attentionné fidèle' sans famille canonique pour préserver simplicité narrative."
+      },
       "evenements_de_vie": [
-        "Mariage (~2010, marié de longue date)",
-        "Paternité tardive choisie",
+        "Mariage longue date (~2010)",
         "Stabilité professionnelle (cadre / indépendant)"
       ],
       "traits_narratifs": ["fiable", "doux", "présent", "élégant-sans-recherche", "fidèle-à-ses-marques"],
+      "_validation_sarah": "P07 ✓ 2026-05-01 (refonte v3.3 : solo dans le casting, marié hors casting, sans enfant canonique. N'est plus alt père de Gabin.)",
       "affinites_qualifiees": {
-        "DUO_NICOLAS_GABIN": "alt narratif père-fils (vs Mathieu — paternité tardive plus calme)",
-        "DUO_MATHIEU_NICOLAS": "amitié adulte Mathieu (les deux papas)",
-        "TRIO_HENRI_NICOLAS_GABIN": "transmission masculine 3 générations"
+        "DUO_MATHIEU_NICOLAS": "amitié masculine adulte avec Mathieu (deux hommes 40-45 ans, complicité de longue date)"
       }
     },
     {
@@ -271,22 +357,33 @@
       "age": 7,
       "genre": "F",
       "ethnicite": "blanche",
-      "particularite": "taches de rousseur, fossettes, cheveux blond vénitien",
-      "duo": "DUO_BEATRICE_FELICIE",
+      "particularite": "taches de rousseur denses, fossettes, cheveux blond vénitien (transmission rousseur 3 gen depuis Marie-Hélène)",
+      "duo": "DUO_MARIEHELENE_FELICIE",
       "style_wear_signature": "Mini-vintage français (Bonpoint × Petit Bateau)",
       "statut_fiche": "DETAILLEE_LOT1",
       "date_anniversaire": "03-15",
       "saison_preferee": "printemps",
+      "lieu_de_vie": "Arrière-pays provençal (avec Anna et Mathieu)",
+      "statut_relationnel": "Enfant de Anna (P02) + Mathieu (P06), petite-fille de Marie-Hélène (P10)",
+      "famille": {
+        "mere": "MAN-P02 Anna",
+        "pere": "MAN-P06 Mathieu",
+        "grand_mere_maternelle": "MAN-P10 Marie-Hélène"
+      },
       "evenements_de_vie": [
-        "Naissance (2019)",
-        "Entrée au CP (rentrée 2025)",
-        "Vacances longues chez sa grand-mère Béatrice en Normandie"
+        "Naissance (2019, Provence)",
+        "Entrée au CP (rentrée 2025) — école du village",
+        "Vacances longues chez sa grand-mère Marie-Hélène (campagne française)"
       ],
       "traits_narratifs": ["rêveuse", "imaginative", "vive", "pieds-nus-jardin", "raconte-histoires"],
+      "_validation_sarah": "P08 ✓ 2026-05-01 (refonte v3.3 : petite-fille de Marie-Hélène (PAS Béatrice), parents Anna+Mathieu, vit en Provence)",
       "affinites_qualifiees": {
-        "DUO_BEATRICE_FELICIE": "grand-mère Béatrice",
-        "MAN-P09": "Gabin (cousin de cœur, même âge)",
-        "MAN-P10": "Marie-Hélène (figure grand-mère bis, amie de Béatrice)"
+        "DUO_MARIEHELENE_FELICIE": "grand-mère Marie-Hélène (transmission rousseur)",
+        "TRIO_ANNA_MATHIEU_FELICIE": "famille nucléaire Provence",
+        "TRIO_MARIEHELENE_ANNA_FELICIE": "3 générations rousses",
+        "MAN-P10": "grand-mère Marie-Hélène",
+        "MAN-P02": "mère Anna",
+        "MAN-P06": "père Mathieu"
       }
     },
     {
@@ -294,24 +391,36 @@
       "prenom": "Gabin",
       "age": 5,
       "genre": "H",
-      "ethnicite": "blanc",
-      "particularite": "cheveux noirs plutôt longs",
-      "duo": "DUO_MATHIEU_GABIN",
+      "ethnicite": "métissé maghrébin/français (3e génération)",
+      "particularite": "cheveux noirs plutôt longs. JUMEAU de César (5 ans, hors casting, visuellement identique — dupliquer la photo de Gabin via Gemini pour shots fratrie)",
+      "duo": "DUO_LILA_GABIN",
       "style_wear_signature": "Mini-sportwear chic (salopette + marinière + Veja)",
       "statut_fiche": "DETAILLEE_LOT3",
       "date_anniversaire": "01-30",
       "saison_preferee": "hiver",
+      "lieu_de_vie": "Paris (avec Lila), week-ends chez Hassan",
+      "statut_relationnel": "Enfant de Lila (mère solo P04), petit-fils de Hassan (S18). Jumeau de César (hors casting). Père hors casting (séparation amiable avant naissance)",
+      "famille": {
+        "mere": "MAN-P04 Lila",
+        "grand_pere_maternel": "MAN-S18 Hassan",
+        "frere_jumeau": "César (hors casting, visuellement identique)",
+        "_pere": "Hors casting, séparé de Lila, contact amiable"
+      },
       "evenements_de_vie": [
-        "Naissance (2021, Mathieu papa)",
+        "Naissance avec son jumeau César (2021, Lila mère solo)",
         "Premier vélo (2024)",
-        "Entrée en maternelle (2024)"
+        "Entrée en maternelle (2024)",
+        "Week-ends réguliers chez son grand-père Hassan"
       ],
-      "traits_narratifs": ["vif", "curieux", "constructeur-cabanes", "questions-mille", "cuisine-avec-papa"],
+      "traits_narratifs": ["vif", "curieux", "constructeur-cabanes", "questions-mille", "café-arabe-chez-papi"],
+      "_validation_sarah": "P09 ✓ 2026-05-01 (refonte v3.3 : fils de Lila PAS Mathieu, jumeau de César hors casting, petit-fils de Hassan)",
       "affinites_qualifiees": {
-        "DUO_MATHIEU_GABIN": "papa Mathieu",
-        "DUO_NICOLAS_GABIN": "alt narratif père-fils Nicolas",
-        "TRIO_HENRI_NICOLAS_GABIN": "transmission masculine 3 générations",
-        "MAN-P08": "Félicie (cousin de cœur)"
+        "DUO_LILA_GABIN": "mère Lila",
+        "DUO_HASSAN_GABIN": "grand-père Hassan (transmission masculine maghrébine)",
+        "TRIO_HASSAN_LILA_GABIN": "3 générations maghrébines",
+        "MAN-P04": "mère Lila",
+        "MAN-S18": "grand-père Hassan",
+        "_jumeau_cesar": "Frère jumeau hors casting visuellement identique"
       }
     },
     {
@@ -326,17 +435,32 @@
       "statut_fiche": "DETAILLEE_LOT3",
       "date_anniversaire": "10-09",
       "saison_preferee": "automne",
+      "metier": "Retraitée — ancienne libraire ou jardinière paysagiste",
+      "lieu_de_vie": "Bretagne (Finistère / Côtes d'Armor) — maison de famille en pierre, jardin breton, côte sauvage",
+      "statut_relationnel": "Veuve. Mère d'Anna (P02) et grand-mère de Félicie (P08). Amitié forte avec Béatrice (P05) au Pays Basque",
+      "famille": {
+        "fille": "MAN-P02 Anna (transmission rousseur)",
+        "petite_fille": "MAN-P08 Félicie",
+        "_mari_defunt": "Hors casting, mort il y a quelques années"
+      },
       "evenements_de_vie": [
         "Veuvage",
         "Retraitée depuis 2021 — passion jardinière",
-        "Petits-enfants en visite régulière"
+        "Naissance d'Anna sa fille (1991)",
+        "Naissance de Félicie sa petite-fille (2019)",
+        "Visites régulières de Anna+Mathieu+Félicie en Bretagne"
       ],
       "traits_narratifs": ["élégance-campagne", "écrit-lettres", "jardin-vrai", "sans-jouer-parisienne", "transmission-douce"],
-      "_validation_sarah": "P10 ✓ 2026-05-01 (precisions: veuve, retraitée depuis 2021, passion jardinière)",
+      "_validation_sarah": "P10 ✓ 2026-05-01 (refonte v3.3 : Bretagne, mère d'Anna, grand-mère de Félicie, veuve, retraitée 2021, passion jardinière)",
       "affinites_qualifiees": {
-        "MAN-P05": "amitié de longue date avec Béatrice",
-        "MAN-P08": "Félicie (figure grand-mère bis)",
-        "MAN-P01": "amitié intergénérationnelle Clémence (antiquaire/jardinière, Honfleur proche)"
+        "DUO_MARIEHELENE_FELICIE": "petite-fille Félicie (transmission rousseur 3 gen)",
+        "TRIO_ANNA_MATHIEU_FELICIE": "famille de sa fille",
+        "TRIO_MARIEHELENE_ANNA_FELICIE": "3 générations rousses (signature visuelle forte)",
+        "DUO_BEATRICE_MARIEHELENE": "amitié rurale (Bretagne ↔ Pays Basque, visites mutuelles)",
+        "MAN-P02": "fille Anna",
+        "MAN-P08": "petite-fille Félicie",
+        "MAN-P05": "amitié Béatrice (Pays Basque)",
+        "MAN-P01": "amitié intergénérationnelle Clémence (antiquaire/jardinière, transmission savoir-faire-femmes-indépendantes)"
       }
     },
     {
@@ -377,15 +501,21 @@
       "statut_fiche": "DETAILLEE_LOT3",
       "date_anniversaire": "04-25",
       "saison_preferee": "printemps",
+      "metier": "Étudiante en mode / beaux-arts",
+      "lieu_de_vie": "Lyon (école mode IFAM ou Beaux-Arts), coloc lyonnaise",
+      "statut_relationnel": "Couple longue distance avec Gaspard (S14, Paris) depuis 18-10-2024. Se voient les week-ends et vacances.",
+      "famille": {
+        "compagnon": "MAN-S14 Gaspard (couple longue distance Paris-Lyon)"
+      },
       "evenements_de_vie": [
-        "Étudiante en mode/beaux-arts",
-        "Vit en coloc",
-        "Premier amour adulte avec Gaspard (18-10-2024)"
+        "Études en mode/beaux-arts à Lyon",
+        "Vit en coloc lyonnaise",
+        "Premier amour adulte avec Gaspard (18-10-2024) — couple longue distance"
       ],
-      "traits_narratifs": ["solaire", "lucide", "Gen-Z-créative", "achète-pour-soi-et-mère", "moins-intello-que-Doillon"],
-      "_validation_sarah": "P12 ✓ 2026-05-01 (precisions: étudiante, vit coloc, premier amour Gaspard 18-10-2024)",
+      "traits_narratifs": ["solaire", "lucide", "Gen-Z-créative", "achète-pour-soi-et-mère", "couple-longue-distance"],
+      "_validation_sarah": "P12 ✓ 2026-05-01 (refonte v3.3 : Lyon, étudiante, coloc, couple longue distance Gaspard 18-10-2024)",
       "affinites_qualifiees": {
-        "DUO_GASPARD_BRUNE": "couple étudiant créatif",
+        "DUO_GASPARD_BRUNE": "couple étudiant créatif longue distance Paris-Lyon",
         "MAN-P11": "amitié avec Léa+Sarah (groupe créatives plus âgées)",
         "MAN-P10": "achète Ypersoa pour sa mère (Marie-Hélène-like figure)"
       }
@@ -395,22 +525,30 @@
       "prenom": "Priya",
       "age": 16,
       "genre": "F",
-      "ethnicite": "sud-asiatique (sri-lankaise)",
+      "ethnicite": "sud-asiatique (sri-lankaise) installée au Pays Basque",
       "particularite": null,
-      "duo": null,
+      "duo": "DUO_BEATRICE_PRIYA",
       "style_wear_signature": "Ado sportwear élégant (jogger + brassière + Nike Cortez)",
       "statut_fiche": "DETAILLEE_LOT4",
       "date_anniversaire": "11-03",
       "saison_preferee": "automne",
+      "lieu_de_vie": "Pays Basque (Bayonne / Anglet — ses parents sri-lankais s'y sont installés). Monte à Paris pour compétitions danse + voir sa marraine Béatrice.",
+      "statut_relationnel": "Ado sportive concentrée. Filleule de Béatrice (P05) — famille de cœur via amitié de Béatrice avec ses parents (hors casting). Pas en couple.",
+      "famille": {
+        "marraine": "MAN-P05 Béatrice (famille de cœur — Béatrice amie de longue date avec les parents sri-lankais de Priya)",
+        "_parents": "Hors casting — sri-lankais installés au Pays Basque. Possiblement médecins/commerçants/ingénieurs."
+      },
       "evenements_de_vie": [
-        "Compétition danse contemporaine ou gymnastique (~2025-2026)",
-        "Lycée — Bac dans 2 ans",
-        "Premier cadeau Ypersoa reçu d'un proche"
+        "Compétitions danse contemporaine ou gymnastique (~2025-2026)",
+        "Lycée Pays Basque — Bac dans 2 ans",
+        "Premier cadeau Ypersoa reçu de sa marraine Béatrice",
+        "Week-ends réguliers chez Béatrice quand elle monte à Paris (Béatrice = Paris + Pays Basque, double pied-à-terre)"
       ],
       "traits_narratifs": ["ambitieuse", "concentrée", "sportive", "intégrée-sans-effacée", "nouvelle-génération"],
+      "_validation_sarah": "S13 ✓ 2026-05-01 (refonte v3.3 : Pays Basque, filleule de Béatrice (option C famille de cœur), parents sri-lankais hors casting)",
       "affinites_qualifiees": {
-        "MAN-P04": "résonance avec Lila (mère d'ados, figure de mentorat possible)",
-        "MAN-S16": "filiation culturelle asiatique (mais générations très différentes)"
+        "DUO_BEATRICE_PRIYA": "marraine-filleule (transmission élective intergénérationnelle, famille de cœur)",
+        "MAN-P05": "marraine Béatrice"
       }
     },
     {
@@ -426,15 +564,22 @@
       "_note_remplacement": "Remplace Marcus (retiré 2026-04-20, re-calibrage démographique)",
       "date_anniversaire": "08-07",
       "saison_preferee": "été",
+      "metier": "Étudiant archi / beaux-arts (Paris)",
+      "lieu_de_vie": "Paris (coloc étudiante)",
+      "statut_relationnel": "Couple longue distance avec Brune (P12, Lyon) depuis 18-10-2024. Se voient les week-ends et vacances.",
+      "famille": {
+        "compagne": "MAN-P12 Brune (couple longue distance Paris-Lyon)"
+      },
       "evenements_de_vie": [
-        "Études archi/beaux-arts (~2021 démarrage)",
-        "Premier amour adulte avec Brune (~2024)",
+        "Études archi/beaux-arts à Paris (~2021 démarrage)",
+        "Premier amour adulte avec Brune (18-10-2024) — couple longue distance Paris-Lyon",
         "Photographe amateur — premier appareil reçu de sa sœur"
       ],
       "traits_narratifs": ["décomplexé", "observant", "skate-musique-photo", "pas-macho", "pas-blasé"],
+      "_validation_sarah": "S14 ✓ 2026-05-01 (refonte v3.3 : Paris, couple longue distance Brune Lyon)",
       "affinites_qualifiees": {
-        "DUO_GASPARD_BRUNE": "couple étudiant créatif",
-        "MAN-P12": "Brune copine"
+        "DUO_GASPARD_BRUNE": "couple étudiant créatif longue distance",
+        "MAN-P12": "Brune (copine, Lyon)"
       }
     },
     {
@@ -449,9 +594,11 @@
       "statut_fiche": "DETAILLEE_LOT4_MINIMALE",
       "date_anniversaire": "05-22",
       "saison_preferee": "été",
+      "lieu_de_vie": "Dunkerque (Hauts-de-France) avec Coline + Hugo",
       "evenements_de_vie": [
-        "Naissance (2025, fils de Hugo)",
-        "Premiers pas en cours"
+        "Naissance (2025, fils de Hugo + Coline)",
+        "Premiers pas en cours",
+        "Déménagement Paris → Dunkerque avec ses parents (~2025)"
       ],
       "traits_narratifs": ["premier-cadeau-naissance", "présence-symbolique", "famille-multigeneration"],
       "affinites_qualifiees": {
@@ -493,18 +640,27 @@
       "statut_fiche": "DETAILLEE_LOT1",
       "date_anniversaire": "02-26",
       "saison_preferee": "hiver",
+      "metier": "Prof de lettres (Paris)",
+      "lieu_de_vie": "Paris",
+      "statut_relationnel": "Célibataire assumée. Très proche de sa sœur Aïcha (P03). Lectrice solitaire élégance discrète.",
+      "famille": {
+        "mere": "MAN-S19-JOSEPHINE (mère biologique)",
+        "beau_pere": "MAN-S19-HENRI (2e mariage de Joséphine)",
+        "soeur": "MAN-P03 Aïcha (cadette)"
+      },
       "evenements_de_vie": [
         "Carrière prof de lettres Paris (~2010-aujourd'hui)",
-        "Voyages réguliers Martinique",
+        "Voyages réguliers Martinique en famille",
         "Aînée des sœurs (Aïcha sa cadette)"
       ],
       "traits_narratifs": ["élégance-discrète", "lectrice", "posée", "transmet-classe-française", "beauté-assumée"],
+      "_validation_sarah": "S17 ✓ 2026-05-01 (refonte v3.3 : célibataire assumée, très proche d'Aïcha, lectrice solitaire)",
       "affinites_qualifiees": {
-        "TRIO_AICHA_CESARIA_JOSEPHINE": "3 générations matriarche",
+        "TRIO_AICHA_CESARIA_JOSEPHINE": "3 générations matriarche afro-caribéennes",
         "MAN-S19-JOSEPHINE": "mère biologique",
-        "MAN-P03": "sœur (Aïcha)",
+        "MAN-P03": "sœur Aïcha (lien fort, complicité quotidienne)",
         "MAN-S19-HENRI": "beau-père",
-        "MAN-P01": "amie cultivée (résonance lecture/antiquités)"
+        "MAN-P01": "amie cultivée Clémence (résonance lecture/antiquités)"
       }
     },
     {
@@ -519,16 +675,33 @@
       "statut_fiche": "DETAILLEE_LOT4",
       "date_anniversaire": "07-02",
       "saison_preferee": "été",
+      "metier": "Retraité (ancien contremaître / ouvrier qualifié / commerçant)",
+      "lieu_de_vie": "Paris",
+      "statut_relationnel": "Veuf. Sa femme (amour de jeunesse, hors casting) est décédée il y a quelques années — photo encadrée de leur jeune mariage dans l'appart. Père de Lila (P04), grand-père des jumeaux Gabin (P09) et César (hors casting). Amitié forte avec Béatrice (P05, intellectuelle Paris).",
+      "famille": {
+        "_femme_defunte": "Hors casting, photo encadrée dans l'appart, amour de jeunesse",
+        "fille": "MAN-P04 Lila (avocate, mère solo des jumeaux)",
+        "petits_fils_jumeaux": "MAN-P09 Gabin + César (hors casting, visuellement identique à Gabin)"
+      },
       "evenements_de_vie": [
         "Immigration France (années 70)",
+        "Mariage avec sa femme (amour de jeunesse, mort il y a quelques années)",
         "Carrière contremaître/ouvrier qualifié/commerçant",
+        "Naissance de Lila (1981)",
         "Retraite (~2018)",
-        "Petits-enfants partout dans l'appart"
+        "Naissance des jumeaux Gabin & César (2021) — photos partout dans l'appart"
       ],
       "traits_narratifs": ["dignité-immigré-construit", "chaleureux", "fier", "offrant", "raconteur"],
+      "_validation_sarah": "S18 ✓ 2026-05-01 (refonte v3.3 : veuf, père de Lila, grand-père des jumeaux Gabin+César, ami de Béatrice)",
       "affinites_qualifiees": {
-        "MAN-P04": "filiation culturelle maghrébine indirecte",
-        "MAN-S19-HENRI": "même génération seniors urbains"
+        "DUO_HASSAN_LILA": "fille Lila (père-fille adulte, transmission silencieuse)",
+        "DUO_HASSAN_GABIN": "petit-fils Gabin (transmission masculine maghrébine — café arabe le dimanche, apprentissage langue, complicité grand-père/petit-fils)",
+        "TRIO_HASSAN_LILA_GABIN": "3 générations maghrébines (immigration → 2e gen → 3e gen)",
+        "DUO_BEATRICE_HASSAN": "amitié urbaine intellectuelle Paris (concerts, expos, brunchs rive gauche, deux retraités CSP+ éclairés)",
+        "MAN-P04": "fille Lila",
+        "MAN-P09": "petit-fils Gabin (et son jumeau César hors casting)",
+        "MAN-P05": "amie Béatrice",
+        "MAN-S19-HENRI": "même génération seniors urbains éclairés"
       }
     },
     {
@@ -545,19 +718,27 @@
       "date_anniversaire_josephine": "06-30",
       "date_mariage": "09-14",
       "saison_preferee": "automne",
+      "metier": "Henri médecin retraité (~2018) + Joséphine ancienne psychanalyste retraitée",
+      "lieu_de_vie": "Avignon (Provence) — retraite urbaine depuis ~2018, vie culturelle (festival, concerts, expos)",
+      "statut_relationnel": "Couple senior mixte, 40 ans de mariage en 2026. 2e mariage de Joséphine. Henri = beau-père d'Aïcha et Césaria. Vivent à Avignon, leurs filles montent les voir régulièrement.",
+      "famille": {
+        "filles": ["MAN-P03 Aïcha (40, Paris)", "MAN-S17 Césaria (40, Paris)"],
+        "_note": "Henri = beau-père d'Aïcha et Césaria (filles biologiques de Joséphine de son 1er mariage). Pas d'enfants communs Henri+Joséphine."
+      },
       "evenements_de_vie": [
-        "Mariage (~1986, 40 ans en 2026)",
-        "Henri médecin/architecte retraité (~2018)",
-        "Joséphine ancienne psychanalyste/avocate retraitée",
-        "2e mariage de Joséphine — beau-père d'Aïcha et Césaria"
+        "Mariage Henri+Joséphine (~1986, 40 ans en 2026)",
+        "Henri médecin retraité (~2018)",
+        "Joséphine ancienne psychanalyste retraitée",
+        "Installation Avignon en retraite (~2018)",
+        "Visites régulières d'Aïcha et Césaria depuis Paris"
       ],
-      "traits_narratifs": ["bourgeoisie-éclairée", "mixte", "ouverte", "concerts-expos-lectures", "long-amour-posé"],
+      "traits_narratifs": ["bourgeoisie-éclairée", "mixte", "ouverte", "concerts-expos-festivals-Avignon", "long-amour-posé"],
+      "_validation_sarah": "S19 ✓ 2026-05-01 (refonte v3.3 : déménagement Paris → Avignon en retraite, vie culturelle Provence urbaine)",
       "affinites_qualifiees": {
         "DUO_HENRI_JOSEPHINE": "couple",
         "TRIO_AICHA_CESARIA_JOSEPHINE": "Joséphine mère biologique d'Aïcha et Césaria",
-        "TRIO_HENRI_NICOLAS_GABIN": "Henri grand-père dans transmission masculine",
-        "MAN-P03": "filles d'âge adulte (Aïcha, Césaria)",
-        "MAN-S17": "filles d'âge adulte (Aïcha, Césaria)"
+        "MAN-P03": "fille adulte Aïcha (Paris, monte les voir Avignon)",
+        "MAN-S17": "fille adulte Césaria (Paris, monte les voir Avignon)"
       }
     },
     {
@@ -572,14 +753,23 @@
       "statut_fiche": "DETAILLEE_LOT4_BIS",
       "date_anniversaire": "03-08",
       "saison_preferee": "printemps",
+      "metier": "Conseil en communication indépendante (télétravail)",
+      "lieu_de_vie": "Dunkerque (Hauts-de-France) — déménagée Paris → Dunkerque pour qualité de vie après naissance de Noé",
+      "statut_relationnel": "En couple non marié avec Hugo (S21), maman de Noé (S15). Famille nucléaire jeune installée Dunkerque.",
+      "famille": {
+        "compagnon": "MAN-S21 Hugo",
+        "fils": "MAN-S15 Bébé Noé"
+      },
       "evenements_de_vie": [
-        "Carrière com/conseil indépendante (~2018-aujourd'hui)",
-        "Rencontre Hugo (~2023)",
-        "Naissance de Noé (2025)"
+        "Carrière com/conseil indépendante Paris (~2018-2024)",
+        "Rencontre Hugo (~2023, Paris)",
+        "Naissance de Noé (2025)",
+        "Déménagement Paris → Dunkerque (qualité de vie, télétravail) ~2025"
       ],
-      "traits_narratifs": ["solo-assumée-puis-mère", "exigeante-goût", "vie-sociale-riche", "fauteuil-jamais-définit", "trentenaire-épanouie"],
+      "traits_narratifs": ["solo-assumée-puis-mère", "exigeante-goût", "télétravail-Dunkerque", "fauteuil-jamais-définit", "trentenaire-épanouie"],
+      "_validation_sarah": "S20 ✓ 2026-05-01 (refonte v3.3 : Dunkerque, conseil comm télétravail)",
       "affinites_qualifiees": {
-        "TRIO_COLINE_HUGO_NOE": "famille nucléaire",
+        "TRIO_COLINE_HUGO_NOE": "famille nucléaire Dunkerque",
         "MAN-S21": "compagnon Hugo",
         "MAN-S15": "fils Noé"
       }
@@ -596,15 +786,24 @@
       "statut_fiche": "DETAILLEE_LOT4",
       "date_anniversaire": "06-12",
       "saison_preferee": "été",
+      "metier": "Ingé / chef de projet digital (télétravail Dunkerque)",
+      "lieu_de_vie": "Dunkerque (Hauts-de-France) — déménagement avec Coline ~2025",
+      "statut_relationnel": "En couple non marié avec Coline (S20), papa de Noé (S15). Famille nucléaire jeune Dunkerque.",
+      "famille": {
+        "compagne": "MAN-S20 Coline",
+        "fils": "MAN-S15 Bébé Noé"
+      },
       "evenements_de_vie": [
-        "Carrière ingé/chef de projet digital",
-        "Rencontre Coline (~2023)",
-        "Naissance de Noé (2025) — congé parentalité en cours/retour"
+        "Carrière ingé/chef de projet digital Paris",
+        "Rencontre Coline (~2023, Paris)",
+        "Naissance de Noé (2025) — congé parentalité",
+        "Déménagement Paris → Dunkerque avec Coline (~2025)"
       ],
       "traits_narratifs": ["papa-2026", "présent", "tendre", "bousculé", "porte-bébé-vissé"],
+      "_validation_sarah": "S21 ✓ 2026-05-01 (refonte v3.3 : Dunkerque télétravail digital)",
       "affinites_qualifiees": {
         "DUO_HUGO_NOE": "papa-fils",
-        "TRIO_COLINE_HUGO_NOE": "famille nucléaire",
+        "TRIO_COLINE_HUGO_NOE": "famille nucléaire Dunkerque",
         "MAN-S20": "compagne Coline",
         "MAN-S15": "fils Noé"
       }
@@ -614,20 +813,35 @@
   "duos_resume": {
     "_reference_complete": "referentiels/shooting/duos_detailles_et_distribution.json",
     "_reference_affinites": "referentiels/casting/affinites_narratives.json",
-    "_note_v2": "Étendu 2026-04-30 avec 8 nouveaux dispositifs (4 duos + 4 trios). Format unifié 'duos[]' avec champ 'type' (duo|trio) et 'nb_membres'.",
+    "_note_v3_3": "Refonte v3.3 (2026-05-01) : 3 dispositifs supprimés (DUO_BEATRICE_FELICIE, DUO_MATHIEU_GABIN, DUO_NICOLAS_GABIN, TRIO_HENRI_NICOLAS_GABIN). 8 dispositifs nouveaux ajoutés autour des 3 lignées familiales (rousses, maghrébines, afro-caribéennes) + duos amitié.",
     "duos": [
-      { "id": "DUO_BEATRICE_FELICIE", "type": "duo", "nb_membres": 2, "nature": "grand-mère + petite-fille", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse intergénérationnelle campagne normande" },
-      { "id": "DUO_MATHIEU_GABIN", "type": "duo", "nb_membres": 2, "nature": "père + fils", "categorie_usage": "principal_forte_rotation", "phrase": "Complicité masculine tendre et ludique. Masculinité française douce." },
-      { "id": "DUO_LEA_SARAH", "type": "duo", "nb_membres": 2, "nature": "couple lesbien marié", "categorie_usage": "iconique_rare", "phrase": "Complicité quotidienne d'un couple établi. Le couple est un fait, pas un statement." },
-      { "id": "DUO_HENRI_JOSEPHINE", "type": "duo", "nb_membres": 2, "nature": "couple senior mixte", "categorie_usage": "transmission_rare", "phrase": "Tendresse posée d'un long amour. Élégance rive gauche éclairée. (Henri = beau-père d'Aïcha et Césaria, 2e mariage de Joséphine)" },
-      { "id": "DUO_GASPARD_BRUNE", "type": "duo", "nb_membres": 2, "nature": "jeune couple étudiants créatifs", "categorie_usage": "iconique_rare", "phrase": "Premier amour adulte d'étudiants créatifs. Insouciance solaire mais lucide." },
-      { "id": "DUO_HUGO_NOE", "type": "duo", "nb_membres": 2, "nature": "jeune père + bébé", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse absolue d'un jeune père porteur. Masculinité paternelle nouvelle génération." },
-      { "id": "DUO_NICOLAS_GABIN", "type": "duo", "nb_membres": 2, "nature": "père + fils (alt narratif vs DUO_MATHIEU_GABIN)", "categorie_usage": "principal_forte_rotation", "phrase": "Père attentionné posé. Transmission posée et calme. Paternité tardive choisie." },
-      { "id": "DUO_MATHIEU_NICOLAS", "type": "duo", "nb_membres": 2, "nature": "amis adultes (deux papas)", "categorie_usage": "principal_forte_rotation", "phrase": "Amitié masculine adulte française. Pudeur masculine douce, complicité de longue date." },
-      { "id": "TRIO_AICHA_CESARIA_JOSEPHINE", "type": "trio", "nb_membres": 3, "nature": "3 générations féminines afro-caribéennes (mère + 2 filles adultes)", "categorie_usage": "transmission_rare", "phrase": "Transmission matriarcale élégante. Joséphine mère biologique, Aïcha et Césaria filles. Henri beau-père hors champ." },
-      { "id": "TRIO_HENRI_NICOLAS_GABIN", "type": "trio", "nb_membres": 3, "nature": "3 générations masculines (grand-père + père + petit-fils)", "categorie_usage": "transmission_rare", "phrase": "Transmission masculine pudique. Henri grand-père, Nicolas père de Gabin (alt narratif)." },
-      { "id": "TRIO_COLINE_HUGO_NOE", "type": "trio", "nb_membres": 3, "nature": "jeune famille nucléaire (mère + père + bébé)", "categorie_usage": "principal_forte_rotation", "phrase": "Jeune parentalité moderne posée. Coline solo dans son shot solo, jeune mère dans le trio (autonomie narrative). Fauteuil jamais sujet." },
-      { "id": "TRIO_COPINES_ANNA_AICHA_LILA", "type": "trio", "nb_membres": 3, "nature": "trio d'amies adultes CSP+ multiculturel", "categorie_usage": "groupes_amis", "phrase": "Girl gang adulte établi. Diversité comme fait, jamais comme statement." }
+      { "id": "DUO_LEA_SARAH", "type": "duo", "nb_membres": 2, "nature": "couple lesbien marié", "categorie_usage": "iconique_rare", "phrase": "Complicité quotidienne d'un couple établi. Le couple est un fait, pas un statement.", "lieu": "Lille" },
+      { "id": "DUO_HENRI_JOSEPHINE", "type": "duo", "nb_membres": 2, "nature": "couple senior mixte", "categorie_usage": "transmission_rare", "phrase": "Tendresse posée d'un long amour. Bourgeoisie éclairée, retraite culturelle Avignon. (Henri = beau-père d'Aïcha et Césaria, 2e mariage de Joséphine)", "lieu": "Avignon" },
+      { "id": "DUO_GASPARD_BRUNE", "type": "duo", "nb_membres": 2, "nature": "jeune couple étudiants créatifs", "categorie_usage": "iconique_rare", "phrase": "Premier amour adulte d'étudiants créatifs. Insouciance solaire mais lucide.", "lieu": "Paris" },
+      { "id": "DUO_HUGO_NOE", "type": "duo", "nb_membres": 2, "nature": "jeune père + bébé", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse absolue d'un jeune père porteur. Masculinité paternelle nouvelle génération.", "lieu": "Paris" },
+      { "id": "DUO_MATHIEU_NICOLAS", "type": "duo", "nb_membres": 2, "nature": "amis adultes français", "categorie_usage": "principal_forte_rotation", "phrase": "Amitié masculine adulte française. Pudeur masculine douce, complicité de longue date.", "lieu": "Paris (Nicolas) ↔ Provence (Mathieu)" },
+
+      { "id": "DUO_ANNA_MATHIEU", "type": "duo", "nb_membres": 2, "nature": "couple parents Provence", "categorie_usage": "principal_forte_rotation", "phrase": "Couple installé arrière-pays provençal, parents de Félicie. Esthétique Sessùn × A.P.C., maison en pierre toujours en travaux.", "lieu": "Arrière-pays provençal", "_v3_3": true },
+      { "id": "DUO_MARIEHELENE_FELICIE", "type": "duo", "nb_membres": 2, "nature": "grand-mère + petite-fille (transmission rousseur)", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse intergénérationnelle Bretagne. Grand-mère rousse cuivrée + petite-fille blond vénitien. Transmission visuelle évidente. Lecture, jardin, lettres écrites à la main.", "lieu": "Bretagne (Finistère / Côtes d'Armor)", "_v3_3": true, "_remplace": "DUO_BEATRICE_FELICIE" },
+      { "id": "DUO_LILA_GABIN", "type": "duo", "nb_membres": 2, "nature": "mère solo + fils 5 ans (jumeau de César hors casting)", "categorie_usage": "principal_forte_rotation", "phrase": "Mère solo cultivée maghrébine et son petit garçon. Quotidien CSP+ Paris, complicité paisible. Pour shots fratrie utiliser 2x photo de Gabin.", "lieu": "Paris", "_v3_3": true, "_remplace": "DUO_MATHIEU_GABIN" },
+      { "id": "DUO_HASSAN_LILA", "type": "duo", "nb_membres": 2, "nature": "père + fille adulte maghrébins", "categorie_usage": "transmission_rare", "phrase": "Père immigré algérien et sa fille avocate, transmission silencieuse. Café arabe, conversation de soirée.", "lieu": "Paris", "_v3_3": true },
+      { "id": "DUO_HASSAN_GABIN", "type": "duo", "nb_membres": 2, "nature": "grand-père + petit-fils 5 ans (transmission masculine maghrébine)", "categorie_usage": "principal_forte_rotation", "phrase": "Grand-père algérois et son petit-fils, café du dimanche, apprentissage langue arabe, complicité tendre.", "lieu": "Paris", "_v3_3": true },
+      { "id": "DUO_BEATRICE_HASSAN", "type": "duo", "nb_membres": 2, "nature": "amitié seniors urbains éclairés", "categorie_usage": "iconique_rare", "phrase": "Amitié intellectuelle Paris (concerts, expos, brunchs rive gauche). Deux retraités CSP+ qui se sont rencontrés vernissage.", "lieu": "Paris", "_v3_3": true },
+      { "id": "DUO_BEATRICE_MARIEHELENE", "type": "duo", "nb_membres": 2, "nature": "amitié femmes campagne", "categorie_usage": "iconique_rare", "phrase": "Amitié rurale (Pays Basque ↔ Bretagne). Visites mutuelles, jardins partagés, lettres l'hiver.", "lieu": "Pays Basque ↔ Bretagne", "_v3_3": true },
+      { "id": "DUO_BEATRICE_PRIYA", "type": "duo", "nb_membres": 2, "nature": "marraine + filleule (famille de cœur)", "categorie_usage": "transmission_rare", "phrase": "Transmission élective intergénérationnelle. Béatrice marraine de Priya via amitié avec ses parents sri-lankais hors casting. Pays Basque ↔ Paris.", "lieu": "Pays Basque + Paris", "_v3_3": true },
+
+      { "id": "TRIO_ANNA_MATHIEU_FELICIE", "type": "trio", "nb_membres": 3, "nature": "famille nucléaire Provence", "categorie_usage": "principal_forte_rotation", "phrase": "Famille nucléaire arrière-pays provençal. Parents 35-40 ans, fille 7 ans, vie de village, vélo-cargo, atelier céramique, jardin.", "lieu": "Arrière-pays provençal", "_v3_3": true },
+      { "id": "TRIO_MARIEHELENE_ANNA_FELICIE", "type": "trio", "nb_membres": 3, "nature": "3 générations rousses françaises", "categorie_usage": "transmission_rare", "phrase": "Transmission visuelle ROUSSEUR sur 3 gen — grand-mère cuivrée + fille brune-rousseur + petite-fille blond vénitien. Bretagne ou Provence selon shoot. Ligne signature visuelle Ypersoa.", "lieu": "Bretagne ou Provence", "_v3_3": true },
+      { "id": "TRIO_HASSAN_LILA_GABIN", "type": "trio", "nb_membres": 3, "nature": "3 générations maghrébines (immigration → 2e gen → 3e gen)", "categorie_usage": "transmission_rare", "phrase": "Transmission patrilinéaire maghrébine. Hassan immigré 70s, Lila avocate 2e gen mère solo, Gabin métissé 3e gen. Pour shots à 4 (avec César jumeau), dupliquer photo Gabin.", "lieu": "Paris", "_v3_3": true },
+      { "id": "TRIO_AICHA_CESARIA_JOSEPHINE", "type": "trio", "nb_membres": 3, "nature": "3 générations féminines afro-caribéennes", "categorie_usage": "transmission_rare", "phrase": "Transmission matriarcale élégante. Joséphine mère biologique (Avignon retraite), Aïcha et Césaria filles adultes (Paris). Henri beau-père hors champ ou présent selon shot." },
+      { "id": "TRIO_COLINE_HUGO_NOE", "type": "trio", "nb_membres": 3, "nature": "jeune famille nucléaire", "categorie_usage": "principal_forte_rotation", "phrase": "Jeune parentalité moderne posée. Coline solo dans son shot solo, jeune mère dans le trio (autonomie narrative). Fauteuil jamais sujet.", "lieu": "Paris" },
+      { "id": "TRIO_COPINES_ANNA_AICHA_LILA", "type": "trio", "nb_membres": 3, "nature": "trio d'amies adultes CSP+ multiculturel", "categorie_usage": "groupes_amis", "phrase": "Girl gang adulte établi. Diversité comme fait, jamais comme statement. Anna en Provence retrouve Aïcha+Lila à Paris ou Avignon.", "lieu": "Paris ou Provence (Avignon retrouvailles parents Aïcha)" }
+    ],
+    "_supprimes_v3_3": [
+      "DUO_BEATRICE_FELICIE — Béatrice n'est plus grand-mère de Félicie (remplacé par DUO_MARIEHELENE_FELICIE)",
+      "DUO_MATHIEU_GABIN — Mathieu n'est plus père de Gabin (remplacé par DUO_LILA_GABIN + DUO_HASSAN_GABIN)",
+      "DUO_NICOLAS_GABIN — Nicolas n'est plus alt père de Gabin (Gabin = fils de Lila uniquement)",
+      "TRIO_HENRI_NICOLAS_GABIN — caduc (Gabin = lignée maghrébine, plus de transmission masculine française)"
     ]
   },
 
