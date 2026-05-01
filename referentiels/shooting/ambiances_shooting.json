@@ -1,13 +1,17 @@
 {
   "_meta": {
-    "schema_version": "1.0",
+    "schema_version": "1.1",
     "referentiel": "ambiances_shooting",
-    "last_updated": "2026-04-20",
-    "description": "5 ambiances visuelles officielles Ypersoa, enrichies avec palette chromatique, mannequins recommandés et usage par pilier. Axe 1 sur 4 du système shooting.",
-    "nb_ambiances": 5,
+    "last_updated": "2026-05-02",
+    "description": "6 ambiances visuelles officielles Ypersoa, alignées entre Atelier Shooting / Atelier Social / Atelier DA. Axe 1 sur 4 du système shooting.",
+    "nb_ambiances": 6,
     "axe_systeme": "1 sur 4 (mood/lumière/lieu)",
-    "source": "archives/aistudio_legacy/atelier_social/src/components/VibeSelector.tsx (5 vibes codifiées)",
-    "distribution_par_pack": "Voir direction_artistique_hero.json > regles_production_pack > distribution_ambiances (80% Studio Brut + Loft Organique, 20% autres)"
+    "source": "Source de vérité unifiée 2026-05-02 — alignement cross-app demandé Sarah",
+    "distribution_par_pack": "Voir direction_artistique_hero.json > regles_production_pack > distribution_ambiances",
+    "changelog": {
+      "v1.0_2026-04-20": "Création — 5 ambiances (studio_brut, loft_organique, aube_intime, echappee_sauvage, lumiere_sepia)",
+      "v1.1_2026-05-02": "Ajout salon_hiver / Salon d'Hiver / Atelier Rempotage (verrière + plantes en pots, chic). Alignement cross-app : ces 6 ambiances sont la source de vérité unique pour atelier-shooting + atelier-social + atelier-da."
+    }
   },
 
   "principe": "Une ambiance définit le mood, la lumière et le lieu général d'une image. Elle se combine avec un type de shot (axe 2), un mannequin (axe 3) et un prompt template (axe 4) pour produire une image finale cohérente.",
@@ -132,6 +136,41 @@
         "Hero homepage site",
         "Campagne printemps-été",
         "Duo adultes-amis en environnement urbain chic"
+      ]
+    },
+
+    {
+      "id": "salon_hiver",
+      "label_fr": "Salon d'Hiver",
+      "label_long": "Atelier Rempotage / Salon d'Hiver",
+      "id_legacy_shooting": "serre",
+      "icone_legacy": "Flower2",
+      "rang_priorite_pack": 3,
+      "pourcentage_pack_default": "10%",
+      "description_courte": "Verrière + plantes en pots, atelier de jardinage chic, lumière hivernale douce",
+      "description_longue": "Atelier de rempotage ou salon d'hiver à la française. Verrière vitrée, lumière naturelle filtrée, étagères de plantes en pots terracotta, table de jardinage en bois patiné, sécateurs et brouillons. Esthétique William Morris × Soeur × La Trésorerie. Le vêtement est porté dans un environnement domestique chic, on cultive ses plantes le dimanche matin. Cohérent saison automne-hiver.",
+      "prompt_en_keywords": "Winter conservatory or potting room, glass roof and large windows, soft filtered natural light, terracotta pots and lush indoor plants on wooden shelves, vintage wooden potting table, William Morris × Soeur × La Trésorerie aesthetic, cozy domestic gardening atmosphere, slow Sunday morning, autumn-winter coherence",
+      "lumiere_dominante": "naturelle filtrée verrière (douce hivernale)",
+      "tons_chromatiques": ["vert_feuillage", "terracotta", "bois_patine", "blanc_creme"],
+      "tons_hex": ["#5C7A3F", "#C4694A", "#A07957", "#F5F0EA"],
+      "lieu_type": "atelier de rempotage, salon d'hiver, jardin d'hiver, verrière domestique",
+      "saisonnalite": "automne-hiver privilégié (printemps possible)",
+      "mannequins_recommandes_ids": ["MAN-P05", "MAN-P10", "MAN-P01", "MAN-P08", "MAN-S17", "MAN-S19-JOSEPHINE"],
+      "mannequins_compatibles_description": "Mannequins matures et matriarches (Marie-Hélène/Bretagne, Béatrice, Joséphine) + Clémence antiquaire Honfleur. Excellent pour DUO_MARIEHELENE_FELICIE (transmission domestique gestes lents). Félicie 7 ans tendre dans cet univers.",
+      "types_de_shots_compatibles": ["lifestyle_studio", "scene_narrative", "detail_intimiste", "duo_couple"],
+      "compatible_motifs_priorite": ["YPM-001", "YPM-009", "YPM-017"],
+      "incompatible_motifs": [],
+      "usage_par_pilier": {
+        "p1_process": false,
+        "p2_emotion": true,
+        "p3_produit": true,
+        "p4_preuve": false
+      },
+      "exemples_utilisation": [
+        "Campagne automne (rempotage)",
+        "Fête des grand-mères / mères jardiner",
+        "Carrousel transmission savoir-faire (DUO_MARIEHELENE_FELICIE)",
+        "Hero d'un drop hiver-Noël"
       ]
     },
 

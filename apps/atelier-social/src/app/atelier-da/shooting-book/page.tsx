@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download, Upload, X, CheckCircle2 } from "lucide-react";
 import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder";
 import { listActiveLookbookAmbiances, type ActiveLookbookAmbiance } from "@/lib/active-ambiances";
+import { AMBIANCES_OFFICIELLES } from "@/lib/ambiances-officielles";
 
 const MOTIFS_YPM = [
   { id: "YPM-001", nom: "La Brigitte" },
@@ -26,13 +27,8 @@ const MOTIFS_YPM = [
   { id: "YPM-017", nom: "La Florale" },
 ];
 
-const AMBIANCES_PREFAITES = [
-  { id: "studio_brut", label: "Studio Brut" },
-  { id: "loft_organique", label: "Loft Organique" },
-  { id: "aube_intime", label: "L'Aube Intime" },
-  { id: "echappee_sauvage", label: "Échappée Sauvage" },
-  { id: "lumiere_sepia", label: "Lumière Sépia" },
-];
+// Source unique : lib/ambiances-officielles.ts (6 ambiances alignées cross-app)
+const AMBIANCES_PREFAITES = AMBIANCES_OFFICIELLES.map((a) => ({ id: a.id, label: a.label }));
 
 const FORMATS = [
   { value: "instagram", label: "Instagram (5 angles 4:5)" },
