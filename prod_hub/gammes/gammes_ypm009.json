@@ -1,0 +1,90 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "referentiel": "gammes_ypm009",
+    "description": "Palettes de fils par variante Shopify pour le motif YPM-009 La Palette. Chaque gamme correspond a une variante Shopify avec sa palette imposee.",
+    "last_updated": "2026-05-02",
+    "source_referentiel_fils": "../../referentiels/palette_fils_broderie_v2.json"
+  },
+
+  "motif": "YPM-009",
+  "nom_commercial_motif": "La Palette",
+
+  "gammes": {
+
+    "chocolat": {
+      "nom_commercial": "Gamme Chocolat",
+      "description_da": "TODO Sarah - tonalite editoriale (ex. douce, intemporelle, automnale)",
+      "fils_ids": [
+        "fil_sable",
+        "fil_camel",
+        "fil_ivoire"
+      ],
+      "_notes_palette": [
+        "fil_camel (#A0785A) tient ici le role 'taupe/marron moyen'. Ambiguite v2 a trancher (Taupe 61380 vs Camel 61128, cf decisions_a_trancher dans palette_fils_broderie_v2.json).",
+        "Pas de fil chocolat fonce dans palette v2. Si la gamme Shopify reelle inclut un brun fonce, ajouter d'abord un fil_chocolat dans le referentiel des fils avant de l'inscrire ici."
+      ],
+      "supports_compatibles": [
+        "TODO_lister_codes_supports_vetements"
+      ],
+      "supports_incompatibles": [
+        "beige",
+        "offwhite",
+        "ivoire",
+        "mastic",
+        "pierre_naturelle"
+      ],
+      "ambiance": ["chaleureux", "intemporel", "automnal"],
+      "saison_recommandee": ["AH"],
+      "occasion_recommandee": ["fete_des_peres"]
+    },
+
+    "rose": {
+      "nom_commercial": "Gamme Rose",
+      "description_da": "TODO Sarah - tonalite editoriale (ex. tendre, feminin, printanier)",
+      "fils_ids": [
+        "fil_bordeaux",
+        "fil_framboise",
+        "fil_rose_pale",
+        "fil_lilas"
+      ],
+      "_notes_palette": [
+        "4 fils valides dans palette v2. Pas de 5e fil rose-coordonne disponible aujourd'hui."
+      ],
+      "supports_compatibles": ["TODO_lister_codes_supports_vetements"],
+      "supports_incompatibles": ["rose_pale", "lilas", "rose_orchidee"],
+      "ambiance": ["tendre", "feminin", "printanier"],
+      "saison_recommandee": ["PE"],
+      "occasion_recommandee": ["fete_des_meres", "saint_valentin"]
+    },
+
+    "bleu": {
+      "nom_commercial": "Gamme Bleu",
+      "description_da": "TODO Sarah - tonalite editoriale (ex. profond, elegant, intemporel)",
+      "fils_ids": [
+        "fil_marine",
+        "fil_canard",
+        "fil_vert_jade",
+        "fil_vert_jardin"
+      ],
+      "_notes_palette": [
+        "4 fils valides dans palette v2. Coherent avec les fiches Tajima existantes (codes 61427/61443/61230/61446)."
+      ],
+      "supports_compatibles": ["TODO_lister_codes_supports_vetements"],
+      "supports_incompatibles": ["marine", "bleu", "canard"],
+      "ambiance": ["profond", "elegant", "intemporel"],
+      "saison_recommandee": ["AH", "PE"],
+      "occasion_recommandee": ["fete_des_peres"]
+    },
+
+    "_TODO_autres_gammes": {
+      "_note": "Sarah - ajouter ici les autres variantes Shopify YPM-009 que tu as creees (ex. signature, festive, etc.). Format: copier une gamme existante et adapter."
+    }
+  },
+
+  "_validation_rules": {
+    "min_fils_par_gamme": 3,
+    "max_fils_par_gamme": 8,
+    "note": "Une gamme avec moins de 3 fils risque de ne pas pouvoir respecter les regles dures sur des textes longs. Une gamme avec plus de 8 fils sature visuellement."
+  }
+}

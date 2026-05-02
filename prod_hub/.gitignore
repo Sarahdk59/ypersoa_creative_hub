@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Tests visuels generes (on les regenere a chaque fois)
+moteur_attribution/tests/test_*.png
+moteur_attribution/tests/preview_*.png
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Cache du moteur (a regenerer si besoin)
+*.cache.json
+.cache/
+
+# Fichiers de travail temporaires
+scratch/
+tmp/
+*.tmp

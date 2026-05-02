@@ -1,0 +1,251 @@
+{
+  "_meta": {
+    "schema_version": "2.0",
+    "referentiel": "palette_fils_broderie",
+    "last_updated": "2026-05-02",
+    "description": "20 couleurs officielles des fils de broderie Ypersoa, enrichies avec les codes fournisseur Gunold Poly 40 et les numeros d'aiguille canoniques sur les TMEZ. Etend la v1 avec les champs production.",
+    "nb_couleurs": 20,
+    "fournisseur_principal": "Gunold Poly 40 (400 dtex polyester)",
+    "remplacement_madeira_pending": ["Plum (1034)", "Putty (1138)", "Eucalyptus (1290)"],
+    "decisions_a_trancher": [
+      "Renommer fil_camel en fil_taupe (cf. usage prod 61380) ?",
+      "Renommer fil_sable en fil_beige (cf. usage prod 61071) ?",
+      "Le jaune moutarde 61137 doit-il integrer la palette officielle ?",
+      "Les 3 fils Madeira doivent-ils etre substitues par des Gunold equivalents ?"
+    ]
+  },
+
+  "couleurs": [
+    {
+      "id": "fil_blanc",
+      "rang": 1,
+      "nom": "Blanc",
+      "hex": "#FFFFFF",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "neutres_clairs",
+      "usage_recommande": "sur_supports_fonces",
+      "supports_incompatibles": ["blanc", "offwhite", "beige"],
+      "ambiance_editoriale": ["pur", "minimal", "lumineux"],
+      "note_prod": "Fil le plus frequent, candidat core kit TMEZ"
+    },
+    {
+      "id": "fil_ivoire",
+      "rang": 2,
+      "nom": "Ivoire",
+      "hex": "#F5F0E0",
+      "code_gunold": "61017",
+      "numero_aiguille_canonique": 91,
+      "famille": "neutres_clairs",
+      "usage_recommande": "sur_supports_fonces_chauds",
+      "supports_incompatibles": ["beige", "offwhite", "mastic", "pierre_naturelle"],
+      "ambiance_editoriale": ["doux", "naturel", "organique"],
+      "note_prod": "A valider visuellement avec nuancier physique"
+    },
+    {
+      "id": "fil_gris_clair",
+      "rang": 3,
+      "nom": "Gris clair",
+      "hex": "#C8C8C8",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "neutres_gris"
+    },
+    {
+      "id": "fil_gris",
+      "rang": 4,
+      "nom": "Gris",
+      "hex": "#A0A0A0",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "neutres_gris"
+    },
+    {
+      "id": "fil_anthracite",
+      "rang": 5,
+      "nom": "Anthracite",
+      "hex": "#4A4A4A",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "neutres_fonces"
+    },
+    {
+      "id": "fil_noir",
+      "rang": 6,
+      "nom": "Noir",
+      "hex": "#1A1A1A",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "neutres_fonces"
+    },
+    {
+      "id": "fil_marine",
+      "rang": 7,
+      "nom": "Marine",
+      "hex": "#1E2D4A",
+      "code_gunold": "61427_TO_VALIDATE",
+      "numero_aiguille_canonique": 84,
+      "famille": "bleus_fonces",
+      "note_prod": "Hypothese: 61427 d'apres analyse visuelle gamme bleu"
+    },
+    {
+      "id": "fil_bleu_roi",
+      "rang": 8,
+      "nom": "Bleu roi",
+      "hex": "#1A3A8F",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "bleus_vifs"
+    },
+    {
+      "id": "fil_bleu_glacier",
+      "rang": 9,
+      "nom": "Bleu glacier",
+      "hex": "#8AAFD4",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "bleus_clairs"
+    },
+    {
+      "id": "fil_canard",
+      "rang": 10,
+      "nom": "Canard",
+      "hex": "#1A6670",
+      "code_gunold": "61443_TO_VALIDATE",
+      "numero_aiguille_canonique": 49,
+      "famille": "bleus_verts",
+      "note_prod": "Hypothese a valider"
+    },
+    {
+      "id": "fil_vert_jade",
+      "rang": 11,
+      "nom": "Vert jade",
+      "hex": "#1A7A6E",
+      "code_gunold": "61230",
+      "numero_aiguille_canonique": 13,
+      "famille": "verts_vifs",
+      "note_prod": "Confirme par fiches Tajima"
+    },
+    {
+      "id": "fil_vert_jardin",
+      "rang": 12,
+      "nom": "Vert jardin",
+      "hex": "#7A9E7E",
+      "code_gunold": "61446",
+      "numero_aiguille_canonique": 26,
+      "famille": "verts_pastels",
+      "note_prod": "Confirme par fiches Tajima"
+    },
+    {
+      "id": "fil_bordeaux",
+      "rang": 13,
+      "nom": "Bordeaux",
+      "hex": "#6B1E2E",
+      "code_gunold": "61035",
+      "numero_aiguille_canonique": 27,
+      "famille": "rouges_fonces",
+      "note_prod": "Confirme par fiches Tajima"
+    },
+    {
+      "id": "fil_rouge",
+      "rang": 14,
+      "nom": "Rouge",
+      "hex": "#C0392B",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "rouges_vifs"
+    },
+    {
+      "id": "fil_rose_pale",
+      "rang": 15,
+      "nom": "Rose pale",
+      "hex": "#F0B8C0",
+      "code_gunold": "61031_OR_61111_TO_VALIDATE",
+      "numero_aiguille_canonique": null,
+      "famille": "roses_doux",
+      "note_prod": "Plusieurs codes roses paleS dans fiches: 61019 / 61031 / 61111. A clarifier."
+    },
+    {
+      "id": "fil_framboise",
+      "rang": 16,
+      "nom": "Framboise",
+      "hex": "#C4294E",
+      "code_gunold": "61400",
+      "numero_aiguille_canonique": 28,
+      "famille": "roses_vifs",
+      "note_prod": "Confirme par fiches Tajima"
+    },
+    {
+      "id": "fil_lilas",
+      "rang": 17,
+      "nom": "Lilas",
+      "hex": "#B8A0C8",
+      "code_gunold": "61193_TO_VALIDATE",
+      "numero_aiguille_canonique": 33,
+      "famille": "violets_doux",
+      "note_prod": "Code apparait sur 2 aiguilles (33 et 53) dans fiche YPM-009 - a clarifier (doublon volontaire ou erreur ?)"
+    },
+    {
+      "id": "fil_sable",
+      "rang": 18,
+      "nom": "Sable",
+      "hex": "#D4C4A8",
+      "code_gunold": "61055_OR_61071_TO_VALIDATE",
+      "numero_aiguille_canonique": null,
+      "famille": "neutres_chauds",
+      "note_prod": "DECISION DA NEEDED: ce fil correspond-il a 'Beige' (61071) ou 'Sable' (61055) en prod ?"
+    },
+    {
+      "id": "fil_terracotta",
+      "rang": 19,
+      "nom": "Terracotta",
+      "hex": "#C4694A",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique": null,
+      "famille": "oranges_terreux",
+      "note_prod": "Couleur signature marque Ypersoa"
+    },
+    {
+      "id": "fil_camel",
+      "rang": 20,
+      "nom": "Camel",
+      "hex": "#A0785A",
+      "code_gunold": "61128_OR_61380_TO_VALIDATE",
+      "numero_aiguille_canonique": null,
+      "famille": "bruns_chauds",
+      "note_prod": "DECISION DA NEEDED: ce fil correspond-il a 'Taupe' (61380) ou 'Camel' (61128) en prod ?"
+    }
+  ],
+
+  "_codes_gunold_observes_dans_fiches": {
+    "description": "Inventaire de tous les codes Gunold extraits des PDF YPM-009 actuels, pour reconciliation avec la palette officielle.",
+    "codes_avec_nom_explicite": [
+      {"code": "61230", "nom": "Jade", "aiguille": 13},
+      {"code": "61446", "nom": "Jardin", "aiguille": 26},
+      {"code": "61400", "nom": "Framboise", "aiguille": 28},
+      {"code": "61035", "nom": "Bordeaux", "aiguille": 27},
+      {"code": "61380", "nom": "Taupe", "aiguille": 4},
+      {"code": "61071", "nom": "Beige", "aiguille": 2}
+    ],
+    "codes_sans_nom_a_identifier": [
+      {"code": "61427", "aiguille": 84, "hypothese": "Marine"},
+      {"code": "61443", "aiguille": 49, "hypothese": "Canard"},
+      {"code": "61193", "aiguille": "33, 53", "hypothese": "Lilas (presence sur 2 aiguilles a clarifier)"},
+      {"code": "61031", "aiguille": 38, "hypothese": "Rose pale"},
+      {"code": "61019", "aiguille": 108, "hypothese": "Rose orange pale"},
+      {"code": "61111", "aiguille": 32, "hypothese": "Rose tres pale"},
+      {"code": "61119", "aiguille": 65, "hypothese": "Rose framboise vif"},
+      {"code": "61055", "aiguille": 80, "hypothese": "Sable"},
+      {"code": "61017", "aiguille": 91, "hypothese": "Ivoire"},
+      {"code": "61128", "aiguille": 110, "hypothese": "Camel"},
+      {"code": "61137", "aiguille": 109, "hypothese": "Jaune moutarde - HORS PALETTE OFFICIELLE"}
+    ],
+    "codes_madeira_a_substituer": [
+      {"code": "1034", "nom": "Plum", "aiguille": 112, "famille_source": "Madeira CL40"},
+      {"code": "1138", "nom": "Putty", "aiguille": 107, "famille_source": "Madeira CL40"},
+      {"code": "1290", "nom": "Eucalyptus", "aiguille": 74, "famille_source": "Madeira CL40"}
+    ]
+  },
+
+  "_note_incompatibilites": "Les supports_incompatibles listent les couleurs de support vetement sur lesquelles le fil serait peu lisible ou visuellement pauvre. Cette donnee doit etre confrontee au referentiel palette_supports_vetements.json pour valider les combinaisons a chaque generation de shooting."
+}
