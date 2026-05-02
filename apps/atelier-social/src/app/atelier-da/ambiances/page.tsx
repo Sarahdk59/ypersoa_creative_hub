@@ -66,14 +66,56 @@ export default function AmbiancesPage() {
                   background: "white",
                   border: "0.5px solid var(--hub-border)",
                   borderRadius: 12,
-                  padding: 20,
+                  overflow: "hidden",
                   display: "flex",
                   flexDirection: "column",
-                  gap: 12,
                 }}
               >
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: "var(--hub-foreground)", color: "var(--hub-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Icon size={20} strokeWidth={1.4} />
+                {/* Image de référence (fallback gracieux si manquante) */}
+                <div
+                  style={{
+                    aspectRatio: "16/10",
+                    background: "var(--hub-bg)",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={a.image_path}
+                    alt={a.label}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    onError={(e) => {
+                      // Fallback gracieux : si image manquante, on affiche le grand icone à la place
+                      const img = e.target as HTMLImageElement;
+                      img.style.display = "none";
+                      const fallback = img.nextElementSibling as HTMLElement | null;
+                      if (fallback) fallback.style.display = "flex";
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "none",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      gap: 8,
+                      color: "var(--hub-foreground)",
+                      opacity: 0.4,
+                    }}
+                  >
+                    <Icon size={48} strokeWidth={1.2} />
+                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, letterSpacing: "0.05em" }}>
+                      Image à uploader
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: "var(--hub-foreground)", color: "var(--hub-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Icon size={18} strokeWidth={1.4} />
                 </div>
                 <div>
                   <h3 style={{ fontFamily: "var(--font-editorial)", fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 4 }}>
@@ -115,6 +157,7 @@ export default function AmbiancesPage() {
                     {a.prompt}
                   </p>
                 </details>
+                </div>
               </article>
             );
           })}

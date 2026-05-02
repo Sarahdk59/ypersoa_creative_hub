@@ -24,9 +24,10 @@ const FAMILLES_OPTIONS = [
 
 const GENRES_OPTIONS = [
   { id: "all", label: "Tous" },
-  { id: "F", label: "Femmes" },
-  { id: "H", label: "Hommes" },
-  { id: "enfant", label: "Enfants" },
+  { id: "F-adulte", label: "Femmes" },
+  { id: "H-adulte", label: "Hommes" },
+  { id: "enfant", label: "Enfants (≤12)" },
+  { id: "ado", label: "Ados (13-20)" },
 ];
 
 export default function CastingPage() {
@@ -52,18 +53,22 @@ export default function CastingPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const allCanoniques = useMemo(() => {
+    if (!data) return [];
+    return expandCouples(data.mannequins.mannequins);
+  }, [data]);
+
   const lieuxOptions = useMemo(() => {
-    if (!data) return [{ id: "all", label: "Tous lieux" }];
     const lieux = new Set<string>();
-    for (const m of data.mannequins.mannequins) {
+    for (const m of allCanoniques) {
       if (m.lieu_de_vie) lieux.add(m.lieu_de_vie.split(/[,(]/)[0].trim());
     }
     return [{ id: "all", label: "Tous lieux" }, ...Array.from(lieux).map((l) => ({ id: l, label: l }))];
-  }, [data]);
+  }, [allCanoniques]);
 
   const filtreCanoniques = useMemo(() => {
     if (!data) return [];
-    return data.mannequins.mannequins.filter((m) => {
+    return allCanoniques.filter((m) => {
       if (filtreFamille !== "all" && m.famille_esthetique !== filtreFamille) {
         // si pas de famille_esthetique, on considère "no-makeup naturelle" par défaut
         if (filtreFamille === "no-makeup naturelle" && !m.famille_esthetique) {
@@ -74,7 +79,13 @@ export default function CastingPage() {
           return false;
         }
       }
-      if (filtreGenre !== "all" && m.genre !== filtreGenre) return false;
+      if (filtreGenre !== "all") {
+        const ageNum = typeof m.age === "number" ? m.age : parseInt(String(m.age).split("-")[0], 10) || 0;
+        if (filtreGenre === "enfant" && ageNum > 12) return false;
+        if (filtreGenre === "ado" && (ageNum < 13 || ageNum > 20)) return false;
+        if (filtreGenre === "F-adulte" && (m.genre !== "F" || ageNum <= 12)) return false;
+        if (filtreGenre === "H-adulte" && (m.genre !== "H" || ageNum <= 12)) return false;
+      }
       if (filtreLieu !== "all" && (!m.lieu_de_vie || !m.lieu_de_vie.toLowerCase().includes(filtreLieu.toLowerCase()))) {
         return false;
       }
@@ -87,7 +98,7 @@ export default function CastingPage() {
       }
       return true;
     });
-  }, [data, filtreFamille, filtreGenre, filtreLieu, recherche]);
+  }, [data, allCanoniques, filtreFamille, filtreGenre, filtreLieu, recherche]);
 
   const lignees = useMemo(() => {
     if (!data?.affinites?.lignees_familiales) return null;
@@ -135,7 +146,7 @@ export default function CastingPage() {
             Casting
           </h1>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 720 }}>
-            {data.mannequins.mannequins.length} canoniques · 3 lignées familiales · 9 régions. Filtre, parcours et plonge dans chaque fiche.
+            {allCanoniques.length} individus canoniques · 3 lignées familiales · 9 régions. Filtre, parcours et plonge dans chaque fiche.
           </p>
         </div>
 
@@ -241,7 +252,7 @@ export default function CastingPage() {
               ))}
             </select>
             <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.5, marginLeft: "auto" }}>
-              {filtreCanoniques.length} / {data.mannequins.mannequins.length}
+              {filtreCanoniques.length} / {allCanoniques.length}
             </span>
           </div>
 
@@ -385,19 +396,48 @@ function FilterPills({ options, value, onChange }: { options: { id: string; labe
   );
 }
 
-function canoniqueImageUrl(c: RawCanonique): string {
-  // Reproduit le mapping photo : MAN-XXX_Prenom_canonique.jpg
-  // Le suffixe diffère pour les couples (LEA, SARAH, HENRI, JOSEPHINE)
-  const baseId = c.id.split("-").slice(0, 2).join("-");
-  const suffix = c.id.split("-")[2];
-  const prenom = (c.prenom || "")
+function slugifyPrenom(prenom: string): string {
+  return prenom
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
+    .replace(/^Bébé\s+/i, "") // strip "Bébé " prefix → "Noé" → "Noe"
+    .replace(/^B[ée]b[ée]\s+/i, "")
     .replace(/[^a-zA-Z]/g, "");
+}
+
+function canoniqueImageUrl(c: RawCanonique): string {
+  // MAN-XXX_Prenom_canonique.jpg
+  // Pour les couples avec sub-id (-LEA, -SARAH, -HENRI, -JOSEPHINE), on extrait le sub
+  const baseId = c.id.split("-").slice(0, 2).join("-");
+  const suffix = c.id.split("-")[2];
   if (suffix) {
-    return `/canoniques/${baseId}_${suffix.charAt(0) + suffix.slice(1).toLowerCase()}_canonique.jpg`;
+    const cap = suffix.charAt(0).toUpperCase() + suffix.slice(1).toLowerCase();
+    return `/canoniques/${baseId}_${cap}_canonique.jpg`;
   }
-  return `/canoniques/${baseId}_${prenom.replace(/\s+/g, "")}_canonique.jpg`;
+  // Sinon on utilise le prénom (slugifié, sans "Bébé ")
+  return `/canoniques/${baseId}_${slugifyPrenom(c.prenom || "")}_canonique.jpg`;
+}
+
+/**
+ * Les couples (MAN-P11 Léa & Sarah, MAN-S19 Henri & Joséphine) sont stockés
+ * comme une seule entrée dans mannequins_recurrents.json. Pour l'affichage
+ * mur, on les split en 2 individus distincts (chacun avec sa photo).
+ */
+function expandCouples(mannequins: RawCanonique[]): RawCanonique[] {
+  const result: RawCanonique[] = [];
+  for (const m of mannequins) {
+    if (m.id === "MAN-P11" && /Léa\s*&\s*Sarah|Lea\s*&\s*Sarah/i.test(m.prenom || "")) {
+      // Split Léa+Sarah
+      result.push({ ...m, id: "MAN-P11-LEA", prenom: "Léa", age: 37, ethnicite: "métisse", _coupleParent: "MAN-P11" } as RawCanonique & { _coupleParent: string });
+      result.push({ ...m, id: "MAN-P11-SARAH", prenom: "Sarah", age: 35, ethnicite: "nordique", _coupleParent: "MAN-P11" } as RawCanonique & { _coupleParent: string });
+    } else if (m.id === "MAN-S19" && /Henri\s*&\s*Jos[ée]phine/i.test(m.prenom || "")) {
+      result.push({ ...m, id: "MAN-S19-HENRI", prenom: "Henri", age: 72, ethnicite: "blanc nordique", _coupleParent: "MAN-S19" } as RawCanonique & { _coupleParent: string });
+      result.push({ ...m, id: "MAN-S19-JOSEPHINE", prenom: "Joséphine", age: 70, ethnicite: "afro-caribéenne", _coupleParent: "MAN-S19" } as RawCanonique & { _coupleParent: string });
+    } else {
+      result.push(m);
+    }
+  }
+  return result;
 }
 
 function CanoniqueCard({ canonique, onClick, compact }: { canonique: RawCanonique; onClick: () => void; compact?: boolean }) {

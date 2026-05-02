@@ -18,6 +18,8 @@ export interface AmbianceOfficielle {
   description: string;
   icon: LucideIcon;
   prompt: string;
+  /** Path relatif servi par /referentiel_ambiance/<id>.jpg — Sarah uploade dans assets/referentiel_ambiance/. Fallback graceful si absent. */
+  image_path: string;
 }
 
 export const AMBIANCES_OFFICIELLES: AmbianceOfficielle[] = [
@@ -28,6 +30,7 @@ export const AMBIANCES_OFFICIELLES: AmbianceOfficielle[] = [
     icon: Sparkles,
     prompt:
       "High-end minimalist studio setting, concrete or pure off-white background, sharp elegant shadows, sober editorial, Sézane × A.P.C. campaign aesthetic, French quiet luxury",
+    image_path: "/referentiel_ambiance/studio_brut.jpg",
   },
   {
     id: "loft_organique",
@@ -36,6 +39,7 @@ export const AMBIANCES_OFFICIELLES: AmbianceOfficielle[] = [
     icon: Flower,
     prompt:
       "Premium chic aesthetic, modern botanical greenhouse loft interior, polished concrete floors, abundant bright natural light, lush organic plants, Vogue Living editorial style, architectural and organic blend",
+    image_path: "/referentiel_ambiance/loft_organique.jpg",
   },
   {
     id: "salon_hiver",
@@ -44,6 +48,7 @@ export const AMBIANCES_OFFICIELLES: AmbianceOfficielle[] = [
     icon: Flower2,
     prompt:
       "Winter conservatory or potting room, glass roof and large windows, soft filtered natural light, terracotta pots and lush indoor plants on wooden shelves, vintage wooden potting table, William Morris × Soeur × La Trésorerie aesthetic, cozy domestic gardening atmosphere, slow Sunday morning, autumn-winter coherence",
+    image_path: "/referentiel_ambiance/salon_hiver.jpg",
   },
   {
     id: "aube_intime",
@@ -52,6 +57,7 @@ export const AMBIANCES_OFFICIELLES: AmbianceOfficielle[] = [
     icon: Coffee,
     prompt:
       "Intimate morning light, soft natural shadows, warm skin tones, wrinkled white linen, slow living atmosphere, deeply emotional and tender",
+    image_path: "/referentiel_ambiance/aube_intime.jpg",
   },
   {
     id: "echappee_sauvage",
@@ -60,6 +66,7 @@ export const AMBIANCES_OFFICIELLES: AmbianceOfficielle[] = [
     icon: Leaf,
     prompt:
       "Wild natural setting, wind in the hair and fabric, dappled sunlight through trees, organic textures, feeling of freedom and connection to earth, cinematic outdoor photography",
+    image_path: "/referentiel_ambiance/echappee_sauvage.jpg",
   },
   {
     id: "lumiere_sepia",
@@ -68,6 +75,7 @@ export const AMBIANCES_OFFICIELLES: AmbianceOfficielle[] = [
     icon: Sun,
     prompt:
       "Golden hour lighting, nostalgic 35mm film look, romantic and poetic atmosphere, warm sunset glow, soft focus, timeless emotive feel",
+    image_path: "/referentiel_ambiance/lumiere_sepia.jpg",
   },
 ];
 

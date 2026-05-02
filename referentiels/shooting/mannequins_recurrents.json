@@ -13,16 +13,16 @@
     },
     "cartographie_regionale": {
       "_principe": "Maillage France pour permettre des shoots variés. 9 régions/villes représentées + 1 lien international (voyages Martinique).",
-      "Paris": ["MAN-P03 Aïcha", "MAN-P04 Lila", "MAN-P05 Béatrice (résidence principale)", "MAN-P07 Nicolas", "MAN-P09 Gabin", "MAN-S14 Gaspard", "MAN-S16 Hiroshi", "MAN-S17 Césaria", "MAN-S18 Hassan"],
+      "Paris": ["MAN-P03 Aïcha", "MAN-P04 Lila", "MAN-P05 Béatrice (résidence principale)", "MAN-P07 Nicolas", "MAN-P09 Gabin", "MAN-S16 Hiroshi", "MAN-S17 Césaria", "MAN-S18 Hassan"],
       "Honfleur (Normandie)": ["MAN-P01 Clémence"],
       "Lille": ["MAN-P11 Léa & Sarah"],
       "Dunkerque (Hauts-de-France)": ["MAN-S20 Coline", "MAN-S21 Hugo", "MAN-S15 Bébé Noé"],
-      "Lyon": ["MAN-P12 Brune"],
+      "Lyon": ["MAN-P12 Brune", "MAN-S14 Gaspard"],
       "Bretagne (Finistère / Côtes d'Armor)": ["MAN-P10 Marie-Hélène"],
       "Pays Basque": ["MAN-S13 Priya (résidence principale)", "MAN-P05 Béatrice (maison de famille)"],
       "Avignon (Provence urbaine)": ["MAN-S19 Henri & Joséphine"],
       "Arrière-pays provençal (Provence rurale)": ["MAN-P02 Anna", "MAN-P06 Mathieu", "MAN-P08 Félicie"],
-      "_couples_distance": "MAN-P12 Brune (Lyon) ↔ MAN-S14 Gaspard (Paris) — couple longue distance depuis 18-10-2024"
+      "_v3_4_2026_05_02": "Gaspard rejoint Brune à Lyon (coloc étudiante). Clémence officiellement à Honfleur (lieu_de_vie ajouté)."
     },
     "_note_v3_3_2026_05_01": "REFONTE NARRATIVE structurelle validée par Sarah le 01/05/2026. Pivot : Béatrice perd son rôle de grand-mère de Félicie au profit de Marie-Hélène (transmission rousse cohérente). Anna + Mathieu deviennent couple parents de Félicie en Provence. Lila devient mère solo de Gabin (Mathieu n'est plus son père). Hassan devient père de Lila + grand-père de Gabin (3 gen maghrébines explicites). Béatrice devient solo + amitiés (Hassan urbain + Marie-Hélène campagne). Voir CASTING_ARBRE_GENEALOGIQUE.md pour visualisation.",
     "changelog": {
@@ -123,6 +123,9 @@
       "statut_fiche": "DETAILLEE_LOT1",
       "date_anniversaire": "10-22",
       "saison_preferee": "automne",
+      "metier": "Antiquaire indépendante (boutique sur les quais de Honfleur)",
+      "lieu_de_vie": "Honfleur (Normandie) — boutique antiquaire sur les quais, héritée de sa grand-mère",
+      "statut_relationnel": "Divorcée et indépendante, mère épanouie d'un fils ado de 16 ans (né 2010, hors casting). Solo assumée, ne demande aucune validation.",
       "evenements_de_vie": [
         "Reprise de la boutique de sa grand-mère à Honfleur (2018)",
         "Divorce assumé comme libération (2020)",
@@ -501,19 +504,19 @@
       "statut_fiche": "DETAILLEE_LOT3",
       "date_anniversaire": "04-25",
       "saison_preferee": "printemps",
-      "metier": "Étudiante en mode / beaux-arts",
-      "lieu_de_vie": "Lyon (école mode IFAM ou Beaux-Arts), coloc lyonnaise",
-      "statut_relationnel": "Couple longue distance avec Gaspard (S14, Paris) depuis 18-10-2024. Se voient les week-ends et vacances.",
+      "metier": "Étudiante en mode / beaux-arts (Lyon)",
+      "lieu_de_vie": "Lyon (coloc étudiante avec Gaspard)",
+      "statut_relationnel": "En couple avec Gaspard (S14) depuis 18-10-2024. Vivent ensemble en coloc à Lyon.",
       "famille": {
-        "compagnon": "MAN-S14 Gaspard (couple longue distance Paris-Lyon)"
+        "compagnon": "MAN-S14 Gaspard (couple, Lyon)"
       },
       "evenements_de_vie": [
         "Études en mode/beaux-arts à Lyon",
-        "Vit en coloc lyonnaise",
-        "Premier amour adulte avec Gaspard (18-10-2024) — couple longue distance"
+        "Vit en coloc lyonnaise avec Gaspard",
+        "Premier amour adulte avec Gaspard (18-10-2024)"
       ],
-      "traits_narratifs": ["solaire", "lucide", "Gen-Z-créative", "achète-pour-soi-et-mère", "couple-longue-distance"],
-      "_validation_sarah": "P12 ✓ 2026-05-01 (refonte v3.3 : Lyon, étudiante, coloc, couple longue distance Gaspard 18-10-2024)",
+      "traits_narratifs": ["solaire", "lucide", "Gen-Z-créative", "achète-pour-soi-et-mère", "vie-de-coloc-lyonnaise"],
+      "_validation_sarah": "P12 ✓ 2026-05-02 (refonte v3.4 : Lyon coloc avec Gaspard, plus longue distance)",
       "affinites_qualifiees": {
         "DUO_GASPARD_BRUNE": "couple étudiant créatif longue distance Paris-Lyon",
         "MAN-P11": "amitié avec Léa+Sarah (groupe créatives plus âgées)",
@@ -564,22 +567,23 @@
       "_note_remplacement": "Remplace Marcus (retiré 2026-04-20, re-calibrage démographique)",
       "date_anniversaire": "08-07",
       "saison_preferee": "été",
-      "metier": "Étudiant archi / beaux-arts (Paris)",
-      "lieu_de_vie": "Paris (coloc étudiante)",
-      "statut_relationnel": "Couple longue distance avec Brune (P12, Lyon) depuis 18-10-2024. Se voient les week-ends et vacances.",
+      "metier": "Étudiant archi / beaux-arts (Lyon)",
+      "lieu_de_vie": "Lyon (coloc étudiante avec Brune)",
+      "statut_relationnel": "En couple avec Brune (P12) depuis 18-10-2024. Vivent ensemble en coloc à Lyon.",
       "famille": {
-        "compagne": "MAN-P12 Brune (couple longue distance Paris-Lyon)"
+        "compagne": "MAN-P12 Brune (couple, Lyon)"
       },
       "evenements_de_vie": [
-        "Études archi/beaux-arts à Paris (~2021 démarrage)",
-        "Premier amour adulte avec Brune (18-10-2024) — couple longue distance Paris-Lyon",
+        "Études archi/beaux-arts à Lyon (~2021 démarrage)",
+        "Premier amour adulte avec Brune (18-10-2024)",
+        "Emménagement coloc à Lyon avec Brune",
         "Photographe amateur — premier appareil reçu de sa sœur"
       ],
       "traits_narratifs": ["décomplexé", "observant", "skate-musique-photo", "pas-macho", "pas-blasé"],
-      "_validation_sarah": "S14 ✓ 2026-05-01 (refonte v3.3 : Paris, couple longue distance Brune Lyon)",
+      "_validation_sarah": "S14 ✓ 2026-05-02 (refonte v3.4 : Lyon avec Brune en coloc, plus longue distance)",
       "affinites_qualifiees": {
-        "DUO_GASPARD_BRUNE": "couple étudiant créatif longue distance",
-        "MAN-P12": "Brune (copine, Lyon)"
+        "DUO_GASPARD_BRUNE": "couple étudiant créatif",
+        "MAN-P12": "Brune (compagne, Lyon)"
       }
     },
     {
@@ -817,7 +821,7 @@
     "duos": [
       { "id": "DUO_LEA_SARAH", "type": "duo", "nb_membres": 2, "nature": "couple lesbien marié", "categorie_usage": "iconique_rare", "phrase": "Complicité quotidienne d'un couple établi. Le couple est un fait, pas un statement.", "lieu": "Lille" },
       { "id": "DUO_HENRI_JOSEPHINE", "type": "duo", "nb_membres": 2, "nature": "couple senior mixte", "categorie_usage": "transmission_rare", "phrase": "Tendresse posée d'un long amour. Bourgeoisie éclairée, retraite culturelle Avignon. (Henri = beau-père d'Aïcha et Césaria, 2e mariage de Joséphine)", "lieu": "Avignon" },
-      { "id": "DUO_GASPARD_BRUNE", "type": "duo", "nb_membres": 2, "nature": "jeune couple étudiants créatifs", "categorie_usage": "iconique_rare", "phrase": "Premier amour adulte d'étudiants créatifs. Insouciance solaire mais lucide.", "lieu": "Paris" },
+      { "id": "DUO_GASPARD_BRUNE", "type": "duo", "nb_membres": 2, "nature": "jeune couple étudiants créatifs", "categorie_usage": "iconique_rare", "phrase": "Premier amour adulte d'étudiants créatifs. Insouciance solaire mais lucide. Vie de coloc à Lyon.", "lieu": "Lyon" },
       { "id": "DUO_HUGO_NOE", "type": "duo", "nb_membres": 2, "nature": "jeune père + bébé", "categorie_usage": "principal_forte_rotation", "phrase": "Tendresse absolue d'un jeune père porteur. Masculinité paternelle nouvelle génération.", "lieu": "Paris" },
       { "id": "DUO_MATHIEU_NICOLAS", "type": "duo", "nb_membres": 2, "nature": "amis adultes français", "categorie_usage": "principal_forte_rotation", "phrase": "Amitié masculine adulte française. Pudeur masculine douce, complicité de longue date.", "lieu": "Paris (Nicolas) ↔ Provence (Mathieu)" },
 
