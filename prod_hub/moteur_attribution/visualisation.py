@@ -11,11 +11,17 @@ from moteur_attribution import Resultat, Couleur, attribuer, parser_texte
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tests")
 
 
-def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur], 
-                    titre: str = "", chemin_sortie: str = None, 
-                    afficher_legende: bool = True) -> None:
-    """Genere un PNG montrant le rendu visuel de l'attribution."""
-    fig, ax = plt.subplots(figsize=(8, 6))
+def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur],
+                    titre: str = "", chemin_sortie: str = None,
+                    afficher_legende: bool = True,
+                    afficher_aiguilles: bool = True) -> None:
+    """Genere un PNG montrant le rendu visuel de l'attribution.
+
+    afficher_aiguilles : si True et que le palette_couleurs contient des
+    numeros d'aiguille canoniques (champ .aiguille), les affiche sous chaque
+    lettre. Pratique pour Adriana en prod.
+    """
+    fig, ax = plt.subplots(figsize=(8, 7))
     fig.patch.set_facecolor("#F5F0EA")  # fond cream Ypersoa
     ax.set_facecolor("#F5F0EA")
 
@@ -30,9 +36,21 @@ def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur],
     hauteur_lettre = 1.5
     espace_v = 0.3
 
+    # Reserve d'espace bas pour la legende (multi-lignes possible)
+    utilisees = sorted(set(res.attribution.values()))
+    n_legende_par_ligne = 4
+    n_lignes_legende = (len(utilisees) + n_legende_par_ligne - 1) // n_legende_par_ligne
+
+    # Geometrie : derniere ligne de lettres + aiguille en dessous + marge + legende
+    last_letter_y = -(n_lignes * (hauteur_lettre + espace_v))
+    margin_after_aiguille = 1.6  # espace entre les ai.X de la derniere ligne et la legende
+    legende_top = last_letter_y - margin_after_aiguille
+    legende_row_h = 0.9
+    ylim_bottom = legende_top - legende_row_h * n_lignes_legende - 0.4
+
     # Axes
     ax.set_xlim(-6, 6)
-    ax.set_ylim(-(n_lignes * (hauteur_lettre + espace_v)) - 1, 1)
+    ax.set_ylim(ylim_bottom, 1)
     ax.set_aspect("equal")
     ax.axis("off")
 
@@ -40,38 +58,60 @@ def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur],
     coeur_y = 0
     ax.text(0, coeur_y, "♥", fontsize=22, ha="center", va="center", color="#6B1E2E")
 
-    # Lettres
+    # Lettres + aiguille canonique en dessous (ai.? en orange si manquant)
     for i_ligne in sorted(par_ligne.keys()):
         chars = sorted(par_ligne[i_ligne])
         y = -((i_ligne + 1) * (hauteur_lettre + espace_v))
         for indice, char, couleur_id, x_rel in chars:
             x = x_rel * largeur_lettre
-            hex_color = palette_couleurs[couleur_id].hex if couleur_id in palette_couleurs else "#888888"
-            ax.text(x, y, char, fontsize=32, ha="center", va="center", 
+            col = palette_couleurs.get(couleur_id)
+            hex_color = col.hex if col else "#888888"
+            ax.text(x, y, char, fontsize=32, ha="center", va="center",
                     color=hex_color, weight="bold", family="sans-serif")
+            if afficher_aiguilles and col:
+                aig = getattr(col, "aiguille", None)
+                if aig:
+                    ax.text(x, y - 0.7, f"ai.{aig}", fontsize=7, ha="center",
+                            va="center", color="#1E2D4A", alpha=0.6, family="monospace")
+                else:
+                    ax.text(x, y - 0.7, "ai.?", fontsize=7, ha="center",
+                            va="center", color="#C45A2C", alpha=0.95,
+                            family="monospace", weight="bold")
 
     # Titre
     titre_complet = titre if titre else f"{' '.join(res.texte_lignes)}"
-    ax.set_title(f"{titre_complet}\nPalette: {res.palette_id} | Score: {res.score:.3f}", 
+    ax.set_title(f"{titre_complet}\nPalette: {res.palette_id} | Score: {res.score:.3f}",
                  fontsize=11, color="#1E2D4A", pad=15)
 
-    # Legende palette
-    if afficher_legende:
-        utilisees = set(res.attribution.values())
-        legende_y = ax.get_ylim()[0] + 0.5
-        n_couleurs = len(utilisees)
-        x_start = -(n_couleurs * 1.5) / 2
-        for i, cid in enumerate(sorted(utilisees)):
-            if cid in palette_couleurs:
-                col = palette_couleurs[cid]
-                cnt = sum(1 for v in res.attribution.values() if v == cid)
-                rect = patches.Rectangle(
-                    (x_start + i * 1.5, legende_y - 0.2), 0.4, 0.4,
-                    facecolor=col.hex, edgecolor="#1E2D4A", linewidth=0.5
-                )
-                ax.add_patch(rect)
-                ax.text(x_start + i * 1.5 + 0.5, legende_y, f"{col.nom} ({cnt})", 
-                        fontsize=8, va="center", color="#1E2D4A")
+    # Legende palette : grille multi-lignes (ai.? orange pour fil sans aiguille)
+    if afficher_legende and utilisees:
+        cell_w = 3.0
+        for i, cid in enumerate(utilisees):
+            row = i // n_legende_par_ligne
+            col_idx = i % n_legende_par_ligne
+            items_dans_cette_ligne = min(n_legende_par_ligne, len(utilisees) - row * n_legende_par_ligne)
+            x_offset_ligne = -((items_dans_cette_ligne - 1) * cell_w) / 2.0
+            x_pos = x_offset_ligne + col_idx * cell_w
+            y_pos = legende_top - row * legende_row_h
+            if cid not in palette_couleurs:
+                continue
+            col = palette_couleurs[cid]
+            cnt = sum(1 for v in res.attribution.values() if v == cid)
+            rect = patches.Rectangle(
+                (x_pos - 0.55, y_pos - 0.25), 0.5, 0.5,
+                facecolor=col.hex, edgecolor="#1E2D4A", linewidth=0.5
+            )
+            ax.add_patch(rect)
+            aig = getattr(col, "aiguille", None)
+            if aig:
+                ax.text(x_pos + 0.05, y_pos, f"{col.nom} · ai.{aig} ({cnt})",
+                        fontsize=8, va="center", ha="left", color="#1E2D4A")
+            else:
+                ax.text(x_pos + 0.05, y_pos, f"{col.nom} · ", fontsize=8,
+                        va="center", ha="left", color="#1E2D4A")
+                ax.text(x_pos + 0.05 + len(col.nom) * 0.1 + 0.25, y_pos,
+                        f"ai.? ({cnt})", fontsize=8, va="center", ha="left",
+                        color="#C45A2C", weight="bold")
 
     plt.tight_layout()
     if chemin_sortie:

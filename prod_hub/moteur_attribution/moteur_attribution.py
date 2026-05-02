@@ -19,6 +19,7 @@ class Couleur:
     id: str
     nom: str
     hex: str
+    aiguille: Optional[int] = None
 
 
 @dataclass

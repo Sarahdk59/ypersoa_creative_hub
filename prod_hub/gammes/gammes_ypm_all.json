@@ -1,0 +1,98 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "gammes_ypm_all",
+    "description": "Gammes prod multicolore par motif YPM. Source canonique pour prod_hub. Lié par motif_id à referentiels/motifs/motifs_ypm.json et par fil_id à referentiels/palette_fils_broderie_v2.json. Cadré le 2026-05-03 avec Sarah, motif par motif.",
+    "last_updated": "2026-05-03",
+    "nb_motifs_total": 17,
+    "nb_motifs_cadres_multicolore": 3,
+    "nb_gammes_total": 5,
+    "motifs_skip_monochrome": [
+      "YPM-001", "YPM-002", "YPM-003", "YPM-005", "YPM-006",
+      "YPM-007", "YPM-008", "YPM-010", "YPM-011", "YPM-012",
+      "YPM-013", "YPM-014", "YPM-015", "YPM-016"
+    ],
+    "_alerte_phase_1_liquid_outdated": [
+      "YPM-017 : Liquid header mentionne 'Turquoise · Rose pâle · Crème' mais gamme prod réelle = ivoire/vert jardin/framboise/corail. Liquid Shopify à mettre à jour.",
+      "YPM-004 : Liquid header dit 'palette atelier figée' sans la spécifier. Gamme prod cadrée ici = rose pâle/vert jardin/marine/terracotta."
+    ]
+  },
+  "gammes_par_motif": {
+    "YPM-001": [],
+    "YPM-002": [],
+    "YPM-003": [],
+    "YPM-004": [
+      {
+        "nom": "multicolore",
+        "fils": [
+          "fil_rose_pale",
+          "fil_vert_jardin",
+          "fil_marine",
+          "fil_terracotta"
+        ],
+        "fils_custom": []
+      }
+    ],
+    "YPM-005": [],
+    "YPM-006": [],
+    "YPM-007": [],
+    "YPM-008": [],
+    "YPM-009": [
+      {
+        "nom": "palette",
+        "fils": [
+          "fil_bordeaux",
+          "fil_canard"
+        ],
+        "fils_custom": [
+          {"id": "fil_moutarde", "nom": "Moutarde", "hex": "#D4A12A"},
+          {"id": "fil_rose_poudre", "nom": "Rose poudré", "hex": "#E8C4C0"},
+          {"id": "fil_gris_perle", "nom": "Gris perle", "hex": "#DDD8D0"}
+        ]
+      },
+      {
+        "nom": "camaïeu bleu",
+        "fils": [
+          "fil_marine",
+          "fil_vert_jade",
+          "fil_vert_jardin",
+          "fil_canard",
+          "fil_bleu_glacier"
+        ],
+        "fils_custom": []
+      },
+      {
+        "nom": "camaïeu rose lavande",
+        "fils": [
+          "fil_bordeaux",
+          "fil_framboise",
+          "fil_rose_pale",
+          "fil_lilas"
+        ],
+        "fils_custom": [
+          {"id": "fil_rose_vif", "nom": "Rose vif", "hex": "#E84B7C"}
+        ]
+      }
+    ],
+    "YPM-010": [],
+    "YPM-011": [],
+    "YPM-012": [],
+    "YPM-013": [],
+    "YPM-014": [],
+    "YPM-015": [],
+    "YPM-016": [],
+    "YPM-017": [
+      {
+        "nom": "multicolore",
+        "fils": [
+          "fil_ivoire",
+          "fil_vert_jardin",
+          "fil_framboise"
+        ],
+        "fils_custom": [
+          {"id": "fil_corail", "nom": "Corail", "hex": "#E89B82"}
+        ]
+      }
+    ]
+  }
+}

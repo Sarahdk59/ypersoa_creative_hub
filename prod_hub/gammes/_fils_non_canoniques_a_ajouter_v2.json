@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "description": "Fils mentionnés dans gammes_ypm_all.json mais absents de palette_fils_broderie_v2.json. À ajouter au référentiel canonique après validation visuelle (codes Gunold + aiguille TMEZ + nuancier physique).",
+    "last_updated": "2026-05-03",
+    "nb_fils_non_canoniques": 5,
+    "_workflow_phase_1": "Cette liste alimente la PR de stabilisation référentiels (cf. routine remote du 2026-05-09). Pour chaque fil : valider visuellement le hex contre le nuancier Gunold physique, attribuer un code Gunold, attribuer un numéro d'aiguille canonique TMEZ, valider la famille."
+  },
+  "fils": [
+    {
+      "id_propose": "fil_moutarde",
+      "nom": "Moutarde",
+      "hex": "#D4A12A",
+      "code_gunold": "61137",
+      "code_gunold_status": "presume_confirme",
+      "numero_aiguille_canonique_propose": 109,
+      "numero_aiguille_status": "a_valider",
+      "famille": "jaunes_chauds",
+      "mentionne_dans": ["YPM-009:palette"],
+      "_note": "Présent dans _codes_gunold_observes_dans_fiches (61137 aiguille 109) mais marqué HORS PALETTE OFFICIELLE en v2. Sarah confirme l'usage en gamme prod (palette YPM-009 multicolore). À ajouter à la palette officielle v2."
+    },
+    {
+      "id_propose": "fil_rose_poudre",
+      "nom": "Rose poudré",
+      "hex": "#E8C4C0",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique_propose": null,
+      "famille": "roses_doux",
+      "mentionne_dans": ["YPM-009:palette"],
+      "_note": "Distinct de fil_rose_pale (#F0B8C0) qui est plus vif. Hex #E8C4C0 = teinte plus poudrée/dusty. À valider visuellement contre nuancier Gunold."
+    },
+    {
+      "id_propose": "fil_gris_perle",
+      "nom": "Gris perle",
+      "hex": "#DDD8D0",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique_propose": null,
+      "famille": "neutres_clairs",
+      "mentionne_dans": ["YPM-009:palette"],
+      "_note": "Gris très clair tirant chaud, distinct de fil_gris_clair (#C8C8C8) qui est gris froid. À valider visuellement."
+    },
+    {
+      "id_propose": "fil_rose_vif",
+      "nom": "Rose vif",
+      "hex": "#E84B7C",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique_propose": null,
+      "famille": "roses_vifs",
+      "mentionne_dans": ["YPM-009:camaïeu rose lavande"],
+      "_note": "Rose saturé entre framboise (#C4294E) et magenta. À valider visuellement. Possiblement code Gunold 61119 (présent dans _codes_gunold_observes aiguille 65, hypothèse 'Rose framboise vif')."
+    },
+    {
+      "id_propose": "fil_corail",
+      "nom": "Corail",
+      "hex": "#E89B82",
+      "code_gunold": "TODO_validate",
+      "numero_aiguille_canonique_propose": null,
+      "famille": "oranges_terreux",
+      "mentionne_dans": ["YPM-017:multicolore"],
+      "_note": "Corail doux peach-rosé, distinct de fil_terracotta (#C4694A) qui est plus foncé/orange. Validé visuellement par Sarah sur photo broderie YPM-017 La Florale (pack MAMA)."
+    }
+  ]
+}
