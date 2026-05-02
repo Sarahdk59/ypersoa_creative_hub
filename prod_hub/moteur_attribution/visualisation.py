@@ -133,4 +133,20 @@ if __name__ == "__main__":
     render_resultat(res4, PALETTE_COMPLETE, titre="AMOUREUSE DE PAUL - gamme rose",
                     chemin_sortie=os.path.join(TESTS_DIR, "test_4_amoureuse_rose.png"))
 
+    # Test 5 : coeur framboise force le moteur a eviter framboise dominante
+    texte5 = ["MAMAN", "DE", "GABIN", "& LOU"]
+    res5 = attribuer(texte5, GAMMES["mixte"], palette_id="mixte_coeur_framboise",
+                     coeur_couleur_id="framboise")
+    render_resultat(res5, PALETTE_COMPLETE,
+                    titre="Coeur framboise force le moteur a eviter framboise dominante",
+                    chemin_sortie=os.path.join(TESTS_DIR, "test_5_coeur_framboise.png"))
+
+    # Test 6 : filtre support cream incompatible avec sable + rose pale
+    texte6 = ["MAMAN", "DE", "GABIN", "& LOU"]
+    res6 = attribuer(texte6, GAMMES["mixte"], palette_id="mixte_support_cream",
+                     fils_incompatibles_support=["sable", "rose_pale"])
+    render_resultat(res6, PALETTE_COMPLETE,
+                    titre="Support cream : sable + rose_pale exclus (palette 3 fils)",
+                    chemin_sortie=os.path.join(TESTS_DIR, "test_6_support_cream.png"))
+
     print("\nTous les visuels generes.")
