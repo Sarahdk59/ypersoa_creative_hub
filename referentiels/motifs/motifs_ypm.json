@@ -1,13 +1,17 @@
 {
   "_meta": {
-    "schema_version": "1.0",
+    "schema_version": "1.1",
     "referentiel": "motifs_ypm",
     "last_updated": "2026-05-02",
     "nb_motifs": 17,
     "nb_variantes_total": 80,
-    "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3).",
+    "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
-    "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)"
+    "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
+    "changelog": {
+      "v1.0_2026-05-02": "Création — 17 motifs + 80 variantes",
+      "v1.1_2026-05-02": "Ajout tags universels par motif et variante (12 tags principaux)"
+    }
   },
   "motifs": [
     {
@@ -15,7 +19,13 @@
       "nom_commercial": "La Brigitte",
       "asset_principal": "YPM-001-BRIGITTE.PNG",
       "nb_variantes": 0,
-      "variantes": []
+      "variantes": [],
+      "tags": [
+        "feminin",
+        "monogramme",
+        "prenom",
+        "typo"
+      ]
     },
     {
       "id": "YPM-002",
@@ -25,16 +35,36 @@
       "variantes": [
         {
           "file": "YPM-002-AMBRE-chaton.PNG",
-          "label": "AMBRE-chaton"
+          "label": "AMBRE-chaton",
+          "tags": [
+            "prenom",
+            "typo"
+          ]
         },
         {
           "file": "YPM-002-AMBRE-nounou.PNG",
-          "label": "AMBRE-nounou"
+          "label": "AMBRE-nounou",
+          "tags": [
+            "famille",
+            "garde-enfant",
+            "prenom",
+            "typo"
+          ]
         },
         {
           "file": "YPM-002-AMBRE-papa.PNG",
-          "label": "AMBRE-papa"
+          "label": "AMBRE-papa",
+          "tags": [
+            "famille",
+            "papa",
+            "prenom",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "prenom",
+        "typo"
       ]
     },
     {
@@ -45,24 +75,61 @@
       "variantes": [
         {
           "file": "YPM-003-CLUB-famille club.PNG",
-          "label": "CLUB-famille club"
+          "label": "CLUB-famille club",
+          "tags": [
+            "amitie",
+            "famille",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-003-CLUB-sista.PNG",
-          "label": "CLUB-sista"
+          "label": "CLUB-sista",
+          "tags": [
+            "amitie",
+            "famille",
+            "fratrie",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-003-CLUBv2.png",
-          "label": "CLUBv2"
+          "label": "CLUBv2",
+          "tags": [
+            "amitie",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-003-Club_Amour_PXF.PNG",
-          "label": "Club_Amour_PXF"
+          "label": "Club_Amour_PXF",
+          "tags": [
+            "amitie",
+            "amour",
+            "couple",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-003-Club_Bride.PNG",
-          "label": "Club_Bride"
+          "label": "Club_Bride",
+          "tags": [
+            "amitie",
+            "couple",
+            "groupe",
+            "mariage",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "amitie",
+        "groupe",
+        "typo"
       ]
     },
     {
@@ -73,16 +140,36 @@
       "variantes": [
         {
           "file": "YPM-004-ANNEE oui.PNG",
-          "label": "ANNEE oui"
+          "label": "ANNEE oui",
+          "tags": [
+            "anniversaire-date",
+            "date",
+            "typo"
+          ]
         },
         {
           "file": "YPM-004-ANNEE-v3.PNG",
-          "label": "ANNEE-v3"
+          "label": "ANNEE-v3",
+          "tags": [
+            "anniversaire-date",
+            "date",
+            "typo"
+          ]
         },
         {
           "file": "YPM-004-ANNEEv2.PNG",
-          "label": "ANNEEv2"
+          "label": "ANNEEv2",
+          "tags": [
+            "anniversaire-date",
+            "date",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "anniversaire-date",
+        "date",
+        "typo"
       ]
     },
     {
@@ -93,36 +180,97 @@
       "variantes": [
         {
           "file": "YPM-005-ANNONCE Annonce.PNG",
-          "label": "ANNONCE Annonce"
+          "label": "ANNONCE Annonce",
+          "tags": [
+            "annonce",
+            "naissance",
+            "typo"
+          ]
         },
         {
           "file": "YPM-005-ANNONCE Madame.PNG",
-          "label": "ANNONCE Madame"
+          "label": "ANNONCE Madame",
+          "tags": [
+            "annonce",
+            "couple",
+            "mariage",
+            "naissance",
+            "typo"
+          ]
         },
         {
           "file": "YPM-005-ANNONCE Monsieur.PNG",
-          "label": "ANNONCE Monsieur"
+          "label": "ANNONCE Monsieur",
+          "tags": [
+            "annonce",
+            "couple",
+            "mariage",
+            "naissance",
+            "typo"
+          ]
         },
         {
           "file": "YPM-005-ANNONCE Papa.PNG",
-          "label": "ANNONCE Papa"
+          "label": "ANNONCE Papa",
+          "tags": [
+            "annonce",
+            "famille",
+            "naissance",
+            "papa",
+            "typo"
+          ]
         },
         {
           "file": "YPM-005-ANNONCE chanceuse.PNG",
-          "label": "ANNONCE chanceuse"
+          "label": "ANNONCE chanceuse",
+          "tags": [
+            "amour",
+            "annonce",
+            "feminin",
+            "naissance",
+            "typo"
+          ]
         },
         {
           "file": "YPM-005-ANNONCE lover.PNG",
-          "label": "ANNONCE lover"
+          "label": "ANNONCE lover",
+          "tags": [
+            "amour",
+            "annonce",
+            "couple",
+            "naissance",
+            "typo"
+          ]
         },
         {
           "file": "YPM-005-ANNONCE papa cheri.JPG",
-          "label": "ANNONCE papa cheri"
+          "label": "ANNONCE papa cheri",
+          "tags": [
+            "amour",
+            "annonce",
+            "famille",
+            "naissance",
+            "papa",
+            "typo"
+          ]
         },
         {
           "file": "YPM-005-ANNONCE papa cheri.png",
-          "label": "ANNONCE papa cheri"
+          "label": "ANNONCE papa cheri",
+          "tags": [
+            "amour",
+            "annonce",
+            "famille",
+            "naissance",
+            "papa",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "annonce",
+        "naissance",
+        "typo"
       ]
     },
     {
@@ -130,7 +278,12 @@
       "nom_commercial": "Le Câlin",
       "asset_principal": "YPM-006-CALIN.PNG",
       "nb_variantes": 0,
-      "variantes": []
+      "variantes": [],
+      "tags": [
+        "coeur",
+        "tendresse",
+        "typo"
+      ]
     },
     {
       "id": "YPM-007",
@@ -140,44 +293,105 @@
       "variantes": [
         {
           "file": "YPM-007-CHOUCHOU marié.PNG",
-          "label": "CHOUCHOU marié"
+          "label": "CHOUCHOU marié",
+          "tags": [
+            "couple",
+            "famille",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU mariée_v2.PNG",
-          "label": "CHOUCHOU mariée_v2"
+          "label": "CHOUCHOU mariée_v2",
+          "tags": [
+            "couple",
+            "famille",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU-amour.PNG",
-          "label": "CHOUCHOU-amour"
+          "label": "CHOUCHOU-amour",
+          "tags": [
+            "amour",
+            "couple",
+            "famille",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU-beurre.PNG",
-          "label": "CHOUCHOU-beurre"
+          "label": "CHOUCHOU-beurre",
+          "tags": [
+            "amour",
+            "famille",
+            "tendresse",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU-mamie.PNG",
-          "label": "CHOUCHOU-mamie"
+          "label": "CHOUCHOU-mamie",
+          "tags": [
+            "famille",
+            "grand-parents",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU-nounou.PNG",
-          "label": "CHOUCHOU-nounou"
+          "label": "CHOUCHOU-nounou",
+          "tags": [
+            "famille",
+            "garde-enfant",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU-papa.PNG",
-          "label": "CHOUCHOU-papa"
+          "label": "CHOUCHOU-papa",
+          "tags": [
+            "famille",
+            "papa",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU-poulette.PNG",
-          "label": "CHOUCHOU-poulette"
+          "label": "CHOUCHOU-poulette",
+          "tags": [
+            "amour",
+            "animal",
+            "famille",
+            "feminin",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU-tempete.PNG",
-          "label": "CHOUCHOU-tempete"
+          "label": "CHOUCHOU-tempete",
+          "tags": [
+            "caractere",
+            "famille",
+            "typo"
+          ]
         },
         {
           "file": "YPM-007-CHOUCHOU_mariée.PNG",
-          "label": "CHOUCHOU_mariée"
+          "label": "CHOUCHOU_mariée",
+          "tags": [
+            "couple",
+            "famille",
+            "mariage",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "famille",
+        "typo"
       ]
     },
     {
@@ -188,24 +402,62 @@
       "variantes": [
         {
           "file": "YPM-008-FELINE-Amour fou.png",
-          "label": "FELINE-Amour fou"
+          "label": "FELINE-Amour fou",
+          "tags": [
+            "amour",
+            "animal",
+            "couple",
+            "feminin",
+            "typo"
+          ]
         },
         {
           "file": "YPM-008-FELINE-madame.PNG",
-          "label": "FELINE-madame"
+          "label": "FELINE-madame",
+          "tags": [
+            "animal",
+            "couple",
+            "feminin",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-008-FELINE-maman cherie.PNG",
-          "label": "FELINE-maman cherie"
+          "label": "FELINE-maman cherie",
+          "tags": [
+            "animal",
+            "famille",
+            "feminin",
+            "maman",
+            "typo"
+          ]
         },
         {
           "file": "YPM-008-FELINE-maman.PNG",
-          "label": "FELINE-maman"
+          "label": "FELINE-maman",
+          "tags": [
+            "animal",
+            "famille",
+            "feminin",
+            "maman",
+            "typo"
+          ]
         },
         {
           "file": "YPM-008-FELINEv1.png",
-          "label": "FELINEv1"
+          "label": "FELINEv1",
+          "tags": [
+            "animal",
+            "feminin",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "animal",
+        "feminin",
+        "typo"
       ]
     },
     {
@@ -216,32 +468,87 @@
       "variantes": [
         {
           "file": "YPM-009-PALETTE - Amoureuse - papa.PNG",
-          "label": "PALETTE - Amoureuse - papa"
+          "label": "PALETTE - Amoureuse - papa",
+          "tags": [
+            "amitie",
+            "amour",
+            "couleurs",
+            "couple",
+            "famille",
+            "groupe",
+            "mariage",
+            "papa",
+            "typo"
+          ]
         },
         {
           "file": "YPM-009-PALETTE - Amoureuse.PNG",
-          "label": "PALETTE - Amoureuse"
+          "label": "PALETTE - Amoureuse",
+          "tags": [
+            "amitie",
+            "amour",
+            "couleurs",
+            "couple",
+            "groupe",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-009-PALETTE-Madame.png",
-          "label": "PALETTE-Madame"
+          "label": "PALETTE-Madame",
+          "tags": [
+            "couleurs",
+            "couple",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-009-PALETTE-beige.png",
-          "label": "PALETTE-beige"
+          "label": "PALETTE-beige",
+          "tags": [
+            "couleurs",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-009-PALETTE-la mariee.png",
-          "label": "PALETTE-la mariee"
+          "label": "PALETTE-la mariee",
+          "tags": [
+            "couleurs",
+            "couple",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-009-PALETTE-vert.png",
-          "label": "PALETTE-vert"
+          "label": "PALETTE-vert",
+          "tags": [
+            "couleurs",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-009-PALETTE_TeamMariee_PXF.PNG",
-          "label": "PALETTE_TeamMariee_PXF"
+          "label": "PALETTE_TeamMariee_PXF",
+          "tags": [
+            "amitie",
+            "couleurs",
+            "couple",
+            "groupe",
+            "mariage",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "couleurs",
+        "mariage",
+        "typo"
       ]
     },
     {
@@ -252,24 +559,63 @@
       "variantes": [
         {
           "file": "YPM-010-RONDE madame_PXF.PNG",
-          "label": "RONDE madame_PXF"
+          "label": "RONDE madame_PXF",
+          "tags": [
+            "couple",
+            "famille",
+            "groupe",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-010-RONDE monsieur.PNG",
-          "label": "RONDE monsieur"
+          "label": "RONDE monsieur",
+          "tags": [
+            "couple",
+            "famille",
+            "groupe",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-010-RONDE-love.PNG",
-          "label": "RONDE-love"
+          "label": "RONDE-love",
+          "tags": [
+            "amour",
+            "couple",
+            "famille",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-010-RONDE-mamie.JPG",
-          "label": "RONDE-mamie"
+          "label": "RONDE-mamie",
+          "tags": [
+            "famille",
+            "grand-parents",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-010-RONDE-soeur.PNG",
-          "label": "RONDE-soeur"
+          "label": "RONDE-soeur",
+          "tags": [
+            "famille",
+            "fratrie",
+            "groupe",
+            "sista",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "famille",
+        "groupe",
+        "typo"
       ]
     },
     {
@@ -280,24 +626,66 @@
       "variantes": [
         {
           "file": "YPM-011-CONFIDENCE-Maman d amour.png",
-          "label": "CONFIDENCE-Maman d amour"
+          "label": "CONFIDENCE-Maman d amour",
+          "tags": [
+            "amitie",
+            "amour",
+            "couple",
+            "famille",
+            "maman",
+            "typo"
+          ]
         },
         {
           "file": "YPM-011-CONFIDENCE-Maman ensemble.png",
-          "label": "CONFIDENCE-Maman ensemble"
+          "label": "CONFIDENCE-Maman ensemble",
+          "tags": [
+            "amitie",
+            "amour",
+            "famille",
+            "maman",
+            "typo"
+          ]
         },
         {
           "file": "YPM-011-CONFIDENCE-Maman.PNG",
-          "label": "CONFIDENCE-Maman"
+          "label": "CONFIDENCE-Maman",
+          "tags": [
+            "amitie",
+            "amour",
+            "famille",
+            "maman",
+            "typo"
+          ]
         },
         {
           "file": "YPM-011-CONFIDENCE-Mamaninette.PNG",
-          "label": "CONFIDENCE-Mamaninette"
+          "label": "CONFIDENCE-Mamaninette",
+          "tags": [
+            "amitie",
+            "amour",
+            "famille",
+            "maman",
+            "typo"
+          ]
         },
         {
           "file": "YPM-011-CONFIDENCE-Mamie.PNG",
-          "label": "CONFIDENCE-Mamie"
+          "label": "CONFIDENCE-Mamie",
+          "tags": [
+            "amitie",
+            "amour",
+            "famille",
+            "grand-parents",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "amitie",
+        "amour",
+        "famille",
+        "typo"
       ]
     },
     {
@@ -308,24 +696,58 @@
       "variantes": [
         {
           "file": "YPM-012-La Meute- mamie ours.PNG",
-          "label": "La Meute- mamie ours"
+          "label": "La Meute- mamie ours",
+          "tags": [
+            "animal",
+            "famille",
+            "grand-parents",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-012-La Meute-papie.PNG",
-          "label": "La Meute-papie"
+          "label": "La Meute-papie",
+          "tags": [
+            "famille",
+            "grand-parents",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-012-La Meute-poule.PNG",
-          "label": "La Meute-poule"
+          "label": "La Meute-poule",
+          "tags": [
+            "animal",
+            "famille",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-012-La Meute.PNG",
-          "label": "La Meute"
+          "label": "La Meute",
+          "tags": [
+            "famille",
+            "groupe",
+            "typo"
+          ]
         },
         {
           "file": "YPM-012-MEUTEv1.PNG",
-          "label": "MEUTEv1"
+          "label": "MEUTEv1",
+          "tags": [
+            "famille",
+            "groupe",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "famille",
+        "groupe",
+        "typo"
       ]
     },
     {
@@ -336,12 +758,33 @@
       "variantes": [
         {
           "file": "YPM-013-DEPUIS-frere.PNG",
-          "label": "DEPUIS-frere"
+          "label": "DEPUIS-frere",
+          "tags": [
+            "anniversaire-date",
+            "couple",
+            "date",
+            "famille",
+            "fratrie",
+            "typo"
+          ]
         },
         {
           "file": "YPM-013-DEPUIS_madame_PXF.PNG",
-          "label": "DEPUIS_madame_PXF"
+          "label": "DEPUIS_madame_PXF",
+          "tags": [
+            "anniversaire-date",
+            "couple",
+            "date",
+            "mariage",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "anniversaire-date",
+        "couple",
+        "date",
+        "typo"
       ]
     },
     {
@@ -352,16 +795,40 @@
       "variantes": [
         {
           "file": "YPM-014-TIGRESSE alba.png",
-          "label": "TIGRESSE alba"
+          "label": "TIGRESSE alba",
+          "tags": [
+            "animal",
+            "feminin",
+            "prenom",
+            "typo"
+          ]
         },
         {
           "file": "YPM-014-TIGRESSE celine.png",
-          "label": "TIGRESSE celine"
+          "label": "TIGRESSE celine",
+          "tags": [
+            "animal",
+            "feminin",
+            "prenom",
+            "typo"
+          ]
         },
         {
           "file": "YPM-014-TIGRESSE lola.png",
-          "label": "TIGRESSE lola"
+          "label": "TIGRESSE lola",
+          "tags": [
+            "animal",
+            "feminin",
+            "prenom",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "animal",
+        "feminin",
+        "prenom",
+        "typo"
       ]
     },
     {
@@ -372,40 +839,99 @@
       "variantes": [
         {
           "file": "YPM-015-AMOUR un jour.png",
-          "label": "AMOUR un jour"
+          "label": "AMOUR un jour",
+          "tags": [
+            "amour",
+            "couple",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION bichette.png",
-          "label": "DECLARATION bichette"
+          "label": "DECLARATION bichette",
+          "tags": [
+            "amour",
+            "couple",
+            "feminin",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION camille&hugo.PNG",
-          "label": "DECLARATION camille&hugo"
+          "label": "DECLARATION camille&hugo",
+          "tags": [
+            "amour",
+            "couple",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION declaration maitresse.PNG",
-          "label": "DECLARATION declaration maitresse"
+          "label": "DECLARATION declaration maitresse",
+          "tags": [
+            "amour",
+            "couple",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION papa.PNG",
-          "label": "DECLARATION papa"
+          "label": "DECLARATION papa",
+          "tags": [
+            "amour",
+            "couple",
+            "famille",
+            "papa",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION_bride team.png",
-          "label": "DECLARATION_bride team"
+          "label": "DECLARATION_bride team",
+          "tags": [
+            "amitie",
+            "amour",
+            "couple",
+            "groupe",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION_bride.PNG",
-          "label": "DECLARATION_bride"
+          "label": "DECLARATION_bride",
+          "tags": [
+            "amour",
+            "couple",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION_madame.PNG",
-          "label": "DECLARATION_madame"
+          "label": "DECLARATION_madame",
+          "tags": [
+            "amour",
+            "couple",
+            "mariage",
+            "typo"
+          ]
         },
         {
           "file": "YPM-015-DECLARATION_monsieur.png",
-          "label": "DECLARATION_monsieur"
+          "label": "DECLARATION_monsieur",
+          "tags": [
+            "amour",
+            "couple",
+            "mariage",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "amour",
+        "couple",
+        "typo"
       ]
     },
     {
@@ -416,28 +942,66 @@
       "variantes": [
         {
           "file": "YPM-016-SIGNATURE daddy.PNG",
-          "label": "SIGNATURE daddy"
+          "label": "SIGNATURE daddy",
+          "tags": [
+            "famille",
+            "papa",
+            "signature",
+            "typo"
+          ]
         },
         {
           "file": "YPM-016-SIGNATURE franck.PNG",
-          "label": "SIGNATURE franck"
+          "label": "SIGNATURE franck",
+          "tags": [
+            "signature",
+            "typo"
+          ]
         },
         {
           "file": "YPM-016-SIGNATURE maman.PNG",
-          "label": "SIGNATURE maman"
+          "label": "SIGNATURE maman",
+          "tags": [
+            "famille",
+            "maman",
+            "signature",
+            "typo"
+          ]
         },
         {
           "file": "YPM-016-SIGNATURE nounou.PNG",
-          "label": "SIGNATURE nounou"
+          "label": "SIGNATURE nounou",
+          "tags": [
+            "famille",
+            "garde-enfant",
+            "signature",
+            "typo"
+          ]
         },
         {
           "file": "YPM-016-SIGNATURE papachou.PNG",
-          "label": "SIGNATURE papachou"
+          "label": "SIGNATURE papachou",
+          "tags": [
+            "famille",
+            "papa",
+            "signature",
+            "typo"
+          ]
         },
         {
           "file": "YPM-016-SIGNATURE raleuse.PNG",
-          "label": "SIGNATURE raleuse"
+          "label": "SIGNATURE raleuse",
+          "tags": [
+            "feminin",
+            "humour",
+            "signature",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "signature",
+        "typo"
       ]
     },
     {
@@ -448,20 +1012,50 @@
       "variantes": [
         {
           "file": "YPM-017-FLORALE  lettrage_emma3.PNG",
-          "label": "FLORALE  lettrage_emma3"
+          "label": "FLORALE  lettrage_emma3",
+          "tags": [
+            "feminin",
+            "floral",
+            "typo"
+          ]
         },
         {
           "file": "YPM-017-FLORALE maman.png",
-          "label": "FLORALE maman"
+          "label": "FLORALE maman",
+          "tags": [
+            "famille",
+            "feminin",
+            "floral",
+            "maman",
+            "typo"
+          ]
         },
         {
           "file": "YPM-017-FLORALE parisienne.PNG",
-          "label": "FLORALE parisienne"
+          "label": "FLORALE parisienne",
+          "tags": [
+            "chic",
+            "feminin",
+            "floral",
+            "typo"
+          ]
         },
         {
           "file": "YPM-017-FLORALE_love.png",
-          "label": "FLORALE_love"
+          "label": "FLORALE_love",
+          "tags": [
+            "amour",
+            "couple",
+            "feminin",
+            "floral",
+            "typo"
+          ]
         }
+      ],
+      "tags": [
+        "feminin",
+        "floral",
+        "typo"
       ]
     }
   ]
