@@ -4,7 +4,7 @@
     "referentiel": "motifs_ypm",
     "last_updated": "2026-05-02",
     "nb_motifs": 17,
-    "nb_variantes_total": 80,
+    "nb_variantes_total": 81,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
     "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
@@ -170,6 +170,16 @@
         "anniversaire-date",
         "date",
         "typo"
+      ],
+      "shooting_pngs": [
+        {
+          "file": "YPM-004-3-generations.png",
+          "label": "3 générations",
+          "tags": [
+            "trio",
+            "famille"
+          ]
+        }
       ]
     },
     {
@@ -277,8 +287,19 @@
       "id": "YPM-006",
       "nom_commercial": "Le Câlin",
       "asset_principal": "YPM-006-CALIN.PNG",
-      "nb_variantes": 0,
-      "variantes": [],
+      "nb_variantes": 1,
+      "variantes": [
+        {
+          "file": "YPM-006-calin-l.png",
+          "label": "Calin L",
+          "tags": [
+            "couple",
+            "cadeau",
+            "coeur",
+            "love"
+          ]
+        }
+      ],
       "tags": [
         "coeur",
         "tendresse",

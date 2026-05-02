@@ -88,6 +88,13 @@ export interface MetiersHub {
 export interface MotifVariante {
   file: string;
   label: string;
+  tags?: string[];
+}
+
+export interface ShootingPng {
+  file: string;
+  label: string;
+  tags?: string[];
 }
 
 export interface MotifYpm {
@@ -96,10 +103,12 @@ export interface MotifYpm {
   asset_principal: string;
   nb_variantes: number;
   variantes: MotifVariante[];
+  tags?: string[];
+  shooting_pngs?: ShootingPng[];
 }
 
 export interface MotifsYpmRef {
-  _meta: { nb_motifs: number; nb_variantes_total: number };
+  _meta: { nb_motifs: number; nb_variantes_total: number; last_updated?: string; [k: string]: unknown };
   motifs: MotifYpm[];
 }
 
@@ -157,6 +166,13 @@ export function getMotifs(): MotifsYpmRef {
   }
   return _cache.motifs;
 }
+
+export function clearMotifsCache(): void {
+  _cache.motifs = undefined;
+}
+
+export const MOTIFS_REF_PATH = join(REFS_DIR, "motifs", "motifs_ypm.json");
+export const ASSETS_MOTIFS_DIR = join(process.cwd(), "..", "..", "assets", "motifs");
 
 export function getAllReferentiels() {
   return {
