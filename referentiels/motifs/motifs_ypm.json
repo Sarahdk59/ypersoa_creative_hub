@@ -1,0 +1,468 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "motifs_ypm",
+    "last_updated": "2026-05-02",
+    "nb_motifs": 17,
+    "nb_variantes_total": 80,
+    "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3).",
+    "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
+    "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)"
+  },
+  "motifs": [
+    {
+      "id": "YPM-001",
+      "nom_commercial": "La Brigitte",
+      "asset_principal": "YPM-001-BRIGITTE.PNG",
+      "nb_variantes": 0,
+      "variantes": []
+    },
+    {
+      "id": "YPM-002",
+      "nom_commercial": "L'Ambre",
+      "asset_principal": "YPM-002-AMBRE.PNG",
+      "nb_variantes": 3,
+      "variantes": [
+        {
+          "file": "YPM-002-AMBRE-chaton.PNG",
+          "label": "AMBRE-chaton"
+        },
+        {
+          "file": "YPM-002-AMBRE-nounou.PNG",
+          "label": "AMBRE-nounou"
+        },
+        {
+          "file": "YPM-002-AMBRE-papa.PNG",
+          "label": "AMBRE-papa"
+        }
+      ]
+    },
+    {
+      "id": "YPM-003",
+      "nom_commercial": "Le Club",
+      "asset_principal": "YPM-003-CLUB.PNG",
+      "nb_variantes": 5,
+      "variantes": [
+        {
+          "file": "YPM-003-CLUB-famille club.PNG",
+          "label": "CLUB-famille club"
+        },
+        {
+          "file": "YPM-003-CLUB-sista.PNG",
+          "label": "CLUB-sista"
+        },
+        {
+          "file": "YPM-003-CLUBv2.png",
+          "label": "CLUBv2"
+        },
+        {
+          "file": "YPM-003-Club_Amour_PXF.PNG",
+          "label": "Club_Amour_PXF"
+        },
+        {
+          "file": "YPM-003-Club_Bride.PNG",
+          "label": "Club_Bride"
+        }
+      ]
+    },
+    {
+      "id": "YPM-004",
+      "nom_commercial": "Notre Héritage",
+      "asset_principal": "YPM-004-ANNEE.PNG",
+      "nb_variantes": 3,
+      "variantes": [
+        {
+          "file": "YPM-004-ANNEE oui.PNG",
+          "label": "ANNEE oui"
+        },
+        {
+          "file": "YPM-004-ANNEE-v3.PNG",
+          "label": "ANNEE-v3"
+        },
+        {
+          "file": "YPM-004-ANNEEv2.PNG",
+          "label": "ANNEEv2"
+        }
+      ]
+    },
+    {
+      "id": "YPM-005",
+      "nom_commercial": "L'Annonce",
+      "asset_principal": "YPM-005-ANNONCE.PNG",
+      "nb_variantes": 8,
+      "variantes": [
+        {
+          "file": "YPM-005-ANNONCE Annonce.PNG",
+          "label": "ANNONCE Annonce"
+        },
+        {
+          "file": "YPM-005-ANNONCE Madame.PNG",
+          "label": "ANNONCE Madame"
+        },
+        {
+          "file": "YPM-005-ANNONCE Monsieur.PNG",
+          "label": "ANNONCE Monsieur"
+        },
+        {
+          "file": "YPM-005-ANNONCE Papa.PNG",
+          "label": "ANNONCE Papa"
+        },
+        {
+          "file": "YPM-005-ANNONCE chanceuse.PNG",
+          "label": "ANNONCE chanceuse"
+        },
+        {
+          "file": "YPM-005-ANNONCE lover.PNG",
+          "label": "ANNONCE lover"
+        },
+        {
+          "file": "YPM-005-ANNONCE papa cheri.JPG",
+          "label": "ANNONCE papa cheri"
+        },
+        {
+          "file": "YPM-005-ANNONCE papa cheri.png",
+          "label": "ANNONCE papa cheri"
+        }
+      ]
+    },
+    {
+      "id": "YPM-006",
+      "nom_commercial": "Le Câlin",
+      "asset_principal": "YPM-006-CALIN.PNG",
+      "nb_variantes": 0,
+      "variantes": []
+    },
+    {
+      "id": "YPM-007",
+      "nom_commercial": "Le Chouchou",
+      "asset_principal": "YPM-007-CHOUCHOU.PNG",
+      "nb_variantes": 10,
+      "variantes": [
+        {
+          "file": "YPM-007-CHOUCHOU marié.PNG",
+          "label": "CHOUCHOU marié"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU mariée_v2.PNG",
+          "label": "CHOUCHOU mariée_v2"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU-amour.PNG",
+          "label": "CHOUCHOU-amour"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU-beurre.PNG",
+          "label": "CHOUCHOU-beurre"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU-mamie.PNG",
+          "label": "CHOUCHOU-mamie"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU-nounou.PNG",
+          "label": "CHOUCHOU-nounou"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU-papa.PNG",
+          "label": "CHOUCHOU-papa"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU-poulette.PNG",
+          "label": "CHOUCHOU-poulette"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU-tempete.PNG",
+          "label": "CHOUCHOU-tempete"
+        },
+        {
+          "file": "YPM-007-CHOUCHOU_mariée.PNG",
+          "label": "CHOUCHOU_mariée"
+        }
+      ]
+    },
+    {
+      "id": "YPM-008",
+      "nom_commercial": "La Féline",
+      "asset_principal": "YPM-008-FELINE.png",
+      "nb_variantes": 5,
+      "variantes": [
+        {
+          "file": "YPM-008-FELINE-Amour fou.png",
+          "label": "FELINE-Amour fou"
+        },
+        {
+          "file": "YPM-008-FELINE-madame.PNG",
+          "label": "FELINE-madame"
+        },
+        {
+          "file": "YPM-008-FELINE-maman cherie.PNG",
+          "label": "FELINE-maman cherie"
+        },
+        {
+          "file": "YPM-008-FELINE-maman.PNG",
+          "label": "FELINE-maman"
+        },
+        {
+          "file": "YPM-008-FELINEv1.png",
+          "label": "FELINEv1"
+        }
+      ]
+    },
+    {
+      "id": "YPM-009",
+      "nom_commercial": "La Palette",
+      "asset_principal": "YPM-009-PALETTE.PNG",
+      "nb_variantes": 7,
+      "variantes": [
+        {
+          "file": "YPM-009-PALETTE - Amoureuse - papa.PNG",
+          "label": "PALETTE - Amoureuse - papa"
+        },
+        {
+          "file": "YPM-009-PALETTE - Amoureuse.PNG",
+          "label": "PALETTE - Amoureuse"
+        },
+        {
+          "file": "YPM-009-PALETTE-Madame.png",
+          "label": "PALETTE-Madame"
+        },
+        {
+          "file": "YPM-009-PALETTE-beige.png",
+          "label": "PALETTE-beige"
+        },
+        {
+          "file": "YPM-009-PALETTE-la mariee.png",
+          "label": "PALETTE-la mariee"
+        },
+        {
+          "file": "YPM-009-PALETTE-vert.png",
+          "label": "PALETTE-vert"
+        },
+        {
+          "file": "YPM-009-PALETTE_TeamMariee_PXF.PNG",
+          "label": "PALETTE_TeamMariee_PXF"
+        }
+      ]
+    },
+    {
+      "id": "YPM-010",
+      "nom_commercial": "La Ronde",
+      "asset_principal": "YPM-010-RONDE.PNG",
+      "nb_variantes": 5,
+      "variantes": [
+        {
+          "file": "YPM-010-RONDE madame_PXF.PNG",
+          "label": "RONDE madame_PXF"
+        },
+        {
+          "file": "YPM-010-RONDE monsieur.PNG",
+          "label": "RONDE monsieur"
+        },
+        {
+          "file": "YPM-010-RONDE-love.PNG",
+          "label": "RONDE-love"
+        },
+        {
+          "file": "YPM-010-RONDE-mamie.JPG",
+          "label": "RONDE-mamie"
+        },
+        {
+          "file": "YPM-010-RONDE-soeur.PNG",
+          "label": "RONDE-soeur"
+        }
+      ]
+    },
+    {
+      "id": "YPM-011",
+      "nom_commercial": "La Confidence",
+      "asset_principal": "YPM-011-CONFIDENCE Viens.png",
+      "nb_variantes": 5,
+      "variantes": [
+        {
+          "file": "YPM-011-CONFIDENCE-Maman d amour.png",
+          "label": "CONFIDENCE-Maman d amour"
+        },
+        {
+          "file": "YPM-011-CONFIDENCE-Maman ensemble.png",
+          "label": "CONFIDENCE-Maman ensemble"
+        },
+        {
+          "file": "YPM-011-CONFIDENCE-Maman.PNG",
+          "label": "CONFIDENCE-Maman"
+        },
+        {
+          "file": "YPM-011-CONFIDENCE-Mamaninette.PNG",
+          "label": "CONFIDENCE-Mamaninette"
+        },
+        {
+          "file": "YPM-011-CONFIDENCE-Mamie.PNG",
+          "label": "CONFIDENCE-Mamie"
+        }
+      ]
+    },
+    {
+      "id": "YPM-012",
+      "nom_commercial": "La Meute",
+      "asset_principal": "YPM-012-MEUTE.PNG",
+      "nb_variantes": 5,
+      "variantes": [
+        {
+          "file": "YPM-012-La Meute- mamie ours.PNG",
+          "label": "La Meute- mamie ours"
+        },
+        {
+          "file": "YPM-012-La Meute-papie.PNG",
+          "label": "La Meute-papie"
+        },
+        {
+          "file": "YPM-012-La Meute-poule.PNG",
+          "label": "La Meute-poule"
+        },
+        {
+          "file": "YPM-012-La Meute.PNG",
+          "label": "La Meute"
+        },
+        {
+          "file": "YPM-012-MEUTEv1.PNG",
+          "label": "MEUTEv1"
+        }
+      ]
+    },
+    {
+      "id": "YPM-013",
+      "nom_commercial": "Le Depuis",
+      "asset_principal": "YPM-013-DEPUIS.PNG",
+      "nb_variantes": 2,
+      "variantes": [
+        {
+          "file": "YPM-013-DEPUIS-frere.PNG",
+          "label": "DEPUIS-frere"
+        },
+        {
+          "file": "YPM-013-DEPUIS_madame_PXF.PNG",
+          "label": "DEPUIS_madame_PXF"
+        }
+      ]
+    },
+    {
+      "id": "YPM-014",
+      "nom_commercial": "La Tigresse",
+      "asset_principal": "YPM-014-TIGRESSE.png",
+      "nb_variantes": 3,
+      "variantes": [
+        {
+          "file": "YPM-014-TIGRESSE alba.png",
+          "label": "TIGRESSE alba"
+        },
+        {
+          "file": "YPM-014-TIGRESSE celine.png",
+          "label": "TIGRESSE celine"
+        },
+        {
+          "file": "YPM-014-TIGRESSE lola.png",
+          "label": "TIGRESSE lola"
+        }
+      ]
+    },
+    {
+      "id": "YPM-015",
+      "nom_commercial": "La Déclaration",
+      "asset_principal": "YPM-015-DECLARATION.png",
+      "nb_variantes": 9,
+      "variantes": [
+        {
+          "file": "YPM-015-AMOUR un jour.png",
+          "label": "AMOUR un jour"
+        },
+        {
+          "file": "YPM-015-DECLARATION bichette.png",
+          "label": "DECLARATION bichette"
+        },
+        {
+          "file": "YPM-015-DECLARATION camille&hugo.PNG",
+          "label": "DECLARATION camille&hugo"
+        },
+        {
+          "file": "YPM-015-DECLARATION declaration maitresse.PNG",
+          "label": "DECLARATION declaration maitresse"
+        },
+        {
+          "file": "YPM-015-DECLARATION papa.PNG",
+          "label": "DECLARATION papa"
+        },
+        {
+          "file": "YPM-015-DECLARATION_bride team.png",
+          "label": "DECLARATION_bride team"
+        },
+        {
+          "file": "YPM-015-DECLARATION_bride.PNG",
+          "label": "DECLARATION_bride"
+        },
+        {
+          "file": "YPM-015-DECLARATION_madame.PNG",
+          "label": "DECLARATION_madame"
+        },
+        {
+          "file": "YPM-015-DECLARATION_monsieur.png",
+          "label": "DECLARATION_monsieur"
+        }
+      ]
+    },
+    {
+      "id": "YPM-016",
+      "nom_commercial": "La Signature",
+      "asset_principal": "YPM-016-SIGNATURE.PNG",
+      "nb_variantes": 6,
+      "variantes": [
+        {
+          "file": "YPM-016-SIGNATURE daddy.PNG",
+          "label": "SIGNATURE daddy"
+        },
+        {
+          "file": "YPM-016-SIGNATURE franck.PNG",
+          "label": "SIGNATURE franck"
+        },
+        {
+          "file": "YPM-016-SIGNATURE maman.PNG",
+          "label": "SIGNATURE maman"
+        },
+        {
+          "file": "YPM-016-SIGNATURE nounou.PNG",
+          "label": "SIGNATURE nounou"
+        },
+        {
+          "file": "YPM-016-SIGNATURE papachou.PNG",
+          "label": "SIGNATURE papachou"
+        },
+        {
+          "file": "YPM-016-SIGNATURE raleuse.PNG",
+          "label": "SIGNATURE raleuse"
+        }
+      ]
+    },
+    {
+      "id": "YPM-017",
+      "nom_commercial": "La Florale",
+      "asset_principal": "YPM-017-FLORALE.PNG",
+      "nb_variantes": 4,
+      "variantes": [
+        {
+          "file": "YPM-017-FLORALE  lettrage_emma3.PNG",
+          "label": "FLORALE  lettrage_emma3"
+        },
+        {
+          "file": "YPM-017-FLORALE maman.png",
+          "label": "FLORALE maman"
+        },
+        {
+          "file": "YPM-017-FLORALE parisienne.PNG",
+          "label": "FLORALE parisienne"
+        },
+        {
+          "file": "YPM-017-FLORALE_love.png",
+          "label": "FLORALE_love"
+        }
+      ]
+    }
+  ]
+}

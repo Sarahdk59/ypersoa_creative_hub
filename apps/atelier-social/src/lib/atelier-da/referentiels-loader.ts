@@ -85,11 +85,30 @@ export interface MetiersHub {
   mapping_app_metiers: Record<string, { metiers_principaux: number[]; label_chrome: string; label_long: string }>;
 }
 
+export interface MotifVariante {
+  file: string;
+  label: string;
+}
+
+export interface MotifYpm {
+  id: string;
+  nom_commercial: string;
+  asset_principal: string;
+  nb_variantes: number;
+  variantes: MotifVariante[];
+}
+
+export interface MotifsYpmRef {
+  _meta: { nb_motifs: number; nb_variantes_total: number };
+  motifs: MotifYpm[];
+}
+
 let _cache: {
   mannequins?: { mannequins: RawCanonique[]; cartographie_regionale?: Record<string, string[]> };
   affinites?: AffinitesNarratives;
   calendrier?: CalendrierCanoniques;
   metiers?: MetiersHub;
+  motifs?: MotifsYpmRef;
 } = {};
 
 function readJson<T>(relativePath: string): T {
@@ -132,11 +151,19 @@ export function getMetiers(): MetiersHub {
   return _cache.metiers;
 }
 
+export function getMotifs(): MotifsYpmRef {
+  if (!_cache.motifs) {
+    _cache.motifs = readJson<MotifsYpmRef>("motifs/motifs_ypm.json");
+  }
+  return _cache.motifs;
+}
+
 export function getAllReferentiels() {
   return {
     mannequins: getMannequins(),
     affinites: getAffinites(),
     calendrier: getCalendrier(),
     metiers: getMetiers(),
+    motifs: getMotifs(),
   };
 }

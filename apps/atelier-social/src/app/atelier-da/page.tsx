@@ -21,15 +21,15 @@ const SUBMODULES: SubmoduleCard[] = [
   {
     id: 1,
     title: "Casting / Mur des canoniques",
-    description: "Moteur narratif intelligent. Recherche par occasion, date, mood. 23 canoniques + 3 lignées familiales.",
-    href: null,
+    description: "23 canoniques + 3 lignées familiales. Mur filtrable (famille, genre, lieu) + vue Lignées avec arbres généalogiques. Click → fiche complète + dispositifs liés.",
+    href: "/atelier-da/casting",
     icon: <Users size={22} strokeWidth={1.4} />,
-    status: "v1",
+    status: "v0",
   },
   {
     id: 2,
     title: "Shooting Book",
-    description: "Brief poétique → plan de shooting structuré (casting + ambiances + shotlist + hooks temporels). Exploitable par atelier-shooting Gemini.",
+    description: "Brief poétique → plan de shooting structuré (casting + ambiances + shotlist + hooks temporels). Génère 1 image hero ou les 5 angles individuellement.",
     href: "/atelier-da/shooting-book",
     icon: <Camera size={22} strokeWidth={1.4} />,
     status: "v0",
@@ -37,10 +37,10 @@ const SUBMODULES: SubmoduleCard[] = [
   {
     id: 3,
     title: "Référentiel motifs YPM",
-    description: "Vue catalogue des 17 motifs Ypersoa (La Brigitte, L'Ambre, Le Club…) avec assets, statuts, shots associés.",
-    href: null,
+    description: "Catalogue des 17 motifs commerciaux Ypersoa + 80 variantes. Click sur un motif → variantes + bouton 'Utiliser dans Shooting Book'.",
+    href: "/atelier-da/motifs",
     icon: <Palette size={22} strokeWidth={1.4} />,
-    status: "v1",
+    status: "v0",
   },
   {
     id: 4,
@@ -61,10 +61,10 @@ const SUBMODULES: SubmoduleCard[] = [
   {
     id: 6,
     title: "Référentiel d'ambiances",
-    description: "Vue catalogue des ambiances (5 préfaites + lookbooks ❤️ actifs). Drag & drop dans un brief.",
-    href: null,
+    description: "Catalogue des 6 ambiances officielles + lookbooks ❤️ actifs. Sources visuelles unifiées entre les 3 ateliers.",
+    href: "/atelier-da/ambiances",
     icon: <ImageIcon size={22} strokeWidth={1.4} />,
-    status: "v1",
+    status: "v0",
   },
   {
     id: 7,
@@ -271,7 +271,7 @@ export default function AtelierDaHome() {
           textAlign: "center",
         }}
       >
-        Atelier DA • V0 — Shooting Book opérationnel • 7 sous-modules à venir.
+        Atelier DA • V1 — 4 sous-modules opérationnels (Casting, Shooting Book, Motifs, Ambiances) • 4 sous-modules à venir V2.
       </p>
     </div>
   );
