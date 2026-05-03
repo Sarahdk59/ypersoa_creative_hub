@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Heart, Camera, Sparkles, Loader2 } from "lucide-react";
-import { AMBIANCES_OFFICIELLES } from "@/lib/ambiances-officielles";
+import { ArrowLeft, Heart, Camera, Sparkles, Loader2, Upload } from "lucide-react";
+import { AMBIANCES_OFFICIELLES, type AmbianceOfficielle } from "@/lib/ambiances-officielles";
 import { listActiveLookbookAmbiances, type ActiveLookbookAmbiance } from "@/lib/active-ambiances";
 
 export default function AmbiancesPage() {
@@ -57,110 +57,9 @@ export default function AmbiancesPage() {
             gap: 16,
           }}
         >
-          {AMBIANCES_OFFICIELLES.map((a) => {
-            const Icon = a.icon;
-            return (
-              <article
-                key={a.id}
-                style={{
-                  background: "white",
-                  border: "0.5px solid var(--hub-border)",
-                  borderRadius: 12,
-                  overflow: "hidden",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                {/* Image de référence (fallback gracieux si manquante) */}
-                <div
-                  style={{
-                    aspectRatio: "16/10",
-                    background: "var(--hub-bg)",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={a.image_path}
-                    alt={a.label}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    onError={(e) => {
-                      // Fallback gracieux : si image manquante, on affiche le grand icone à la place
-                      const img = e.target as HTMLImageElement;
-                      img.style.display = "none";
-                      const fallback = img.nextElementSibling as HTMLElement | null;
-                      if (fallback) fallback.style.display = "flex";
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      display: "none",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "column",
-                      gap: 8,
-                      color: "var(--hub-foreground)",
-                      opacity: 0.4,
-                    }}
-                  >
-                    <Icon size={48} strokeWidth={1.2} />
-                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, letterSpacing: "0.05em" }}>
-                      Image à uploader
-                    </span>
-                  </div>
-                </div>
-
-                <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: "var(--hub-foreground)", color: "var(--hub-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Icon size={18} strokeWidth={1.4} />
-                </div>
-                <div>
-                  <h3 style={{ fontFamily: "var(--font-editorial)", fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 4 }}>
-                    {a.label}
-                  </h3>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.5, margin: 0, marginBottom: 8 }}>
-                    <code>{a.id}</code>
-                  </p>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, opacity: 0.75, margin: 0, lineHeight: 1.5 }}>
-                    {a.description}
-                  </p>
-                </div>
-                <details style={{ marginTop: 4 }}>
-                  <summary
-                    style={{
-                      cursor: "pointer",
-                      fontFamily: "var(--font-sans)",
-                      fontSize: 11,
-                      opacity: 0.6,
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Voir prompt EN
-                  </summary>
-                  <p
-                    style={{
-                      marginTop: 8,
-                      padding: 10,
-                      background: "var(--hub-bg)",
-                      borderRadius: 8,
-                      fontFamily: "monospace",
-                      fontSize: 11,
-                      lineHeight: 1.5,
-                      color: "var(--hub-foreground)",
-                      opacity: 0.85,
-                    }}
-                  >
-                    {a.prompt}
-                  </p>
-                </details>
-                </div>
-              </article>
-            );
-          })}
+          {AMBIANCES_OFFICIELLES.map((a) => (
+            <AmbianceCard key={a.id} ambiance={a} />
+          ))}
         </div>
       </section>
 
@@ -254,5 +153,178 @@ export default function AmbiancesPage() {
         )}
       </section>
     </div>
+  );
+}
+
+function AmbianceCard({ ambiance }: { ambiance: AmbianceOfficielle }) {
+  const Icon = ambiance.icon;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [bust, setBust] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [imgFailed, setImgFailed] = useState(false);
+  const imgSrc = bust ? `${ambiance.image_path}?v=${bust}` : ambiance.image_path;
+
+  const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    void doUpload(file);
+  };
+
+  const doUpload = async (file: File) => {
+    setUploading(true);
+    setErr(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch(`/api/da/ambiances/${encodeURIComponent(ambiance.id)}/upload`, {
+        method: "POST",
+        body: fd,
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error || "Échec upload");
+      setBust(res.data.ts as number);
+      setImgFailed(false);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <article
+      style={{
+        background: "white",
+        border: "0.5px solid var(--hub-border)",
+        borderRadius: 12,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div
+        style={{
+          aspectRatio: "16/10",
+          background: "var(--hub-bg)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {!imgFailed && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imgSrc}
+            alt={ambiance.label}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            onError={() => setImgFailed(true)}
+          />
+        )}
+        {imgFailed && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: 8,
+              color: "var(--hub-foreground)",
+              opacity: 0.4,
+            }}
+          >
+            <Icon size={48} strokeWidth={1.2} />
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, letterSpacing: "0.05em" }}>
+              Image à uploader
+            </span>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+          aria-label="Uploader une image JPG"
+          title="Uploader une image JPG (max 5 MB)"
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "6px 10px",
+            borderRadius: 999,
+            border: "0.5px solid var(--hub-border)",
+            background: "rgba(255,255,255,0.92)",
+            color: "var(--hub-foreground)",
+            fontFamily: "var(--font-sans)",
+            fontSize: 11,
+            cursor: uploading ? "default" : "pointer",
+          }}
+        >
+          {uploading ? <Loader2 size={12} className="animate-spin" /> : <Upload size={12} />}
+          {uploading ? "Upload…" : imgFailed ? "Uploader" : "Remplacer"}
+        </button>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg"
+          style={{ display: "none" }}
+          onChange={onPick}
+        />
+      </div>
+
+      <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ width: 36, height: 36, borderRadius: 10, background: "var(--hub-foreground)", color: "var(--hub-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Icon size={18} strokeWidth={1.4} />
+        </div>
+        <div>
+          <h3 style={{ fontFamily: "var(--font-editorial)", fontSize: 18, fontWeight: 500, margin: 0, marginBottom: 4 }}>
+            {ambiance.label}
+          </h3>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.5, margin: 0, marginBottom: 8 }}>
+            <code>{ambiance.id}</code>
+          </p>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, opacity: 0.75, margin: 0, lineHeight: 1.5 }}>
+            {ambiance.description}
+          </p>
+        </div>
+        {err && (
+          <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "#a13a16" }}>
+            {err}
+          </div>
+        )}
+        <details style={{ marginTop: 4 }}>
+          <summary
+            style={{
+              cursor: "pointer",
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              opacity: 0.6,
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+            }}
+          >
+            Voir prompt EN
+          </summary>
+          <p
+            style={{
+              marginTop: 8,
+              padding: 10,
+              background: "var(--hub-bg)",
+              borderRadius: 8,
+              fontFamily: "monospace",
+              fontSize: 11,
+              lineHeight: 1.5,
+              color: "var(--hub-foreground)",
+              opacity: 0.85,
+            }}
+          >
+            {ambiance.prompt}
+          </p>
+        </details>
+      </div>
+    </article>
   );
 }

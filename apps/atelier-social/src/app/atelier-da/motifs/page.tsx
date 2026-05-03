@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, Camera, X, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Camera, X, Plus, Star } from "lucide-react";
 import type { MotifYpm } from "@/lib/atelier-da/referentiels-loader";
 
 interface MotifsBundle {
@@ -290,7 +290,7 @@ function MotifModal({
                 <h4 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hub-foreground)", opacity: 0.6, margin: "0 0 12px 0" }}>
                   Variantes ({motif.variantes.length})
                 </h4>
-                <PngGrid items={motif.variantes} />
+                <PngGrid items={motif.variantes} motifId={motif.id} onUpdated={onUploaded} />
               </div>
             )}
 
@@ -299,7 +299,7 @@ function MotifModal({
                 <h4 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hub-foreground)", opacity: 0.6, margin: "0 0 12px 0" }}>
                   PNGs shooting ({motif.shooting_pngs.length})
                 </h4>
-                <PngGrid items={motif.shooting_pngs} />
+                <PngGrid items={motif.shooting_pngs} motifId={motif.id} onUpdated={onUploaded} />
               </div>
             )}
           </div>
@@ -309,7 +309,37 @@ function MotifModal({
   );
 }
 
-function PngGrid({ items }: { items: { file: string; label: string }[] }) {
+function PngGrid({
+  items,
+  motifId,
+  onUpdated,
+}: {
+  items: { file: string; label: string }[];
+  motifId?: string;
+  onUpdated?: () => Promise<void>;
+}) {
+  const [busyFile, setBusyFile] = useState<string | null>(null);
+
+  const setHero = async (file: string) => {
+    if (!motifId || !onUpdated) return;
+    setBusyFile(file);
+    try {
+      const res = await fetch(`/api/da/motifs/${encodeURIComponent(motifId)}/set-hero`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error || "Échec");
+      await onUpdated();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusyFile(null);
+    }
+  };
+
+  const canSetHero = !!(motifId && onUpdated);
+
   return (
     <div
       style={{
@@ -327,8 +357,40 @@ function PngGrid({ items }: { items: { file: string; label: string }[] }) {
             borderRadius: 10,
             padding: 8,
             textAlign: "center",
+            position: "relative",
           }}
         >
+          {canSetHero && (
+            <button
+              type="button"
+              onClick={() => setHero(v.file)}
+              disabled={busyFile !== null}
+              title="Définir comme photo hero du motif"
+              aria-label="Définir comme hero"
+              style={{
+                position: "absolute",
+                top: 4,
+                right: 4,
+                width: 26,
+                height: 26,
+                borderRadius: 999,
+                border: "0.5px solid var(--hub-border)",
+                background: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: busyFile ? "default" : "pointer",
+                opacity: busyFile && busyFile !== v.file ? 0.4 : 1,
+                padding: 0,
+              }}
+            >
+              {busyFile === v.file ? (
+                <Loader2 size={12} className="animate-spin" />
+              ) : (
+                <Star size={12} strokeWidth={1.6} />
+              )}
+            </button>
+          )}
           <div style={{ aspectRatio: "1/1", background: "white", borderRadius: 6, padding: 8, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img

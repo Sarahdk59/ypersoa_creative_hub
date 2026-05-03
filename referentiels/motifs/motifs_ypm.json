@@ -2,9 +2,9 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-05-02",
+    "last_updated": "2026-05-03",
     "nb_motifs": 17,
-    "nb_variantes_total": 81,
+    "nb_variantes_total": 83,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
     "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
@@ -70,9 +70,13 @@
     {
       "id": "YPM-003",
       "nom_commercial": "Le Club",
-      "asset_principal": "YPM-003-CLUB.PNG",
-      "nb_variantes": 5,
+      "asset_principal": "YPM-003-papa-club.png",
+      "nb_variantes": 6,
       "variantes": [
+        {
+          "file": "YPM-003-CLUB.PNG",
+          "label": "CLUB"
+        },
         {
           "file": "YPM-003-CLUB-famille club.PNG",
           "label": "CLUB-famille club",
@@ -135,9 +139,13 @@
     {
       "id": "YPM-004",
       "nom_commercial": "Notre Héritage",
-      "asset_principal": "YPM-004-ANNEE.PNG",
-      "nb_variantes": 3,
+      "asset_principal": "YPM-004-3-generations.png",
+      "nb_variantes": 4,
       "variantes": [
+        {
+          "file": "YPM-004-ANNEE.PNG",
+          "label": "ANNEE"
+        },
         {
           "file": "YPM-004-ANNEE oui.PNG",
           "label": "ANNEE oui",
@@ -171,16 +179,7 @@
         "date",
         "typo"
       ],
-      "shooting_pngs": [
-        {
-          "file": "YPM-004-3-generations.png",
-          "label": "3 générations",
-          "tags": [
-            "trio",
-            "famille"
-          ]
-        }
-      ]
+      "shooting_pngs": []
     },
     {
       "id": "YPM-005",
@@ -418,9 +417,13 @@
     {
       "id": "YPM-008",
       "nom_commercial": "La Féline",
-      "asset_principal": "YPM-008-FELINE.png",
+      "asset_principal": "YPM-008-FELINE-maman.PNG",
       "nb_variantes": 5,
       "variantes": [
+        {
+          "file": "YPM-008-FELINE.png",
+          "label": "FELINE"
+        },
         {
           "file": "YPM-008-FELINE-Amour fou.png",
           "label": "FELINE-Amour fou",
@@ -446,17 +449,6 @@
         {
           "file": "YPM-008-FELINE-maman cherie.PNG",
           "label": "FELINE-maman cherie",
-          "tags": [
-            "animal",
-            "famille",
-            "feminin",
-            "maman",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-008-FELINE-maman.PNG",
-          "label": "FELINE-maman",
           "tags": [
             "animal",
             "famille",
@@ -575,19 +567,12 @@
     {
       "id": "YPM-010",
       "nom_commercial": "La Ronde",
-      "asset_principal": "YPM-010-RONDE.PNG",
+      "asset_principal": "YPM-010-RONDE madame_PXF.PNG",
       "nb_variantes": 5,
       "variantes": [
         {
-          "file": "YPM-010-RONDE madame_PXF.PNG",
-          "label": "RONDE madame_PXF",
-          "tags": [
-            "couple",
-            "famille",
-            "groupe",
-            "mariage",
-            "typo"
-          ]
+          "file": "YPM-010-RONDE.PNG",
+          "label": "RONDE"
         },
         {
           "file": "YPM-010-RONDE monsieur.PNG",
@@ -642,9 +627,13 @@
     {
       "id": "YPM-011",
       "nom_commercial": "La Confidence",
-      "asset_principal": "YPM-011-CONFIDENCE Viens.png",
+      "asset_principal": "YPM-011-CONFIDENCE-Maman.PNG",
       "nb_variantes": 5,
       "variantes": [
+        {
+          "file": "YPM-011-CONFIDENCE Viens.png",
+          "label": "CONFIDENCE Viens"
+        },
         {
           "file": "YPM-011-CONFIDENCE-Maman d amour.png",
           "label": "CONFIDENCE-Maman d amour",
@@ -660,17 +649,6 @@
         {
           "file": "YPM-011-CONFIDENCE-Maman ensemble.png",
           "label": "CONFIDENCE-Maman ensemble",
-          "tags": [
-            "amitie",
-            "amour",
-            "famille",
-            "maman",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-011-CONFIDENCE-Maman.PNG",
-          "label": "CONFIDENCE-Maman",
           "tags": [
             "amitie",
             "amour",
