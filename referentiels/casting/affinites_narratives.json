@@ -18,7 +18,7 @@
       "type": "duo",
       "membres": ["MAN-P11-LEA", "MAN-P11-SARAH"],
       "nature": "couple_etabli_lesbien",
-      "lieu": "Lille",
+      "lieu": "Campagne Aquitaine (rencontrées à Lille ~2018)",
       "qualifiers": ["complicite-silencieuse", "couple-fait-pas-statement", "voyageuses", "esthetique-douce"],
       "themes_compatibles": ["saint-valentin", "anniversaire-mariage", "co-living", "voyage-couple", "diner-recoit", "annonce-grossesse", "fiancailles"],
       "ambiances_recommandees": ["aube", "loft", "minimalist"],
@@ -58,6 +58,28 @@
       "themes_compatibles": ["fete-peres", "premier-cadeau-naissance", "conge-parentalite", "rentree-creche", "annonce-grossesse", "naissance"],
       "ambiances_recommandees": ["aube", "loft", "minimalist"],
       "occasions_clientes": ["naissance", "fete-peres", "premier-noel-bebe"]
+    },
+    {
+      "id": "DUO_COLINE_NOE",
+      "type": "duo",
+      "membres": ["MAN-S20", "MAN-S15"],
+      "nature": "jeune_mere_bebe",
+      "lieu": "Dunkerque",
+      "qualifiers": ["tendresse-maternelle-quotidienne", "presence-douce", "co-parentalite-egalitaire", "fatigue-assumee", "amour-evident"],
+      "themes_compatibles": ["fete-meres", "premier-cadeau-naissance", "conge-maternite", "allaitement", "rentree-creche", "premier-anniversaire", "annonce-grossesse"],
+      "ambiances_recommandees": ["aube", "loft", "minimalist"],
+      "occasions_clientes": ["naissance", "fete-meres", "premier-noel-bebe", "anniversaire-bebe"]
+    },
+    {
+      "id": "DUO_COLINE_HUGO",
+      "type": "duo",
+      "membres": ["MAN-S20", "MAN-S21"],
+      "nature": "couple_jeune_parent_etabli",
+      "lieu": "Dunkerque",
+      "qualifiers": ["co-parentalite-egalitaire", "couple-installe-non-marie", "telework-cote-cote", "post-paris-quete-de-vie", "complicite-fonctionnelle"],
+      "themes_compatibles": ["saint-valentin", "anniversaire-couple", "co-living", "annonce-grossesse", "premier-anniversaire-bebe", "emmenagement"],
+      "ambiances_recommandees": ["aube", "loft", "minimalist"],
+      "occasions_clientes": ["saint-valentin", "anniversaire-couple", "cadeau-couple-jeune-parent", "emmenagement"]
     },
     {
       "id": "DUO_MATHIEU_NICOLAS",
@@ -239,6 +261,73 @@
       "occasions_clientes": ["fete-peres", "fete-grand-peres", "ramadan"],
       "_note_quartet_avec_jumeau": "Pour shot 4 personnes (Hassan + Lila + Gabin + César), dupliquer la photo de Gabin pour générer César",
       "_v3_3": true
+    },
+    {
+      "id": "DUO_HENRI_NICOLAS",
+      "type": "duo",
+      "membres": ["MAN-S19-HENRI", "MAN-P07"],
+      "nature": "pere_fils_adultes_blancs",
+      "lieu": "Avignon (Henri) ↔ Paris (Nicolas)",
+      "qualifiers": ["transmission-discrete", "respect-genere", "pere-medecin-fils-cadre", "rive-gauche-eclairee", "pudeur-masculine-francaise"],
+      "themes_compatibles": ["fete-peres", "anniversaire-pere", "noel-famille-multigeneration", "transmission-cadeaux"],
+      "ambiances_recommandees": ["loft", "minimalist", "sepia"],
+      "occasions_clientes": ["fete-peres", "anniversaire-pere", "noel"]
+    },
+    {
+      "id": "DUO_NICOLAS_GASPARD",
+      "type": "duo",
+      "membres": ["MAN-P07", "MAN-S14"],
+      "nature": "pere_fils_jeune_adulte",
+      "lieu": "Paris (Nicolas) ↔ Lyon (Gaspard)",
+      "qualifiers": ["transmission-paternelle-douce", "fierte-discrete", "papa-cadre-fils-archi-creatif", "lien-renforce-distance"],
+      "themes_compatibles": ["fete-peres", "anniversaire-fils", "rentree-universitaire", "noel-famille"],
+      "ambiances_recommandees": ["loft", "minimalist", "sauvage"],
+      "occasions_clientes": ["fete-peres", "anniversaire-fils-jeune-adulte", "noel"]
+    },
+    {
+      "id": "DUO_HENRI_GASPARD",
+      "type": "duo",
+      "membres": ["MAN-S19-HENRI", "MAN-S14"],
+      "nature": "grand_pere_petit_fils_blancs",
+      "lieu": "Avignon (Henri) ↔ Lyon (Gaspard)",
+      "qualifiers": ["transmission-grand-pere", "complicite-genere-saute", "medecin-retraite-archi-etudiant", "racines-Avignon-Provence"],
+      "themes_compatibles": ["fete-grand-peres", "anniversaire-grand-pere", "noel-famille-multigeneration", "vacances-Provence"],
+      "ambiances_recommandees": ["sepia", "loft", "sauvage"],
+      "occasions_clientes": ["fete-grand-peres", "noel", "vacances-en-famille"]
+    },
+    {
+      "id": "TRIO_HENRI_NICOLAS_GASPARD",
+      "type": "trio",
+      "membres": ["MAN-S19-HENRI", "MAN-P07", "MAN-S14"],
+      "nature": "trois_generations_blanches_patrilineaires",
+      "lieu": "Avignon (réunion famille) ou itinérant",
+      "qualifiers": ["transmission-3-generations", "patrilineaire-blanche", "medecin-cadre-archi", "pudeur-masculine-francaise", "racines-Provence"],
+      "themes_compatibles": ["fete-peres", "fete-grand-peres", "noel-famille", "anniversaire-Henri", "vacances-Provence"],
+      "ambiances_recommandees": ["sepia", "loft"],
+      "occasions_clientes": ["fete-peres", "fete-grand-peres", "noel-famille-multigeneration"],
+      "_note_lignee": "Lignée patrilinéaire blanche réintégrée v1.2 (avait été supprimée en v1.1 sur Gabin, ré-établie sur Gaspard)"
+    },
+    {
+      "id": "DUO_HASSAN_MARIEHELENE",
+      "type": "duo",
+      "membres": ["MAN-S18", "MAN-P10"],
+      "nature": "amitie_seniors_intergenres_amis_d_enfance",
+      "lieu": "Paris (Hassan) ↔ Bretagne (Marie-Hélène) — retrouvailles régulières",
+      "qualifiers": ["amis-d-enfance", "amitie-mixte-pudique", "longue-vie-partagee", "complicite-non-romantique"],
+      "themes_compatibles": ["amitie-longue-date", "anniversaire-ami", "noel-cadeau-ami", "voyage-amis-seniors"],
+      "ambiances_recommandees": ["loft", "sepia", "aube"],
+      "occasions_clientes": ["anniversaire-ami", "noel", "cadeau-ami-de-toujours"]
+    },
+    {
+      "id": "TRIO_HASSAN_MARIEHELENE_BEATRICE",
+      "type": "trio",
+      "membres": ["MAN-S18", "MAN-P10", "MAN-P05"],
+      "nature": "amis_d_enfance_seniors_eclaires",
+      "lieu": "Paris ou retrouvailles campagne (Bretagne / Normandie)",
+      "qualifiers": ["amis-d-enfance", "trio-seniors-eclaires", "amitie-longue-vie", "intergenres-mixte-ethnique", "complicite-cultivee"],
+      "themes_compatibles": ["amitie-longue-date", "retrouvailles-amis-seniors", "anniversaire-ami", "noel-cadeau-amis", "voyage-amis-seniors"],
+      "ambiances_recommandees": ["loft", "sepia", "aube"],
+      "occasions_clientes": ["anniversaire-ami", "noel-cadeau-amis", "cadeau-amis-de-toujours"]
     }
   ],
 
@@ -337,7 +426,7 @@
   },
 
   "lignees_familiales": {
-    "_principe": "3 lignées familiales explicites sur 3 générations chacune. Densité narrative principale du casting.",
+    "_principe": "Familles au sens large — lignées biologiques 3 générations + cellules nucléaires + couples + familles de cœur. Densité narrative principale du casting.",
     "rousses_francaises": {
       "ids": ["MAN-P10", "MAN-P02", "MAN-P06", "MAN-P08"],
       "narration": "Marie-Hélène (65, Bretagne) → Anna (35) + Mathieu (40) → Félicie (7). Transmission rousseur visible (cuivrée → brune-rousseur → blond vénitien).",
@@ -352,9 +441,33 @@
     },
     "afro_caribeennes": {
       "ids": ["MAN-S19-JOSEPHINE", "MAN-S19-HENRI", "MAN-P03", "MAN-S17"],
-      "narration": "Joséphine (70, Martinique → Avignon retraite) + Henri (72, beau-père) → Aïcha (40, Paris) + Césaria (40, Paris). Matriarcale + 2e mariage Joséphine.",
+      "narration": "Joséphine (70, Martinique → Avignon retraite) + Henri (72, beau-père via remariage 1986) → Aïcha (42, Paris) + Césaria (46, Paris). Matriarcale + 2e mariage Joséphine.",
       "duos_associes": ["DUO_HENRI_JOSEPHINE"],
       "trios_associes": ["TRIO_AICHA_CESARIA_JOSEPHINE"]
+    },
+    "famille_dunkerque": {
+      "ids": ["MAN-S20", "MAN-S21", "MAN-S15"],
+      "narration": "Coline (35) + Hugo (30) → Bébé Noé (1). Famille nucléaire jeune installée à Dunkerque (post-Paris ~2025, télétravail, qualité de vie).",
+      "duos_associes": ["DUO_COLINE_HUGO", "DUO_COLINE_NOE", "DUO_HUGO_NOE"],
+      "trios_associes": ["TRIO_COLINE_HUGO_NOE"]
+    },
+    "patrilineaire_blanche_henri": {
+      "ids": ["MAN-S19-HENRI", "MAN-P07", "MAN-S14"],
+      "narration": "Henri (72, médecin retraité Avignon, 1er mariage avant Joséphine) → Nicolas (45, cadre Paris) → Gaspard (23, étudiant archi Lyon). 3 générations patrilinéaires blanches. Note : Henri est aussi marié à Joséphine (afro-caribéenne) en 2e noces depuis 1986 (cf. lignée afro_caribeennes).",
+      "duos_associes": ["DUO_HENRI_NICOLAS", "DUO_NICOLAS_GASPARD", "DUO_HENRI_GASPARD"],
+      "trios_associes": ["TRIO_HENRI_NICOLAS_GASPARD"]
+    },
+    "amis_d_enfance_seniors": {
+      "ids": ["MAN-S18", "MAN-P10", "MAN-P05"],
+      "narration": "Hassan (68) + Marie-Hélène (65) + Béatrice (55) — amis d'enfance devenus seniors éclairés, retrouvailles régulières Paris ↔ Bretagne ↔ Normandie. Famille de cœur, pas de sang.",
+      "duos_associes": ["DUO_HASSAN_MARIEHELENE", "DUO_BEATRICE_HASSAN", "DUO_BEATRICE_MARIEHELENE"],
+      "trios_associes": ["TRIO_HASSAN_MARIEHELENE_BEATRICE"]
+    },
+    "couple_lea_sarah": {
+      "ids": ["MAN-P11-LEA", "MAN-P11-SARAH"],
+      "narration": "Léa (37, métisse, prof de danse) + Sarah (35, nordique, designer/illustratrice) — couple lesbien marié depuis 2023. Rencontre à Lille (~2018), installées en campagne d'Aquitaine (~2025). Famille au sens large (couple sans enfant pour l'instant).",
+      "duos_associes": ["DUO_LEA_SARAH"],
+      "trios_associes": []
     }
   },
 

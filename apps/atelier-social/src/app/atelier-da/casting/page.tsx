@@ -190,7 +190,7 @@ export default function CastingPage() {
               gap: 6,
             }}
           >
-            <GitBranch size={13} /> Lignées
+            <GitBranch size={13} /> Familles
           </button>
         </div>
       </header>
@@ -290,12 +290,20 @@ export default function CastingPage() {
 
       {viewMode === "lignees" && lignees && (
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {Object.entries(lignees).map(([key, lignee]) => {
+          {Object.entries(lignees)
+            .filter(
+              ([key, lignee]) =>
+                !key.startsWith("_") &&
+                lignee &&
+                typeof lignee === "object" &&
+                Array.isArray((lignee as { ids?: unknown }).ids)
+            )
+            .map(([key, lignee]) => {
             const titre = key
               .replace(/_/g, " ")
               .replace(/^./, (c) => c.toUpperCase());
             const membres = lignee.ids
-              .map((id) => data.mannequins.mannequins.find((m) => m.id === id || id.startsWith(m.id + "-")))
+              .map((id) => allCanoniques.find((m) => m.id === id))
               .filter((m): m is RawCanonique => Boolean(m));
             return (
               <section
@@ -308,45 +316,44 @@ export default function CastingPage() {
                 }}
               >
                 <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, margin: 0, marginBottom: 8 }}>
-                  Lignée {titre}
+                  {titre}
                 </h2>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.7, lineHeight: 1.5, marginTop: 0, marginBottom: 16 }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.7, lineHeight: 1.5, marginTop: 0, marginBottom: 20 }}>
                   {lignee.narration}
                 </p>
+
+                <h3 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.6, margin: "0 0 12px 0" }}>
+                  Membres ({membres.length})
+                </h3>
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
                     gap: 12,
-                    marginBottom: 16,
+                    marginBottom: 24,
                   }}
                 >
                   {membres.map((m) => (
                     <CanoniqueCard key={m.id} canonique={m} onClick={() => setSelectedCanonique(m)} compact />
                   ))}
                 </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  {[...lignee.duos_associes, ...lignee.trios_associes].map((d) => (
-                    <span
-                      key={d}
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: 10,
-                        padding: "3px 8px",
-                        background: "var(--hub-bg)",
-                        border: "0.5px solid var(--hub-border)",
-                        borderRadius: 999,
-                        color: "var(--hub-foreground)",
-                        opacity: 0.7,
-                      }}
-                    >
-                      {d}
-                    </span>
-                  ))}
-                </div>
+
+                <DispositifsCluster
+                  ids={[...lignee.duos_associes, ...lignee.trios_associes]}
+                  dispositifs={data.affinites.dispositifs_etablis}
+                  allCanoniques={allCanoniques}
+                  onSelectCanonique={setSelectedCanonique}
+                />
               </section>
             );
           })}
+
+          <OrphanDispositifsSection
+            lignees={lignees}
+            dispositifs={data.affinites.dispositifs_etablis}
+            allCanoniques={allCanoniques}
+            onSelectCanonique={setSelectedCanonique}
+          />
         </div>
       )}
 
@@ -656,5 +663,175 @@ function Section({ title, body, list, icon }: { title: string; body?: string; li
         </ul>
       )}
     </div>
+  );
+}
+
+function DispositifsCluster({
+  ids,
+  dispositifs,
+  allCanoniques,
+  onSelectCanonique,
+}: {
+  ids: string[];
+  dispositifs: DispositifEtabli[];
+  allCanoniques: RawCanonique[];
+  onSelectCanonique: (c: RawCanonique) => void;
+}) {
+  const items = ids
+    .map((id) => dispositifs.find((d) => d.id === id))
+    .filter((d): d is DispositifEtabli => Boolean(d));
+  if (items.length === 0) return null;
+
+  const duos = items.filter((d) => d.type === "duo");
+  const trios = items.filter((d) => d.type === "trio");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      {duos.length > 0 && (
+        <div>
+          <h3 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.6, margin: "0 0 10px 0" }}>
+            Duos ({duos.length})
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {duos.map((d) => (
+              <DispositifRow key={d.id} dispositif={d} allCanoniques={allCanoniques} onSelectCanonique={onSelectCanonique} />
+            ))}
+          </div>
+        </div>
+      )}
+      {trios.length > 0 && (
+        <div>
+          <h3 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.6, margin: "0 0 10px 0" }}>
+            Trios ({trios.length})
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {trios.map((d) => (
+              <DispositifRow key={d.id} dispositif={d} allCanoniques={allCanoniques} onSelectCanonique={onSelectCanonique} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DispositifRow({
+  dispositif,
+  allCanoniques,
+  onSelectCanonique,
+}: {
+  dispositif: DispositifEtabli;
+  allCanoniques: RawCanonique[];
+  onSelectCanonique: (c: RawCanonique) => void;
+}) {
+  const membres = dispositif.membres
+    .map((mid) => allCanoniques.find((c) => c.id === mid))
+    .filter((c): c is RawCanonique => Boolean(c));
+  const natureHuman = (dispositif.nature || "").replace(/_/g, " ");
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        padding: 10,
+        background: "var(--hub-bg)",
+        borderRadius: 12,
+        border: "0.5px solid var(--hub-border)",
+      }}
+    >
+      <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+        {membres.map((m) => (
+          <button
+            key={m.id}
+            type="button"
+            onClick={() => onSelectCanonique(m)}
+            title={`${m.prenom} (${m.id})`}
+            style={{
+              width: 56,
+              height: 72,
+              borderRadius: 8,
+              overflow: "hidden",
+              border: "0.5px solid var(--hub-border)",
+              padding: 0,
+              background: "white",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={canoniqueImageUrl(m)}
+              alt={m.prenom}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
+            />
+          </button>
+        ))}
+      </div>
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, marginBottom: 2 }}>
+          {membres.map((m) => m.prenom).join(" + ")}
+        </div>
+        <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.7, marginBottom: 4 }}>
+          {natureHuman}
+        </div>
+        <div style={{ fontFamily: "var(--font-sans)", fontSize: 10, opacity: 0.5 }}>
+          <code>{dispositif.id}</code>
+          {dispositif.lieu && <span> · {dispositif.lieu}</span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OrphanDispositifsSection({
+  lignees,
+  dispositifs,
+  allCanoniques,
+  onSelectCanonique,
+}: {
+  lignees: Record<string, unknown>;
+  dispositifs: DispositifEtabli[];
+  allCanoniques: RawCanonique[];
+  onSelectCanonique: (c: RawCanonique) => void;
+}) {
+  const usedIds = new Set<string>();
+  for (const lignee of Object.values(lignees)) {
+    if (
+      lignee &&
+      typeof lignee === "object" &&
+      Array.isArray((lignee as { duos_associes?: unknown }).duos_associes)
+    ) {
+      const l = lignee as { duos_associes: string[]; trios_associes: string[] };
+      for (const id of l.duos_associes) usedIds.add(id);
+      for (const id of l.trios_associes || []) usedIds.add(id);
+    }
+  }
+  const orphans = dispositifs.filter((d) => !usedIds.has(d.id));
+  if (orphans.length === 0) return null;
+
+  return (
+    <section
+      style={{
+        background: "white",
+        border: "0.5px solid var(--hub-border)",
+        borderRadius: 16,
+        padding: 24,
+      }}
+    >
+      <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, margin: 0, marginBottom: 8 }}>
+        Autres duos & trios
+      </h2>
+      <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.7, lineHeight: 1.5, marginTop: 0, marginBottom: 20 }}>
+        Dispositifs qui ne sont rattachés à aucune famille (amitiés, couples, paires occasionnelles).
+      </p>
+      <DispositifsCluster
+        ids={orphans.map((d) => d.id)}
+        dispositifs={dispositifs}
+        allCanoniques={allCanoniques}
+        onSelectCanonique={onSelectCanonique}
+      />
+    </section>
   );
 }

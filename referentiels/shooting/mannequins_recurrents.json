@@ -15,7 +15,7 @@
       "_principe": "Maillage France pour permettre des shoots variés. 9 régions/villes représentées + 1 lien international (voyages Martinique).",
       "Paris": ["MAN-P03 Aïcha", "MAN-P04 Lila", "MAN-P05 Béatrice (résidence principale)", "MAN-P07 Nicolas", "MAN-P09 Gabin", "MAN-S16 Hiroshi", "MAN-S17 Césaria", "MAN-S18 Hassan"],
       "Honfleur (Normandie)": ["MAN-P01 Clémence"],
-      "Lille": ["MAN-P11 Léa & Sarah"],
+      "Aquitaine (campagne)": ["MAN-P11 Léa & Sarah"],
       "Dunkerque (Hauts-de-France)": ["MAN-S20 Coline", "MAN-S21 Hugo", "MAN-S15 Bébé Noé"],
       "Lyon": ["MAN-P12 Brune", "MAN-S14 Gaspard"],
       "Bretagne (Finistère / Côtes d'Armor)": ["MAN-P10 Marie-Hélène"],
@@ -183,7 +183,7 @@
     {
       "id": "MAN-P03",
       "prenom": "Aïcha",
-      "age": 40,
+      "age": 42,
       "genre": "F",
       "ethnicite": "afro-caribéenne",
       "particularite": null,
@@ -340,13 +340,17 @@
       "saison_preferee": "hiver",
       "metier": "Cadre / indépendant (Paris)",
       "lieu_de_vie": "Paris",
-      "statut_relationnel": "Marié de longue date à une femme non-canonique. Sans enfant canonique (possibles enfants hors casting laissés flous)",
+      "statut_relationnel": "Marié de longue date à une femme non-canonique. Père de Gaspard (S14, 23 ans, étudiant Lyon).",
       "famille": {
-        "_note": "Marié hors casting, sans enfant canonique. Reste figure du 'mari attentionné fidèle' sans famille canonique pour préserver simplicité narrative."
+        "pere": "MAN-S19-HENRI (Henri, médecin retraité Avignon, 1er mariage avant Joséphine)",
+        "fils": "MAN-S14 Gaspard (23 ans, étudiant archi Lyon, en couple avec Brune P12)",
+        "_note": "Lignée patrilinéaire blanche Henri → Nicolas → Gaspard. Henri est aussi marié à Joséphine (S19) en 2e noces depuis 1986 — Nicolas est le fils du 1er mariage de Henri."
       },
       "evenements_de_vie": [
+        "Naissance vers 1981 (1er enfant de Henri)",
         "Mariage longue date (~2010)",
-        "Stabilité professionnelle (cadre / indépendant)"
+        "Stabilité professionnelle (cadre / indépendant)",
+        "Naissance de Gaspard (2003)"
       ],
       "traits_narratifs": ["fiable", "doux", "présent", "élégant-sans-recherche", "fidèle-à-ses-marques"],
       "_validation_sarah": "P07 ✓ 2026-05-01 (refonte v3.3 : solo dans le casting, marié hors casting, sans enfant canonique. N'est plus alt père de Gabin.)",
@@ -480,10 +484,12 @@
       "date_anniversaire_sarah": "02-14",
       "date_mariage": "06-18",
       "saison_preferee": "été",
+      "lieu_de_vie": "Campagne Aquitaine (rencontrées à Lille ~2018)",
       "evenements_de_vie": [
         "Rencontre à Lille (~2018)",
         "Mariage (2023, 3 ans aujourd'hui)",
-        "Achat appartement lumineux (2024)"
+        "Achat appartement lumineux (2024)",
+        "Installation campagne Aquitaine (~2025)"
       ],
       "traits_narratifs": ["complicité-silencieuse", "couple-fait-pas-statement", "voyageuses", "reçoivent", "esthétique-douce"],
       "affinites_qualifiees": {
@@ -571,7 +577,10 @@
       "lieu_de_vie": "Lyon (coloc étudiante avec Brune)",
       "statut_relationnel": "En couple avec Brune (P12) depuis 18-10-2024. Vivent ensemble en coloc à Lyon.",
       "famille": {
-        "compagne": "MAN-P12 Brune (couple, Lyon)"
+        "compagne": "MAN-P12 Brune (couple, Lyon)",
+        "pere": "MAN-P07 Nicolas (45 ans, cadre Paris)",
+        "grand_pere_paternel": "MAN-S19-HENRI Henri (72 ans, médecin retraité Avignon)",
+        "_note": "Lignée patrilinéaire blanche Henri → Nicolas → Gaspard, 3 générations."
       },
       "evenements_de_vie": [
         "Études archi/beaux-arts à Lyon (~2021 démarrage)",
@@ -635,7 +644,7 @@
     {
       "id": "MAN-S17",
       "prenom": "Césaria",
-      "age": 40,
+      "age": 46,
       "genre": "F",
       "ethnicite": "afro-caribéenne",
       "particularite": "vitiligo discret (mains/cou/tempe)",

@@ -24,7 +24,7 @@ Références visuelles : Jeanne Damas, Caroline de Maigret, Clémentine Desseaux
 |---|---|---|---|---|---|
 | P01 | Clémence ⭐ | 38 | blanche | Parisienne assumée Honfleur, frange Bardot + bordeaux MAC Diva (Charlotte Gainsbourg) — **famille maquillée chic** | — |
 | P02 | Anna | 35 | blanche sud | Provençale moderne (Sessùn/Soeur) | — |
-| P03 | Aïcha | 40 | afro-caribéenne | Élégance parisienne-caribéenne | — |
+| P03 | Aïcha | 42 | afro-caribéenne | Élégance parisienne-caribéenne | — |
 | P04 | Lila | 45 | maghrébine | Parisienne sophistiquée (Leïla Bekhti) | — |
 | P05 | Béatrice | 55 | métisse | Bourgeoise campagne normande | ⭐ BÉATRICE-FÉLICIE |
 | P06 | Mathieu | 40 | blanc | Papa sportwear chic | ⭐ MATHIEU-GABIN |
@@ -43,7 +43,7 @@ Références visuelles : Jeanne Damas, Caroline de Maigret, Clémentine Desseaux
 | S14 | Gaspard | 23 | blanc | Skateur élégant archi | — |
 | S15 | Bébé Noé | 1 | blanc | Body brodé Ypersoa | — |
 | S16 | Hiroshi | 55 | japonais | Architecte minimaliste (Yohji/CDG) | — |
-| S17 | Césaria | 40 | afro-caribéenne | Classique français intemporel | **vitiligo discret** |
+| S17 | Césaria | 46 | afro-caribéenne | Classique français intemporel | **vitiligo discret** |
 | S18 | Hassan | 68 | maghrébin | Patriarche algérois Paris | **canne élégante** |
 | S19 | Henri & Joséphine | 72 + 70 | blanc + afro | Bourgeoisie rive gauche mixte | ⭐ HENRI-JOSÉPHINE |
 | S20 | Coline | 35 | blanche | Minimaliste urbaine (Emoi Emoi × The Row light) | **fauteuil roulant** |

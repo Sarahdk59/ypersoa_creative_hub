@@ -595,11 +595,11 @@
       "id": "TRIO_AICHA_CESARIA_JOSEPHINE",
       "type": "trio",
       "nb_membres": 3,
-      "membres": ["MAN-P03 Aïcha (afro-caribéenne 40)", "MAN-S17 Césaria (afro-caribéenne 40)", "MAN-S19-JOSEPHINE Joséphine (afro-caribéenne 70)"],
+      "membres": ["MAN-P03 Aïcha (afro-caribéenne 42)", "MAN-S17 Césaria (afro-caribéenne 46)", "MAN-S19-JOSEPHINE Joséphine (afro-caribéenne 70)"],
       "nature": "trois générations féminines afro-caribéennes — mère + 2 filles adultes",
-      "ages": "40 + 40 + 70 (deux filles 40, mère 70, écart générationnel 30 ans)",
+      "ages": "42 + 46 + 70 (Aïcha 42, Césaria 46 — 4 ans d'écart, mère 70)",
       "ethnicites": "3 afro-caribéennes",
-      "lien_familial": "Joséphine est mère biologique d'Aïcha et Césaria. Aïcha et Césaria sont sœurs (jumelles ou très proches). Henri (mari actuel de Joséphine, DUO_HENRI_JOSEPHINE) est beau-père bienveillant hors champ.",
+      "lien_familial": "Joséphine est mère biologique d'Aïcha et Césaria. Césaria est l'aînée (46), Aïcha la cadette (42). Henri (mari actuel de Joséphine via remariage 1986, DUO_HENRI_JOSEPHINE) est beau-père bienveillant hors champ.",
 
       "dynamique_relationnelle": {
         "phrase_directrice": "Trois générations afro-caribéennes féminines. Joséphine matriarche posée, Aïcha et Césaria filles adultes complémentaires. Transmission noble qui ne s'affiche pas — l'élégance d'une famille qui n'a rien à prouver.",
@@ -815,9 +815,9 @@
       "id": "TRIO_COPINES_ANNA_AICHA_LILA",
       "type": "trio",
       "nb_membres": 3,
-      "membres": ["MAN-P02 Anna (blanche provençale 35)", "MAN-P03 Aïcha (afro-caribéenne 40)", "MAN-P04 Lila (maghrébine 45)"],
+      "membres": ["MAN-P02 Anna (blanche provençale 35)", "MAN-P03 Aïcha (afro-caribéenne 42)", "MAN-P04 Lila (maghrébine 45)"],
       "nature": "trio d'amies adultes CSP+ — girl gang multiculturel",
-      "ages": "35 + 40 + 45",
+      "ages": "35 + 42 + 45",
       "ethnicites": "blanche provençale + afro-caribéenne + maghrébine (diversité comme fait, pas comme statement)",
       "lien_amical": "Amies de longue date — se connaissent depuis ~10-15 ans. Vernissages, dîners, voyages communs. Anna débarque de Provence quand elle est à Paris, Aïcha et Lila sont parisiennes. Réunions chez l'une ou l'autre.",
 
