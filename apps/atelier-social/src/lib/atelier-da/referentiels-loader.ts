@@ -97,6 +97,24 @@ export interface ShootingPng {
   tags?: string[];
 }
 
+/** Bible technique motif — règles prod broderie. */
+export interface MotifBible {
+  /** Dimensions brodées en cm (largeur × hauteur). */
+  dimensions_cm?: { largeur: number; hauteur: number };
+  /** Nb max de couleurs simultanées sur le motif. */
+  nb_couleurs_max?: number;
+  /** Description du motif (composition, ex. "Cœur + une initiale"). */
+  composition?: string;
+  /** Règles de validation libres (multi-lignes, retour à la ligne = nouveau item). */
+  regles_validation?: string;
+  /** Filename relatif du fichier PXF (Tajima Pulse) dans assets/motifs/prod/. */
+  fichier_pxf?: string;
+  /** Filename relatif du fichier DST (Tajima broderie) dans assets/motifs/prod/. */
+  fichier_dst?: string;
+  /** Notes prod additionnelles (vitesse machine, support compatible, etc.). */
+  notes_prod?: string;
+}
+
 export interface MotifYpm {
   id: string;
   nom_commercial: string;
@@ -105,6 +123,7 @@ export interface MotifYpm {
   variantes: MotifVariante[];
   tags?: string[];
   shooting_pngs?: ShootingPng[];
+  bible?: MotifBible;
 }
 
 export interface MotifsYpmRef {

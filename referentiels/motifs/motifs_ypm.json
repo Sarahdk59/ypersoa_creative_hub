@@ -2,9 +2,9 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-05-03",
+    "last_updated": "2026-05-06",
     "nb_motifs": 17,
-    "nb_variantes_total": 83,
+    "nb_variantes_total": 92,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
     "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
@@ -25,14 +25,28 @@
         "monogramme",
         "prenom",
         "typo"
-      ]
+      ],
+      "bible": {
+        "dimensions_cm": {
+          "largeur": 2,
+          "hauteur": 4.5
+        },
+        "nb_couleurs_max": 1,
+        "composition": "Cœur + une initiale",
+        "regles_validation": "1 seule couleur de fil. Initiale unique en majuscule. Cœur centré au-dessus de l'initiale. Format compact 2 cm × 4,5 cm — ne pas dépasser sous peine de perdre la lisibilité.",
+        "notes_prod": "Motif minimaliste, idéal pour t-shirt et sweat. Vitesse machine standard."
+      }
     },
     {
       "id": "YPM-002",
       "nom_commercial": "L'Ambre",
-      "asset_principal": "YPM-002-AMBRE.PNG",
+      "asset_principal": "YPM-002-AMBRE-papa.PNG",
       "nb_variantes": 3,
       "variantes": [
+        {
+          "file": "YPM-002-AMBRE.PNG",
+          "label": "AMBRE"
+        },
         {
           "file": "YPM-002-AMBRE-chaton.PNG",
           "label": "AMBRE-chaton",
@@ -50,29 +64,41 @@
             "prenom",
             "typo"
           ]
-        },
-        {
-          "file": "YPM-002-AMBRE-papa.PNG",
-          "label": "AMBRE-papa",
-          "tags": [
-            "famille",
-            "papa",
-            "prenom",
-            "typo"
-          ]
         }
       ],
       "tags": [
         "prenom",
         "typo"
-      ]
+      ],
+      "bible": {
+        "dimensions_cm": {
+          "largeur": 8,
+          "hauteur": 8.3
+        },
+        "nb_couleurs_max": 2,
+        "composition": "Cœur contour + texte script à côté",
+        "regles_validation": "Texte libre jusqu'à 8 caractères (ex. Maman, Chaton, Chérie). Typo script : 1 majuscule par mot suivie de minuscules. 2 couleurs dissociables parmi les 20 fils canoniques (1 pour le cœur contour, 1 pour le texte). Placement : buste gauche. Dimensions indicatives ~8 × 8,3 cm — Adriana adapte selon typo et nb caractères.",
+        "notes_prod": "Cœur en contour (pas plein), texte script Tajima. Adaptation au cas par cas selon longueur du mot."
+      }
     },
     {
       "id": "YPM-003",
       "nom_commercial": "Le Club",
       "asset_principal": "YPM-003-papa-club.png",
-      "nb_variantes": 6,
+      "nb_variantes": 10,
       "variantes": [
+        {
+          "file": "YPM-003-club-flower.png",
+          "label": "club-flower"
+        },
+        {
+          "file": "YPM-003-wedding-club.png",
+          "label": "wedding-club"
+        },
+        {
+          "file": "YPM-003-CLUB-sista.PNG",
+          "label": "CLUB-sista"
+        },
         {
           "file": "YPM-003-CLUB.PNG",
           "label": "CLUB"
@@ -83,17 +109,6 @@
           "tags": [
             "amitie",
             "famille",
-            "groupe",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-003-CLUB-sista.PNG",
-          "label": "CLUB-sista",
-          "tags": [
-            "amitie",
-            "famille",
-            "fratrie",
             "groupe",
             "typo"
           ]
@@ -128,20 +143,55 @@
             "mariage",
             "typo"
           ]
+        },
+        {
+          "file": "YPM-003-cat-mom.png",
+          "label": "Cat mom",
+          "tags": [
+            "cat",
+            "club",
+            "gang",
+            "paw",
+            "patte"
+          ]
+        },
+        {
+          "file": "YPM-003-dog-dad.png",
+          "label": "Dog Dad",
+          "tags": [
+            "dog",
+            "dad",
+            "club"
+          ]
         }
       ],
       "tags": [
         "amitie",
         "groupe",
         "typo"
-      ]
+      ],
+      "shooting_pngs": [],
+      "bible": {
+        "dimensions_cm": {
+          "largeur": 6.5,
+          "hauteur": 6.5
+        },
+        "nb_couleurs_max": 1,
+        "composition": "Badge rond · cercle + cœur (ou symbole) + 2 mots",
+        "regles_validation": "Mot du haut : 7 caractères max, MAJUSCULES (mots-clés : MAMA / SISTA / TEAM / AMOUR / FAMILLE, ou texte libre). Mot du bas : 7 caractères max, MAJUSCULES (année, prénom court, surnom). Symbole central : 1 parmi 6 → Cœur (défaut) / Étoile / Trèfle / Fleur / Infini / Patte. Couleur de fil : 1 SEULE couleur — le cercle, le symbole et les 2 mots sont SOLIDAIRES (même fil). Placement : buste gauche.",
+        "notes_prod": "Broderie côté cœur (buste gauche) — diamètre 6,5 cm. 20 couleurs de fil canoniques disponibles. Adriana adapte la typo au cas par cas selon longueur des mots. Différence configurateur (7 caractères) vs description Shopify (6) à harmoniser. Option broderie poignet gauche dispo en supplément (+6€)."
+      }
     },
     {
       "id": "YPM-004",
       "nom_commercial": "Notre Héritage",
-      "asset_principal": "YPM-004-3-generations.png",
-      "nb_variantes": 4,
+      "asset_principal": "YPM-004-joseph-nicolas-gaspard.png",
+      "nb_variantes": 5,
       "variantes": [
+        {
+          "file": "YPM-004-3-generations.png",
+          "label": "3-generations"
+        },
         {
           "file": "YPM-004-ANNEE.PNG",
           "label": "ANNEE"
@@ -179,14 +229,28 @@
         "date",
         "typo"
       ],
-      "shooting_pngs": []
+      "shooting_pngs": [],
+      "bible": {
+        "dimensions_cm": {
+          "largeur": 6.5,
+          "hauteur": 8
+        },
+        "nb_couleurs_max": 5,
+        "composition": "Empilement vertical de dates (1 à 4) + texte bas optionnel — signature famille",
+        "regles_validation": "Date 1 obligatoire. Dates 2 / 3 / 4 optionnelles (max 4 dates). Format date : AAAA (4 chiffres) ou JJ/MM/AAAA (10 caractères). Texte bas : optionnel, 20 caractères max (ex. \"Famille Martin\", \"Nous depuis 1989\"). Mode couleur (choix client) : Monochrome (1 fil parmi les 20 canoniques) OU Multicolore (palette atelier non modifiable, 5 fils : Bordeaux / Rose vif / Lilas / Framboise / Corail). Placement : buste gauche (côté cœur).",
+        "notes_prod": "Broderie côté cœur (buste gauche) — diamètre indicatif 6,5 × 8 cm, hauteur variable selon nb dates (1-4) et présence texte bas. En mode multicolore : palette atelier FIGÉE non modifiable client (Bordeaux / Rose vif / Lilas / Framboise / Corail) — attribution des fils par date pilotée par moteur prod_hub (règles : pas de palindrome XYX horizontal, équilibre couleurs, cohérence cœur). En mode monochrome : 1 seul fil sur l'ensemble du motif. Option broderie poignet gauche dispo (+6€). Texte bas en typo script (alors que dates en typo serif gras)."
+      }
     },
     {
       "id": "YPM-005",
       "nom_commercial": "L'Annonce",
-      "asset_principal": "YPM-005-ANNONCE.PNG",
+      "asset_principal": "YPM-005-ANNONCE papa cheri.JPG",
       "nb_variantes": 8,
       "variantes": [
+        {
+          "file": "YPM-005-ANNONCE.PNG",
+          "label": "ANNONCE"
+        },
         {
           "file": "YPM-005-ANNONCE Annonce.PNG",
           "label": "ANNONCE Annonce",
@@ -252,18 +316,6 @@
           ]
         },
         {
-          "file": "YPM-005-ANNONCE papa cheri.JPG",
-          "label": "ANNONCE papa cheri",
-          "tags": [
-            "amour",
-            "annonce",
-            "famille",
-            "naissance",
-            "papa",
-            "typo"
-          ]
-        },
-        {
           "file": "YPM-005-ANNONCE papa cheri.png",
           "label": "ANNONCE papa cheri",
           "tags": [
@@ -285,18 +337,12 @@
     {
       "id": "YPM-006",
       "nom_commercial": "Le Câlin",
-      "asset_principal": "YPM-006-CALIN.PNG",
+      "asset_principal": "YPM-006-calin-l.png",
       "nb_variantes": 1,
       "variantes": [
         {
-          "file": "YPM-006-calin-l.png",
-          "label": "Calin L",
-          "tags": [
-            "couple",
-            "cadeau",
-            "coeur",
-            "love"
-          ]
+          "file": "YPM-006-CALIN.PNG",
+          "label": "CALIN"
         }
       ],
       "tags": [
@@ -308,9 +354,13 @@
     {
       "id": "YPM-007",
       "nom_commercial": "Le Chouchou",
-      "asset_principal": "YPM-007-CHOUCHOU.PNG",
+      "asset_principal": "YPM-007-CHOUCHOU-papa.PNG",
       "nb_variantes": 10,
       "variantes": [
+        {
+          "file": "YPM-007-CHOUCHOU.PNG",
+          "label": "CHOUCHOU"
+        },
         {
           "file": "YPM-007-CHOUCHOU marié.PNG",
           "label": "CHOUCHOU marié",
@@ -366,15 +416,6 @@
           "tags": [
             "famille",
             "garde-enfant",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-007-CHOUCHOU-papa.PNG",
-          "label": "CHOUCHOU-papa",
-          "tags": [
-            "famille",
-            "papa",
             "typo"
           ]
         },
@@ -476,23 +517,12 @@
     {
       "id": "YPM-009",
       "nom_commercial": "La Palette",
-      "asset_principal": "YPM-009-PALETTE.PNG",
+      "asset_principal": "YPM-009-PALETTE - Amoureuse - papa.PNG",
       "nb_variantes": 7,
       "variantes": [
         {
-          "file": "YPM-009-PALETTE - Amoureuse - papa.PNG",
-          "label": "PALETTE - Amoureuse - papa",
-          "tags": [
-            "amitie",
-            "amour",
-            "couleurs",
-            "couple",
-            "famille",
-            "groupe",
-            "mariage",
-            "papa",
-            "typo"
-          ]
+          "file": "YPM-009-PALETTE.PNG",
+          "label": "PALETTE"
         },
         {
           "file": "YPM-009-PALETTE - Amoureuse.PNG",
@@ -567,23 +597,20 @@
     {
       "id": "YPM-010",
       "nom_commercial": "La Ronde",
-      "asset_principal": "YPM-010-RONDE madame_PXF.PNG",
-      "nb_variantes": 5,
+      "asset_principal": "YPM-010-pere-fect.png",
+      "nb_variantes": 6,
       "variantes": [
+        {
+          "file": "YPM-010-RONDE monsieur.PNG",
+          "label": "RONDE monsieur"
+        },
+        {
+          "file": "YPM-010-RONDE madame_PXF.PNG",
+          "label": "RONDE madame_PXF"
+        },
         {
           "file": "YPM-010-RONDE.PNG",
           "label": "RONDE"
-        },
-        {
-          "file": "YPM-010-RONDE monsieur.PNG",
-          "label": "RONDE monsieur",
-          "tags": [
-            "couple",
-            "famille",
-            "groupe",
-            "mariage",
-            "typo"
-          ]
         },
         {
           "file": "YPM-010-RONDE-love.PNG",
@@ -622,14 +649,19 @@
         "famille",
         "groupe",
         "typo"
-      ]
+      ],
+      "shooting_pngs": []
     },
     {
       "id": "YPM-011",
       "nom_commercial": "La Confidence",
-      "asset_principal": "YPM-011-CONFIDENCE-Maman.PNG",
-      "nb_variantes": 5,
+      "asset_principal": "YPM-011-papa-de-noe-hugo.png",
+      "nb_variantes": 7,
       "variantes": [
+        {
+          "file": "YPM-011-CONFIDENCE-Maman.PNG",
+          "label": "CONFIDENCE-Maman"
+        },
         {
           "file": "YPM-011-CONFIDENCE Viens.png",
           "label": "CONFIDENCE Viens"
@@ -678,6 +710,10 @@
             "grand-parents",
             "typo"
           ]
+        },
+        {
+          "file": "YPM-011-pere-du-fils.png",
+          "label": "Père du fils"
         }
       ],
       "tags": [
@@ -690,9 +726,13 @@
     {
       "id": "YPM-012",
       "nom_commercial": "La Meute",
-      "asset_principal": "YPM-012-MEUTE.PNG",
+      "asset_principal": "YPM-012-La Meute-poule.PNG",
       "nb_variantes": 5,
       "variantes": [
+        {
+          "file": "YPM-012-MEUTE.PNG",
+          "label": "MEUTE"
+        },
         {
           "file": "YPM-012-La Meute- mamie ours.PNG",
           "label": "La Meute- mamie ours",
@@ -710,16 +750,6 @@
           "tags": [
             "famille",
             "grand-parents",
-            "groupe",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-012-La Meute-poule.PNG",
-          "label": "La Meute-poule",
-          "tags": [
-            "animal",
-            "famille",
             "groupe",
             "typo"
           ]
@@ -752,9 +782,13 @@
     {
       "id": "YPM-013",
       "nom_commercial": "Le Depuis",
-      "asset_principal": "YPM-013-DEPUIS.PNG",
-      "nb_variantes": 2,
+      "asset_principal": "YPM-013-daron-depuis-2019.png",
+      "nb_variantes": 3,
       "variantes": [
+        {
+          "file": "YPM-013-DEPUIS.PNG",
+          "label": "DEPUIS"
+        },
         {
           "file": "YPM-013-DEPUIS-frere.PNG",
           "label": "DEPUIS-frere",
@@ -784,7 +818,8 @@
         "couple",
         "date",
         "typo"
-      ]
+      ],
+      "shooting_pngs": []
     },
     {
       "id": "YPM-014",
@@ -833,9 +868,13 @@
     {
       "id": "YPM-015",
       "nom_commercial": "La Déclaration",
-      "asset_principal": "YPM-015-DECLARATION.png",
+      "asset_principal": "YPM-015-DECLARATION papa.PNG",
       "nb_variantes": 9,
       "variantes": [
+        {
+          "file": "YPM-015-DECLARATION.png",
+          "label": "DECLARATION"
+        },
         {
           "file": "YPM-015-AMOUR un jour.png",
           "label": "AMOUR un jour",
@@ -870,17 +909,6 @@
           "tags": [
             "amour",
             "couple",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-015-DECLARATION papa.PNG",
-          "label": "DECLARATION papa",
-          "tags": [
-            "amour",
-            "couple",
-            "famille",
-            "papa",
             "typo"
           ]
         },
@@ -936,9 +964,13 @@
     {
       "id": "YPM-016",
       "nom_commercial": "La Signature",
-      "asset_principal": "YPM-016-SIGNATURE.PNG",
+      "asset_principal": "YPM-016-SIGNATURE papachou.PNG",
       "nb_variantes": 6,
       "variantes": [
+        {
+          "file": "YPM-016-SIGNATURE.PNG",
+          "label": "SIGNATURE"
+        },
         {
           "file": "YPM-016-SIGNATURE daddy.PNG",
           "label": "SIGNATURE daddy",
@@ -973,16 +1005,6 @@
           "tags": [
             "famille",
             "garde-enfant",
-            "signature",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-016-SIGNATURE papachou.PNG",
-          "label": "SIGNATURE papachou",
-          "tags": [
-            "famille",
-            "papa",
             "signature",
             "typo"
           ]

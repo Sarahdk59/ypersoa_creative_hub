@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, Camera, X, Plus, Star } from "lucide-react";
-import type { MotifYpm } from "@/lib/atelier-da/referentiels-loader";
+import { ArrowLeft, BookOpen, Loader2, Camera, Pencil, X, Plus, Star } from "lucide-react";
+import type { MotifBible, MotifYpm } from "@/lib/atelier-da/referentiels-loader";
 
 interface MotifsBundle {
   motifs: { motifs: MotifYpm[]; _meta: { nb_motifs: number; nb_variantes_total: number } };
@@ -284,6 +284,8 @@ function MotifModal({
                 }}
               />
             )}
+
+            <BibleSection motif={motif} onUpdated={onUploaded} />
 
             {motif.variantes.length > 0 && (
               <div style={{ marginBottom: 20 }}>
@@ -584,3 +586,175 @@ function UploadForm({
     </form>
   );
 }
+
+function BibleSection({ motif, onUpdated }: { motif: MotifYpm; onUpdated: () => Promise<void> }) {
+  const [editing, setEditing] = useState(false);
+  const bible = motif.bible ?? {};
+  const isEmpty = !bible.composition && !bible.dimensions_cm && !bible.nb_couleurs_max
+    && !bible.regles_validation && !bible.notes_prod;
+
+  if (editing) {
+    return <BibleForm motif={motif} onCancel={() => setEditing(false)} onSaved={async () => { await onUpdated(); setEditing(false); }} />;
+  }
+
+  return (
+    <div style={{ marginBottom: 20, padding: 16, background: "var(--hub-bg)", borderRadius: 12, border: "0.5px solid var(--hub-border)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+        <h4 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hub-foreground)", opacity: 0.7, margin: 0, display: "flex", alignItems: "center", gap: 6 }}>
+          <BookOpen size={12} /> Bible technique
+        </h4>
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 4,
+            padding: "4px 10px", borderRadius: 999,
+            background: "white", border: "0.5px solid var(--hub-border)",
+            fontFamily: "var(--font-sans)", fontSize: 11, cursor: "pointer",
+            color: "var(--hub-foreground)",
+          }}
+        >
+          <Pencil size={11} /> Éditer
+        </button>
+      </div>
+
+      {isEmpty ? (
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, opacity: 0.55, fontStyle: "italic", margin: 0 }}>
+          Aucune règle de validation. Click <em>Éditer</em> pour cadrer le motif.
+        </p>
+      ) : (
+        <dl style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "6px 12px", margin: 0, fontFamily: "var(--font-sans)", fontSize: 12 }}>
+          {bible.composition && (<>
+            <dt style={dtStyle}>Composition</dt>
+            <dd style={ddStyle}>{bible.composition}</dd>
+          </>)}
+          {bible.dimensions_cm && (<>
+            <dt style={dtStyle}>Dimensions</dt>
+            <dd style={ddStyle}>{bible.dimensions_cm.largeur} cm × {bible.dimensions_cm.hauteur} cm</dd>
+          </>)}
+          {bible.nb_couleurs_max !== undefined && (<>
+            <dt style={dtStyle}>Couleurs max</dt>
+            <dd style={ddStyle}>{bible.nb_couleurs_max}</dd>
+          </>)}
+          {bible.regles_validation && (<>
+            <dt style={dtStyle}>Règles</dt>
+            <dd style={{ ...ddStyle, whiteSpace: "pre-wrap" }}>{bible.regles_validation}</dd>
+          </>)}
+          {bible.notes_prod && (<>
+            <dt style={dtStyle}>Notes prod</dt>
+            <dd style={{ ...ddStyle, whiteSpace: "pre-wrap" }}>{bible.notes_prod}</dd>
+          </>)}
+        </dl>
+      )}
+    </div>
+  );
+}
+
+function BibleForm({ motif, onCancel, onSaved }: { motif: MotifYpm; onCancel: () => void; onSaved: () => Promise<void> }) {
+  const b = motif.bible ?? {};
+  const [composition, setComposition] = useState(b.composition ?? "");
+  const [largeur, setLargeur] = useState<string>(b.dimensions_cm?.largeur != null ? String(b.dimensions_cm.largeur) : "");
+  const [hauteur, setHauteur] = useState<string>(b.dimensions_cm?.hauteur != null ? String(b.dimensions_cm.hauteur) : "");
+  const [nbCouleurs, setNbCouleurs] = useState<string>(b.nb_couleurs_max != null ? String(b.nb_couleurs_max) : "");
+  const [regles, setRegles] = useState(b.regles_validation ?? "");
+  const [notes, setNotes] = useState(b.notes_prod ?? "");
+  const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setErr(null);
+    try {
+      const dims = (largeur && hauteur)
+        ? { largeur: parseFloat(largeur), hauteur: parseFloat(hauteur) }
+        : null;
+      const body: Record<string, unknown> = {
+        composition: composition.trim() || null,
+        dimensions_cm: dims,
+        nb_couleurs_max: nbCouleurs ? parseInt(nbCouleurs, 10) : null,
+        regles_validation: regles.trim() || null,
+        notes_prod: notes.trim() || null,
+      };
+      const res = await fetch(`/api/da/motifs/${encodeURIComponent(motif.id)}/bible`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(typeof res.error === "string" ? res.error : "Échec");
+      await onSaved();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%", padding: "8px 10px",
+    border: "0.5px solid var(--hub-border)", borderRadius: 8,
+    fontFamily: "var(--font-sans)", fontSize: 13, background: "white",
+  };
+  const labelStyle: React.CSSProperties = {
+    fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
+    letterSpacing: "0.05em", textTransform: "uppercase", opacity: 0.6,
+    display: "block", marginBottom: 4,
+  };
+
+  return (
+    <form
+      onSubmit={submit}
+      style={{ marginBottom: 20, padding: 16, background: "var(--hub-bg)", borderRadius: 12, border: "0.5px solid var(--hub-border)", display: "grid", gap: 12 }}
+    >
+      <h4 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hub-foreground)", opacity: 0.7, margin: 0 }}>
+        Bible technique — éditer
+      </h4>
+      <div>
+        <label style={labelStyle}>Composition</label>
+        <input type="text" value={composition} onChange={(e) => setComposition(e.target.value)} placeholder='ex. "Cœur + une initiale"' style={inputStyle} />
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+        <div>
+          <label style={labelStyle}>Largeur (cm)</label>
+          <input type="number" step="0.1" value={largeur} onChange={(e) => setLargeur(e.target.value)} placeholder="2.0" style={inputStyle} />
+        </div>
+        <div>
+          <label style={labelStyle}>Hauteur (cm)</label>
+          <input type="number" step="0.1" value={hauteur} onChange={(e) => setHauteur(e.target.value)} placeholder="4.5" style={inputStyle} />
+        </div>
+        <div>
+          <label style={labelStyle}>Couleurs max</label>
+          <input type="number" min="1" max="30" value={nbCouleurs} onChange={(e) => setNbCouleurs(e.target.value)} placeholder="1" style={inputStyle} />
+        </div>
+      </div>
+      <div>
+        <label style={labelStyle}>Règles de validation</label>
+        <textarea value={regles} onChange={(e) => setRegles(e.target.value)} rows={3} style={{ ...inputStyle, resize: "vertical" }} placeholder="ex. 1 seule couleur de fil. Initiale en majuscule. Cœur centré." />
+      </div>
+      <div>
+        <label style={labelStyle}>Notes prod (optionnel)</label>
+        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} style={{ ...inputStyle, resize: "vertical" }} placeholder="ex. Vitesse machine standard. Support compatible : t-shirt, sweat." />
+      </div>
+      {err && <div style={{ color: "#a13a16", fontSize: 12, fontFamily: "var(--font-sans)" }}>{err}</div>}
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+        <button type="button" onClick={onCancel} disabled={submitting} style={{
+          padding: "8px 16px", borderRadius: 999, border: "0.5px solid var(--hub-border)",
+          background: "white", fontFamily: "var(--font-sans)", fontSize: 12, cursor: "pointer",
+        }}>Annuler</button>
+        <button type="submit" disabled={submitting} style={{
+          padding: "8px 16px", borderRadius: 999, border: "none",
+          background: "var(--hub-foreground)", color: "var(--hub-bg)",
+          fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
+          cursor: submitting ? "default" : "pointer", opacity: submitting ? 0.5 : 1,
+          display: "inline-flex", alignItems: "center", gap: 6,
+        }}>
+          {submitting ? <Loader2 size={13} className="animate-spin" /> : null}
+          Enregistrer
+        </button>
+      </div>
+    </form>
+  );
+}
+
+const dtStyle: React.CSSProperties = { fontWeight: 600, opacity: 0.55, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", margin: 0, alignSelf: "start" };
+const ddStyle: React.CSSProperties = { margin: 0, color: "var(--hub-foreground)" };
