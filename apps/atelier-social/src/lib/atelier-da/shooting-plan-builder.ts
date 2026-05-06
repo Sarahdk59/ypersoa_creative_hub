@@ -212,7 +212,9 @@ export async function buildShootingPlan(input: ShootingBriefInput): Promise<Shoo
     .filter((s) => s.score > 0)
     .sort((a, b) => b.score - a.score);
 
-  const top = scored.slice(0, 5);
+  // Top 8 (au lieu de 5) pour ne pas écarter les dispositifs ajoutés tardivement
+  // dans le JSON qui ont le même score que les anciens.
+  const top = scored.slice(0, 8);
 
   const casting_propose: ShootingPlanCanoniqueSuggestion[] = top.map(({ d, score }) => ({
     id: d.id,

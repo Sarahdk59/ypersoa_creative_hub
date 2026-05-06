@@ -7,11 +7,13 @@ import type {
   RawCanonique,
   AffinitesNarratives,
   DispositifEtabli,
+  CalendrierCanoniques,
 } from "@/lib/atelier-da/referentiels-loader";
 
 interface ReferentielsBundle {
   mannequins: { mannequins: RawCanonique[]; cartographie_regionale?: Record<string, string[]> };
   affinites: AffinitesNarratives;
+  calendrier?: CalendrierCanoniques;
 }
 
 type ViewMode = "mur" | "lignees";
@@ -47,7 +49,11 @@ export default function CastingPage() {
       .then((r) => r.json())
       .then((res) => {
         if (!res.ok) throw new Error(res.error);
-        setData({ mannequins: res.data.mannequins, affinites: res.data.affinites });
+        setData({
+          mannequins: res.data.mannequins,
+          affinites: res.data.affinites,
+          calendrier: res.data.calendrier,
+        });
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -362,6 +368,7 @@ export default function CastingPage() {
         <CanoniqueModal
           canonique={selectedCanonique}
           dispositifs={data.affinites.dispositifs_etablis}
+          anniversaires={data.calendrier?.anniversaires ?? []}
           onClose={() => setSelectedCanonique(null)}
         />
       )}
@@ -507,9 +514,21 @@ function CanoniqueCard({ canonique, onClick, compact }: { canonique: RawCanoniqu
   );
 }
 
-function CanoniqueModal({ canonique, dispositifs, onClose }: { canonique: RawCanonique; dispositifs: DispositifEtabli[]; onClose: () => void }) {
+function CanoniqueModal({
+  canonique,
+  dispositifs,
+  anniversaires,
+  onClose,
+}: {
+  canonique: RawCanonique;
+  dispositifs: DispositifEtabli[];
+  anniversaires: { id: string; date_naissance_complete: string }[];
+  onClose: () => void;
+}) {
   const url = canoniqueImageUrl(canonique);
   const dispositifsLies = dispositifs.filter((d) => d.membres.includes(canonique.id));
+  const anniv = anniversaires.find((a) => a.id === canonique.id);
+  const dateNaissance = anniv?.date_naissance_complete?.replace(/-/g, "/") ?? null;
   return (
     <div
       onClick={onClose}
@@ -575,6 +594,7 @@ function CanoniqueModal({ canonique, dispositifs, onClose }: { canonique: RawCan
             </h2>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, opacity: 0.5, margin: 0, marginBottom: 16 }}>
               <code>{canonique.id}</code> · {canonique.age} ans · {canonique.genre} · {canonique.ethnicite}
+              {dateNaissance && <> — {dateNaissance}</>}
             </p>
 
             {canonique.statut_relationnel && (

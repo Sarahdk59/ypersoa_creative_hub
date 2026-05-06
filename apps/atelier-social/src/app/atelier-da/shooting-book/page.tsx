@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download, Upload, X, CheckCircle2 } from "lucide-react";
 import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder";
@@ -15,7 +16,22 @@ const PRODUITS_YP = [
   { id: "YP004", label: "Hoodie enfant", short: "Hoodie enfant" },
 ];
 
-const MOTIFS_YPM = [
+/** Couleurs supports neutres Ypersoa (extrait palette_supports_par_produit.json YP019).
+ *  Pour V1 hardcodé. À remplacer par fetch dynamique du référentiel produits en V2. */
+const SUPPORT_COLORS = [
+  { id: "blanc", label: "Blanc", hex: "#FFFFFF" },
+  { id: "offwhite", label: "Écru", hex: "#F4EFEA" },
+  { id: "mastic", label: "Mastic", hex: "#C5C0B3" },
+  { id: "rose_pastel", label: "Rose pastel", hex: "#F2D6CF" },
+  { id: "bleu_pastel", label: "Bleu pastel", hex: "#BCD4DE" },
+  { id: "canard", label: "Canard", hex: "#1F4D4D" },
+  { id: "marine", label: "Marine", hex: "#1A2E4F" },
+  { id: "kaki", label: "Kaki", hex: "#5C6B4A" },
+  { id: "gris_fonce", label: "Gris foncé", hex: "#3A3A3A" },
+  { id: "noir", label: "Noir", hex: "#1A1614" },
+] as const;
+
+const MOTIFS_YPM_FALLBACK = [
   { id: "YPM-001", nom: "La Brigitte" },
   { id: "YPM-002", nom: "L'Ambre" },
   { id: "YPM-003", nom: "Le Club" },
@@ -47,9 +63,42 @@ const FORMATS = [
 ];
 
 export default function ShootingBookPage() {
+  const searchParams = useSearchParams();
   const [briefTexte, setBriefTexte] = useState("");
   const [produitId, setProduitId] = useState<string>("YP019");
   const [motifId, setMotifId] = useState("");
+  const [motifsList, setMotifsList] = useState<{ id: string; nom: string; asset_principal?: string }[]>(MOTIFS_YPM_FALLBACK);
+
+  // Charge les motifs réels (avec asset_principal) depuis le référentiel
+  useEffect(() => {
+    fetch("/api/da/referentiels", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => {
+        if (!res.ok) return;
+        const motifs = res.data?.motifs?.motifs;
+        if (Array.isArray(motifs)) {
+          setMotifsList(
+            motifs.map((m: { id: string; nom_commercial: string; asset_principal?: string }) => ({
+              id: m.id,
+              nom: m.nom_commercial,
+              asset_principal: m.asset_principal,
+            }))
+          );
+        }
+      })
+      .catch(() => undefined);
+  }, []);
+
+  // Deep-link Planable : pré-remplit motif + brief depuis ?motif=YPM-XXX&brief=...
+  useEffect(() => {
+    if (!searchParams) return;
+    const m = searchParams.get("motif");
+    const b = searchParams.get("brief");
+    if (m) setMotifId(m);
+    if (b) setBriefTexte(b);
+    // Mount only — Sarah peut ensuite éditer librement
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [ambiances, setAmbiances] = useState<string[]>([]);
   const [lookbookAmbianceIds, setLookbookAmbianceIds] = useState<string[]>([]);
   const [format, setFormat] = useState<string>("instagram");
@@ -62,6 +111,7 @@ export default function ShootingBookPage() {
   const [motifPngDataUrl, setMotifPngDataUrl] = useState<string | null>(null);
   const [motifPngFilename, setMotifPngFilename] = useState<string | null>(null);
   const [motifSize, setMotifSize] = useState<"petit" | "moyen" | "grand">("moyen");
+  const [supportColor, setSupportColor] = useState<string>("blanc");
 
   // Sélection manuelle d'un dispositif casting (radio-like, default top 1)
   const [selectedDispositifId, setSelectedDispositifId] = useState<string | null>(null);
@@ -80,7 +130,8 @@ export default function ShootingBookPage() {
     listActiveLookbookAmbiances().then(setActiveLookbookAmbiances).catch(() => undefined);
   }, []);
 
-  const motifNom = MOTIFS_YPM.find((m) => m.id === motifId)?.nom;
+  const motifSelected = motifsList.find((m) => m.id === motifId);
+  const motifNom = motifSelected?.nom;
 
   const toggleAmbiance = (id: string) => {
     setAmbiances((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
@@ -118,11 +169,13 @@ export default function ShootingBookPage() {
     setRenderedImage(null);
     setImageError(null);
     try {
+      const supportLabel = SUPPORT_COLORS.find((c) => c.id === supportColor)?.label ?? supportColor;
+      const briefWithSupport = `${briefTexte.trim()}\n\nSupport : t-shirt/sweat ${supportLabel} (couleur Ypersoa officielle).`;
       const res = await fetch("/api/da/shooting-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          texte_libre: briefTexte.trim(),
+          texte_libre: briefWithSupport,
           produit_yp_id: produitId,
           motif_ypm_id: motifId || undefined,
           motif_ypm_nom: motifNom,
@@ -380,28 +433,58 @@ export default function ShootingBookPage() {
           >
             Motif YPM (optionnel)
           </label>
-          <select
-            value={motifId}
-            onChange={(e) => setMotifId(e.target.value)}
-            style={{
-              width: "100%",
-              padding: 10,
-              borderRadius: 10,
-              border: "1px solid var(--hub-border)",
-              fontFamily: "var(--font-sans)",
-              fontSize: 13,
-              outline: "none",
-              background: "var(--hub-bg)",
-              color: "var(--hub-foreground)",
-            }}
-          >
-            <option value="">— Pas de motif spécifique —</option>
-            {MOTIFS_YPM.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.id} · {m.nom}
-              </option>
-            ))}
-          </select>
+          <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
+            {/* Vignette du motif sélectionné — fallback en placeholder cream si rien */}
+            <div
+              style={{
+                width: 56,
+                height: 56,
+                flexShrink: 0,
+                borderRadius: 10,
+                background: "var(--hub-bg)",
+                border: "0.5px solid var(--hub-border)",
+                overflow: "hidden",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 4,
+              }}
+            >
+              {motifSelected?.asset_principal ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={`/motifs/${encodeURIComponent(motifSelected.asset_principal)}`}
+                  alt={motifSelected.nom}
+                  style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+                  onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
+                />
+              ) : (
+                <span style={{ fontSize: 10, opacity: 0.4 }}>—</span>
+              )}
+            </div>
+            <select
+              value={motifId}
+              onChange={(e) => setMotifId(e.target.value)}
+              style={{
+                flex: 1,
+                padding: 10,
+                borderRadius: 10,
+                border: "1px solid var(--hub-border)",
+                fontFamily: "var(--font-sans)",
+                fontSize: 13,
+                outline: "none",
+                background: "var(--hub-bg)",
+                color: "var(--hub-foreground)",
+              }}
+            >
+              <option value="">— Pas de motif spécifique —</option>
+              {motifsList.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.id} · {m.nom}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Upload PNG du motif (référence broderie pour Gemini) */}
           <label
@@ -556,6 +639,57 @@ export default function ShootingBookPage() {
                 >
                   <span style={{ fontWeight: 600 }}>{s.label}</span>
                   <span style={{ fontSize: 9, opacity: 0.7 }}>{s.sub}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <label
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--hub-foreground)",
+              opacity: 0.6,
+              display: "block",
+              marginTop: 16,
+              marginBottom: 8,
+            }}
+          >
+            Couleur du support
+          </label>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {SUPPORT_COLORS.map((c) => {
+              const active = supportColor === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setSupportColor(c.id)}
+                  title={`${c.label} · ${c.hex}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    border: active ? "1.5px solid var(--hub-foreground)" : "0.5px solid var(--hub-border)",
+                    background: active ? "var(--hub-foreground)" : "white",
+                    color: active ? "var(--hub-bg)" : "var(--hub-foreground)",
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 11,
+                    cursor: "pointer",
+                  }}
+                >
+                  <span style={{
+                    width: 14, height: 14, borderRadius: 999,
+                    background: c.hex,
+                    border: "0.5px solid rgba(0,0,0,0.15)",
+                    display: "inline-block",
+                  }} />
+                  {c.label}
                 </button>
               );
             })}
