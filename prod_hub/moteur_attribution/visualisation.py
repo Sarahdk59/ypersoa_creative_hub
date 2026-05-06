@@ -3,18 +3,46 @@ Visualisation matplotlib des resultats d'attribution.
 """
 
 import os
+import re
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from typing import Dict, List
+from matplotlib.font_manager import FontProperties
+from typing import Dict, List, Optional
 from moteur_attribution import Resultat, Couleur, attribuer, parser_texte
 
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tests")
 
 
+def format_gunold(code: Optional[str]) -> Optional[str]:
+    """Nettoie un code Gunold pour affichage : '61443_TO_VALIDATE' → '61 443',
+    '61055_OR_61071_TO_VALIDATE' → '61 055 / 61 071', '' ou 'TODO_validate' → None."""
+    if not code:
+        return None
+    if code.upper() in ("TODO_VALIDATE",):
+        return None
+    parts = re.split(r"_OR_", code, flags=re.IGNORECASE)
+    cleaned = []
+    for p in parts:
+        # Retire suffixes de validation
+        p = re.sub(r"_?TO_?VALIDATE", "", p, flags=re.IGNORECASE).strip()
+        digits = "".join(c for c in p if c.isdigit())
+        if not digits:
+            continue
+        # Format "61443" → "61 443" si 5 chiffres, "611900" → "61 1900" sinon laisser
+        if len(digits) == 5:
+            cleaned.append(f"{digits[:2]} {digits[2:]}")
+        else:
+            cleaned.append(digits)
+    if not cleaned:
+        return None
+    return " / ".join(cleaned)
+
+
 def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur],
                     titre: str = "", chemin_sortie: str = None,
                     afficher_legende: bool = True,
-                    afficher_aiguilles: bool = True) -> None:
+                    afficher_aiguilles: bool = True,
+                    font_path: Optional[str] = None) -> None:
     """Genere un PNG montrant le rendu visuel de l'attribution.
 
     afficher_aiguilles : si True et que le palette_couleurs contient des
@@ -58,6 +86,13 @@ def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur],
     coeur_y = 0
     ax.text(0, coeur_y, "♥", fontsize=22, ha="center", va="center", color="#6B1E2E")
 
+    # Font lettres : custom .ttf si fourni, sinon sans-serif gras par defaut
+    if font_path and os.path.exists(font_path):
+        font_lettres = FontProperties(fname=font_path, size=32)
+        text_kwargs_lettres = {"fontproperties": font_lettres}
+    else:
+        text_kwargs_lettres = {"family": "sans-serif", "weight": "bold", "fontsize": 32}
+
     # Lettres + aiguille canonique en dessous (ai.? en orange si manquant)
     for i_ligne in sorted(par_ligne.keys()):
         chars = sorted(par_ligne[i_ligne])
@@ -66,15 +101,19 @@ def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur],
             x = x_rel * largeur_lettre
             col = palette_couleurs.get(couleur_id)
             hex_color = col.hex if col else "#888888"
-            ax.text(x, y, char, fontsize=32, ha="center", va="center",
-                    color=hex_color, weight="bold", family="sans-serif")
+            ax.text(x, y, char, ha="center", va="center",
+                    color=hex_color, **text_kwargs_lettres)
             if afficher_aiguilles and col:
+                g_str = format_gunold(getattr(col, "code_gunold", None))
                 aig = getattr(col, "aiguille", None)
-                if aig:
+                if g_str:
+                    ax.text(x, y - 0.7, g_str, fontsize=7, ha="center",
+                            va="center", color="#1E2D4A", alpha=0.6, family="monospace")
+                elif aig:
                     ax.text(x, y - 0.7, f"ai.{aig}", fontsize=7, ha="center",
                             va="center", color="#1E2D4A", alpha=0.6, family="monospace")
                 else:
-                    ax.text(x, y - 0.7, "ai.?", fontsize=7, ha="center",
+                    ax.text(x, y - 0.7, "réf.?", fontsize=7, ha="center",
                             va="center", color="#C45A2C", alpha=0.95,
                             family="monospace", weight="bold")
 
@@ -102,15 +141,19 @@ def render_resultat(res: Resultat, palette_couleurs: Dict[str, Couleur],
                 facecolor=col.hex, edgecolor="#1E2D4A", linewidth=0.5
             )
             ax.add_patch(rect)
+            g_str = format_gunold(getattr(col, "code_gunold", None))
             aig = getattr(col, "aiguille", None)
-            if aig:
+            if g_str:
+                ax.text(x_pos + 0.05, y_pos, f"{col.nom} · {g_str} ({cnt})",
+                        fontsize=8, va="center", ha="left", color="#1E2D4A")
+            elif aig:
                 ax.text(x_pos + 0.05, y_pos, f"{col.nom} · ai.{aig} ({cnt})",
                         fontsize=8, va="center", ha="left", color="#1E2D4A")
             else:
                 ax.text(x_pos + 0.05, y_pos, f"{col.nom} · ", fontsize=8,
                         va="center", ha="left", color="#1E2D4A")
                 ax.text(x_pos + 0.05 + len(col.nom) * 0.1 + 0.25, y_pos,
-                        f"ai.? ({cnt})", fontsize=8, va="center", ha="left",
+                        f"réf.? ({cnt})", fontsize=8, va="center", ha="left",
                         color="#C45A2C", weight="bold")
 
     plt.tight_layout()

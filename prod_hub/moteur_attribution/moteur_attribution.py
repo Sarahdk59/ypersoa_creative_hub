@@ -20,6 +20,7 @@ class Couleur:
     nom: str
     hex: str
     aiguille: Optional[int] = None
+    code_gunold: Optional[str] = None
 
 
 @dataclass
@@ -145,6 +146,38 @@ def trouver_violations_diagonales(positions: List[Position], attr: Dict[int, str
     return v
 
 
+def trouver_violations_palindrome_horizontal(
+    positions: List[Position], attr: Dict[int, str]
+) -> List[Tuple[int, int, int]]:
+    """
+    Patterns XYX sur la meme ligne : meme couleur encadrant une autre couleur unique.
+    Exemple interdit : L=1 O=2 U=1  (rebond sandwich).
+    Note : XXY et YXX sont deja couverts par adjacence horizontale.
+    """
+    v = []
+    for i in range(len(positions)):
+        pi = positions[i]
+        for j in range(len(positions)):
+            if i == j:
+                continue
+            pj = positions[j]
+            if pj.ligne != pi.ligne:
+                continue
+            if pj.indice - pi.indice != 2:
+                continue
+            # i, i+2 meme couleur ?
+            if attr.get(i) != attr.get(j):
+                continue
+            # trouver la lettre du milieu (meme ligne, indice = pi.indice + 1)
+            for k in range(len(positions)):
+                pk = positions[k]
+                if pk.ligne == pi.ligne and pk.indice == pi.indice + 1:
+                    if attr.get(k) != attr.get(i):
+                        v.append((i, k, j))
+                    break
+    return v
+
+
 def valider_dur(positions: List[Position], attr: Dict[int, str]) -> Tuple[bool, List[str]]:
     """Retourne (est_valide, liste_erreurs)."""
     erreurs = []
@@ -157,6 +190,9 @@ def valider_dur(positions: List[Position], attr: Dict[int, str]) -> Tuple[bool, 
     diag = trouver_violations_diagonales(positions, attr)
     if diag:
         erreurs.append(f"Diagonale x3: {len(diag)} cas {diag[:3]}")
+    palin = trouver_violations_palindrome_horizontal(positions, attr)
+    if palin:
+        erreurs.append(f"Palindrome XYX: {len(palin)} cas {palin[:3]}")
     return (len(erreurs) == 0, erreurs)
 
 
@@ -175,6 +211,15 @@ def viole_local(positions: List[Position], attr: Dict[int, str], idx: int) -> bo
         # adjacence horizontale
         if pj.ligne == pos_idx.ligne and abs(pj.indice - pos_idx.indice) == 1:
             return True
+        # palindrome horizontal XYX (meme ligne, indice diff de 2, couleur du milieu deja differente)
+        if pj.ligne == pos_idx.ligne and abs(pj.indice - pos_idx.indice) == 2:
+            milieu_indice = (pj.indice + pos_idx.indice) // 2
+            for k in range(idx):
+                pk = positions[k]
+                if pk.ligne == pos_idx.ligne and pk.indice == milieu_indice:
+                    if attr.get(k) != couleur_idx:
+                        return True
+                    break
         # alignement vertical
         if sont_alignes_verticalement(pj, pos_idx):
             return True

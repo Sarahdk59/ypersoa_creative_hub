@@ -26,56 +26,113 @@ PALETTE_V2_PATH = ROOT / "referentiels" / "palette_fils_broderie_v2.json"
 @st.cache_data
 def load_palette_v2() -> dict:
     raw = json.loads(PALETTE_V2_PATH.read_text(encoding="utf-8"))
-    return {
-        c["id"]: Couleur(c["id"], c["nom"], c["hex"], c.get("numero_aiguille_canonique"))
-        for c in raw["couleurs"]
-    }
+    out = {}
+    for c in raw["couleurs"]:
+        gunold = c.get("code_gunold")
+        if gunold == "TODO_validate":
+            gunold = None
+        out[c["id"]] = Couleur(
+            c["id"], c["nom"], c["hex"],
+            c.get("numero_aiguille_canonique"),
+            gunold,
+        )
+    return out
+
+
+def _luminance(hex_color: str) -> float:
+    h = hex_color.lstrip("#")
+    if len(h) != 6:
+        return 0.5
+    r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255
 
 
 def swatch_grid(palette: dict, mode: str, current, key_prefix: str, cols_per_row: int = 10):
-    """Grille de swatches cliquables. mode: 'single' ou 'multi'.
-    Retourne la nouvelle valeur de selection."""
-    fil_ids = list(palette.keys())
-    new_current = list(current) if mode == "multi" else current
-    rows = (len(fil_ids) + cols_per_row - 1) // cols_per_row
+    """Grille de swatches cliquables. mode: 'single' (cœur) ou 'multi' (gamme, support).
 
+    Multi → st.checkbox natif sous chaque disque (1 widget par fil, pas d'ambiguïté de clic).
+    Single → boutons toggle exclusif (cliquer un autre fil remplace l'ancien — comportement attendu).
+    """
+    fil_ids = list(palette.keys())
+
+    if mode == "multi":
+        return _swatch_grid_multi(palette, fil_ids, current, key_prefix, cols_per_row)
+    return _swatch_grid_single(palette, fil_ids, current, key_prefix, cols_per_row)
+
+
+def _swatch_grid_single(palette, fil_ids, current, key_prefix, cols_per_row):
+    new_current = current
+    rows = (len(fil_ids) + cols_per_row - 1) // cols_per_row
     for r in range(rows):
-        cols = st.columns(cols_per_row)
+        cols = st.columns(cols_per_row, gap="small")
         for ci in range(cols_per_row):
             idx = r * cols_per_row + ci
             if idx >= len(fil_ids):
                 break
             fid = fil_ids[idx]
             fil = palette[fid]
-            if mode == "single":
-                is_sel = current == fid
-            else:
-                is_sel = fid in current
-
-            border = "3px solid #1E2D4A" if is_sel else "1px solid #d0d0d0"
+            is_sel = current == fid
+            text_color = "#1A1614" if _luminance(fil.hex) > 0.65 else "#FAF7F2"
+            check_mark = "●" if is_sel else ""
+            border = "2.5px solid #1E2D4A" if is_sel else "1px solid rgba(0,0,0,0.12)"
             with cols[ci]:
                 st.markdown(
-                    f'<div style="text-align:center;padding:2px 0">'
-                    f'<div style="width:34px;height:34px;border-radius:50%;'
-                    f'background:{fil.hex};border:{border};margin:0 auto;'
-                    f'box-shadow:{("0 0 0 2px white inset" if fil.hex.upper() in ("#FFFFFF",) else "none")}"></div>'
-                    f"</div>",
+                    f'<div style="display:flex;justify-content:center;align-items:center;'
+                    f'width:36px;height:36px;border-radius:50%;background:{fil.hex};'
+                    f'border:{border};margin:0 auto 2px;color:{text_color};'
+                    f'font-weight:700;font-size:14px;">{check_mark}</div>',
                     unsafe_allow_html=True,
                 )
                 clicked = st.button(
-                    "✓" if is_sel else "·",
-                    key=f"{key_prefix}_{fid}",
-                    help=f"{fil.nom} · {fil.hex}",
-                    use_container_width=True,
+                    fil.nom.split()[0][:7],
+                    key=f"sw_{key_prefix}_{fid}",
+                    help=f"{fil.nom} · {fil.hex}"
+                         + (f" · Gunold {fil.code_gunold}" if fil.code_gunold else ""),
                 )
             if clicked:
-                if mode == "single":
-                    new_current = None if is_sel else fid
-                else:
-                    if is_sel:
-                        new_current.remove(fid)
-                    else:
-                        new_current.append(fid)
+                new_current = None if is_sel else fid
+    return new_current
+
+
+def _swatch_grid_multi(palette, fil_ids, current, key_prefix, cols_per_row):
+    """Mode multi via checkbox natif Streamlit. Pas de bug de clic, pas de cache."""
+    rows = (len(fil_ids) + cols_per_row - 1) // cols_per_row
+
+    # Lit les valeurs actuelles depuis session_state (alimenté par les checkboxes)
+    new_current = []
+    for r in range(rows):
+        cols = st.columns(cols_per_row, gap="small")
+        for ci in range(cols_per_row):
+            idx = r * cols_per_row + ci
+            if idx >= len(fil_ids):
+                break
+            fid = fil_ids[idx]
+            fil = palette[fid]
+            chk_key = f"chk_{key_prefix}_{fid}"
+            # Init la 1re fois depuis `current` (paramètre)
+            if chk_key not in st.session_state:
+                st.session_state[chk_key] = fid in current
+            is_sel = st.session_state[chk_key]
+
+            text_color = "#1A1614" if _luminance(fil.hex) > 0.65 else "#FAF7F2"
+            check_mark = "✓" if is_sel else ""
+            border = "2.5px solid #1E2D4A" if is_sel else "1px solid rgba(0,0,0,0.12)"
+            with cols[ci]:
+                st.markdown(
+                    f'<div style="display:flex;justify-content:center;align-items:center;'
+                    f'width:36px;height:36px;border-radius:50%;background:{fil.hex};'
+                    f'border:{border};margin:0 auto 2px;color:{text_color};'
+                    f'font-weight:700;font-size:14px;">{check_mark}</div>',
+                    unsafe_allow_html=True,
+                )
+                checked = st.checkbox(
+                    fil.nom.split()[0][:7],
+                    key=chk_key,
+                    help=f"{fil.nom} · {fil.hex}"
+                         + (f" · Gunold {fil.code_gunold}" if fil.code_gunold else ""),
+                )
+                if checked:
+                    new_current.append(fid)
     return new_current
 
 
@@ -159,13 +216,70 @@ def main() -> None:
             )
 
         # === 5. Custom fil ===
-        with st.expander("5. Ajouter un fil custom (hors palette v2)"):
+        with st.expander("5. Ajouter / gérer un fil custom (hors palette v2)"):
             cnom = st.text_input("Nom", value="Menthe", key="custom_nom")
             chex = st.color_picker("Hex", value="#B8DCC8", key="custom_hex")
+            cgunold = st.text_input("Réf Gunold (optionnel, ex. 61190)", value="", key="custom_gunold")
             cid = st.text_input("ID interne", value=f"fil_{cnom.lower().replace(' ', '_')}", key="custom_id")
             if st.button("Ajouter ce fil"):
-                st.session_state.custom_fils[cid] = Couleur(cid, cnom, chex)
+                st.session_state.custom_fils[cid] = Couleur(
+                    cid, cnom, chex, code_gunold=cgunold.strip() or None
+                )
                 st.rerun()
+
+            # Liste des fils custom existants (rename / delete)
+            if st.session_state.custom_fils:
+                st.markdown("---")
+                st.caption(f"{len(st.session_state.custom_fils)} fil(s) custom déjà ajouté(s)")
+                for fid, fil in list(st.session_state.custom_fils.items()):
+                    cc1, cc2, cc3, cc4 = st.columns([1, 4, 3, 1])
+                    with cc1:
+                        st.markdown(
+                            f'<div style="width:24px;height:24px;border-radius:50%;'
+                            f'background:{fil.hex};border:1px solid rgba(0,0,0,0.15);'
+                            f'margin-top:6px"></div>',
+                            unsafe_allow_html=True,
+                        )
+                    with cc2:
+                        new_nom = st.text_input(
+                            "Nom", value=fil.nom, key=f"rename_{fid}",
+                            label_visibility="collapsed",
+                        )
+                    with cc3:
+                        new_gunold = st.text_input(
+                            "Gunold", value=fil.code_gunold or "",
+                            key=f"regunold_{fid}", placeholder="ex. 61190",
+                            label_visibility="collapsed",
+                        )
+                    with cc4:
+                        if st.button("✕", key=f"del_{fid}", help=f"Supprimer {fil.nom}"):
+                            st.session_state.custom_fils.pop(fid, None)
+                            # Nettoie aussi gamme/coeur/support si ce fil y était
+                            if st.session_state.coeur == fid:
+                                st.session_state.coeur = None
+                            st.session_state.gamme = [g for g in st.session_state.gamme if g != fid]
+                            st.session_state.support_incompat = [
+                                s for s in st.session_state.support_incompat if s != fid
+                            ]
+                            st.rerun()
+                    # Apply rename / regunold sans rerun violent
+                    if new_nom != fil.nom or (new_gunold or None) != fil.code_gunold:
+                        st.session_state.custom_fils[fid] = Couleur(
+                            fid, new_nom.strip() or fil.nom, fil.hex,
+                            aiguille=fil.aiguille,
+                            code_gunold=new_gunold.strip() or None,
+                        )
+
+        # === 5b. Police ===
+        fonts_dir = Path(__file__).parent / "assets" / "fonts"
+        font_files = sorted(fonts_dir.glob("*.ttf")) + sorted(fonts_dir.glob("*.otf"))
+        font_options = ["Sans-serif (défaut)"] + [f.stem for f in font_files]
+        font_choice = st.selectbox("Police", font_options, index=0,
+                                   help=f"Dépose un .ttf dans {fonts_dir.relative_to(Path.cwd())} pour étendre la liste")
+        if font_choice == "Sans-serif (défaut)":
+            font_path = None
+        else:
+            font_path = str(next(f for f in font_files if f.stem == font_choice))
 
         # === 6. Generer ===
         st.markdown("### 6. Generer")
@@ -206,14 +320,36 @@ def main() -> None:
                     tmp_dir = Path("/tmp/prod_hub_preview")
                     tmp_dir.mkdir(exist_ok=True)
                     tmp_png = tmp_dir / "current.png"
+                    tmp_pdf = tmp_dir / "current.pdf"
                     render_resultat(
                         res,
                         palette_courante,
                         titre=" / ".join(texte_lignes),
                         chemin_sortie=str(tmp_png),
                         afficher_legende=True,
+                        font_path=font_path,
+                    )
+                    # Génère aussi un PDF pour le download (fiche technique Adriana)
+                    render_resultat(
+                        res,
+                        palette_courante,
+                        titre=" / ".join(texte_lignes),
+                        chemin_sortie=str(tmp_pdf),
+                        afficher_legende=True,
+                        font_path=font_path,
                     )
                     st.image(str(tmp_png), use_container_width=True)
+
+                    pdf_filename = "_".join(t for t in texte_lignes) + ".pdf"
+                    pdf_filename = pdf_filename.replace(" ", "_") or "attribution.pdf"
+                    with open(tmp_pdf, "rb") as f:
+                        st.download_button(
+                            label="📄 Télécharger l'attribution (PDF)",
+                            data=f.read(),
+                            file_name=pdf_filename,
+                            mime="application/pdf",
+                            use_container_width=True,
+                        )
 
                     with st.expander("Plan d'aiguille (attribution détaillée)"):
                         rows = []
