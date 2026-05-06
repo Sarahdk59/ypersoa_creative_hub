@@ -7,7 +7,11 @@
     "dev:atelier": "pnpm --filter @ypersoa/atelier-social dev",
     "build:atelier": "pnpm --filter @ypersoa/atelier-social build",
     "dev:atelier-shooting": "pnpm --filter @ypersoa/atelier-shooting dev",
-    "build:atelier-shooting": "pnpm --filter @ypersoa/atelier-shooting build"
+    "build:atelier-shooting": "pnpm --filter @ypersoa/atelier-shooting build",
+    "dev:planable": "pnpm --filter @ypersoa/planable-ypersoa dev",
+    "build:planable": "pnpm --filter @ypersoa/planable-ypersoa build",
+    "test:planable": "pnpm --filter @ypersoa/planable-ypersoa test",
+    "typecheck:planable": "pnpm --filter @ypersoa/planable-ypersoa type-check"
   },
   "engines": {
     "node": ">=20.0.0",
