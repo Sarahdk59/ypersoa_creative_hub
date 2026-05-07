@@ -5,6 +5,7 @@ import { PRODUCTS_HUB, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISA
 import { getCanoniquesSorted, getCanoniqueById } from '../lib/canoniques';
 import { getColorsForProduct, isFilGarmentIncompatible } from '../lib/hub-data';
 import { listActiveLookbookAmbiances } from '../lib/active-ambiances';
+import MotifPickerPanel from './MotifPickerPanel';
 
 interface SidebarProps {
   settings: GenerationSettings;
@@ -63,27 +64,33 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
             1. Broderie (PNG)
           </label>
-          <div 
-            onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-yp-sable rounded-xl p-6 text-center cursor-pointer hover:bg-yp-linen transition-colors group relative overflow-hidden"
-          >
-            {settings.embroideryImage ? (
-              <div className="flex flex-col items-center">
-                <img src={settings.embroideryImage} alt="Embroidery preview" className="h-24 w-auto object-contain mb-2" />
-                <span className="text-xs text-yp-olive font-medium">Modifier l'image</span>
-              </div>
-            ) : (
-              <div className="py-4">
-                <i className="fa-solid fa-cloud-arrow-up text-3xl text-yp-sable mb-3 group-hover:scale-110 transition-transform"></i>
-                <p className="text-sm text-slate-500">Cliquez pour importer votre fichier PNG</p>
-              </div>
-            )}
-            <input 
-              ref={fileInputRef}
-              type="file" 
-              accept="image/png" 
-              onChange={handleFileChange} 
-              className="hidden" 
+          <div className="space-y-3">
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-yp-sable rounded-xl p-6 text-center cursor-pointer hover:bg-yp-linen transition-colors group relative overflow-hidden"
+            >
+              {settings.embroideryImage ? (
+                <div className="flex flex-col items-center">
+                  <img src={settings.embroideryImage} alt="Embroidery preview" className="h-24 w-auto object-contain mb-2" />
+                  <span className="text-xs text-yp-olive font-medium">Modifier l'image</span>
+                </div>
+              ) : (
+                <div className="py-4">
+                  <i className="fa-solid fa-cloud-arrow-up text-3xl text-yp-sable mb-3 group-hover:scale-110 transition-transform"></i>
+                  <p className="text-sm text-slate-500">Cliquez pour importer votre fichier PNG</p>
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </div>
+
+            <MotifPickerPanel
+              onPick={(dataUrl) => setSettings(prev => ({ ...prev, embroideryImage: dataUrl }))}
             />
           </div>
         </section>

@@ -4,7 +4,7 @@
  * On lit avec fs depuis l'API route Next.js, pas d'import statique pour éviter
  * d'embarquer ~1500 lignes de JSON dans le bundle client.
  */
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync, existsSync } from "fs";
 import { join } from "path";
 
 // process.cwd() depuis Next.js dev server = apps/atelier-social/
@@ -115,6 +115,19 @@ export interface MotifBible {
   notes_prod?: string;
 }
 
+/**
+ * Fichier de prod broderie (PXF Tajima Pulse, DST Tajima broderie).
+ * Une "key" = une variante prod (lettre A-Z, année 1976, prénom slugifié...).
+ * Un fichier peut être présent en PXF, DST, ou les deux. `null` = absent.
+ * Le préfixe motif + key reconstitue le filename : `${motifId}-${key}.PXF`.
+ */
+export interface MotifProdFile {
+  key: string;
+  pxf: string | null;
+  dst: string | null;
+  png: string | null;
+}
+
 export interface MotifYpm {
   id: string;
   nom_commercial: string;
@@ -124,6 +137,7 @@ export interface MotifYpm {
   tags?: string[];
   shooting_pngs?: ShootingPng[];
   bible?: MotifBible;
+  prod_files?: MotifProdFile[];
 }
 
 export interface MotifsYpmRef {
@@ -183,7 +197,14 @@ export function getMotifs(): MotifsYpmRef {
   if (!_cache.motifs) {
     _cache.motifs = readJson<MotifsYpmRef>("motifs/motifs_ypm.json");
   }
-  return _cache.motifs;
+  const prodIndex = scanProdFilesByMotif();
+  return {
+    ..._cache.motifs,
+    motifs: _cache.motifs.motifs.map((m) => ({
+      ...m,
+      prod_files: prodIndex.get(m.id) ?? [],
+    })),
+  };
 }
 
 export function clearMotifsCache(): void {
@@ -192,6 +213,74 @@ export function clearMotifsCache(): void {
 
 export const MOTIFS_REF_PATH = join(REFS_DIR, "motifs", "motifs_ypm.json");
 export const ASSETS_MOTIFS_DIR = join(process.cwd(), "..", "..", "assets", "motifs");
+export const ASSETS_MOTIFS_PXF_DIR = join(process.cwd(), "..", "..", "assets", "motifs pxf");
+export const ASSETS_MOTIFS_DST_DIR = join(process.cwd(), "..", "..", "assets", "motifs dst");
+export const ASSETS_MOTIFS_PNG_DIR = join(process.cwd(), "..", "..", "assets", "motifs png");
+
+const PROD_FILE_RE = /^(YPM-\d{3})-(.+)\.(pxf|dst|png)$/i;
+
+/**
+ * Scanne les dossiers `assets/motifs pxf/` et `assets/motifs dst/`,
+ * regroupe par motif id puis par key. Source de vérité = le disque.
+ */
+export function scanProdFilesByMotif(): Map<string, MotifProdFile[]> {
+  const byMotif = new Map<string, Map<string, MotifProdFile>>();
+
+  const ingest = (dir: string, ext: "pxf" | "dst" | "png") => {
+    if (!existsSync(dir)) return;
+    let entries: string[];
+    try {
+      entries = readdirSync(dir);
+    } catch {
+      return;
+    }
+    for (const filename of entries) {
+      const match = PROD_FILE_RE.exec(filename);
+      if (!match) continue;
+      const fileExt = match[3].toLowerCase();
+      if (fileExt !== ext) continue;
+      const motifId = match[1];
+      const key = match[2].trim();
+      let motifMap = byMotif.get(motifId);
+      if (!motifMap) {
+        motifMap = new Map();
+        byMotif.set(motifId, motifMap);
+      }
+      const existing = motifMap.get(key) ?? { key, pxf: null, dst: null, png: null };
+      existing[ext] = filename;
+      motifMap.set(key, existing);
+    }
+  };
+
+  ingest(ASSETS_MOTIFS_PXF_DIR, "pxf");
+  ingest(ASSETS_MOTIFS_DST_DIR, "dst");
+  ingest(ASSETS_MOTIFS_PNG_DIR, "png");
+
+  const out = new Map<string, MotifProdFile[]>();
+  for (const [motifId, keyMap] of byMotif) {
+    const list = Array.from(keyMap.values()).sort(compareProdKeys);
+    out.set(motifId, list);
+  }
+  return out;
+}
+
+/**
+ * Tri "métier" : variantes commerciales courtes d'abord (A-Z, 0-9),
+ * puis numériques pures (années 1976, 1997...), puis labels textuels (BRIGITTE V2…).
+ */
+function compareProdKeys(a: MotifProdFile, b: MotifProdFile): number {
+  const ta = keyType(a.key);
+  const tb = keyType(b.key);
+  if (ta !== tb) return ta - tb;
+  if (ta === 1) return Number(a.key) - Number(b.key);
+  return a.key.localeCompare(b.key, "fr", { numeric: true, sensitivity: "base" });
+}
+
+function keyType(k: string): number {
+  if (/^[A-Za-z0-9]$/.test(k)) return 0;
+  if (/^\d+$/.test(k)) return 1;
+  return 2;
+}
 
 export function getAllReferentiels() {
   return {

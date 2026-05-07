@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ImageUploader } from "@/components/ImageUploader";
 import { ImportedShotsPanel } from "@/components/ImportedShotsPanel";
+import { MotifPickerPanel } from "@/components/MotifPickerPanel";
+import { ProductColorPicker } from "@/components/ProductColorPicker";
 import { SavePackDialog } from "@/components/SavePackDialog";
 import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
@@ -85,6 +87,8 @@ export default function Home() {
   const [selectedOccasion, setSelectedOccasion] = useState<string>(OCCASIONS[0].id);
   const [selectedPlatform, setSelectedPlatform] = useState<"instagram" | "pinterest">("instagram");
   const [selectedCanoniqueIds, setSelectedCanoniqueIds] = useState<string[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<string>("YP001");
+  const [selectedGarmentColor, setSelectedGarmentColor] = useState<string>("beige");
   const [withOverlay, setWithOverlay] = useState(false);
 
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
@@ -369,13 +373,14 @@ export default function Home() {
           <div className="col-span-12 lg:col-span-4 flex flex-col h-full min-h-0 bg-white/30 rounded-2xl">
             <div className="flex-1 min-h-0 overflow-y-auto visible-scrollbar p-3 space-y-3">
               <section>
-                <h2 className="font-serif text-sm font-medium mb-1 text-brand-text">
+                <h2 className="font-serif text-sm font-medium mb-1 text-brand-text flex items-center gap-1.5">
                   1. Ta vision
+                  <span className="text-[10px] font-normal text-brand-muted italic">— optionnel</span>
                 </h2>
                 <textarea
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
-                  placeholder="Décris le contenu que tu imagines..."
+                  placeholder="Décris le contenu que tu imagines… (laisser vide pour génération libre)"
                   className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white focus:outline-none focus:ring-1 focus:ring-brand-rose/50 resize-none h-14 text-xs text-brand-text placeholder:text-brand-muted/50"
                 />
               </section>
@@ -383,10 +388,21 @@ export default function Home() {
               <section>
                 <h2 className="font-serif text-sm font-medium mb-1">2. Ton produit</h2>
                 <ImportedShotsPanel onImport={handleImageSelected} />
+                <MotifPickerPanel onImport={handleImageSelected} />
                 <div className="h-28 max-h-28 overflow-hidden rounded-xl">
                   <ImageUploader
                     selectedImage={selectedImage}
                     onImageSelected={handleImageSelected}
+                  />
+                </div>
+                <div className="mt-3">
+                  <ProductColorPicker
+                    productId={selectedProduct}
+                    garmentColorId={selectedGarmentColor}
+                    onChange={(p, g) => {
+                      setSelectedProduct(p);
+                      setSelectedGarmentColor(g);
+                    }}
                   />
                 </div>
               </section>

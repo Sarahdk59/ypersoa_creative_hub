@@ -45,6 +45,10 @@ h1, h2, h3, h4, h5, h6, .font-serif {
   cursor: not-allowed;
 }
 
+.prod-card:hover .prod-card-actions {
+  opacity: 1;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

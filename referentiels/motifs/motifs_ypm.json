@@ -2,9 +2,9 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-05-06",
+    "last_updated": "2026-05-07",
     "nb_motifs": 17,
-    "nb_variantes_total": 92,
+    "nb_variantes_total": 95,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
     "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
@@ -17,9 +17,27 @@
     {
       "id": "YPM-001",
       "nom_commercial": "La Brigitte",
-      "asset_principal": "YPM-001-BRIGITTE.PNG",
-      "nb_variantes": 0,
-      "variantes": [],
+      "asset_principal": "YPM-001-A.PNG",
+      "nb_variantes": 3,
+      "variantes": [
+        {
+          "file": "YPM-001-ypm-001-s.png",
+          "label": "ypm-001-s"
+        },
+        {
+          "file": "YPM-001-BRIGITTE.PNG",
+          "label": "BRIGITTE"
+        },
+        {
+          "file": "YPM-001-alphabet-ypm-001-la-brigitte.png",
+          "label": "Alphabet YPM-001 La Brigitte",
+          "tags": [
+            "Brigitte",
+            "Alphabet",
+            "YPM-001"
+          ]
+        }
+      ],
       "tags": [
         "feminin",
         "monogramme",
@@ -517,9 +535,25 @@
     {
       "id": "YPM-009",
       "nom_commercial": "La Palette",
-      "asset_principal": "YPM-009-PALETTE - Amoureuse - papa.PNG",
+      "asset_principal": "YPM-009-PALETTE-Madame.png",
       "nb_variantes": 7,
       "variantes": [
+        {
+          "file": "YPM-009-PALETTE-la mariee.png",
+          "label": "PALETTE-la mariee"
+        },
+        {
+          "file": "YPM-009-PALETTE_TeamMariee_PXF.PNG",
+          "label": "PALETTE_TeamMariee_PXF"
+        },
+        {
+          "file": "YPM-009-PALETTE-vert.png",
+          "label": "PALETTE-vert"
+        },
+        {
+          "file": "YPM-009-PALETTE - Amoureuse - papa.PNG",
+          "label": "PALETTE - Amoureuse - papa"
+        },
         {
           "file": "YPM-009-PALETTE.PNG",
           "label": "PALETTE"
@@ -538,51 +572,10 @@
           ]
         },
         {
-          "file": "YPM-009-PALETTE-Madame.png",
-          "label": "PALETTE-Madame",
-          "tags": [
-            "couleurs",
-            "couple",
-            "mariage",
-            "typo"
-          ]
-        },
-        {
           "file": "YPM-009-PALETTE-beige.png",
           "label": "PALETTE-beige",
           "tags": [
             "couleurs",
-            "mariage",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-009-PALETTE-la mariee.png",
-          "label": "PALETTE-la mariee",
-          "tags": [
-            "couleurs",
-            "couple",
-            "mariage",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-009-PALETTE-vert.png",
-          "label": "PALETTE-vert",
-          "tags": [
-            "couleurs",
-            "mariage",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-009-PALETTE_TeamMariee_PXF.PNG",
-          "label": "PALETTE_TeamMariee_PXF",
-          "tags": [
-            "amitie",
-            "couleurs",
-            "couple",
-            "groupe",
             "mariage",
             "typo"
           ]
