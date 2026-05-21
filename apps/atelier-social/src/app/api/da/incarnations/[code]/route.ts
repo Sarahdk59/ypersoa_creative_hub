@@ -48,6 +48,9 @@ export async function PATCH(
 
   if (typeof input.nom_commercial === "string") patch.nom_commercial = input.nom_commercial;
   if (typeof input.motif_ypm === "string") patch.motif_ypm = input.motif_ypm;
+  if (input.variante_file === null || typeof input.variante_file === "string") {
+    patch.variante_file = input.variante_file as string | null;
+  }
   if (input.spec_broderie && typeof input.spec_broderie === "object") {
     const s = input.spec_broderie as Record<string, unknown>;
     if (

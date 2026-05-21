@@ -6,7 +6,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, FileSpreadsheet, Loader2, Plus, Search, X } from "lucide-react";
+import { ArrowLeft, BarChart3, FileSpreadsheet, Loader2, Plus, Search, X } from "lucide-react";
 
 import type {
   IncarnationEnriched,
@@ -162,7 +162,10 @@ function IncarnationsPageInner() {
             production (digitalisation, shooting, publication).
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <Link href="/atelier-da/incarnations/audit" style={ghostButton}>
+            <BarChart3 size={14} strokeWidth={1.6} /> Audit production
+          </Link>
           <Link
             href="/atelier-da/incarnations/import"
             style={ghostButton}

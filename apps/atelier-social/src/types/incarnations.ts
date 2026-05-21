@@ -45,6 +45,7 @@ export interface Incarnation {
   code: string; // YPI-001
   nom_commercial: string; // "MAMA CLUB"
   motif_ypm: string; // FK -> motifs.code
+  variante_file?: string | null; // ex. "YPM-003-mama-club.png" — liaison vers variante motif
   spec_broderie: SpecBroderie;
   gabarits_cibles: string[]; // ["YP001","YP005","YP019"]
   collections_cibles: string[]; // ["pour-maman","fete-des-meres"]
@@ -56,20 +57,35 @@ export interface Incarnation {
   updated_at: string;
 }
 
+export interface MotifVariante {
+  file: string;
+  label: string;
+  tags?: string[];
+  destinataires?: string[];
+  occasions?: string[];
+  produits?: string[];
+}
+
+export interface IncarnationPhoto {
+  id: string;
+  gabarit: string; // "YP001"
+  couleur_produit: string | null; // "creme"
+  media_id: string;
+  public_url: string;
+  filename: string;
+  width?: number | null;
+  height?: number | null;
+  is_hero: boolean;
+  ordre: number;
+  created_at: string;
+}
+
 export interface IncarnationEnriched extends Incarnation {
   motif_nom: string;
   motif_famille: string | null;
   gabarits_shootes_count: number;
   gabarits_cibles_count: number;
-  photos: Array<{
-    id?: string;
-    gabarit: string;
-    couleur_produit?: string | null;
-    media_id: string;
-    public_url: string;
-    is_hero: boolean;
-    ordre?: number;
-  }>;
+  photos: IncarnationPhoto[];
 }
 
 export interface IncarnationFilters {

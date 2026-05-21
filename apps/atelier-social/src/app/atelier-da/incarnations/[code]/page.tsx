@@ -6,7 +6,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import { ArrowLeft, FileJson, Loader2, Trash2 } from "lucide-react";
 
 import type { IncarnationEnriched, Motif } from "@/types/incarnations";
 import {
@@ -19,6 +19,9 @@ import {
   IncarnationForm,
   type IncarnationFormValues,
 } from "@/components/incarnations/IncarnationForm";
+import { VarianteSelector } from "@/components/incarnations/VarianteSelector";
+import { PhotosSection } from "@/components/incarnations/PhotosSection";
+import { ShopifyExportModal } from "@/components/incarnations/ShopifyExportModal";
 
 export default function IncarnationDetailPage() {
   const params = useParams<{ code: string }>();
@@ -32,6 +35,7 @@ export default function IncarnationDetailPage() {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,6 +78,17 @@ export default function IncarnationDetailPage() {
       setError(err instanceof Error ? err.message : "Erreur de sauvegarde");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSelectVariante = async (file: string | null) => {
+    if (!incarnation) return;
+    try {
+      const updated = await updateIncarnation(code, { variante_file: file });
+      setIncarnation(updated);
+      setSavedAt(new Date());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur liaison variante");
     }
   };
 
@@ -179,6 +194,25 @@ export default function IncarnationDetailPage() {
           )}
           <button
             type="button"
+            onClick={() => setExportOpen(true)}
+            style={{
+              background: "var(--hub-foreground)",
+              color: "var(--hub-bg)",
+              border: "none",
+              borderRadius: 9999,
+              padding: "8px 16px",
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <FileJson size={12} /> Metafield Shopify
+          </button>
+          <button
+            type="button"
             onClick={handleDelete}
             disabled={deleting}
             style={{
@@ -200,6 +234,14 @@ export default function IncarnationDetailPage() {
         </div>
       </header>
 
+      {exportOpen && (
+        <ShopifyExportModal
+          motifYpm={incarnation.motif_ypm}
+          motifNom={incarnation.motif_nom}
+          onClose={() => setExportOpen(false)}
+        />
+      )}
+
       <IncarnationForm
         mode="edit"
         motifs={motifs}
@@ -209,7 +251,7 @@ export default function IncarnationDetailPage() {
         error={error}
       />
 
-      {/* Section photos = Sprint 2 */}
+      {/* Variante du motif */}
       <section
         style={{
           marginTop: 24,
@@ -217,19 +259,79 @@ export default function IncarnationDetailPage() {
           background: "white",
           border: "0.5px solid var(--hub-border)",
           borderRadius: 12,
-          fontFamily: "var(--font-sans)",
-          fontSize: 12,
-          color: "var(--hub-foreground)",
-          opacity: 0.7,
-          lineHeight: 1.6,
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
         }}
       >
-        <strong style={{ fontWeight: 600 }}>Bibliothèque visuelle</strong> — Sprint 2 :
-        liaison vers la médiathèque (picker filtré, gestion is_hero par gabarit, drag-and-drop
-        d&apos;ordre, génération metafield Shopify).
+        <h3
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            margin: 0,
+            color: "var(--hub-foreground)",
+            opacity: 0.7,
+          }}
+        >
+          Variante du motif
+        </h3>
+        <VarianteSelector
+          motifId={incarnation.motif_ypm}
+          motifNom={incarnation.motif_nom}
+          currentFile={incarnation.variante_file ?? null}
+          suggestedLabel={incarnation.nom_commercial}
+          onSelect={handleSelectVariante}
+        />
+      </section>
+
+      {/* Bibliothèque visuelle — photos médiathèque */}
+      <section
+        style={{
+          marginTop: 24,
+          padding: 20,
+          background: "white",
+          border: "0.5px solid var(--hub-border)",
+          borderRadius: 12,
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <h3
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            margin: 0,
+            color: "var(--hub-foreground)",
+            opacity: 0.7,
+          }}
+        >
+          Bibliothèque visuelle ({incarnation.photos.length})
+        </h3>
+        <PhotosSection
+          incarnationCode={incarnation.code}
+          incarnationSlug={slugifyIncarnation(incarnation.nom_commercial)}
+          motifYpm={incarnation.motif_ypm}
+          gabaritsCibles={incarnation.gabarits_cibles}
+        />
       </section>
     </div>
   );
+}
+
+function slugifyIncarnation(nom: string): string {
+  return nom
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 const backLinkStyle: React.CSSProperties = {

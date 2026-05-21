@@ -6,6 +6,7 @@ import type {
   IncarnationEnriched,
   IncarnationFilters,
   IncarnationListResponse,
+  IncarnationPhoto,
   IncarnationStatut,
   IncarnationTon,
   Motif,
@@ -50,6 +51,7 @@ export interface CreateIncarnationPayload {
   code?: string;
   nom_commercial: string;
   motif_ypm: string;
+  variante_file?: string | null;
   spec_broderie: SpecBroderie;
   gabarits_cibles?: string[];
   collections_cibles?: string[];
@@ -100,6 +102,131 @@ export async function fetchMotifs(): Promise<Motif[]> {
   const res = await fetch(`/api/da/motifs`, { cache: "no-store" });
   if (!res.ok) throw new Error(`fetchMotifs ${res.status}`);
   return (await res.json()) as Motif[];
+}
+
+export interface MotifVariantesResponse {
+  motif: { id: string; nom_commercial: string; asset_principal: string };
+  variantes: Array<{
+    file: string;
+    label: string;
+    tags?: string[];
+    destinataires?: string[];
+    occasions?: string[];
+    produits?: string[];
+  }>;
+}
+
+export async function fetchMotifVariantes(
+  motifId: string,
+): Promise<MotifVariantesResponse> {
+  const res = await fetch(`/api/da/motifs/${encodeURIComponent(motifId)}/variantes`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`fetchMotifVariantes ${res.status}`);
+  return (await res.json()) as MotifVariantesResponse;
+}
+
+export interface UploadVarianteResult {
+  ok: boolean;
+  data?: { id: string; type: string; file: string; label: string; tags?: string[] };
+  error?: string;
+}
+
+export async function uploadMotifVariante(
+  motifId: string,
+  input: { file: File; label: string; tags?: string },
+): Promise<UploadVarianteResult> {
+  const fd = new FormData();
+  fd.append("file", input.file);
+  fd.append("label", input.label);
+  fd.append("type", "variante");
+  if (input.tags) fd.append("tags", input.tags);
+  const res = await fetch(`/api/da/motifs/${encodeURIComponent(motifId)}/upload`, {
+    method: "POST",
+    body: fd,
+  });
+  return (await res.json()) as UploadVarianteResult;
+}
+
+// ─── Photos liaison ────────────────────────────────────────────────────────
+
+export async function fetchIncarnationPhotos(
+  code: string,
+): Promise<IncarnationPhoto[]> {
+  const res = await fetch(
+    `/api/da/incarnations/${encodeURIComponent(code)}/photos`,
+    { cache: "no-store" },
+  );
+  if (!res.ok) throw new Error(`fetchIncarnationPhotos ${res.status}`);
+  const data = (await res.json()) as { photos: IncarnationPhoto[] };
+  return data.photos;
+}
+
+export async function linkPhotoToIncarnation(
+  code: string,
+  input: {
+    media_id: string;
+    gabarit: string;
+    couleur_produit?: string | null;
+    is_hero?: boolean;
+  },
+): Promise<IncarnationPhoto> {
+  const res = await fetch(
+    `/api/da/incarnations/${encodeURIComponent(code)}/photos`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+  );
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`linkPhotoToIncarnation ${res.status} : ${txt}`);
+  }
+  return (await res.json()) as IncarnationPhoto;
+}
+
+export async function unlinkPhoto(code: string, photoId: string): Promise<void> {
+  const res = await fetch(
+    `/api/da/incarnations/${encodeURIComponent(code)}/photos/${photoId}`,
+    { method: "DELETE" },
+  );
+  if (!res.ok) throw new Error(`unlinkPhoto ${res.status}`);
+}
+
+export async function updatePhotoLink(
+  code: string,
+  photoId: string,
+  patch: { is_hero?: boolean; ordre?: number; gabarit?: string; couleur_produit?: string | null },
+): Promise<IncarnationPhoto> {
+  const res = await fetch(
+    `/api/da/incarnations/${encodeURIComponent(code)}/photos/${photoId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    },
+  );
+  if (!res.ok) throw new Error(`updatePhotoLink ${res.status}`);
+  return (await res.json()) as IncarnationPhoto;
+}
+
+export async function reorderPhotos(
+  code: string,
+  gabarit: string,
+  photoIds: string[],
+): Promise<IncarnationPhoto[]> {
+  const res = await fetch(
+    `/api/da/incarnations/${encodeURIComponent(code)}/photos`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reorder: { gabarit, photo_ids: photoIds } }),
+    },
+  );
+  if (!res.ok) throw new Error(`reorderPhotos ${res.status}`);
+  const data = (await res.json()) as { photos: IncarnationPhoto[] };
+  return data.photos;
 }
 
 export interface PreviewXlsxResponse {

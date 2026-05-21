@@ -11,12 +11,25 @@ import type {
   IncarnationEnriched,
   IncarnationFilters,
   IncarnationListResponse,
+  IncarnationPhoto,
   IncarnationStatut,
   IncarnationTon,
   Motif,
   SpecBroderie,
 } from "@/types/incarnations";
+import { getMedia as getMediaById } from "@/lib/mediatheque/store";
 import { SEED_INCARNATIONS, SEED_MOTIFS } from "./seed";
+
+interface IncarnationPhotoRow {
+  id: string;
+  incarnation_id: string;
+  media_id: string;
+  gabarit: string;
+  couleur_produit: string | null;
+  is_hero: boolean;
+  ordre: number;
+  created_at: string;
+}
 
 declare global {
   // eslint-disable-next-line no-var
@@ -24,6 +37,7 @@ declare global {
     | {
         motifs: Map<string, Motif>;
         incarnations: Map<string, Incarnation>;
+        photos: Map<string, IncarnationPhotoRow>;
         seeded: boolean;
       }
     | undefined;
@@ -34,6 +48,7 @@ function getStore() {
     globalThis.__ypersoa_incarnations_store__ = {
       motifs: new Map(),
       incarnations: new Map(),
+      photos: new Map(),
       seeded: false,
     };
   }
@@ -46,17 +61,50 @@ function getStore() {
   return s;
 }
 
-function enrich(inc: Incarnation): IncarnationEnriched {
+async function loadIncarnationPhotos(incarnationId: string): Promise<IncarnationPhoto[]> {
+  const store = getStore();
+  const rows = Array.from(store.photos.values()).filter(
+    (p) => p.incarnation_id === incarnationId,
+  );
+  rows.sort((a, b) => {
+    if (a.is_hero !== b.is_hero) return a.is_hero ? -1 : 1;
+    return a.ordre - b.ordre;
+  });
+  const out: IncarnationPhoto[] = [];
+  for (const row of rows) {
+    const media = await getMediaById(row.media_id);
+    if (!media) continue;
+    out.push({
+      id: row.id,
+      gabarit: row.gabarit,
+      couleur_produit: row.couleur_produit,
+      media_id: row.media_id,
+      public_url: media.public_url,
+      filename: media.filename,
+      width: media.width,
+      height: media.height,
+      is_hero: row.is_hero,
+      ordre: row.ordre,
+      created_at: row.created_at,
+    });
+  }
+  return out;
+}
+
+async function enrichAsync(inc: Incarnation): Promise<IncarnationEnriched> {
   const motif = getStore().motifs.get(inc.motif_ypm);
+  const photos = await loadIncarnationPhotos(inc.id);
+  const gabaritsShootes = new Set(photos.map((p) => p.gabarit));
   return {
     ...inc,
     motif_nom: motif?.nom ?? inc.motif_ypm,
     motif_famille: motif?.famille ?? null,
-    gabarits_shootes_count: 0, // sera calculé en Sprint 2 depuis incarnations_photos
+    gabarits_shootes_count: gabaritsShootes.size,
     gabarits_cibles_count: inc.gabarits_cibles.length,
-    photos: [],
+    photos,
   };
 }
+
 
 // ─── MOTIFS ────────────────────────────────────────────────────────────────
 
@@ -117,7 +165,7 @@ export async function listIncarnations(
   });
 
   return {
-    data: rows.map(enrich),
+    data: await Promise.all(rows.map(enrichAsync)),
     meta: { total: rows.length },
   };
 }
@@ -126,7 +174,7 @@ export async function getIncarnationByCode(
   code: string,
 ): Promise<IncarnationEnriched | null> {
   for (const inc of getStore().incarnations.values()) {
-    if (inc.code === code) return enrich(inc);
+    if (inc.code === code) return enrichAsync(inc);
   }
   return null;
 }
@@ -135,7 +183,7 @@ export async function getIncarnationById(
   id: string,
 ): Promise<IncarnationEnriched | null> {
   const inc = getStore().incarnations.get(id);
-  return inc ? enrich(inc) : null;
+  return inc ? enrichAsync(inc) : null;
 }
 
 export interface CreateIncarnationInput {
@@ -193,12 +241,13 @@ export async function createIncarnation(
     updated_at: now,
   };
   store.incarnations.set(inc.id, inc);
-  return enrich(inc);
+  return enrichAsync(inc);
 }
 
 export interface UpdateIncarnationInput {
   nom_commercial?: string;
   motif_ypm?: string;
+  variante_file?: string | null;
   spec_broderie?: SpecBroderie;
   gabarits_cibles?: string[];
   collections_cibles?: string[];
@@ -226,7 +275,7 @@ export async function updateIncarnationByCode(
   }
   Object.assign(target, patch);
   target.updated_at = new Date().toISOString();
-  return enrich(target);
+  return enrichAsync(target);
 }
 
 export async function deleteIncarnationByCode(code: string): Promise<boolean> {
@@ -238,6 +287,228 @@ export async function deleteIncarnationByCode(code: string): Promise<boolean> {
     }
   }
   return false;
+}
+
+// ─── INCARNATIONS_PHOTOS (liaison médiathèque) ───────────────────────────
+
+export interface AddPhotoInput {
+  media_id: string;
+  gabarit: string;
+  couleur_produit?: string | null;
+  is_hero?: boolean;
+}
+
+export async function listIncarnationPhotos(
+  code: string,
+): Promise<IncarnationPhoto[]> {
+  for (const inc of getStore().incarnations.values()) {
+    if (inc.code === code) return loadIncarnationPhotos(inc.id);
+  }
+  return [];
+}
+
+export async function addPhotoToIncarnation(
+  code: string,
+  input: AddPhotoInput,
+): Promise<IncarnationPhoto | null> {
+  const store = getStore();
+  let inc: Incarnation | undefined;
+  for (const i of store.incarnations.values()) {
+    if (i.code === code) {
+      inc = i;
+      break;
+    }
+  }
+  if (!inc) return null;
+
+  const media = await getMediaById(input.media_id);
+  if (!media) throw new Error(`Media inconnu : ${input.media_id}`);
+
+  // Pas de double liaison du même media sur la même incarnation
+  for (const row of store.photos.values()) {
+    if (row.incarnation_id === inc.id && row.media_id === input.media_id) {
+      return {
+        id: row.id,
+        gabarit: row.gabarit,
+        couleur_produit: row.couleur_produit,
+        media_id: row.media_id,
+        public_url: media.public_url,
+        filename: media.filename,
+        width: media.width,
+        height: media.height,
+        is_hero: row.is_hero,
+        ordre: row.ordre,
+        created_at: row.created_at,
+      };
+    }
+  }
+
+  // Calcul de l'ordre suivant pour ce gabarit
+  let maxOrdre = -1;
+  for (const row of store.photos.values()) {
+    if (row.incarnation_id === inc.id && row.gabarit === input.gabarit) {
+      if (row.ordre > maxOrdre) maxOrdre = row.ordre;
+    }
+  }
+
+  // Si is_hero demandé, démasquer les autres heros du même gabarit
+  if (input.is_hero) {
+    for (const row of store.photos.values()) {
+      if (row.incarnation_id === inc.id && row.gabarit === input.gabarit && row.is_hero) {
+        row.is_hero = false;
+      }
+    }
+  }
+
+  const row: IncarnationPhotoRow = {
+    id: randomUUID(),
+    incarnation_id: inc.id,
+    media_id: input.media_id,
+    gabarit: input.gabarit,
+    couleur_produit: input.couleur_produit ?? null,
+    is_hero: Boolean(input.is_hero),
+    ordre: maxOrdre + 1,
+    created_at: new Date().toISOString(),
+  };
+  store.photos.set(row.id, row);
+  inc.updated_at = new Date().toISOString();
+
+  return {
+    id: row.id,
+    gabarit: row.gabarit,
+    couleur_produit: row.couleur_produit,
+    media_id: row.media_id,
+    public_url: media.public_url,
+    filename: media.filename,
+    width: media.width,
+    height: media.height,
+    is_hero: row.is_hero,
+    ordre: row.ordre,
+    created_at: row.created_at,
+  };
+}
+
+export async function removePhotoFromIncarnation(
+  code: string,
+  photoId: string,
+): Promise<boolean> {
+  const store = getStore();
+  let inc: Incarnation | undefined;
+  for (const i of store.incarnations.values()) {
+    if (i.code === code) {
+      inc = i;
+      break;
+    }
+  }
+  if (!inc) return false;
+  const row = store.photos.get(photoId);
+  if (!row || row.incarnation_id !== inc.id) return false;
+  store.photos.delete(photoId);
+  inc.updated_at = new Date().toISOString();
+  return true;
+}
+
+export interface UpdatePhotoInput {
+  is_hero?: boolean;
+  ordre?: number;
+  gabarit?: string;
+  couleur_produit?: string | null;
+}
+
+export async function updateIncarnationPhoto(
+  code: string,
+  photoId: string,
+  patch: UpdatePhotoInput,
+): Promise<IncarnationPhoto | null> {
+  const store = getStore();
+  let inc: Incarnation | undefined;
+  for (const i of store.incarnations.values()) {
+    if (i.code === code) {
+      inc = i;
+      break;
+    }
+  }
+  if (!inc) return null;
+  const row = store.photos.get(photoId);
+  if (!row || row.incarnation_id !== inc.id) return null;
+
+  // is_hero exclusif par (incarnation, gabarit)
+  if (patch.is_hero === true) {
+    const targetGabarit = patch.gabarit ?? row.gabarit;
+    for (const other of store.photos.values()) {
+      if (
+        other.incarnation_id === inc.id &&
+        other.gabarit === targetGabarit &&
+        other.id !== row.id
+      ) {
+        other.is_hero = false;
+      }
+    }
+  }
+
+  if (patch.is_hero !== undefined) row.is_hero = patch.is_hero;
+  if (patch.ordre !== undefined) row.ordre = patch.ordre;
+  if (patch.gabarit !== undefined) row.gabarit = patch.gabarit;
+  if (patch.couleur_produit !== undefined) row.couleur_produit = patch.couleur_produit;
+
+  inc.updated_at = new Date().toISOString();
+
+  const media = await getMediaById(row.media_id);
+  return {
+    id: row.id,
+    gabarit: row.gabarit,
+    couleur_produit: row.couleur_produit,
+    media_id: row.media_id,
+    public_url: media?.public_url ?? "",
+    filename: media?.filename ?? "",
+    width: media?.width,
+    height: media?.height,
+    is_hero: row.is_hero,
+    ordre: row.ordre,
+    created_at: row.created_at,
+  };
+}
+
+/** Ré-ordonner toutes les photos d'un (incarnation, gabarit) selon l'ordre reçu. */
+export async function reorderIncarnationPhotos(
+  code: string,
+  gabarit: string,
+  orderedPhotoIds: string[],
+): Promise<IncarnationPhoto[]> {
+  const store = getStore();
+  let inc: Incarnation | undefined;
+  for (const i of store.incarnations.values()) {
+    if (i.code === code) {
+      inc = i;
+      break;
+    }
+  }
+  if (!inc) return [];
+
+  for (let i = 0; i < orderedPhotoIds.length; i++) {
+    const row = store.photos.get(orderedPhotoIds[i]);
+    if (row && row.incarnation_id === inc.id && row.gabarit === gabarit) {
+      row.ordre = i;
+    }
+  }
+  inc.updated_at = new Date().toISOString();
+  return loadIncarnationPhotos(inc.id);
+}
+
+/** Helpers utilisés par l'audit pour calculer les stats globales. */
+export async function tagsPhotosCountByIncarnationGabarit(): Promise<
+  Map<string, { count: number; hasHero: boolean }>
+> {
+  const store = getStore();
+  const map = new Map<string, { count: number; hasHero: boolean }>();
+  for (const row of store.photos.values()) {
+    const key = `${row.incarnation_id}__${row.gabarit}`;
+    const cur = map.get(key) ?? { count: 0, hasHero: false };
+    cur.count += 1;
+    if (row.is_hero) cur.hasHero = true;
+    map.set(key, cur);
+  }
+  return map;
 }
 
 // ─── IMPORT XLSX ───────────────────────────────────────────────────────────
