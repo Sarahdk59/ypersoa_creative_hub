@@ -118,10 +118,55 @@ export interface MotionSourceCollection {
   }>;
 }
 
+export interface MotionSourceLikedShot {
+  type: "liked-shot";
+  id: string;
+  label: string;
+  public_url: string;
+  origin?: string; // "shooting" | "social" | autre
+  liked_at?: string;
+}
+
+export interface MotionSourceCanonique {
+  type: "canonique";
+  id: string; // MAN-P01
+  label: string; // "Clémence"
+  public_url: string;
+  favorite?: boolean;
+}
+
+export interface MotionSourceMedia {
+  type: "media";
+  id: string; // media_id (médiathèque)
+  label: string;
+  public_url: string;
+}
+
 export type MotionSource =
   | MotionSourcePackshot
   | MotionSourceLookbook
-  | MotionSourceCollection;
+  | MotionSourceCollection
+  | MotionSourceLikedShot
+  | MotionSourceCanonique
+  | MotionSourceMedia;
+
+/** Origine d'une source (pour grouper dans le sélecteur). */
+export type SourceOrigin =
+  | "collection"
+  | "lookbook"
+  | "packshot"
+  | "liked-shot"
+  | "canonique"
+  | "media";
+
+export const SOURCE_ORIGIN_LABELS: Record<SourceOrigin, string> = {
+  collection: "Collections Shooting",
+  lookbook: "Lookbooks & Ambiances",
+  packshot: "Packshots",
+  "liked-shot": "Visuels likés ❤",
+  canonique: "Casting canoniques",
+  media: "Médiathèque",
+};
 
 export const MODE_LABELS: Record<MotionMode, string> = {
   reel: "Reel Insta animé",

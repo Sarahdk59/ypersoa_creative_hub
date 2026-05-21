@@ -12,10 +12,15 @@
  */
 
 import { listMedia, getMedia } from "@/lib/mediatheque/store";
+import { CANONIQUES } from "@/lib/canoniques";
 import type {
+  MotionMode,
   MotionSource,
+  MotionSourceCanonique,
   MotionSourceCollection,
+  MotionSourceLikedShot,
   MotionSourceLookbook,
+  MotionSourceMedia,
   MotionSourcePackshot,
 } from "@/types/motion";
 
@@ -212,23 +217,128 @@ export async function getCollectionSource(
   return STUB_COLLECTIONS.find((c) => c.id === id) ?? null;
 }
 
+// ─── Likes cross-app (table Supabase liked_shots) ──────────────────────────
+
+export async function listLikedShotSources(): Promise<MotionSourceLikedShot[]> {
+  try {
+    const mod = await import("@/lib/imported-shots");
+    if (typeof mod.listImportedShots !== "function") return [];
+    const shots = await mod.listImportedShots(100);
+    return shots.map((s) => ({
+      type: "liked-shot" as const,
+      id: s.id,
+      label: s.shot_label ?? `Shot ${s.id.slice(0, 6)}`,
+      public_url: s.image_url,
+      liked_at: s.created_at,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export async function getLikedShotSource(
+  id: string,
+): Promise<MotionSourceLikedShot | null> {
+  const all = await listLikedShotSources();
+  return all.find((s) => s.id === id) ?? null;
+}
+
+// ─── Canoniques (casting Ypersoa) ──────────────────────────────────────────
+
+const CANONIQUE_BASE = "/canoniques";
+
+export async function listCanoniqueSources(): Promise<MotionSourceCanonique[]> {
+  return CANONIQUES.map((c) => ({
+    type: "canonique" as const,
+    id: c.id,
+    label: c.prenom,
+    public_url: `${CANONIQUE_BASE}/${c.filename}`,
+    favorite: c.favorite ?? false,
+  }));
+}
+
+export async function getCanoniqueSource(
+  id: string,
+): Promise<MotionSourceCanonique | null> {
+  const c = CANONIQUES.find((x) => x.id === id);
+  if (!c) return null;
+  return {
+    type: "canonique",
+    id: c.id,
+    label: c.prenom,
+    public_url: `${CANONIQUE_BASE}/${c.filename}`,
+    favorite: c.favorite ?? false,
+  };
+}
+
+// ─── Médiathèque générique (toutes sources confondues) ────────────────────
+
+export async function listMediaSources(): Promise<MotionSourceMedia[]> {
+  const r = await listMedia({ per_page: 200 });
+  return r.data.map((m) => ({
+    type: "media" as const,
+    id: m.id,
+    label: m.filename,
+    public_url: m.public_url,
+  }));
+}
+
+export async function getMediaSource(id: string): Promise<MotionSourceMedia | null> {
+  const m = await getMedia(id);
+  if (!m) return null;
+  return {
+    type: "media",
+    id: m.id,
+    label: m.filename,
+    public_url: m.public_url,
+  };
+}
+
 // ─── Résolveur unifié ──────────────────────────────────────────────────────
 
-export async function listSources(
-  mode: "reel" | "ambiance" | "packshot",
-): Promise<MotionSource[]> {
+/**
+ * Sources disponibles par mode :
+ *  - reel     : collections Atelier Shooting (multi-shots, exigés par le pipeline)
+ *  - ambiance : lookbooks + likes + canoniques + médiathèque (toute photo unique)
+ *  - packshot : packshots + likes + canoniques + médiathèque (toute photo unique)
+ */
+export async function listSources(mode: MotionMode): Promise<MotionSource[]> {
   if (mode === "reel") return listCollectionSources();
-  if (mode === "ambiance") return listLookbookSources();
-  if (mode === "packshot") return listPackshotSources();
+  if (mode === "ambiance") {
+    const [lookbooks, likes, canoniques, media] = await Promise.all([
+      listLookbookSources(),
+      listLikedShotSources(),
+      listCanoniqueSources(),
+      listMediaSources(),
+    ]);
+    return [...lookbooks, ...likes, ...canoniques, ...media];
+  }
+  if (mode === "packshot") {
+    const [packshots, likes, canoniques, media] = await Promise.all([
+      listPackshotSources(),
+      listLikedShotSources(),
+      listCanoniqueSources(),
+      listMediaSources(),
+    ]);
+    return [...packshots, ...likes, ...canoniques, ...media];
+  }
   return [];
 }
 
 export async function getSource(
-  mode: "reel" | "ambiance" | "packshot",
+  mode: MotionMode,
   id: string,
 ): Promise<MotionSource | null> {
+  // On essaye dans l'ordre des sources susceptibles d'avoir l'id, par mode.
   if (mode === "reel") return getCollectionSource(id);
-  if (mode === "ambiance") return getLookbookSource(id);
-  if (mode === "packshot") return getPackshotSource(id);
-  return null;
+
+  // Pour ambiance et packshot, on tente tous les types tour à tour
+  return (
+    (await getPackshotSource(id)) ??
+    (await getLookbookSource(id)) ??
+    (await getLikedShotSource(id)) ??
+    (await getCanoniqueSource(id)) ??
+    (await getMediaSource(id)) ??
+    null
+  );
 }

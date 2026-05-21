@@ -18,6 +18,7 @@ import {
 } from "./engine";
 import {
   promptAmbiance,
+  promptCanonique,
   promptPackshot,
   promptReelClip,
   selectShotsForReel,
@@ -61,13 +62,20 @@ async function buildPlans(
     );
   }
 
-  if (job.mode === "ambiance" && source.type === "lookbook") {
+  if (job.mode === "ambiance") {
+    // Toutes sources photo unique acceptées (lookbook, like, canonique, media, packshot)
+    const url = sourceImageUrl(source);
+    if (!url) throw new Error(`Source ambiance sans image : ${source.type}`);
     return [
       {
         ordre: 1,
-        shot_type: "AMBIANCE",
-        asset_sujet_url: source.public_url,
-        prompt_mouvement: promptAmbiance(job.brief),
+        shot_type: source.type === "canonique" ? "PORTRAIT ÉDITORIAL" : "AMBIANCE",
+        asset_sujet_url: url,
+        asset_style_url: lookbookStyleUrl ?? undefined,
+        prompt_mouvement:
+          source.type === "canonique"
+            ? promptCanonique(job.brief)
+            : promptAmbiance(job.brief),
         duree_sec: 8,
         clip_url: null,
         statut: "en_attente",
@@ -75,13 +83,25 @@ async function buildPlans(
     ];
   }
 
-  if (job.mode === "packshot" && source.type === "packshot") {
+  if (job.mode === "packshot") {
+    // Toutes sources photo unique acceptées
+    const url = sourceImageUrl(source);
+    if (!url) throw new Error(`Source packshot sans image : ${source.type}`);
     return [
       {
         ordre: 1,
-        shot_type: "PACKSHOT",
-        asset_sujet_url: source.public_url,
-        prompt_mouvement: promptPackshot("rotation", job.brief),
+        shot_type:
+          source.type === "canonique"
+            ? "PORTRAIT ÉDITORIAL"
+            : source.type === "packshot"
+              ? "PACKSHOT"
+              : "OBJET / PROP",
+        asset_sujet_url: url,
+        asset_style_url: lookbookStyleUrl ?? undefined,
+        prompt_mouvement:
+          source.type === "canonique"
+            ? promptCanonique(job.brief)
+            : promptPackshot("rotation", job.brief),
         duree_sec: 8,
         clip_url: null,
         statut: "en_attente",
@@ -90,6 +110,11 @@ async function buildPlans(
   }
 
   throw new Error(`Incohérence mode/source : ${job.mode} / ${source.type}`);
+}
+
+function sourceImageUrl(source: MotionSource): string | null {
+  if (source.type === "collection") return source.shots[0]?.public_url ?? null;
+  return source.public_url;
 }
 
 export interface StartJobInput extends CreateMotionJobInput {

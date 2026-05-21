@@ -59,6 +59,28 @@ export function promptReelClip(shotType: ShotType, brief?: string | null): strin
   ]);
 }
 
+/**
+ * Source canonique : portrait animé d'un mannequin du casting Ypersoa.
+ * La canonique est chest-up fond cream — l'animation doit RESPIRER, pas
+ * inventer un environnement. Cas d'usage : prévisualiser un casting en
+ * motion avant un shooting réel.
+ */
+export function promptCanonique(brief?: string | null): string {
+  return assemble([
+    "Portrait animé à partir de la photo canonique fournie comme image de référence.",
+    "Le mannequin respire doucement, regard vivant et présent, fond cream uni inchangé.",
+    "Mouvements subtils combinables : parallaxe très douce, frange ou mèche qui bouge à peine, " +
+      "regard qui se pose puis se redresse, micro-sourire qui s'esquisse sans forcer.",
+    "Profondeur de champ courte, le visage net, le fond doux et stable.",
+    "Slow motion 24fps, plan continu 8 secondes, format 9:16 vertical portrait.",
+    "Aucun changement d'attitude majeur : la canonique doit RESTER reconnaissable " +
+      "(même coiffure, même maquillage, même expression d'ensemble). Ce n'est pas " +
+      "une nouvelle scène, c'est la canonique qui prend vie.",
+    brief ? `Note éditoriale : ${brief}` : null,
+    BRAND_RULES,
+  ]);
+}
+
 /** Mode ambiance lookbook : 1 clip d'ambiance pure, pas de mannequin. */
 export function promptAmbiance(brief?: string | null): string {
   return assemble([
