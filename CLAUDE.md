@@ -1,6 +1,8 @@
-# CLAUDE.md — Sessions 28-29 avril 2026
+# CLAUDE.md — Sessions 28-29 avril 2026 + 21-22 mai 2026
 
 **Mise à jour majeure** post sessions cumulées Hub Phase 2 atelier-social + naissance Clémence canonique signature.
+
+**Addendum 21-22 mai 2026** : module Atelier Production → Commandes Shopify (section 9 ci-dessous).
 
 ---
 
@@ -600,3 +602,365 @@ Structure `mannequins_lot1_5fiches.json` :
 - *"raconte une histoire de tendresse et de transmission"* (formule narrative validée)
 - *"messager d'émotions"* (formule éditoriale validée)
 - *"un témoignage d'amour"* (formule de clôture)
+
+---
+
+## 9. SESSIONS 21-22 MAI 2026 — MODULE ATELIER PRODUCTION → COMMANDES SHOPIFY
+
+### Contexte
+
+Sarah partage le **bon de préparation Shopify #1002** (PDF Shopify, 3 articles brodés livrés à Mouvaux). Constat : pas de workflow prod dans le Hub. Besoin de croiser SKU Shopify ↔ référentiel motifs YPM ↔ fils Gunold, et de planifier sur 2 machines TMEZ Tajima à l'atelier de Wattrelos.
+
+### Livraison V1 (en sessions étendues 21-22/05)
+
+- **5 référentiels nouveaux** dans `referentiels/`
+- **1 lib partagée** + **1 allocateur planning** dans `apps/atelier-social/src/lib/production/`
+- **4 API routes** dans `app/api/production/commandes/`
+- **2 pages UI** dans `app/atelier-production/commandes/`
+- **Bucket commandes** ajouté à la search globale `/api/search`
+- **Card "Commandes Shopify"** ajoutée au hub Atelier Production
+
+### 9.1 Décisions architecturales verrouillées
+
+#### Stockage : 1 fichier JSON par commande dans `referentiels/commandes/{id}.json`
+- **Décision** : pas de Supabase pour V1, lecture/écriture via `fs` côté API route Next.js (pattern aligné avec `prod_kanban.json`, `palette_fils_broderie_v2.json`, etc.)
+- **Raison** : data structurée, traçable git, pas de migration nécessaire, Sarah peut éditer directement le JSON si besoin
+- **Écarté** : Supabase (overkill V1, demande migrations), localStorage (perd la donnée entre devices)
+
+#### Pivot SKU Shopify ↔ référentiels internes
+- **Décision** : créer `referentiels/shopify_sku_mapping.json` qui contient 3 tables : `produits` (YP005, YP019…), `motifs_sku_to_ypm` (CAL→YPM-006, CLU→YPM-003…), `fils_couleur_libre_to_id` (noms FR clients → IDs `palette_fils_broderie_v2`)
+- **Raison** : les SKU Shopify utilisent des codes courts à 3 lettres (CAL, CLU…) qui ne mappent pas 1-à-1 avec les YPM-XXX ; il fallait un pivot explicite documenté
+- **Écarté** : déduction par regex sur le nom de produit (fragile), embarquer le mapping dans `motifs_ypm.json` (alourdit un référentiel déjà gros)
+
+#### Loader TS dédié `lib/production/commandes-loader.ts` (pas dans `atelier-da/referentiels-loader.ts`)
+- **Décision** : nouvelle lib autonome plutôt qu'ajout aux 535 lignes du loader DA existant
+- **Raison** : séparation des concerns (atelier DA = casting/visions, atelier production = commandes), plus simple à maintenir, plus facile à supprimer/déplacer plus tard si extraction du module
+- **Écarté** : tout fusionner dans un seul loader (déjà trop gros, mélange métiers)
+
+#### Vitesse machine TMEZ : 800 points/minute (vitesse cible, validée 22/05)
+- **Décision** : recalibré 2 fois en cours de session (750 estimé → 650 confirmé sur YPM-001-K → 800 cible production)
+- **Raison** : Sarah a calibré à partir de la fiche technique réelle YPM-001-K (1890 points = 2,4 min) et de son objectif de vitesse cible
+- **Écarté** : 750 (estimation initiale trop pessimiste), 650 (vitesse mesurée mais sous-cible)
+
+#### Préparation DST = 5 min par motif unique, mutualisée par YPM dans la commande
+- **Décision** : ajouter une opération `preparation_dst` (5 min) facturée 1 fois par YPM unique dans la commande (toggle `mutualiser_prep_dst_par_motif: true`)
+- **Raison** : Sarah précise "5 min par motif à programmer" → si 2 articles partagent un YPM (ex Club sur sweat + Club sur t-shirt), 1 seule prog DST suffit
+- **Écarté** : 5 min par article systématique (sur-estime), 0 prep pour les motifs déjà existants (sous-estime — il faut quand même charger le fichier dans la machine)
+
+#### Algorithme planning : 2 stratégies, OTIF par défaut
+- **Décision OTIF** (On Time In Full) : articles dans l'ordre `date_commande` (FIFO), à chaque allocation préfère la machine dont le DERNIER article a le même fil principal (mutualise la bobine)
+- **Décision LPT** (Longest Processing Time first) : articles longs en premier, machine la moins chargée — équilibrage charge pur
+- **Toggle UI** : Sarah peut switcher OTIF/LPT par commande, OTIF est le défaut atelier
+- **Raison** : OTIF respecte les engagements clients (premier arrivé premier servi), LPT optimise le makespan total mais peut faire passer une commande tardive avant une commande ancienne
+- **Écarté** : un seul algo (les 2 sont utiles selon contexte — Sarah peut tester LPT en cas de gros lot urgent)
+
+#### Journal de production en 4 étapes (DST → Broderie → CQ → Expédition)
+- **Décision** : object `journal` sur chaque commande avec 4 entrées `{ par, le }` + `archivee_le`
+- **Raison** : traçabilité atelier — savoir qui a fait quoi quand permet l'archivage post-expé et le diagnostic en cas de défaut
+- **Écarté** : 3 étapes sans CQ (Sarah a explicitement demandé l'ajout du CQ après broderie 22/05), bloc texte libre (perd la structure)
+
+#### Rebroder = nouvelle commande `{id}-R{n}` (pas un statut)
+- **Décision** : bouton "Rebroder cet article" → modal (zones + motif défaut) → crée une commande indépendante `1002-R1` avec champ `rework_de`
+- **Raison** : un rework a son propre cycle de vie (planning, journal, expédition séparée) ; le tracer comme commande à part permet de garder un historique propre et de la prioriser
+- **Écarté** : flag `rebroderie_demandee` sur l'article original (pollue le statut original), faire 2 fois la même commande (perd le lien historique)
+
+#### Désarchivage intelligent (restaure le statut selon le journal)
+- **Décision** : bouton "Désarchiver et remettre en prod" qui calcule le nouveau statut :
+  - Expé remplie → `expediee`
+  - CQ ou broderie remplie → `terminee`
+  - Planning existant → `planifiee`
+  - Sinon → `a_planifier`
+- **Raison** : éviter qu'une commande désarchivée revienne en "a_planifier" alors qu'elle a déjà été brodée + expédiée
+- **Écarté** : juste supprimer `archivee_le` (laisse le statut "archivee" incohérent), forcer "a_planifier" (perte d'info)
+
+#### Search globale étendue : bucket "commandes" avec archives
+- **Décision** : ajouter un 9e bucket à `/api/search` qui scanne TOUTES les commandes (actives + archivées). Match sur numéro (avec/sans `#`), client, ville, SKU, motif YPM, statut, équipe (Adriana/Felismina/Rebecca). Boost ×100 si match exact de l'ID
+- **Raison** : Sarah veut retrouver une commande archivée en tapant `1002` ou `#1002` dans la search principale
+- **Écarté** : 2 buckets séparés actives/archives (lourd pour le user), recherche limitée aux actives (perd l'historique)
+
+### 9.2 Paramètres atelier figés (validés Sarah 21-22/05)
+
+| Paramètre | Valeur | Source |
+|---|---|---|
+| Vitesse TMEZ | **800 pts/min** | Cible production (22/05) |
+| Calibration FT | YPM-001-K = 1890 pts = 2,4 min | PDF Tajima Pulse |
+| Nombre de machines | 2 (TMEZ-1, TMEZ-2) | Atelier Wattrelos |
+| Type | Identiques, parallélisables librement | Validé 21/05 |
+| Heures effectives/j/machine | **6h** (360 min) | Validé 21/05 |
+| Pause déjeuner | 12h–13h | Standard atelier |
+| Préparation DST | **5 min par motif unique** (mutualisée) | Validé 22/05 |
+| Cadrage / dé-cadrage zone | 3 min | Estimé |
+| Changement bobine fil | 2 min | Estimé |
+| Setup produit (sortir vêtement, repérer) | 5 min | Estimé |
+| Contrôle qualité + pliage + sachet | 3 min | Estimé |
+| Algo planning par défaut | **OTIF** | Validé 22/05 |
+
+### 9.3 Standards broderie par motif (Sarah, broderie pure)
+
+| Motif YPM | Durée broderie max | Note |
+|---|---|---|
+| **Le Câlin (YPM-006)** | **5 min** | Cœur + initiale standard |
+| **Le Club (YPM-003)** | **8 min** | Compo typo + symbole central standard. Peut dépasser si commande custom multi-zones. |
+
+Garde-fou cohérence : si le calcul dépasse de >30% ces standards pour un motif simple, vérifier la classification ou la FT.
+
+### 9.4 Durées de broderie par type (à 800 pts/min)
+
+Utilisé en fallback si pas de FT précise pour la variante (sinon `nb_points / 800`).
+
+| Type | Durée | Points estim | Exemples |
+|---|---|---|---|
+| `initiale_simple` | 2 min | 1900 | `c`, `m`, `K` |
+| `mot_court` (3-5 lettres) | 3 min | 2400 | `PUNK`, `CLUB`, `AMOUR` |
+| `mot_moyen` (6-10 lettres) | 5 min | 4000 | `COEUR`, `SAUVAGE`, `MAMAN` |
+| `texte_long` (11-20 caractères) | 7 min | 5600 | `Funky Love Drug`, `Mon amour` |
+| `texte_tres_long` (21+ caractères) | 11 min | 8800 | `Une vie à t'aimer` |
+| `symbole_simple` | 2 min | 1600 | Cœur, Étoile, Trèfle, Fleur |
+| `symbole_complexe` | 5 min | 4000 | Bouquet, Animal détaillé |
+
+### 9.5 Équipe atelier production identifiée
+
+| Personne | Rôle |
+|---|---|
+| **Adriana** | Préparation DST + contrôle qualité |
+| **Felismina** | Broderie machine |
+| **Rebecca** | Expédition / logistique |
+| **Sarah** | Direction artistique, validation |
+| Cyrielle, Thierry | Rôles transverses (kanban) |
+
+Ces noms apparaissent en autocomplete dans les champs `par` du journal.
+
+### 9.6 Format SKU Shopify (pivot)
+
+**Pattern** : `YP{produit3}-{motif3}-{couleur_libre}-{taille}`
+
+Exemple : `YP005-CAL-BEIGE-XS` → produit YP005 (Sweat Awdis JH030) / motif YPM-006 Le Câlin / couleur beige / taille XS.
+
+**Produits référencés** :
+| Code | Type | Fournisseur | Ref |
+|---|---|---|---|
+| YP005 | Sweat Brodé | Awdis | JH030 |
+| YP019 | T-Shirt Brodé | B&C | TU05T |
+
+**Codes motifs SKU → YPM** (mapping confirmé) :
+- `CAL` → YPM-006 Le Câlin
+- `CLU` → YPM-003 Le Club
+
+**À confirmer** (mapping pré-rempli mais non validé en prod) : `BRI`→YPM-001, `AMB`→YPM-002, `HER`→YPM-004, `ANN`→YPM-005, `CHO`→YPM-007, `FEL`→YPM-008, `PAL`→YPM-009, `RON`→YPM-010, `CON`→YPM-011, `MEU`→YPM-012, `TIG`→YPM-014, `DEC`→YPM-015.
+
+**Couleurs de fil** : table `fils_couleur_libre_to_id` qui normalise les noms FR saisis côté configurateur Shopify (rose pâle, vert jade, bordeaux, etc.) vers les IDs `palette_fils_broderie_v2`. Insensible casse + accents.
+
+### 9.7 Schéma data commande
+
+Chaque commande = 1 fichier `referentiels/commandes/{id}.json` avec :
+
+```
+{
+  id, numero_shopify, date_commande, date_impression_bon,
+  statut: "a_planifier" | "planifiee" | "en_cours" | "terminee" | "expediee" | "archivee",
+  priorite: "normale" | "urgente",
+  expedition: { nom, adresse, code_postal, ville, pays },
+  facturation: { ... },
+  articles: [{
+    id, sku, produit_id, produit_nom, motif_sku, ypm_id, ypm_nom,
+    couleur_support, taille, quantite,
+    broderies: [{
+      placement: "buste" | "poignet" | "dos" | "nuque",
+      champs: [{ label, valeur, type, duree_min, fil_id?, variante_filename? }],
+      fil_id, fil_nom, fil_hex, fil_code_gunold,
+      fil_id_secondaire?, ...,
+      duree_broderie_min, duree_cadrage_min, duree_changement_fil_min, duree_total_min,
+      note_atelier?
+    }],
+    duree_preparation_dst_min, duree_setup_min, duree_cq_min, duree_total_article_min
+  }],
+  planning: {
+    mode: "auto" | "manuel",
+    algo: "otif" | "lpt",
+    horizon_jours, date_debut,
+    slots: [{ id, machine: "TMEZ-1"|"TMEZ-2", jour, heure_debut, heure_fin, duree_min, article_id, commande_id }],
+    genere_le
+  } | null,
+  journal: {
+    dst?: { par, le, note? },
+    broderie?: { par, le, note? },
+    cq?: { par, le, note? },
+    expedition?: { par, le, note? },
+    archivee_le?
+  },
+  rework_de?: { commande_id, article_id, motif, zones_a_rebroder? },
+  duree_total_min, nb_changements_fil_total, notes,
+  created_at, updated_at
+}
+```
+
+Doc complète : `referentiels/commandes/_schema.md`.
+
+### 9.8 Fiches techniques YPM (Tajima Pulse)
+
+Nouveau référentiel `referentiels/fiches_techniques_ypm.json` indexé par `variante_filename` (clé = nom de fichier dans `motifs_ypm.json`). Pour chaque FT : `nb_points`, `dimensions_mm`, `nb_changements_couleur`, `nb_coupe_fils`, `usage_fil_m`, `usage_bobine_m`, `cout_eur`, `aiguilles[]`.
+
+**Première FT importée** : YPM-001-K (1890 pts, 21.8×43mm, 9.11m fil, 1 changement couleur, code 61002 Gunold) — utilisée comme référence de calibration vitesse atelier.
+
+**Logique de durée broderie** :
+1. Si un champ broderie référence une variante avec FT chargée → `duree = nb_points / 800`
+2. Sinon → classification par longueur (table `broderie_types`) en respectant le label (les labels qui contiennent "mot"/"texte"/"initiale" forcent en texte, "symbole" force en symbole)
+
+### 9.9 Algorithmes planning
+
+**Capacité** : 2 machines × 6h/jour = 720 min/jour. Horizon par défaut 3 jours = 36h.
+
+**OTIF (par défaut)** — On Time In Full
+1. Articles dans l'ordre `date_commande` (FIFO) puis ordre dans la commande
+2. Pour chaque article : identifier son **fil principal** (fil qui cumule le plus de temps de broderie)
+3. Préférer la machine dont le DERNIER article a le même fil principal (mutualise la bobine déjà en place — 0 changement)
+4. Sinon, machine la moins chargée aujourd'hui
+5. Saute au jour ouvré suivant si dépassement de la capacité du jour
+
+**LPT** — Longest Processing Time first
+1. Articles triés par durée totale décroissante
+2. Chaque article → machine la moins chargée (cumul total)
+3. Objectif : minimiser le makespan total (temps jusqu'à fin du dernier article)
+
+**Limite V1** : optim intra-commande seulement. Le vrai OTIF multi-commandes (regrouper N commandes du jour pour minimiser les changements de fils globaux) demande un planning global hors structure commande/commande — **TODO V2** (cf 9.14).
+
+### 9.10 UI module
+
+**`/atelier-production/commandes`** (liste)
+- Section "Actives" + section "Archives" pliable (bouton "Voir N archivées")
+- Cards : numéro Shopify, statut coloré, client+ville, nb articles + broderies + durée totale, badge urgent
+- Click → fiche détaillée
+
+**`/atelier-production/commandes/[id]`** (fiche + planning intégré)
+- Header : numéro, dates, statut, durée prod totale
+- Bandeau orange si commande rework
+- Section Adresses (expé + facturation)
+- Section Articles : 1 card par article avec broderies détaillées (label, valeur, type, durée, fil avec puce hex + code Gunold)
+- Section Journal (4 cartes DST/Broderie/CQ/Expé éditables inline avec datalist personnes + datepicker)
+- Section Planning : toggle OTIF/LPT, datepicker début, bouton Générer/Régénérer, vue Gantt 2 machines avec pause déj hachurée
+- Bouton "Rebroder cet article" sur chaque article (caché si archivée)
+- Modal Rebroder : checkboxes zones + textarea motif → crée commande `{id}-R{n}`
+
+### 9.11 Search globale (`/api/search` + `/search`)
+
+Nouveau bucket **"Commandes Shopify"** en première position. Match sur :
+- Numéro (avec ou sans `#`, normalisé)
+- Client (nom expédition + facturation)
+- Ville, code postal
+- SKU complet
+- Motif YPM (id + nom)
+- Statut (cherche `archivee`, `expediee`, etc.)
+- Équipe (`adriana`, `felismina`, `rebecca`, `sarah`)
+- Notes et motif rework
+
+**Boost ×100** si match exact de l'ID → la commande recherchée arrive toujours en première position.
+
+### 9.12 Méthode de travail (apprentissages session)
+
+#### Mapping JSON pour data structurée, pas pour input IA
+- Reconfirme la règle vue avec Gemini : le JSON est bon pour stocker/transmettre de la donnée structurée entre couches techniques, mauvais pour briefer un LLM générateur (cf. §3 sur les prompts littéraires)
+- Pour les paramètres atelier qui changent souvent (durées, vitesses), JSON éditable >>>>> hard-codé dans le TS
+
+#### Recalibrer une constante prod = 3 fois normal
+- Vitesse machine recalée 3 fois en une session (750 → 650 → 800). C'est NORMAL : la première estimation est toujours fausse, la mesure réelle révise, l'objectif de production révise encore
+- Leçon : implémenter la vitesse comme un paramètre `_meta.vitesse_machine_pts_par_min` lisible/modifiable, pas comme une constante magique dans le code
+
+#### Préserver la donnée saisie quand on recalcule
+- La fonction `recalculerDureesCommande` respecte `champ.source_duree === "manuel"` pour ne pas écraser les ajustements manuels Sarah
+- Sans ce garde-fou, chaque clic "Régénérer planning" écraserait les fines-tuning faites à la main
+
+#### Classification automatique = piège sans contexte
+- "COEUR" en majuscules était classé comme symbole (parce que "coeur" est dans la liste des symboles). Solution : la classification regarde le **label** ("Mot haut" → force en texte, "Symbole buste" → force en symbole) avant de regarder le contenu
+- Règle : quand on a un label métier qui catégorise la donnée, l'utiliser comme hint avant la détection par contenu
+
+#### Tests : type-check ≠ test fonctionnel
+- `pnpm type-check` valide les types mais pas les calculs (les durées calculées dans la fonction de recalcul n'ont pas de test unitaire — pourrait casser silencieusement). À ajouter en V2
+
+### 9.13 Pièges et anti-patterns (session 21-22/05)
+
+#### Régénération planning qui downgrade le statut (corrigé)
+- **Bug v1** : `POST /api/.../planning` faisait `commande.statut = "planifiee"` systématiquement → écrasait "expediee" / "archivee" si on régénérait
+- **Fix v1.1** : ne touche au statut QUE s'il est encore `a_planifier`
+- **Leçon** : une route qui modifie une sous-ressource ne doit pas réinitialiser des champs adjacents avancés
+
+#### Classification "COEUR" mot vs symbole (corrigé)
+- **Bug** : "COEUR" en mot était reclassé en symbole_simple (2 min) au lieu de mot_moyen (5-10 min) car "coeur" figurait dans `symboles_simples`
+- **Fix** : `classifierTexteEnType(valeur, durees, label?)` regarde maintenant le label métier pour trancher
+- **Leçon** : la chair humaine du label > le contenu brut
+
+#### Hex codes pour les couleurs → toujours KO (confirmé)
+- Cf §6 — règle confirmée même côté production : on n'envoie pas les hex à l'utilisateur dans les bons de prod, on utilise le **nom de fil + code Gunold**
+- Les hex servent uniquement à colorier les puces UI (ThreadChip)
+
+#### Ne PAS reformater les JSON commandes manuellement après une régénération planning
+- Le linter (Prettier?) reformate parfois les JSON quand l'utilisateur ouvre + sauvegarde
+- Pas grave en soi, mais les `Edit` ciblés sur des strings multi-lignes échouent ensuite (différence de formatting)
+- **Pattern** : utiliser `Edit replace_all=true` sur des fragments stables (1-2 lignes max), ou Read + Edit ciblé
+
+#### Une UI qui montre "Désarchiver" générique perd l'info de statut
+- **Bug initial** : bouton "Désarchiver" supprimait juste `archivee_le` → la commande retombait en "archivee" (statut non touché) ou en statut incohérent
+- **Fix** : bouton "Désarchiver et remettre en prod" qui calcule le statut cible selon le journal
+- **Leçon** : un bouton "annuler" doit faire le travail inverse complet, pas juste retirer un flag
+
+#### Saisie manuelle V1 du PDF Shopify (assumé)
+- Le parsing PDF auto-Shopify est reporté en V2 — pour V1 Sarah me passe le PDF et je saisis le JSON à la main
+- C'est ASSUMÉ comme limite V1, pas un bug. Permet d'avancer sur le reste sans bloquer sur le parsing
+- À automatiser quand Shopify API webhook sera branché
+
+### 9.14 TODOs V2 (cadrés, non implémentés)
+
+| Feature | Pourquoi V2 | Effort estimé |
+|---|---|---|
+| **Upload PDF Shopify auto-parsé** | V1 = saisie JSON manuelle. V2 = OpenAI Vision ou pdf-parse + parsing structuré | 1 session |
+| **Planning global multi-commandes** | V1 = 1 planning par commande. V2 = vue Gantt qui empile N commandes du jour sur les 2 machines avec vrai OTIF inter-commandes (regroupement bordeaux ensemble cross-commandes) | 2-3 sessions |
+| **Drag-and-drop manuel des slots** | V1 = allocation auto seulement. V2 = repositionnement manuel à la souris (react-dnd) | 1-2 sessions |
+| **Export PDF bons d'atelier** | Imprimer la fiche article + plan d'aiguille pour Felismina/Adriana | 1 session |
+| **Import en masse des FT YPM** | V1 = 1 FT (YPM-001-K). V2 = parser auto les exports Tajima Pulse PDF → enrichit `fiches_techniques_ypm.json` | 1 session |
+| **Mode "broderie en cours"** | Statut intermédiaire avec timer live + alerte Felismina si dépassement | 1 session |
+| **Notifications statut** (Slack/email) | Quand une commande passe en "expediee" notifier le client + Sarah | 1 session |
+| **Webhook Shopify** | Création auto de la commande dans le Hub dès qu'une commande Shopify est payée | 2 sessions |
+
+### 9.15 Citations Sarah à graver (sessions 21-22/05)
+
+> *"voici le bon de préparation de shopify. J'aimerais pouvoir les intégrer dans l'atelier de production avec la référence motif, couleur de fils et faire un planning de flow production sur 3 jours pour optimiser l'utilisation des deux machines à broder"* (cadrage initial 21/05)
+
+> *"650 points à la minute en moyenne. Câlin doit faire 5 min de broderie, Club 8 min max. On doit aussi prendre en compte un temps de préparation du fichier DST. au moins 5 minutes par motifs à programmer sur le planning de prod."* (recalibrage atelier 22/05)
+
+> *"je veux pouvoir noter DST par Adriana le 20/05. Broderie par Felismina le 22/05. Expedition par Rebecca le 23/05. Archive le 23/05"* (cadrage journal 22/05)
+
+> *"je veux pouvoir desarchiver la commande et la remettre en prod rapidement"* (cadrage UX désarchivage 22/05)
+
+> *"calculer automatiquement ma production à 800 points minute avec la génération d'un planning de prod par OTIF : on time in full, premier arrivé premier servi avec l'optimisation des machines"* (cadrage algo OTIF 22/05)
+
+> *"Si 10 modèles multicolores sur la journée, optimiser les changements de couleurs, de fils, et de palettes pour broder au plus vite"* (vision V2 planning global multi-commandes 22/05)
+
+> *"Je veux aussi une option : rebroder pour rebroder un article qui presente un defaut"* (cadrage feature rework 22/05)
+
+> *"Je veux aussi la date du CQ contrôle qualité après broderie"* (cadrage 4e étape journal 22/05)
+
+> *"dans mon search, je dois pouvoir retrouver mes commandes archivées"* (cadrage search étendue 22/05)
+
+### 9.16 Inventaire fichiers livrés (sessions 21-22/05)
+
+**Référentiels** (`referentiels/`)
+- `shopify_sku_mapping.json` — pivot SKU ↔ YPM ↔ fils
+- `durees_broderie.json` v1.2 — vitesse, types broderie, prep DST, capacité atelier
+- `fiches_techniques_ypm.json` — FT Tajima Pulse par variante (1 entrée : YPM-001-K)
+- `commandes/_schema.md` — doc schéma
+- `commandes/1002.json` — commande de test enrichie (3 articles, 86 min total, journal complet 4 étapes, archivée 23/05)
+
+**Code** (`apps/atelier-social/src/`)
+- `lib/production/commandes-loader.ts` — types + CRUD JSON + helper recalcul
+- `lib/production/planning-allocator.ts` — algos LPT + OTIF
+- `app/api/production/commandes/route.ts` — GET liste / POST création
+- `app/api/production/commandes/[id]/route.ts` — GET / PATCH
+- `app/api/production/commandes/[id]/planning/route.ts` — POST génération / DELETE reset
+- `app/api/production/commandes/[id]/rebroder/route.ts` — POST création commande rework
+- `app/api/search/route.ts` — bucket commandes ajouté
+- `app/atelier-production/commandes/page.tsx` — liste avec toggle archives
+- `app/atelier-production/commandes/[id]/page.tsx` — fiche + journal + Gantt + modal rebroder
+- `app/atelier-production/page.tsx` — card Commandes Shopify ajoutée
+- `app/search/page.tsx` — section Commandes Shopify ajoutée
+
+**Mémoire feedback** (`~/.claude/projects/.../memory/`)
+- `project_atelier_prod_params.md` — 800 pts/min, prep DST, journal 4 étapes, algos OTIF/LPT, mécanique rebroder, désarchivage intelligent

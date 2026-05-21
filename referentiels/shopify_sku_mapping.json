@@ -1,0 +1,177 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "shopify_sku_mapping",
+    "last_updated": "2026-05-21",
+    "description": "Pivot entre les SKU Shopify (format YPpppp-MMM-COULEUR-TAILLE) et les référentiels internes Hub : produits-supports (palette_supports_par_produit), motifs (motifs_ypm), fils (palette_fils_broderie_v2). Source de vérité pour le module Atelier Production → Commandes.",
+    "format_sku": "YP{produit3}-{motif3}-{couleur_libre}-{taille}",
+    "exemple_sku": "YP005-CAL-BEIGE-XS → produit YP005 (sweat) / motif YPM-006 (Le Câlin) / couleur beige / taille XS"
+  },
+
+  "produits": {
+    "YP005": {
+      "type": "sweat",
+      "nom_commercial": "Sweat Brodé",
+      "fournisseur": "Awdis",
+      "ref_fournisseur": "JH030",
+      "duree_setup_machine_min": 8,
+      "note": "Sweat unisexe à enfiler. Cadrage buste poitrine + poignet manchette."
+    },
+    "YP019": {
+      "type": "tshirt",
+      "nom_commercial": "T-Shirt Brodé",
+      "fournisseur": "B&C",
+      "ref_fournisseur": "TU05T",
+      "duree_setup_machine_min": 6,
+      "note": "T-shirt en jersey simple. Premier produit non-Awdis du catalogue. Dialecte de couleurs propre (cf. palette_supports_par_produit.YP019)."
+    }
+  },
+
+  "motifs_sku_to_ypm": {
+    "CAL": {
+      "ypm_id": "YPM-006",
+      "nom_commercial": "Le Câlin",
+      "note": "Mapping confirmé via axes_shopify (axe_broderies_coeurs)."
+    },
+    "CLU": {
+      "ypm_id": "YPM-003",
+      "nom_commercial": "Le Club",
+      "note": "Best-seller. 10 variantes documentées."
+    },
+    "BRI": {
+      "ypm_id": "YPM-001",
+      "nom_commercial": "La Brigitte",
+      "note": "À confirmer."
+    },
+    "AMB": {
+      "ypm_id": "YPM-002",
+      "nom_commercial": "L'Ambre",
+      "note": "À confirmer."
+    },
+    "HER": {
+      "ypm_id": "YPM-004",
+      "nom_commercial": "Notre Héritage",
+      "note": "À confirmer."
+    },
+    "ANN": {
+      "ypm_id": "YPM-005",
+      "nom_commercial": "L'Annonce",
+      "note": "À confirmer."
+    },
+    "CHO": {
+      "ypm_id": "YPM-007",
+      "nom_commercial": "Le Chouchou",
+      "note": "À confirmer."
+    },
+    "FEL": {
+      "ypm_id": "YPM-008",
+      "nom_commercial": "La Féline",
+      "note": "À confirmer."
+    },
+    "PAL": {
+      "ypm_id": "YPM-009",
+      "nom_commercial": "La Palette",
+      "note": "À confirmer."
+    },
+    "RON": {
+      "ypm_id": "YPM-010",
+      "nom_commercial": "La Ronde",
+      "note": "À confirmer."
+    },
+    "CON": {
+      "ypm_id": "YPM-011",
+      "nom_commercial": "La Confidence",
+      "note": "À confirmer."
+    },
+    "MEU": {
+      "ypm_id": "YPM-012",
+      "nom_commercial": "La Meute",
+      "note": "À confirmer."
+    },
+    "TIG": {
+      "ypm_id": "YPM-014",
+      "nom_commercial": "La Tigresse",
+      "note": "À confirmer."
+    },
+    "DEC": {
+      "ypm_id": "YPM-015",
+      "nom_commercial": "La Déclaration",
+      "note": "À confirmer."
+    }
+  },
+
+  "fils_couleur_libre_to_id": {
+    "_principe": "Mapping nom français saisi côté Shopify (configurateur client) → ID fil dans palette_fils_broderie_v2. Insensible à la casse, accents tolérés.",
+    "blanc": "fil_blanc",
+    "ivoire": "fil_ivoire",
+    "ecru": "fil_ecru",
+    "écru": "fil_ecru",
+    "beige": "fil_beige",
+    "sable": "fil_beige",
+    "noir": "fil_noir",
+    "gris": "fil_gris",
+    "anthracite": "fil_anthracite",
+    "rouge": "fil_rouge",
+    "rouge cerise": "fil_rouge",
+    "bordeaux": "fil_bordeaux",
+    "rose": "fil_rose",
+    "rose pale": "fil_rose_pale",
+    "rose pâle": "fil_rose_pale",
+    "rose poudre": "fil_rose_poudre",
+    "rose poudré": "fil_rose_poudre",
+    "rose poudree": "fil_rose_poudre",
+    "vert jade": "fil_vert_jade",
+    "jade": "fil_vert_jade",
+    "vert jardin": "fil_vert_jardin",
+    "vert sauge": "fil_vert_sauge",
+    "sauge": "fil_vert_sauge",
+    "vert fonce": "fil_vert_fonce",
+    "vert foncé": "fil_vert_fonce",
+    "vert kaki": "fil_kaki",
+    "kaki": "fil_kaki",
+    "bleu": "fil_bleu",
+    "bleu marine": "fil_marine",
+    "marine": "fil_marine",
+    "bleu ciel": "fil_bleu_ciel",
+    "bleu pastel": "fil_bleu_pastel",
+    "jaune": "fil_jaune",
+    "moutarde": "fil_moutarde",
+    "ocre": "fil_ocre",
+    "orange": "fil_orange",
+    "terracotta": "fil_terracotta",
+    "violet": "fil_violet",
+    "lavande": "fil_lavande",
+    "taupe": "fil_taupe",
+    "camel": "fil_taupe",
+    "marron": "fil_marron",
+    "chocolat": "fil_chocolat"
+  },
+
+  "placements": {
+    "_principe": "Décrit les zones de broderie reconnues sur les bons de préparation Shopify. Chaque placement détermine le cadrage atelier (type de cerceau Tajima TMEZ).",
+    "buste": {
+      "label": "Broderie buste",
+      "cerceau": "cerceau_buste_standard",
+      "cote": "gauche",
+      "note": "Placement principal coeur gauche, ~12cm sous épaule."
+    },
+    "poignet": {
+      "label": "Broderie poignet",
+      "cerceau": "cerceau_manchette_petit",
+      "cote": "selon_indication",
+      "note": "Cadrage spécifique manchette. Souvent texte court ou initiale."
+    },
+    "dos": {
+      "label": "Broderie dos",
+      "cerceau": "cerceau_dos_large",
+      "cote": "centre",
+      "note": "Cadrage large entre omoplates. Plus rare, motifs plus grands."
+    },
+    "nuque": {
+      "label": "Broderie nuque",
+      "cerceau": "cerceau_nuque_petit",
+      "cote": "centre_haut",
+      "note": "Petite broderie haute, généralement initiale ou symbole."
+    }
+  }
+}

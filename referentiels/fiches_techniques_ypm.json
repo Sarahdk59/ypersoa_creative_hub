@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "fiches_techniques_ypm",
+    "last_updated": "2026-05-21",
+    "description": "Fiches techniques Tajima par variante de motif YPM. Source : exports PDF Tajima Software Solutions Inc. (Pulse). Une entrée par variante (clé = filename de la variante dans motifs_ypm.json). Sert au calcul de durée précise dans le planning production : duree_broderie_min = nb_points / 650.",
+    "source_format": "Tajima Pulse — export PDF avec champs Dimension, Points, Changements de couleur, Coupe-fils, Usage fil, Usage bobine, Coût, Aiguilles.",
+    "vitesse_machine_pts_par_min": 650,
+    "directive_usage": "Si un champ broderie d'une commande référence une variante avec FT enregistrée, le module utilise nb_points/650 pour la durée pure. Sinon, fallback sur la classification par longueur (broderie_types dans durees_broderie.json)."
+  },
+
+  "fiches": {
+    "YPM-001-K.PNG": {
+      "variante_id": "YPM-001-K",
+      "ypm_id": "YPM-001",
+      "ypm_nom": "La Brigitte",
+      "label_variante": "K (initiale)",
+      "nb_points": 1890,
+      "dimensions_mm": { "largeur": 21.8, "hauteur": 43.0 },
+      "nb_changements_couleur": 1,
+      "nb_coupe_fils": 3,
+      "usage_fil_m": 9.11,
+      "usage_bobine_m": 3.04,
+      "cout_eur": 1.89,
+      "origine_x_mm": { "min": -10, "max": 10 },
+      "origine_y_mm": { "min": -21, "max": 21 },
+      "distance_debut_fin_mm": 0.0,
+      "aiguilles": [
+        {
+          "numero": 1,
+          "code_fil": "61002",
+          "fournisseur_fil": "Gunold-Poly",
+          "usage_fil_m": 9.14,
+          "nb_points": 1890
+        }
+      ],
+      "duree_broderie_calculee_min": 2.9,
+      "source_pdf": "YPM-001-K.pdf",
+      "importe_le": "2026-05-21",
+      "note": "Initiale K seule sur motif Brigitte. Référence de calibration vitesse atelier (1890 pts en 2,9 min → 650 pts/min)."
+    }
+  }
+}

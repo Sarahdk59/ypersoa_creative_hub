@@ -1,0 +1,283 @@
+{
+  "id": "1002",
+  "numero_shopify": "#1002",
+  "date_commande": "2026-05-21",
+  "date_impression_bon": "2026-05-21",
+  "statut": "archivee",
+  "priorite": "normale",
+  "expedition": {
+    "nom": "sarah kedziora",
+    "adresse_ligne1": "11 Rue du Docteur Calmette",
+    "code_postal": "59420",
+    "ville": "Mouvaux",
+    "pays": "France"
+  },
+  "facturation": {
+    "nom": "sarah diruit",
+    "adresse_ligne1": "11 Rue Du docteur Calmette",
+    "code_postal": "59420",
+    "ville": "Mouvaux",
+    "pays": "France"
+  },
+  "articles": [
+    {
+      "id": "art_1002_01",
+      "sku": "YP005-CAL-BEIGE-XS",
+      "produit_id": "YP005",
+      "produit_nom": "Sweat Brodé",
+      "motif_sku": "CAL",
+      "ypm_id": "YPM-006",
+      "ypm_nom": "Le Câlin",
+      "couleur_support": "beige",
+      "taille": "XS",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Initiale 2e",
+              "valeur": "c",
+              "type": "initiale_simple",
+              "duree_min": 2,
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_blanc",
+          "fil_nom": "Blanc",
+          "fil_hex": "#F5EEF2",
+          "fil_code_gunold": "61002",
+          "duree_broderie_min": 2,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 5
+        },
+        {
+          "placement": "poignet",
+          "champs": [
+            {
+              "label": "Initiale",
+              "valeur": "m",
+              "type": "initiale_simple",
+              "duree_min": 2,
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_rouge",
+          "fil_nom": "Rouge",
+          "fil_hex": "#AC0E2E",
+          "fil_code_gunold": "61398",
+          "duree_broderie_min": 2,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 2,
+          "duree_total_min": 7
+        }
+      ],
+      "duree_preparation_dst_min": 5,
+      "duree_setup_min": 5,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 25
+    },
+    {
+      "id": "art_1002_02",
+      "sku": "YP005-CLU-BEIGE-2XL",
+      "produit_id": "YP005",
+      "produit_nom": "Sweat Brodé",
+      "motif_sku": "CLU",
+      "ypm_id": "YPM-003",
+      "ypm_nom": "Le Club",
+      "couleur_support": "beige",
+      "taille": "2XL",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Mot haut",
+              "valeur": "COEUR",
+              "type": "mot_court",
+              "duree_min": 3,
+              "source_duree": "classification"
+            },
+            {
+              "label": "Mot bas",
+              "valeur": "SAUVAGE",
+              "type": "mot_moyen",
+              "duree_min": 5,
+              "source_duree": "classification"
+            },
+            {
+              "label": "Symbole buste",
+              "valeur": "Fleur",
+              "type": "symbole_simple",
+              "duree_min": 2,
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_vert_jade",
+          "fil_nom": "Vert jade",
+          "fil_hex": "#006865",
+          "fil_code_gunold": "61230",
+          "duree_broderie_min": 10,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 13
+        },
+        {
+          "placement": "poignet",
+          "champs": [
+            {
+              "label": "Texte poignet",
+              "valeur": "Funky Love Drug",
+              "type": "texte_long",
+              "duree_min": 7,
+              "fil_id": "fil_rose_pale",
+              "source_duree": "classification"
+            },
+            {
+              "label": "Symbole poignet",
+              "valeur": "Trèfle",
+              "type": "symbole_simple",
+              "duree_min": 2,
+              "fil_id": "fil_vert_jardin",
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_rose_pale",
+          "fil_nom": "Rose pâle",
+          "fil_hex": "#F2C0BC",
+          "fil_code_gunold": "61408",
+          "fil_id_secondaire": "fil_vert_jardin",
+          "fil_nom_secondaire": "Vert jardin",
+          "fil_hex_secondaire": "#A1D7C9",
+          "fil_code_gunold_secondaire": "61446",
+          "duree_broderie_min": 9,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 4,
+          "duree_total_min": 16,
+          "note_atelier": "2 fils sur cette zone (rose pâle puis vert jardin) — 1 changement bobine intermédiaire."
+        }
+      ],
+      "duree_preparation_dst_min": 5,
+      "duree_setup_min": 5,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 42
+    },
+    {
+      "id": "art_1002_03",
+      "sku": "YP019-CLU-KHAKI-XS",
+      "produit_id": "YP019",
+      "produit_nom": "T-Shirt Brodé",
+      "motif_sku": "CLU",
+      "ypm_id": "YPM-003",
+      "ypm_nom": "Le Club",
+      "couleur_support": "kaki",
+      "taille": "XS",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Mot haut",
+              "valeur": "PUNK",
+              "type": "mot_court",
+              "duree_min": 3,
+              "source_duree": "classification"
+            },
+            {
+              "label": "Mot bas",
+              "valeur": "CLUB",
+              "type": "mot_court",
+              "duree_min": 3,
+              "source_duree": "classification"
+            },
+            {
+              "label": "Symbole buste",
+              "valeur": "Étoile",
+              "type": "symbole_simple",
+              "duree_min": 2,
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_bordeaux",
+          "fil_nom": "Bordeaux",
+          "fil_hex": "#5C2C35",
+          "fil_code_gunold": "61402",
+          "duree_broderie_min": 8,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 11
+        }
+      ],
+      "duree_preparation_dst_min": 0,
+      "duree_setup_min": 5,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 19,
+      "notes": "Prep DST mutualisée avec art_1002_02 (même motif YPM-003 Le Club)."
+    }
+  ],
+  "planning": {
+    "mode": "auto",
+    "horizon_jours": 3,
+    "date_debut": "2026-05-22",
+    "slots": [
+      {
+        "id": "slot_mpf6qdoqe7aj",
+        "machine": "TMEZ-1",
+        "jour": "2026-05-22",
+        "heure_debut": "09:00",
+        "heure_fin": "09:46",
+        "duree_min": 46,
+        "article_id": "art_1002_02",
+        "commande_id": "1002"
+      },
+      {
+        "id": "slot_mpf6qdoqxikx",
+        "machine": "TMEZ-2",
+        "jour": "2026-05-22",
+        "heure_debut": "09:00",
+        "heure_fin": "09:27",
+        "duree_min": 27,
+        "article_id": "art_1002_01",
+        "commande_id": "1002"
+      },
+      {
+        "id": "slot_mpf6qdoqaw0t",
+        "machine": "TMEZ-2",
+        "jour": "2026-05-22",
+        "heure_debut": "09:27",
+        "heure_fin": "09:48",
+        "duree_min": 21,
+        "article_id": "art_1002_03",
+        "commande_id": "1002"
+      }
+    ],
+    "genere_le": "2026-05-21T07:44:29.642Z"
+  },
+  "journal": {
+    "dst": {
+      "par": "Adriana",
+      "le": "2026-05-20"
+    },
+    "broderie": {
+      "par": "Felismina",
+      "le": "2026-05-22"
+    },
+    "cq": {
+      "par": "Adriana",
+      "le": "2026-05-22"
+    },
+    "expedition": {
+      "par": "Rebecca",
+      "le": "2026-05-23"
+    },
+    "archivee_le": "2026-05-23"
+  },
+  "duree_total_min": 86,
+  "nb_changements_fil_total": 3,
+  "notes": "Commande exemple V1 du module Atelier Production → Commandes. Recalibrée v1.2 (800 pts/min, prep DST 5 min/motif mutualisée, journal 4 étapes DST/Broderie/CQ/Expédition, algo planning OTIF par défaut). Câlin = 5 min broderie max / Club = 8 min broderie max (standards Sarah).",
+  "created_at": "2026-05-21",
+  "updated_at": "2026-05-21"
+}

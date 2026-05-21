@@ -1,0 +1,130 @@
+{
+  "_meta": {
+    "schema_version": "1.2",
+    "referentiel": "durees_broderie",
+    "last_updated": "2026-05-21",
+    "description": "Durées estimées par type de tâche broderie sur Tajima TMEZ. Sert au calcul automatique du plan de production. Calibré sur fiches techniques YPM réelles et estimations Sarah atelier.",
+    "machine_reference": "Tajima TMEZ (mono-tête, table standard)",
+    "vitesse_machine_pts_par_min": 800,
+    "principe_total": "duree_article = preparation_dst + setup_produit + somme(duree_broderie + cadrage + changements_fil) + CQ",
+    "changelog": {
+      "v1.0_2026-05-21": "Création initiale, 750 pts/min estimés",
+      "v1.1_2026-05-21": "Recalibrage 650 pts/min (vitesse réelle Sarah). Ajout opération preparation_dst (5 min/motif). Durées par type alignées sur standards Câlin=5min / Club=8min.",
+      "v1.2_2026-05-21": "Recalibrage 800 pts/min (vitesse cible production). Algo planning OTIF (FIFO + optim fils inter-articles) en complément de LPT (équilibrage)."
+    }
+  },
+
+  "operations": {
+    "preparation_dst": {
+      "label": "Préparation du fichier DST (programmation motif sur la machine)",
+      "duree_min": 5,
+      "note": "À ajouter UNE fois par motif à programmer sur la machine. Si le même motif est utilisé sur plusieurs articles de la commande et que mutualiser_prep_dst_par_motif=true, n'est compté qu'une fois par motif unique.",
+      "scope": "par_motif_unique_article"
+    },
+    "cadrage_zone": {
+      "label": "Cadrage / dé-cadrage d'une zone",
+      "duree_min": 3,
+      "note": "Tendre l'entoilage + positionner sur cerceau + verrouiller + dé-cadrer."
+    },
+    "changement_bobine_fil": {
+      "label": "Changement de bobine de fil",
+      "duree_min": 2,
+      "note": "Couper, dégager, enfiler nouvelle bobine, faire le noeud."
+    },
+    "setup_produit_initial": {
+      "label": "Préparation initiale d'un article (sortir le vêtement, repérer, marquer)",
+      "duree_min": 5,
+      "note": "Inclut le passage des références sur la fiche papier."
+    },
+    "controle_qualite_final": {
+      "label": "Contrôle qualité + pliage + sachet",
+      "duree_min": 3,
+      "note": "Vérification broderie + nettoyage fils + pliage + mise en sachet."
+    }
+  },
+
+  "broderie_types": {
+    "_principe": "Durée pure de broderie machine (hors cadrage, hors DST, hors changement fil). Basée sur 800 points/minute sur TMEZ (vitesse cible production). Référence concrète : YPM-001-K = 1890 pts = 2,4 min. Utilisé en fallback quand la FT précise (nb_points) n'est pas connue pour la variante.",
+    "initiale_simple": {
+      "label": "Initiale 1 lettre",
+      "duree_min": 2,
+      "exemples": ["c", "m", "A", "K"],
+      "points_estim": 1900,
+      "ref_calibration": "YPM-001-K = 1890 pts = 2,4 min à 800 pts/min"
+    },
+    "mot_court": {
+      "label": "Mot court 3-5 lettres",
+      "duree_min": 3,
+      "exemples": ["PUNK", "CLUB", "AMOUR"],
+      "points_estim": 2400
+    },
+    "mot_moyen": {
+      "label": "Mot moyen 6-10 lettres",
+      "duree_min": 5,
+      "exemples": ["COEUR", "SAUVAGE", "MAMAN"],
+      "points_estim": 4000
+    },
+    "texte_long": {
+      "label": "Texte long 11-20 caractères (2-3 mots)",
+      "duree_min": 7,
+      "exemples": ["Funky Love Drug", "Mon amour"],
+      "points_estim": 5600
+    },
+    "texte_tres_long": {
+      "label": "Texte très long 21+ caractères",
+      "duree_min": 11,
+      "exemples": ["Une vie à t'aimer"],
+      "points_estim": 8800
+    },
+    "symbole_simple": {
+      "label": "Symbole simple (coeur, étoile, trèfle, fleur basique)",
+      "duree_min": 2,
+      "exemples": ["Coeur", "Étoile", "Trèfle", "Fleur"],
+      "points_estim": 1600
+    },
+    "symbole_complexe": {
+      "label": "Symbole complexe (motif détaillé multicouches)",
+      "duree_min": 5,
+      "exemples": ["Bouquet", "Animal détaillé"],
+      "points_estim": 4000
+    }
+  },
+
+  "standards_motifs_atelier": {
+    "_principe": "Standards Sarah pour les motifs canoniques YPM, broderie pure (hors DST/setup/cadrage/CQ). Utilisé comme garde-fou de cohérence.",
+    "YPM-006_le_calin": {
+      "duree_broderie_max_min": 5,
+      "note": "Coeur + initiale standard"
+    },
+    "YPM-003_le_club": {
+      "duree_broderie_max_min": 8,
+      "note": "Composition typo + symbole central standard. Si commande custom multi-zones, le total peut dépasser."
+    }
+  },
+
+  "regles_classification_auto": {
+    "_principe": "Règles utilisées par le module pour classifier automatiquement une saisie client en type de broderie quand on n'a pas de FT précise.",
+    "longueur_caracteres": [
+      { "max": 1, "type": "initiale_simple" },
+      { "max": 5, "type": "mot_court" },
+      { "max": 10, "type": "mot_moyen" },
+      { "max": 20, "type": "texte_long" },
+      { "max": 999, "type": "texte_tres_long" }
+    ],
+    "symboles_simples": ["coeur", "cœur", "etoile", "étoile", "trefle", "trèfle", "fleur", "lune", "soleil"],
+    "symboles_complexes": ["bouquet", "rose detaillee", "animal", "papillon detaille"]
+  },
+
+  "capacite_atelier": {
+    "_principe": "Paramètres planning par défaut. Modifiables depuis l'UI commande.",
+    "nb_machines": 2,
+    "noms_machines": ["TMEZ-1", "TMEZ-2"],
+    "heures_effectives_par_jour": 6,
+    "minutes_effectives_par_jour": 360,
+    "jours_ouvres": ["lundi", "mardi", "mercredi", "jeudi", "vendredi"],
+    "pause_dejeuner_min": 60,
+    "mutualiser_prep_dst_par_motif": true,
+    "algo_planning_par_defaut": "otif",
+    "note": "Tajima TMEZ identiques, parallélisables librement (validé Sarah 21/05/2026). Vitesse 800 pts/min. mutualiser_prep_dst_par_motif=true → 1 seule prep DST par YPM unique dans la commande. algo_planning_par_defaut='otif' → FIFO date_commande + optim regroupement fils inter-articles sur même machine (vs 'lpt' = équilibrage pur)."
+  }
+}
