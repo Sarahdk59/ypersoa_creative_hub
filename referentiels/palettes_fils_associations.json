@@ -1,0 +1,352 @@
+{
+  "_meta": {
+    "schema_version": "1.1",
+    "referentiel": "palettes_fils_associations",
+    "last_updated": "2026-05-21",
+    "description": "Palettes d'associations canoniques de fils Gunold-Poly. Une palette = ensemble réutilisable, qu'un motif peut référencer dans bible.palettes_associees.",
+    "nb_palettes": 26
+  },
+  "palettes": [
+    {
+      "id": "palette_camaieu_bleu",
+      "nom": "Camaïeu de bleu",
+      "type": "camaieu",
+      "fils": [
+        "fil_bleu_petrole",
+        "fil_bleu_turquoise",
+        "fil_bleu_glacier",
+        "fil_bleu_clair"
+      ],
+      "description": "Variations du bleu profond au glacier — gradient cohérent.",
+      "archive": true
+    },
+    {
+      "id": "palette_multicolore_chaud",
+      "nom": "Multicolore",
+      "type": "multicolore",
+      "fils": [
+        "fil_rose_poudre",
+        "fil_ocre_moutarde",
+        "fil_sable",
+        "fil_canard",
+        "fil_framboise"
+      ],
+      "description": "Palette multicolore éditoriale — chaud + naturel + accent canard.",
+      "favori": true
+    },
+    {
+      "id": "palette_camaieu_rose",
+      "nom": "Camaïeu de rose",
+      "type": "camaieu",
+      "fils": [
+        "fil_rose_vif",
+        "fil_cerise",
+        "fil_mauve",
+        "fil_violet",
+        "fil_lilas"
+      ],
+      "description": "Variations rose-violet — du fushia au profond aubergine.",
+      "favori": true
+    },
+    {
+      "id": "palette_camaieu_naturel",
+      "nom": "Camaïeu de naturel",
+      "type": "camaieu",
+      "fils": [
+        "fil_camel",
+        "fil_noir",
+        "fil_ivoire",
+        "fil_terracotta"
+      ],
+      "description": "Tons naturels et terre — lin, sable, terracotta, rythmé par le noir.",
+      "favori": true
+    },
+    {
+      "id": "palette_multicolore_trends_2026",
+      "nom": "Multicolore Trends 2026",
+      "type": "multicolore",
+      "fils": [
+        "fil_marine",
+        "fil_terracotta",
+        "fil_rose_poudre",
+        "fil_vert_sauge",
+        "fil_bordeaux"
+      ],
+      "description": "Palette tendance 2026 — base multicolore (marine + terracotta + rose poudré + vert sauge) rythmée par le bordeaux signature.",
+      "archive": true
+    },
+    {
+      "id": "palette_camaieu_bleu_perle",
+      "nom": "Camaïeu bleu + perle",
+      "type": "camaieu",
+      "fils": [
+        "fil_bleu_petrole",
+        "fil_bleu_turquoise",
+        "fil_bleu_glacier",
+        "fil_bleu_clair",
+        "fil_gris_perle"
+      ],
+      "description": "Pétrole profond fini par le gris perle lustré — neutre lumineux qui adoucit le gradient bleu.",
+      "archive": true
+    },
+    {
+      "id": "palette_camaieu_bleu_marine",
+      "nom": "Orage",
+      "type": "camaieu",
+      "fils": [
+        "fil_marine",
+        "fil_bleu_petrole",
+        "fil_canard",
+        "fil_vert_jade",
+        "fil_bleu_de_prusse"
+      ],
+      "description": "Gradient marin total, du marine profond au bleu glacier.",
+      "favori": true
+    },
+    {
+      "id": "palette_terre_grisee",
+      "nom": "Terre grisée",
+      "type": "camaieu",
+      "fils": [
+        "fil_terracotta",
+        "fil_rose_grise",
+        "fil_camel",
+        "fil_naturel",
+        "fil_gris_perle"
+      ],
+      "description": "Terracotta posé sur des neutres mats (rose grisé, gris perle) — pas de noir, lecture grisée chic.",
+      "archive": true
+    },
+    {
+      "id": "palette_trends_2026_grisee",
+      "nom": "Trends 2026 grisée",
+      "type": "multicolore",
+      "fils": [
+        "fil_marine",
+        "fil_terracotta",
+        "fil_rose_grise",
+        "fil_vert_sauge",
+        "fil_gris_perle"
+      ],
+      "description": "Variante grisée de la Trends 2026 — rose grisé en place du rose poudré, gris perle à la place du bordeaux.",
+      "archive": true
+    },
+    {
+      "id": "palette_naturel_canard",
+      "nom": "Naturel × canard",
+      "type": "camaieu",
+      "fils": [
+        "fil_naturel",
+        "fil_ivoire",
+        "fil_camel",
+        "fil_canard",
+        "fil_anthracite"
+      ],
+      "description": "Camaïeu naturel chaud rythmé par le canard profond et l'anthracite — moins terreux que le camaïeu naturel classique.",
+      "archive": true
+    },
+    {
+      "id": "palette_jardin_printanier",
+      "nom": "Jardin printanier",
+      "type": "multicolore",
+      "fils": [
+        "fil_vert_jardin",
+        "fil_vert_sauge",
+        "fil_framboise",
+        "fil_rose_poudre",
+        "fil_marine"
+      ],
+      "description": "Camaïeu botanique (jardin + sauge) avec accents rose poudré et framboise, ancré par le pétrole profond — registre Sézane × A.P.C. version végétale.",
+      "archive": true
+    },
+    {
+      "id": "palette_jardin_cevenole",
+      "nom": "Jardin cévénole",
+      "type": "camaieu",
+      "fils": [
+        "fil_vert_sauge",
+        "fil_canard",
+        "fil_vert_jade",
+        "fil_vert_jardin",
+        "fil_sable"
+      ],
+      "description": "Camaïeu vert profond façon châtaigneraie cévenole — sauge, canard, jade, jardin, posés sur le sable chaud. Registre nature minérale, terroir.",
+      "favori": true
+    },
+    {
+      "id": "palette_printemps_basque",
+      "nom": "Printemps basque",
+      "type": "multicolore",
+      "fils": [
+        "fil_cerise",
+        "fil_rose_poudre",
+        "fil_vert_sauge",
+        "fil_parme",
+        "fil_canard"
+      ],
+      "description": "Palette pays basque au printemps — rouge espelette signature, adouci par rose poudré et lilas, ancré sauge et canard. Registre festif tempéré.",
+      "favori": true
+    },
+    {
+      "id": "palette_trends",
+      "nom": "Trends",
+      "type": "camaieu",
+      "fils": [
+        "fil_vert_sauge",
+        "fil_marine",
+        "fil_bordeaux",
+        "fil_terracotta",
+        "fil_rose_poudre"
+      ]
+    },
+    {
+      "id": "palette_pastel",
+      "nom": "Pastel",
+      "type": "multicolore",
+      "fils": [
+        "fil_corail",
+        "fil_miel",
+        "fil_menthe",
+        "fil_mer_du_sud",
+        "fil_framboise"
+      ],
+      "archive": true
+    },
+    {
+      "id": "palette_cuivre_doux",
+      "nom": "Cuivré doux",
+      "type": "camaieu",
+      "fils": [
+        "fil_blush",
+        "fil_rose_doux",
+        "fil_sable",
+        "fil_rose_poudre",
+        "fil_rosee"
+      ]
+    },
+    {
+      "id": "palette_blush",
+      "nom": "Blush",
+      "type": "camaieu",
+      "fils": [
+        "fil_blush",
+        "fil_terracotta",
+        "fil_bordeaux",
+        "fil_kaki",
+        "fil_vieux_rose"
+      ]
+    },
+    {
+      "id": "palette_automne",
+      "nom": "Automne",
+      "type": "camaieu",
+      "fils": [
+        "fil_miel",
+        "fil_sable",
+        "fil_kaki",
+        "fil_framboise",
+        "fil_prune"
+      ],
+      "favori": true
+    },
+    {
+      "id": "palette_rouge_camaieu",
+      "nom": "Passion Passion",
+      "type": "camaieu",
+      "fils": [
+        "fil_blush",
+        "fil_rouge",
+        "fil_bordeaux",
+        "fil_framboise",
+        "fil_rose_vif"
+      ]
+    },
+    {
+      "id": "palette_neutre_olive",
+      "nom": "Terre à Terre",
+      "type": "camaieu",
+      "fils": [
+        "fil_kaki",
+        "fil_kaki_fonce",
+        "fil_sable",
+        "fil_olive",
+        "fil_taupe"
+      ],
+      "favori": true
+    },
+    {
+      "id": "palette_mer_du_sud",
+      "nom": "Farniente",
+      "type": "camaieu",
+      "fils": [
+        "fil_bleu",
+        "fil_bleu_ciel",
+        "fil_corail",
+        "fil_ivoire",
+        "fil_mer_du_sud"
+      ]
+    },
+    {
+      "id": "palette_malo_les_bains",
+      "nom": "Malo Les Bains",
+      "type": "camaieu",
+      "fils": [
+        "fil_mer_du_sud",
+        "fil_bleu_ciel",
+        "fil_bleu_clair",
+        "fil_bleu",
+        "fil_bleu_glacier"
+      ],
+      "favori": true
+    },
+    {
+      "id": "palette_dynamique",
+      "nom": "Dynamique",
+      "type": "camaieu",
+      "fils": [
+        "fil_ivoire",
+        "fil_marine",
+        "fil_parme",
+        "fil_orchidee",
+        "fil_mer_du_sud"
+      ]
+    },
+    {
+      "id": "palette_mix_match",
+      "nom": "Mix & Match",
+      "type": "camaieu",
+      "fils": [
+        "fil_rose_doux",
+        "fil_bleu_ciel",
+        "fil_corail",
+        "fil_vert_jade",
+        "fil_bleu_petrole"
+      ],
+      "archive": true
+    },
+    {
+      "id": "palette_nautilus",
+      "nom": "Nautilus",
+      "type": "camaieu",
+      "fils": [
+        "fil_bleu_roi",
+        "fil_bleu_ciel",
+        "fil_rose_vif",
+        "fil_blush",
+        "fil_ivoire"
+      ]
+    },
+    {
+      "id": "palette_citronnade",
+      "nom": "Citronnade",
+      "type": "camaieu",
+      "fils": [
+        "fil_bleu_ciel",
+        "fil_bleu_roi",
+        "fil_ocre_moutarde",
+        "fil_ivoire",
+        "fil_rose_vif"
+      ]
+    }
+  ]
+}

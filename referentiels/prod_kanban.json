@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "prod_kanban",
+    "last_updated": "2026-05-18",
+    "description": "Kanban board production : post-its de questions / améliorations / décisions à trancher pour la prod broderie. Adriana et Sarah ajoutent, déplacent, archivent."
+  },
+  "columns": [
+    {
+      "id": "backlog",
+      "label": "Backlog",
+      "ordre": 0,
+      "couleur": "#B5B0A6"
+    },
+    {
+      "id": "prochain",
+      "label": "Prochain",
+      "ordre": 1,
+      "couleur": "#E8B547"
+    },
+    {
+      "id": "en_cours",
+      "label": "En cours",
+      "ordre": 2,
+      "couleur": "#176B7A"
+    },
+    {
+      "id": "teste",
+      "label": "Testé",
+      "ordre": 3,
+      "couleur": "#6F8E70"
+    },
+    {
+      "id": "fait",
+      "label": "Fait",
+      "ordre": 4,
+      "couleur": "#2F7A3E"
+    }
+  ],
+  "cards": [
+    {
+      "id": "card_mpbrrmfqtmsj",
+      "column_id": "backlog",
+      "title": "validation gamme couleur",
+      "body": "",
+      "type": "decision",
+      "stakeholders": [
+        "Rebecca",
+        "Sarah"
+      ],
+      "created_at": "2026-05-18",
+      "updated_at": "2026-05-18"
+    },
+    {
+      "id": "card_mpbrquvgqwxc",
+      "column_id": "backlog",
+      "title": "faire le poignet éclair & arc en ciel",
+      "body": "",
+      "type": "question",
+      "stakeholders": [
+        "Sarah"
+      ],
+      "created_at": "2026-05-18",
+      "updated_at": "2026-05-18"
+    }
+  ]
+}

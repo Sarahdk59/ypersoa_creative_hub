@@ -1,0 +1,345 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "attributions_library",
+    "last_updated": "2026-05-21",
+    "description": "Bibliothèque des attributions multicolores sauvegardées depuis le moteur. Chaque entrée garde texte + palette/couleur + typo + résultat algo (positions + attribution + score) pour rejouer le rendu identique."
+  },
+  "attributions": [
+    {
+      "id": "attr_mpf7ksum3f2p",
+      "name": "YPM-004 Palette Camaïeu de rose",
+      "motif_id": "YPM-004",
+      "mode": "palette",
+      "palette_id": "palette_camaieu_rose",
+      "coeur_couleur_id": null,
+      "texte_lignes": [
+        "1994",
+        "1996",
+        "1952",
+        "2000"
+      ],
+      "typo_id": "russ_times",
+      "bg_fond": "#EFE9D8",
+      "result": {
+        "attribution": {
+          "0": "fil_rose_vif",
+          "1": "fil_rose_vif",
+          "2": "fil_cerise",
+          "3": "fil_cerise",
+          "4": "fil_mauve",
+          "5": "fil_mauve",
+          "6": "fil_violet",
+          "7": "fil_violet",
+          "8": "fil_cerise",
+          "9": "fil_cerise",
+          "10": "fil_mauve",
+          "11": "fil_mauve",
+          "12": "fil_violet",
+          "13": "fil_violet",
+          "14": "fil_rose_vif",
+          "15": "fil_rose_vif"
+        },
+        "positions": [
+          {
+            "ligne": 0,
+            "indice": 0,
+            "x_relatif": -1.5,
+            "caractere": "1"
+          },
+          {
+            "ligne": 0,
+            "indice": 1,
+            "x_relatif": -0.5,
+            "caractere": "9"
+          },
+          {
+            "ligne": 0,
+            "indice": 2,
+            "x_relatif": 0.5,
+            "caractere": "9"
+          },
+          {
+            "ligne": 0,
+            "indice": 3,
+            "x_relatif": 1.5,
+            "caractere": "4"
+          },
+          {
+            "ligne": 1,
+            "indice": 0,
+            "x_relatif": -1.5,
+            "caractere": "1"
+          },
+          {
+            "ligne": 1,
+            "indice": 1,
+            "x_relatif": -0.5,
+            "caractere": "9"
+          },
+          {
+            "ligne": 1,
+            "indice": 2,
+            "x_relatif": 0.5,
+            "caractere": "9"
+          },
+          {
+            "ligne": 1,
+            "indice": 3,
+            "x_relatif": 1.5,
+            "caractere": "6"
+          },
+          {
+            "ligne": 2,
+            "indice": 0,
+            "x_relatif": -1.5,
+            "caractere": "1"
+          },
+          {
+            "ligne": 2,
+            "indice": 1,
+            "x_relatif": -0.5,
+            "caractere": "9"
+          },
+          {
+            "ligne": 2,
+            "indice": 2,
+            "x_relatif": 0.5,
+            "caractere": "5"
+          },
+          {
+            "ligne": 2,
+            "indice": 3,
+            "x_relatif": 1.5,
+            "caractere": "2"
+          },
+          {
+            "ligne": 3,
+            "indice": 0,
+            "x_relatif": -1.5,
+            "caractere": "2"
+          },
+          {
+            "ligne": 3,
+            "indice": 1,
+            "x_relatif": -0.5,
+            "caractere": "0"
+          },
+          {
+            "ligne": 3,
+            "indice": 2,
+            "x_relatif": 0.5,
+            "caractere": "0"
+          },
+          {
+            "ligne": 3,
+            "indice": 3,
+            "x_relatif": 1.5,
+            "caractere": "0"
+          }
+        ],
+        "score": 1,
+        "seed": 0,
+        "distribution": [
+          {
+            "couleur_id": "fil_rose_vif",
+            "count": 4
+          },
+          {
+            "couleur_id": "fil_cerise",
+            "count": 4
+          },
+          {
+            "couleur_id": "fil_mauve",
+            "count": 4
+          },
+          {
+            "couleur_id": "fil_violet",
+            "count": 4
+          }
+        ]
+      },
+      "created_at": "2026-05-21"
+    },
+    {
+      "id": "attr_mpd487to5edy",
+      "name": "YPM-009 Palette Citronnade",
+      "motif_id": "YPM-009",
+      "mode": "palette",
+      "palette_id": "palette_citronnade",
+      "coeur_couleur_id": null,
+      "texte_lignes": [
+        "Daddy",
+        "cool",
+        "and",
+        "the gang"
+      ],
+      "typo_id": "looney",
+      "bg_fond": "#EFE9D8",
+      "result": {
+        "attribution": {
+          "0": "fil_bleu_ciel",
+          "1": "fil_rose_vif",
+          "2": "fil_ocre_moutarde",
+          "3": "fil_bleu_roi",
+          "4": "fil_rose_vif",
+          "5": "fil_bleu_roi",
+          "6": "fil_bleu_ciel",
+          "7": "fil_blanc",
+          "8": "fil_ocre_moutarde",
+          "9": "fil_rose_vif",
+          "10": "fil_ocre_moutarde",
+          "11": "fil_bleu_ciel",
+          "12": "fil_blanc",
+          "13": "fil_bleu_ciel",
+          "14": "fil_bleu_roi",
+          "15": "fil_rose_vif",
+          "16": "fil_ocre_moutarde",
+          "17": "fil_bleu_roi",
+          "18": "fil_blanc"
+        },
+        "positions": [
+          {
+            "ligne": 0,
+            "indice": 0,
+            "x_relatif": -2,
+            "caractere": "D"
+          },
+          {
+            "ligne": 0,
+            "indice": 1,
+            "x_relatif": -1,
+            "caractere": "a"
+          },
+          {
+            "ligne": 0,
+            "indice": 2,
+            "x_relatif": 0,
+            "caractere": "d"
+          },
+          {
+            "ligne": 0,
+            "indice": 3,
+            "x_relatif": 1,
+            "caractere": "d"
+          },
+          {
+            "ligne": 0,
+            "indice": 4,
+            "x_relatif": 2,
+            "caractere": "y"
+          },
+          {
+            "ligne": 1,
+            "indice": 0,
+            "x_relatif": -1.5,
+            "caractere": "c"
+          },
+          {
+            "ligne": 1,
+            "indice": 1,
+            "x_relatif": -0.5,
+            "caractere": "o"
+          },
+          {
+            "ligne": 1,
+            "indice": 2,
+            "x_relatif": 0.5,
+            "caractere": "o"
+          },
+          {
+            "ligne": 1,
+            "indice": 3,
+            "x_relatif": 1.5,
+            "caractere": "l"
+          },
+          {
+            "ligne": 2,
+            "indice": 0,
+            "x_relatif": -1,
+            "caractere": "a"
+          },
+          {
+            "ligne": 2,
+            "indice": 1,
+            "x_relatif": 0,
+            "caractere": "n"
+          },
+          {
+            "ligne": 2,
+            "indice": 2,
+            "x_relatif": 1,
+            "caractere": "d"
+          },
+          {
+            "ligne": 3,
+            "indice": 0,
+            "x_relatif": -3,
+            "caractere": "t"
+          },
+          {
+            "ligne": 3,
+            "indice": 1,
+            "x_relatif": -2,
+            "caractere": "h"
+          },
+          {
+            "ligne": 3,
+            "indice": 2,
+            "x_relatif": -1,
+            "caractere": "e"
+          },
+          {
+            "ligne": 3,
+            "indice": 3,
+            "x_relatif": 0,
+            "caractere": "g"
+          },
+          {
+            "ligne": 3,
+            "indice": 4,
+            "x_relatif": 1,
+            "caractere": "a"
+          },
+          {
+            "ligne": 3,
+            "indice": 5,
+            "x_relatif": 2,
+            "caractere": "n"
+          },
+          {
+            "ligne": 3,
+            "indice": 6,
+            "x_relatif": 3,
+            "caractere": "g"
+          }
+        ],
+        "score": 0.9981764412226666,
+        "seed": 1499190768,
+        "distribution": [
+          {
+            "couleur_id": "fil_bleu_ciel",
+            "count": 4
+          },
+          {
+            "couleur_id": "fil_rose_vif",
+            "count": 4
+          },
+          {
+            "couleur_id": "fil_ocre_moutarde",
+            "count": 4
+          },
+          {
+            "couleur_id": "fil_bleu_roi",
+            "count": 4
+          },
+          {
+            "couleur_id": "fil_blanc",
+            "count": 3
+          }
+        ]
+      },
+      "created_at": "2026-05-19"
+    }
+  ]
+}

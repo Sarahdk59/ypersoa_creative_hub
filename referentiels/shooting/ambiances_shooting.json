@@ -152,7 +152,7 @@
       "prompt_en_keywords": "Winter conservatory or potting room, glass roof and large windows, soft filtered natural light, terracotta pots and lush indoor plants on wooden shelves, vintage wooden potting table, William Morris × Soeur × La Trésorerie aesthetic, cozy domestic gardening atmosphere, slow Sunday morning, autumn-winter coherence",
       "lumiere_dominante": "naturelle filtrée verrière (douce hivernale)",
       "tons_chromatiques": ["vert_feuillage", "terracotta", "bois_patine", "blanc_creme"],
-      "tons_hex": ["#5C7A3F", "#C4694A", "#A07957", "#F5F0EA"],
+      "tons_hex": ["#5C7A3F", "#CF5D61", "#A07957", "#F5F0EA"],
       "lieu_type": "atelier de rempotage, salon d'hiver, jardin d'hiver, verrière domestique",
       "saisonnalite": "automne-hiver privilégié (printemps possible)",
       "mannequins_recommandes_ids": ["MAN-P05", "MAN-P10", "MAN-P01", "MAN-P08", "MAN-S17", "MAN-S19-JOSEPHINE"],
@@ -240,7 +240,7 @@
 
       "lumiere_dominante": "naturelle extérieur dynamique (backlight)",
       "tons_chromatiques": ["vert_prairie", "ocre_terre", "ciel_blanc", "terracotta_sable"],
-      "tons_hex": ["#87A96B", "#B8763E", "#E8E4D9", "#C4694A"],
+      "tons_hex": ["#87A96B", "#B8763E", "#E8E4D9", "#CF5D61"],
       "lieu_type": "extérieur sauvage : plage, forêt, dunes, prairie, montagne",
       "saisonnalite": "printemps / été / début automne (évite hiver brumeux)",
 
@@ -290,7 +290,7 @@
 
       "lumiere_dominante": "dorée couchant (backlight ou rimlight)",
       "tons_chromatiques": ["dore_miel", "ocre_couchant", "terracotta_chaud", "brun_cacao"],
-      "tons_hex": ["#D4A574", "#B87333", "#C4694A", "#8B5A3C"],
+      "tons_hex": ["#D4A574", "#B87333", "#CF5D61", "#8B5A3C"],
       "lieu_type": "extérieur fin de journée, terrasse, balcon, fenêtre couchant, jardin",
       "saisonnalite": "toute saison (printemps-automne idéaux)",
 

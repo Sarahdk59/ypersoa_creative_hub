@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "regles_broderie",
+    "last_updated": "2026-05-21",
+    "description": "Règles et contraintes officielles broderie Ypersoa par type de placement. Source de vérité pour la prod Adriana et pour les générations IA (atelier-shooting, atelier-DA shooting-book)."
+  },
+  "placements": [
+    {
+      "id": "poignet",
+      "label": "Poignet",
+      "icone": "Watch",
+      "dimension_max_cm": 5.5,
+      "dimension_axe": "largeur",
+      "regles": [
+        "Largeur max : 5,5 cm",
+        "Adapter de manière proportionnelle les motifs de 2 lignes ou plus",
+        "Adapter la typographie à la typographie du buste"
+      ],
+      "note": ""
+    },
+    {
+      "id": "cote_coeur",
+      "label": "Côté cœur",
+      "icone": "Shirt",
+      "dimension_par_defaut_cm": 8,
+      "dimension_xxl_cm": 10,
+      "dimension_axe": "largeur",
+      "regles": [
+        "Largeur par défaut : 8 cm",
+        "Passer à 10 cm pour les tailles 2XL ou 3XL si besoin"
+      ],
+      "note": ""
+    },
+    {
+      "id": "centre",
+      "label": "Centre",
+      "icone": "AlignCenter",
+      "dimension_par_defaut_cm": 24,
+      "dimension_axe": "largeur",
+      "regles": [
+        "Largeur par défaut : 24 cm",
+        "largeur Max 29 cm"
+      ],
+      "note": ""
+    },
+    {
+      "id": "nommage_fichiers",
+      "label": "Nommage des fichiers",
+      "icone": "FileText",
+      "regles": [
+        "YPM-001-A = motif / lettre template (A)",
+        "YPM-001-A-poignet-coeur contour = motif / lettre (A) / position (poignet) - modèle (cœur contour)",
+        "YPM-003-Club_Infinity = motif Le Club avec la broderie Club + symbole Infini",
+        "YPM-003-Club-poignet-infiny = motif Le Club avec la broderie Club + symbole infiny pour le poignet"
+      ],
+      "note": "Convention de nommage des fichiers prod (PXF/DST/PNG/FT) dans assets/motifs *. Format de base : {YPM-id}-{lettre|nom}[-{position}-{modele}].{ext}. Position = buste (par défaut, omise) / poignet. Modèle = variante visuelle (coeur contour, infiny, etc.)."
+    },
+    {
+      "id": "production",
+      "label": "Production",
+      "icone": "Ruler",
+      "regles": [
+        "Utilisation de la machine à 800 points minutes"
+      ],
+      "note": ""
+    }
+  ]
+}

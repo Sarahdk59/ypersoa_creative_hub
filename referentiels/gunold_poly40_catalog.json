@@ -1,0 +1,1408 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "gunold_poly40_catalog",
+    "source": "Gunold Poly 40 — catalogue officiel fournisseur",
+    "last_updated": "2026-05-19",
+    "description": "Catalogue complet des codes Gunold Poly 40 avec hex officiel. Utilisé par le calculateur de nouveau fil pour auto-remplir le hex à partir d'un code Gunold."
+  },
+  "couleurs": [
+    {
+      "code_gunold": "61001",
+      "hex": "#F4F4F8"
+    },
+    {
+      "code_gunold": "61002",
+      "hex": "#F5EEF2"
+    },
+    {
+      "code_gunold": "61005",
+      "hex": "#200416",
+      "pantone_pms": "426"
+    },
+    {
+      "code_gunold": "61011",
+      "hex": "#969695",
+      "pantone_pms_named": "Cool Gray 5"
+    },
+    {
+      "code_gunold": "61015",
+      "hex": "#FDCDCB"
+    },
+    {
+      "code_gunold": "61017",
+      "hex": "#EFCAAE",
+      "pantone_pms": "474"
+    },
+    {
+      "code_gunold": "61019",
+      "hex": "#FF9686"
+    },
+    {
+      "code_gunold": "61020",
+      "hex": "#FF7570",
+      "pantone_pms": "177"
+    },
+    {
+      "code_gunold": "61021",
+      "hex": "#CB3B1C"
+    },
+    {
+      "code_gunold": "61022",
+      "hex": "#F5F3D5"
+    },
+    {
+      "code_gunold": "61023",
+      "hex": "#FFDE05",
+      "pantone_pms": "109"
+    },
+    {
+      "code_gunold": "61024",
+      "hex": "#FFAE00"
+    },
+    {
+      "code_gunold": "61025",
+      "hex": "#D47500"
+    },
+    {
+      "code_gunold": "61028",
+      "hex": "#8183CC",
+      "pantone_pms": "543"
+    },
+    {
+      "code_gunold": "61029",
+      "hex": "#6A80DC",
+      "pantone_pms": "284"
+    },
+    {
+      "code_gunold": "61030",
+      "hex": "#A4B5EA",
+      "pantone_pms": "659"
+    },
+    {
+      "code_gunold": "61031",
+      "hex": "#D6B3CD",
+      "pantone_pms": "257"
+    },
+    {
+      "code_gunold": "61032",
+      "hex": "#974DB4",
+      "pantone_pms": "521"
+    },
+    {
+      "code_gunold": "61033",
+      "hex": "#B32C92",
+      "pantone_pms": "258"
+    },
+    {
+      "code_gunold": "61034",
+      "hex": "#A72B4A",
+      "pantone_pms": "198"
+    },
+    {
+      "code_gunold": "61035",
+      "hex": "#671119",
+      "pantone_pms": "209"
+    },
+    {
+      "code_gunold": "61036",
+      "hex": "#8B3634",
+      "pantone_pms": "491"
+    },
+    {
+      "code_gunold": "61037",
+      "hex": "#E80200",
+      "pantone_pms": "186"
+    },
+    {
+      "code_gunold": "61039",
+      "hex": "#CA0005",
+      "pantone_pms": "193"
+    },
+    {
+      "code_gunold": "61040",
+      "hex": "#6A5E5E",
+      "pantone_pms": "424"
+    },
+    {
+      "code_gunold": "61041",
+      "hex": "#757272",
+      "pantone_pms": "431"
+    },
+    {
+      "code_gunold": "61042",
+      "hex": "#22126B",
+      "pantone_pms": "662"
+    },
+    {
+      "code_gunold": "61043",
+      "hex": "#38263C"
+    },
+    {
+      "code_gunold": "61044",
+      "hex": "#1D062F",
+      "pantone_pms": "655"
+    },
+    {
+      "code_gunold": "61045",
+      "hex": "#8BCBCB"
+    },
+    {
+      "code_gunold": "61046",
+      "hex": "#6D8F8F",
+      "pantone_pms": "562"
+    },
+    {
+      "code_gunold": "61047",
+      "hex": "#BFCFA1",
+      "pantone_pms": "358"
+    },
+    {
+      "code_gunold": "61049",
+      "hex": "#6BA168",
+      "pantone_pms": "7489"
+    },
+    {
+      "code_gunold": "61051",
+      "hex": "#2A6C31",
+      "pantone_pms": "356"
+    },
+    {
+      "code_gunold": "61054",
+      "hex": "#E8BB9F",
+      "pantone_pms": "7514"
+    },
+    {
+      "code_gunold": "61055",
+      "hex": "#E9AF6E",
+      "pantone_pms": "7509"
+    },
+    {
+      "code_gunold": "61056",
+      "hex": "#D07444"
+    },
+    {
+      "code_gunold": "61057",
+      "hex": "#752212",
+      "pantone_pms": "469"
+    },
+    {
+      "code_gunold": "61058",
+      "hex": "#67281D"
+    },
+    {
+      "code_gunold": "61059",
+      "hex": "#64443F",
+      "pantone_pms": "7519"
+    },
+    {
+      "code_gunold": "61061",
+      "hex": "#FFEAA6"
+    },
+    {
+      "code_gunold": "61063",
+      "hex": "#F0F9E9"
+    },
+    {
+      "code_gunold": "61064",
+      "hex": "#FFD5EC"
+    },
+    {
+      "code_gunold": "61065",
+      "hex": "#FF8B00"
+    },
+    {
+      "code_gunold": "61066",
+      "hex": "#FFEEA4"
+    },
+    {
+      "code_gunold": "61067",
+      "hex": "#FFF77F",
+      "pantone_pms": "120"
+    },
+    {
+      "code_gunold": "61068",
+      "hex": "#F5E9E9"
+    },
+    {
+      "code_gunold": "61070",
+      "hex": "#E8AE54"
+    },
+    {
+      "code_gunold": "61071",
+      "hex": "#EFE9DC"
+    },
+    {
+      "code_gunold": "61074",
+      "hex": "#D5DFFE",
+      "pantone_pms": "290"
+    },
+    {
+      "code_gunold": "61076",
+      "hex": "#292379"
+    },
+    {
+      "code_gunold": "61077",
+      "hex": "#C4CFCE"
+    },
+    {
+      "code_gunold": "61078",
+      "hex": "#FF7200",
+      "pantone_pms": "172",
+      "pantone_pms_named": "Orange 021 / Warm"
+    },
+    {
+      "code_gunold": "61079",
+      "hex": "#237553",
+      "pantone_pms": "348"
+    },
+    {
+      "code_gunold": "61080",
+      "hex": "#D076C1"
+    },
+    {
+      "code_gunold": "61081",
+      "hex": "#CF5D61"
+    },
+    {
+      "code_gunold": "61082",
+      "hex": "#F8E4C9",
+      "pantone_pms": "468"
+    },
+    {
+      "code_gunold": "61083",
+      "hex": "#FFC94F",
+      "pantone_pms": "130"
+    },
+    {
+      "code_gunold": "61085",
+      "hex": "#DBCCC3",
+      "pantone_pms": "434"
+    },
+    {
+      "code_gunold": "61086",
+      "hex": "#FFFFED",
+      "pantone_pms_named": "Warm Gray 1"
+    },
+    {
+      "code_gunold": "61090",
+      "hex": "#1B7895"
+    },
+    {
+      "code_gunold": "61094",
+      "hex": "#40AADE",
+      "pantone_pms": "312"
+    },
+    {
+      "code_gunold": "61095",
+      "hex": "#31AAD1",
+      "pantone_pms": "638"
+    },
+    {
+      "code_gunold": "61096",
+      "hex": "#075787",
+      "pantone_pms": "315"
+    },
+    {
+      "code_gunold": "61100",
+      "hex": "#BBD7A9",
+      "pantone_pms": "359"
+    },
+    {
+      "code_gunold": "61101",
+      "hex": "#35884B",
+      "pantone_pms": "355"
+    },
+    {
+      "code_gunold": "61103",
+      "hex": "#371E18",
+      "pantone_pms": "553"
+    },
+    {
+      "code_gunold": "61104",
+      "hex": "#CCD394",
+      "pantone_pms": "577"
+    },
+    {
+      "code_gunold": "61108",
+      "hex": "#FF95C3",
+      "pantone_pms": "189"
+    },
+    {
+      "code_gunold": "61109",
+      "hex": "#F12E84",
+      "pantone_pms": "212"
+    },
+    {
+      "code_gunold": "61111",
+      "hex": "#FAC8DB",
+      "pantone_pms": "678"
+    },
+    {
+      "code_gunold": "61112",
+      "hex": "#3F0E6A"
+    },
+    {
+      "code_gunold": "61113",
+      "hex": "#FFE4E8",
+      "pantone_pms": "496"
+    },
+    {
+      "code_gunold": "61115",
+      "hex": "#FFCDDA",
+      "pantone_pms": "189"
+    },
+    {
+      "code_gunold": "61117",
+      "hex": "#FFBCCA",
+      "pantone_pms": "203"
+    },
+    {
+      "code_gunold": "61119",
+      "hex": "#DA587D"
+    },
+    {
+      "code_gunold": "61120",
+      "hex": "#FCEDEE"
+    },
+    {
+      "code_gunold": "61121",
+      "hex": "#F3A8D5"
+    },
+    {
+      "code_gunold": "61122",
+      "hex": "#660D63"
+    },
+    {
+      "code_gunold": "61124",
+      "hex": "#FFC500",
+      "pantone_pms": "116"
+    },
+    {
+      "code_gunold": "61126",
+      "hex": "#E68536",
+      "pantone_pms": "153"
+    },
+    {
+      "code_gunold": "61127",
+      "hex": "#E6CAAA",
+      "pantone_pms": "467"
+    },
+    {
+      "code_gunold": "61128",
+      "hex": "#9D654E"
+    },
+    {
+      "code_gunold": "61129",
+      "hex": "#761C1D",
+      "pantone_pms": "497"
+    },
+    {
+      "code_gunold": "61130",
+      "hex": "#6E2A26",
+      "pantone_pms_named": "Black 4 / Cool"
+    },
+    {
+      "code_gunold": "61131",
+      "hex": "#534246",
+      "pantone_pms": "440"
+    },
+    {
+      "code_gunold": "61134",
+      "hex": "#5F90BB"
+    },
+    {
+      "code_gunold": "61135",
+      "hex": "#FFDA6C",
+      "pantone_pms": "121"
+    },
+    {
+      "code_gunold": "61137",
+      "hex": "#FFB406"
+    },
+    {
+      "code_gunold": "61143",
+      "hex": "#39408E",
+      "pantone_pms": "647"
+    },
+    {
+      "code_gunold": "61145",
+      "hex": "#88ACDD",
+      "pantone_pms": "297"
+    },
+    {
+      "code_gunold": "61147",
+      "hex": "#C40006",
+      "pantone_pms": "186"
+    },
+    {
+      "code_gunold": "61148",
+      "hex": "#FF9AB2",
+      "pantone_pms": "183"
+    },
+    {
+      "code_gunold": "61149",
+      "hex": "#D7A47E"
+    },
+    {
+      "code_gunold": "61151",
+      "hex": "#D6E5E8",
+      "pantone_pms": "545"
+    },
+    {
+      "code_gunold": "61154",
+      "hex": "#FF7BA0"
+    },
+    {
+      "code_gunold": "61156",
+      "hex": "#5A5A0A"
+    },
+    {
+      "code_gunold": "61158",
+      "hex": "#912D10",
+      "pantone_pms": "470"
+    },
+    {
+      "code_gunold": "61159",
+      "hex": "#CBB300",
+      "pantone_pms": "117"
+    },
+    {
+      "code_gunold": "61162",
+      "hex": "#292636"
+    },
+    {
+      "code_gunold": "61165",
+      "hex": "#BECDDD"
+    },
+    {
+      "code_gunold": "61166",
+      "hex": "#686160",
+      "pantone_pms": "7540"
+    },
+    {
+      "code_gunold": "61167",
+      "hex": "#FFD978",
+      "pantone_pms": "135"
+    },
+    {
+      "code_gunold": "61168",
+      "hex": "#FF831D"
+    },
+    {
+      "code_gunold": "61169",
+      "hex": "#801215",
+      "pantone_pms": "202"
+    },
+    {
+      "code_gunold": "61170",
+      "hex": "#803F2A",
+      "pantone_pms": "463"
+    },
+    {
+      "code_gunold": "61171",
+      "hex": "#523355",
+      "pantone_pms": "546"
+    },
+    {
+      "code_gunold": "61172",
+      "hex": "#675E7D"
+    },
+    {
+      "code_gunold": "61173",
+      "hex": "#80624B",
+      "pantone_pms": "385"
+    },
+    {
+      "code_gunold": "61174",
+      "hex": "#1B4F0B",
+      "pantone_pms": "350"
+    },
+    {
+      "code_gunold": "61175",
+      "hex": "#61603F",
+      "pantone_pms": "350"
+    },
+    {
+      "code_gunold": "61176",
+      "hex": "#666421",
+      "pantone_pms": "370"
+    },
+    {
+      "code_gunold": "61177",
+      "hex": "#AEB256",
+      "pantone_pms": "377"
+    },
+    {
+      "code_gunold": "61179",
+      "hex": "#915F65"
+    },
+    {
+      "code_gunold": "61180",
+      "hex": "#91665F",
+      "pantone_pms": "404"
+    },
+    {
+      "code_gunold": "61181",
+      "hex": "#C22314",
+      "pantone_pms": "180"
+    },
+    {
+      "code_gunold": "61183",
+      "hex": "#2C0C4E"
+    },
+    {
+      "code_gunold": "61184",
+      "hex": "#FF4905",
+      "pantone_pms_named": "Warm Red 2X"
+    },
+    {
+      "code_gunold": "61185",
+      "hex": "#FFA300",
+      "pantone_pms": "123"
+    },
+    {
+      "code_gunold": "61187",
+      "hex": "#FFD600",
+      "pantone_pms": "108"
+    },
+    {
+      "code_gunold": "61189",
+      "hex": "#420861"
+    },
+    {
+      "code_gunold": "61190",
+      "hex": "#9F2347"
+    },
+    {
+      "code_gunold": "61191",
+      "hex": "#D50476",
+      "pantone_pms": "240"
+    },
+    {
+      "code_gunold": "61192",
+      "hex": "#BC0668"
+    },
+    {
+      "code_gunold": "61193",
+      "hex": "#AC80BA"
+    },
+    {
+      "code_gunold": "61194",
+      "hex": "#914AB4"
+    },
+    {
+      "code_gunold": "61195",
+      "hex": "#431467",
+      "pantone_pms": "267"
+    },
+    {
+      "code_gunold": "61196",
+      "hex": "#5867CB",
+      "pantone_pms": "279"
+    },
+    {
+      "code_gunold": "61197",
+      "hex": "#471A5F"
+    },
+    {
+      "code_gunold": "61198",
+      "hex": "#563C7D",
+      "pantone_pms": "653"
+    },
+    {
+      "code_gunold": "61200",
+      "hex": "#2A1658",
+      "pantone_pms": "654"
+    },
+    {
+      "code_gunold": "61203",
+      "hex": "#ADB8D3"
+    },
+    {
+      "code_gunold": "61206",
+      "hex": "#415D73"
+    },
+    {
+      "code_gunold": "61208",
+      "hex": "#32574A",
+      "pantone_pms": "342"
+    },
+    {
+      "code_gunold": "61209",
+      "hex": "#D1C184"
+    },
+    {
+      "code_gunold": "61211",
+      "hex": "#937E69"
+    },
+    {
+      "code_gunold": "61212",
+      "hex": "#7D6E5A"
+    },
+    {
+      "code_gunold": "61214",
+      "hex": "#72404A",
+      "pantone_pms": "504"
+    },
+    {
+      "code_gunold": "61218",
+      "hex": "#C0B6B3",
+      "pantone_pms_named": "Cool Gray 4"
+    },
+    {
+      "code_gunold": "61219",
+      "hex": "#676160",
+      "pantone_pms_named": "Cool Gray 10"
+    },
+    {
+      "code_gunold": "61220",
+      "hex": "#4D4044",
+      "pantone_pms": "532"
+    },
+    {
+      "code_gunold": "61222",
+      "hex": "#8DB2F0",
+      "pantone_pms": "283"
+    },
+    {
+      "code_gunold": "61224",
+      "hex": "#FF8AC0",
+      "pantone_pms": "210"
+    },
+    {
+      "code_gunold": "61225",
+      "hex": "#FFD2F1",
+      "pantone_pms": "509"
+    },
+    {
+      "code_gunold": "61230",
+      "hex": "#316772",
+      "pantone_pms": "323"
+    },
+    {
+      "code_gunold": "61231",
+      "hex": "#FF0E6F",
+      "pantone_pms": "219"
+    },
+    {
+      "code_gunold": "61235",
+      "hex": "#340D6B",
+      "pantone_pms": "273"
+    },
+    {
+      "code_gunold": "61236",
+      "hex": "#E2D8E1",
+      "pantone_pms": "538"
+    },
+    {
+      "code_gunold": "61249",
+      "hex": "#65B4E3",
+      "pantone_pms": "298"
+    },
+    {
+      "code_gunold": "61252",
+      "hex": "#0086C6",
+      "pantone_pms": "639"
+    },
+    {
+      "code_gunold": "61253",
+      "hex": "#0057A2"
+    },
+    {
+      "code_gunold": "61255",
+      "hex": "#AA0594"
+    },
+    {
+      "code_gunold": "61258",
+      "hex": "#FFC9A7",
+      "pantone_pms": "162"
+    },
+    {
+      "code_gunold": "61259",
+      "hex": "#FE7D6E",
+      "pantone_pms": "170"
+    },
+    {
+      "code_gunold": "61350",
+      "hex": "#F4F4F8"
+    },
+    {
+      "code_gunold": "61351",
+      "hex": "#F4F4F8"
+    },
+    {
+      "code_gunold": "61352",
+      "hex": "#232800",
+      "pantone_pms_named": "Black 6"
+    },
+    {
+      "code_gunold": "61353",
+      "hex": "#515E63",
+      "pantone_pms": "431"
+    },
+    {
+      "code_gunold": "61354",
+      "hex": "#3D3A38",
+      "pantone_pms": "7540"
+    },
+    {
+      "code_gunold": "61355",
+      "hex": "#61626D",
+      "pantone_pms": "429"
+    },
+    {
+      "code_gunold": "61356",
+      "hex": "#7C7D8A",
+      "pantone_pms": "430"
+    },
+    {
+      "code_gunold": "61357",
+      "hex": "#ACA8AA",
+      "pantone_pms": "401"
+    },
+    {
+      "code_gunold": "61358",
+      "hex": "#614D49",
+      "pantone_pms": "424"
+    },
+    {
+      "code_gunold": "61359",
+      "hex": "#DBBE00",
+      "pantone_pms": "129"
+    },
+    {
+      "code_gunold": "61360",
+      "hex": "#714200",
+      "pantone_pms": "133"
+    },
+    {
+      "code_gunold": "61361",
+      "hex": "#826A00"
+    },
+    {
+      "code_gunold": "61362",
+      "hex": "#5D5027"
+    },
+    {
+      "code_gunold": "61363",
+      "hex": "#584A3F"
+    },
+    {
+      "code_gunold": "61364",
+      "hex": "#AA7300",
+      "pantone_pms": "132"
+    },
+    {
+      "code_gunold": "61365",
+      "hex": "#F3D000",
+      "pantone_pms": "109"
+    },
+    {
+      "code_gunold": "61366",
+      "hex": "#9F9478",
+      "pantone_pms": "7536"
+    },
+    {
+      "code_gunold": "61367",
+      "hex": "#F29200",
+      "pantone_pms": "137"
+    },
+    {
+      "code_gunold": "61368",
+      "hex": "#DB7900",
+      "pantone_pms": "130"
+    },
+    {
+      "code_gunold": "61369",
+      "hex": "#FDC428"
+    },
+    {
+      "code_gunold": "61370",
+      "hex": "#663E37",
+      "pantone_pms": "7532"
+    },
+    {
+      "code_gunold": "61371",
+      "hex": "#593C15"
+    },
+    {
+      "code_gunold": "61372",
+      "hex": "#C09B5D"
+    },
+    {
+      "code_gunold": "61373",
+      "hex": "#FF8C00"
+    },
+    {
+      "code_gunold": "61374",
+      "hex": "#AD6B00"
+    },
+    {
+      "code_gunold": "61375",
+      "hex": "#BE7821"
+    },
+    {
+      "code_gunold": "61376",
+      "hex": "#D3965F"
+    },
+    {
+      "code_gunold": "61377",
+      "hex": "#7B4327",
+      "pantone_pms": "7504"
+    },
+    {
+      "code_gunold": "61378",
+      "hex": "#DCD1BA",
+      "pantone_pms": "7500"
+    },
+    {
+      "code_gunold": "61379",
+      "hex": "#897B60",
+      "pantone_pms": "7536"
+    },
+    {
+      "code_gunold": "61380",
+      "hex": "#745E5A",
+      "pantone_pms": "403"
+    },
+    {
+      "code_gunold": "61381",
+      "hex": "#B63B00",
+      "pantone_pms": "7511"
+    },
+    {
+      "code_gunold": "61382",
+      "hex": "#8F6136",
+      "pantone_pms": "463"
+    },
+    {
+      "code_gunold": "61383",
+      "hex": "#9F4A00",
+      "pantone_pms": "139"
+    },
+    {
+      "code_gunold": "61384",
+      "hex": "#6B3300",
+      "pantone_pms": "7512"
+    },
+    {
+      "code_gunold": "61385",
+      "hex": "#56221B",
+      "pantone_pms": "7532"
+    },
+    {
+      "code_gunold": "61386",
+      "hex": "#5E2022",
+      "pantone_pms": "161"
+    },
+    {
+      "code_gunold": "61387",
+      "hex": "#F5C29E"
+    },
+    {
+      "code_gunold": "61388",
+      "hex": "#7F4E4D"
+    },
+    {
+      "code_gunold": "61389",
+      "hex": "#C09D79",
+      "pantone_pms": "7504"
+    },
+    {
+      "code_gunold": "61390",
+      "hex": "#AC0000",
+      "pantone_pms": "174"
+    },
+    {
+      "code_gunold": "61391",
+      "hex": "#953A0A"
+    },
+    {
+      "code_gunold": "61392",
+      "hex": "#E90000"
+    },
+    {
+      "code_gunold": "61393",
+      "hex": "#D70000"
+    },
+    {
+      "code_gunold": "61394",
+      "hex": "#DC9695",
+      "pantone_pms": "693"
+    },
+    {
+      "code_gunold": "61395",
+      "hex": "#B70000",
+      "pantone_pms": "187"
+    },
+    {
+      "code_gunold": "61396",
+      "hex": "#FF738D"
+    },
+    {
+      "code_gunold": "61397",
+      "hex": "#472E27",
+      "pantone_pms": "412"
+    },
+    {
+      "code_gunold": "61398",
+      "hex": "#C30000",
+      "pantone_pms": "200"
+    },
+    {
+      "code_gunold": "61399",
+      "hex": "#910000"
+    },
+    {
+      "code_gunold": "61400",
+      "hex": "#7C0000"
+    },
+    {
+      "code_gunold": "61401",
+      "hex": "#840000",
+      "pantone_pms": "201"
+    },
+    {
+      "code_gunold": "61402",
+      "hex": "#6E2100"
+    },
+    {
+      "code_gunold": "61403",
+      "hex": "#E3819D"
+    },
+    {
+      "code_gunold": "61404",
+      "hex": "#EC005E"
+    },
+    {
+      "code_gunold": "61405",
+      "hex": "#7A1322",
+      "pantone_pms": "216"
+    },
+    {
+      "code_gunold": "61406",
+      "hex": "#9C1B37",
+      "pantone_pms": "696"
+    },
+    {
+      "code_gunold": "61407",
+      "hex": "#7A2C36",
+      "pantone_pms": "222"
+    },
+    {
+      "code_gunold": "61408",
+      "hex": "#F4CEE9"
+    },
+    {
+      "code_gunold": "61409",
+      "hex": "#A40042",
+      "pantone_pms": "235"
+    },
+    {
+      "code_gunold": "61410",
+      "hex": "#ED67A2",
+      "pantone_pms": "210"
+    },
+    {
+      "code_gunold": "61411",
+      "hex": "#6A00A2",
+      "pantone_pms": "260"
+    },
+    {
+      "code_gunold": "61412",
+      "hex": "#670836",
+      "pantone_pms": "242"
+    },
+    {
+      "code_gunold": "61413",
+      "hex": "#7B314E",
+      "pantone_pms": "261"
+    },
+    {
+      "code_gunold": "61414",
+      "hex": "#68367A"
+    },
+    {
+      "code_gunold": "61415",
+      "hex": "#363C66"
+    },
+    {
+      "code_gunold": "61416",
+      "hex": "#2B2790"
+    },
+    {
+      "code_gunold": "61417",
+      "hex": "#402A80",
+      "pantone_pms": "272"
+    },
+    {
+      "code_gunold": "61418",
+      "hex": "#77597E",
+      "pantone_pms": "270"
+    },
+    {
+      "code_gunold": "61419",
+      "hex": "#401F3D",
+      "pantone_pms": "532"
+    },
+    {
+      "code_gunold": "61420",
+      "hex": "#3B274A",
+      "pantone_pms": "276"
+    },
+    {
+      "code_gunold": "61421",
+      "hex": "#3D2440"
+    },
+    {
+      "code_gunold": "61422",
+      "hex": "#381B3A",
+      "pantone_pms": "533"
+    },
+    {
+      "code_gunold": "61423",
+      "hex": "#4F1E3A",
+      "pantone_pms": "669"
+    },
+    {
+      "code_gunold": "61424",
+      "hex": "#224099",
+      "pantone_pms": "294"
+    },
+    {
+      "code_gunold": "61425",
+      "hex": "#0051B3",
+      "pantone_pms": "286"
+    },
+    {
+      "code_gunold": "61426",
+      "hex": "#00388B",
+      "pantone_pms": "287"
+    },
+    {
+      "code_gunold": "61427",
+      "hex": "#0F3A65",
+      "pantone_pms": "534"
+    },
+    {
+      "code_gunold": "61428",
+      "hex": "#0071AF",
+      "pantone_pms": "285"
+    },
+    {
+      "code_gunold": "61429",
+      "hex": "#0078D3"
+    },
+    {
+      "code_gunold": "61430",
+      "hex": "#009DDA",
+      "pantone_pms": "299"
+    },
+    {
+      "code_gunold": "61431",
+      "hex": "#6997C1",
+      "pantone_pms": "278"
+    },
+    {
+      "code_gunold": "61432",
+      "hex": "#425779"
+    },
+    {
+      "code_gunold": "61433",
+      "hex": "#74BCD7",
+      "pantone_pms": "297"
+    },
+    {
+      "code_gunold": "61434",
+      "hex": "#A2A7BC",
+      "pantone_pms": "7542"
+    },
+    {
+      "code_gunold": "61435",
+      "hex": "#005FA3",
+      "pantone_pms": "633"
+    },
+    {
+      "code_gunold": "61436",
+      "hex": "#44425B",
+      "pantone_pms": "303"
+    },
+    {
+      "code_gunold": "61437",
+      "hex": "#0089B6",
+      "pantone_pms": "306"
+    },
+    {
+      "code_gunold": "61438",
+      "hex": "#232E56",
+      "pantone_pms": "302"
+    },
+    {
+      "code_gunold": "61439",
+      "hex": "#2D2128",
+      "pantone_pms": "7546"
+    },
+    {
+      "code_gunold": "61440",
+      "hex": "#5FC3CD",
+      "pantone_pms": "631"
+    },
+    {
+      "code_gunold": "61441",
+      "hex": "#1E3246"
+    },
+    {
+      "code_gunold": "61442",
+      "hex": "#00718F",
+      "pantone_pms": "328"
+    },
+    {
+      "code_gunold": "61443",
+      "hex": "#00809F",
+      "pantone_pms": "7474"
+    },
+    {
+      "code_gunold": "61444",
+      "hex": "#0A3D60",
+      "pantone_pms": "7476"
+    },
+    {
+      "code_gunold": "61445",
+      "hex": "#3C4666",
+      "pantone_pms": "7477"
+    },
+    {
+      "code_gunold": "61446",
+      "hex": "#65B4B7",
+      "pantone_pms": "7472"
+    },
+    {
+      "code_gunold": "61447",
+      "hex": "#00602B"
+    },
+    {
+      "code_gunold": "61448",
+      "hex": "#009F86",
+      "pantone_pms": "340"
+    },
+    {
+      "code_gunold": "61449",
+      "hex": "#1D222A",
+      "pantone_pms": "343"
+    },
+    {
+      "code_gunold": "61450",
+      "hex": "#37231C"
+    },
+    {
+      "code_gunold": "61451",
+      "hex": "#007A61",
+      "pantone_pms": "349"
+    },
+    {
+      "code_gunold": "61452",
+      "hex": "#5A9649",
+      "pantone_pms": "362"
+    },
+    {
+      "code_gunold": "61453",
+      "hex": "#8AC277",
+      "pantone_pms": "358"
+    },
+    {
+      "code_gunold": "61454",
+      "hex": "#2D3922",
+      "pantone_pms": "553"
+    },
+    {
+      "code_gunold": "61455",
+      "hex": "#46281F",
+      "pantone_pms": "448"
+    },
+    {
+      "code_gunold": "61456",
+      "hex": "#FBD500",
+      "pantone_pms": "122"
+    },
+    {
+      "code_gunold": "61457",
+      "hex": "#EC7400",
+      "pantone_pms": "173"
+    },
+    {
+      "code_gunold": "61458",
+      "hex": "#970006"
+    },
+    {
+      "code_gunold": "61459",
+      "hex": "#95CEEE",
+      "pantone_pms": "291"
+    },
+    {
+      "code_gunold": "61460",
+      "hex": "#173C86",
+      "pantone_pms": "288"
+    },
+    {
+      "code_gunold": "61461",
+      "hex": "#242436",
+      "pantone_pms": "533"
+    },
+    {
+      "code_gunold": "61462",
+      "hex": "#C5AF98",
+      "pantone_pms": "7501"
+    },
+    {
+      "code_gunold": "61463",
+      "hex": "#733F03",
+      "pantone_pms": "7531"
+    },
+    {
+      "code_gunold": "61464",
+      "hex": "#C8C4C4",
+      "pantone_pms": "428"
+    },
+    {
+      "code_gunold": "61465",
+      "hex": "#9E9DAC",
+      "pantone_pms": "7543"
+    },
+    {
+      "code_gunold": "61466",
+      "hex": "#365DB2",
+      "pantone_pms": "660"
+    },
+    {
+      "code_gunold": "61467",
+      "hex": "#1C3E9D",
+      "pantone_pms": "280"
+    },
+    {
+      "code_gunold": "61468",
+      "hex": "#0070C0",
+      "pantone_pms": "639"
+    },
+    {
+      "code_gunold": "61469",
+      "hex": "#006630",
+      "pantone_pms": "348"
+    },
+    {
+      "code_gunold": "61470",
+      "hex": "#8C735A",
+      "pantone_pms": "7530"
+    },
+    {
+      "code_gunold": "61471",
+      "hex": "#64687E",
+      "pantone_pms": "7544"
+    },
+    {
+      "code_gunold": "61472",
+      "hex": "#C8AD7B"
+    },
+    {
+      "code_gunold": "61473",
+      "hex": "#562C1A"
+    },
+    {
+      "code_gunold": "61474",
+      "hex": "#B1B3A8",
+      "pantone_pms_named": "Warm Gray 1"
+    },
+    {
+      "code_gunold": "61475",
+      "hex": "#958E91",
+      "pantone_pms": "7538"
+    },
+    {
+      "code_gunold": "61476",
+      "hex": "#E8D9BB",
+      "pantone_pms": "7499"
+    },
+    {
+      "code_gunold": "61477",
+      "hex": "#E0B89A"
+    },
+    {
+      "code_gunold": "61503",
+      "hex": "#227E72"
+    },
+    {
+      "code_gunold": "61508",
+      "hex": "#A38373"
+    },
+    {
+      "code_gunold": "61510",
+      "hex": "#92D45C",
+      "pantone_pms": "375"
+    },
+    {
+      "code_gunold": "61511",
+      "hex": "#FF3082",
+      "pantone_pms": "212"
+    },
+    {
+      "code_gunold": "61513",
+      "hex": "#187C9A",
+      "pantone_pms": "321"
+    },
+    {
+      "code_gunold": "61517",
+      "hex": "#3E656A"
+    },
+    {
+      "code_gunold": "61533",
+      "hex": "#CA084F",
+      "pantone_pms": "227"
+    },
+    {
+      "code_gunold": "61535",
+      "hex": "#101B93",
+      "pantone_pms": "661"
+    },
+    {
+      "code_gunold": "61536",
+      "hex": "#302122"
+    },
+    {
+      "code_gunold": "61594",
+      "hex": "#7E0000",
+      "pantone_pms": "181"
+    },
+    {
+      "code_gunold": "61901",
+      "hex": "#D8FE28"
+    },
+    {
+      "code_gunold": "61904",
+      "hex": "#90FF00"
+    },
+    {
+      "code_gunold": "61905",
+      "hex": "#FFF100"
+    },
+    {
+      "code_gunold": "61909",
+      "hex": "#FF6F96"
+    },
+    {
+      "code_gunold": "61910",
+      "hex": "#FF0082"
+    },
+    {
+      "code_gunold": "61913",
+      "hex": "#FF0044"
+    },
+    {
+      "code_gunold": "61914",
+      "hex": "#FF9E06"
+    },
+    {
+      "code_gunold": "61953",
+      "hex": "#FF4800"
+    }
+  ]
+}
