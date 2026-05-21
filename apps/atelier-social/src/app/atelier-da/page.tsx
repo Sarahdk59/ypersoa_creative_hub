@@ -1,12 +1,14 @@
 /**
- * Home Atelier-DA — 8 sous-modules accessibles depuis le hub.
- * V0 : seul le sous-module 1 (Shooting Book) est fonctionnel. Les 7 autres
- * sont des stubs accessibles avec note "À venir V1".
+ * Home Atelier-DA — vision et direction artistique.
+ * 8 sous-modules : 6 disponibles V1, 2 à venir V2.
+ *
+ * Référentiels motifs / fils / palettes sont passés sur Atelier Production
+ * depuis le 15/05/2026 (séparation production ↔ DA).
  *
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Camera, Palette, Sparkles, Settings, Image as ImageIcon, BookOpen, Archive, ArrowRight } from "lucide-react";
+import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -36,34 +38,34 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 3,
-    title: "Référentiel motifs YPM",
-    description: "Catalogue des 17 motifs commerciaux Ypersoa + 80 variantes. Click sur un motif → variantes + bouton 'Utiliser dans Shooting Book'.",
-    href: "/atelier-da/motifs",
-    icon: <Palette size={22} strokeWidth={1.4} />,
-    status: "v0",
-  },
-  {
-    id: 4,
-    title: "Création motifs YPM & variantes",
-    description: "Outil de création nouveaux motifs selon template + variantes des motifs existants.",
-    href: null,
-    icon: <Sparkles size={22} strokeWidth={1.4} />,
-    status: "v2",
-  },
-  {
-    id: 5,
-    title: "Règles & contraintes broderies",
-    description: "Documentation production Tajima : tailles, couleurs, exclusions par produit, formats DST.",
-    href: null,
-    icon: <Settings size={22} strokeWidth={1.4} />,
-    status: "v2",
-  },
-  {
-    id: 6,
     title: "Référentiel d'ambiances",
     description: "Catalogue des 6 ambiances officielles + lookbooks ❤️ actifs. Sources visuelles unifiées entre les 3 ateliers.",
     href: "/atelier-da/ambiances",
     icon: <ImageIcon size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 4,
+    title: "Motifs (catalogue)",
+    description: "Vue site-web des motifs YPM, filtrable par destinataire (papa, maman, parrain, témoins…) et occasion (mariage, naissance, fête des mères…). Click → utiliser dans Shooting.",
+    href: "/atelier-da/motifs",
+    icon: <Sparkles size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 5,
+    title: "Médiathèque",
+    description: "Toutes tes photos shooting / lifestyle / IA / packshot centralisées. Filtres par incarnation, motif, gabarit. Upload batch drag-and-drop avec auto-tagging depuis le nom de fichier.",
+    href: "/atelier-da/mediatheque",
+    icon: <Library size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 6,
+    title: "Atelier Production",
+    description: "Fiche technique des motifs, fils, palettes + moteur d'attribution. Lien raccourci quand la DA a besoin de la vue prod.",
+    href: "/atelier-production",
+    icon: <Compass size={22} strokeWidth={1.4} />,
     status: "v0",
   },
   {
@@ -114,11 +116,11 @@ export default function AtelierDaHome() {
           }}
         >
           L&apos;espace de travail du Directeur Artistique. 8 sous-modules pour penser, décider et orienter
-          la direction artistique d&apos;Ypersoa, depuis la mémoire vivante du casting jusqu&apos;au plan de shooting.
+          la direction artistique d&apos;Ypersoa, depuis la mémoire vivante du casting jusqu&apos;à la médiathèque centrale.
         </p>
       </header>
 
-      {/* Grille des 8 sous-modules */}
+      {/* Grille des 7 sous-modules */}
       <div
         style={{
           display: "grid",
@@ -271,7 +273,7 @@ export default function AtelierDaHome() {
           textAlign: "center",
         }}
       >
-        Atelier DA • V1 — 4 sous-modules opérationnels (Casting, Shooting Book, Motifs, Ambiances) • 4 sous-modules à venir V2.
+        Atelier DA • V1 — 5 sous-modules opérationnels (Casting, Shooting Book, Ambiances, Motifs, Atelier Production) • 3 sous-modules à venir V2.
       </p>
     </div>
   );
