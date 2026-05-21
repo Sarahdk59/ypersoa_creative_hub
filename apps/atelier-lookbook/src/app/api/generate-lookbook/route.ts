@@ -59,6 +59,34 @@ interface RequestBody {
   brief: string;
   count?: number; // default 20
   pinned_canoniques?: string[]; // si présent, le LLM DOIT utiliser ces canoniques en priorité
+  palette_id?: string;          // si présent, force la palette du lookbook (hex codes Hub)
+}
+
+const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
+
+/**
+ * Résout une palette du référentiel Hub en liste de hex codes + descripteur lisible.
+ * Retourne null si la palette n'est pas trouvée ou si pas de palette_id.
+ */
+function loadPaletteHexCodes(paletteId: string | undefined): { hexCodes: string[]; description: string } | null {
+  if (!paletteId) return null;
+  try {
+    const palettesRaw = JSON.parse(readFileSync(join(REFS_DIR, "palettes_fils_associations.json"), "utf-8")) as {
+      palettes: Array<{ id: string; nom: string; fils: string[]; description?: string }>;
+    };
+    const filsRaw = JSON.parse(readFileSync(join(REFS_DIR, "palette_fils_broderie_v2.json"), "utf-8")) as {
+      couleurs: Array<{ id: string; nom: string; hex: string }>;
+    };
+    const palette = palettesRaw.palettes.find((p) => p.id === paletteId);
+    if (!palette) return null;
+    const filsById = new Map(filsRaw.couleurs.map((f) => [f.id, f]));
+    const fils = palette.fils.map((fid) => filsById.get(fid)).filter((f): f is { id: string; nom: string; hex: string } => Boolean(f));
+    const hexCodes = fils.map((f) => f.hex);
+    const description = `Palette "${palette.nom}" : ${fils.map((f) => `${f.nom} (${f.hex})`).join(", ")}`;
+    return { hexCodes, description };
+  } catch {
+    return null;
+  }
 }
 
 function jsonError(status: number, message: string, extra?: Record<string, unknown>) {
@@ -69,10 +97,15 @@ async function callLLMDecomposition(
   openai: OpenAI,
   brief: string,
   count: number,
-  pinnedCanoniques: string[] = []
+  pinnedCanoniques: string[] = [],
+  palette: { hexCodes: string[]; description: string } | null = null,
 ) {
   const pinnedBlock = pinnedCanoniques.length > 0
     ? `\n\n⚠️ CANONIQUES ÉPINGLÉS PAR SARAH — tu DOIS utiliser ces canoniques (et uniquement ceux-ci) sur tous les prompts "canonique_humain". Distribue-les équitablement, ne mets pas le même 2 fois de suite. IDs imposés : ${pinnedCanoniques.join(", ")}.\n`
+    : "";
+
+  const paletteBlock = palette
+    ? `\n\n🎨 PALETTE IMPOSÉE PAR SARAH — tu DOIS construire le lookbook autour de cette palette de couleur Ypersoa.\n${palette.description}\n\nRègles d'application :\n- ambiance_extraite.palette DOIT contenir EXACTEMENT ces hex codes (dans cet ordre) : ${palette.hexCodes.join(", ")}\n- Chaque prompt_en DOIT mentionner explicitement les nuances dominantes (couleurs des vêtements / accessoires / lumière / décor) en respectant cette palette\n- Les textiles, fonds, props, lumière, ciel, fleurs, accessoires choisis doivent tomber dans ce spectre chromatique\n- Cohérence brand : on ne mélange pas avec des couleurs hors palette\n`
     : "";
 
   const canoniquesContext = pinnedCanoniques.length > 0
@@ -81,7 +114,7 @@ async function callLLMDecomposition(
 
   const userPrompt = `Brief poétique de Sarah : "${brief}"
 
-Décompose ce brief en ${count} prompts EN structurés pour générer un lookbook saisonnier Ypersoa.${pinnedBlock}
+Décompose ce brief en ${count} prompts EN structurés pour générer un lookbook saisonnier Ypersoa.${pinnedBlock}${paletteBlock}
 
 CANONIQUES DISPONIBLES (use exact MAN-XXX id):
 ${canoniquesContext}
@@ -213,14 +246,20 @@ export async function POST(req: NextRequest) {
     const gemini = new GoogleGenAI({ apiKey: geminiKey });
     const supabase = createClient(supabaseUrl, supabaseAnon);
 
-    // 1. Décomposition LLM
+    // 1. Décomposition LLM (avec palette imposée si fournie)
+    const palette = loadPaletteHexCodes(body.palette_id);
     const { parsed, model } = await callLLMDecomposition(
       openai,
       body.brief.trim(),
       count,
-      pinnedCanoniques
+      pinnedCanoniques,
+      palette,
     );
     const prompts = parsed.prompts.slice(0, count);
+    // Si palette imposée → on overwrite la palette retournée par le LLM pour garantir la cohérence
+    if (palette) {
+      parsed.ambiance_extraite.palette = palette.hexCodes;
+    }
 
     // 2. Insert lookbook (statut = brouillon, slug unique check)
     const lookbookId = crypto.randomUUID();

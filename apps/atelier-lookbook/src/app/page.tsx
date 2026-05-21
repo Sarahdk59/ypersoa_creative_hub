@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, Heart, Loader2, AlertCircle, FolderOpen, Download, Package, X, FolderOutput } from "lucide-react";
+import { Sparkles, Heart, Loader2, AlertCircle, FolderOpen, Download, Package, X, FolderOutput, RotateCcw, Plus } from "lucide-react";
 import { AmbianceExtraite, Lookbook } from "@/lib/types";
 import { setLookbookActiveAmbiance, listRecentLookbooks, getLookbookFull, isAmbianceActive, extendLookbookAmbiance } from "@/lib/lookbooks-client";
 import { setImageValide, deleteLookbookImage } from "@/lib/images-client";
 import { downloadSingleImage, downloadLookbookAsZip, buildImageFilename } from "@/lib/download";
 import { CastingPicker, CastingMode } from "@/components/CastingPicker";
+import { AddCustomImageModal } from "@/components/AddCustomImageModal";
 
 interface ResponseImage {
   image_id?: string;
@@ -53,6 +54,10 @@ export default function Home() {
   const [showLibrary, setShowLibrary] = useState(false);
   const [castingMode, setCastingMode] = useState<CastingMode>("auto");
   const [pinnedCanoniques, setPinnedCanoniques] = useState<string[]>([]);
+  // Palette Hub imposée pour le lookbook (force ambiance_extraite.palette + prompts)
+  const [paletteId, setPaletteId] = useState<string>("");
+  const [palettes, setPalettes] = useState<Array<{ id: string; nom: string; type: string; description?: string; favori?: boolean; fils: Array<{ id: string; nom: string; hex: string }> }>>([]);
+  const [paletteFavoriBusy, setPaletteFavoriBusy] = useState(false);
   const [selectedImageIds, setSelectedImageIds] = useState<Set<string>>(new Set());
   const [reopeningId, setReopeningId] = useState<string | null>(null);
   const [zippingId, setZippingId] = useState<string | null>(null);
@@ -60,6 +65,34 @@ export default function Home() {
   useEffect(() => {
     listRecentLookbooks(12).then(setRecentLookbooks).catch(() => undefined);
   }, [result]);
+
+  // Charge la liste des palettes Hub au boot
+  const refreshPalettes = () => {
+    fetch("/api/palettes")
+      .then((r) => r.json())
+      .then((d) => { if (d.ok) setPalettes(d.palettes); })
+      .catch(() => undefined);
+  };
+  useEffect(() => {
+    refreshPalettes();
+  }, []);
+
+  const togglePaletteFavori = async (id: string, current: boolean) => {
+    setPaletteFavoriBusy(true);
+    try {
+      const res = await fetch(`/api/palettes/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ favori: !current }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error || "Erreur");
+      refreshPalettes();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+    } finally {
+      setPaletteFavoriBusy(false);
+    }
+  };
 
   const handleGenerate = async () => {
     if (!brief.trim() || generating) return;
@@ -76,6 +109,7 @@ export default function Home() {
           brief: brief.trim(),
           count,
           pinned_canoniques: castingMode === "pin" ? pinnedCanoniques : [],
+          palette_id: paletteId || undefined,
         }),
       });
       const data = await res.json();
@@ -239,6 +273,37 @@ export default function Home() {
     }
   };
 
+  // État de régénération par image (pour spinner local + désactivation bouton)
+  const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
+  const handleRegenerateImage = async (img: ResponseImage) => {
+    if (!result || !img.image_id) return;
+    setRegeneratingId(img.image_id);
+    setError(null);
+    try {
+      const res = await fetch("/api/regenerate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image_id: img.image_id }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      // Met à jour l'image dans le state — bust cache CDN avec un timestamp
+      setResult({
+        ...result,
+        images: result.images.map((i) =>
+          i.image_id === img.image_id
+            ? { ...i, url: `${res.data.image_url}?t=${Date.now()}`, storage_path: res.data.image_storage_path }
+            : i
+        ),
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setRegeneratingId(null);
+    }
+  };
+
+  const [addCustomOpen, setAddCustomOpen] = useState(false);
+
   const [downloading, setDownloading] = useState(false);
   const handleDownloadZip = async () => {
     if (!result) return;
@@ -352,6 +417,79 @@ export default function Home() {
               onModeChange={setCastingMode}
               onPinnedChange={setPinnedCanoniques}
             />
+
+            {/* Palette imposée — option pour aligner le lookbook sur une palette Hub */}
+            <div className="mt-4">
+              <label className="block text-[11px] font-semibold tracking-wider uppercase text-brand-muted mb-2">
+                Palette imposée (optionnel)
+              </label>
+              <div className="flex gap-2 items-stretch">
+                <select
+                  value={paletteId}
+                  onChange={(e) => setPaletteId(e.target.value)}
+                  className="flex-1 px-3 py-2 rounded-lg border border-brand-muted/20 bg-white text-sm text-brand-text focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                >
+                  <option value="">— Aucune (palette libre par le LLM) —</option>
+                  {palettes.some((p) => p.favori) && (
+                    <optgroup label="❤︎ Favorites">
+                      {palettes.filter((p) => p.favori).map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.nom} ({p.fils.length} fils · {p.type})
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                  <optgroup label="Toutes les palettes">
+                    {palettes.filter((p) => !p.favori).map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.nom} ({p.fils.length} fils · {p.type})
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+                {paletteId && (() => {
+                  const p = palettes.find((x) => x.id === paletteId);
+                  if (!p) return null;
+                  return (
+                    <button
+                      type="button"
+                      onClick={() => togglePaletteFavori(p.id, Boolean(p.favori))}
+                      disabled={paletteFavoriBusy}
+                      title={p.favori ? "Retirer des favoris" : "Liker cette palette"}
+                      aria-label={p.favori ? "Retirer des favoris" : "Liker cette palette"}
+                      className="px-3 rounded-lg border text-sm transition-colors disabled:opacity-50"
+                      style={{
+                        background: p.favori ? "#B4665F" : "white",
+                        borderColor: p.favori ? "#B4665F" : "rgba(180,102,95,0.25)",
+                        color: p.favori ? "white" : "#B4665F",
+                      }}
+                    >
+                      <Heart className="w-4 h-4" fill={p.favori ? "white" : "none"} strokeWidth={1.8} />
+                    </button>
+                  );
+                })()}
+              </div>
+              {paletteId && (() => {
+                const p = palettes.find((x) => x.id === paletteId);
+                if (!p) return null;
+                return (
+                  <div className="mt-2">
+                    <div className="flex h-6 rounded overflow-hidden border border-brand-muted/15">
+                      {p.fils.map((f) => (
+                        <div
+                          key={f.id}
+                          title={`${f.nom} · ${f.hex}`}
+                          style={{ flex: 1, background: f.hex }}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-brand-muted mt-1 italic">
+                      Les hex de cette palette seront injectés dans le prompt LLM + forcés dans ambiance_extraite.palette du lookbook généré.
+                    </p>
+                  </div>
+                );
+              })()}
+            </div>
 
             {error && (
               <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
@@ -490,6 +628,16 @@ export default function Home() {
               </div>
             )}
 
+            <div className="flex justify-end mb-3">
+              <button
+                onClick={() => setAddCustomOpen(true)}
+                className="px-4 py-2 rounded-full bg-white border border-brand-muted/30 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 flex items-center gap-1.5"
+                title="Ajouter une image custom au lookbook (depuis catalogue, motif macro ou URL)"
+              >
+                <Plus className="w-3.5 h-3.5" /> Ajouter une image
+              </button>
+            </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {result.images.map((img) => {
                 const isSelected = img.image_id ? selectedImageIds.has(img.image_id) : false;
@@ -574,6 +722,14 @@ export default function Home() {
                       title="Télécharger cette image"
                     >
                       <Download className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleRegenerateImage(img)}
+                      disabled={regeneratingId === img.image_id}
+                      className="p-2 rounded-full shadow-lg bg-white/95 text-brand-text hover:bg-brand-text hover:text-white hover:scale-110 transition-all disabled:opacity-50"
+                      title="Régénérer avec le même prompt"
+                    >
+                      <RotateCcw className={`w-4 h-4 ${regeneratingId === img.image_id ? "animate-spin" : ""}`} />
                     </button>
                     <button
                       onClick={() => handleDeleteImage(img)}
@@ -683,6 +839,35 @@ export default function Home() {
           </aside>
         )}
       </main>
+
+      {addCustomOpen && result && (
+        <AddCustomImageModal
+          lookbookId={result.lookbook_id}
+          lookbookPalette={result.ambiance_extraite?.palette}
+          onClose={() => setAddCustomOpen(false)}
+          onAdded={async () => {
+            // Refresh le lookbook complet pour récupérer la nouvelle image
+            try {
+              const { lookbook, images } = await getLookbookFull(result.lookbook_id);
+              setResult({
+                ...result,
+                images: images.map((img) => ({
+                  image_id: img.id,
+                  storage_path: img.image_storage_path || undefined,
+                  position: img.position,
+                  famille: img.famille,
+                  url: img.image_url,
+                  canonique_injecte: img.canonique_injecte,
+                  prompt_en: img.prompt_en,
+                  valide: img.valide,
+                })),
+              });
+            } catch (err) {
+              setError(err instanceof Error ? err.message : String(err));
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
