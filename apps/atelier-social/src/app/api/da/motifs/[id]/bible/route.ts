@@ -72,7 +72,7 @@ export async function PATCH(
         );
       }
     }
-    for (const k of ["composition", "regles_validation", "notes_prod"] as const) {
+    for (const k of ["composition", "regles_validation", "notes_prod", "typographie", "template_poignet"] as const) {
       if (k in body) {
         const v = body[k];
         if (v === null || v === undefined || v === "") delete bible[k];

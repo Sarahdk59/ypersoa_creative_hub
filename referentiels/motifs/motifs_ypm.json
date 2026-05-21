@@ -2,9 +2,9 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-05-07",
-    "nb_motifs": 17,
-    "nb_variantes_total": 95,
+    "last_updated": "2026-05-21",
+    "nb_motifs": 18,
+    "nb_variantes_total": 104,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
     "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
@@ -15,18 +15,92 @@
   },
   "motifs": [
     {
-      "id": "YPM-001",
-      "nom_commercial": "La Brigitte",
-      "asset_principal": "YPM-001-A.PNG",
-      "nb_variantes": 3,
+      "id": "YPM-000",
+      "nom_commercial": "Templates typographiques",
+      "asset_principal": "YPM-000 Museo Infinity.PNG",
+      "nb_variantes": 5,
       "variantes": [
         {
+          "file": "YPM-000 Russ Times Coeur.PNG",
+          "label": "Russ Times Coeur"
+        },
+        {
+          "file": "YPM-000 Museo Infinity.PNG",
+          "label": "Museo Infinity",
+          "tags": [
+            "typo"
+          ]
+        },
+        {
+          "file": "YPM-000 Russ Times.PNG",
+          "label": "Russ Times",
+          "tags": [
+            "typo"
+          ]
+        },
+        {
+          "file": "YPM-000 Diana Star_PXF.PNG",
+          "label": "Diana Star",
+          "tags": [
+            "typo"
+          ]
+        },
+        {
+          "file": "YPM-000 Script New Paw.PNG",
+          "label": "Script New Paw",
+          "tags": [
+            "typo",
+            "patte"
+          ]
+        }
+      ],
+      "tags": [
+        "template",
+        "typo",
+        "default"
+      ],
+      "bible": {
+        "composition": "Templates typographiques par défaut — bibliothèque de polices brodables réutilisables sur tous les motifs",
+        "notes_prod": "Motif racine : sert de bibliothèque de typos. Les variantes sont des templates de polices (Museo, Russ Times, Diana Star, Script New) injectables dans d'autres motifs."
+      }
+    },
+    {
+      "id": "YPM-001",
+      "nom_commercial": "La Brigitte",
+      "asset_principal": "YPM-001-B.PNG",
+      "nb_variantes": 5,
+      "variantes": [
+        {
+          "file": "YPM-001-G.PNG",
+          "label": "G",
+          "destinataires": [],
+          "occasions": [
+            "naissance"
+          ],
+          "produits": []
+        },
+        {
+          "file": "YPM-001-A.PNG",
+          "label": "A",
+          "destinataires": [
+            "amis"
+          ],
+          "occasions": [],
+          "produits": []
+        },
+        {
           "file": "YPM-001-ypm-001-s.png",
-          "label": "ypm-001-s"
+          "label": "ypm-001-s",
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-001-BRIGITTE.PNG",
-          "label": "BRIGITTE"
+          "label": "BRIGITTE",
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-001-alphabet-ypm-001-la-brigitte.png",
@@ -35,7 +109,10 @@
             "Brigitte",
             "Alphabet",
             "YPM-001"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
@@ -53,17 +130,37 @@
         "composition": "Cœur + une initiale",
         "regles_validation": "1 seule couleur de fil. Initiale unique en majuscule. Cœur centré au-dessus de l'initiale. Format compact 2 cm × 4,5 cm — ne pas dépasser sous peine de perdre la lisibilité.",
         "notes_prod": "Motif minimaliste, idéal pour t-shirt et sweat. Vitesse machine standard."
-      }
+      },
+      "destinataires": [
+        "amis"
+      ],
+      "occasions": [
+        "naissance"
+      ]
     },
     {
       "id": "YPM-002",
       "nom_commercial": "L'Ambre",
-      "asset_principal": "YPM-002-AMBRE-papa.PNG",
-      "nb_variantes": 3,
+      "asset_principal": "YPM-002-Anaïs.PNG",
+      "nb_variantes": 4,
       "variantes": [
         {
+          "file": "YPM-002-AMBRE-papa.PNG",
+          "label": "AMBRE-papa",
+          "destinataires": [
+            "papa"
+          ],
+          "occasions": [],
+          "produits": []
+        },
+        {
           "file": "YPM-002-AMBRE.PNG",
-          "label": "AMBRE"
+          "label": "AMBRE",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-002-AMBRE-chaton.PNG",
@@ -71,7 +168,12 @@
           "tags": [
             "prenom",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "bébé"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-002-AMBRE-nounou.PNG",
@@ -81,7 +183,12 @@
             "garde-enfant",
             "prenom",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "nounou"
+          ],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
@@ -97,7 +204,9 @@
         "composition": "Cœur contour + texte script à côté",
         "regles_validation": "Texte libre jusqu'à 8 caractères (ex. Maman, Chaton, Chérie). Typo script : 1 majuscule par mot suivie de minuscules. 2 couleurs dissociables parmi les 20 fils canoniques (1 pour le cœur contour, 1 pour le texte). Placement : buste gauche. Dimensions indicatives ~8 × 8,3 cm — Adriana adapte selon typo et nb caractères.",
         "notes_prod": "Cœur en contour (pas plein), texte script Tajima. Adaptation au cas par cas selon longueur du mot."
-      }
+      },
+      "destinataires": [],
+      "occasions": []
     },
     {
       "id": "YPM-003",
@@ -107,19 +216,39 @@
       "variantes": [
         {
           "file": "YPM-003-club-flower.png",
-          "label": "club-flower"
+          "label": "club-flower",
+          "destinataires": [],
+          "occasions": [
+            "intemporel"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-003-wedding-club.png",
-          "label": "wedding-club"
+          "label": "wedding-club",
+          "destinataires": [],
+          "occasions": [
+            "mariage"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-003-CLUB-sista.PNG",
-          "label": "CLUB-sista"
+          "label": "CLUB-sista",
+          "destinataires": [
+            "sœur"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-003-CLUB.PNG",
-          "label": "CLUB"
+          "label": "CLUB",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-003-CLUB-famille club.PNG",
@@ -129,7 +258,10 @@
             "famille",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-003-CLUBv2.png",
@@ -138,7 +270,13 @@
             "amitie",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [
+            "anniversaire",
+            "naissance"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-003-Club_Amour_PXF.PNG",
@@ -149,7 +287,13 @@
             "couple",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [
+            "déclaration",
+            "intemporel"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-003-Club_Bride.PNG",
@@ -160,7 +304,12 @@
             "groupe",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [
+            "mariage"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-003-cat-mom.png",
@@ -171,7 +320,10 @@
             "gang",
             "paw",
             "patte"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-003-dog-dad.png",
@@ -180,7 +332,10 @@
             "dog",
             "dad",
             "club"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
@@ -197,22 +352,67 @@
         "nb_couleurs_max": 1,
         "composition": "Badge rond · cercle + cœur (ou symbole) + 2 mots",
         "regles_validation": "Mot du haut : 7 caractères max, MAJUSCULES (mots-clés : MAMA / SISTA / TEAM / AMOUR / FAMILLE, ou texte libre). Mot du bas : 7 caractères max, MAJUSCULES (année, prénom court, surnom). Symbole central : 1 parmi 6 → Cœur (défaut) / Étoile / Trèfle / Fleur / Infini / Patte. Couleur de fil : 1 SEULE couleur — le cercle, le symbole et les 2 mots sont SOLIDAIRES (même fil). Placement : buste gauche.",
-        "notes_prod": "Broderie côté cœur (buste gauche) — diamètre 6,5 cm. 20 couleurs de fil canoniques disponibles. Adriana adapte la typo au cas par cas selon longueur des mots. Différence configurateur (7 caractères) vs description Shopify (6) à harmoniser. Option broderie poignet gauche dispo en supplément (+6€)."
-      }
+        "notes_prod": "Broderie côté cœur (buste gauche) — diamètre 6,5 cm. 20 couleurs de fil canoniques disponibles. Adriana adapte la typo au cas par cas selon longueur des mots. Différence configurateur (7 caractères) vs description Shopify (6) à harmoniser. Option broderie poignet gauche dispo en supplément (+6€).\n\nDecaler les ronds et les lettres selon le besoin"
+      },
+      "destinataires": [],
+      "occasions": []
     },
     {
       "id": "YPM-004",
       "nom_commercial": "Notre Héritage",
-      "asset_principal": "YPM-004-joseph-nicolas-gaspard.png",
-      "nb_variantes": 5,
+      "asset_principal": "YPM-004-4Dates.PNG",
+      "nb_variantes": 6,
       "variantes": [
         {
+          "file": "YPM-004-joseph-nicolas-gaspard.png",
+          "label": "joseph-nicolas-gaspard",
+          "destinataires": [
+            "frère",
+            "papy",
+            "papa"
+          ],
+          "occasions": [
+            "intemporel",
+            "anniversaire",
+            "fête des pères",
+            "transmission",
+            "déclaration"
+          ],
+          "produits": [],
+          "tags": [
+            "famille"
+          ]
+        },
+        {
           "file": "YPM-004-3-generations.png",
-          "label": "3-generations"
+          "label": "3-generations",
+          "destinataires": [
+            "papa",
+            "papy",
+            "enfant"
+          ],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-004-ANNEE.PNG",
-          "label": "ANNEE"
+          "label": "ANNEE",
+          "destinataires": [
+            "couple",
+            "frère",
+            "sœur",
+            "maman",
+            "papa"
+          ],
+          "occasions": [
+            "déclaration",
+            "transmission"
+          ],
+          "produits": [],
+          "tags": [
+            "famille"
+          ]
         },
         {
           "file": "YPM-004-ANNEE oui.PNG",
@@ -221,7 +421,12 @@
             "anniversaire-date",
             "date",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [
+            "mariage"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-004-ANNEE-v3.PNG",
@@ -229,8 +434,14 @@
           "tags": [
             "anniversaire-date",
             "date",
-            "typo"
-          ]
+            "typo",
+            "love"
+          ],
+          "destinataires": [
+            "couple"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-004-ANNEEv2.PNG",
@@ -239,7 +450,10 @@
             "anniversaire-date",
             "date",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
@@ -247,17 +461,68 @@
         "date",
         "typo"
       ],
-      "shooting_pngs": [],
+      "shooting_pngs": [
+        {
+          "file": "YPM-004-brune-gaspard.png",
+          "label": "Brune & Gaspard",
+          "tags": [
+            "couple",
+            "année",
+            "famille",
+            "héritage",
+            "date"
+          ]
+        }
+      ],
       "bible": {
         "dimensions_cm": {
           "largeur": 6.5,
           "hauteur": 8
         },
-        "nb_couleurs_max": 5,
+        "nb_couleurs_max": 4,
         "composition": "Empilement vertical de dates (1 à 4) + texte bas optionnel — signature famille",
-        "regles_validation": "Date 1 obligatoire. Dates 2 / 3 / 4 optionnelles (max 4 dates). Format date : AAAA (4 chiffres) ou JJ/MM/AAAA (10 caractères). Texte bas : optionnel, 20 caractères max (ex. \"Famille Martin\", \"Nous depuis 1989\"). Mode couleur (choix client) : Monochrome (1 fil parmi les 20 canoniques) OU Multicolore (palette atelier non modifiable, 5 fils : Bordeaux / Rose vif / Lilas / Framboise / Corail). Placement : buste gauche (côté cœur).",
-        "notes_prod": "Broderie côté cœur (buste gauche) — diamètre indicatif 6,5 × 8 cm, hauteur variable selon nb dates (1-4) et présence texte bas. En mode multicolore : palette atelier FIGÉE non modifiable client (Bordeaux / Rose vif / Lilas / Framboise / Corail) — attribution des fils par date pilotée par moteur prod_hub (règles : pas de palindrome XYX horizontal, équilibre couleurs, cohérence cœur). En mode monochrome : 1 seul fil sur l'ensemble du motif. Option broderie poignet gauche dispo (+6€). Texte bas en typo script (alors que dates en typo serif gras)."
-      }
+        "regles_validation": "Date 1 obligatoire. Dates 2 / 3 / 4 optionnelles (max 4 dates). Format date : AAAA (4 chiffres) ou JJ/MM/AAAA (10 caractères). Texte bas : optionnel, 20 caractères max (ex. \"Famille Martin\", \"Nous depuis 1989\"). Mode couleur (choix client) : Monochrome (1 fil parmi les 20 canoniques) OU Multicolore (palette atelier FIGÉE, 4 fils : Marine / Terracotta / Rose poudré / Vert sauge). Placement : buste gauche (côté cœur).",
+        "notes_prod": "Broderie côté cœur (buste gauche) — diamètre indicatif 6,5 × 8 cm, hauteur variable selon nb dates (1-4) et présence texte bas. En mode multicolore : palette atelier FIGÉE non modifiable client (Marine / Terracotta / Rose poudré / Vert sauge) — attribution des fils par date pilotée par moteur prod_hub (règles : pas de palindrome XYX horizontal, équilibre couleurs, cohérence cœur). En mode monochrome : 1 seul fil sur l'ensemble du motif. Option broderie poignet gauche dispo (+6€). Texte bas en typo script (alors que dates en typo serif gras).",
+        "fils_associes": [
+          "fil_marine",
+          "fil_terracotta",
+          "fil_rose_poudre",
+          "fil_vert_sauge"
+        ],
+        "distribution_pattern": {
+          "type": "fixed_per_line",
+          "comment": "A=Marine, B=Terracotta, C=Rose poudré, D=Sauge (ordre figé bible). Lignes dates = pattern par nb dates, ligne texte signature = DDDD (tout en D=Sauge).",
+          "fils_order": [
+            "fil_marine",
+            "fil_terracotta",
+            "fil_rose_poudre",
+            "fil_vert_sauge"
+          ],
+          "patterns_dates": {
+            "1": [
+              "DDAA"
+            ],
+            "2": [
+              "BBCC",
+              "DDAA"
+            ],
+            "3": [
+              "CCDD",
+              "BBCC",
+              "DDAA"
+            ],
+            "4": [
+              "AABB",
+              "CCDD",
+              "BBCC",
+              "DDAA"
+            ]
+          },
+          "signature_line": "DDDD"
+        }
+      },
+      "destinataires": [],
+      "occasions": []
     },
     {
       "id": "YPM-005",
@@ -267,7 +532,13 @@
       "variantes": [
         {
           "file": "YPM-005-ANNONCE.PNG",
-          "label": "ANNONCE"
+          "label": "ANNONCE",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-005-ANNONCE Annonce.PNG",
@@ -276,7 +547,12 @@
             "annonce",
             "naissance",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "sœur"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-005-ANNONCE Madame.PNG",
@@ -287,7 +563,12 @@
             "mariage",
             "naissance",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [
+            "mariage"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-005-ANNONCE Monsieur.PNG",
@@ -298,7 +579,10 @@
             "mariage",
             "naissance",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-005-ANNONCE Papa.PNG",
@@ -309,7 +593,10 @@
             "naissance",
             "papa",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-005-ANNONCE chanceuse.PNG",
@@ -320,7 +607,12 @@
             "feminin",
             "naissance",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [
+            "intemporel"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-005-ANNONCE lover.PNG",
@@ -331,7 +623,10 @@
             "couple",
             "naissance",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-005-ANNONCE papa cheri.png",
@@ -343,14 +638,23 @@
             "naissance",
             "papa",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
         "annonce",
         "naissance",
         "typo"
-      ]
+      ],
+      "destinataires": [],
+      "occasions": [],
+      "produits": [],
+      "bible": {
+        "regles_validation": "1 couleur unique\nDeux lignes  à augmenter ou diminuer en proportionnelle\nDeux lignes centrés\n\nDimension Maxi de la broderie entre 24 et 29 cm maximum\nTypo 1 : athletics\nTypo 2 : Russ Times"
+      }
     },
     {
       "id": "YPM-006",
@@ -360,14 +664,30 @@
       "variantes": [
         {
           "file": "YPM-006-CALIN.PNG",
-          "label": "CALIN"
+          "label": "CALIN",
+          "destinataires": [],
+          "occasions": [],
+          "produits": [],
+          "tags": [
+            "caractere",
+            "initiale",
+            "alphabet",
+            "amour",
+            "coeur"
+          ]
         }
       ],
       "tags": [
         "coeur",
         "tendresse",
         "typo"
-      ]
+      ],
+      "destinataires": [],
+      "occasions": [],
+      "produits": [],
+      "bible": {
+        "composition": "Coeur avec initiale à l'intérieur"
+      }
     },
     {
       "id": "YPM-007",
@@ -377,7 +697,16 @@
       "variantes": [
         {
           "file": "YPM-007-CHOUCHOU.PNG",
-          "label": "CHOUCHOU"
+          "label": "CHOUCHOU",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [
+            "fête des mères",
+            "anniversaire"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-007-CHOUCHOU marié.PNG",
@@ -387,7 +716,10 @@
             "famille",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU mariée_v2.PNG",
@@ -397,7 +729,10 @@
             "famille",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU-amour.PNG",
@@ -407,7 +742,10 @@
             "couple",
             "famille",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU-beurre.PNG",
@@ -417,7 +755,10 @@
             "famille",
             "tendresse",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU-mamie.PNG",
@@ -426,7 +767,10 @@
             "famille",
             "grand-parents",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU-nounou.PNG",
@@ -435,7 +779,10 @@
             "famille",
             "garde-enfant",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU-poulette.PNG",
@@ -446,7 +793,10 @@
             "famille",
             "feminin",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU-tempete.PNG",
@@ -455,7 +805,10 @@
             "caractere",
             "famille",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-007-CHOUCHOU_mariée.PNG",
@@ -465,23 +818,47 @@
             "famille",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
         "famille",
         "typo"
-      ]
+      ],
+      "destinataires": [
+        "papa"
+      ],
+      "occasions": [
+        "fête des pères"
+      ],
+      "produits": []
     },
     {
       "id": "YPM-008",
       "nom_commercial": "La Féline",
-      "asset_principal": "YPM-008-FELINE-maman.PNG",
+      "asset_principal": "YPM-008-FELINE-madame.PNG",
       "nb_variantes": 5,
       "variantes": [
         {
+          "file": "YPM-008-FELINE-maman.PNG",
+          "label": "FELINE-maman",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [],
+          "produits": [],
+          "tags": []
+        },
+        {
           "file": "YPM-008-FELINE.png",
-          "label": "FELINE"
+          "label": "FELINE",
+          "destinataires": [],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-008-FELINE-Amour fou.png",
@@ -492,18 +869,10 @@
             "couple",
             "feminin",
             "typo"
-          ]
-        },
-        {
-          "file": "YPM-008-FELINE-madame.PNG",
-          "label": "FELINE-madame",
-          "tags": [
-            "animal",
-            "couple",
-            "feminin",
-            "mariage",
-            "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-008-FELINE-maman cherie.PNG",
@@ -514,7 +883,10 @@
             "feminin",
             "maman",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-008-FELINEv1.png",
@@ -523,40 +895,82 @@
             "animal",
             "feminin",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
         "animal",
         "feminin",
         "typo"
-      ]
+      ],
+      "bible": {
+        "fils_associes": [
+          "fil_noir",
+          "fil_camel"
+        ]
+      },
+      "destinataires": [],
+      "occasions": [],
+      "produits": []
     },
     {
       "id": "YPM-009",
       "nom_commercial": "La Palette",
-      "asset_principal": "YPM-009-PALETTE-Madame.png",
+      "asset_principal": "YPM-009-PALETTE - Amoureuse - papa.PNG",
       "nb_variantes": 7,
       "variantes": [
         {
+          "file": "YPM-009-PALETTE.PNG",
+          "label": "PALETTE",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [
+            "fête des mères"
+          ],
+          "produits": [],
+          "tags": []
+        },
+        {
+          "file": "YPM-009-PALETTE-Madame.png",
+          "label": "PALETTE-Madame",
+          "destinataires": [
+            "couple"
+          ],
+          "occasions": [
+            "mariage"
+          ],
+          "produits": [],
+          "tags": []
+        },
+        {
           "file": "YPM-009-PALETTE-la mariee.png",
-          "label": "PALETTE-la mariee"
+          "label": "PALETTE-la mariee",
+          "destinataires": [],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-009-PALETTE_TeamMariee_PXF.PNG",
-          "label": "PALETTE_TeamMariee_PXF"
+          "label": "PALETTE_TeamMariee_PXF",
+          "destinataires": [],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-009-PALETTE-vert.png",
-          "label": "PALETTE-vert"
-        },
-        {
-          "file": "YPM-009-PALETTE - Amoureuse - papa.PNG",
-          "label": "PALETTE - Amoureuse - papa"
-        },
-        {
-          "file": "YPM-009-PALETTE.PNG",
-          "label": "PALETTE"
+          "label": "PALETTE-vert",
+          "destinataires": [],
+          "occasions": [
+            "intemporel"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-009-PALETTE - Amoureuse.PNG",
@@ -569,7 +983,10 @@
             "groupe",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-009-PALETTE-beige.png",
@@ -578,14 +995,31 @@
             "couleurs",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "papa"
+          ],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
         "couleurs",
         "mariage",
         "typo"
-      ]
+      ],
+      "bible": {
+        "palettes_associees": [
+          "palette_multicolore_chaud"
+        ]
+      },
+      "destinataires": [
+        "papa"
+      ],
+      "occasions": [
+        "fête des pères"
+      ],
+      "produits": []
     },
     {
       "id": "YPM-010",
@@ -595,15 +1029,42 @@
       "variantes": [
         {
           "file": "YPM-010-RONDE monsieur.PNG",
-          "label": "RONDE monsieur"
+          "label": "RONDE monsieur",
+          "destinataires": [
+            "couple"
+          ],
+          "occasions": [
+            "mariage"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-010-RONDE madame_PXF.PNG",
-          "label": "RONDE madame_PXF"
+          "label": "RONDE madame_PXF",
+          "destinataires": [
+            "couple"
+          ],
+          "occasions": [
+            "intemporel",
+            "mariage"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-010-RONDE.PNG",
-          "label": "RONDE"
+          "label": "RONDE",
+          "destinataires": [],
+          "occasions": [
+            "mariage",
+            "intemporel",
+            "déclaration"
+          ],
+          "produits": [],
+          "tags": [
+            "amour"
+          ]
         },
         {
           "file": "YPM-010-RONDE-love.PNG",
@@ -614,7 +1075,12 @@
             "famille",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "nounou"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-010-RONDE-mamie.JPG",
@@ -624,7 +1090,12 @@
             "grand-parents",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "mamie"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-010-RONDE-soeur.PNG",
@@ -635,7 +1106,14 @@
             "groupe",
             "sista",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "sœur"
+          ],
+          "occasions": [
+            "intemporel"
+          ],
+          "produits": []
         }
       ],
       "tags": [
@@ -643,7 +1121,19 @@
         "groupe",
         "typo"
       ],
-      "shooting_pngs": []
+      "shooting_pngs": [],
+      "bible": {
+        "composition": "Typo Arc de Cercle",
+        "regles_validation": "Côté coeur",
+        "typographie": "Arial Rounded"
+      },
+      "destinataires": [
+        "papa"
+      ],
+      "occasions": [
+        "fête des pères"
+      ],
+      "produits": []
     },
     {
       "id": "YPM-011",
@@ -653,11 +1143,25 @@
       "variantes": [
         {
           "file": "YPM-011-CONFIDENCE-Maman.PNG",
-          "label": "CONFIDENCE-Maman"
+          "label": "CONFIDENCE-Maman",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [
+            "fête des mères"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-011-CONFIDENCE Viens.png",
-          "label": "CONFIDENCE Viens"
+          "label": "CONFIDENCE Viens",
+          "destinataires": [],
+          "occasions": [
+            "déclaration"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-011-CONFIDENCE-Maman d amour.png",
@@ -669,7 +1173,10 @@
             "famille",
             "maman",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-011-CONFIDENCE-Maman ensemble.png",
@@ -678,9 +1185,18 @@
             "amitie",
             "amour",
             "famille",
-            "maman",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "maman",
+            "couple",
+            "amis"
+          ],
+          "occasions": [
+            "déclaration",
+            "intemporel"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-011-CONFIDENCE-Mamaninette.PNG",
@@ -689,9 +1205,13 @@
             "amitie",
             "amour",
             "famille",
-            "maman",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "mamie"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-011-CONFIDENCE-Mamie.PNG",
@@ -702,11 +1222,20 @@
             "famille",
             "grand-parents",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-011-pere-du-fils.png",
-          "label": "Père du fils"
+          "label": "Père du fils",
+          "destinataires": [
+            "papa"
+          ],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         }
       ],
       "tags": [
@@ -714,7 +1243,9 @@
         "amour",
         "famille",
         "typo"
-      ]
+      ],
+      "destinataires": [],
+      "occasions": []
     },
     {
       "id": "YPM-012",
@@ -724,7 +1255,15 @@
       "variantes": [
         {
           "file": "YPM-012-MEUTE.PNG",
-          "label": "MEUTE"
+          "label": "MEUTE",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [
+            "fête des mères"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-012-La Meute- mamie ours.PNG",
@@ -735,7 +1274,12 @@
             "grand-parents",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "mamie"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-012-La Meute-papie.PNG",
@@ -745,7 +1289,12 @@
             "grand-parents",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "papy"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-012-La Meute.PNG",
@@ -754,7 +1303,14 @@
             "famille",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "papa"
+          ],
+          "occasions": [
+            "fête des pères"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-012-MEUTEv1.PNG",
@@ -763,14 +1319,31 @@
             "famille",
             "groupe",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "frère",
+            "sœur",
+            "bébé",
+            "enfant"
+          ],
+          "occasions": [
+            "naissance"
+          ],
+          "produits": []
         }
       ],
       "tags": [
         "famille",
         "groupe",
         "typo"
-      ]
+      ],
+      "destinataires": [
+        "papa"
+      ],
+      "occasions": [
+        "fête des pères"
+      ],
+      "produits": []
     },
     {
       "id": "YPM-013",
@@ -817,9 +1390,13 @@
     {
       "id": "YPM-014",
       "nom_commercial": "La Tigresse",
-      "asset_principal": "YPM-014-TIGRESSE.png",
+      "asset_principal": "YPM-014-TIGRESSE lola.png",
       "nb_variantes": 3,
       "variantes": [
+        {
+          "file": "YPM-014-TIGRESSE.png",
+          "label": "TIGRESSE"
+        },
         {
           "file": "YPM-014-TIGRESSE alba.png",
           "label": "TIGRESSE alba",
@@ -833,16 +1410,6 @@
         {
           "file": "YPM-014-TIGRESSE celine.png",
           "label": "TIGRESSE celine",
-          "tags": [
-            "animal",
-            "feminin",
-            "prenom",
-            "typo"
-          ]
-        },
-        {
-          "file": "YPM-014-TIGRESSE lola.png",
-          "label": "TIGRESSE lola",
           "tags": [
             "animal",
             "feminin",
@@ -866,7 +1433,15 @@
       "variantes": [
         {
           "file": "YPM-015-DECLARATION.png",
-          "label": "DECLARATION"
+          "label": "DECLARATION",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [
+            "fête des mères"
+          ],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-015-AMOUR un jour.png",
@@ -875,7 +1450,10 @@
             "amour",
             "couple",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-015-DECLARATION bichette.png",
@@ -885,7 +1463,10 @@
             "couple",
             "feminin",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-015-DECLARATION camille&hugo.PNG",
@@ -894,16 +1475,22 @@
             "amour",
             "couple",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-015-DECLARATION declaration maitresse.PNG",
           "label": "DECLARATION declaration maitresse",
-          "tags": [
-            "amour",
-            "couple",
-            "typo"
-          ]
+          "tags": [],
+          "destinataires": [
+            "maîtresse"
+          ],
+          "occasions": [
+            "déclaration"
+          ],
+          "produits": []
         },
         {
           "file": "YPM-015-DECLARATION_bride team.png",
@@ -915,7 +1502,10 @@
             "groupe",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-015-DECLARATION_bride.PNG",
@@ -925,7 +1515,10 @@
             "couple",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-015-DECLARATION_madame.PNG",
@@ -935,7 +1528,10 @@
             "couple",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-015-DECLARATION_monsieur.png",
@@ -945,42 +1541,62 @@
             "couple",
             "mariage",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         }
       ],
       "tags": [
         "amour",
         "couple",
         "typo"
-      ]
+      ],
+      "destinataires": [
+        "papa"
+      ],
+      "occasions": [
+        "fête des pères"
+      ],
+      "produits": []
     },
     {
       "id": "YPM-016",
       "nom_commercial": "La Signature",
-      "asset_principal": "YPM-016-SIGNATURE papachou.PNG",
+      "asset_principal": "YPM-016-SIGNATURE daddy.PNG",
       "nb_variantes": 6,
       "variantes": [
         {
-          "file": "YPM-016-SIGNATURE.PNG",
-          "label": "SIGNATURE"
+          "file": "YPM-016-SIGNATURE papachou.PNG",
+          "label": "SIGNATURE papachou",
+          "destinataires": [
+            "papa"
+          ],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         },
         {
-          "file": "YPM-016-SIGNATURE daddy.PNG",
-          "label": "SIGNATURE daddy",
-          "tags": [
-            "famille",
-            "papa",
-            "signature",
-            "typo"
-          ]
+          "file": "YPM-016-SIGNATURE.PNG",
+          "label": "SIGNATURE",
+          "destinataires": [
+            "maman"
+          ],
+          "occasions": [],
+          "produits": [],
+          "tags": []
         },
         {
           "file": "YPM-016-SIGNATURE franck.PNG",
           "label": "SIGNATURE franck",
           "tags": [
             "signature",
-            "typo"
-          ]
+            "typo",
+            "prénom"
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-016-SIGNATURE maman.PNG",
@@ -990,7 +1606,10 @@
             "maman",
             "signature",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-016-SIGNATURE nounou.PNG",
@@ -1000,7 +1619,12 @@
             "garde-enfant",
             "signature",
             "typo"
-          ]
+          ],
+          "destinataires": [
+            "nounou"
+          ],
+          "occasions": [],
+          "produits": []
         },
         {
           "file": "YPM-016-SIGNATURE raleuse.PNG",
@@ -1010,13 +1634,27 @@
             "humour",
             "signature",
             "typo"
-          ]
+          ],
+          "destinataires": [],
+          "occasions": [
+            "anniversaire",
+            "intemporel"
+          ],
+          "produits": []
         }
       ],
       "tags": [
         "signature",
         "typo"
-      ]
+      ],
+      "destinataires": [
+        "papa"
+      ],
+      "occasions": [],
+      "produits": [],
+      "bible": {
+        "regles_validation": "Validation proportionnelle des 2 lignes"
+      }
     },
     {
       "id": "YPM-017",

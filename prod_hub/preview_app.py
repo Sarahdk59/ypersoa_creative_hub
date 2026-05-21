@@ -24,7 +24,8 @@ PALETTE_V2_PATH = ROOT / "referentiels" / "palette_fils_broderie_v2.json"
 
 
 @st.cache_data
-def load_palette_v2() -> dict:
+def _load_palette_v2_cached(_mtime: float) -> dict:
+    """Cache invalidé dès que le mtime du fichier change → reflète les éditions Hub instantanément."""
     raw = json.loads(PALETTE_V2_PATH.read_text(encoding="utf-8"))
     out = {}
     for c in raw["couleurs"]:
@@ -35,8 +36,13 @@ def load_palette_v2() -> dict:
             c["id"], c["nom"], c["hex"],
             c.get("numero_aiguille_canonique"),
             gunold,
+            favori=bool(c.get("favori", False)),
         )
     return out
+
+
+def load_palette_v2() -> dict:
+    return _load_palette_v2_cached(PALETTE_V2_PATH.stat().st_mtime)
 
 
 def _luminance(hex_color: str) -> float:
@@ -47,7 +53,11 @@ def _luminance(hex_color: str) -> float:
     return (0.299 * r + 0.587 * g + 0.114 * b) / 255
 
 
-def swatch_grid(palette: dict, mode: str, current, key_prefix: str, cols_per_row: int = 10):
+SWATCH_SIZE = 52
+COLS_PER_ROW = 7
+
+
+def swatch_grid(palette: dict, mode: str, current, key_prefix: str, cols_per_row: int = COLS_PER_ROW):
     """Grille de swatches cliquables. mode: 'single' (cœur) ou 'multi' (gamme, support).
 
     Multi → st.checkbox natif sous chaque disque (1 widget par fil, pas d'ambiguïté de clic).
@@ -60,11 +70,35 @@ def swatch_grid(palette: dict, mode: str, current, key_prefix: str, cols_per_row
     return _swatch_grid_single(palette, fil_ids, current, key_prefix, cols_per_row)
 
 
+def _swatch_html(fil, is_sel, content_inner=""):
+    text_color = "#1A1614" if _luminance(fil.hex) > 0.65 else "#FAF7F2"
+    border = "3px solid #1E2D4A" if is_sel else "1px solid rgba(0,0,0,0.12)"
+    star = (
+        f'<span style="position:absolute;top:-2px;right:-2px;font-size:14px;color:#E8B547;'
+        f'text-shadow:0 0 3px white,0 0 3px white;line-height:1;">★</span>'
+        if getattr(fil, "favori", False) else ""
+    )
+    code_badge = (
+        f'<span style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);'
+        f'background:white;border:0.5px solid rgba(0,0,0,0.15);border-radius:6px;'
+        f'padding:0 4px;font-size:9px;font-family:Menlo,monospace;color:#1A1614;'
+        f'white-space:nowrap;line-height:14px;">{fil.code_gunold}</span>'
+        if fil.code_gunold else ""
+    )
+    return (
+        f'<div style="position:relative;width:{SWATCH_SIZE}px;height:{SWATCH_SIZE + 8}px;margin:0 auto 6px;">'
+        f'<div style="display:flex;justify-content:center;align-items:center;'
+        f'width:{SWATCH_SIZE}px;height:{SWATCH_SIZE}px;border-radius:50%;background:{fil.hex};'
+        f'border:{border};color:{text_color};font-weight:700;font-size:18px;">{content_inner}</div>'
+        f'{star}{code_badge}</div>'
+    )
+
+
 def _swatch_grid_single(palette, fil_ids, current, key_prefix, cols_per_row):
     new_current = current
     rows = (len(fil_ids) + cols_per_row - 1) // cols_per_row
     for r in range(rows):
-        cols = st.columns(cols_per_row, gap="small")
+        cols = st.columns(cols_per_row, gap="medium")
         for ci in range(cols_per_row):
             idx = r * cols_per_row + ci
             if idx >= len(fil_ids):
@@ -72,22 +106,16 @@ def _swatch_grid_single(palette, fil_ids, current, key_prefix, cols_per_row):
             fid = fil_ids[idx]
             fil = palette[fid]
             is_sel = current == fid
-            text_color = "#1A1614" if _luminance(fil.hex) > 0.65 else "#FAF7F2"
             check_mark = "●" if is_sel else ""
-            border = "2.5px solid #1E2D4A" if is_sel else "1px solid rgba(0,0,0,0.12)"
             with cols[ci]:
-                st.markdown(
-                    f'<div style="display:flex;justify-content:center;align-items:center;'
-                    f'width:36px;height:36px;border-radius:50%;background:{fil.hex};'
-                    f'border:{border};margin:0 auto 2px;color:{text_color};'
-                    f'font-weight:700;font-size:14px;">{check_mark}</div>',
-                    unsafe_allow_html=True,
-                )
+                st.markdown(_swatch_html(fil, is_sel, check_mark), unsafe_allow_html=True)
                 clicked = st.button(
-                    fil.nom.split()[0][:7],
+                    fil.nom,
                     key=f"sw_{key_prefix}_{fid}",
                     help=f"{fil.nom} · {fil.hex}"
                          + (f" · Gunold {fil.code_gunold}" if fil.code_gunold else ""),
+                    use_container_width=True,
+                    type="primary" if is_sel else "secondary",
                 )
             if clicked:
                 new_current = None if is_sel else fid
@@ -101,7 +129,7 @@ def _swatch_grid_multi(palette, fil_ids, current, key_prefix, cols_per_row):
     # Lit les valeurs actuelles depuis session_state (alimenté par les checkboxes)
     new_current = []
     for r in range(rows):
-        cols = st.columns(cols_per_row, gap="small")
+        cols = st.columns(cols_per_row, gap="medium")
         for ci in range(cols_per_row):
             idx = r * cols_per_row + ci
             if idx >= len(fil_ids):
@@ -113,20 +141,11 @@ def _swatch_grid_multi(palette, fil_ids, current, key_prefix, cols_per_row):
             if chk_key not in st.session_state:
                 st.session_state[chk_key] = fid in current
             is_sel = st.session_state[chk_key]
-
-            text_color = "#1A1614" if _luminance(fil.hex) > 0.65 else "#FAF7F2"
             check_mark = "✓" if is_sel else ""
-            border = "2.5px solid #1E2D4A" if is_sel else "1px solid rgba(0,0,0,0.12)"
             with cols[ci]:
-                st.markdown(
-                    f'<div style="display:flex;justify-content:center;align-items:center;'
-                    f'width:36px;height:36px;border-radius:50%;background:{fil.hex};'
-                    f'border:{border};margin:0 auto 2px;color:{text_color};'
-                    f'font-weight:700;font-size:14px;">{check_mark}</div>',
-                    unsafe_allow_html=True,
-                )
+                st.markdown(_swatch_html(fil, is_sel, check_mark), unsafe_allow_html=True)
                 checked = st.checkbox(
-                    fil.nom.split()[0][:7],
+                    fil.nom,
                     key=chk_key,
                     help=f"{fil.nom} · {fil.hex}"
                          + (f" · Gunold {fil.code_gunold}" if fil.code_gunold else ""),
@@ -149,9 +168,21 @@ def main() -> None:
     st.markdown(
         """
         <style>
-        button[kind="secondary"] { padding: 2px 0 !important; min-height: 22px !important;
-            font-size: 11px !important; }
-        h3 { font-size: 16px !important; margin-top: 8px !important; margin-bottom: 4px !important; }
+        /* Boutons swatch (mode single coeur) */
+        button[kind="secondary"], button[kind="primary"] {
+            padding: 4px 6px !important; min-height: 28px !important;
+            font-size: 11px !important; line-height: 1.2 !important;
+            white-space: normal !important; word-break: break-word !important;
+        }
+        /* Checkbox swatch (mode multi gamme/support) — label sur 1 ligne */
+        div[data-testid="stCheckbox"] label p {
+            font-size: 11px !important; line-height: 1.2 !important;
+            white-space: nowrap !important;
+        }
+        div[data-testid="stCheckbox"] {
+            margin-top: 2px !important;
+        }
+        h3 { font-size: 16px !important; margin-top: 16px !important; margin-bottom: 8px !important; }
         </style>
         """,
         unsafe_allow_html=True,
@@ -181,14 +212,26 @@ def main() -> None:
         st.session_state.ligne4 = "jules"
 
     palette_courante = {**palette_v2, **st.session_state.custom_fils}
+    nb_favoris = sum(1 for f in palette_v2.values() if f.favori)
 
     col_form, col_result = st.columns([1, 1])
 
     with col_form:
+        # === 0. Filtre vue palette ===
+        mode_favoris = st.toggle(
+            f"Vue B2C — favoris seulement (⭐ {nb_favoris} fils)",
+            value=False,
+            help="Active pour simuler ce que voit le client final sur ypersoa.fr (fils marqués favoris dans le Hub atelier-DA).",
+        )
+        if mode_favoris:
+            palette_visible = {fid: f for fid, f in palette_courante.items() if f.favori}
+        else:
+            palette_visible = palette_courante
+
         # === 1. Coeur ===
         st.markdown(f"### 1. Couleur du cœur — _{label_fil(palette_courante, st.session_state.coeur)}_")
         st.session_state.coeur = swatch_grid(
-            palette_courante, "single", st.session_state.coeur, "coeur"
+            palette_visible, "single", st.session_state.coeur, "coeur"
         )
 
         # === 2. Gamme (Multicolore impose par variante) ===
@@ -197,7 +240,7 @@ def main() -> None:
         )
         st.caption("Selection multiple : les fils que la variante Shopify impose")
         st.session_state.gamme = swatch_grid(
-            palette_courante, "multi", st.session_state.gamme, "gamme"
+            palette_visible, "multi", st.session_state.gamme, "gamme"
         )
 
         # === 3. Texte ===
@@ -212,7 +255,7 @@ def main() -> None:
         with st.expander("4. Filtre support (avancé) — fils incompatibles avec le sweat client"):
             st.caption("Pour Adriana : exclut les fils peu lisibles sur le support choisi")
             st.session_state.support_incompat = swatch_grid(
-                palette_courante, "multi", st.session_state.support_incompat, "support"
+                palette_visible, "multi", st.session_state.support_incompat, "support"
             )
 
         # === 5. Custom fil ===

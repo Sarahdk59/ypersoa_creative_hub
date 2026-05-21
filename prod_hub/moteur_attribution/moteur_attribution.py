@@ -21,6 +21,7 @@ class Couleur:
     hex: str
     aiguille: Optional[int] = None
     code_gunold: Optional[str] = None
+    favori: bool = False
 
 
 @dataclass
