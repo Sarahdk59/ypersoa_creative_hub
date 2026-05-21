@@ -12,7 +12,9 @@ import {
   ArrowLeft,
   Download,
   Package,
+  Layers,
 } from "lucide-react";
+import { AddToCatalogModal } from "@/components/AddToCatalogModal";
 import {
   Collection,
   SocialPack,
@@ -48,6 +50,11 @@ export function LibraryDrawer({ open, onClose, refreshKey }: Props) {
   const [openPack, setOpenPack] = useState<SocialPack | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Recherche transverse multi-champs : matche YPM-008, "chouchou", "père",
+  // "mariage", "papa"… sur title/caption/hooks/occasion/canonique/pinterest_tags.
+  // Tokens séparés par espace = AND logique (ex: "chouchou papa" → packs qui ont
+  // les 2 termes quelque part).
+  const [searchQuery, setSearchQuery] = useState("");
 
   const refresh = async () => {
     setLoading(true);
@@ -84,6 +91,32 @@ export function LibraryDrawer({ open, onClose, refreshKey }: Props) {
 
   const packCountByCollection = (collectionId: string) =>
     packs.filter((p) => p.collection_id === collectionId).length;
+
+  // Filtre transverse : tokenise sur espace, AND logique sur tous les champs
+  // texte d'un pack (title, caption_text, caption_hooks values, occasion_id,
+  // canonique_ids, pinterest_title, pinterest_description, pinterest_tags,
+  // custom_prompt, notes). Match Insensitive (toLowerCase).
+  const filteredPacks = (() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return packs;
+    const tokens = q.split(/\s+/).filter(Boolean);
+    return packs.filter((p) => {
+      const haystack = [
+        p.title ?? "",
+        p.caption_text ?? "",
+        ...(p.caption_hooks ? Object.values(p.caption_hooks) : []),
+        p.pinterest_title ?? "",
+        p.pinterest_description ?? "",
+        ...(p.pinterest_tags ?? []),
+        p.occasion_id ?? "",
+        p.vibe_id ?? "",
+        ...(p.canonique_ids ?? []),
+        p.custom_prompt ?? "",
+        p.notes ?? "",
+      ].join("  ").toLowerCase();
+      return tokens.every((t) => haystack.includes(t));
+    });
+  })();
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end">
@@ -176,6 +209,21 @@ export function LibraryDrawer({ open, onClose, refreshKey }: Props) {
               >
                 <Heart className={`w-3 h-3 ${favoriteOnly ? "fill-white" : ""}`} /> Favoris uniquement
               </button>
+              <span className="mx-2 text-slate-300">|</span>
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher : YPM-008, chouchou, papa, mariage…"
+                className="flex-1 min-w-[200px] px-3 py-1 rounded-full border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-rose-300"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="text-slate-400 hover:text-slate-600 text-[11px] underline"
+                >
+                  Effacer
+                </button>
+              )}
             </div>
 
             <div className="flex-1 overflow-y-auto p-5">
@@ -186,9 +234,17 @@ export function LibraryDrawer({ open, onClose, refreshKey }: Props) {
                   Aucun pack pour l&apos;instant. Génère un pack et clique ❤️ &quot;Sauvegarder dans le hub&quot;.
                 </div>
               )}
-              {!loading && packs.length > 0 && (
+              {!loading && packs.length > 0 && filteredPacks.length === 0 && (
+                <div className="text-center text-slate-400 text-sm py-12">
+                  Aucun pack ne correspond à <strong>« {searchQuery} »</strong>.{" "}
+                  <button onClick={() => setSearchQuery("")} className="text-rose-500 hover:underline">
+                    Effacer la recherche
+                  </button>
+                </div>
+              )}
+              {!loading && filteredPacks.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {packs.map((pack) => (
+                  {filteredPacks.map((pack) => (
                     <button
                       key={pack.id}
                       onClick={() => setOpenPack(pack)}
@@ -264,6 +320,8 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
   const [error, setError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  // Cible de la modal "Ranger dans catalogue" — null = fermée, sinon { url, idx } de la slide cliquée.
+  const [catalogTarget, setCatalogTarget] = useState<{ url: string; idx: number } | null>(null);
 
   const collectionForPack = collections.find((c) => c.id === pack.collection_id) || null;
 
@@ -373,6 +431,13 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
                     title={`Télécharger slide ${idx + 1}`}
                   >
                     <Download className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => setCatalogTarget({ url, idx })}
+                    className="bg-white/90 hover:bg-slate-800 hover:text-white text-slate-700 p-1.5 rounded-full shadow-md transition-colors"
+                    title="Ranger dans le catalogue motif"
+                  >
+                    <Layers className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => handleDeleteSlide(idx)}
@@ -556,6 +621,15 @@ function PackDetail({ pack, collections, onChange, onSaved, onDeleted }: PackDet
           </div>
         </div>
       </div>
+
+      {catalogTarget && (
+        <AddToCatalogModal
+          imageUrl={catalogTarget.url}
+          shotLabel={`${pack.title ?? "Pack"} · slide ${catalogTarget.idx + 1}/${pack.image_urls.length}`}
+          onClose={() => setCatalogTarget(null)}
+          onSaved={() => { /* no-op : la lib catalog est lue depuis /atelier-da/motifs */ }}
+        />
+      )}
     </div>
   );
 }

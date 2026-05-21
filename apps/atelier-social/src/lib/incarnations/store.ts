@@ -53,6 +53,12 @@ function getStore() {
     };
   }
   const s = globalThis.__ypersoa_incarnations_store__;
+  // HMR safety : si le global a été créé par une version précédente du module
+  // qui ne connaissait pas un champ (ex. `photos`), backfiller pour éviter
+  // un TypeError sur `undefined.values()` après un hot reload.
+  if (!s.motifs) s.motifs = new Map();
+  if (!s.incarnations) s.incarnations = new Map();
+  if (!s.photos) s.photos = new Map();
   if (!s.seeded) {
     for (const m of SEED_MOTIFS) s.motifs.set(m.code, m);
     for (const i of SEED_INCARNATIONS) s.incarnations.set(i.id, i);

@@ -1,14 +1,12 @@
 /**
- * HubSidebar — chrome latérale 64px, 3 icônes verticales.
+ * HubSidebar — chrome latérale 64px, 5 icônes verticales.
  *
  * Détecte l'app active via usePathname (Next App Router).
- * Atelier-shooting est explicitement disabled aujourd'hui : tooltip
- * "À venir, prochaine session" + pas de href cliquable.
  */
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MessageCircle, Camera, BookImage, Compass } from "lucide-react";
+import { MessageCircle, Camera, BookImage, Compass, Cpu } from "lucide-react";
 import { HubSidebarIcon } from "./HubSidebarIcon";
 
 export function HubSidebar() {
@@ -53,6 +51,12 @@ export function HubSidebar() {
         label="Atelier DA"
         href="/atelier-da"
         active={isActive("/atelier-da")}
+      />
+      <HubSidebarIcon
+        icon={<Cpu size={20} strokeWidth={1.6} />}
+        label="Atelier Production"
+        href="/atelier-production"
+        active={isActive("/atelier-production")}
       />
     </nav>
   );

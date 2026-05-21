@@ -8,7 +8,8 @@ import { ProductColorPicker } from "@/components/ProductColorPicker";
 import { SavePackDialog } from "@/components/SavePackDialog";
 import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { Heart, FolderOpen, X } from "lucide-react";
+import { Heart, FolderOpen, X, Calendar, Layers, Trello } from "lucide-react";
+import Link from "next/link";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
 import {
   ActiveLookbookAmbiance,
@@ -353,6 +354,32 @@ export default function Home() {
                 </span>
               </div>
             )}
+            <Link
+              href="/social/kanban"
+              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              title="Kanban projets sociaux — Concept / Shooting / À filmer / Production / Publié"
+            >
+              <Trello className="w-3.5 h-3.5" />
+              Projets
+            </Link>
+            <Link
+              href="/atelier-da/motifs"
+              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              title="Catalogue motifs YPM filtrable par destinataire / occasion / produit"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              Catalogue motifs
+            </Link>
+            <a
+              href={process.env.NEXT_PUBLIC_PLANABLE_URL ?? "http://localhost:3002"}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              title="Planable — calendrier éditorial Insta/Pinterest"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              Planable
+            </a>
             {supabaseOn && (
               <button
                 onClick={() => setLibraryOpen(true)}

@@ -6,7 +6,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Upload, CheckSquare, Square } from "lucide-react";
+import { Search, Upload, CheckSquare, Square, LayoutGrid } from "lucide-react";
 
 import type { SortOrder } from "@/types/mediatheque";
 
@@ -20,6 +20,7 @@ interface GalleryHeaderProps {
   selectMode: boolean;
   onToggleSelectMode: () => void;
   selectedCount: number;
+  onOpenAudit?: () => void;
 }
 
 export function GalleryHeader({
@@ -32,6 +33,7 @@ export function GalleryHeader({
   selectMode,
   onToggleSelectMode,
   selectedCount,
+  onOpenAudit,
 }: GalleryHeaderProps) {
   return (
     <div
@@ -137,11 +139,38 @@ export function GalleryHeader({
         {loading ? "…" : `${total} photo${total > 1 ? "s" : ""}`}
       </span>
 
+      {/* Bouton Audit production */}
+      {onOpenAudit && (
+        <button
+          type="button"
+          onClick={onOpenAudit}
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            background: "white",
+            color: "var(--hub-foreground)",
+            border: "0.5px solid var(--hub-border)",
+            borderRadius: 9999,
+            padding: "10px 16px",
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "0.04em",
+            cursor: "pointer",
+          }}
+          title="Voir la couverture motifs × produits et combler les trous en 2 clics"
+        >
+          <LayoutGrid size={14} strokeWidth={1.8} /> Audit production
+        </button>
+      )}
+
       {/* Bouton Upload */}
       <Link
         href="/atelier-da/mediatheque/upload"
         style={{
-          marginLeft: "auto",
+          marginLeft: onOpenAudit ? 0 : "auto",
           display: "flex",
           alignItems: "center",
           gap: 6,

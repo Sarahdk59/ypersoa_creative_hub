@@ -86,6 +86,7 @@ const RAW: SeedTag[] = [
   // PLANS
   { category: "plan", slug: "hero", label: "Hero / packshot principal" },
   { category: "plan", slug: "buste", label: "Buste / détail broderie" },
+  { category: "plan", slug: "lookbook", label: "Lookbook / packshot porté" },
   { category: "plan", slug: "lifestyle", label: "Lifestyle / en situation" },
   { category: "plan", slug: "detail-broderie", label: "Macro broderie" },
   { category: "plan", slug: "plat", label: "Pose à plat" },

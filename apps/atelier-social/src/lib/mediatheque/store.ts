@@ -289,6 +289,131 @@ export async function removeTagFromMedia(
   return rowToMediaWithTags(row);
 }
 
+// ─── AUDIT PRODUCTION ──────────────────────────────────────────────────────
+// Matrice motif × produit × plan pour voir d'un coup ce qu'il manque dans la
+// médiathèque (lookbook + lifestyle pour les 18 motifs × 5 produits).
+
+export interface AuditCellSample {
+  id: string;
+  public_url: string;
+  filename: string;
+  statut: MediaStatut;
+}
+
+export interface AuditCell {
+  count: number;
+  sample: AuditCellSample | null;
+}
+
+export interface AuditAxis {
+  slug: string;
+  label: string;
+}
+
+export interface AuditMatrix {
+  motifs: AuditAxis[];
+  produits: AuditAxis[];
+  plans: AuditAxis[];
+  matrix: Record<string, Record<string, Record<string, AuditCell>>>;
+  totals: {
+    cells_total: number;
+    cells_filled: number;
+    photos_total: number;
+  };
+}
+
+export interface AuditOptions {
+  motif_slugs: string[];
+  produit_slugs: string[];
+  plan_slugs: string[];
+}
+
+export async function getAuditMatrix(options: AuditOptions): Promise<AuditMatrix> {
+  const store = getStore();
+  const motifSet = new Set(options.motif_slugs);
+  const produitSet = new Set(options.produit_slugs);
+  const planSet = new Set(options.plan_slugs);
+
+  const matrix: AuditMatrix["matrix"] = {};
+  for (const m of options.motif_slugs) {
+    matrix[m] = {};
+    for (const p of options.produit_slugs) {
+      matrix[m][p] = {};
+      for (const pl of options.plan_slugs) {
+        matrix[m][p][pl] = { count: 0, sample: null };
+      }
+    }
+  }
+
+  let photosTotal = 0;
+
+  for (const row of store.media.values()) {
+    let motifSlug: string | null = null;
+    let produitSlug: string | null = null;
+    const planSlugs: string[] = [];
+    for (const tagId of row.tag_ids) {
+      const t = store.tags.get(tagId);
+      if (!t) continue;
+      if (t.category === "motif" && motifSet.has(t.slug)) motifSlug = t.slug;
+      else if (t.category === "gabarit" && produitSet.has(t.slug)) produitSlug = t.slug;
+      else if (t.category === "plan" && planSet.has(t.slug)) planSlugs.push(t.slug);
+    }
+    if (!motifSlug || !produitSlug || planSlugs.length === 0) continue;
+    photosTotal += 1;
+    for (const planSlug of planSlugs) {
+      const cell = matrix[motifSlug][produitSlug][planSlug];
+      cell.count += 1;
+      if (!cell.sample) {
+        cell.sample = {
+          id: row.id,
+          public_url: row.public_url,
+          filename: row.filename,
+          statut: row.statut,
+        };
+      }
+    }
+  }
+
+  const cellsTotal =
+    options.motif_slugs.length * options.produit_slugs.length * options.plan_slugs.length;
+  let cellsFilled = 0;
+  for (const m of options.motif_slugs) {
+    for (const p of options.produit_slugs) {
+      for (const pl of options.plan_slugs) {
+        if (matrix[m][p][pl].count > 0) cellsFilled += 1;
+      }
+    }
+  }
+
+  const axisFromTags = (
+    category: TagCategory,
+    slugs: string[],
+  ): AuditAxis[] => {
+    return slugs.map((slug) => {
+      let label = slug.toUpperCase();
+      for (const t of store.tags.values()) {
+        if (t.category === category && t.slug === slug) {
+          label = t.label;
+          break;
+        }
+      }
+      return { slug, label };
+    });
+  };
+
+  return {
+    motifs: axisFromTags("motif", options.motif_slugs),
+    produits: axisFromTags("gabarit", options.produit_slugs),
+    plans: axisFromTags("plan", options.plan_slugs),
+    matrix,
+    totals: {
+      cells_total: cellsTotal,
+      cells_filled: cellsFilled,
+      photos_total: photosTotal,
+    },
+  };
+}
+
 export async function tagsUsageCount(): Promise<Map<string, number>> {
   const store = getStore();
   const counts = new Map<string, number>();

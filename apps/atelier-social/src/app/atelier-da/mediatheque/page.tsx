@@ -16,6 +16,7 @@ import { fetchMediaList, fetchTags } from "@/lib/mediatheque/api-client";
 import { MediaCard } from "@/components/mediatheque/MediaCard";
 import { TagFilterSidebar } from "@/components/mediatheque/TagFilterSidebar";
 import { GalleryHeader } from "@/components/mediatheque/GalleryHeader";
+import { AuditProductionDrawer } from "@/components/mediatheque/AuditProductionDrawer";
 
 function MediathequePageInner() {
   const router = useRouter();
@@ -30,6 +31,8 @@ function MediathequePageInner() {
   const [q, setQ] = useState(sp.get("q") ?? "");
   const [selectMode, setSelectMode] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [auditOpen, setAuditOpen] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   const selectedTags = useMemo(() => sp.getAll("tags"), [sp]);
   const sort: SortOrder =
@@ -80,7 +83,7 @@ function MediathequePageInner() {
     return () => {
       cancelled = true;
     };
-  }, [selectedTags, q, sort]);
+  }, [selectedTags, q, sort, reloadKey]);
 
   // Usage counts (par tag id) pour la sidebar
   const usage = useMemo(() => {
@@ -200,6 +203,7 @@ function MediathequePageInner() {
             selectMode={selectMode}
             onToggleSelectMode={toggleSelectMode}
             selectedCount={selected.size}
+            onOpenAudit={() => setAuditOpen(true)}
           />
 
           {error && (
@@ -296,6 +300,13 @@ function MediathequePageInner() {
           )}
         </div>
       </div>
+
+      {/* Drawer audit production */}
+      <AuditProductionDrawer
+        open={auditOpen}
+        onClose={() => setAuditOpen(false)}
+        onChanged={() => setReloadKey((k) => k + 1)}
+      />
 
       {/* Barre flottante sélection multiple */}
       {selected.size > 0 && (

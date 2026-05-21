@@ -128,3 +128,47 @@ export async function fetchTags(): Promise<TagsResponse> {
   if (!res.ok) throw new Error(`fetchTags ${res.status}`);
   return (await res.json()) as TagsResponse;
 }
+
+// ─── AUDIT PRODUCTION ──────────────────────────────────────────────────────
+
+export interface AuditAxis {
+  slug: string;
+  label: string;
+}
+
+export interface AuditCell {
+  count: number;
+  sample: {
+    id: string;
+    public_url: string;
+    filename: string;
+    statut: MediaStatut;
+  } | null;
+}
+
+export interface AuditMatrixResponse {
+  motifs: AuditAxis[];
+  produits: AuditAxis[];
+  plans: AuditAxis[];
+  matrix: Record<string, Record<string, Record<string, AuditCell>>>;
+  totals: {
+    cells_total: number;
+    cells_filled: number;
+    photos_total: number;
+  };
+}
+
+export async function fetchAuditMatrix(params?: {
+  motifs?: string[];
+  produits?: string[];
+  plans?: string[];
+}): Promise<AuditMatrixResponse> {
+  const sp = new URLSearchParams();
+  for (const m of params?.motifs ?? []) sp.append("motif", m);
+  for (const p of params?.produits ?? []) sp.append("produit", p);
+  for (const pl of params?.plans ?? []) sp.append("plan", pl);
+  const url = `/api/da/mediatheque/audit${sp.toString() ? `?${sp}` : ""}`;
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`fetchAuditMatrix ${res.status}`);
+  return (await res.json()) as AuditMatrixResponse;
+}

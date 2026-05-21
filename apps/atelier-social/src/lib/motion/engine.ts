@@ -73,23 +73,24 @@ class Veo31Engine implements MotionEngineClient {
 
   private async launch(plan: ClipPlan): Promise<string> {
     const subject = await urlToBase64(plan.asset_sujet_url);
-    const style = plan.asset_style_url
-      ? await urlToBase64(plan.asset_style_url)
-      : null;
+    const subjectMime = sniffMimeFromUrl(plan.asset_sujet_url);
+    // Format REST Veo 3.1 via generativelanguage.googleapis.com:predictLongRunning :
+    //   instances[].image.{ bytesBase64Encoded, mimeType }
+    // (Le format `inlineData` qu'on lit dans la doc ai.google.dev s'applique au
+    // SDK JS, pas à l'appel REST direct. La REST attend `bytesBase64Encoded`
+    // au même niveau que `mimeType`, comme Imagen / Vertex AI.)
     const body = {
       instances: [
         {
           prompt: plan.prompt_mouvement,
-          subjectImage: { bytesBase64Encoded: subject, mimeType: "image/png" },
-          ...(style
-            ? { styleImage: { bytesBase64Encoded: style, mimeType: "image/png" } }
-            : {}),
+          image: { bytesBase64Encoded: subject, mimeType: subjectMime },
         },
       ],
       parameters: {
         aspectRatio: "9:16",
         durationSeconds: plan.duree_sec,
         sampleCount: 1,
+        generateAudio: false,
       },
     };
     const res = await fetch(
@@ -161,24 +162,22 @@ class OmniFlashEngine implements MotionEngineClient {
 
   private async launch(plan: ClipPlan): Promise<string> {
     const subject = await urlToBase64(plan.asset_sujet_url);
-    const style = plan.asset_style_url
-      ? await urlToBase64(plan.asset_style_url)
-      : null;
-    // Pattern présumé "any-to-any" : tableau de parts (text + image) en input.
+    const subjectMime = sniffMimeFromUrl(plan.asset_sujet_url);
+    // Best-guess Omni Flash : on suit le pattern REST Veo 3.1 actuel
+    // (image.bytesBase64Encoded + mimeType) tant que la doc dev officielle
+    // n'est pas publiée. À ajuster dès parution.
     const body = {
       instances: [
         {
-          parts: [
-            { text: plan.prompt_mouvement },
-            { inlineData: { data: subject, mimeType: "image/png" } },
-            ...(style ? [{ inlineData: { data: style, mimeType: "image/png" } }] : []),
-          ],
+          prompt: plan.prompt_mouvement,
+          image: { bytesBase64Encoded: subject, mimeType: subjectMime },
         },
       ],
       parameters: {
         aspectRatio: "9:16",
         durationSeconds: plan.duree_sec,
         sampleCount: 1,
+        generateAudio: false,
       },
     };
     const res = await fetch(
@@ -253,10 +252,26 @@ async function urlToBase64(url: string): Promise<string> {
     const idx = url.indexOf(",");
     return idx >= 0 ? url.slice(idx + 1) : "";
   }
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Téléchargement image ${url} HTTP ${res.status}`);
+  // URL relative servie par Next.js (ex: /canoniques/MAN-P01.jpg) : la rendre absolue
+  const absolute = url.startsWith("/")
+    ? `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}${url}`
+    : url;
+  const res = await fetch(absolute);
+  if (!res.ok) throw new Error(`Téléchargement image ${absolute} HTTP ${res.status}`);
   const buf = Buffer.from(await res.arrayBuffer());
   return buf.toString("base64");
+}
+
+function sniffMimeFromUrl(url: string): string {
+  if (url.startsWith("data:")) {
+    const m = url.match(/^data:([^;]+);/);
+    return m?.[1] ?? "image/png";
+  }
+  const lower = url.toLowerCase().split("?")[0];
+  if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+  if (lower.endsWith(".webp")) return "image/webp";
+  if (lower.endsWith(".gif")) return "image/gif";
+  return "image/png";
 }
 
 function toDataUrl(b64: string | undefined): string | null {
