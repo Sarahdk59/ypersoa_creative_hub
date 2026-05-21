@@ -42,9 +42,18 @@ interface MotifImage {
 
 interface Props {
   onPick: (dataUrl: string) => void;
+  /**
+   * Si fourni, filtre les images affichées :
+   *   - "poignet" : ne montre que les variantes / prod_files dont la clé ou le
+   *     filename matche /poignet/i. Utile pour le slot "broderie poignet"
+   *     (1bis) qui ne doit proposer que les versions adaptées au cuff.
+   */
+  filter?: "poignet";
+  /** Label custom du header (sinon "Référentiel motifs Hub"). */
+  triggerLabel?: string;
 }
 
-const MotifPickerPanel: React.FC<Props> = ({ onPick }) => {
+const MotifPickerPanel: React.FC<Props> = ({ onPick, filter, triggerLabel }) => {
   const [motifs, setMotifs] = useState<Motif[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -63,36 +72,60 @@ const MotifPickerPanel: React.FC<Props> = ({ onPick }) => {
   }, []);
 
   const selected = motifs.find((m) => m.id === selectedId);
+  const poignetRegex = /poignet/i;
+  const matchesFilter = (label: string, filename: string): boolean => {
+    if (!filter) return true;
+    if (filter === "poignet") return poignetRegex.test(label) || poignetRegex.test(filename);
+    return true;
+  };
+
+  // Liste des motifs proposés dans le select : si filter="poignet", on ne montre
+  // que les motifs qui ont AU MOINS une variante/prod-file/shooting-png poignet.
+  const filteredMotifs = !filter
+    ? motifs
+    : motifs.filter((m) => {
+        const candidates = [
+          ...(m.variantes ?? []).map((v) => ({ label: v.label, filename: v.file })),
+          ...(m.shooting_pngs ?? []).map((v) => ({ label: v.label, filename: v.file })),
+          ...(m.prod_files ?? []).map((p) => ({ label: p.key, filename: p.png ?? "" })),
+        ];
+        return candidates.some((c) => matchesFilter(c.label, c.filename));
+      });
 
   const images: MotifImage[] = !selected
     ? []
     : [
-        {
+        ...(filter ? [] : [{
           source: "principal" as const,
           url: `${HUB_URL}/motifs/${encodeURIComponent(selected.asset_principal)}`,
           label: "Hero",
           filename: selected.asset_principal,
-        },
+        }]),
         ...(selected.prod_files ?? [])
           .filter((p) => p.png)
+          .filter((p) => matchesFilter(p.key, p.png as string))
           .map((p) => ({
             source: "prod" as const,
             url: `${HUB_URL}/api/da/motifs/${encodeURIComponent(selected.id)}/preview?key=${encodeURIComponent(p.key)}`,
             label: p.key,
             filename: p.png as string,
           })),
-        ...(selected.variantes ?? []).map((v) => ({
-          source: "variante" as const,
-          url: `${HUB_URL}/motifs/${encodeURIComponent(v.file)}`,
-          label: v.label,
-          filename: v.file,
-        })),
-        ...(selected.shooting_pngs ?? []).map((v) => ({
-          source: "shooting" as const,
-          url: `${HUB_URL}/motifs/${encodeURIComponent(v.file)}`,
-          label: v.label,
-          filename: v.file,
-        })),
+        ...(selected.variantes ?? [])
+          .filter((v) => matchesFilter(v.label, v.file))
+          .map((v) => ({
+            source: "variante" as const,
+            url: `${HUB_URL}/motifs/${encodeURIComponent(v.file)}`,
+            label: v.label,
+            filename: v.file,
+          })),
+        ...(selected.shooting_pngs ?? [])
+          .filter((v) => matchesFilter(v.label, v.file))
+          .map((v) => ({
+            source: "shooting" as const,
+            url: `${HUB_URL}/motifs/${encodeURIComponent(v.file)}`,
+            label: v.label,
+            filename: v.file,
+          })),
       ];
 
   const handlePick = async (img: MotifImage) => {
@@ -122,11 +155,11 @@ const MotifPickerPanel: React.FC<Props> = ({ onPick }) => {
       <div className="flex items-center gap-2 mb-2">
         <i className="fa-solid fa-layer-group text-teal-700 text-sm" />
         <h3 className="text-xs font-bold text-teal-800 uppercase tracking-wider">
-          Référentiel motifs Hub
+          {triggerLabel ?? "Référentiel motifs Hub"}
         </h3>
-        {motifs.length > 0 && (
+        {filteredMotifs.length > 0 && (
           <span className="text-[10px] bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full font-semibold">
-            {motifs.length}
+            {filteredMotifs.length}
           </span>
         )}
       </div>
@@ -143,19 +176,24 @@ const MotifPickerPanel: React.FC<Props> = ({ onPick }) => {
         </div>
       )}
 
-      {!loading && motifs.length > 0 && (
+      {!loading && filteredMotifs.length > 0 && (
         <select
           value={selectedId}
           onChange={(e) => setSelectedId(e.target.value)}
           className="w-full p-1.5 rounded-md border border-teal-200 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-teal-400 mb-2"
         >
-          <option value="">Choisir un motif…</option>
-          {motifs.map((m) => (
+          <option value="">{filter === "poignet" ? "Choisir un motif avec variante poignet…" : "Choisir un motif…"}</option>
+          {filteredMotifs.map((m) => (
             <option key={m.id} value={m.id}>
               {m.nom_commercial} · {m.id}
             </option>
           ))}
         </select>
+      )}
+      {!loading && filter && filteredMotifs.length === 0 && (
+        <div className="text-[11px] text-slate-500 italic py-2">
+          Aucun motif n'a encore de variante poignet documentée.
+        </div>
       )}
 
       {selected && images.length > 0 && (

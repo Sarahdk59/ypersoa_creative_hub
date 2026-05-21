@@ -9,7 +9,9 @@ export const PRODUCTS_HUB = HUB_PRODUITS;
 // Compat legacy : array des id YPxxx
 export const PRODUCTS: ProductType[] = HUB_PRODUITS.map(p => p.id as ProductType);
 
-export const SIZES: EmbroiderySize[] = [2, 4, 6, 8, 12, 20];
+// Tailles canoniques broderie Ypersoa (cf. /atelier-production/regles) :
+//   2 cm = mini (initiale), 4 cm = poignet max 5.5cm, 8 cm = côté cœur par défaut, 24 cm = centre dos
+export const SIZES: EmbroiderySize[] = [2, 4, 8, 24];
 
 // Aligné sur charte Hub : 4:5 = standard PDP Shopify, 1:1 = carrousel/feed, 16:9 = hero, 9:16 = story/reel.
 // 3:4 conservé en legacy (rétro-compat). 4:3 supprimé (non utilisé dans aucune variante Hub, interdit pour PDP).
@@ -213,7 +215,7 @@ LUMIÈRE : Lumière naturelle zénithale, morning window light ou golden hour do
 PALETTE : Tons neutres désaturés, beige "natural raw", sable, crème, avec des touches de [THREAD_COLOR].
 PRODUIT : Un [PRODUCT] de couleur unie et constante [GARMENT_COLOR] confectionné en [MATERIAL]. Le vêtement est vierge à l'intérieur, sans aucune étiquette ou label de marque visible au niveau du col. La texture du tissu doit être parfaitement visible au niveau des mailles.
 BRODERIE : Le motif joint est brodé en fil [THREAD_COLOR] côté cœur. ⚠️ COULEUR FIL OBLIGATOIRE : la broderie générée DOIT être en fil [THREAD_COLOR], même si l'image source PNG montre la broderie dans une autre couleur. RE-BRODE le motif dans la couleur [THREAD_COLOR] sur le vêtement final, en ignorant la couleur de référence du PNG source (qui n'est qu'une référence de forme et de typographie, pas de couleur). ATTENTION PARTICULIÈRE : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Elle doit s'intégrer complètement au tissu comme une broderie fine et délicate, sans aucune surépaisseur. Si le motif contient du texte, les lettres brodées doivent être d'une lisibilité et d'une précision chirurgicale, sans aucune déformation. Les points de broderie (satin stitch, fill stitch) doivent être distincts et épouser parfaitement la tension et la maille du vêtement. Le rendu doit être 100% plat, lisse et ultra-réaliste.
-TAILLE : La broderie mesure [SIZE] cm.\${COPYRIGHT_DISCLAIMER}
+TAILLE : [SIZE]\${COPYRIGHT_DISCLAIMER}
 `;
 
 export const PACKSHOT_PROMPT = `Generate an image of: Hyper-realistic digital 3D mockup of an e-commerce packshot d'un [PRODUIT] oversize de couleur unie et constante [COULEUR SWEAT], présenté sur un MANNEQUIN INVISIBLE (invisible mannequin effect). IMPORTANT : Le vêtement est présenté seul, sans modèle, flottant dans les airs avec un effet mannequin invisible. Le vêtement flotte seul devant un fond studio blanc pur. Le vêtement est vierge à l'intérieur, sans aucune étiquette ou label de marque visible au niveau du col. Motif brodé en fil [COULEUR FIL] visible sur l'[EMPLACEMENT] ([DIMENSION] maximum). ⚠️ COULEUR FIL OBLIGATOIRE : la broderie DOIT être en fil [COULEUR FIL], même si l'image source PNG montre une autre couleur. RE-BRODE le motif dans cette couleur sur le vêtement final, en ignorant la couleur de référence du PNG source (forme et typographie uniquement). ATTENTION : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Rendu 100% plat, lisse et ultra-réaliste, intégré au tissu sans surépaisseur. Éclairage studio parfaitement doux, sans ombres marquées, rendu fidèle aux couleurs réelles. Vue de face symétrique, packshot commercial mode premium, niveau vrai shooting photo professionnel, style minimaliste haut de gamme similaire aux fiches produit A.P.C., Octobre Éditions et Sézane, 4K ultra-réaliste.\${COPYRIGHT_DISCLAIMER}`;

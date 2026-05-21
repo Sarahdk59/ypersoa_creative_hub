@@ -6,6 +6,7 @@ import { generateYpersoaPack } from './services/geminiService';
 import { SHOTS_CONFIG } from './constants';
 import { isSupabaseConfigured } from './lib/supabase';
 import { likeShot, listLikedShots, unlikeShot, LikedShot } from './lib/liked-shots';
+import CatalogShotModal from './components/CatalogShotModal';
 
 const App: React.FC = () => {
   const [hasApiKey, setHasApiKey] = useState<boolean | null>(null);
@@ -13,6 +14,11 @@ const App: React.FC = () => {
     product: 'YP001',  // Hoodie Adulte (le plus large catalogue couleurs : 12)
     size: 4,
     embroideryImage: null,
+    // Broderie poignet (optionnelle) : motif secondaire 4 cm max 5 cm sur le bord
+    // du poignet droit. Le service Gemini ne l'injecte que pour les shots où
+    // l'avant-bras est visible (lifestyle, plein pied, mouvement).
+    wristEmbroideryImage: null,
+    wristSize: 4,
     mode: 'mannequin',
     familyConfig: {
       coupleType: 'random',
@@ -28,9 +34,9 @@ const App: React.FC = () => {
     threadColor: '',                // 'Comme sur l'image' par défaut
     garmentColor: 'beige',          // ID Hub officiel
     decorStyle: 'parisien',
-    // Hook 1 — défauts compatibles avec workflow legacy (diversity random)
-    castingMode: 'diversity',
-    canoniqueIds: []
+    // Défaut Sarah 19/05/2026 : casting canonique Hub (MAN-P01 Clémence) au lieu de diversity random.
+    castingMode: 'canonique',
+    canoniqueIds: ['MAN-P01']
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -45,6 +51,11 @@ const App: React.FC = () => {
   const [likedShots, setLikedShots] = useState<LikedShot[]>([]);
   const [showLikedPanel, setShowLikedPanel] = useState(false);
   const [likingNow, setLikingNow] = useState(false);
+  // Modal "Ajouter au catalogue motif" — déclenchée sur le shot courant
+  const [catalogModalOpen, setCatalogModalOpen] = useState(false);
+  const [catalogToast, setCatalogToast] = useState<string | null>(null);
+  // Modal "Ranger" depuis un favori (LikedShot existant sur Supabase)
+  const [catalogFromLiked, setCatalogFromLiked] = useState<LikedShot | null>(null);
 
   useEffect(() => {
     if (!supabaseOn) return;
@@ -290,6 +301,15 @@ const App: React.FC = () => {
                         {likingNow ? 'Sync...' : likedUrls.has(currentPack[selectedImageIndex]) ? 'Liké' : 'Liker pour RS'}
                       </button>
                     )}
+                    {supabaseOn && (
+                      <button
+                        onClick={() => setCatalogModalOpen(true)}
+                        className="bg-white text-yp-olive hover:bg-yp-olive hover:text-white px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2 hover:scale-105 transition-all"
+                        title="Ranger ce shot dans le catalogue motif (par personne ou occasion)"
+                      >
+                        <i className="fa-solid fa-folder-plus"></i> Catalogue
+                      </button>
+                    )}
                     <button
                       onClick={() => handleRemoveAt(selectedImageIndex)}
                       className="bg-white text-slate-500 hover:bg-red-500 hover:text-white px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2 hover:scale-105 transition-all"
@@ -417,6 +437,13 @@ const App: React.FC = () => {
                             {shot.shot_label}
                           </span>
                           <button
+                            onClick={() => setCatalogFromLiked(shot)}
+                            className="bg-white/90 text-yp-olive text-[11px] py-1 px-2 rounded-full hover:bg-yp-olive hover:text-white transition-all"
+                            title="Ranger ce favori dans le catalogue motif"
+                          >
+                            <i className="fa-solid fa-folder-plus mr-1"></i> Catalogue
+                          </button>
+                          <button
                             onClick={() => handleUnlike(shot)}
                             className="bg-white/90 text-rose-500 text-[11px] py-1 px-2 rounded-full hover:bg-white transition-all"
                           >
@@ -468,6 +495,40 @@ const App: React.FC = () => {
           )}
         </div>
       </main>
+
+      {catalogModalOpen && currentPack && currentPack[selectedImageIndex] && (
+        <CatalogShotModal
+          imageDataUrl={currentPack[selectedImageIndex]}
+          shotLabel={shotLabels[selectedImageIndex] || `shot-${selectedImageIndex + 1}`}
+          productId={settings.product}
+          settings={settings}
+          onClose={() => setCatalogModalOpen(false)}
+          onSaved={() => {
+            setCatalogToast('✓ Shot ajouté au catalogue');
+            setTimeout(() => setCatalogToast(null), 3000);
+          }}
+        />
+      )}
+
+      {catalogFromLiked && (
+        <CatalogShotModal
+          existingImageUrl={catalogFromLiked.image_url}
+          shotLabel={catalogFromLiked.shot_label ?? 'Favori'}
+          productId={catalogFromLiked.pack_settings?.product ?? settings.product}
+          settings={catalogFromLiked.pack_settings ?? settings}
+          onClose={() => setCatalogFromLiked(null)}
+          onSaved={() => {
+            setCatalogToast('✓ Favori ajouté au catalogue');
+            setTimeout(() => setCatalogToast(null), 3000);
+          }}
+        />
+      )}
+
+      {catalogToast && (
+        <div className="fixed bottom-6 right-6 bg-yp-olive text-white px-5 py-3 rounded-full shadow-2xl text-sm font-bold z-50 animate-pulse">
+          {catalogToast}
+        </div>
+      )}
     </div>
   );
 };

@@ -12,9 +12,12 @@
  * au prochain restart Vite (les imports JSON sont bundlés au build dev).
  */
 
-import filsRaw from '@hub/referentiels/palette_fils_broderie.json';
+// Bascule v1 → v2 le 18/05/2026 : v2 est la source canonique partagée
+// avec atelier-production (codes Gunold + Pantone TPG + flags favori/canonique).
+import filsRaw from '@hub/referentiels/palette_fils_broderie_v2.json';
 import garmentsRaw from '@hub/referentiels/palette_supports_vetements.json';
 import produitsRaw from '@hub/referentiels/palette_supports_par_produit.json';
+import palettesRaw from '@hub/referentiels/palettes_fils_associations.json';
 
 // ============================================================================
 // Types
@@ -26,9 +29,14 @@ export interface HubFil {
   nom: string;           // 'Framboise'
   hex: string;           // '#C4294E'
   famille: string;
-  usage_recommande: string;
-  supports_incompatibles: string[];
-  ambiance_editoriale: string[];
+  // Champs optionnels depuis v2 (certains fils ne les ont pas tous)
+  usage_recommande?: string;
+  supports_incompatibles?: string[];
+  ambiance_editoriale?: string[];
+  code_gunold?: string;
+  pantone_tpg?: string;
+  favori?: boolean;
+  canonique?: boolean;
 }
 
 export interface HubGarment {
@@ -71,6 +79,17 @@ export interface HubProduit {
 
 export const HUB_FILS: HubFil[] = (filsRaw as { couleurs: HubFil[] }).couleurs;
 export const HUB_GARMENTS: HubGarment[] = (garmentsRaw as { couleurs: HubGarment[] }).couleurs;
+
+export interface HubPalette {
+  id: string;
+  nom: string;
+  type: 'camaieu' | 'multicolore' | 'duo' | 'trio';
+  fils: string[];
+  description?: string;
+  archive?: boolean;
+}
+export const HUB_PALETTES: HubPalette[] = (palettesRaw as { palettes: HubPalette[] }).palettes
+  .filter((p) => !p.archive);
 
 const produitsByCode = (produitsRaw as { produits: Record<string, Omit<HubProduit, 'id'>> }).produits;
 export const HUB_PRODUITS: HubProduit[] = Object.entries(produitsByCode).map(([id, def]) => ({
@@ -123,5 +142,5 @@ export function getProduitById(id: string): HubProduit | undefined {
 export function isFilGarmentIncompatible(filId: string, garmentId: string): boolean {
   const fil = getFilById(filId);
   if (!fil) return false;
-  return fil.supports_incompatibles.includes(garmentId);
+  return fil.supports_incompatibles?.includes(garmentId) ?? false;
 }

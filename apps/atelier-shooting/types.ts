@@ -3,7 +3,7 @@
 // YP001 = Hoodie Adulte, YP004 = Hoodie Enfant, YP005 = Sweat Adulte, YP019 = T-shirt Adulte, YP021 = Zoodie Adulte
 export type ProductType = 'YP001' | 'YP004' | 'YP005' | 'YP019' | 'YP021';
 
-export type EmbroiderySize = 2 | 4 | 6 | 8 | 12 | 20;
+export type EmbroiderySize = 2 | 4 | 8 | 24;
 
 export type ShotMode = 'mannequin' | 'packshot' | 'family' | 'full';
 
@@ -65,11 +65,23 @@ export interface GenerationSettings {
   product: ProductType;
   size: EmbroiderySize;
   embroideryImage: string | null;
+  /**
+   * Broderie secondaire poignet (optionnel). Si fournie, Gemini ajoute une 2e
+   * broderie sur le poignet droit du vêtement, max 5 cm de large. Utilisée
+   * uniquement pour les shots où le bras est visible — sur macro buste / ghost
+   * de face le service ignore wristImage pour ne pas saturer Gemini.
+   */
+  wristEmbroideryImage?: string | null;
+  wristSize?: number; // cm, défaut 4, max 5
   mode: ShotMode;
   familyConfig: FamilyConfig;
   aspectRatio: AspectRatio;
   diversity: ModelDiversity;
   threadColor: string;
+  // Si fourni et non vide : broderie MULTICOLORE — chaque lettre/forme du motif
+  // utilise un fil parmi cette liste (ids HUB_FILS). Le mapping reste identique
+  // entre tous les shots du pack. Si vide/undefined, on retombe sur threadColor mono.
+  threadPaletteIds?: string[];
   garmentColor: string;
   decorStyle: DecorStyle;
   // Si decorStyle === 'lookbook' on stocke l'ambiance résolue côté client (pas
