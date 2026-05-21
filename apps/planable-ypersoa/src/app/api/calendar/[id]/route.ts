@@ -70,8 +70,19 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const supabase = getSupabaseServer();
-    const { error } = await supabase.from("planable_calendar_entries").delete().eq("id", id);
+    const { data, error } = await supabase
+      .from("planable_calendar_entries")
+      .delete()
+      .eq("id", id)
+      .neq("status", "published")
+      .select();
     if (error) throw error;
+    if (!data || data.length === 0) {
+      return NextResponse.json(
+        { ok: false, error: "Entrée introuvable ou déjà publiée (suppression interdite)" },
+        { status: 409 }
+      );
+    }
     return NextResponse.json({ ok: true });
   } catch (err) {
     return NextResponse.json(

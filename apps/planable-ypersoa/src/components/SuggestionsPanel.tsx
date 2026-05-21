@@ -1,5 +1,5 @@
 "use client";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, RotateCcw, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { frDate, shortFrDate } from "@/lib/utils/date";
 import type { OccasionUrgency } from "@/lib/occasions/calculator";
@@ -27,10 +27,14 @@ export function SuggestionsPanel({
   suggestions,
   loading,
   onExpandCampaign,
+  onResetCampaign,
+  plannedCountBySlug,
 }: {
   suggestions: SuggestionPayload[];
   loading: boolean;
   onExpandCampaign: (slug: string) => Promise<void>;
+  onResetCampaign: (slug: string) => Promise<void>;
+  plannedCountBySlug: Map<string, number>;
 }) {
   return (
     <aside style={{
@@ -64,7 +68,13 @@ export function SuggestionsPanel({
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {suggestions.map((s) => (
-          <SuggestionCard key={s.occasion.slug} sugg={s} onExpand={onExpandCampaign} />
+          <SuggestionCard
+            key={s.occasion.slug}
+            sugg={s}
+            onExpand={onExpandCampaign}
+            onReset={onResetCampaign}
+            plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
+          />
         ))}
       </div>
     </aside>
@@ -74,13 +84,19 @@ export function SuggestionsPanel({
 function SuggestionCard({
   sugg,
   onExpand,
+  onReset,
+  plannedCount,
 }: {
   sugg: SuggestionPayload;
   onExpand: (slug: string) => Promise<void>;
+  onReset: (slug: string) => Promise<void>;
+  plannedCount: number;
 }) {
   const [expanding, setExpanding] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const dot = URGENCY_DOT[sugg.urgency.kind] ?? "#1A1614";
   const isEngagementOnly = sugg.urgency.kind === "engagement_only";
+  const hasPlanned = plannedCount > 0;
 
   return (
     <article style={{
@@ -138,30 +154,56 @@ function SuggestionCard({
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={async () => {
-          setExpanding(true);
-          await onExpand(sugg.occasion.slug);
-          setExpanding(false);
-        }}
-        disabled={expanding}
-        title={sugg.has_special_campaign ? "Brief Ypersoa hardcodé (19 entrées spécifiques)" : "Plan auto : 2 posts/sem + 1 pin/2 sem sur la fenêtre de campagne"}
-        style={{
-          display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center",
-          padding: "8px 12px", borderRadius: 999,
-          background: "var(--color-ink)", color: "var(--color-cream)",
-          border: "none", fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500,
-          cursor: expanding ? "default" : "pointer", opacity: expanding ? 0.6 : 1,
-        }}
-      >
-        {expanding ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-        {expanding
-          ? "Création…"
-          : sugg.has_special_campaign
-            ? "Planifier la campagne complète"
-            : "Planifier (auto · 2/sem)"}
-      </button>
+      <div style={{ display: "flex", gap: 6, flexDirection: "column" }}>
+        <button
+          type="button"
+          onClick={async () => {
+            setExpanding(true);
+            await onExpand(sugg.occasion.slug);
+            setExpanding(false);
+          }}
+          disabled={expanding || resetting}
+          title={sugg.has_special_campaign ? "Brief Ypersoa hardcodé (19 entrées spécifiques)" : "Plan auto : 2 posts/sem + 1 pin/2 sem sur la fenêtre de campagne"}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center",
+            padding: "8px 12px", borderRadius: 999,
+            background: "var(--color-ink)", color: "var(--color-cream)",
+            border: "none", fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500,
+            cursor: expanding ? "default" : "pointer", opacity: expanding ? 0.6 : 1,
+          }}
+        >
+          {expanding ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+          {expanding
+            ? "Création…"
+            : sugg.has_special_campaign
+              ? "Planifier la campagne complète"
+              : "Planifier (auto · 2/sem)"}
+        </button>
+
+        {hasPlanned && (
+          <button
+            type="button"
+            onClick={async () => {
+              setResetting(true);
+              await onReset(sugg.occasion.slug);
+              setResetting(false);
+            }}
+            disabled={resetting || expanding}
+            title={`Effacer les ${plannedCount} entrée(s) déjà planifiées pour cette occasion (les déjà publiées sont conservées)`}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center",
+              padding: "6px 12px", borderRadius: 999,
+              background: "white", color: "#c53030",
+              border: "0.5px solid #c53030",
+              fontFamily: "var(--font-sans)", fontSize: 10, fontWeight: 500,
+              cursor: resetting ? "default" : "pointer", opacity: resetting ? 0.6 : 1,
+            }}
+          >
+            {resetting ? <Loader2 size={11} className="animate-spin" /> : <RotateCcw size={11} />}
+            {resetting ? "Effacement…" : `Effacer la planification (${plannedCount})`}
+          </button>
+        )}
+      </div>
     </article>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { Plus } from "lucide-react";
+import { CheckSquare, Loader2, Plus, Square, Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CalendarView } from "@/components/CalendarView";
 import { EntryDetailPanel } from "@/components/EntryDetailPanel";
@@ -22,6 +22,9 @@ export default function PlanablePage() {
   const [editingEntry, setEditingEntry] = useState<DetailEntry | null>(null);
   const [todayOverride, setTodayOverride] = useState<string>("");
   const [globalErr, setGlobalErr] = useState<string | null>(null);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const fetchEntries = useCallback(async () => {
     setLoadingEntries(true);
@@ -70,6 +73,84 @@ export default function PlanablePage() {
     () => suggestions.map((s) => ({ slug: s.occasion.slug, name_fr: s.occasion.name_fr })),
     [suggestions]
   );
+
+  // Compte des entrées plannifiables (= non publiées) par slug d'occasion
+  // pour afficher "X entrées planifiées · Effacer" sur les cartes de suggestion.
+  const plannedCountBySlug = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const e of entries) {
+      if (!e.occasion_slug || e.status === "published") continue;
+      map.set(e.occasion_slug, (map.get(e.occasion_slug) ?? 0) + 1);
+    }
+    return map;
+  }, [entries]);
+
+  const toggleSelection = useCallback((id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const exitSelectionMode = useCallback(() => {
+    setSelectionMode(false);
+    setSelectedIds(new Set());
+  }, []);
+
+  const bulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Supprimer ${selectedIds.size} entrée(s) sélectionnée(s) ? (les déjà publiées seront ignorées)`)) return;
+    setBulkDeleting(true);
+    try {
+      const res = await fetch("/api/calendar/bulk-delete", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ ids: Array.from(selectedIds) }),
+      }).then((r) => r.json());
+      if (!res.ok) {
+        alert(typeof res.error === "string" ? res.error : "Échec suppression");
+        return;
+      }
+      const { deleted, skipped_published } = res.data as { deleted: number; skipped_published: number };
+      if (skipped_published > 0) {
+        alert(`${deleted} supprimée(s) · ${skipped_published} ignorée(s) car déjà publiée(s)`);
+      }
+      exitSelectionMode();
+      await fetchEntries();
+      if (selectedDetail && selectedIds.has(selectedDetail.id)) setSelectedDetail(null);
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
+  const deleteSingleEntry = async (entry: PlanableCalendarEntryRow) => {
+    const res = await fetch(`/api/calendar/${entry.id}`, { method: "DELETE" }).then((r) => r.json());
+    if (!res.ok) {
+      alert(typeof res.error === "string" ? res.error : "Échec suppression");
+      return;
+    }
+    if (selectedDetail?.id === entry.id) setSelectedDetail(null);
+    await fetchEntries();
+  };
+
+  const resetCampaign = async (slug: string) => {
+    const planned = plannedCountBySlug.get(slug) ?? 0;
+    if (planned === 0) return;
+    if (!confirm(`Effacer la planification de cette occasion (${planned} entrée(s)) ? Les déjà publiées seront conservées.`)) return;
+    const res = await fetch(`/api/campaigns/${slug}/entries`, { method: "DELETE" }).then((r) => r.json());
+    if (!res.ok) {
+      alert(typeof res.error === "string" ? res.error : "Échec reset");
+      return;
+    }
+    const { deleted, skipped_published } = res.data as { deleted: number; skipped_published: number };
+    if (skipped_published > 0) {
+      alert(`${deleted} supprimée(s) · ${skipped_published} conservée(s) car déjà publiée(s)`);
+    }
+    if (selectedDetail?.occasion_slug === slug) setSelectedDetail(null);
+    await fetchEntries();
+  };
 
   const generatePack = async () => {
     if (!selectedDetail) return;
@@ -135,6 +216,25 @@ export default function PlanablePage() {
 
           <button
             type="button"
+            onClick={() => {
+              if (selectionMode) exitSelectionMode();
+              else { setSelectionMode(true); setSelectedDetail(null); }
+            }}
+            title={selectionMode ? "Quitter le mode sélection" : "Sélectionner plusieurs entrées pour suppression en lot"}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px",
+              borderRadius: 999, background: selectionMode ? "var(--color-ink)" : "white",
+              color: selectionMode ? "var(--color-cream)" : "var(--color-ink)",
+              border: "0.5px solid var(--color-border)",
+              fontFamily: "var(--font-sans)", fontSize: 11, cursor: "pointer",
+            }}
+          >
+            {selectionMode ? <CheckSquare size={12} /> : <Square size={12} />}
+            {selectionMode ? "Sélection active" : "Sélectionner"}
+          </button>
+
+          <button
+            type="button"
             onClick={() => setDialogDate(new Date())}
             style={{
               display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px",
@@ -146,6 +246,49 @@ export default function PlanablePage() {
           </button>
         </div>
       </header>
+
+      {selectionMode && (
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: "var(--color-cream)", borderBottom: "0.5px solid var(--color-border)",
+          padding: "8px 24px", fontSize: 12, fontFamily: "var(--font-sans)",
+        }}>
+          <span>
+            <strong>{selectedIds.size}</strong> sélectionnée(s) ·
+            <span style={{ opacity: 0.65, marginLeft: 4 }}>
+              clique sur des chips pour cocher/décocher
+            </span>
+          </span>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={exitSelectionMode}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "6px 12px", borderRadius: 999, background: "white",
+                border: "0.5px solid var(--color-border)", cursor: "pointer", fontSize: 11,
+              }}
+            >
+              <X size={12} /> Annuler
+            </button>
+            <button
+              type="button"
+              onClick={bulkDelete}
+              disabled={selectedIds.size === 0 || bulkDeleting}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "6px 14px", borderRadius: 999,
+                background: selectedIds.size === 0 ? "rgba(197,48,48,0.4)" : "#c53030",
+                color: "white", border: "none", fontSize: 11, fontWeight: 500,
+                cursor: selectedIds.size === 0 || bulkDeleting ? "not-allowed" : "pointer",
+              }}
+            >
+              {bulkDeleting ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
+              Supprimer la sélection
+            </button>
+          </div>
+        </div>
+      )}
 
       {engagementOnlyBanner && (
         <div style={{
@@ -176,6 +319,8 @@ export default function PlanablePage() {
           suggestions={suggestions}
           loading={loadingSugg}
           onExpandCampaign={expandCampaign}
+          onResetCampaign={resetCampaign}
+          plannedCountBySlug={plannedCountBySlug}
         />
 
         <div style={{ minHeight: 0, overflow: "hidden" }}>
@@ -188,7 +333,11 @@ export default function PlanablePage() {
               entries={entries}
               selectedEntryId={selectedDetail?.id ?? null}
               onSelectEntry={(e) => fetchEntryDetail(e.id)}
-              onClickDay={(d) => setDialogDate(d)}
+              onDeleteEntry={deleteSingleEntry}
+              onClickDay={(d) => { if (!selectionMode) setDialogDate(d); }}
+              selectionMode={selectionMode}
+              selectedIds={selectedIds}
+              onToggleSelection={toggleSelection}
             />
           )}
         </div>

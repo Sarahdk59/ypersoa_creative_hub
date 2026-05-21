@@ -14,14 +14,22 @@ export function CalendarView({
   entries,
   selectedEntryId,
   onSelectEntry,
+  onDeleteEntry,
   onClickDay,
+  selectionMode,
+  selectedIds,
+  onToggleSelection,
 }: {
   monthAnchor: Date;
   setMonthAnchor: (d: Date) => void;
   entries: PlanableCalendarEntryRow[];
   selectedEntryId: string | null;
   onSelectEntry: (e: PlanableCalendarEntryRow) => void;
+  onDeleteEntry: (e: PlanableCalendarEntryRow) => Promise<void>;
   onClickDay: (d: Date) => void;
+  selectionMode: boolean;
+  selectedIds: Set<string>;
+  onToggleSelection: (id: string) => void;
 }) {
   const days = useMemo(() => monthGridDays(monthAnchor), [monthAnchor]);
 
@@ -108,7 +116,13 @@ export function CalendarView({
                     key={e.id}
                     entry={e}
                     selected={e.id === selectedEntryId}
-                    onClick={() => { onSelectEntry(e); }}
+                    selectionMode={selectionMode}
+                    checked={selectedIds.has(e.id)}
+                    onClick={() => {
+                      if (selectionMode) onToggleSelection(e.id);
+                      else onSelectEntry(e);
+                    }}
+                    onDelete={async () => { await onDeleteEntry(e); }}
                   />
                 ))}
                 {overflow > 0 && (

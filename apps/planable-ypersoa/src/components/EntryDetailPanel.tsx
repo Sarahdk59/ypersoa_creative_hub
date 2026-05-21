@@ -151,18 +151,29 @@ export function EntryDetailPanel({
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={async () => {
-          if (!confirm("Supprimer cette entrée ?")) return;
-          setDeleting(true); await onDelete(); setDeleting(false);
-        }}
-        disabled={deleting}
-        style={{ ...iconBtn, marginTop: "auto", color: "#c53030", borderColor: "#c53030" }}
-        aria-label="Supprimer l'entrée"
-      >
-        {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} Supprimer
-      </button>
+      {entry.status !== "published" && (
+        <button
+          type="button"
+          onClick={async () => {
+            if (!confirm("Supprimer cette entrée ?")) return;
+            setDeleting(true); await onDelete(); setDeleting(false);
+          }}
+          disabled={deleting}
+          style={{ ...iconBtn, marginTop: "auto", color: "#c53030", borderColor: "#c53030" }}
+          aria-label="Supprimer l'entrée"
+        >
+          {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} Supprimer
+        </button>
+      )}
+      {entry.status === "published" && (
+        <p style={{
+          marginTop: "auto", padding: "8px 12px", borderRadius: 8,
+          background: "rgba(47,122,62,0.08)", color: "#2f7a3e",
+          fontFamily: "var(--font-sans)", fontSize: 11, lineHeight: 1.5, margin: 0,
+        }}>
+          Cette entrée est déjà publiée — suppression désactivée.
+        </p>
+      )}
     </aside>
   );
 }
