@@ -1,0 +1,117 @@
+{% comment %}
+═══════════════════════════════════════════════════════════════════
+  SNIPPET YPERSOA — Photo contextuelle selon collection d'entrée
+
+  À intégrer dans :
+   - snippets/card-product.liquid (pour les tuiles de collection)
+   - templates/product.json sections (pour la photo hero PDP)
+
+  Comportement :
+   - Si le client navigue depuis /collections/pour-papa,
+     la tuile produit affiche la photo PAPA CLUB plutôt que la générique.
+   - Si pas de match avec la collection courante, retombe sur l'image
+     produit par défaut (product.featured_image).
+   - Sur la PDP, on lit aussi le paramètre URL ?incarnation=YPI-002
+     pour pré-remplir le configurateur.
+
+  Prérequis :
+   - Chaque produit a un metafield JSON `custom.incarnations` au format
+     de metafield_le_club_exemple.json
+   - Les collections sont taggées avec un handle (pour-papa, pour-maman...)
+═══════════════════════════════════════════════════════════════════
+{% endcomment %}
+
+{%- comment %} ────── Détection du contexte ────── {% endcomment -%}
+{%- assign current_collection = collection.handle | default: '' -%}
+{%- assign incarnation_param = request.url | split: 'incarnation=' | last | split: '&' | first -%}
+
+{%- comment %} ────── Lecture des incarnations du produit ────── {% endcomment -%}
+{%- assign incarnations_raw = product.metafields.custom.incarnations -%}
+{%- if incarnations_raw -%}
+  {%- assign incarnations_list = incarnations_raw.value.incarnations -%}
+{%- else -%}
+  {%- assign incarnations_list = nil -%}
+{%- endif -%}
+
+{%- comment %} ────── Sélection de l'incarnation ────── {% endcomment -%}
+{%- assign selected_incarnation = nil -%}
+
+{%- if incarnations_list -%}
+
+  {%- comment %} 1. Priorité au paramètre URL explicite ?incarnation=YPI-XXX {% endcomment -%}
+  {%- if incarnation_param != blank and incarnation_param != request.url -%}
+    {%- for inc in incarnations_list -%}
+      {%- if inc.code == incarnation_param -%}
+        {%- assign selected_incarnation = inc -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- comment %} 2. Sinon, match avec la collection courante {% endcomment -%}
+  {%- if selected_incarnation == nil and current_collection != '' -%}
+    {%- for inc in incarnations_list -%}
+      {%- if inc.collections_cibles contains current_collection -%}
+        {%- assign selected_incarnation = inc -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+{%- endif -%}
+
+{%- comment %} ────── Application visuelle ────── {% endcomment -%}
+{%- if selected_incarnation -%}
+  {%- assign card_image = selected_incarnation.photo_hero | default: product.featured_image -%}
+  {%- assign card_label = selected_incarnation.nom -%}
+{%- else -%}
+  {%- assign card_image = product.featured_image -%}
+  {%- assign card_label = nil -%}
+{%- endif -%}
+
+{%- comment %} ────── Rendu (à adapter selon ton thème) ────── {% endcomment -%}
+<div class="product-card" data-product-handle="{{ product.handle }}">
+  <a href="{{ product.url }}{% if selected_incarnation %}?incarnation={{ selected_incarnation.code }}{% endif %}">
+    <img src="{{ card_image | image_url: width: 600 }}"
+         alt="{{ product.title }}{% if card_label %} — {{ card_label }}{% endif %}"
+         loading="lazy">
+    <div class="product-card__info">
+      <h3 class="product-card__title">{{ product.title }}</h3>
+      {%- if card_label -%}
+        <p class="product-card__incarnation">{{ card_label }}</p>
+      {%- endif -%}
+      <p class="product-card__price">{{ product.price | money }}</p>
+    </div>
+  </a>
+</div>
+
+
+{%- comment %}
+═══════════════════════════════════════════════════════════════════
+  CÔTÉ CONFIGURATEUR PDP — Pré-remplissage des champs
+
+  Dans le snippet perso-badge.liquid (ou équivalent du motif),
+  ajouter en début :
+
+  {%- assign incarnation_param = request.url | split: 'incarnation=' | last | split: '&' | first -%}
+  {%- assign incarnations_list = product.metafields.custom.incarnations.value.incarnations -%}
+  {%- assign prefill = nil -%}
+  {%- if incarnation_param != blank and incarnations_list -%}
+    {%- for inc in incarnations_list -%}
+      {%- if inc.code == incarnation_param -%}{%- assign prefill = inc -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  Puis sur les champs :
+  <input type="text" name="properties[Mot haut]"
+         value="{{ prefill.mot_haut }}"
+         placeholder="MAMA">
+
+  <input type="text" name="properties[Mot bas]"
+         value="{{ prefill.mot_bas }}"
+         placeholder="CLUB">
+
+  Et pour le symbole et la couleur, présélectionner l'option
+  correspondante à prefill.symbole et prefill.couleur_fil.
+═══════════════════════════════════════════════════════════════════
+{% endcomment %}

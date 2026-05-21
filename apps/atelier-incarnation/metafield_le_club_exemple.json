@@ -1,0 +1,81 @@
+{
+  "_comment": "Metafield à attacher au produit Shopify 'T-Shirt Brodé — Le Club' (et idem pour Hoodie, Sweat, Zoodie). Namespace: custom · Key: incarnations · Type: json",
+  "_doc": "Chaque entrée représente une incarnation photographiée du motif. Le thème Liquid lit ce JSON pour choisir la photo hero et le pré-remplissage du configurateur selon la collection d'entrée du client.",
+
+  "incarnations": [
+    {
+      "code": "YPI-001",
+      "nom": "MAMA CLUB",
+      "mot_haut": "MAMA",
+      "mot_bas": "CLUB",
+      "symbole": "Cœur",
+      "couleur_fil": "Vert sapin",
+      "photo_hero": "https://cdn.shopify.com/.../mama-club-tshirt-creme.jpg",
+      "photo_thumb": "https://cdn.shopify.com/.../mama-club-tshirt-creme-thumb.jpg",
+      "collections_cibles": ["pour-maman", "fete-des-meres", "naissance"],
+      "ton": "tendre"
+    },
+    {
+      "code": "YPI-002",
+      "nom": "PAPA CLUB",
+      "mot_haut": "PAPA",
+      "mot_bas": "CLUB",
+      "symbole": "Cœur",
+      "couleur_fil": "Bleu marine",
+      "photo_hero": "https://cdn.shopify.com/.../papa-club-tshirt-creme.jpg",
+      "photo_thumb": "https://cdn.shopify.com/.../papa-club-tshirt-creme-thumb.jpg",
+      "collections_cibles": ["pour-papa", "fete-des-peres"],
+      "ton": "tendre"
+    },
+    {
+      "code": "YPI-003",
+      "nom": "SISTA CLUB",
+      "mot_haut": "SISTA",
+      "mot_bas": "CLUB",
+      "symbole": "Cœur",
+      "couleur_fil": "Rose framboise",
+      "photo_hero": "https://cdn.shopify.com/.../sista-club-tshirt-rose.jpg",
+      "photo_thumb": "https://cdn.shopify.com/.../sista-club-tshirt-rose-thumb.jpg",
+      "collections_cibles": ["pour-soeur", "pour-amie", "anniversaire"],
+      "ton": "complice"
+    },
+    {
+      "code": "YPI-004",
+      "nom": "FAMILLE CLUB",
+      "mot_haut": "FAMILLE",
+      "mot_bas": "CLUB",
+      "symbole": "Cœur",
+      "couleur_fil": "Bleu marine",
+      "photo_hero": "https://cdn.shopify.com/.../famille-club-tshirt-creme.jpg",
+      "photo_thumb": "https://cdn.shopify.com/.../famille-club-tshirt-creme-thumb.jpg",
+      "collections_cibles": ["pour-famille", "noel"],
+      "ton": "tendre"
+    },
+    {
+      "code": "YPI-006",
+      "nom": "BRIDE TEAM",
+      "mot_haut": "BRIDE",
+      "mot_bas": "TEAM",
+      "symbole": "Cœur",
+      "couleur_fil": "Rose poudré",
+      "photo_hero": "https://cdn.shopify.com/.../bride-team-tshirt-creme.jpg",
+      "photo_thumb": "https://cdn.shopify.com/.../bride-team-tshirt-creme-thumb.jpg",
+      "collections_cibles": ["pour-mariee", "evjf", "mariage"],
+      "ton": "complice"
+    },
+    {
+      "code": "YPI-007",
+      "nom": "DOG DAD GANG",
+      "mot_haut": "DOG DAD",
+      "mot_bas": "GANG",
+      "symbole": "Patte",
+      "couleur_fil": "Crème",
+      "photo_hero": "https://cdn.shopify.com/.../dog-dad-gang-tshirt-marine.jpg",
+      "photo_thumb": "https://cdn.shopify.com/.../dog-dad-gang-tshirt-marine-thumb.jpg",
+      "collections_cibles": ["pour-papa", "animaux"],
+      "ton": "complice"
+    }
+  ],
+
+  "chips_configurateur": ["MAMA", "PAPA", "SISTA", "AMOUR", "FAMILLE", "TEAM"]
+}
