@@ -10,3 +10,12 @@ apps/*/.next/
 apps/*/tsconfig.tsbuildinfo
 *.tsbuildinfo
 .next/
+
+# Python (prod_hub)
+__pycache__/
+*.pyc
+.venv/
+.streamlit/secrets.toml
+
+# Claude Code local config (settings.json est partagé, settings.local.json non)
+.claude/settings.local.json

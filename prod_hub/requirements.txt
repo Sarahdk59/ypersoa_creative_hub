@@ -1,0 +1,25 @@
+# prod_hub — Streamlit + moteur d'attribution couleur→lettre
+#
+# Installation locale :
+#   cd prod_hub
+#   python3 -m venv .venv
+#   source .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# Lancer la preview :
+#   streamlit run preview_app.py
+#
+# Lancer la page de cadrage motifs :
+#   streamlit run pages/1_Cadrer_motifs.py
+#
+# Cibler Python 3.11+ (testé sur 3.11 et 3.12).
+
+# UI Streamlit
+streamlit>=1.36,<2.0
+
+# Visualisation matplotlib (rendu PNG des attributions broderie)
+matplotlib>=3.8,<4.0
+
+# Note : pas de dépendance OpenAI/Anthropic/Gemini ici — le moteur
+# d'attribution est purement algorithmique (backtracking + scoring).
+# Les seules deps externes sont stdlib (hashlib, random, math, json, pathlib).
