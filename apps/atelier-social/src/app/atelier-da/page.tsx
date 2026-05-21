@@ -1,6 +1,6 @@
 /**
  * Home Atelier-DA — vision et direction artistique.
- * 8 sous-modules : 6 disponibles V1, 2 à venir V2.
+ * 9 sous-modules : 7 disponibles V1, 2 à venir V2.
  *
  * Référentiels motifs / fils / palettes sont passés sur Atelier Production
  * depuis le 15/05/2026 (séparation production ↔ DA).
@@ -8,7 +8,7 @@
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library } from "lucide-react";
+import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -62,6 +62,14 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 6,
+    title: "Incarnations",
+    description: "Référentiel des déclinaisons éditoriales (MAMA CLUB, PAPA CLUB, DOG DAD GANG…). Pilote les chips configurateur Shopify et les photos contextuelles par collection. Import XLSX + édition spec broderie + ciblage.",
+    href: "/atelier-da/incarnations",
+    icon: <Shapes size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 7,
     title: "Atelier Production",
     description: "Fiche technique des motifs, fils, palettes + moteur d'attribution. Lien raccourci quand la DA a besoin de la vue prod.",
     href: "/atelier-production",
@@ -69,7 +77,7 @@ const SUBMODULES: SubmoduleCard[] = [
     status: "v0",
   },
   {
-    id: 7,
+    id: 8,
     title: "Bible de marque visuelle",
     description: "Palette officielle, typos (Cormorant, DM Sans, Josefin), red lines vocabulaires, références muses (Sézane × A.P.C.).",
     href: null,
@@ -77,7 +85,7 @@ const SUBMODULES: SubmoduleCard[] = [
     status: "v2",
   },
   {
-    id: 8,
+    id: 9,
     title: "Décisions DA archivées",
     description: "Trace des grandes décisions DA (29/04 Camille→Clémence, 01/05 refonte 3 lignées). Histoire éditoriale Ypersoa.",
     href: null,
@@ -115,8 +123,8 @@ export default function AtelierDaHome() {
             lineHeight: 1.6,
           }}
         >
-          L&apos;espace de travail du Directeur Artistique. 8 sous-modules pour penser, décider et orienter
-          la direction artistique d&apos;Ypersoa, depuis la mémoire vivante du casting jusqu&apos;à la médiathèque centrale.
+          L&apos;espace de travail du Directeur Artistique. 9 sous-modules pour penser, décider et orienter
+          la direction artistique d&apos;Ypersoa, du casting au shooting, de la médiathèque aux incarnations.
         </p>
       </header>
 
