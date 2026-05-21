@@ -4,6 +4,21 @@
 
 **Addendum 21-22 mai 2026** : module Atelier Production → Commandes Shopify (section 9 ci-dessous).
 
+**Addendum session handoff 22 mai 2026** : préparation passation à Keyvan (hébergement + auth) et structuration des docs. Voir section 10.
+
+---
+
+## 0. POINTS D'ENTRÉE DOCS
+
+| Document | Quand le lire |
+|---|---|
+| [README.md](README.md) | Première visite du repo, démarrage local |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Comprendre les 7 apps + le mapping 14 métiers |
+| [docs/HANDOFF_KEYVAN.md](docs/HANDOFF_KEYVAN.md) | Hébergement, auth, accès admin Sarah / opérationnel atelier |
+| [docs/TESTS_STATUS.md](docs/TESTS_STATUS.md) | Ce qui est testé manuellement vs pas testé du tout |
+| [docs/PROCHAINE_SESSION.md](docs/PROCHAINE_SESSION.md) | Incohérences à résoudre, questions ouvertes, TODOs V2 |
+| **CLAUDE.md** (ce fichier) | Décisions archi + règles brand + apprentissages session par session |
+
 ---
 
 ## 1. DÉCISIONS ARCHITECTURALES (verrouillées dans cette session)
@@ -964,3 +979,61 @@ Nouveau bucket **"Commandes Shopify"** en première position. Match sur :
 
 **Mémoire feedback** (`~/.claude/projects/.../memory/`)
 - `project_atelier_prod_params.md` — 800 pts/min, prep DST, journal 4 étapes, algos OTIF/LPT, mécanique rebroder, désarchivage intelligent
+
+---
+
+## 10. SESSION HANDOFF — 22 MAI 2026 (préparation passation Keyvan)
+
+### 10.1 Objectif de la session
+
+Pas une session de code feature. Une session **handoff** pour préparer la transmission du projet :
+- À Keyvan (hébergement, auth, mise en sécurité)
+- À toute personne arrivant sur le repo sans contexte
+
+### 10.2 Livrables docs
+
+| Fichier | Rôle | État |
+|---|---|---|
+| `README.md` | Réécrit — entrée du repo, démarrage rapide, inventaire des 7 apps | ✅ |
+| `docs/ARCHITECTURE.md` | Carte des apps + mapping 14 métiers + dataflows + Supabase schema | ✅ |
+| `docs/HANDOFF_KEYVAN.md` | Hébergement + auth + matrice de droits (admin Sarah / opérationnel atelier) + checklist sécurité | ✅ |
+| `docs/TESTS_STATUS.md` | App par app — ce qui est testé manuellement vs pas testé | ✅ |
+| `docs/PROCHAINE_SESSION.md` | Incohérences (dossier mediateque vide, double route motifs, etc.) + questions ouvertes + TODOs V2 | ✅ |
+| `apps/*/.env.local.example` + `.env.example` | Mis à jour avec TOUTES les vars utilisées | ✅ |
+| `prod_hub/requirements.txt` | Créé — streamlit + matplotlib | ✅ |
+
+### 10.3 Décisions de cette session
+
+- **Auth = documentation uniquement** pour Keyvan. Pas d'implémentation NextAuth ni de stub middleware. Keyvan choisira sa stack (recommandation : Supabase Auth).
+- **Hébergement = ouvert**. Recommandation Vercel pour les Next.js, oauth2-proxy pour Streamlit.
+- **Matrice de droits** verrouillée : Sarah admin full, opérationnel atelier peut DÉPOSER des DST mais pas SUPPRIMER ni REMPLACER. Toute modification destructive = Sarah seule.
+- **Storage assets** : recommandation migration vers Supabase Storage avec buckets par type (canoniques / motifs-png / motifs-dst / motifs-pxf / motifs-ft / referentiel-ambiance).
+- **Rotation clés** : à faire AVANT premier déploiement public. Keys actuelles dans `.env.local` valides pour Sarah locale uniquement.
+
+### 10.4 Incohérences identifiées (à trancher en prochaine session)
+
+1. `apps/atelier-mediateque/` est un dossier vide alors que l'implémentation est dans `atelier-social` → décider : supprimer ou migrer
+2. `apps/atelier-incarnation/` contient uniquement de la doc (XLSX + SQL + Liquid + SPEC) → Sprint 1 MVP à implémenter dans `atelier-social/atelier-da/incarnations/`
+3. `referentiels/palette_fils_broderie.json` (v1) coexiste avec `_v2.json` → auditer les imports v1, migrer, supprimer v1
+4. Double route `/atelier-da/motifs` (catalogue créatif) et `/atelier-production/motifs` (vue technique) → vérifier pas de logique dupliquée
+5. Inventaire canoniques : CLAUDE.md mentionne 23, le tableau §4 n'en liste que 21 → recompter dans `referentiels/casting/`
+
+### 10.5 Question critique non tranchée
+
+Les **assets binaires** (`.DST`, `.PXF`, `.pdf` fiches techniques, PNG aperçus) — ~200-400 MB — sont-ils versionnés sur git ? Aujourd'hui ils traînent en `??` dans `git status` (212 fichiers). Recommandation Claude : **non**, gérer via Git LFS ou directement Supabase Storage. À discuter avec Keyvan AVANT premier push sur remote partagé.
+
+### 10.6 Commits thématiques effectués
+
+1. **docs(handoff)** : README + docs/ARCHITECTURE + HANDOFF_KEYVAN + TESTS_STATUS + PROCHAINE_SESSION + CLAUDE.md §10
+2. **chore(env)** : mise à jour `.env.example` de toutes les apps + `prod_hub/requirements.txt`
+3. **(reste du code en cours)** — à grouper par module en prochaines sessions (cf. PROCHAINE_SESSION §3)
+
+### 10.7 Citations Sarah à graver (22/05 handoff)
+
+> *"On commit tout ce qui traine. On rédige un nouveau read me. On controle en .env.example et on les complète si necessaire. On rédige les requirements.txt"* (cadrage handoff)
+
+> *"On documente le besoin de fournir des accès admin à Sarah, un accès opérationnel aux métiers avec la possibilité de déposer des .DST dans le hub mais pas de supprimer, d'ajouter ou de remplacer des documents"* (matrice de droits)
+
+> *"On documente et on explique pour keyvan le besoin d'heberger proprement pour tous les différentes app selon l'atelier metier"* (cadrage handoff Keyvan)
+
+> *"Expliquer spécifiquement ce qui a été testé vs non testé"* (honnêteté handoff)
