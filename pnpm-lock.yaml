@@ -167,6 +167,8 @@ importers:
         specifier: ~5.8.2
         version: 5.8.3
 
+  apps/hub-portal: {}
+
   apps/planable-ypersoa:
     dependencies:
       '@supabase/supabase-js':
