@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "packageManager": "pnpm@10.33.2",
   "description": "Studio de génération de shootings produits Ypersoa — fork standalone de shoot_studio AIStudio, branché sur les référentiels du Hub (canoniques, variantes, palettes).",
   "scripts": {
     "dev": "vite",

@@ -2,6 +2,7 @@
   "name": "@ypersoa/atelier-lookbook",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.33.2",
   "description": "Atelier Lookbook - Studio de production de lookbooks IA Ypersoa (brief poétique → 12-20 visuels d'ambiance saisonnière)",
   "scripts": {
     "dev": "next dev --port 3003",

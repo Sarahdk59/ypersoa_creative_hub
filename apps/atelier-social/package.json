@@ -2,6 +2,7 @@
   "name": "@ypersoa/atelier-social",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.33.2",
   "description": "Atelier Social - Module Hub Ypersoa pour génération de contenus IG/Pinterest brand-safe",
   "scripts": {
     "dev": "next dev --port 3000",
