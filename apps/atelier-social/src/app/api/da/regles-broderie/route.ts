@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     for (const k of ["dimension_max_cm", "dimension_par_defaut_cm", "dimension_xxl_cm"]) {
       if (typeof body[k] === "number" && (body[k] as number) > 0) newPlacement[k] = body[k];
     }
-    data.placements.push(newPlacement as ReglesBroderieRef["placements"][number]);
+    data.placements.push(newPlacement as unknown as ReglesBroderieRef["placements"][number]);
     data._meta.last_updated = new Date().toISOString().slice(0, 10);
     writeFileSync(REGLES_BRODERIE_REF_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
     clearReglesBroderieCache();

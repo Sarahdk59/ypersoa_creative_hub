@@ -10,7 +10,7 @@
  * (atelier-da/motifs, lookbook, social/kanban, etc.).
  */
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search as SearchIcon, Loader2, Layers, Camera, BookOpen, AlertTriangle, Image as ImageIcon, Trello, Palette as PaletteIcon, Droplet, ShoppingBag, Archive, RefreshCw, Clock } from "lucide-react";
@@ -131,7 +131,7 @@ function formatDureeShort(min: number): string {
   return m ? `${h}h${String(m).padStart(2, "0")}` : `${h}h`;
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const router = useRouter();
   const params = useSearchParams();
   const initialQ = params.get("q") ?? "";
@@ -591,3 +591,11 @@ const pillStyle: React.CSSProperties = {
   textTransform: "capitalize",
   letterSpacing: 0.2,
 };
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchContent />
+    </Suspense>
+  );
+}

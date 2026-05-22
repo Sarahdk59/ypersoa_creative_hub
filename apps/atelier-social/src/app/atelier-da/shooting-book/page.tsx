@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download, Upload, X, CheckCircle2 } from "lucide-react";
@@ -62,7 +62,7 @@ const FORMATS = [
   { value: "hero-banner", label: "Hero banner cinematic" },
 ];
 
-export default function ShootingBookPage() {
+function ShootingBookContent() {
   const searchParams = useSearchParams();
   const [briefTexte, setBriefTexte] = useState("");
   const [produitId, setProduitId] = useState<string>("YP019");
@@ -1598,5 +1598,13 @@ export default function ShootingBookPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function ShootingBookPage() {
+  return (
+    <Suspense fallback={null}>
+      <ShootingBookContent />
+    </Suspense>
   );
 }
