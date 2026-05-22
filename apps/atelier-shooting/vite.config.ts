@@ -16,6 +16,9 @@ export default defineConfig({
       allow: ['..', '../..']
     }
   },
+  preview: {
+    allowedHosts: true
+  },
   plugins: [react()],
   resolve: {
     alias: {
