@@ -9,16 +9,26 @@
 "use client";
 
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { HubTopbar } from "./HubTopbar";
 import { HubSidebar } from "./HubSidebar";
+import { AuthProvider } from "./auth/AuthProvider";
 
 interface HubShellProps {
   children: ReactNode;
 }
 
 export function HubShell({ children }: HubShellProps) {
+  const pathname = usePathname() || "";
+
+  // La page de login s'affiche sans la chrome du Hub.
+  if (pathname.startsWith("/login")) {
+    return <>{children}</>;
+  }
+
   return (
-    <div
+    <AuthProvider>
+      <div
       style={{
         minHeight: "100vh",
         background: "var(--hub-bg)",
@@ -41,6 +51,7 @@ export function HubShell({ children }: HubShellProps) {
           {children}
         </main>
       </div>
-    </div>
+      </div>
+    </AuthProvider>
   );
 }

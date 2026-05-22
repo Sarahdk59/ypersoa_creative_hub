@@ -11,12 +11,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, LogOut } from "lucide-react";
+import { useAuth } from "./auth/AuthProvider";
+import { createClient } from "@/lib/supabase/client";
+import { ROLE_LABELS } from "@/lib/access";
 
 export function HubTopbar() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [q, setQ] = useState("");
+  const { email, role } = useAuth();
+
+  async function handleLogout() {
+    await createClient().auth.signOut();
+    router.push("/login");
+    router.refresh();
+  }
 
   // Raccourci global Cmd+K / Ctrl+K → focus l'input search
   useEffect(() => {
@@ -136,15 +146,47 @@ export function HubTopbar() {
         </span>
       </form>
 
-      <span
-        style={{
-          fontFamily: "var(--font-sans)",
-          fontSize: 12,
-          opacity: 0.5,
-        }}
-      >
-        profile
-      </span>
+      <div className="flex items-center gap-3 shrink-0">
+        {email && (
+          <span
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              color: "var(--hub-foreground)",
+              opacity: 0.7,
+              textAlign: "right",
+              lineHeight: 1.3,
+            }}
+          >
+            {email}
+            {role && (
+              <>
+                <br />
+                <span style={{ opacity: 0.7 }}>{ROLE_LABELS[role]}</span>
+              </>
+            )}
+          </span>
+        )}
+        <button
+          onClick={handleLogout}
+          title="Se déconnecter"
+          aria-label="Se déconnecter"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 30,
+            height: 30,
+            borderRadius: 8,
+            border: "0.5px solid var(--hub-border)",
+            background: "white",
+            color: "var(--hub-foreground)",
+            cursor: "pointer",
+          }}
+        >
+          <LogOut size={15} strokeWidth={1.6} />
+        </button>
+      </div>
     </header>
   );
 }

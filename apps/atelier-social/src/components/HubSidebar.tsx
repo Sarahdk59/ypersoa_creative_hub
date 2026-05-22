@@ -8,12 +8,19 @@
 import { usePathname } from "next/navigation";
 import { MessageCircle, Camera, BookImage, Compass, Cpu } from "lucide-react";
 import { HubSidebarIcon } from "./HubSidebarIcon";
+import { useAuth } from "./auth/AuthProvider";
+import { canAccess } from "@/lib/access";
 
 export function HubSidebar() {
   const pathname = usePathname() || "";
+  const { role, loading } = useAuth();
 
   const isActive = (prefix: string) =>
     pathname === prefix || pathname.startsWith(prefix + "/");
+
+  // Pendant le chargement du rôle on montre tout (le middleware fait foi),
+  // puis on masque les sections interdites au rôle.
+  const show = (href: string) => loading || canAccess(role, href);
 
   return (
     <nav
@@ -28,36 +35,46 @@ export function HubSidebar() {
         height: "100%",
       }}
     >
-      <HubSidebarIcon
-        icon={<MessageCircle size={20} strokeWidth={1.6} />}
-        label="Atelier Social"
-        href="/social"
-        active={isActive("/social")}
-      />
-      <HubSidebarIcon
-        icon={<Camera size={20} strokeWidth={1.6} />}
-        label="Atelier Shooting"
-        href="/shooting"
-        active={isActive("/shooting")}
-      />
-      <HubSidebarIcon
-        icon={<BookImage size={20} strokeWidth={1.6} />}
-        label="Atelier Lookbook"
-        href="/lookbook"
-        active={isActive("/lookbook")}
-      />
-      <HubSidebarIcon
-        icon={<Compass size={20} strokeWidth={1.6} />}
-        label="Atelier DA"
-        href="/atelier-da"
-        active={isActive("/atelier-da")}
-      />
-      <HubSidebarIcon
-        icon={<Cpu size={20} strokeWidth={1.6} />}
-        label="Atelier Production"
-        href="/atelier-production"
-        active={isActive("/atelier-production")}
-      />
+      {show("/social") && (
+        <HubSidebarIcon
+          icon={<MessageCircle size={20} strokeWidth={1.6} />}
+          label="Atelier Social"
+          href="/social"
+          active={isActive("/social")}
+        />
+      )}
+      {show("/shooting") && (
+        <HubSidebarIcon
+          icon={<Camera size={20} strokeWidth={1.6} />}
+          label="Atelier Shooting"
+          href="/shooting"
+          active={isActive("/shooting")}
+        />
+      )}
+      {show("/lookbook") && (
+        <HubSidebarIcon
+          icon={<BookImage size={20} strokeWidth={1.6} />}
+          label="Atelier Lookbook"
+          href="/lookbook"
+          active={isActive("/lookbook")}
+        />
+      )}
+      {show("/atelier-da") && (
+        <HubSidebarIcon
+          icon={<Compass size={20} strokeWidth={1.6} />}
+          label="Atelier DA"
+          href="/atelier-da"
+          active={isActive("/atelier-da")}
+        />
+      )}
+      {show("/atelier-production") && (
+        <HubSidebarIcon
+          icon={<Cpu size={20} strokeWidth={1.6} />}
+          label="Atelier Production"
+          href="/atelier-production"
+          active={isActive("/atelier-production")}
+        />
+      )}
     </nav>
   );
 }
