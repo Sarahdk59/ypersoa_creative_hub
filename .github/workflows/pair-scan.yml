@@ -1,0 +1,207 @@
+name: Pair Security Scan
+
+on:
+  push:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | tar xz -C /usr/local/bin gitleaks
+
+      - name: Run gitleaks
+        id: gitleaks
+        run: |
+          set +e
+          gitleaks detect --source=. --report-format=json --report-path=gitleaks.json --no-banner 2>/dev/null
+          set -e
+          if [ -f gitleaks.json ]; then
+            COUNT=$(python3 -c "import json; print(len(json.load(open('gitleaks.json'))))" 2>/dev/null || echo 0)
+          else
+            COUNT=0
+          fi
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+      - name: Install and run semgrep
+        id: semgrep
+        run: |
+          pip install --quiet semgrep
+          set +e
+          semgrep scan --config=auto --json --quiet --metrics=on . > semgrep.json 2>/dev/null
+          set -e
+          if [ -f semgrep.json ]; then
+            COUNT=$(python3 -c "import json; print(len(json.load(open('semgrep.json')).get('results',[])))" 2>/dev/null || echo 0)
+          else
+            COUNT=0
+          fi
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+      - name: Build report
+        id: report
+        env:
+          GL_COUNT: ${{ steps.gitleaks.outputs.count }}
+          SG_COUNT: ${{ steps.semgrep.outputs.count }}
+          REPO_NAME: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+
+          gl = int(os.environ.get("GL_COUNT", "0"))
+          sg = int(os.environ.get("SG_COUNT", "0"))
+          total = gl + sg
+          repo = os.environ["REPO_NAME"]
+          branch = os.environ["BRANCH"]
+          sha = os.environ["COMMIT_SHA"][:7]
+          actor = os.environ["ACTOR"]
+          run_url = os.environ["RUN_URL"]
+
+          # Job summary
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              if total > 0:
+                  f.write(f"## 🔴 {total} finding(s) detected\n\n")
+              else:
+                  f.write("## ✅ Clean — no findings\n\n")
+              f.write(f"**Repo:** {repo} · **Branch:** {branch} · **Commit:** {sha}\n\n")
+              f.write("| Scanner | Findings |\n|---------|----------|\n")
+              f.write(f"| Gitleaks (secrets) | {gl} |\n| Semgrep (code) | {sg} |\n")
+
+          # Build details + Claude Code prompts
+          details = []
+          prompts = []
+
+          if os.path.exists("gitleaks.json"):
+              for item in json.load(open("gitleaks.json")):
+                  rule = item.get('RuleID','?')
+                  file = item.get('File','?')
+                  line = item.get('StartLine',0)
+                  details.append(f"SECRET: {rule} in {file}:{line}")
+                  prompts.append({
+                      "type": "secret",
+                      "file": file,
+                      "line": line,
+                      "rule": rule,
+                      "prompt": f"Le fichier `{file}` contient un secret ({rule}) a la ligne {line}. "
+                                f"1) Verifie si ce fichier est dans .gitignore. Si non, ajoute-le. "
+                                f"2) Si le secret est hardcode dans le code source (pas un .env), extrais-le dans une variable d'environnement. "
+                                f"3) Verifie que .env est dans .gitignore. "
+                                f"4) Si le secret a ete commite dans l'historique git, dis-le moi pour que je le revoke."
+                  })
+
+          if os.path.exists("semgrep.json"):
+              for r in json.load(open("semgrep.json")).get("results", []):
+                  sev = r.get("extra", {}).get("severity", "?")
+                  check = r.get('check_id','?')
+                  short = check.split('.')[-1]
+                  file = r.get('path','?')
+                  line = r.get('start',{}).get('line',0)
+                  msg = r.get('extra',{}).get('message','')
+                  details.append(f"[{sev}] {short} in {file}:{line}")
+                  if sev in ("ERROR", "WARNING"):
+                      prompts.append({
+                          "type": "vuln",
+                          "file": file,
+                          "line": line,
+                          "rule": check,
+                          "severity": sev,
+                          "prompt": f"Semgrep a detecte un probleme de securite dans `{file}` ligne {line}. "
+                                    f"Rule: {check}. "
+                                    f"Description: {msg[:200]}. "
+                                    f"Corrige ce probleme en appliquant la bonne pratique de securite. "
+                                    f"Montre moi le diff avant/apres."
+                      })
+
+          # Write outputs
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"total={total}\n")
+              f.write(f"has_findings={'true' if total > 0 else 'false'}\n")
+
+          # Build Claude Code prompt block for email
+          prompt_section = ""
+          if prompts:
+              prompt_section = '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;margin-top:16px;">'
+              prompt_section += '<h3 style="margin:0 0 12px;color:#166534;">Prompts Claude Code - copie-colle pour fixer</h3>'
+              for i, p in enumerate(prompts[:5], 1):
+                  escaped = p["prompt"].replace("<","&lt;").replace(">","&gt;")
+                  prompt_section += f'<div style="margin-bottom:12px;"><p style="margin:0 0 4px;font-weight:600;font-size:13px;">Fix #{i} - {p["file"]}:{p["line"]}</p>'
+                  prompt_section += f'<pre style="background:#fff;border:1px solid #d1d5db;border-radius:4px;padding:10px;font-size:12px;white-space:pre-wrap;cursor:pointer;" title="Copie ce prompt">{escaped}</pre></div>'
+              prompt_section += '</div>'
+
+          # Write email payload
+          details_text = "\n".join(details[:30])
+          email_to = os.environ.get("ALERT_EMAIL", "")
+          html = (
+              f'<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">'
+              f'<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px;margin-bottom:16px;">'
+              f'<h2 style="margin:0;color:#991b1b;">{total} finding(s) on {repo}</h2>'
+              f'<p style="margin:4px 0 0;color:#b91c1c;">Branch: {branch} - Commit: {sha} - Par: {actor}</p></div>'
+              f'<p><b>Gitleaks:</b> {gl} secret(s) - <b>Semgrep:</b> {sg} vuln(s)</p>'
+              f'<pre style="background:#f9fafb;padding:12px;border-radius:6px;font-size:13px;white-space:pre-wrap;">{details_text}</pre>'
+              f'{prompt_section}'
+              f'<p style="margin-top:16px;"><a href="{run_url}" style="background:#1d4ed8;color:white;padding:8px 16px;border-radius:4px;text-decoration:none;">Voir le run</a></p>'
+              f'<p style="color:#9ca3af;font-size:11px;margin-top:16px;">Pair - Ton CTO personnel</p></div>'
+          )
+          payload = json.dumps({"from":"Pair CTO <onboarding@resend.dev>","to":[email_to],"subject":f"[Pair] {total} finding(s) on {repo} ({branch})","html":html})
+          with open("/tmp/email-payload.json","w") as f:
+              f.write(payload)
+
+          if total > 0:
+              print(f"{total} finding(s):")
+              for d in details[:20]:
+                  print(f"  {d}")
+          else:
+              print("Clean")
+          PYEOF
+
+      - name: Send email alert
+        if: steps.report.outputs.has_findings == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          if [ -z "$RESEND_API_KEY" ]; then
+            echo "No RESEND_API_KEY, skipping email"
+            exit 0
+          fi
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer $RESEND_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d @/tmp/email-payload.json)
+          echo "Resend HTTP $HTTP_CODE"
+
+      - name: Send ntfy push
+        if: steps.report.outputs.has_findings == 'true'
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          REPO_NAME: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          GL_COUNT: ${{ steps.gitleaks.outputs.count }}
+          SG_COUNT: ${{ steps.semgrep.outputs.count }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$NTFY_TOPIC" ]; then exit 0; fi
+          TOTAL=$((GL_COUNT + SG_COUNT))
+          curl -s -H "Title: Pair: $TOTAL finding(s)" \
+            -H "Priority: urgent" -H "Tags: rotating_light" \
+            -H "Click: $RUN_URL" \
+            -d "$REPO_NAME ($BRANCH): $GL_COUNT secret(s), $SG_COUNT vuln(s)" \
+            "https://ntfy.sh/$NTFY_TOPIC" || true
+
+      - name: Fail if findings
+        if: steps.report.outputs.has_findings == 'true'
+        run: exit 1
