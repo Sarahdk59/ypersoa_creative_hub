@@ -6,7 +6,7 @@
  * V2 : règles & contraintes broderie, plans techniques DST/PXF.
  */
 import Link from "next/link";
-import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag } from "lucide-react";
+import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag, Shirt } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -77,6 +77,14 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 8,
+    title: "Base produit",
+    description: "Catalogue des produits-supports en vente sur Shopify (YP001, YP004, YP019, YP021) et de leurs variantes couleur — hex, nom fournisseur, packshot. Vue lecture depuis le référentiel palette_supports_par_produit.",
+    href: "/atelier-production/base-produit",
+    icon: <Shirt size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 9,
     title: "Plans techniques DST/PXF",
     description: "Générateur de fiches techniques Tajima Pulse + visualisation plan d'aiguille. Export PDF prêt atelier.",
     href: null,
@@ -272,7 +280,7 @@ export default function AtelierProductionHome() {
           textAlign: "center",
         }}
       >
-        Atelier Production • V1 — 7 modules opérationnels (Moteur d&apos;attribution, Motifs, Fils, Palettes, Règles broderie, Kanban prod, Commandes Shopify) • 1 module à venir V2. Moteur d&apos;attribution lance Streamlit sur localhost:8501 (port React en V2).
+        Atelier Production • V1 — 8 modules opérationnels (Moteur d&apos;attribution, Motifs, Fils, Palettes, Règles broderie, Kanban prod, Commandes Shopify, Base produit) • 1 module à venir V2. Moteur d&apos;attribution lance Streamlit sur localhost:8501 (port React en V2).
       </p>
     </div>
   );
