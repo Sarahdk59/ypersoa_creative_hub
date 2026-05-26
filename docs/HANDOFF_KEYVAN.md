@@ -63,16 +63,35 @@ C'est une règle d'**immutabilité par défaut** côté opérationnel. Implicati
 
 ## 3. État actuel de l'authentification
 
-> **Aucune** authentification n'est implémentée à ce jour.
+> **Auth Supabase + rôles désormais implémentée sur `atelier-social`** (commit `f5d764a`). Les 3 autres apps Next.js et Streamlit restent à protéger.
 
-- Pas de pages login / signup
-- Pas de session / cookie d'auth
-- Pas de protection des routes API (52 routes dans atelier-social, toutes accessibles sans token)
-- Le seul `middleware.ts` existant ([apps/atelier-social/src/middleware.ts](../apps/atelier-social/src/middleware.ts)) ne fait que du CORS `Access-Control-Allow-Origin: *`
-- RLS Supabase = ouvert (Sarah seule user V1)
-- `.env.local` contient les clés OpenAI / Gemini / Supabase en clair
+### Ce qui est en place sur `atelier-social`
 
-**Conséquence : ces apps ne peuvent PAS être publiées sur un domaine public en l'état.**
+- **Page de login** ([/login](../apps/atelier-social/src/app/login/page.tsx)) — email + mot de passe via `supabase.auth.signInWithPassword`. Invite-only (pas de signup public).
+- **Reset de mot de passe** (commit `435dfd2`) :
+  - lien "Mot de passe oublié ?" sur `/login`
+  - [/login/forgot-password](../apps/atelier-social/src/app/login/forgot-password/page.tsx) — `resetPasswordForEmail` → email avec lien
+  - [/auth/reset-password](../apps/atelier-social/src/app/auth/reset-password/page.tsx) — écoute `PASSWORD_RECOVERY`, `updateUser({ password })`, redirige vers `/login`
+- **Middleware** ([apps/atelier-social/src/middleware.ts](../apps/atelier-social/src/middleware.ts)) — toute PAGE exige une session (sinon → `/login?redirect=…`), puis gating par rôle. `/login*`, `/auth*` et `/api*` restent publics ; CORS `*` préservé sur `/api/da` et `/motifs` (iframe shooting).
+- **Rôles** ([lib/access.ts](../apps/atelier-social/src/lib/access.ts)) : `admin` / `crea` / `prod` / `viewer`, lus depuis la table `profiles` (colonne `role`). Gating par section dans `ROLE_SECTIONS`.
+- **Clients Supabase SSR** : `lib/supabase/client.ts` (navigateur) + `lib/supabase/server.ts` (serveur, cookies) via `@supabase/ssr`.
+
+### Ce qui reste à faire
+
+- **Routes API non gardées** dans atelier-social (appelées same-origin par des pages déjà authentifiées — acceptable V1, mais à durcir avant exposition publique large).
+- **3 autres apps Next.js + Streamlit** : pas encore protégées (cf. §4).
+- **RLS Supabase** : à activer (cf. §4.3).
+- `.env.local` contient les clés OpenAI / Gemini / Supabase en clair → rotation avant déploiement public (cf. §5).
+
+### ⚠️ Config Supabase requise pour le reset password (dashboard, hors code)
+
+Sans ces deux réglages, le lien de réinitialisation dans l'email est **rejeté par Supabase** :
+
+1. **Authentication → URL Configuration → Site URL** : domaine de prod (ex. `https://hub.ypersoa.fr`).
+2. **Authentication → URL Configuration → Redirect URLs** : ajouter `https://<domaine-prod>/auth/reset-password` (+ `http://localhost:3000/auth/reset-password` pour le dev local).
+3. *(optionnel)* Personnaliser le template email **Reset Password** (Authentication → Email Templates) en français, ton tutoiement brand.
+
+> **Limite connue (V1)** : le lien doit être ouvert dans le **même navigateur** que la demande (code_verifier PKCE stocké localement). Sur un autre device, la page affiche "lien invalide ou expiré" → l'utilisateur redemande un lien. Pour lever cette limite, basculer le flow de reset sur un route handler serveur qui fait `exchangeCodeForSession`.
 
 ---
 
