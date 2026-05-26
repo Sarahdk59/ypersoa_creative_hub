@@ -6,7 +6,7 @@
  * V2 : règles & contraintes broderie, plans techniques DST/PXF.
  */
 import Link from "next/link";
-import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag, Shirt } from "lucide-react";
+import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag, Shirt, FlaskConical } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -85,6 +85,14 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 9,
+    title: "Zone de test",
+    description: "Dépôt des fichiers DST/PXF + aperçu JPG des tests broderie à faire. Attribution à Adriana, Rebecca ou Cyrielle et suivi par phase : réception → machine → modification à prévoir → modification faite le → validé.",
+    href: "/atelier-production/zone-test",
+    icon: <FlaskConical size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 10,
     title: "Plans techniques DST/PXF",
     description: "Générateur de fiches techniques Tajima Pulse + visualisation plan d'aiguille. Export PDF prêt atelier.",
     href: null,
@@ -280,7 +288,7 @@ export default function AtelierProductionHome() {
           textAlign: "center",
         }}
       >
-        Atelier Production • V1 — 8 modules opérationnels (Moteur d&apos;attribution, Motifs, Fils, Palettes, Règles broderie, Kanban prod, Commandes Shopify, Base produit) • 1 module à venir V2. Moteur d&apos;attribution lance Streamlit sur localhost:8501 (port React en V2).
+        Atelier Production • V1 — 9 modules opérationnels (Moteur d&apos;attribution, Motifs, Fils, Palettes, Règles broderie, Kanban prod, Commandes Shopify, Base produit, Zone de test) • 1 module à venir V2. Moteur d&apos;attribution lance Streamlit sur localhost:8501 (port React en V2).
       </p>
     </div>
   );

@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "zone_test",
+    "last_updated": "2026-05-26",
+    "description": "Zone de test broderie : dépôt des fichiers DST/PXF + aperçu JPG des tests à faire, attribution (Adriana, Rebecca, Cyrielle) et suivi par phase (réception → machine → modif à prévoir → modif faite le → validé)."
+  },
+  "tests": [
+    {
+      "id": "test_mpmlyelcmqtc",
+      "titre": "set poignets",
+      "phase": "reception",
+      "files": [
+        {
+          "id": "f_mpmm2zi5jkz1",
+          "kind": "dst",
+          "filename": "f_mpmm2zi5jkz1.dst",
+          "original_name": "patte chien dog.DST",
+          "size": 5829,
+          "uploaded_at": "2026-05-26"
+        },
+        {
+          "id": "f_mpmm33fa4s2c",
+          "kind": "dst",
+          "filename": "f_mpmm33fa4s2c.dst",
+          "original_name": "broderie poignet animaux.DST",
+          "size": 173913,
+          "uploaded_at": "2026-05-26"
+        },
+        {
+          "id": "f_mpmm37buka6b",
+          "kind": "dst",
+          "filename": "f_mpmm37buka6b.dst",
+          "original_name": "broderie poignet etoiles.DST",
+          "size": 185463,
+          "uploaded_at": "2026-05-26"
+        },
+        {
+          "id": "f_mpmm3b7h3s6s",
+          "kind": "dst",
+          "filename": "f_mpmm3b7h3s6s.dst",
+          "original_name": "broderie poignet meteo.DST",
+          "size": 68331,
+          "uploaded_at": "2026-05-26"
+        }
+      ],
+      "created_at": "2026-05-26",
+      "updated_at": "2026-05-26",
+      "assignee": "Rebecca"
+    }
+  ]
+}
