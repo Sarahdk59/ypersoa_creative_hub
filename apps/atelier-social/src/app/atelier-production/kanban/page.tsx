@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, Plus, X, ChevronLeft, ChevronRight, Trash2, Pencil, Save, HelpCircle, Bug, Sparkles, ScrollText, StickyNote, Gavel, Search, Archive, Users, Upload } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, X, ChevronLeft, ChevronRight, Trash2, Pencil, Save, HelpCircle, Bug, Sparkles, ScrollText, StickyNote, Gavel, Search, Archive, Users, Upload, ImagePlus, Download } from "lucide-react";
 import type { ProdKanbanRef, KanbanCard, KanbanColumn } from "@/lib/atelier-da/referentiels-loader";
 
 const STAKEHOLDERS = ["Rebecca", "Cyrielle", "Adriana", "Thierry", "Sarah"] as const;
@@ -238,6 +238,20 @@ function ArchiveCard({ card, columns, onSaved }: { card: KanbanCard; columns: Ka
           ))}
         </div>
       )}
+      {card.image && (
+        <a
+          href={`/api/da/prod-kanban/${encodeURIComponent(card.id)}/image`}
+          style={{
+            marginTop: 8, marginRight: 6, padding: "4px 10px", borderRadius: 999,
+            border: "0.5px solid rgba(0,0,0,0.15)", background: "white",
+            fontFamily: "var(--font-sans)", fontSize: 10, cursor: "pointer",
+            display: "inline-flex", alignItems: "center", gap: 4,
+            color: "var(--hub-foreground)", textDecoration: "none",
+          }}
+        >
+          <Download size={10} /> Image
+        </a>
+      )}
       <button type="button" onClick={restore} disabled={busy} style={{
         marginTop: 8, padding: "4px 10px", borderRadius: 999, border: "0.5px solid rgba(0,0,0,0.15)",
         background: "white", fontFamily: "var(--font-sans)", fontSize: 10, cursor: "pointer",
@@ -335,6 +349,8 @@ function CardItem({
   onSaved: () => Promise<void>;
 }) {
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const meta = TYPE_META[card.type || "question"] || TYPE_META.question;
   const colIdx = columns.findIndex((c) => c.id === card.column_id);
   const prevCol = colIdx > 0 ? columns[colIdx - 1] : null;
@@ -389,6 +405,40 @@ function CardItem({
   };
   const alreadyPromu = (card.tags || []).includes("promu_en_regle");
 
+  const uploadImage = async (file: File) => {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch(`/api/da/prod-kanban/${encodeURIComponent(card.id)}/image`, {
+        method: "POST",
+        body: fd,
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      await onSaved();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = async () => {
+    if (!confirm("Retirer le PNG attaché à cette card ?")) return;
+    setUploading(true);
+    try {
+      const res = await fetch(`/api/da/prod-kanban/${encodeURIComponent(card.id)}/image`, {
+        method: "DELETE",
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      await onSaved();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (editing) {
     return <EditCardForm card={card} onCancel={onCancelEdit} onSaved={onSaved} />;
   }
@@ -437,6 +487,66 @@ function CardItem({
           ))}
         </div>
       )}
+      {/* Pièce jointe PNG : la prod la télécharge */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,.png,.jpg,.jpeg"
+        style={{ display: "none" }}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) uploadImage(f);
+          e.target.value = "";
+        }}
+      />
+      {card.image ? (
+        <div style={{ marginTop: 6, marginBottom: 2 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/api/da/prod-kanban/${encodeURIComponent(card.id)}/image?inline=1&v=${encodeURIComponent(card.updated_at)}`}
+            alt={card.image.original_name}
+            style={{
+              width: "100%", maxHeight: 160, objectFit: "contain",
+              borderRadius: 6, border: "0.5px solid rgba(0,0,0,0.1)", background: "white",
+            }}
+          />
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+            <a
+              href={`/api/da/prod-kanban/${encodeURIComponent(card.id)}/image`}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "3px 9px", borderRadius: 999, border: "0.5px solid rgba(0,0,0,0.15)",
+                background: "white", fontFamily: "var(--font-sans)", fontSize: 10, cursor: "pointer",
+                color: "var(--hub-foreground)", textDecoration: "none",
+              }}
+            >
+              <Download size={10} /> Télécharger
+            </a>
+            <button
+              type="button" onClick={removeImage} disabled={uploading}
+              title="Retirer l'image" style={{ ...iconBtnStyle, marginLeft: "auto" }}
+            >
+              {uploading ? <Loader2 size={11} className="animate-spin" /> : <Trash2 size={11} />}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          style={{
+            marginTop: 6, marginBottom: 2,
+            display: "inline-flex", alignItems: "center", gap: 5,
+            padding: "4px 10px", borderRadius: 999, border: "0.5px dashed rgba(0,0,0,0.25)",
+            background: "transparent", fontFamily: "var(--font-sans)", fontSize: 10, cursor: "pointer",
+            color: "var(--hub-foreground)", opacity: 0.7,
+          }}
+        >
+          {uploading ? <Loader2 size={11} className="animate-spin" /> : <ImagePlus size={11} />} Ajouter un PNG ou JPG
+        </button>
+      )}
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, fontSize: 10, opacity: 0.55 }}>
         <span>{card.updated_at}</span>
         <div style={{ display: "flex", gap: 2 }}>

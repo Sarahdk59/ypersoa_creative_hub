@@ -392,6 +392,8 @@ export interface KanbanCard {
   stakeholders?: KanbanStakeholder[];
   /** Date à laquelle la card est passée en colonne "fait" (pour archive auto à +7j). */
   done_at?: string;
+  /** Pièce jointe image PNG/JPG attachée à la card (la prod la télécharge ensuite). Stockée dans assets/kanban/{card_id}.{png|jpg}. */
+  image?: { filename: string; original_name: string; size: number; uploaded_at: string };
   created_at: string;
   updated_at: string;
 }
@@ -408,6 +410,9 @@ export function getProdKanban(): ProdKanbanRef {
 }
 
 export const PROD_KANBAN_REF_PATH = join(REFS_DIR, "prod_kanban.json");
+
+/** Dossier des pièces jointes PNG des cards kanban prod (repo root). */
+export const ASSETS_KANBAN_DIR = join(process.cwd(), "..", "..", "assets", "kanban");
 
 export interface GunoldCatalogEntry {
   code_gunold: string;
