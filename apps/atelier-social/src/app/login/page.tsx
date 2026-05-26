@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
@@ -132,6 +133,18 @@ function LoginForm() {
         >
           {loading ? "Connexion…" : "Se connecter"}
         </button>
+
+        <Link
+          href="/login/forgot-password"
+          style={{
+            fontSize: 13,
+            color: "#6b5f57",
+            textAlign: "center",
+            textDecoration: "none",
+          }}
+        >
+          Mot de passe oublié ?
+        </Link>
       </form>
     </div>
   );
