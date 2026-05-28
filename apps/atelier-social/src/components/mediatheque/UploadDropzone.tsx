@@ -1,13 +1,10 @@
 /**
  * UploadDropzone — drag-and-drop multi-fichiers pour la médiathèque.
  *
- * Sprint 1 : pas d'upload réel vers Supabase Storage. Les fichiers sont
- * lus côté client en data URL et POSTés sur /api/da/mediatheque/media en
- * tant que public_url temporaire. Permet à Sarah de tester le flux
- * complet (drag → tag → galerie) sans branchement DB.
- *
- * Sprint 2 : remplacer `readAsDataURL` par un upload vers le bucket
- * `ypersoa-media` + génération de thumbnail.
+ * Upload réel vers Supabase Storage (bucket `mediatheque`) : chaque fichier est
+ * envoyé dans le bucket public, puis ses métadonnées (URL publique persistante,
+ * tags, source, etc.) sont enregistrées via /api/da/mediatheque/media. Les
+ * photos survivent aux redéploiements.
  */
 "use client";
 
@@ -18,6 +15,7 @@ import { ArrowRight, Check, FileImage, Loader2, Trash2, UploadCloud } from "luci
 import type { MediaSource, Tag, TagCategory } from "@/types/mediatheque";
 import { SOURCE_LABELS, TAG_CATEGORY_LABELS, TAG_CATEGORY_ORDER } from "@/types/mediatheque";
 import { createMedia } from "@/lib/mediatheque/api-client";
+import { uploadMediaFile } from "@/lib/mediatheque/storage";
 
 interface PendingFile {
   id: string;
@@ -75,18 +73,12 @@ function suggestTags(filename: string, tagsByCategory: Record<string, Tag[]>): s
   return ids;
 }
 
-function readFile(file: File): Promise<{ dataUrl: string; width: number; height: number }> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(reader.error);
-    reader.onload = () => {
-      const dataUrl = String(reader.result);
-      const img = new Image();
-      img.onload = () => resolve({ dataUrl, width: img.naturalWidth, height: img.naturalHeight });
-      img.onerror = () => resolve({ dataUrl, width: 0, height: 0 });
-      img.src = dataUrl;
-    };
-    reader.readAsDataURL(file);
+function imageDimensions(src: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => resolve({ width: 0, height: 0 });
+    img.src = src;
   });
 }
 
@@ -188,14 +180,16 @@ export function UploadDropzone({ tagsByCategory, onUploaded }: UploadDropzonePro
         prev.map((f) => (f.id === pending.id ? { ...f, status: "uploading" } : f)),
       );
       try {
-        const { dataUrl, width, height } = await readFile(pending.file);
+        const { width, height } = await imageDimensions(pending.preview);
+        const { storage_path, public_url } = await uploadMediaFile(pending.file, source);
         const allTagIds = new Set<string>([
           ...globalTagIds,
           ...(perFileTags[pending.id] ?? []),
         ]);
         const created = await createMedia({
           filename: pending.file.name,
-          public_url: dataUrl,
+          public_url,
+          storage_path,
           width: width || undefined,
           height: height || undefined,
           size_bytes: pending.file.size,

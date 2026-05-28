@@ -1,17 +1,19 @@
 /**
  * Médiathèque — couche d'accès aux données.
  *
- * Sprint 1 : implémentation in-memory (seedée avec MOCK_MEDIA + SEED_TAGS),
- * persistée dans un module-level Map qui survit aux requêtes API tant que
- * le process Next.js tourne. Permet à Sarah de tester l'upload + le filtrage
- * sans toucher Supabase.
+ * Implémentation Supabase (tables `mediatheque_media`, `mediatheque_tags`,
+ * `mediatheque_media_tags` + bucket Storage `mediatheque`). Les vraies photos
+ * de collection uploadées via l'interface y sont stockées durablement (survit
+ * aux redéploiements Railway).
  *
- * Sprint 2 (à venir) : implémentation Supabase activée quand
- * NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY sont définis.
+ * Fallback in-memory : si Supabase n'est pas configuré (NEXT_PUBLIC_SUPABASE_URL
+ * / NEXT_PUBLIC_SUPABASE_ANON_KEY absents), on retombe sur un store en mémoire
+ * seedé avec la taxonomie de tags uniquement (galerie vide, pas de placeholders).
  */
 
 import { randomUUID } from "node:crypto";
 
+import { supabase } from "@/lib/supabase";
 import type {
   Media,
   MediaFilters,
@@ -23,7 +25,13 @@ import type {
 } from "@/types/mediatheque";
 import { parseTagRef } from "@/types/mediatheque";
 import { SEED_TAGS } from "./taxonomie";
-import { MOCK_MEDIA } from "./mock-data";
+
+const BUCKET = "mediatheque";
+const TBL_MEDIA = "mediatheque_media";
+const TBL_TAGS = "mediatheque_tags";
+const TBL_LINK = "mediatheque_media_tags";
+
+// ─── FALLBACK IN-MEMORY (Supabase non configuré) ─────────────────────────────
 
 interface MediaRow extends Media {
   tag_ids: Set<string>;
@@ -40,7 +48,7 @@ declare global {
     | undefined;
 }
 
-function getStore() {
+function memStore() {
   if (!globalThis.__ypersoa_mediatheque_store__) {
     globalThis.__ypersoa_mediatheque_store__ = {
       media: new Map(),
@@ -51,20 +59,13 @@ function getStore() {
   const store = globalThis.__ypersoa_mediatheque_store__;
   if (!store.seeded) {
     for (const t of SEED_TAGS) store.tags.set(t.id, t);
-    for (const m of MOCK_MEDIA) {
-      const { tags, ...rest } = m;
-      store.media.set(m.id, {
-        ...rest,
-        tag_ids: new Set(tags.map((t) => t.id)),
-      });
-    }
     store.seeded = true;
   }
   return store;
 }
 
-function rowToMediaWithTags(row: MediaRow): MediaWithTags {
-  const store = getStore();
+function memRowToMedia(row: MediaRow): MediaWithTags {
+  const store = memStore();
   const tags: Tag[] = [];
   for (const tagId of row.tag_ids) {
     const t = store.tags.get(tagId);
@@ -75,23 +76,119 @@ function rowToMediaWithTags(row: MediaRow): MediaWithTags {
   return { ...media, tags };
 }
 
+// ─── SUPABASE HELPERS ────────────────────────────────────────────────────────
+
+let tagsSeededThisProcess = false;
+
+/** Upsert idempotent de la taxonomie (taxonomie.ts = source de vérité). */
+async function ensureTagsSeeded() {
+  if (!supabase || tagsSeededThisProcess) return;
+  const payload = SEED_TAGS.map((t) => ({
+    id: t.id,
+    category: t.category,
+    slug: t.slug,
+    label: t.label,
+    color_hex: t.color_hex,
+    parent_id: t.parent_id,
+  }));
+  const { error } = await supabase.from(TBL_TAGS).upsert(payload, { onConflict: "id" });
+  if (!error) tagsSeededThisProcess = true;
+}
+
+interface DbMediaRow {
+  id: string;
+  filename: string;
+  storage_path: string;
+  public_url: string;
+  width: number | null;
+  height: number | null;
+  size_bytes: number | null;
+  mime_type: string | null;
+  source: Media["source"];
+  date_shoot: string | null;
+  photographe: string | null;
+  statut: MediaStatut;
+  notes: string | null;
+  uploaded_by: string | null;
+  uploaded_at: string;
+  updated_at: string;
+  mediatheque_media_tags?: { tag_id: string }[];
+}
+
+const MEDIA_SELECT =
+  "id,filename,storage_path,public_url,width,height,size_bytes,mime_type,source,date_shoot,photographe,statut,notes,uploaded_by,uploaded_at,updated_at,mediatheque_media_tags(tag_id)";
+
+function dbRowToMedia(row: DbMediaRow, tagsById: Map<string, Tag>): MediaWithTags {
+  const tags: Tag[] = [];
+  for (const link of row.mediatheque_media_tags ?? []) {
+    const t = tagsById.get(link.tag_id);
+    if (t) tags.push(t);
+  }
+  return {
+    id: row.id,
+    filename: row.filename,
+    storage_path: row.storage_path,
+    public_url: row.public_url,
+    width: row.width,
+    height: row.height,
+    size_bytes: row.size_bytes,
+    mime_type: row.mime_type,
+    source: row.source,
+    date_shoot: row.date_shoot,
+    photographe: row.photographe,
+    statut: row.statut,
+    notes: row.notes,
+    uploaded_by: row.uploaded_by,
+    uploaded_at: row.uploaded_at,
+    updated_at: row.updated_at,
+    tags,
+  };
+}
+
+async function loadTagsById(): Promise<Map<string, Tag>> {
+  await ensureTagsSeeded();
+  const map = new Map<string, Tag>();
+  if (!supabase) {
+    for (const t of memStore().tags.values()) map.set(t.id, t);
+    return map;
+  }
+  const { data, error } = await supabase.from(TBL_TAGS).select("*");
+  if (error) throw new Error(`Lecture ${TBL_TAGS} échouée : ${error.message}`);
+  for (const t of (data ?? []) as Tag[]) map.set(t.id, t);
+  return map;
+}
+
+async function loadAllMediaWithTags(): Promise<MediaWithTags[]> {
+  const tagsById = await loadTagsById();
+  if (!supabase) {
+    return Array.from(memStore().media.values()).map(memRowToMedia);
+  }
+  const { data, error } = await supabase
+    .from(TBL_MEDIA)
+    .select(MEDIA_SELECT)
+    .order("uploaded_at", { ascending: false });
+  if (error) throw new Error(`Lecture ${TBL_MEDIA} échouée : ${error.message}`);
+  return (data ?? []).map((row) => dbRowToMedia(row as DbMediaRow, tagsById));
+}
+
 // ─── TAGS ──────────────────────────────────────────────────────────────────
 
 export async function listTags(): Promise<Tag[]> {
-  const store = getStore();
-  return Array.from(store.tags.values());
+  const map = await loadTagsById();
+  return Array.from(map.values());
 }
 
 export async function getTag(id: string): Promise<Tag | null> {
-  return getStore().tags.get(id) ?? null;
+  const map = await loadTagsById();
+  return map.get(id) ?? null;
 }
 
 export async function findTag(
   category: TagCategory,
   slug: string,
 ): Promise<Tag | null> {
-  const store = getStore();
-  for (const t of store.tags.values()) {
+  const map = await loadTagsById();
+  for (const t of map.values()) {
     if (t.category === category && t.slug === slug) return t;
   }
   return null;
@@ -103,19 +200,29 @@ export async function createTag(input: {
   label: string;
   color_hex?: string;
 }): Promise<Tag> {
-  const store = getStore();
   const existing = await findTag(input.category, input.slug);
   if (existing) return existing;
+
   const tag: Tag = {
-    id: randomUUID(),
+    id: `tag-${input.category}-${input.slug}`,
     category: input.category,
     slug: input.slug,
     label: input.label,
     color_hex: input.color_hex ?? "#1E2D4A",
     parent_id: null,
   };
-  store.tags.set(tag.id, tag);
-  return tag;
+
+  if (!supabase) {
+    memStore().tags.set(tag.id, tag);
+    return tag;
+  }
+  const { data, error } = await supabase
+    .from(TBL_TAGS)
+    .upsert(tag, { onConflict: "id" })
+    .select("*")
+    .single();
+  if (error) throw new Error(`Création tag échouée : ${error.message}`);
+  return data as Tag;
 }
 
 // ─── MEDIA ─────────────────────────────────────────────────────────────────
@@ -125,8 +232,7 @@ const DEFAULT_PER_PAGE = 48;
 export async function listMedia(
   filters: MediaFilters = {},
 ): Promise<MediaListResponse> {
-  const store = getStore();
-  let rows = Array.from(store.media.values()).map(rowToMediaWithTags);
+  let rows = await loadAllMediaWithTags();
 
   // Filtres tags : AND entre catégories, OR dans une catégorie
   if (filters.tags && filters.tags.length > 0) {
@@ -189,8 +295,19 @@ export async function listMedia(
 }
 
 export async function getMedia(id: string): Promise<MediaWithTags | null> {
-  const row = getStore().media.get(id);
-  return row ? rowToMediaWithTags(row) : null;
+  if (!supabase) {
+    const row = memStore().media.get(id);
+    return row ? memRowToMedia(row) : null;
+  }
+  const tagsById = await loadTagsById();
+  const { data, error } = await supabase
+    .from(TBL_MEDIA)
+    .select(MEDIA_SELECT)
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new Error(`Lecture média échouée : ${error.message}`);
+  if (!data) return null;
+  return dbRowToMedia(data as DbMediaRow, tagsById);
 }
 
 export interface CreateMediaInput {
@@ -211,32 +328,70 @@ export interface CreateMediaInput {
 }
 
 export async function createMedia(input: CreateMediaInput): Promise<MediaWithTags> {
-  const store = getStore();
   const now = new Date().toISOString();
-  const id = randomUUID();
-  const row: MediaRow = {
-    id,
-    filename: input.filename,
-    storage_path:
-      input.storage_path ??
-      `${input.source}/${now.slice(0, 7)}/${input.filename}`,
-    public_url: input.public_url,
-    width: input.width ?? null,
-    height: input.height ?? null,
-    size_bytes: input.size_bytes ?? null,
-    mime_type: input.mime_type ?? null,
-    source: input.source,
-    date_shoot: input.date_shoot ?? null,
-    photographe: input.photographe ?? null,
-    statut: input.statut ?? "a_valider",
-    notes: input.notes ?? null,
-    uploaded_by: input.uploaded_by ?? "innovation@ypersoa.fr",
-    uploaded_at: now,
-    updated_at: now,
-    tag_ids: new Set(input.tag_ids ?? []),
-  };
-  store.media.set(id, row);
-  return rowToMediaWithTags(row);
+  const storage_path =
+    input.storage_path ?? `${input.source}/${now.slice(0, 7)}/${input.filename}`;
+  const tagIds = input.tag_ids ?? [];
+
+  if (!supabase) {
+    const store = memStore();
+    const id = randomUUID();
+    const row: MediaRow = {
+      id,
+      filename: input.filename,
+      storage_path,
+      public_url: input.public_url,
+      width: input.width ?? null,
+      height: input.height ?? null,
+      size_bytes: input.size_bytes ?? null,
+      mime_type: input.mime_type ?? null,
+      source: input.source,
+      date_shoot: input.date_shoot ?? null,
+      photographe: input.photographe ?? null,
+      statut: input.statut ?? "a_valider",
+      notes: input.notes ?? null,
+      uploaded_by: input.uploaded_by ?? "innovation@ypersoa.fr",
+      uploaded_at: now,
+      updated_at: now,
+      tag_ids: new Set(tagIds),
+    };
+    store.media.set(id, row);
+    return memRowToMedia(row);
+  }
+
+  await ensureTagsSeeded();
+
+  const { data, error } = await supabase
+    .from(TBL_MEDIA)
+    .insert({
+      filename: input.filename,
+      storage_path,
+      public_url: input.public_url,
+      width: input.width ?? null,
+      height: input.height ?? null,
+      size_bytes: input.size_bytes ?? null,
+      mime_type: input.mime_type ?? null,
+      source: input.source,
+      date_shoot: input.date_shoot ?? null,
+      photographe: input.photographe ?? null,
+      statut: input.statut ?? "a_valider",
+      notes: input.notes ?? null,
+      uploaded_by: input.uploaded_by ?? "innovation@ypersoa.fr",
+    })
+    .select("id")
+    .single();
+  if (error) throw new Error(`Création média échouée : ${error.message}`);
+
+  const mediaId = (data as { id: string }).id;
+  if (tagIds.length > 0) {
+    const links = tagIds.map((tag_id) => ({ media_id: mediaId, tag_id }));
+    const { error: linkErr } = await supabase.from(TBL_LINK).insert(links);
+    if (linkErr) throw new Error(`Association tags échouée : ${linkErr.message}`);
+  }
+
+  const created = await getMedia(mediaId);
+  if (!created) throw new Error("Média créé introuvable");
+  return created;
 }
 
 export interface UpdateMediaInput {
@@ -252,41 +407,89 @@ export async function updateMedia(
   id: string,
   patch: UpdateMediaInput,
 ): Promise<MediaWithTags | null> {
-  const store = getStore();
-  const row = store.media.get(id);
-  if (!row) return null;
-  Object.assign(row, patch);
-  row.updated_at = new Date().toISOString();
-  return rowToMediaWithTags(row);
+  if (!supabase) {
+    const row = memStore().media.get(id);
+    if (!row) return null;
+    Object.assign(row, patch);
+    row.updated_at = new Date().toISOString();
+    return memRowToMedia(row);
+  }
+  const { error } = await supabase
+    .from(TBL_MEDIA)
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw new Error(`Mise à jour média échouée : ${error.message}`);
+  return getMedia(id);
 }
 
 export async function deleteMedia(id: string): Promise<boolean> {
-  return getStore().media.delete(id);
+  if (!supabase) {
+    return memStore().media.delete(id);
+  }
+  // Récupère le storage_path pour supprimer aussi le fichier du bucket
+  const { data: row } = await supabase
+    .from(TBL_MEDIA)
+    .select("storage_path")
+    .eq("id", id)
+    .maybeSingle();
+  if (!row) return false;
+
+  const storagePath = (row as { storage_path: string }).storage_path;
+  if (storagePath) {
+    await supabase.storage.from(BUCKET).remove([storagePath]);
+  }
+  const { error } = await supabase.from(TBL_MEDIA).delete().eq("id", id);
+  if (error) throw new Error(`Suppression média échouée : ${error.message}`);
+  return true;
 }
 
 export async function addTagToMedia(
   mediaId: string,
   tagId: string,
 ): Promise<MediaWithTags | null> {
-  const store = getStore();
-  const row = store.media.get(mediaId);
-  if (!row) return null;
-  if (!store.tags.has(tagId)) return null;
-  row.tag_ids.add(tagId);
-  row.updated_at = new Date().toISOString();
-  return rowToMediaWithTags(row);
+  if (!supabase) {
+    const store = memStore();
+    const row = store.media.get(mediaId);
+    if (!row) return null;
+    if (!store.tags.has(tagId)) return null;
+    row.tag_ids.add(tagId);
+    row.updated_at = new Date().toISOString();
+    return memRowToMedia(row);
+  }
+  const { error } = await supabase
+    .from(TBL_LINK)
+    .upsert({ media_id: mediaId, tag_id: tagId }, { onConflict: "media_id,tag_id" });
+  if (error) throw new Error(`Ajout tag échoué : ${error.message}`);
+  await supabase
+    .from(TBL_MEDIA)
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", mediaId);
+  return getMedia(mediaId);
 }
 
 export async function removeTagFromMedia(
   mediaId: string,
   tagId: string,
 ): Promise<MediaWithTags | null> {
-  const store = getStore();
-  const row = store.media.get(mediaId);
-  if (!row) return null;
-  row.tag_ids.delete(tagId);
-  row.updated_at = new Date().toISOString();
-  return rowToMediaWithTags(row);
+  if (!supabase) {
+    const store = memStore();
+    const row = store.media.get(mediaId);
+    if (!row) return null;
+    row.tag_ids.delete(tagId);
+    row.updated_at = new Date().toISOString();
+    return memRowToMedia(row);
+  }
+  const { error } = await supabase
+    .from(TBL_LINK)
+    .delete()
+    .eq("media_id", mediaId)
+    .eq("tag_id", tagId);
+  if (error) throw new Error(`Retrait tag échoué : ${error.message}`);
+  await supabase
+    .from(TBL_MEDIA)
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", mediaId);
+  return getMedia(mediaId);
 }
 
 // ─── AUDIT PRODUCTION ──────────────────────────────────────────────────────
@@ -329,7 +532,8 @@ export interface AuditOptions {
 }
 
 export async function getAuditMatrix(options: AuditOptions): Promise<AuditMatrix> {
-  const store = getStore();
+  const allMedia = await loadAllMediaWithTags();
+  const tagsById = await loadTagsById();
   const motifSet = new Set(options.motif_slugs);
   const produitSet = new Set(options.produit_slugs);
   const planSet = new Set(options.plan_slugs);
@@ -347,13 +551,11 @@ export async function getAuditMatrix(options: AuditOptions): Promise<AuditMatrix
 
   let photosTotal = 0;
 
-  for (const row of store.media.values()) {
+  for (const row of allMedia) {
     let motifSlug: string | null = null;
     let produitSlug: string | null = null;
     const planSlugs: string[] = [];
-    for (const tagId of row.tag_ids) {
-      const t = store.tags.get(tagId);
-      if (!t) continue;
+    for (const t of row.tags) {
       if (t.category === "motif" && motifSet.has(t.slug)) motifSlug = t.slug;
       else if (t.category === "gabarit" && produitSet.has(t.slug)) produitSlug = t.slug;
       else if (t.category === "plan" && planSet.has(t.slug)) planSlugs.push(t.slug);
@@ -391,7 +593,7 @@ export async function getAuditMatrix(options: AuditOptions): Promise<AuditMatrix
   ): AuditAxis[] => {
     return slugs.map((slug) => {
       let label = slug.toUpperCase();
-      for (const t of store.tags.values()) {
+      for (const t of tagsById.values()) {
         if (t.category === category && t.slug === slug) {
           label = t.label;
           break;
@@ -415,12 +617,19 @@ export async function getAuditMatrix(options: AuditOptions): Promise<AuditMatrix
 }
 
 export async function tagsUsageCount(): Promise<Map<string, number>> {
-  const store = getStore();
   const counts = new Map<string, number>();
-  for (const row of store.media.values()) {
-    for (const tagId of row.tag_ids) {
-      counts.set(tagId, (counts.get(tagId) ?? 0) + 1);
+  if (!supabase) {
+    for (const row of memStore().media.values()) {
+      for (const tagId of row.tag_ids) {
+        counts.set(tagId, (counts.get(tagId) ?? 0) + 1);
+      }
     }
+    return counts;
+  }
+  const { data, error } = await supabase.from(TBL_LINK).select("tag_id");
+  if (error) throw new Error(`Comptage tags échoué : ${error.message}`);
+  for (const link of (data ?? []) as { tag_id: string }[]) {
+    counts.set(link.tag_id, (counts.get(link.tag_id) ?? 0) + 1);
   }
   return counts;
 }
