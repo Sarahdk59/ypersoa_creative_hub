@@ -522,9 +522,12 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
             </button>
           </div>
 
-          {/* Mannequin Casting Options (Diversity ↔ Canonique Hub) — actif aussi en mode 'full' */}
-          {(settings.mode === 'mannequin' || settings.mode === 'full') && (
-            <div className="space-y-4 p-4 bg-yp-linen/50 rounded-xl border border-yp-sable/30 animate-in fade-in slide-in-from-top-2">
+          {/* Casting (Diversity ↔ Canonique Hub) — visible dans TOUS les modes (29/05).
+              Les sous-champs Diversity (ethnie/âge/morpho) restent gated à mannequin/full
+              car la Famille a son propre bloc diversité et le Packshot n'a pas de personne.
+              Le sélecteur Canonique reste visible partout : appliqué en mannequin/full/family
+              (ancrage d'un adulte sur le canonique), persisté en packshot (pas appliqué). */}
+          <div className="space-y-4 p-4 bg-yp-linen/50 rounded-xl border border-yp-sable/30 animate-in fade-in slide-in-from-top-2">
               {/* Toggle casting mode */}
               <div>
                 <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Casting</label>
@@ -554,8 +557,8 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                 </div>
               </div>
 
-              {/* Mode Diversity (random visages) */}
-              {settings.castingMode === 'diversity' && (
+              {/* Mode Diversity (random visages) — uniquement quand le mode utilise ce bloc */}
+              {settings.castingMode === 'diversity' && (settings.mode === 'mannequin' || settings.mode === 'full') && (
                 <>
                   <div>
                     <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Ethnie</label>
@@ -644,12 +647,15 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                   })()}
 
                   <div className="text-[9px] text-slate-500 italic leading-relaxed border-t border-yp-sable/30 pt-3">
-                    Le canonique sera uploadé en référence Gemini pour préserver le visage du mannequin sur toutes les régénérations (~95% fidélité). Mode famille canonique multi-mannequins prévu en V2.
+                    {settings.mode === 'packshot'
+                      ? "Sélection conservée mais NON appliquée en Packshot (vêtement seul, fond blanc, pas de personne dans le rendu). Le choix est mémorisé : repassé en Mannequin / Famille / Pack Complet, le canonique reprend son rôle."
+                      : settings.mode === 'family'
+                        ? "En mode Famille, le canonique ancre L'UN DES ADULTES de la composition choisie sur ce visage exact (~95% fidélité). Les autres membres (enfants, second adulte si présent) suivent la diversité naturelle."
+                        : "Le canonique sera uploadé en référence Gemini pour préserver le visage du mannequin sur toutes les régénérations (~95% fidélité)."}
                   </div>
                 </>
               )}
             </div>
-          )}
 
           {/* Family Options */}
           {settings.mode === 'family' && (

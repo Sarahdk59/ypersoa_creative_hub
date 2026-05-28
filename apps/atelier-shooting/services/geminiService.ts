@@ -483,11 +483,30 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
           'enfant-papa': 'composé d\'un papa SEUL (un seul adulte sur la photo, pas de maman ni de second parent)',
           'enfant-mamie': 'composé d\'une mamie SEULE (un seul adulte sur la photo, pas d\'autre adulte) — transmission générationnelle, scène intime grand-mère / petit-enfant'
         }[settings.familyConfig.coupleType];
-        
+
         context = FAMILY_DESCRIPTION
           .replace("[COUPLE_TYPE]", coupleTypeLabel || "mixte")
           .replace("[CHILDREN_COUNT]", settings.familyConfig.childrenCount.toString())
           .replace("[MATERIAL]", material);
+
+        // Hook 1 étendu au mode 'family' (29/05) : si l'utilisateur a choisi un
+        // canonique, on l'ancre comme L'UN DES ADULTES de la composition. Le portrait
+        // canonique est déjà injecté dans parts[] (loadCanoniqueParts plus bas — non
+        // gated par mode), il ne manquait que le hook texte qui le lie à un membre.
+        // Combinaisons naturelles :
+        //  - 'enfant-maman' + canonique femme → la maman = le canonique
+        //  - 'enfant-papa' + canonique homme → le papa = le canonique
+        //  - 'enfant-mamie' + canonique femme âgée → la mamie = le canonique
+        //  - 'maman-papa' + canonique → l'un des deux adultes = le canonique, l'autre = diversity
+        if (settings.castingMode === 'canonique' && settings.canoniqueIds.length > 0) {
+          const canoniques = settings.canoniqueIds
+            .map(id => getCanoniqueById(id))
+            .filter((c): c is Canonique => Boolean(c));
+          if (canoniques.length > 0) {
+            const canoniqueContext = buildCanoniqueContext(canoniques);
+            context = `🪞 ANCRAGE CANONIQUE (ABSOLU) : Parmi les adultes de la famille décrite ci-dessous, UN D'EUX correspond EXACTEMENT au mannequin canonique attaché en référence — même visage, même identité, même âge, mêmes traits, même peau, mêmes cheveux. Les autres membres (autre adulte si présent, enfants) sont composés selon la diversité naturelle décrite. L'ADULTE CANONIQUE doit rester fidèle à 100% au portrait de référence : pas un sosie, pas une approximation — la MÊME personne.\n\n${canoniqueContext}\n\n${context}`;
+          }
+        }
       }
 
       // [DECOR] : injecté en mode 'mannequin' selon settings.decorStyle.
@@ -510,7 +529,14 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
 
   // Hook 1 — si mode canonique, on charge les portraits canoniques et on les injecte
   // en parts[] AVANT l'image broderie (ordre validé par passation 24/04 — 95% fidélité visage).
-  const canoniqueParts = (settings.castingMode === 'canonique' && settings.canoniqueIds.length > 0)
+  // Étendu au mode 'family' (29/05) : ancrage d'un adulte sur le canonique.
+  // EXCLU du mode 'packshot' : pas de personne dans le rendu vêtement-seul ; la sélection
+  // utilisateur reste persistée dans le state mais n'est pas envoyée à Gemini.
+  const canoniqueParts = (
+    settings.castingMode === 'canonique' &&
+    settings.canoniqueIds.length > 0 &&
+    settings.mode !== 'packshot'
+  )
     ? await loadCanoniqueParts(settings.canoniqueIds)
     : [];
 
