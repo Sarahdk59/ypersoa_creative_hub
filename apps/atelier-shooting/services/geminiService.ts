@@ -536,26 +536,41 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   // l'utilise comme référence de forme (cordons sans embout, finitions exactes
   // Awdis JH001/JH050). Sans cette mention, Gemini peut interpréter l'image
   // comme une référence pour la broderie au lieu du garment.
+  //
+  // ⚠️ On référence le packshot par son CONTENU visuel ("plain garment, no
+  // embroidery, white studio background") et plus par sa position dans parts[].
+  // L'ancien wording "second attached image" devenait faux dès qu'il y avait
+  // 2+ canoniques ou que l'ordre changeait — et confondait Gemini sur la
+  // fidélité PNG buste (cf. fix 28/05 sur la priorisation embroidery > packshot).
   if (packshotPart) {
-    promptText = promptText + `\n\n⚠️ GARMENT SHAPE REFERENCE (PACKSHOT) : The second attached image is the official Awdis ${settings.product === "YP021" ? "JH050 zoodie" : "JH001 hoodie"} packshot reference — use it to anchor the garment SHAPE exactly : hood proportions, drawstring cords that are PURE COTTON BRAIDED WITH NO AGLET (no plastic tip, no metal cap, no decorative end — cords end with a simple knot or raw cut, exactly matching the body color), kangaroo pocket placement, rib cuffs, neckline. The packshot color may differ from the requested garment color (${garmentColorText}) — IGNORE the packshot color, use it for SHAPE AND FINISHES ONLY. The final image must be in ${garmentColorText}. DO NOT copy the packshot's white studio background.`;
+    promptText = promptText + `\n\n⚠️ GARMENT SHAPE REFERENCE (PACKSHOT) : Among the attached images, the one showing a PLAIN garment with NO embroidery on a WHITE STUDIO BACKGROUND is the official Awdis ${settings.product === "YP021" ? "JH050 zoodie" : "JH001 hoodie"} packshot. Use it ONLY to anchor the garment SHAPE : hood proportions, drawstring cords that are PURE COTTON BRAIDED WITH NO AGLET (no plastic tip, no metal cap, no decorative end — cords end with a simple knot or raw cut, exactly matching the body color), kangaroo pocket placement, rib cuffs, neckline. The packshot color may differ from the requested garment color (${garmentColorText}) — IGNORE the packshot color, use it for SHAPE AND FINISHES ONLY. The final image must be in ${garmentColorText}. DO NOT copy the packshot's white studio background.\n\n⚠️ ABSOLUTE PRIORITY : The embroidery PNG reference(s) (the smaller image(s) showing a motif on a plain background — chest motif and optional cuff motif) take ABSOLUTE PRECEDENCE over the packshot for EVERYTHING embroidery-related : exact letters, exact shape, exact typography, exact placement. The packshot shows a garment with NO embroidery on purpose — it MUST NOT influence how the embroidery is rendered. The chest embroidery in the final image MUST match the chest PNG pixel-perfectly (form, letters, geometry) ; only the thread color follows the prompt.`;
   }
 
   const response = await ai.models.generateContent({
     model: 'gemini-3.1-flash-image-preview',
     contents: {
       parts: [
+        // 1. Canoniques (visage) — d'abord, garantit 95% fidélité visage (passation 24/04).
         ...canoniqueParts,
-        ...(packshotPart ? [packshotPart] : []),
-        // Broderie principale = 1er PNG broderie (côté cœur). L'ordre compte :
-        // c'est ce que le buildWristBlock annonce à Gemini ("FIRST embroidery PNG").
+        // 2. Broderie principale (chest, côté cœur) — IMMÉDIATEMENT après les canoniques.
+        //    Position 2 historique, restaurée le 28/05 pour récupérer la fidélité PNG
+        //    qui s'était dégradée depuis l'ajout du packshot entre les deux.
+        //    C'est ce que le buildWristBlock annonce à Gemini ("FIRST embroidery PNG").
         {
           inlineData: {
             data: base64Data,
             mimeType: mimeType,
           },
         },
-        // Broderie poignet (optionnelle, conditionnelle au shot) = 2e PNG broderie.
+        // 3. Broderie poignet (optionnelle, conditionnelle au shot) — 2e PNG broderie,
+        //    juste après le chest. Identifié par buildWristBlock comme "SECOND embroidery PNG".
         ...(wristPart ? [wristPart] : []),
+        // 4. Packshot YP001/YP021 (référence FORME uniquement, vêtement sans broderie) —
+        //    déplacé APRÈS les PNG broderie pour qu'il n'interfère plus avec la
+        //    fidélité PNG buste. Le hook texte le décrit par contenu visuel
+        //    ("plain garment, no embroidery, white studio background"), donc la position
+        //    dans parts[] ne fait plus l'objet d'une référence textuelle.
+        ...(packshotPart ? [packshotPart] : []),
         {
           text: promptText
         },
