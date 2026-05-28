@@ -476,7 +476,12 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
           'maman-maman': 'composé de deux mamans',
           'maman-mamie': 'composé d\'une maman et d\'une mamie',
           'papi-papa': 'composé d\'un papi et d\'un papa',
-          'papa-mamie': 'composé d\'un papa et d\'une mamie'
+          'papa-mamie': 'composé d\'un papa et d\'une mamie',
+          // Duos parent-enfant / grand-parent-enfant (un seul adulte, le ou les enfants
+          // viennent du compteur CHILDREN_COUNT — par défaut 1 = vrai duo)
+          'enfant-maman': 'composé d\'une maman SEULE (un seul adulte sur la photo, pas de papa ni de second parent)',
+          'enfant-papa': 'composé d\'un papa SEUL (un seul adulte sur la photo, pas de maman ni de second parent)',
+          'enfant-mamie': 'composé d\'une mamie SEULE (un seul adulte sur la photo, pas d\'autre adulte) — transmission générationnelle, scène intime grand-mère / petit-enfant'
         }[settings.familyConfig.coupleType];
         
         context = FAMILY_DESCRIPTION

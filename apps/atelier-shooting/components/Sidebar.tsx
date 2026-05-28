@@ -655,7 +655,7 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           {settings.mode === 'family' && (
             <div className="space-y-4 p-4 bg-yp-linen/50 rounded-xl border border-yp-sable/30 animate-in fade-in slide-in-from-top-2">
               <div>
-                <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Composition du couple</label>
+                <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Composition</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { id: 'random', label: 'Aléatoire' },
@@ -664,7 +664,11 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                     { id: 'maman-maman', label: 'Maman / Maman' },
                     { id: 'maman-mamie', label: 'Maman / Mamie' },
                     { id: 'papi-papa', label: 'Papi / Papa' },
-                    { id: 'papa-mamie', label: 'Papa / Mamie' }
+                    { id: 'papa-mamie', label: 'Papa / Mamie' },
+                    // Duos parent-enfant / grand-parent-enfant (forment un duo si childrenCount=1)
+                    { id: 'enfant-maman', label: 'Enfant / Maman' },
+                    { id: 'enfant-papa', label: 'Enfant / Papa' },
+                    { id: 'enfant-mamie', label: 'Enfant / Mamie' }
                   ].map(c => (
                     <button
                       key={c.id}

@@ -7,7 +7,12 @@ export type EmbroiderySize = 2 | 4 | 8 | 24;
 
 export type ShotMode = 'mannequin' | 'packshot' | 'family' | 'full';
 
-export type CoupleType = 'random' | 'maman-papa' | 'papa-papa' | 'maman-maman' | 'maman-mamie' | 'papi-papa' | 'papa-mamie';
+// Compositions adulte/adulte (couples) + duos enfant/adulte (parent-enfant, grand-parent-enfant).
+// Les "enfant-*" forment naturellement un duo avec childrenCount=1 (valeur par défaut).
+export type CoupleType =
+  | 'random'
+  | 'maman-papa' | 'papa-papa' | 'maman-maman' | 'maman-mamie' | 'papi-papa' | 'papa-mamie'
+  | 'enfant-maman' | 'enfant-papa' | 'enfant-mamie';
 
 export interface FamilyConfig {
   coupleType: CoupleType;
