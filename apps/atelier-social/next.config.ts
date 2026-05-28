@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // pdf-parse v2 utilise pdfjs-dist qui référence pdf.worker.mjs en runtime.
+  // Sans cette ligne, le bundler Next inlines le code mais perd le worker en
+  // prod ("Cannot find module pdf.worker.mjs"). On garde les paquets externes
+  // pour qu'ils soient résolus depuis node_modules à l'exécution.
+  serverExternalPackages: ["pdf-parse", "pdfjs-dist"],
   experimental: {
     serverActions: {
       bodySizeLimit: "10mb", // pour images base64
