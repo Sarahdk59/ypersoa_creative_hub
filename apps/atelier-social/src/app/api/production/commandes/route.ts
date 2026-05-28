@@ -4,7 +4,14 @@
  *   POST → créer une nouvelle commande (depuis un objet déjà structuré)
  */
 import { NextResponse } from "next/server";
-import { listCommandes, writeCommande, type Commande } from "@/lib/production/commandes-loader";
+import {
+  getDureesRef,
+  getFichesTechniques,
+  listCommandes,
+  recalculerDureesCommande,
+  writeCommande,
+  type Commande,
+} from "@/lib/production/commandes-loader";
 
 export async function GET() {
   try {
@@ -35,14 +42,22 @@ export async function POST(request: Request) {
       facturation: body.facturation ?? body.expedition!,
       articles: body.articles,
       planning: body.planning ?? null,
+      bon_preparation_pdf: body.bon_preparation_pdf,
       duree_total_min: body.duree_total_min ?? 0,
       nb_changements_fil_total: body.nb_changements_fil_total ?? 0,
       notes: body.notes,
       created_at: body.created_at ?? now,
       updated_at: now,
     };
-    writeCommande(commande);
-    return NextResponse.json({ ok: true, data: commande });
+    // Recalcul des durées (idempotent — sécurise les commandes éditées à la main
+    // avant POST, notamment après revue d'un draft parsé depuis un PDF).
+    const recalculee = recalculerDureesCommande(
+      commande,
+      getDureesRef(),
+      getFichesTechniques(),
+    );
+    writeCommande(recalculee);
+    return NextResponse.json({ ok: true, data: recalculee });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : String(err) },

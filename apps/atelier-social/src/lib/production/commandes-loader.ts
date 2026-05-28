@@ -135,6 +135,15 @@ export interface Planning {
   genere_le?: string;
 }
 
+export interface BonPreparationPdf {
+  storage_path: string;
+  public_url: string;
+  filename: string;
+  uploaded_by?: string; // email admin
+  uploaded_at: string;  // ISO datetime
+  size_bytes?: number;
+}
+
 export interface Commande {
   id: string;
   numero_shopify: string;
@@ -148,6 +157,7 @@ export interface Commande {
   planning: Planning | null;
   journal?: JournalCommande;
   rework_de?: ReworkOrigine;
+  bon_preparation_pdf?: BonPreparationPdf;
   duree_total_min: number;
   nb_changements_fil_total: number;
   notes?: string;

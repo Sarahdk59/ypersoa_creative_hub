@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, ArrowRight, Package, Clock, AlertCircle, Archive } from "lucide-react";
+import { ArrowLeft, Loader2, ArrowRight, Package, Clock, AlertCircle, Archive, UploadCloud } from "lucide-react";
 import type { Commande, StatutCommande } from "@/lib/production/commandes-loader";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
@@ -26,6 +26,7 @@ export default function CommandesListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showArchived, setShowArchived] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
 
   const { active, archived } = useMemo(() => {
     const a: Commande[] = [];
@@ -46,6 +47,11 @@ export default function CommandesListPage() {
       })
       .catch((e) => setError(e instanceof Error ? e.message : String(e)))
       .finally(() => setLoading(false));
+
+    fetch("/api/me", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => setRole(res?.data?.role ?? null))
+      .catch(() => setRole(null));
   }, []);
 
   if (loading) {
@@ -82,29 +88,59 @@ export default function CommandesListPage() {
             {active.length} active{active.length > 1 ? "s" : ""} · {archived.length} archivée{archived.length > 1 ? "s" : ""}. Chaque commande croise SKU Shopify ↔ motif YPM ↔ fils Gunold et génère un planning auto sur 2 machines TMEZ (6h/jour, 650 pts/min, +5 min DST par motif).
           </p>
         </div>
-        {archived.length > 0 && (
-          <button
-            onClick={() => setShowArchived((v) => !v)}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 6,
-              padding: "8px 14px", borderRadius: 6,
-              border: "0.5px solid var(--hub-border)", background: "var(--hub-bg)",
-              color: "var(--hub-foreground)", fontFamily: "var(--font-sans)", fontSize: 12,
-              cursor: "pointer",
-            }}
-          >
-            <Archive size={13} strokeWidth={1.6} />
-            {showArchived ? "Masquer archivées" : `Voir les ${archived.length} archivée${archived.length > 1 ? "s" : ""}`}
-          </button>
-        )}
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          {role === "admin" && (
+            <Link
+              href="/atelier-production/commandes/upload"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 14px", borderRadius: 6,
+                border: "none", background: "var(--color-brand-rose, #A76059)",
+                color: "white", fontFamily: "var(--font-sans)", fontSize: 12,
+                fontWeight: 500, cursor: "pointer", textDecoration: "none",
+              }}
+            >
+              <UploadCloud size={13} strokeWidth={1.6} />
+              Déposer un bon de préparation
+            </Link>
+          )}
+          {archived.length > 0 && (
+            <button
+              onClick={() => setShowArchived((v) => !v)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 14px", borderRadius: 6,
+                border: "0.5px solid var(--hub-border)", background: "var(--hub-bg)",
+                color: "var(--hub-foreground)", fontFamily: "var(--font-sans)", fontSize: 12,
+                cursor: "pointer",
+              }}
+            >
+              <Archive size={13} strokeWidth={1.6} />
+              {showArchived ? "Masquer archivées" : `Voir les ${archived.length} archivée${archived.length > 1 ? "s" : ""}`}
+            </button>
+          )}
+        </div>
       </header>
 
       {commandes.length === 0 && (
         <div style={{
           padding: 60, textAlign: "center", border: "1px dashed var(--hub-border)",
-          borderRadius: 12, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.6
+          borderRadius: 12, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)",
         }}>
-          Aucune commande importée pour le moment.
+          <p style={{ opacity: 0.6, margin: 0 }}>Aucune commande importée pour le moment.</p>
+          {role === "admin" && (
+            <Link
+              href="/atelier-production/commandes/upload"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                marginTop: 16, padding: "10px 20px", borderRadius: 9999,
+                background: "var(--color-brand-rose, #A76059)", color: "white",
+                fontSize: 13, fontWeight: 500, textDecoration: "none",
+              }}
+            >
+              <UploadCloud size={14} strokeWidth={1.6} /> Déposer un bon de préparation
+            </Link>
+          )}
         </div>
       )}
 

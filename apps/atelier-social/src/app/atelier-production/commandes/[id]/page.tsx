@@ -202,6 +202,38 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
         </span>
       </header>
 
+      {/* SECTION BON DE PRÉPARATION PDF (si déposé via /upload) */}
+      {commande.bon_preparation_pdf && (
+        <section style={{
+          display: "flex", alignItems: "center", gap: 12,
+          padding: "12px 16px", marginBottom: 24,
+          background: "var(--hub-bg)", border: "0.5px solid var(--hub-border)", borderRadius: 10,
+        }}>
+          <FileText size={18} strokeWidth={1.6} style={{ color: "var(--hub-foreground)", opacity: 0.7 }} />
+          <div style={{ flex: 1, fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.4 }}>
+            <div style={{ fontWeight: 500 }}>Bon de préparation Shopify</div>
+            <div style={{ fontSize: 11, opacity: 0.6 }}>
+              {commande.bon_preparation_pdf.filename}
+              {commande.bon_preparation_pdf.uploaded_by ? ` · déposé par ${commande.bon_preparation_pdf.uploaded_by}` : ""}
+              {" · "}{commande.bon_preparation_pdf.uploaded_at.slice(0, 10)}
+            </div>
+          </div>
+          <a
+            href={commande.bon_preparation_pdf.public_url}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              fontFamily: "var(--font-sans)", fontSize: 12,
+              padding: "6px 14px", borderRadius: 9999,
+              border: "0.5px solid var(--hub-border)", background: "white",
+              color: "var(--hub-foreground)", textDecoration: "none",
+            }}
+          >
+            Ouvrir le PDF
+          </a>
+        </section>
+      )}
+
       {/* SECTION ADRESSES */}
       <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 32 }}>
         <div style={{ padding: 16, border: "0.5px solid var(--hub-border)", borderRadius: 10 }}>
