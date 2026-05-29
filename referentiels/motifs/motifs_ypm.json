@@ -2,7 +2,7 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-05-21",
+    "last_updated": "2026-05-22",
     "nb_motifs": 18,
     "nb_variantes_total": 104,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
@@ -141,26 +141,16 @@
     {
       "id": "YPM-002",
       "nom_commercial": "L'Ambre",
-      "asset_principal": "YPM-002-Anaïs.PNG",
+      "asset_principal": "YPM-002-AMBRE-papa.PNG",
       "nb_variantes": 4,
       "variantes": [
         {
-          "file": "YPM-002-AMBRE-papa.PNG",
-          "label": "AMBRE-papa",
-          "destinataires": [
-            "papa"
-          ],
-          "occasions": [],
-          "produits": []
+          "file": "YPM-002-AMBRE.PNG",
+          "label": "AMBRE"
         },
         {
-          "file": "YPM-002-AMBRE.PNG",
-          "label": "AMBRE",
-          "destinataires": [
-            "maman"
-          ],
-          "occasions": [],
-          "produits": []
+          "file": "YPM-002-Anaïs.PNG",
+          "label": "Anaïs"
         },
         {
           "file": "YPM-002-AMBRE-chaton.PNG",
