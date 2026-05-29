@@ -2,7 +2,7 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-05-22",
+    "last_updated": "2026-05-29",
     "nb_motifs": 18,
     "nb_variantes_total": 104,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
@@ -149,8 +149,8 @@
           "label": "AMBRE"
         },
         {
-          "file": "YPM-002-Anaïs.PNG",
-          "label": "Anaïs"
+          "file": "YPM-002-Anaïs.PNG",
+          "label": "Anaïs"
         },
         {
           "file": "YPM-002-AMBRE-chaton.PNG",
@@ -699,8 +699,8 @@
           "tags": []
         },
         {
-          "file": "YPM-007-CHOUCHOU marié.PNG",
-          "label": "CHOUCHOU marié",
+          "file": "YPM-007-CHOUCHOU marié.PNG",
+          "label": "CHOUCHOU marié",
           "tags": [
             "couple",
             "famille",
@@ -712,8 +712,8 @@
           "produits": []
         },
         {
-          "file": "YPM-007-CHOUCHOU mariée_v2.PNG",
-          "label": "CHOUCHOU mariée_v2",
+          "file": "YPM-007-CHOUCHOU mariée_v2.PNG",
+          "label": "CHOUCHOU mariée_v2",
           "tags": [
             "couple",
             "famille",
@@ -801,8 +801,8 @@
           "produits": []
         },
         {
-          "file": "YPM-007-CHOUCHOU_mariée.PNG",
-          "label": "CHOUCHOU_mariée",
+          "file": "YPM-007-CHOUCHOU_mariée.PNG",
+          "label": "CHOUCHOU_mariée",
           "tags": [
             "couple",
             "famille",
