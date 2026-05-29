@@ -200,8 +200,12 @@ type HairLength = "long" | "medium" | "short";
 
 function detectHairLength(signature: string): HairLength {
   const s = signature.toLowerCase();
-  if (/pixel cut|pixel-cut|buzz cut|crew cut|crop court|cheveux courts|short hair|afro court|très court|cheveux ras/.test(s)) return "short";
-  if (/\bbob\b|carré|carre court|shoulder.length|shoulder length|mi-long|cheveux mi-longs|jawline/.test(s)) return "medium";
+  // SHORT : pixel/buzz/crew/crop + cropped + "short" générique. Ajout "salt-and-pepper short"
+  // et "silver short" pour les profils masculins matures (Yohji-architect style).
+  if (/pixel cut|pixel-cut|buzz cut|crew cut|short crop|cropped|crop court|cheveux courts|cheveux court|cheveux ras|short hair|short cropped|short cut|afro court|très court|salt[- ]and[- ]pepper short|silver short/.test(s)) return "short";
+  // MEDIUM : ajout de "medium-length" / "medium length" / "medium hair" (bug Hiroshi
+  // 29/05 : signature "medium-length hair" tombait dans le fallback "long" faute de match).
+  if (/\bbob\b|carré|carre court|shoulder.length|shoulder length|medium.length|medium length|medium hair|mi-long|cheveux mi-longs|jawline/.test(s)) return "medium";
   return "long";
 }
 
@@ -574,7 +578,27 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   // 2+ canoniques ou que l'ordre changeait — et confondait Gemini sur la
   // fidélité PNG buste (cf. fix 28/05 sur la priorisation embroidery > packshot).
   if (packshotPart) {
-    promptText = promptText + `\n\n⚠️ GARMENT SHAPE REFERENCE (PACKSHOT) : Among the attached images, the one showing a PLAIN garment with NO embroidery on a WHITE STUDIO BACKGROUND is the official Awdis ${settings.product === "YP021" ? "JH050 zoodie" : "JH001 hoodie"} packshot. Use it ONLY to anchor the garment SHAPE : hood proportions, drawstring cords that are PURE COTTON BRAIDED WITH NO AGLET (no plastic tip, no metal cap, no decorative end — cords end with a simple knot or raw cut, exactly matching the body color), kangaroo pocket placement, rib cuffs, neckline. The packshot color may differ from the requested garment color (${garmentColorText}) — IGNORE the packshot color, use it for SHAPE AND FINISHES ONLY. The final image must be in ${garmentColorText}. DO NOT copy the packshot's white studio background.\n\n⚠️ ABSOLUTE PRIORITY : The embroidery PNG reference(s) (the smaller image(s) showing a motif on a plain background — chest motif and optional cuff motif) take ABSOLUTE PRECEDENCE over the packshot for EVERYTHING embroidery-related : exact letters, exact shape, exact typography, exact placement. The packshot shows a garment with NO embroidery on purpose — it MUST NOT influence how the embroidery is rendered. The chest embroidery in the final image MUST match the chest PNG pixel-perfectly (form, letters, geometry) ; only the thread color follows the prompt.`;
+    // 2 versions du hook packshot selon le produit :
+    //  - YP001 / YP021 (hoodies/zoodies à cordons) : packshot = référence FORME
+    //    + cordons sans aglet. La couleur du packshot peut différer (palette
+    //    Awdis incomplète) → on demande d'IGNORER la couleur du packshot.
+    //  - YP019 / YP005 / YP004 (t-shirts, sweats, hoodies enfant) : on a tous les
+    //    packshots colorés dans la palette officielle. Le packshot = référence
+    //    FORME + COULEUR ANCRÉE (correspondance Sarah 29/05 — la couleur du
+    //    rendu doit matcher pixel-perfect le packshot, pas être réinterprétée).
+    const isCordonProduct = settings.product === "YP001" || settings.product === "YP021";
+    const productLabel = settings.product === "YP021" ? "Awdis JH050 zoodie"
+      : settings.product === "YP001" ? "Awdis JH001 hoodie"
+      : settings.product === "YP019" ? "B&C TU05T t-shirt"
+      : settings.product === "YP005" ? "Awdis JH030 sweat"
+      : settings.product === "YP004" ? "Awdis JH001K kids hoodie"
+      : settings.product + " garment";
+
+    const shapeBlock = isCordonProduct
+      ? `Use it ONLY to anchor the garment SHAPE : hood proportions, drawstring cords that are PURE COTTON BRAIDED WITH NO AGLET (no plastic tip, no metal cap, no decorative end — cords end with a simple knot or raw cut, exactly matching the body color), kangaroo pocket placement, rib cuffs, neckline. The packshot color may differ from the requested garment color (${garmentColorText}) — IGNORE the packshot color, use it for SHAPE AND FINISHES ONLY.`
+      : `Use it to anchor BOTH the garment SHAPE (cut, silhouette, neckline shape, sleeve length, rib finish) AND the EXACT COLOR. ⚠️ COLOR ANCHOR (ABSOLUTE) : the body color of the packshot IS the requested color (${garmentColorText}) — match it pixel-perfectly, same hue, same saturation, same value. Do NOT shift the color tone, do NOT brighten or darken, do NOT reinterpret. The packshot IS the color reference.`;
+
+    promptText = promptText + `\n\n⚠️ GARMENT REFERENCE (PACKSHOT) : Among the attached images, the one showing a PLAIN garment with NO embroidery on a WHITE STUDIO BACKGROUND is the official ${productLabel} packshot. ${shapeBlock} The final image must show the model wearing the same garment, in ${garmentColorText}. DO NOT copy the packshot's white studio background — keep the scene environment as described in the prompt.\n\n⚠️ ABSOLUTE EMBROIDERY PRIORITY : The embroidery PNG reference(s) (the smaller image(s) showing a motif on a plain background — chest motif and optional cuff motif) take ABSOLUTE PRECEDENCE over the packshot for EVERYTHING embroidery-related : exact letters, exact shape, exact typography, exact placement. The packshot shows a garment with NO embroidery on purpose — it MUST NOT influence how the embroidery is rendered. The chest embroidery in the final image MUST match the chest PNG pixel-perfectly (form, letters, geometry) ; only the thread color follows the prompt.`;
   }
 
   const response = await ai.models.generateContent({

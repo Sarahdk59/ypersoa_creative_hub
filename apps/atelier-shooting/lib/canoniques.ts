@@ -204,7 +204,7 @@ export const CANONIQUES: Canonique[] = [
     genre: "homme",
     type: "secondaire",
     description: "Japonais, argenté, architecte minimaliste Yohji",
-    signature: "silver-grey medium-length hair, refined Japanese features, minimalist Yohji-architect aesthetic, contemplative gaze",
+    signature: "silver-grey short cropped hair swept back from forehead, NEVER long, NEVER tied in a ponytail — refined Japanese features, minimalist Yohji-architect aesthetic, contemplative gaze",
     filename: "MAN-S16_Hiroshi_canonique.jpg",
   },
   {
