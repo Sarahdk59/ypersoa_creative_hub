@@ -617,18 +617,14 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       // peau réaliste → block injuste qui faisait tomber les shoots Sarah dans
       // le fallback ghost-mockup). BLOCK_ONLY_HIGH garde la protection
       // hard-content sans bloquer les portraits familiaux légitimes.
-      // Le modèle gemini-3.1-flash-image-preview a des catégories spécifiques
-      // image (HARM_CATEGORY_IMAGE_*) — on les ajoute aux catégories texte
-      // par sécurité (l'API ignore celles qui ne s'appliquent pas).
+      // ⚠️ Le SDK TypeScript déclare aussi HARM_CATEGORY_IMAGE_* mais l'endpoint
+      // v1beta les rejette en INVALID_ARGUMENT. On garde uniquement les 4
+      // catégories texte standard, qui s'appliquent aussi aux modèles image.
       safetySettings: [
         { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
         { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
         { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
         { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
-        { category: HarmCategory.HARM_CATEGORY_IMAGE_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
-        { category: HarmCategory.HARM_CATEGORY_IMAGE_HATE, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
-        { category: HarmCategory.HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
-        { category: HarmCategory.HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
       ],
     }
   });
