@@ -456,10 +456,17 @@ STYLE : Minimaliste, élégant, vrai. Pas de maquillage ou maquillage "no-makeup
 
 export const FLAT_LAY_DESCRIPTION = "Présentation artistique à plat. Focus sur la matière [MATERIAL] et les ombres douces.";
 
+// FAMILY_DESCRIPTION : prompt assoupli le 29/05 pour éviter que Gemini déclenche
+// son filtre safety (false positives "minors + skin detail" qui faisaient tomber
+// les générations famille dans le fallback ghost-mockup). Modifications :
+//   - "enfant(s) mineur(s) (jeunes enfants ou bébés)" → "enfant(s)" + cadrage
+//     éditorial famille (Sézane / Émoï-Émoï / Bonpoint).
+//   - "Grain de peau très visible, pores" → "texture de peau naturelle et douce"
+//     (on garde le naturel sans focaliser sur le détail dermique des mineurs).
 export const FAMILY_DESCRIPTION = `
-GROUPE (IDENTITÉ ET ÉMOTION) : Un groupe virtuel [COUPLE_TYPE] avec [CHILDREN_COUNT] enfant(s) mineur(s) (jeunes enfants ou bébés).
+GROUPE (IDENTITÉ ET ÉMOTION) : Une scène familiale chaleureuse — un groupe virtuel [COUPLE_TYPE] avec [CHILDREN_COUNT] enfant(s). Photographie éditoriale de famille dans la lignée Sézane / Émoï-Émoï / Bonpoint / Petit Bateau — pas un portrait clinique mais un instant de lien partagé entre les membres.
 ETHNIE : Diversifiée et naturelle.
-ATMOSPHÈRE : Photographie lifestyle premium, niveau vrai shooting photo professionnel. Très émotionnel, authentique, lien fort, complicité, ambiance émoi émoi et Sézane. 
-VÊTEMENTS : Ils portent tous des vêtements Ypersoa coordonnés en [MATERIAL].
-LES MODÈLES SONT VIRTUELS MAIS ULTRA-RÉALISTES ET IMPARFAITS : ATTENTION, ILS NE DOIVENT PAS ÊTRE TROP PARFAITS NI RESSEMBLER À DES STARS. Grain de peau très visible, pores, cheveux naturels (légèrement en bataille). L'âge de chaque membre doit être respecté (les jeunes parents ne doivent pas avoir de rides de vieillesse). Sourires éclatants et vrais, postures très naturelles, souples et détendues, pleines de vie. C'est une scène conceptuelle ultra-authentique.
+ATMOSPHÈRE : Photographie lifestyle premium, niveau vrai shooting photo professionnel. Très émotionnel, authentique, lien fort, complicité, ambiance émoi émoi et Sézane.
+VÊTEMENTS : Ils portent tous des vêtements Ypersoa coordonnés en [MATERIAL] — exactement le même produit pour tous les membres (pas de variation de gabarit dans la même image).
+LES MODÈLES SONT VIRTUELS MAIS RÉALISTES ET IMPARFAITS : ils ne doivent pas être trop parfaits ni ressembler à des stars. Texture de peau naturelle et douce, cheveux naturels (légèrement en bataille). L'âge de chaque membre doit être respecté (les jeunes parents ne doivent pas avoir de rides de vieillesse). Sourires éclatants et vrais, postures très naturelles, souples et détendues, pleines de vie. C'est une scène conceptuelle ultra-authentique.
 `;

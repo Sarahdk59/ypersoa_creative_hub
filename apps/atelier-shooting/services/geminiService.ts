@@ -1,5 +1,5 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from "@google/genai";
 import { GenerationSettings } from "../types";
 import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT, FULL_PACK_SERRE, FULL_PACK_AUBE, FULL_PACK_SAUVAGE, FULL_PACK_SEPIA, DECOR_DESCRIPTIONS } from "../constants";
 import { DecorStyle } from "../types";
@@ -611,7 +611,25 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       imageConfig: {
         aspectRatio: settings.aspectRatio,
         imageSize: "2K"
-      }
+      },
+      // Relâche le filtre safety de Gemini (par défaut BLOCK_MEDIUM_AND_ABOVE)
+      // pour éviter les faux positifs en mode famille (scène avec enfants +
+      // peau réaliste → block injuste qui faisait tomber les shoots Sarah dans
+      // le fallback ghost-mockup). BLOCK_ONLY_HIGH garde la protection
+      // hard-content sans bloquer les portraits familiaux légitimes.
+      // Le modèle gemini-3.1-flash-image-preview a des catégories spécifiques
+      // image (HARM_CATEGORY_IMAGE_*) — on les ajoute aux catégories texte
+      // par sécurité (l'API ignore celles qui ne s'appliquent pas).
+      safetySettings: [
+        { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+        { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+        { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+        { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+        { category: HarmCategory.HARM_CATEGORY_IMAGE_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+        { category: HarmCategory.HARM_CATEGORY_IMAGE_HATE, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+        { category: HarmCategory.HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+        { category: HarmCategory.HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
+      ],
     }
   });
 
@@ -622,8 +640,20 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   const candidate = response.candidates[0];
   if (!candidate.content || !candidate.content.parts) {
     if (candidate.finishReason === 'IMAGE_OTHER' || candidate.finishReason === 'SAFETY' || candidate.finishReason === 'BLOCKLIST') {
+      // Garde-fou mode famille (29/05) : le fallback ghost-mockup
+      // ("vêtement seul fond blanc, no people") n'a aucun sens en Famille —
+      // il fabrique 4 produits différents sans broderie au lieu de la scène
+      // attendue. Mieux vaut lever une erreur claire pour que Sarah retente
+      // (changer canonique, composition, ou prompt) que livrer un faux résultat.
+      if (settings.mode === 'family') {
+        throw new Error(
+          `Génération famille bloquée par le filtre Gemini (${candidate.finishReason}). ` +
+          `Réessaie : change de canonique, simplifie la composition (Aléatoire), ou retente — ` +
+          `le filtre est parfois aléatoire sur les scènes avec enfants.`
+        );
+      }
       console.warn(`Blocked by ${candidate.finishReason}, retrying with safe fallback prompt...`);
-      
+
       const safePrompt = `Generate a simple, safe, and generic 3D mockup of a ${settings.product} in color ${garmentColorText}. The garment is floating on a pure white background. The attached image is a simple graphic design to be embroidered on the chest. Do not generate any people, faces, or text. This is a safe, conceptual product visualization.`;
       
       try {
