@@ -119,8 +119,8 @@ export const CANONIQUES: Canonique[] = [
     age: 5,
     genre: "enfant",
     type: "principal",
-    description: "Blanc, cheveux noirs longs, mini-sportwear chic",
-    signature: "long dark hair to the chin, dark eyes, gentle little-boy smile, casual sportwear style",
+    description: "Blanc, cheveux noirs mi-longs au menton avec frange, mini-sportwear chic",
+    signature: "medium-length dark hair to the chin with a soft fringe (boyish chin-length cut, NEVER below the jaw, NEVER long flowing hair on the shoulders or back), dark eyes, gentle little-boy smile, casual sportwear style",
     filename: "MAN-P09_Gabin_canonique.jpg",
   },
   {

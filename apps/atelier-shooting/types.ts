@@ -34,9 +34,10 @@ export interface ModelDiversity {
   disability: DisabilityType;
 }
 
-// 7 décors disponibles. Sélecteur visible en mode 'mannequin' et 'full'.
-// En mode 'family' le décor est imposé par le couple choisi (DUO_*/TRIO_* du référentiel).
-// En mode 'packshot' pas de décor (fond blanc studio).
+// 7 décors disponibles. Sélecteur visible dans TOUS les modes (29/05).
+// 'mannequin' / 'full' / 'family' : décor de la scène.
+// 'packshot' : arrière-plan du packshot ('minimalist' = fond blanc e-commerce classique,
+//   tout autre décor = vêtement net en avant-plan devant l'ambiance floutée).
 // 'lookbook' = ambiance custom issue d'un lookbook ❤️ actif (cf. customLookbookId).
 export type DecorStyle = 'minimalist' | 'parisien' | 'loft' | 'serre' | 'aube' | 'sauvage' | 'sepia' | 'lookbook';
 

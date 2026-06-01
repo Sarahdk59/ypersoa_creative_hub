@@ -205,7 +205,7 @@ function detectHairLength(signature: string): HairLength {
   if (/pixel cut|pixel-cut|buzz cut|crew cut|short crop|cropped|crop court|cheveux courts|cheveux court|cheveux ras|short hair|short cropped|short cut|afro court|très court|salt[- ]and[- ]pepper short|silver short/.test(s)) return "short";
   // MEDIUM : ajout de "medium-length" / "medium length" / "medium hair" (bug Hiroshi
   // 29/05 : signature "medium-length hair" tombait dans le fallback "long" faute de match).
-  if (/\bbob\b|carré|carre court|shoulder.length|shoulder length|medium.length|medium length|medium hair|mi-long|cheveux mi-longs|jawline/.test(s)) return "medium";
+  if (/\bbob\b|carré|carre court|shoulder.length|shoulder length|medium.length|medium length|medium hair|mi-long|cheveux mi-longs|jawline|to the chin|chin.length|chin length|to the jaw|au menton/.test(s)) return "medium";
   return "long";
 }
 
@@ -373,7 +373,16 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     ? getCanoniqueById(settings.canoniqueIds[0])
     : null;
   const hairLength: HairLength = firstCanon ? detectHairLength(firstCanon.signature) : "long";
-  const hairBlock = settings.mode !== 'packshot' ? buildHairBlock(seedOffset, hairLength) : "";
+  // Le bloc capillaire rotatif parle "the model" au singulier avec des placements
+  // épaule gauche/droite : ambigu dès qu'il y a 2+ personnes ancrées. On ne l'applique
+  // que pour un seul canonique (ou diversity) hors packshot — sinon les portraits
+  // canoniques portent déjà la coiffure exacte de chaque membre.
+  const appliedCanonCount = (settings.castingMode === 'canonique' && settings.mode !== 'packshot')
+    ? settings.canoniqueIds.length
+    : 0;
+  const hairBlock = (settings.mode !== 'packshot' && appliedCanonCount < 2)
+    ? buildHairBlock(seedOffset, hairLength)
+    : "";
 
   const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   const match = settings.embroideryImage!.match(/^data:(image\/[a-zA-Z+]+);base64,/);
@@ -438,13 +447,23 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     if (settings.mode === 'packshot') {
       const emplacement = buildEmplacement(settings.product, settings.size);
 
+      // [BACKGROUND] : arrière-plan du packshot selon le décor choisi (29/05).
+      // 'minimalist' (et fallback) = fond studio blanc pur e-commerce classique.
+      // Tout autre décor = le vêtement (mannequin invisible) flotte en avant-plan net
+      // devant l'ambiance choisie, légèrement floutée pour rester un packshot produit.
+      const packDecor = getDecorDescription(settings.decorStyle, settings);
+      const backgroundText = settings.decorStyle === 'minimalist'
+        ? "Le vêtement flotte seul devant un fond studio blanc pur."
+        : `Le vêtement flotte seul, NET et EN AVANT-PLAN, devant l'ambiance suivante reléguée en arrière-plan légèrement flou (depth of field, le vêtement reste le héros visuel) : ${packDecor.full}`;
+
       promptText = PACKSHOT_PROMPT
         .replace(/\[PRODUIT\]/g, productDescription)
         .replace(/\[COULEUR SWEAT\]/g, garmentColorText)
         .replace(/\[COULEUR FIL\]/g, threadColorText)
         .replace(/\[EMPLACEMENT\]/g, emplacement)
-        .replace(/\[DIMENSION\]/g, embroideryBlock);
-        
+        .replace(/\[DIMENSION\]/g, embroideryBlock)
+        .replace("[BACKGROUND]", backgroundText);
+
       promptText += " " + shot.packshotSuffix;
     } else {
       let variation = "";
@@ -508,14 +527,17 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
             .filter((c): c is Canonique => Boolean(c));
           if (canoniques.length > 0) {
             const canoniqueContext = buildCanoniqueContext(canoniques);
-            context = `🪞 ANCRAGE CANONIQUE (ABSOLU) : Parmi les adultes de la famille décrite ci-dessous, UN D'EUX correspond EXACTEMENT au mannequin canonique attaché en référence — même visage, même identité, même âge, mêmes traits, même peau, mêmes cheveux. Les autres membres (autre adulte si présent, enfants) sont composés selon la diversité naturelle décrite. L'ADULTE CANONIQUE doit rester fidèle à 100% au portrait de référence : pas un sosie, pas une approximation — la MÊME personne.\n\n${canoniqueContext}\n\n${context}`;
+            const ancrage = canoniques.length === 1
+              ? `🪞 ANCRAGE CANONIQUE (ABSOLU) : Parmi les membres de la famille décrite ci-dessous, UN D'EUX correspond EXACTEMENT au mannequin canonique attaché en référence — même visage, même identité, même âge, mêmes traits, même peau, mêmes cheveux. Les autres membres (autre adulte si présent, enfants) sont composés selon la diversité naturelle décrite. LE MEMBRE CANONIQUE doit rester fidèle à 100% au portrait de référence : pas un sosie, pas une approximation — la MÊME personne.`
+              : `🪞 ANCRAGE CANONIQUES (ABSOLU) : Parmi les membres de la famille décrite ci-dessous, ${canoniques.length} D'ENTRE EUX correspondent EXACTEMENT aux ${canoniques.length} mannequins canoniques attachés en référence — un membre par portrait canonique (en respectant genre et âge de chaque canonique : un canonique enfant = un enfant, un canonique adulte femme = une mère/mamie, etc.). Chaque membre canonique garde 100% du visage, de l'identité, de l'âge, des traits, de la peau et des cheveux de SON portrait de référence — pas un sosie, pas une approximation, la MÊME personne. Les membres restants non couverts par un canonique suivent la diversité naturelle décrite.`;
+            context = `${ancrage}\n\n${canoniqueContext}\n\n${context}`;
           }
         }
       }
 
-      // [DECOR] : injecté en mode 'mannequin' selon settings.decorStyle.
-      // En mode 'family' le décor reste imposé par le couple choisi (FAMILY_DESCRIPTION
-      // ne contient pas [DECOR]) — pas d'injection ici.
+      // [DECOR] : injecté selon settings.decorStyle en mode 'mannequin' ET 'family' (29/05).
+      // La scène familiale utilise désormais le décor choisi par l'utilisateur (avant :
+      // forcé sur 'parisien'). Le PROMPT_BASE porte le [DECOR] dans les deux modes.
       const decor = getDecorDescription(settings.decorStyle, settings);
       promptText = PROMPT_BASE
         .replace("[PRODUCT]", productDescription)
@@ -523,11 +545,11 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
         .replace("[SIZE]", embroideryBlock)
         .replace(/\[THREAD_COLOR\]/g, threadColorText)
         .replace("[GARMENT_COLOR]", garmentColorText)
-        .replace("[DECOR]", settings.mode === 'mannequin' ? decor.short : DECOR_DESCRIPTIONS.parisien.short)
+        .replace("[DECOR]", decor.short)
         + context + " "
         + variation
             .replace(/\[THREAD_COLOR\]/g, threadColorText)
-            .replace("[DECOR]", settings.mode === 'mannequin' ? decor.full : DECOR_DESCRIPTIONS.parisien.full);
+            .replace("[DECOR]", decor.full);
     }
   }
 

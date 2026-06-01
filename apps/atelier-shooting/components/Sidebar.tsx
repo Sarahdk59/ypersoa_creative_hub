@@ -605,53 +605,114 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                 </>
               )}
 
-              {/* Mode Canonique (mannequin Hub persistant) */}
+              {/* Mode Canonique (mannequins Hub persistants) — sélection MULTIPLE (29/05).
+                  canoniqueIds[] peut contenir 1..N mannequins : un clic toggle l'appartenance.
+                  En mannequin/full, plusieurs canoniques = plusieurs personnes dans la scène.
+                  En famille, chaque canonique sélectionné ancre un membre de la composition. */}
               {settings.castingMode === 'canonique' && (
                 <>
                   <div>
-                    <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Mannequin canonique</label>
-                    <select
-                      value={settings.canoniqueIds[0] || ''}
-                      onChange={(e) => setSettings(prev => ({ ...prev, canoniqueIds: e.target.value ? [e.target.value] : [] }))}
-                      className="w-full px-2 py-1.5 rounded-md text-[10px] border border-slate-200 bg-white outline-none"
-                    >
-                      <option value="">— Choisir un mannequin —</option>
-                      {getCanoniquesSorted().map(c => (
-                        <option key={c.id} value={c.id}>
-                          {c.favorite ? '⭐ ' : ''}{c.id} — {c.prenom}, {c.age} ({c.genre})
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-[10px] font-bold text-yp-olive uppercase">
+                        Mannequin(s) canonique(s)
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] text-slate-400">
+                          {settings.canoniqueIds.length} sélectionné{settings.canoniqueIds.length > 1 ? 's' : ''}
+                        </span>
+                        {settings.canoniqueIds.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setSettings(prev => ({ ...prev, canoniqueIds: [] }))}
+                            className="text-[9px] text-rose-500 hover:underline"
+                          >
+                            Tout effacer
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="max-h-56 overflow-y-auto pr-1 space-y-1 border border-slate-200 rounded-lg p-1.5 bg-white">
+                      {getCanoniquesSorted().map(c => {
+                        const selected = settings.canoniqueIds.includes(c.id);
+                        return (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => setSettings(prev => ({
+                              ...prev,
+                              canoniqueIds: selected
+                                ? prev.canoniqueIds.filter(id => id !== c.id)
+                                : [...prev.canoniqueIds, c.id]
+                            }))}
+                            className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left border transition-all ${
+                              selected
+                                ? 'bg-yp-olive text-white border-yp-olive'
+                                : 'bg-white text-slate-600 border-slate-100 hover:border-yp-sable'
+                            }`}
+                          >
+                            <img
+                              src={`/canoniques/${c.filename}`}
+                              alt={c.prenom}
+                              className="w-7 h-9 rounded object-cover flex-shrink-0 bg-yp-linen"
+                              onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-[10px] font-semibold truncate">
+                                {c.favorite ? '⭐ ' : ''}{c.prenom}, {c.age}
+                              </div>
+                              <div className={`text-[9px] truncate ${selected ? 'text-white/70' : 'text-slate-400'}`}>
+                                {c.id} · {c.genre}{c.duo ? ` · ${c.duo}` : ''}
+                              </div>
+                            </div>
+                            <i className={`fa-solid ${selected ? 'fa-circle-check' : 'fa-circle-plus'} text-xs flex-shrink-0`}></i>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
-                  {settings.canoniqueIds[0] && (() => {
-                    const c = getCanoniqueById(settings.canoniqueIds[0]);
-                    if (!c) return null;
-                    return (
-                      <div className="flex gap-3 items-start p-2 bg-white rounded-lg border border-yp-sable/30">
-                        <img
-                          src={`/canoniques/${c.filename}`}
-                          alt={c.prenom}
-                          className="w-20 h-24 rounded-md object-cover flex-shrink-0"
-                          onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="text-[11px] font-bold text-yp-olive">
-                            {c.prenom} {c.favorite && '⭐'}
+                  {settings.canoniqueIds.length > 0 && (
+                    <div className="space-y-1.5">
+                      {settings.canoniqueIds.map(id => {
+                        const c = getCanoniqueById(id);
+                        if (!c) return null;
+                        return (
+                          <div key={id} className="flex gap-3 items-start p-2 bg-white rounded-lg border border-yp-sable/30">
+                            <img
+                              src={`/canoniques/${c.filename}`}
+                              alt={c.prenom}
+                              className="w-16 h-20 rounded-md object-cover flex-shrink-0"
+                              onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-[11px] font-bold text-yp-olive">
+                                {c.prenom} {c.favorite && '⭐'}
+                              </div>
+                              <div className="text-[9px] text-slate-400 mb-1">{c.id} · {c.age} ans · {c.genre}{c.duo ? ` · ${c.duo}` : ''}</div>
+                              <div className="text-[9px] text-slate-500 italic leading-snug">{c.description}</div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setSettings(prev => ({ ...prev, canoniqueIds: prev.canoniqueIds.filter(cid => cid !== id) }))}
+                              className="text-slate-300 hover:text-rose-500 flex-shrink-0"
+                              title="Retirer"
+                            >
+                              <i className="fa-solid fa-xmark text-xs"></i>
+                            </button>
                           </div>
-                          <div className="text-[9px] text-slate-400 mb-1">{c.id} · {c.age} ans · {c.genre}{c.duo ? ` · ${c.duo}` : ''}</div>
-                          <div className="text-[9px] text-slate-500 italic leading-snug">{c.description}</div>
-                        </div>
-                      </div>
-                    );
-                  })()}
+                        );
+                      })}
+                    </div>
+                  )}
 
                   <div className="text-[9px] text-slate-500 italic leading-relaxed border-t border-yp-sable/30 pt-3">
                     {settings.mode === 'packshot'
-                      ? "Sélection conservée mais NON appliquée en Packshot (vêtement seul, fond blanc, pas de personne dans le rendu). Le choix est mémorisé : repassé en Mannequin / Famille / Pack Complet, le canonique reprend son rôle."
+                      ? "Sélection conservée mais NON appliquée en Packshot (vêtement seul, pas de personne dans le rendu). Le choix est mémorisé : repassé en Mannequin / Famille / Pack Complet, les canoniques reprennent leur rôle."
                       : settings.mode === 'family'
-                        ? "En mode Famille, le canonique ancre L'UN DES ADULTES de la composition choisie sur ce visage exact (~95% fidélité). Les autres membres (enfants, second adulte si présent) suivent la diversité naturelle."
-                        : "Le canonique sera uploadé en référence Gemini pour préserver le visage du mannequin sur toutes les régénérations (~95% fidélité)."}
+                        ? "En mode Famille, chaque canonique sélectionné ancre un membre de la composition sur son visage exact (~95% fidélité). Les membres restants (enfants, adultes non couverts) suivent la diversité naturelle."
+                        : settings.canoniqueIds.length > 1
+                          ? `Les ${settings.canoniqueIds.length} canoniques seront uploadés en référence Gemini et apparaîtront ENSEMBLE dans la scène, chacun fidèle à son portrait (~95%).`
+                          : "Le canonique sera uploadé en référence Gemini pour préserver le visage du mannequin sur toutes les régénérations (~95% fidélité)."}
                   </div>
                 </>
               )}
@@ -718,13 +779,18 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           )}
         </section>
 
-        {/* Step 7: Décor — visible en mode mannequin + full uniquement.
-            Family : décor imposé par le couple. Packshot : pas de décor (fond blanc). */}
-        {(settings.mode === 'mannequin' || settings.mode === 'full') && (
-          <section>
+        {/* Step 7: Décor — visible dans TOUS les modes (29/05).
+            Mannequin/Full : décor de la scène. Family : décor de la scène familiale.
+            Packshot : arrière-plan du packshot (Studio Brut Minimaliste = fond blanc classique). */}
+        <section>
             <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
               7. Décor / Ambiance
             </label>
+            {settings.mode === 'packshot' && (
+              <p className="text-[10px] text-slate-400 italic mb-2 leading-snug">
+                Packshot mannequin invisible : « Studio Brut Minimaliste » garde le fond blanc e-commerce classique. Tout autre décor place le vêtement dans l'ambiance choisie.
+              </p>
+            )}
             <div className="grid grid-cols-1 gap-2">
               {DECOR_STYLES.map(d => (
                 <button
@@ -799,8 +865,7 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                 </div>
               </div>
             )}
-          </section>
-        )}
+        </section>
       </div>
 
       <div className="mt-10 pt-6 border-t border-yp-sable">
