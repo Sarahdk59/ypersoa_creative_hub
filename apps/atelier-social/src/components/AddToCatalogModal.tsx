@@ -26,7 +26,7 @@ const OCCASIONS = [
   "déclaration", "transmission", "intemporel", "noël", "saint-valentin", "rentrée scolaire", "lifestyle",
 ];
 
-const PRODUITS = ["YP001", "YP005", "YP019", "YP021", "YP004"];
+const PRODUITS = ["YP001", "YP022", "YP005", "YP019", "YP023", "YP021", "YP004"];
 
 interface Motif {
   id: string;
