@@ -4,12 +4,13 @@
     "referentiel": "palette_supports_vetements",
     "last_updated": "2026-04-19",
     "description": "Couleurs officielles des vetements supports Ypersoa (hoodies, t-shirts, sweats). Palette canonisee apres arbitrage des doublons.",
-    "nb_couleurs_officielles": 21,
+    "nb_couleurs_officielles": 22,
     "changelog": [
       "v1.1 - Canonisation des doublons : 'Bleu' supprime (alias de Marine), 'Vert' supprime (alias de Vert sauge), 'Jaune' et 'Citron jaune' supprimes (alias de Citron), 'Khaki' supprime (alias de Kaki)",
       "v1.2 - Correction hex 'Vert terre' : #8B7355 (marron-taupe, faux) -> #616D55 (vert olive militaire, echantillonne sur packshot Awdis Earthy Green)",
       "v1.3 - Ajout 'Bleu ciel' (#8BA0B0) suite decouverte sur YP021. Distinct du Bleu clair (#A8C8D8) et du Bleu pastel (#8AAFD4).",
-      "v1.4 - Correction hex 'Rose orchidee' : #E2ACC1 -> #FAD0D5 (vraie couleur echantillonnee sur packshot B&C Orchid Pink utilise pour YP019)"
+      "v1.4 - Correction hex 'Rose orchidee' : #E2ACC1 -> #FAD0D5 (vraie couleur echantillonnee sur packshot B&C Orchid Pink utilise pour YP019)",
+      "v1.5 - Ajout 'Gris chine' (#B5B7B8) suite ajout produits slim YP022/YP023. Heather grey clair texture chinee/mouchetee. Distinct du 'Gris' plat (#9B9B9B) et du 'Gris fonce' (#404040)."
     ]
   },
 
@@ -130,6 +131,15 @@
       "famille": "neutres_fonces",
       "saison_signature": "automne_hiver",
       "ambiance_editoriale": ["chic", "urbain", "sobre"]
+    },
+    {
+      "id": "gris_chine",
+      "nom": "Gris chiné",
+      "hex": "#B5B7B8",
+      "famille": "neutres_gris",
+      "saison_signature": "toute_annee",
+      "ambiance_editoriale": ["sport_chic", "casual", "doux"],
+      "note": "Heather grey clair, texture chinee/mouchetee (melange de fibres claires et grises, jamais un gris plat uniforme). Ajoute en v1.5 pour les produits slim YP022 (hoodie) et YP023 (t-shirt). Distinct du 'Gris' plat (#9B9B9B) et du 'Gris fonce' (#404040)."
     },
     {
       "id": "vert_sauge",

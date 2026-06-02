@@ -64,6 +64,14 @@
       "YP021": {
         "nom": "Zoodie (sweat zippé)",
         "fiche_technique": "assets_produits/YP021/YP021_fiche_produit.json"
+      },
+      "YP022": {
+        "nom": "Hoodie slim adulte (coupe ajustée, sans fournisseur)",
+        "fiche_technique": "assets_produits/YP022/YP022_fiche_produit.json"
+      },
+      "YP023": {
+        "nom": "T-shirt slim adulte (coupe ajustée, sans fournisseur)",
+        "fiche_technique": "assets_produits/YP023/YP023_fiche_produit.json"
       }
     }
   },

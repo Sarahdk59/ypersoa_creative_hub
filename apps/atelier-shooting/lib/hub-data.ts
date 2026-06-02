@@ -5,7 +5,7 @@
  * et expose des helpers typés pour les apps :
  *  - HUB_FILS : 20 fils de broderie
  *  - HUB_GARMENTS : 21 couleurs de support vêtement
- *  - HUB_PRODUITS : 5 produits YPxxx avec leurs sous-catalogues couleurs
+ *  - HUB_PRODUITS : 7 produits YPxxx avec leurs sous-catalogues couleurs
  *  - getColorsForProduct(YPxxx) : couleurs réellement disponibles pour un produit
  *
  * Mise à jour : pas de duplication. Si Sarah modifie le JSON Hub, l'app picks up

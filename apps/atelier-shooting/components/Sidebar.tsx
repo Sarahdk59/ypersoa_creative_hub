@@ -86,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
         {/* Step 1: Upload */}
         <section>
           <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
-            1. Broderie (PNG)
+            1. Broderie (PNG ou JPG)
           </label>
           <div className="space-y-3">
             <div
@@ -101,13 +101,13 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
               ) : (
                 <div className="py-4">
                   <i className="fa-solid fa-cloud-arrow-up text-3xl text-yp-sable mb-3 group-hover:scale-110 transition-transform"></i>
-                  <p className="text-sm text-slate-500">Cliquez pour importer votre fichier PNG</p>
+                  <p className="text-sm text-slate-500">Cliquez pour importer votre fichier PNG ou JPG</p>
                 </div>
               )}
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png"
+                accept="image/png,image/jpeg"
                 onChange={handleFileChange}
                 className="hidden"
               />
@@ -152,7 +152,7 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
               <input
                 ref={wristFileInputRef}
                 type="file"
-                accept="image/png"
+                accept="image/png,image/jpeg"
                 onChange={handleWristFileChange}
                 className="hidden"
               />

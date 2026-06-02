@@ -6,9 +6,10 @@
     "description": "Sous-catalogue des couleurs disponibles par produit support Ypersoa. Construit par croisement des 5 fiches produit (assets_produits/YPxxx/YPxxx_fiche_produit.json) avec palette_supports_vetements.json.",
     "source_de_verite": "assets_produits/YPxxx/YPxxx_fiche_produit.json (variantes_couleurs)",
     "usage_par_le_hub": "Le moteur shooting Phase 2 DOIT consulter ce fichier pour valider toute combinaison (produit, couleur). Les goldens existants ont été audités le 2026-04-22 : tout conforme.",
-    "nb_produits": 5,
+    "nb_produits": 7,
     "changelog": [
-      "v1.0 (2026-04-22) - Création suite au bug Team Dog ('beige camel' inventé). Audit goldens existants : tout conforme."
+      "v1.0 (2026-04-22) - Création suite au bug Team Dog ('beige camel' inventé). Audit goldens existants : tout conforme.",
+      "v1.1 (2026-06-02) - Ajout YP022 (Hoodie slim) et YP023 (T-shirt slim), 4 couleurs chacun (gris_chine, noir, marine, blanc). Coupe très ajustée près du corps (plus étroite que YP001/YP019). Aucun fournisseur référencé. Nouvelle couleur gris_chine (#B5B7B8) ajoutée à palette_supports_vetements v1.5."
     ]
   },
   "produits": {
@@ -470,6 +471,94 @@
           "packshot_reference": "YP021_packshot_marine.jpg"
         }
       ]
+    },
+    "YP022": {
+      "nom_commercial": "Hoodie Slim Adulte",
+      "type_produit": "hoodie",
+      "public_cible": "adulte_unisexe",
+      "fournisseur": "—",
+      "nb_couleurs_disponibles": 4,
+      "ids_couleurs_dispo_quick_check": [
+        "gris_chine",
+        "noir",
+        "marine",
+        "blanc"
+      ],
+      "particularite_couleurs": "4 couleurs (gris chiné, noir, marine, blanc). Coupe très ajustée près du corps (slim), plus étroite que le YP001 (Fit Relax Ample). Aucun fournisseur référencé.",
+      "couleurs_detaillees": [
+        {
+          "id_palette": "gris_chine",
+          "nom_ypersoa": "Gris chiné",
+          "hex_palette_officiel": "#B5B7B8",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP022_packshot_gris_chine.png"
+        },
+        {
+          "id_palette": "noir",
+          "nom_ypersoa": "Noir",
+          "hex_palette_officiel": "#1A1A1A",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP022_packshot_noir.png"
+        },
+        {
+          "id_palette": "marine",
+          "nom_ypersoa": "Marine",
+          "hex_palette_officiel": "#1E2D4A",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP022_packshot_marine.png"
+        },
+        {
+          "id_palette": "blanc",
+          "nom_ypersoa": "Blanc",
+          "hex_palette_officiel": "#FFFFFF",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP022_packshot_blanc.png"
+        }
+      ]
+    },
+    "YP023": {
+      "nom_commercial": "T-Shirt Slim Adulte",
+      "type_produit": "tshirt",
+      "public_cible": "adulte_unisexe",
+      "fournisseur": "—",
+      "nb_couleurs_disponibles": 4,
+      "ids_couleurs_dispo_quick_check": [
+        "gris_chine",
+        "noir",
+        "marine",
+        "blanc"
+      ],
+      "particularite_couleurs": "4 couleurs (gris chiné, noir, marine, blanc). Coupe très ajustée près du corps (slim), plus étroite encore que le YP019 (déjà ajusté européen). Aucun fournisseur référencé.",
+      "couleurs_detaillees": [
+        {
+          "id_palette": "gris_chine",
+          "nom_ypersoa": "Gris chiné",
+          "hex_palette_officiel": "#B5B7B8",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP023_packshot_gris_chine.png"
+        },
+        {
+          "id_palette": "noir",
+          "nom_ypersoa": "Noir",
+          "hex_palette_officiel": "#1A1A1A",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP023_packshot_noir.png"
+        },
+        {
+          "id_palette": "marine",
+          "nom_ypersoa": "Marine",
+          "hex_palette_officiel": "#1E2D4A",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP023_packshot_marine.png"
+        },
+        {
+          "id_palette": "blanc",
+          "nom_ypersoa": "Blanc",
+          "hex_palette_officiel": "#FFFFFF",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP023_packshot_blanc.png"
+        }
+      ]
     }
   },
   "couleurs_cross_reference": {
@@ -491,9 +580,11 @@
           "YP004",
           "YP005",
           "YP019",
-          "YP021"
+          "YP021",
+          "YP022",
+          "YP023"
         ],
-        "nb_produits": 5
+        "nb_produits": 7
       },
       "bleu_ciel": {
         "nom_ypersoa": "Bleu ciel",
@@ -539,6 +630,14 @@
         ],
         "nb_produits": 1
       },
+      "gris_chine": {
+        "nom_ypersoa": "Gris chiné",
+        "disponible_sur": [
+          "YP022",
+          "YP023"
+        ],
+        "nb_produits": 2
+      },
       "gris_fonce": {
         "nom_ypersoa": "Gris foncé",
         "disponible_sur": [
@@ -568,9 +667,11 @@
           "YP004",
           "YP005",
           "YP019",
-          "YP021"
+          "YP021",
+          "YP022",
+          "YP023"
         ],
-        "nb_produits": 5
+        "nb_produits": 7
       },
       "mastic": {
         "nom_ypersoa": "Mastic",
@@ -586,9 +687,11 @@
           "YP004",
           "YP005",
           "YP019",
-          "YP021"
+          "YP021",
+          "YP022",
+          "YP023"
         ],
-        "nb_produits": 5
+        "nb_produits": 7
       },
       "offwhite": {
         "nom_ypersoa": "Offwhite",

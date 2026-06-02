@@ -1,7 +1,8 @@
 
 // Codes produits Ypersoa (YPxxx). Mapping fournisseur Awdis/B&C dans referentiels/_mapping_legacy.json.
 // YP001 = Hoodie Adulte, YP004 = Hoodie Enfant, YP005 = Sweat Adulte, YP019 = T-shirt Adulte, YP021 = Zoodie Adulte
-export type ProductType = 'YP001' | 'YP004' | 'YP005' | 'YP019' | 'YP021';
+// YP022 = Hoodie Slim Adulte, YP023 = T-shirt Slim Adulte (coupe très ajustée, sans fournisseur référencé)
+export type ProductType = 'YP001' | 'YP004' | 'YP005' | 'YP019' | 'YP021' | 'YP022' | 'YP023';
 
 export type EmbroiderySize = 2 | 4 | 8 | 24;
 

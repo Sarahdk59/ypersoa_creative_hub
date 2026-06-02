@@ -24,6 +24,22 @@
       "ref_fournisseur": "TU05T",
       "duree_setup_machine_min": 6,
       "note": "T-shirt en jersey simple. Premier produit non-Awdis du catalogue. Dialecte de couleurs propre (cf. palette_supports_par_produit.YP019)."
+    },
+    "YP022": {
+      "type": "hoodie",
+      "nom_commercial": "Hoodie Slim Brodé",
+      "fournisseur": "—",
+      "ref_fournisseur": "—",
+      "duree_setup_machine_min": 8,
+      "note": "Hoodie adulte coupe slim (très ajustée). Aucun fournisseur référencé. 4 couleurs : gris_chine, noir, marine, blanc. Cadrage buste poitrine + poignet gauche + dos."
+    },
+    "YP023": {
+      "type": "tshirt",
+      "nom_commercial": "T-Shirt Slim Brodé",
+      "fournisseur": "—",
+      "ref_fournisseur": "—",
+      "duree_setup_machine_min": 6,
+      "note": "T-shirt adulte coupe slim (très ajustée). Aucun fournisseur référencé. 4 couleurs : gris_chine, noir, marine, blanc. Cadrage buste poitrine uniquement."
     }
   },
 

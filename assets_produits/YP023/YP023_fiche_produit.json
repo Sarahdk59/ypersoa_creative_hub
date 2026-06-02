@@ -1,0 +1,109 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "produit_support",
+    "last_updated": "2026-06-02",
+    "statut": "actif",
+    "base_sur_template": "YP019 v1.4 (structure identique)",
+    "particularite": "T-shirt à coupe SLIM (très ajustée près du corps), encore plus étroite que le YP019 (déjà coupe ajustée européenne). Aucun fournisseur référencé — produit saisi côté Ypersoa. SKU même structure (YP023-XXXX-XXXX). 4 couleurs : gris chiné, noir, marine, blanc."
+  },
+
+  "identite": {
+    "yp_ref": "YP023",
+    "nom_commercial_ypersoa": "T-Shirt Slim Adulte",
+    "type_produit": "tshirt",
+    "public_cible": "adulte_unisexe",
+    "statut_catalogue": "standard",
+    "tagline": "Le t-shirt slim Ypersoa — coupe très ajustée près du corps, silhouette épurée"
+  },
+
+  "fournisseur": {
+    "marque_reelle": "—",
+    "gamme": "—",
+    "reference_fournisseur": "—",
+    "plateforme_commande": "—",
+    "note": "Aucun fournisseur référencé. Produit saisi côté Ypersoa, hors gammes Awdis/B&C. Structure de fiche identique aux autres supports."
+  },
+
+  "specs_techniques": {
+    "grammage_g_m2": null,
+    "composition": "[A_VALIDER] coton (typique t-shirt)",
+    "interieur": "non concerne (t-shirt sans doublure)",
+    "coupe": "Slim — très ajustée près du corps (plus étroite encore que la coupe ajustée européenne du YP019)",
+    "nom_commercial_fournisseur": "—",
+    "finitions": {
+      "col": "col rond, bord côte",
+      "manches": "manches courtes",
+      "coutures": "coutures laterales",
+      "ourlet": "ourlet simple",
+      "etiquette": "interieure"
+    },
+    "entretien": {
+      "lavage": "à froid",
+      "sechage": "basse température",
+      "repassage": "à froid",
+      "javel": "non",
+      "nettoyage_sec": "non"
+    },
+    "note_coupe": "DISTINCTIF CLÉ : coupe slim près du corps, encore plus moulante que le YP019. Épaules et torse ajustés, manches courtes près du bras, ourlet près des hanches. JAMAIS oversize, JAMAIS coupe américaine ample."
+  },
+
+  "tailles": {
+    "unite": "cm",
+    "systeme": "tailles_adultes_unisexe",
+    "grille_simple": ["XS", "S", "M", "L", "XL", "XXL"],
+    "grille_detaillee": "[A_COMPLETER] Mesures cm (tour poitrine, longueur corps, longueur manche courte) — coupe slim, valeurs plus serrées que YP019.",
+    "note": "Coupe slim : à taille égale, plus moulant que le YP019 (déjà ajusté)."
+  },
+
+  "variantes_couleurs": [
+    {"id_palette": "gris_chine", "nom_ypersoa": "Gris chiné", "hex_palette_officiel": "#B5B7B8", "nom_fournisseur": "—", "packshot": "YP023_packshot_gris_chine.png", "note": "Heather grey clair, texture chinée/mouchetée (jamais un gris plat)."},
+    {"id_palette": "noir", "nom_ypersoa": "Noir", "hex_palette_officiel": "#1A1A1A", "nom_fournisseur": "—", "packshot": "YP023_packshot_noir.png"},
+    {"id_palette": "marine", "nom_ypersoa": "Marine", "hex_palette_officiel": "#1E2D4A", "nom_fournisseur": "—", "packshot": "YP023_packshot_marine.png"},
+    {"id_palette": "blanc", "nom_ypersoa": "Blanc", "hex_palette_officiel": "#FFFFFF", "nom_fournisseur": "—", "packshot": "YP023_packshot_blanc.png"}
+  ],
+
+  "placements_broderie_autorises": [
+    {"id": "poitrine_gauche", "label": "Poitrine gauche", "usage": "standard", "compatible_avec_tous_motifs": true}
+  ],
+
+  "placements_broderie_NON_autorises": [
+    {"id": "dos_centre_haut", "raison": "Pas de broderie dos sur t-shirt léger — cohérent avec YP019, préserve la légèreté visuelle"},
+    {"id": "poignet", "raison": "Manches courtes — pas de poignet broderie possible techniquement"}
+  ],
+
+  "assets": {
+    "dossier_racine": "assets_produits/YP023/",
+    "fiche_technique_officielle": null,
+    "fiche_technique_status": "A_CREER",
+    "packshots_disponibles": 0,
+    "packshots_status": "A_CREER — packshots fond blanc uniforme à produire (4 couleurs).",
+    "photo_reference_par_defaut": null,
+    "note_ancrage_visuel": "Pas encore de packshot. Le moteur shooting génère donc à partir du prompt seul. Dès que des packshots fond blanc seront dispos, ils ancreront la coupe slim près du corps."
+  },
+
+  "interdits_visuels_specifiques": {
+    "tshirt_slim_yp023": [
+      "coupe oversize / ample / baggy (YP023 est SLIM, près du corps — c'est son élément le plus distinctif)",
+      "coupe américaine large / drop shoulders",
+      "CAPUCHE (interdit absolu — YP023 est un t-shirt manches courtes)",
+      "manches longues (YP023 est manches courtes uniquement)",
+      "col V ou col chemise (YP023 est col rond bord côte)",
+      "poche poitrine (YP023 est uni, sans poche)",
+      "etiquette de marque exterieure visible (etiquette interieure)"
+    ],
+    "note": "La coupe slim près du corps est l'élément le plus distinctif visuellement. Plus moulant que le YP019. Toute génération oversize/ample est non-conforme YP023."
+  },
+
+  "ambiance_editoriale_produit": {
+    "saisons_signature": ["printemps", "ete"],
+    "ambiances_shooting_recommandees": ["aube_intime", "echappee_sauvage", "studio_brut"],
+    "profils_cibles": [
+      "femme 25-45 silhouette fine qui cherche un t-shirt structuré près du corps",
+      "homme 25-45 minimaliste coupe ajustée",
+      "clientèle plus mode / moins sportwear ample"
+    ],
+    "occasions_cles": ["ete", "vacances", "saint_valentin", "anniversaire_estival", "cadeau_voyage"],
+    "note": "Pendant slim du YP019 : même esprit t-shirt épuré mais coupe encore plus moulante. 4 couleurs sobres (gris chiné, noir, marine, blanc)."
+  }
+}
