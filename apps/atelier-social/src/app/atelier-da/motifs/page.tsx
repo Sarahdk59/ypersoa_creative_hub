@@ -1102,7 +1102,7 @@ function CatalogShotsGallery({ motifId }: { motifId: string }) {
   const productTabs = useMemo(() => {
     const seen = new Set<string>();
     for (const s of shots) if (s.product_id) seen.add(s.product_id);
-    const order = ["YP019", "YP023", "YP005", "YP001", "YP022", "YP021", "YP004"];
+    const order = ["YP019", "YP023", "YP005", "YP001", "YP022", "YP021", "YP004", "YP013"];
     return order.filter((p) => seen.has(p));
   }, [shots]);
 
@@ -1385,7 +1385,7 @@ function CatalogueView({
   const productsPresent = useMemo(() => {
     const s = new Set<string>();
     for (const x of shots) if (x.product_id) s.add(x.product_id);
-    return ["YP019", "YP023", "YP005", "YP001", "YP022", "YP021", "YP004"].filter((p) => s.has(p));
+    return ["YP019", "YP023", "YP005", "YP001", "YP022", "YP021", "YP004", "YP013"].filter((p) => s.has(p));
   }, [shots]);
 
   const motifsPresent = useMemo(() => {

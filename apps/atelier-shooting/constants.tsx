@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ProductType, EmbroiderySize, AspectRatio, Ethnicity, AgeRange, BodyType, DisabilityType, DecorStyle } from './types';
-import { HUB_FILS, HUB_GARMENTS, HUB_PRODUITS } from './lib/hub-data';
+import { HUB_FILS, HUB_GARMENTS, HUB_PRODUITS, getProduitById } from './lib/hub-data';
 
 // 7 produits YPxxx du Hub (lus depuis referentiels/palette_supports_par_produit.json).
 // Chaque entrée : id (YP001…), nom_commercial (humainement lisible), nb couleurs.
@@ -112,7 +112,8 @@ export const PRODUCT_MATERIALS: Record<ProductType, string> = {
   'YP019': 'jersey de coton épais et lourd, maille dense et structurée, t-shirt adulte (B&C). DÉTAIL CRUCIAL : AUCUNE POCHE KANGOUROU, t-shirt manches courtes simple.',
   'YP021': 'coton mélangé (80% coton / 20% polyester) de 280g/m², avec fermeture éclair métallique, zoodie adulte (Awdis JH050). DÉTAIL CRUCIAL ET IMPÉRATIF : le zoodie possède des cordons de serrage RONDS en coton, SANS AUCUN EMBOUT PLASTIQUE ni métallique (le bout du cordon est juste noué ou coupé net). Ne générez AUCUN embout sur les cordons. ⚠️ COULEUR DES CORDONS : les cordons sont EXACTEMENT de la MÊME COULEUR que le corps du zoodie (teinté dans le ton du vêtement). JAMAIS de cordons blancs si le zoodie n\'est pas blanc. JAMAIS de cordons d\'une couleur contrastée.',
   'YP022': 'coton mélangé texture douce, hoodie adulte à COUPE SLIM (très ajustée, près du corps). ⚠️ COUPE OBLIGATOIRE : silhouette SLIM moulante — épaules et torse ajustés, manches fines, ourlet resserré. JAMAIS oversize, JAMAIS ample, JAMAIS baggy streetwear (c\'est l\'inverse du hoodie ample). DÉTAIL CRUCIAL ET IMPÉRATIF : cordons de serrage RONDS en coton, SANS AUCUN EMBOUT PLASTIQUE ni métallique (bout du cordon juste noué ou coupé net). Ne générez AUCUN embout. ⚠️ COULEUR DES CORDONS : EXACTEMENT la MÊME COULEUR que le corps du sweat (ton sur ton). JAMAIS de cordons blancs si le sweat n\'est pas blanc, JAMAIS de cordons contrastés. Si gris chiné : texture chinée/mouchetée, jamais un gris plat uniforme.',
-  'YP023': 'jersey de coton, t-shirt adulte à COUPE SLIM (très ajustée, près du corps). ⚠️ COUPE OBLIGATOIRE : silhouette SLIM moulante — épaules et torse ajustés, manches courtes près du bras, ourlet près des hanches. JAMAIS oversize, JAMAIS coupe américaine ample. DÉTAIL CRUCIAL : AUCUNE POCHE, AUCUNE CAPUCHE, manches courtes simple. Si gris chiné : texture chinée/mouchetée, jamais un gris plat uniforme.'
+  'YP023': 'jersey de coton, t-shirt adulte à COUPE SLIM (très ajustée, près du corps). ⚠️ COUPE OBLIGATOIRE : silhouette SLIM moulante — épaules et torse ajustés, manches courtes près du bras, ourlet près des hanches. JAMAIS oversize, JAMAIS coupe américaine ample. DÉTAIL CRUCIAL : AUCUNE POCHE, AUCUNE CAPUCHE, manches courtes simple. Si gris chiné : texture chinée/mouchetée, jamais un gris plat uniforme.',
+  'YP013': "casquette baseball 6 panneaux à COTON DÉLAVÉ VINTAGE (washed / pigment-dyed). ⚠️ PRODUIT COIFFE PORTÉ SUR LA TÊTE — ce n'est PAS un vêtement de torse. Calotte basse LOW PROFILE en sergé de coton délavé, visière pré-incurvée légèrement contrastée (ton sur ton washed), œillets de ventilation brodés assortis, bouton recouvert au sommet, sangle arrière réglable. ⚠️ ASPECT OBLIGATOIRE : coton DÉLAVÉ vintage à l'aspect adouci et légèrement passé — JAMAIS un coton neuf brillant ni une couleur plate uniforme. JAMAIS de filet mesh trucker, JAMAIS de snapback haute structurée rigide. La broderie est sur le DEVANT DE LA CALOTTE (panneau frontal central, au-dessus de la visière), JAMAIS sur la poitrine."
 };
 
 /**
@@ -126,8 +127,57 @@ export const PRODUCT_DESCRIPTION_FR: Record<ProductType, string> = {
   'YP019': 't-shirt épais à manches courtes adulte. ⚠️ SILHOUETTE OBLIGATOIRE : C\'EST UN T-SHIRT classique col rond manches courtes, AUCUNE CAPUCHE, AUCUNE POCHE KANGOUROU, AUCUNE fermeture éclair, AUCUN cordon.',
   'YP021': 'sweat zippé à capuche (zoodie) adulte avec cordons ronds sans embout. ⚠️ SILHOUETTE OBLIGATOIRE : ABSOLUMENT un ZIP-UP zoodie avec une FERMETURE ÉCLAIR MÉTALLIQUE CENTRALE VISIBLE allant du col au bas du vêtement. La fermeture éclair sépare le devant en DEUX PANNEAUX symétriques. JAMAIS un pullover. Capuche avec cordons. ⚠️ EMPLACEMENT BRODERIE pour ce produit zippé : la broderie côté cœur est positionnée sur le PANNEAU GAUCHE DU PORTEUR (= notre droite à l\'écran), CLAIREMENT À GAUCHE du zip central, JAMAIS sur le zip, JAMAIS chevauchant le zip, JAMAIS traversant le zip. Espace minimum 3 cm entre le bord droit de la broderie et le zip central.',
   'YP022': 'sweat à capuche (hoodie) adulte à COUPE SLIM, avec cordons ronds sans embout. ⚠️ SILHOUETTE OBLIGATOIRE : PULLOVER hoodie (à enfiler par la tête) à coupe TRÈS AJUSTÉE près du corps, AUCUNE fermeture éclair, capuche avec cordons ton sur ton, poche kangourou frontale unique. JAMAIS de zip central. JAMAIS oversize ni ample — silhouette slim moulante.',
-  'YP023': 't-shirt à manches courtes adulte à COUPE SLIM. ⚠️ SILHOUETTE OBLIGATOIRE : T-SHIRT col rond manches courtes à coupe TRÈS AJUSTÉE près du corps, AUCUNE CAPUCHE, AUCUNE POCHE, AUCUNE fermeture éclair, AUCUN cordon. JAMAIS oversize ni coupe américaine ample — silhouette slim moulante.'
+  'YP023': 't-shirt à manches courtes adulte à COUPE SLIM. ⚠️ SILHOUETTE OBLIGATOIRE : T-SHIRT col rond manches courtes à coupe TRÈS AJUSTÉE près du corps, AUCUNE CAPUCHE, AUCUNE POCHE, AUCUNE fermeture éclair, AUCUN cordon. JAMAIS oversize ni coupe américaine ample — silhouette slim moulante.',
+  'YP013': "casquette baseball vintage en coton délavé (PRODUIT COIFFE). ⚠️ SILHOUETTE OBLIGATOIRE : c'est une CASQUETTE baseball 6 panneaux à PROFIL BAS (low profile), portée SUR LA TÊTE, avec une visière pré-incurvée légèrement contrastée et une sangle arrière réglable. Coton DÉLAVÉ vintage (washed). AUCUN filet mesh trucker, AUCUNE casquette plate snapback rigide. ⚠️ EMPLACEMENT BRODERIE : la broderie est sur le DEVANT DE LA CALOTTE (panneau frontal central, juste au-dessus de la visière), centrée — JAMAIS sur la poitrine, JAMAIS sur un torse, JAMAIS côté cœur. Ce produit n'a ni col, ni poche, ni capuche, ni cordon."
 };
+
+// ============================================================================
+// BRANCHE COIFFE (casquettes, bonnets…) — produits portés sur la TÊTE
+// ----------------------------------------------------------------------------
+// Tout le moteur a été conçu pour une broderie "côté cœur" (panneau gauche du
+// porteur). Une casquette se brode sur le DEVANT DE LA CALOTTE et se porte sur
+// la tête : on bascule donc sur une branche dédiée. La détection est
+// data-driven (type_produit dans palette_supports_par_produit.json) → tout
+// futur produit coiffe (bonnet, bob…) est pris en charge sans toucher au code.
+// ============================================================================
+
+const HEADWEAR_TYPES = ['casquette', 'bonnet', 'bob', 'chapeau', 'beanie'];
+
+/** True si le produit est une coiffe (porté sur la tête, broderie front-calotte). */
+export function isHeadwear(productId: string): boolean {
+  const p = getProduitById(productId);
+  return !!p && HEADWEAR_TYPES.includes(p.type_produit);
+}
+
+/**
+ * Bloc d'override appendé à la FIN de chaque prompt quand le produit est une
+ * coiffe. Il neutralise les hypothèses "vêtement de torse" héritées des prompts
+ * génériques (côté cœur, poche, capuche, cordon, col, oversize) et reverrouille
+ * le placement front-de-calotte + le port sur la tête. Placé en dernier pour
+ * dominer toute mention contradictoire en amont du prompt.
+ */
+export const HEADWEAR_OVERRIDE = `
+
+🧢 OVERRIDE PRODUIT COIFFE (ABSOLU — prioritaire sur toute instruction contraire ci-dessus) :
+  • Le produit est une CASQUETTE baseball vintage en coton DÉLAVÉ (washed / pigment-dyed), profil bas (low profile), visière pré-incurvée légèrement contrastée, sangle arrière réglable. Ce n'est PAS un vêtement de torse.
+  • Si une personne est présente : elle PORTE la casquette SUR LA TÊTE, correctement posée, visière vers l'avant. La tête, le visage et la casquette sont dans le cadre, nets et au premier plan. PAS de casquette tenue à la main (sauf macro produit), PAS de casquette posée sur une table en mode "porté".
+  • EMPLACEMENT BRODERIE (verrouillé) : la broderie est sur le DEVANT DE LA CALOTTE — panneau frontal central, juste au-dessus de la visière, centrée gauche-droite. JAMAIS sur la poitrine, le torse, l'épaule, le dos ou la visière. Toute mention de "côté cœur", "panneau gauche", "sous la clavicule", "poitrine" est NULLE pour ce produit.
+  • IGNORER totalement, car ce produit n'en a pas : poche kangourou, capuche, cordons / drawstrings, fermeture éclair, col, manches, ourlet côtelé. Ne dessine aucun de ces éléments.
+  • Coton délavé vintage obligatoire : aspect adouci, légèrement passé — jamais un coton neuf brillant ni une couleur plate. Visière contrastée washed caractéristique.`;
+
+/**
+ * Prompt packshot dédié casquette : la coiffe est présentée SEULE (vue 3/4
+ * produit), pas un vêtement oversize sur mannequin invisible. Mêmes placeholders
+ * que PACKSHOT_PROMPT ([PRODUIT], [COULEUR SWEAT], [COULEUR FIL], [EMPLACEMENT],
+ * [DIMENSION], [BACKGROUND]) pour réutiliser la même substitution dans le service.
+ */
+export const CAP_PACKSHOT_PROMPT = `Generate an image of: Hyper-realistic e-commerce packshot of a single [PRODUIT], color [COULEUR SWEAT], shown ALONE as a product (NO model, NO head, NO body). The cap is presented in a clean three-quarter front product view, slightly angled so both the front crown panel and the pre-curved contrasted visor are clearly visible, low-profile silhouette, washed vintage cotton texture visible. [BACKGROUND] The embroidered motif (attached PNG) is embroidered in [COULEUR FIL] thread on [EMPLACEMENT] ([DIMENSION]). ⚠️ COULEUR FIL OBLIGATOIRE : la broderie DOIT être en fil [COULEUR FIL], même si le PNG source montre une autre couleur (RE-BRODE dans cette couleur, forme et typographie du PNG uniquement). ATTENTION : broderie EXTRÊMEMENT PLATE, SANS RELIEF, intégrée au sergé coton. Éclairage studio doux et uniforme, rendu fidèle aux couleurs, esthétique fiche produit premium A.P.C. / Sézane, 4K ultra-réaliste.\${COPYRIGHT_DISCLAIMER}`;
+
+/**
+ * Suffixe macro dédié casquette : gros plan sur la broderie du DEVANT de la
+ * calotte (remplace SHOTS_CONFIG.DETAIL.promptSuffix, entièrement orienté torse).
+ */
+export const CAP_MACRO_SUFFIX = "⚠️ MACRO BRODERIE CASQUETTE : gros plan macro extrême sur la broderie en fil [THREAD_COLOR] située sur le DEVANT DE LA CALOTTE (panneau frontal central, au-dessus de la visière). La broderie remplit 60-80% du cadre. Le cadre laisse visible (en bokeh crémeux flou sur les bords) un INDICE de contexte casquette : l'amorce de la visière incurvée en bas du cadre, OU une couture de panneau / un œillet de ventilation sur le côté — pour ancrer qu'on est sur une calotte de casquette, jamais sur un torse. ⚠️ Le cadre EXCLUT le visage, la sangle arrière, le bouton du sommet. ⚠️ TEXTURE : sergé de coton DÉLAVÉ vintage dans le halo autour de la broderie (jamais un jersey de t-shirt, jamais un molleton de sweat). Objectif 100mm macro, f/2.8-f/4, focus ultra-précis sur chaque point de couture, typographie parfaitement lisible, bokeh crémeux. La broderie doit être EXTRÊMEMENT PLATE, SANS RELIEF.";
 
 // 20 fils Hub (lus depuis referentiels/palette_fils_broderie.json) + swatch
 // "Comme sur l'image" gardé en premier (si Sarah veut laisser le PNG décider).
@@ -220,7 +270,7 @@ DÉCOR : [DECOR]
 LUMIÈRE : Lumière naturelle zénithale, morning window light ou golden hour douce.
 PALETTE : Tons neutres désaturés, beige "natural raw", sable, crème, avec des touches de [THREAD_COLOR].
 PRODUIT : Un [PRODUCT] de couleur unie et constante [GARMENT_COLOR] confectionné en [MATERIAL]. Le vêtement est vierge à l'intérieur, sans aucune étiquette ou label de marque visible au niveau du col. La texture du tissu doit être parfaitement visible au niveau des mailles.
-BRODERIE : Le motif joint est brodé en fil [THREAD_COLOR] côté cœur. ⚠️ COULEUR FIL OBLIGATOIRE : la broderie générée DOIT être en fil [THREAD_COLOR], même si l'image source PNG montre la broderie dans une autre couleur. RE-BRODE le motif dans la couleur [THREAD_COLOR] sur le vêtement final, en ignorant la couleur de référence du PNG source (qui n'est qu'une référence de forme et de typographie, pas de couleur). ATTENTION PARTICULIÈRE : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Elle doit s'intégrer complètement au tissu comme une broderie fine et délicate, sans aucune surépaisseur. Si le motif contient du texte, les lettres brodées doivent être d'une lisibilité et d'une précision chirurgicale, sans aucune déformation. Les points de broderie (satin stitch, fill stitch) doivent être distincts et épouser parfaitement la tension et la maille du vêtement. Le rendu doit être 100% plat, lisse et ultra-réaliste.
+BRODERIE : Le motif joint est brodé en fil [THREAD_COLOR] sur [EMPLACEMENT_BRODERIE]. ⚠️ COULEUR FIL OBLIGATOIRE : la broderie générée DOIT être en fil [THREAD_COLOR], même si l'image source PNG montre la broderie dans une autre couleur. RE-BRODE le motif dans la couleur [THREAD_COLOR] sur le vêtement final, en ignorant la couleur de référence du PNG source (qui n'est qu'une référence de forme et de typographie, pas de couleur). ATTENTION PARTICULIÈRE : La broderie doit être EXTRÊMEMENT PLATE, SANS AUCUN RELIEF, SANS EFFET 3D NI GONFLÉ. Elle doit s'intégrer complètement au tissu comme une broderie fine et délicate, sans aucune surépaisseur. Si le motif contient du texte, les lettres brodées doivent être d'une lisibilité et d'une précision chirurgicale, sans aucune déformation. Les points de broderie (satin stitch, fill stitch) doivent être distincts et épouser parfaitement la tension et la maille du vêtement. Le rendu doit être 100% plat, lisse et ultra-réaliste.
 TAILLE : [SIZE]\${COPYRIGHT_DISCLAIMER}
 `;
 

@@ -1,7 +1,7 @@
 
 import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from "@google/genai";
 import { GenerationSettings } from "../types";
-import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT, FULL_PACK_SERRE, FULL_PACK_AUBE, FULL_PACK_SAUVAGE, FULL_PACK_SEPIA, DECOR_DESCRIPTIONS } from "../constants";
+import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT, FULL_PACK_SERRE, FULL_PACK_AUBE, FULL_PACK_SAUVAGE, FULL_PACK_SEPIA, DECOR_DESCRIPTIONS, isHeadwear, HEADWEAR_OVERRIDE, CAP_PACKSHOT_PROMPT, CAP_MACRO_SUFFIX } from "../constants";
 import { DecorStyle } from "../types";
 import { fetchCanoniqueAsBase64, getCanoniqueById, Canonique } from "../lib/canoniques";
 import { getGarmentById, HUB_FILS } from "../lib/hub-data";
@@ -44,15 +44,30 @@ function buildThreadDescription(settings: GenerationSettings): string {
  * du cadre entre 2 shots du même pack.
  */
 function buildEmbroideryBlock(sizeCm: number, productId: string): string {
-  // Largeur poitrine adulte ~50cm, enfant YP004 ~35cm. Sert à donner un ratio
-  // visuel ancré (cm → % poitrine) pour bloquer la dérive de Gemini.
-  const chestWidthCm = productId === "YP004" ? 35 : 50;
-  const chestRatio = Math.round((sizeCm / chestWidthCm) * 100);
+  // Coiffe : on raisonne par rapport au DEVANT DE LA CALOTTE (~13 cm de large
+  // utile), pas à la poitrine. Une broderie casquette dépasse rarement ~7 cm.
+  const headwear = isHeadwear(productId);
+  // Largeur de la surface de référence : calotte ~13cm, poitrine enfant ~35cm, adulte ~50cm.
+  const surfaceWidthCm = headwear ? 13 : (productId === "YP004" ? 35 : 50);
+  const surfaceLabel = headwear ? "cap front panel" : "wearer's chest";
+  const surfaceRatio = Math.round((sizeCm / surfaceWidthCm) * 100);
 
   // Catégorie + repère haptique (objets familiers de référence pour Gemini).
   let category: string;
   let hapticRef: string;
-  if (sizeCm <= 2) {
+  if (headwear) {
+    // Repères dédiés casquette (broderie front-calotte).
+    if (sizeCm <= 2) {
+      category = "MICRO broderie casquette (petite initiale / symbole)";
+      hapticRef = "about the size of a fingernail";
+    } else if (sizeCm <= 5) {
+      category = "PETITE broderie front-calotte discrète";
+      hapticRef = "about the size of a large coin";
+    } else {
+      category = "STANDARD broderie front-calotte (logo/texte centré)";
+      hapticRef = "about the size of a matchbox / small credit-card height — fills most of the cap front panel";
+    }
+  } else if (sizeCm <= 2) {
     category = "MICRO initiale brodée (poignet / col / ourlet)";
     hapticRef = "plus petit qu'une pièce de 2€ — about the size of a fingernail";
   } else if (sizeCm <= 4) {
@@ -66,11 +81,16 @@ function buildEmbroideryBlock(sizeCm: number, productId: string): string {
     hapticRef = "about the size of an open hand — larger than a palm but smaller than a sheet of A4";
   }
 
+  const support = headwear ? "cap" : "garment";
+  const distanceHint = headwear
+    ? "A wide shot of a person wearing the cap shows it as a small detail on the cap front, a close-up on the cap shows it bigger in frame, but the embroidery itself keeps the same physical size on the cap front panel in every image."
+    : "A full-body shot shows it as a small detail, a chest crop shows it bigger in frame, but the embroidery itself has the same physical size on the garment in every image.";
+
   return `EMBROIDERY PHYSICAL SIZE (ABSOLUTE — same across every shot of the pack) :
-  • Real-world width : EXACTLY ${sizeCm} cm wide on the garment (NOT "${sizeCm}cm maximum", NOT "around ${sizeCm}cm" — EXACTLY ${sizeCm} cm).
-  • Proportion to the body : ~${chestRatio}% of the wearer's chest width (chest is ~${chestWidthCm}cm wide). The embroidery occupies roughly ${chestRatio}% of the horizontal span of the chest panel.
+  • Real-world width : EXACTLY ${sizeCm} cm wide on the ${support} (NOT "${sizeCm}cm maximum", NOT "around ${sizeCm}cm" — EXACTLY ${sizeCm} cm).
+  • Proportion : ~${surfaceRatio}% of the ${surfaceLabel} width (~${surfaceWidthCm}cm wide). The embroidery occupies roughly ${surfaceRatio}% of the horizontal span of the ${surfaceLabel}.
   • Haptic reference : ${category} — ${hapticRef}.
-  • INVARIANT across the pack : this physical ${sizeCm}cm width NEVER changes between shots — only the camera distance changes. A full-body shot shows it as a small detail, a chest crop shows it bigger in frame, but the embroidery itself has the same physical size on the garment in every image. DO NOT make the embroidery huge on one shot and tiny on the next.`;
+  • INVARIANT across the pack : this physical ${sizeCm}cm width NEVER changes between shots — only the camera distance changes. ${distanceHint} DO NOT make the embroidery huge on one shot and tiny on the next.`;
 }
 
 /**
@@ -138,17 +158,23 @@ async function fetchProductPackshotPart(
   product: string,
   garmentColor: string
 ): Promise<{ inlineData: { data: string; mimeType: string } } | null> {
-  // Seuls YP001 et YP021 ont des packshots ET des cordons à problème.
-  if (product !== "YP001" && product !== "YP021") return null;
+  // Produits avec packshot injecté comme char-ref :
+  //  - YP001 / YP021 : cordons à problème (hallucinations aglet) → ancrage FORME.
+  //  - YP013 : casquette → ancrage FORME (low-profile + visière) + COULEUR.
+  if (product !== "YP001" && product !== "YP021" && product !== "YP013") return null;
+
+  // Fallback couleur par défaut si la couleur exacte n'existe pas encore en asset.
+  const fallbackByProduct: Record<string, string> = {
+    YP001: `/packshots/YP001/YP001_packshot_pierre_naturelle.webp`,
+    YP021: `/packshots/YP021/YP021_packshot_pierre_naturelle.webp`,
+    YP013: `/packshots/YP013/YP013_packshot_offwhite.png`,
+  };
 
   // Essai dans l'ordre : webp matching color → png matching color → fallback couleur par défaut.
   const candidates = [
     `/packshots/${product}/${product}_packshot_${garmentColor}.webp`,
     `/packshots/${product}/${product}_packshot_${garmentColor}.png`,
-    // Fallback par défaut si la couleur exacte n'existe pas en asset
-    product === "YP001"
-      ? `/packshots/YP001/YP001_packshot_pierre_naturelle.webp`
-      : `/packshots/YP021/YP021_packshot_pierre_naturelle.webp`,
+    fallbackByProduct[product],
   ];
 
   for (const url of candidates) {
@@ -406,6 +432,10 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
    * broderie sur ou au travers du zip.
    */
   function buildEmplacement(productId: string, size: number): string {
+    // Coiffe : broderie sur le DEVANT de la calotte, quelle que soit la taille.
+    if (isHeadwear(productId)) {
+      return "le DEVANT de la calotte de la casquette (panneau frontal central, juste au-dessus de la visière, centré gauche-droite), JAMAIS sur la poitrine ni le torse";
+    }
     const isZipped = productId === 'YP021';
     if (size >= 20) {
       return isZipped ? "centre poitrine, MAIS sur le panneau gauche du porteur clairement à gauche du zip central, JAMAIS sur ou chevauchant le zip" : "centre du vêtement";
@@ -452,11 +482,18 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       // Tout autre décor = le vêtement (mannequin invisible) flotte en avant-plan net
       // devant l'ambiance choisie, légèrement floutée pour rester un packshot produit.
       const packDecor = getDecorDescription(settings.decorStyle, settings);
+      // Coiffe : le "vêtement flotte" devient "la casquette est présentée seule".
+      const headwear = isHeadwear(settings.product);
+      const subject = headwear ? "La casquette est présentée seule" : "Le vêtement flotte seul";
       const backgroundText = settings.decorStyle === 'minimalist'
-        ? "Le vêtement flotte seul devant un fond studio blanc pur."
-        : `Le vêtement flotte seul, NET et EN AVANT-PLAN, devant l'ambiance suivante reléguée en arrière-plan légèrement flou (depth of field, le vêtement reste le héros visuel) : ${packDecor.full}`;
+        ? `${subject} devant un fond studio blanc pur.`
+        : `${subject}, NET et EN AVANT-PLAN, devant l'ambiance suivante reléguée en arrière-plan légèrement flou (depth of field, le produit reste le héros visuel) : ${packDecor.full}`;
 
-      promptText = PACKSHOT_PROMPT
+      // Casquette : template packshot dédié (produit seul, vue 3/4) au lieu du
+      // "vêtement oversize sur mannequin invisible". Le packshotSuffix de SHOTS_CONFIG
+      // (orienté torse/oversize) est ignoré en coiffe — l'override casquette suffit.
+      const packshotBase = headwear ? CAP_PACKSHOT_PROMPT : PACKSHOT_PROMPT;
+      promptText = packshotBase
         .replace(/\[PRODUIT\]/g, productDescription)
         .replace(/\[COULEUR SWEAT\]/g, garmentColorText)
         .replace(/\[COULEUR FIL\]/g, threadColorText)
@@ -464,13 +501,18 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
         .replace(/\[DIMENSION\]/g, embroideryBlock)
         .replace("[BACKGROUND]", backgroundText);
 
-      promptText += " " + shot.packshotSuffix;
+      if (!headwear) promptText += " " + shot.packshotSuffix;
     } else {
       let variation = "";
       let context = "";
 
       if (settings.mode === 'mannequin') {
         variation = shot.promptSuffix;
+        // Coiffe : le shot "Macro Broderie" (DETAIL) est entièrement orienté torse
+        // (panneau gauche, clavicule) → on le remplace par la macro front-calotte.
+        if (isHeadwear(settings.product) && shotType === 'DETAIL') {
+          variation = CAP_MACRO_SUFFIX;
+        }
 
         // Hook 1 — si castingMode === 'canonique' avec un mannequin sélectionné,
         // on remplace le bloc MODEL_DESCRIPTION+diversity par une signature
@@ -539,12 +581,14 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       // La scène familiale utilise désormais le décor choisi par l'utilisateur (avant :
       // forcé sur 'parisien'). Le PROMPT_BASE porte le [DECOR] dans les deux modes.
       const decor = getDecorDescription(settings.decorStyle, settings);
+      const emplacementBase = buildEmplacement(settings.product, settings.size);
       promptText = PROMPT_BASE
         .replace("[PRODUCT]", productDescription)
         .replace("[MATERIAL]", material)
         .replace("[SIZE]", embroideryBlock)
         .replace(/\[THREAD_COLOR\]/g, threadColorText)
         .replace("[GARMENT_COLOR]", garmentColorText)
+        .replace("[EMPLACEMENT_BRODERIE]", emplacementBase)
         .replace("[DECOR]", decor.short)
         + context + " "
         + variation
@@ -576,7 +620,11 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   // ce shot montre le bras, on injecte le PNG en parts[] APRÈS le PNG broderie
   // principale + on ajoute un bloc texte explicite. Sinon (macro / ghost / buste
   // close / packshot), on ignore le poignet pour ne pas saturer Gemini.
-  const wristActive = !!settings.wristEmbroideryImage && shotShowsWrist(settings.mode, shotType);
+  // Coiffe : pas de "broderie poignet" (le bloc parle de manchette de manche, sans
+  // objet sur une casquette). On neutralise même si l'utilisateur a chargé un PNG poignet.
+  const wristActive = !!settings.wristEmbroideryImage
+    && !isHeadwear(settings.product)
+    && shotShowsWrist(settings.mode, shotType);
   const wristPart = wristActive ? dataUrlToInlinePart(settings.wristEmbroideryImage!) : null;
   if (wristActive && wristPart) {
     promptText = promptText + buildWristBlock(settings.wristSize ?? 4, settings.product);
@@ -609,18 +657,34 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     //    FORME + COULEUR ANCRÉE (correspondance Sarah 29/05 — la couleur du
     //    rendu doit matcher pixel-perfect le packshot, pas être réinterprétée).
     const isCordonProduct = settings.product === "YP001" || settings.product === "YP021";
+    const headwear = isHeadwear(settings.product);
     const productLabel = settings.product === "YP021" ? "Awdis JH050 zoodie"
       : settings.product === "YP001" ? "Awdis JH001 hoodie"
       : settings.product === "YP019" ? "B&C TU05T t-shirt"
       : settings.product === "YP005" ? "Awdis JH030 sweat"
       : settings.product === "YP004" ? "Awdis JH001K kids hoodie"
+      : settings.product === "YP013" ? "Ypersoa YP013 vintage washed cap"
       : settings.product + " garment";
 
-    const shapeBlock = isCordonProduct
+    // Mot générique pour l'objet (cap vs garment) et le port (worn on the head vs worn).
+    const itemWord = headwear ? "cap" : "garment";
+    const wornPhrase = headwear ? "wearing the same cap on the head, visor forward" : "wearing the same garment";
+
+    const shapeBlock = headwear
+      ? `Use it to anchor BOTH the cap SHAPE (low-profile baseball silhouette, 6 panels, pre-curved contrasted visor, adjustable back strap, washed vintage cotton texture) AND the EXACT COLOR. ⚠️ COLOR ANCHOR (ABSOLUTE) : the color of the packshot IS the requested color (${garmentColorText}) — match it pixel-perfectly, same hue, same saturation, same value, same washed/faded character. Do NOT shift the tone, do NOT make it look like brand-new glossy cotton. The packshot IS the color reference.`
+      : isCordonProduct
       ? `Use it ONLY to anchor the garment SHAPE : hood proportions, drawstring cords that are PURE COTTON BRAIDED WITH NO AGLET (no plastic tip, no metal cap, no decorative end — cords end with a simple knot or raw cut, exactly matching the body color), kangaroo pocket placement, rib cuffs, neckline. The packshot color may differ from the requested garment color (${garmentColorText}) — IGNORE the packshot color, use it for SHAPE AND FINISHES ONLY.`
       : `Use it to anchor BOTH the garment SHAPE (cut, silhouette, neckline shape, sleeve length, rib finish) AND the EXACT COLOR. ⚠️ COLOR ANCHOR (ABSOLUTE) : the body color of the packshot IS the requested color (${garmentColorText}) — match it pixel-perfectly, same hue, same saturation, same value. Do NOT shift the color tone, do NOT brighten or darken, do NOT reinterpret. The packshot IS the color reference.`;
 
-    promptText = promptText + `\n\n⚠️ GARMENT REFERENCE (PACKSHOT) : Among the attached images, the one showing a PLAIN garment with NO embroidery on a WHITE STUDIO BACKGROUND is the official ${productLabel} packshot. ${shapeBlock} The final image must show the model wearing the same garment, in ${garmentColorText}. DO NOT copy the packshot's white studio background — keep the scene environment as described in the prompt.\n\n⚠️ ABSOLUTE EMBROIDERY PRIORITY : The embroidery PNG reference(s) (the smaller image(s) showing a motif on a plain background — chest motif and optional cuff motif) take ABSOLUTE PRECEDENCE over the packshot for EVERYTHING embroidery-related : exact letters, exact shape, exact typography, exact placement. The packshot shows a garment with NO embroidery on purpose — it MUST NOT influence how the embroidery is rendered. The chest embroidery in the final image MUST match the chest PNG pixel-perfectly (form, letters, geometry) ; only the thread color follows the prompt.`;
+    const embroideryZone = headwear ? "cap-front" : "chest";
+    promptText = promptText + `\n\n⚠️ ${headwear ? "CAP" : "GARMENT"} REFERENCE (PACKSHOT) : Among the attached images, the one showing a PLAIN ${itemWord} with NO embroidery on a WHITE STUDIO BACKGROUND is the official ${productLabel} packshot. ${shapeBlock} The final image must show ${settings.mode === 'packshot' ? `the same ${itemWord}` : `the model ${wornPhrase}`}, in ${garmentColorText}. DO NOT copy the packshot's white studio background — keep the scene environment as described in the prompt.\n\n⚠️ ABSOLUTE EMBROIDERY PRIORITY : The embroidery PNG reference(s) (the smaller image(s) showing a motif on a plain background) take ABSOLUTE PRECEDENCE over the packshot for EVERYTHING embroidery-related : exact letters, exact shape, exact typography, exact placement. The packshot shows a ${itemWord} with NO embroidery on purpose — it MUST NOT influence how the embroidery is rendered. The ${embroideryZone} embroidery in the final image MUST match the embroidery PNG pixel-perfectly (form, letters, geometry) ; only the thread color follows the prompt.`;
+  }
+
+  // Coiffe : override final (placement front-calotte, port sur la tête, pas de
+  // poche/capuche/cordon/col/torse). Appendé en DERNIER pour dominer toute
+  // mention "côté cœur / torse / oversize" héritée des prompts génériques.
+  if (isHeadwear(settings.product)) {
+    promptText = promptText + HEADWEAR_OVERRIDE;
   }
 
   const response = await ai.models.generateContent({

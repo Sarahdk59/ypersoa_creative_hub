@@ -40,6 +40,14 @@
       "ref_fournisseur": "—",
       "duree_setup_machine_min": 6,
       "note": "T-shirt adulte coupe slim (très ajustée). Aucun fournisseur référencé. 4 couleurs : gris_chine, noir, marine, blanc. Cadrage buste poitrine uniquement."
+    },
+    "YP013": {
+      "type": "casquette",
+      "nom_commercial": "Casquette Vintage Brodée",
+      "fournisseur": "—",
+      "ref_fournisseur": "—",
+      "duree_setup_machine_min": 6,
+      "note": "Casquette vintage coton délavé (PRODUIT COIFFE). Aucun fournisseur référencé. 15 couleurs washed. Cadrage broderie : DEVANT de la calotte (panneau frontal), pas côté cœur. Bridage cadre broderie casquette ~5-7 cm de large."
     }
   },
 

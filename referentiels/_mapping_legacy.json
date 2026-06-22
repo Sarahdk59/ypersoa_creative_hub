@@ -42,7 +42,10 @@
       "t-shirt": "YP019",
       "tshirt": "YP019",
       "hoodie enfant": "YP004",
-      "hoodie junior": "YP004"
+      "hoodie junior": "YP004",
+      "casquette": "YP013",
+      "casquette vintage": "YP013",
+      "cap": "YP013"
     },
     "verite_metier_yp": {
       "YP001": {
@@ -72,6 +75,10 @@
       "YP023": {
         "nom": "T-shirt slim adulte (coupe ajustée, sans fournisseur)",
         "fiche_technique": "assets_produits/YP023/YP023_fiche_produit.json"
+      },
+      "YP013": {
+        "nom": "Casquette vintage adulte (coiffe, coton délavé, sans fournisseur)",
+        "fiche_technique": "assets_produits/YP013/YP013_fiche_produit.json"
       }
     }
   },

@@ -1,0 +1,116 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "produit_support",
+    "last_updated": "2026-06-22",
+    "statut": "actif",
+    "base_sur_template": "YP022 v1.0 (structure identique, adaptée produit COIFFE)",
+    "particularite": "PREMIER PRODUIT COIFFE du catalogue. Casquette baseball low-profile en coton délavé vintage. Broderie sur le DEVANT de la calotte (panneau frontal au-dessus de la visière), PAS côté cœur. Le moteur shooting bascule en branche 'coiffe' (isHeadwear) : placement, packshot et macro adaptés. Aucun fournisseur référencé. 15 couleurs washed."
+  },
+
+  "identite": {
+    "yp_ref": "YP013",
+    "nom_commercial_ypersoa": "Casquette Vintage",
+    "type_produit": "casquette",
+    "public_cible": "adulte_unisexe",
+    "statut_catalogue": "standard",
+    "tagline": "La casquette vintage Ypersoa — coton délavé, profil bas décontracté, visière contrastée pour un look washed authentique"
+  },
+
+  "fournisseur": {
+    "marque_reelle": "—",
+    "gamme": "—",
+    "reference_fournisseur": "—",
+    "plateforme_commande": "—",
+    "note": "Aucun fournisseur référencé. Produit saisi côté Ypersoa. Style baseball cap 6 panneaux délavé / pigment-dyed, taille unique réglable."
+  },
+
+  "specs_techniques": {
+    "grammage_g_m2": null,
+    "composition": "Calotte en sergé 100% coton naturel / visière en coton épais 100% lavé",
+    "poids_g": 93,
+    "coupe": "Low profile (profil compact) — calotte basse, port décontracté",
+    "construction": "6 panneaux, visière pré-incurvée, style bicolore naturel/coloré (visière contrastée délavée)",
+    "finitions": {
+      "calotte": "sergé coton délavé (pigment-dyed, aspect washed vintage)",
+      "visiere": "coton épais 100% lavé, légèrement contrastée (ton sur ton washed)",
+      "oeillets": "œillets de ventilation brodés assortis",
+      "fermeture": "sangle arrière réglable (boucle métal ou bande agrippante)",
+      "bouton_sommet": "bouton recouvert assorti à la calotte",
+      "etiquette": "détachable"
+    },
+    "entretien": {
+      "lavage": "à froid à la main",
+      "sechage": "à l'air libre",
+      "repassage": "à froid",
+      "javel": "non",
+      "nettoyage_sec": "non"
+    },
+    "note_coupe": "DISTINCTIF CLÉ : produit COIFFE porté sur la tête. Esprit vintage délavé (washed / pigment-dyed) — jamais un coton neuf brillant uniforme. Visière contrastée caractéristique."
+  },
+
+  "tailles": {
+    "unite": "cm",
+    "systeme": "taille_unique_reglable",
+    "grille_simple": ["TU"],
+    "note": "Taille unique, sangle arrière réglable."
+  },
+
+  "variantes_couleurs": [
+    {"id_palette": "offwhite", "nom_ypersoa": "Écru délavé", "hex_palette_officiel": "#F4EFEA", "nom_fournisseur": "—", "packshot": "YP013_packshot_offwhite.png"},
+    {"id_palette": "beige", "nom_ypersoa": "Sable délavé", "hex_palette_officiel": "#F5F0E0", "nom_fournisseur": "—", "packshot": "YP013_packshot_beige.png"},
+    {"id_palette": "gris", "nom_ypersoa": "Gris clair délavé", "hex_palette_officiel": "#9B9B9B", "nom_fournisseur": "—", "packshot": "YP013_packshot_gris.png"},
+    {"id_palette": "gris_fonce", "nom_ypersoa": "Anthracite délavé", "hex_palette_officiel": "#404040", "nom_fournisseur": "—", "packshot": "YP013_packshot_gris_fonce.png"},
+    {"id_palette": "noir", "nom_ypersoa": "Noir délavé", "hex_palette_officiel": "#1A1A1A", "nom_fournisseur": "—", "packshot": "YP013_packshot_noir.png"},
+    {"id_palette": "bleu_ciel", "nom_ypersoa": "Bleu délavé", "hex_palette_officiel": "#8BA0B0", "nom_fournisseur": "—", "packshot": "YP013_packshot_bleu_ciel.png"},
+    {"id_palette": "marine", "nom_ypersoa": "Bleu denim foncé délavé", "hex_palette_officiel": "#1E2D4A", "nom_fournisseur": "—", "packshot": "YP013_packshot_marine.png"},
+    {"id_palette": "rose_pale", "nom_ypersoa": "Rose poudré délavé", "hex_palette_officiel": "#F0B8C0", "nom_fournisseur": "—", "packshot": "YP013_packshot_rose_pale.png"},
+    {"id_palette": "rose_vif", "nom_ypersoa": "Rose vif délavé", "hex_palette_officiel": "#D483AB", "nom_fournisseur": "—", "packshot": "YP013_packshot_rose_vif.png"},
+    {"id_palette": "bordeaux", "nom_ypersoa": "Bordeaux délavé", "hex_palette_officiel": "#8A4B52", "nom_fournisseur": "—", "packshot": "YP013_packshot_bordeaux.png"},
+    {"id_palette": "terracotta", "nom_ypersoa": "Terracotta délavé", "hex_palette_officiel": "#C07A5C", "nom_fournisseur": "—", "packshot": "YP013_packshot_terracotta.png"},
+    {"id_palette": "moutarde", "nom_ypersoa": "Moutarde délavé", "hex_palette_officiel": "#C8A24E", "nom_fournisseur": "—", "packshot": "YP013_packshot_moutarde.png"},
+    {"id_palette": "vert_sauge", "nom_ypersoa": "Vert sauge délavé", "hex_palette_officiel": "#7A9E7E", "nom_fournisseur": "—", "packshot": "YP013_packshot_vert_sauge.png"},
+    {"id_palette": "vert_sapin", "nom_ypersoa": "Vert sapin délavé", "hex_palette_officiel": "#3F5A4A", "nom_fournisseur": "—", "packshot": "YP013_packshot_vert_sapin.png"},
+    {"id_palette": "kaki", "nom_ypersoa": "Kaki délavé", "hex_palette_officiel": "#5C614B", "nom_fournisseur": "—", "packshot": "YP013_packshot_kaki.png"}
+  ],
+
+  "placements_broderie_autorises": [
+    {"id": "devant_calotte", "label": "Devant de la calotte (panneau frontal centré)", "usage": "standard", "compatible_avec_tous_motifs": true},
+    {"id": "visiere", "label": "Visière (côté)", "usage": "statement", "compatible_avec_tous_motifs": false},
+    {"id": "dos_sangle", "label": "Arrière au-dessus de la sangle", "usage": "addon", "compatible_avec_tous_motifs": false}
+  ],
+
+  "assets": {
+    "dossier_racine": "assets_produits/YP013/",
+    "fiche_technique_officielle": null,
+    "fiche_technique_status": "A_CREER",
+    "packshots_disponibles": 0,
+    "packshots_status": "A_DEPOSER — Sarah dispose des packshots. À nommer YP013_packshot_{id_palette}.png et déposer dans apps/atelier-shooting/public/packshots/YP013/ (et copie ici).",
+    "photo_reference_par_defaut": null,
+    "note_ancrage_visuel": "Dès qu'un packshot YP013 est présent dans public/packshots/YP013/, le moteur l'injecte comme référence FORME + COULEUR (ancrage low-profile + visière contrastée). Sans packshot, génération à partir du prompt seul (branche coiffe)."
+  },
+
+  "interdits_visuels_specifiques": {
+    "casquette_yp013": [
+      "broderie placée sur la poitrine / le torse (ERREUR FRÉQUENTE — la broderie va sur le DEVANT de la calotte)",
+      "casquette trucker à filet mesh (YP013 est une casquette coton full panel délavée)",
+      "snapback plate haute / casquette structurée rigide (YP013 est low-profile souple)",
+      "coton neuf brillant uniforme (YP013 est délavé / washed vintage)",
+      "logo ou texte imprimé sur la visière ou la calotte (seule la broderie Ypersoa est autorisée)",
+      "visière plate non incurvée (YP013 a une visière pré-incurvée)"
+    ],
+    "note": "Le caractère COIFFE (porté sur la tête) + le placement broderie devant-calotte sont les éléments les plus distinctifs. Toute broderie côté cœur est non-conforme YP013."
+  },
+
+  "ambiance_editoriale_produit": {
+    "saisons_signature": ["printemps", "ete", "mi_saison"],
+    "ambiances_shooting_recommandees": ["echappee_sauvage", "lumiere_sepia", "studio_brut"],
+    "profils_cibles": [
+      "femme 25-45 style décontracté vintage",
+      "homme 25-45 casual washed",
+      "clientèle accessoire / cadeau été"
+    ],
+    "occasions_cles": ["ete", "festival", "cadeau", "fete_des_peres", "vacances"],
+    "note": "Premier accessoire coiffe du catalogue. Broderie front-de-calotte, esprit washed vintage. 15 teintes délavées."
+  }
+}
