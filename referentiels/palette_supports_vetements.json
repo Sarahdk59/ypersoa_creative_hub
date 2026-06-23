@@ -4,14 +4,14 @@
     "referentiel": "palette_supports_vetements",
     "last_updated": "2026-06-22",
     "description": "Couleurs officielles des vetements supports Ypersoa (hoodies, t-shirts, sweats, casquettes). Palette canonisee apres arbitrage des doublons.",
-    "nb_couleurs_officielles": 28,
+    "nb_couleurs_officielles": 25,
     "changelog": [
       "v1.1 - Canonisation des doublons : 'Bleu' supprime (alias de Marine), 'Vert' supprime (alias de Vert sauge), 'Jaune' et 'Citron jaune' supprimes (alias de Citron), 'Khaki' supprime (alias de Kaki)",
       "v1.2 - Correction hex 'Vert terre' : #8B7355 (marron-taupe, faux) -> #616D55 (vert olive militaire, echantillonne sur packshot Awdis Earthy Green)",
       "v1.3 - Ajout 'Bleu ciel' (#8BA0B0) suite decouverte sur YP021. Distinct du Bleu clair (#A8C8D8) et du Bleu pastel (#8AAFD4).",
       "v1.4 - Correction hex 'Rose orchidee' : #E2ACC1 -> #FAD0D5 (vraie couleur echantillonnee sur packshot B&C Orchid Pink utilise pour YP019)",
       "v1.5 - Ajout 'Gris chine' (#B5B7B8) suite ajout produits slim YP022/YP023. Heather grey clair texture chinee/mouchetee. Distinct du 'Gris' plat (#9B9B9B) et du 'Gris fonce' (#404040).",
-      "v1.6 - Ajout de 5 teintes 'delave vintage' suite ajout YP013 (Casquette Vintage, coton lave) : Bordeaux (#8A4B52), Terracotta (#C07A5C), Moutarde (#C8A24E), Vert sapin (#3F5A4A), Rose vif (#D483AB). Ces teintes sont d'esprit lave/delave : sur YP013 la finition washed vient de la matiere (cf. PRODUCT_MATERIALS YP013), le hex donne la dominante. Reutilisables a terme sur d'autres supports washed."
+      "v1.6 - Ajout de 2 teintes 'delave vintage' suite ajout YP013 (Casquette Vintage, coton lave) : Bordeaux (#8A4B52, 'rouge vintage') et Rose vif (#D483AB). Les 3 autres couleurs YP013 reutilisent des ids existants (beige='sable vintage', vert_olive='olive vintage', bleu_pastel). Esprit washed : sur YP013 la finition delave vient de la matiere (cf. PRODUCT_MATERIALS YP013), le hex donne la dominante. NB : terracotta/moutarde/vert_sapin avaient ete ajoutes puis retires (YP013 finalement limite aux 5 couleurs photographiees)."
     ]
   },
 
@@ -221,33 +221,6 @@
       "saison_signature": "automne_hiver",
       "ambiance_editoriale": ["delave", "vintage", "profond"],
       "note": "Lie-de-vin delave. Ajoute en v1.6 pour la casquette vintage YP013 (coton lave). Esprit washed."
-    },
-    {
-      "id": "terracotta",
-      "nom": "Terracotta",
-      "hex": "#C07A5C",
-      "famille": "terres_chaudes",
-      "saison_signature": "automne",
-      "ambiance_editoriale": ["delave", "vintage", "terreux"],
-      "note": "Terracotta delave. Ajoute en v1.6 pour la casquette vintage YP013. Esprit washed."
-    },
-    {
-      "id": "moutarde",
-      "nom": "Moutarde",
-      "hex": "#C8A24E",
-      "famille": "jaunes_chauds",
-      "saison_signature": "automne",
-      "ambiance_editoriale": ["delave", "vintage", "solaire_doux"],
-      "note": "Ocre / moutarde delave. Ajoute en v1.6 pour la casquette vintage YP013. Distinct du Citron (#E8D84A, jaune vif). Esprit washed."
-    },
-    {
-      "id": "vert_sapin",
-      "nom": "Vert sapin",
-      "hex": "#3F5A4A",
-      "famille": "verts_profonds",
-      "saison_signature": "automne_hiver",
-      "ambiance_editoriale": ["delave", "vintage", "foret"],
-      "note": "Vert foret / sapin delave. Ajoute en v1.6 pour la casquette vintage YP013. Plus fonce et bleute que vert_terre (#616D55). Esprit washed."
     },
     {
       "id": "rose_vif",

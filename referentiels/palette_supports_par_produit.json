@@ -10,7 +10,7 @@
     "changelog": [
       "v1.0 (2026-04-22) - Création suite au bug Team Dog ('beige camel' inventé). Audit goldens existants : tout conforme.",
       "v1.1 (2026-06-02) - Ajout YP022 (Hoodie slim) et YP023 (T-shirt slim), 4 couleurs chacun (gris_chine, noir, marine, blanc). Coupe très ajustée près du corps (plus étroite que YP001/YP019). Aucun fournisseur référencé. Nouvelle couleur gris_chine (#B5B7B8) ajoutée à palette_supports_vetements v1.5.",
-      "v1.2 (2026-06-22) - Ajout YP013 (Casquette Vintage), premier produit COIFFE (porté sur la tête, broderie sur le devant de la calotte — pas côté cœur). 15 couleurs délavées vintage. 5 nouvelles teintes washed ajoutées à palette_supports_vetements v1.6 (bordeaux, terracotta, moutarde, vert_sapin, rose_vif). Le moteur shooting bascule en branche 'coiffe' pour ce produit (isHeadwear)."
+      "v1.2 (2026-06-22) - Ajout YP013 (Casquette Vintage), premier produit COIFFE (porté sur la tête, broderie sur le devant de la calotte — pas côté cœur). 5 couleurs délavées vintage photographiées (beige/sable, vert_olive, bleu_pastel, rose_vif, bordeaux). 2 nouvelles teintes washed ajoutées à palette_supports_vetements v1.6 (bordeaux='rouge vintage', rose_vif) ; les 3 autres réutilisent des ids existants. Le moteur shooting bascule en branche 'coiffe' pour ce produit (isHeadwear)."
     ]
   },
   "produits": {
@@ -566,41 +566,51 @@
       "type_produit": "casquette",
       "public_cible": "adulte_unisexe",
       "fournisseur": "—",
-      "nb_couleurs_disponibles": 15,
+      "nb_couleurs_disponibles": 5,
       "ids_couleurs_dispo_quick_check": [
-        "offwhite",
         "beige",
-        "gris",
-        "gris_fonce",
-        "noir",
-        "bleu_ciel",
-        "marine",
-        "rose_pale",
+        "vert_olive",
+        "bleu_pastel",
         "rose_vif",
-        "bordeaux",
-        "terracotta",
-        "moutarde",
-        "vert_sauge",
-        "vert_sapin",
-        "kaki"
+        "bordeaux"
       ],
-      "particularite_couleurs": "PRODUIT COIFFE (porté sur la tête, broderie sur le DEVANT de la calotte — pas côté cœur). Casquette baseball low-profile en coton délavé vintage, calotte sergé + visière contrastée lavée. 15 teintes washed. Le caractère délavé vient de la matière (cf. fiche produit) ; le hex donne la dominante.",
+      "particularite_couleurs": "PRODUIT COIFFE (porté sur la tête, broderie sur le DEVANT de la calotte — pas côté cœur). Casquette baseball low-profile en coton délavé vintage, calotte sergé + visière contrastée lavée. 5 teintes washed photographiées (packshots dispos) : Sable, Olive, Bleu pastel, Rose vif, Bordeaux. Le caractère délavé vient de la matière (cf. fiche produit) ; le hex donne la dominante.",
       "couleurs_detaillees": [
-        {"id_palette": "offwhite", "nom_ypersoa": "Écru délavé", "hex_palette_officiel": "#F4EFEA", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_offwhite.png"},
-        {"id_palette": "beige", "nom_ypersoa": "Sable délavé", "hex_palette_officiel": "#F5F0E0", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_beige.png"},
-        {"id_palette": "gris", "nom_ypersoa": "Gris clair délavé", "hex_palette_officiel": "#9B9B9B", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_gris.png"},
-        {"id_palette": "gris_fonce", "nom_ypersoa": "Anthracite délavé", "hex_palette_officiel": "#404040", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_gris_fonce.png"},
-        {"id_palette": "noir", "nom_ypersoa": "Noir délavé", "hex_palette_officiel": "#1A1A1A", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_noir.png"},
-        {"id_palette": "bleu_ciel", "nom_ypersoa": "Bleu délavé", "hex_palette_officiel": "#8BA0B0", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_bleu_ciel.png"},
-        {"id_palette": "marine", "nom_ypersoa": "Bleu denim foncé délavé", "hex_palette_officiel": "#1E2D4A", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_marine.png"},
-        {"id_palette": "rose_pale", "nom_ypersoa": "Rose poudré délavé", "hex_palette_officiel": "#F0B8C0", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_rose_pale.png"},
-        {"id_palette": "rose_vif", "nom_ypersoa": "Rose vif délavé", "hex_palette_officiel": "#D483AB", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_rose_vif.png"},
-        {"id_palette": "bordeaux", "nom_ypersoa": "Bordeaux délavé", "hex_palette_officiel": "#8A4B52", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_bordeaux.png"},
-        {"id_palette": "terracotta", "nom_ypersoa": "Terracotta délavé", "hex_palette_officiel": "#C07A5C", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_terracotta.png"},
-        {"id_palette": "moutarde", "nom_ypersoa": "Moutarde délavé", "hex_palette_officiel": "#C8A24E", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_moutarde.png"},
-        {"id_palette": "vert_sauge", "nom_ypersoa": "Vert sauge délavé", "hex_palette_officiel": "#7A9E7E", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_vert_sauge.png"},
-        {"id_palette": "vert_sapin", "nom_ypersoa": "Vert sapin délavé", "hex_palette_officiel": "#3F5A4A", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_vert_sapin.png"},
-        {"id_palette": "kaki", "nom_ypersoa": "Kaki délavé", "hex_palette_officiel": "#5C614B", "nom_fournisseur": "—", "packshot_reference": "YP013_packshot_kaki.png"}
+        {
+          "id_palette": "beige",
+          "nom_ypersoa": "Sable vintage",
+          "hex_palette_officiel": "#F5F0E0",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP013_packshot_beige.png"
+        },
+        {
+          "id_palette": "vert_olive",
+          "nom_ypersoa": "Olive vintage",
+          "hex_palette_officiel": "#6B7A3A",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP013_packshot_vert_olive.png"
+        },
+        {
+          "id_palette": "bleu_pastel",
+          "nom_ypersoa": "Bleu pastel délavé",
+          "hex_palette_officiel": "#8AAFD4",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP013_packshot_bleu_pastel.png"
+        },
+        {
+          "id_palette": "rose_vif",
+          "nom_ypersoa": "Rose vif délavé",
+          "hex_palette_officiel": "#D483AB",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP013_packshot_rose_vif.png"
+        },
+        {
+          "id_palette": "bordeaux",
+          "nom_ypersoa": "Rouge vintage (bordeaux délavé)",
+          "hex_palette_officiel": "#8A4B52",
+          "nom_fournisseur": "—",
+          "packshot_reference": "YP013_packshot_bordeaux.png"
+        }
       ]
     }
   },
@@ -633,15 +643,7 @@
       "bleu_ciel": {
         "nom_ypersoa": "Bleu ciel",
         "disponible_sur": [
-          "YP021",
-          "YP013"
-        ],
-        "nb_produits": 2
-      },
-      "bordeaux": {
-        "nom_ypersoa": "Bordeaux",
-        "disponible_sur": [
-          "YP013"
+          "YP021"
         ],
         "nb_produits": 1
       },
@@ -657,14 +659,22 @@
       "bleu_pastel": {
         "nom_ypersoa": "Bleu pastel",
         "disponible_sur": [
-          "YP019"
+          "YP019",
+          "YP013"
         ],
-        "nb_produits": 1
+        "nb_produits": 2
       },
       "bleu_petrole": {
         "nom_ypersoa": "Bleu pétrole",
         "disponible_sur": [
           "YP001"
+        ],
+        "nb_produits": 1
+      },
+      "bordeaux": {
+        "nom_ypersoa": "Bordeaux",
+        "disponible_sur": [
+          "YP013"
         ],
         "nb_produits": 1
       },
@@ -690,28 +700,19 @@
         ],
         "nb_produits": 2
       },
-      "gris": {
-        "nom_ypersoa": "Gris",
-        "disponible_sur": [
-          "YP013"
-        ],
-        "nb_produits": 1
-      },
       "gris_fonce": {
         "nom_ypersoa": "Gris foncé",
         "disponible_sur": [
-          "YP019",
-          "YP013"
+          "YP019"
         ],
-        "nb_produits": 2
+        "nb_produits": 1
       },
       "kaki": {
         "nom_ypersoa": "Kaki",
         "disponible_sur": [
-          "YP019",
-          "YP013"
+          "YP019"
         ],
-        "nb_produits": 2
+        "nb_produits": 1
       },
       "lilas": {
         "nom_ypersoa": "Lilas",
@@ -730,22 +731,14 @@
           "YP019",
           "YP021",
           "YP022",
-          "YP023",
-          "YP013"
+          "YP023"
         ],
-        "nb_produits": 8
+        "nb_produits": 7
       },
       "mastic": {
         "nom_ypersoa": "Mastic",
         "disponible_sur": [
           "YP019"
-        ],
-        "nb_produits": 1
-      },
-      "moutarde": {
-        "nom_ypersoa": "Moutarde",
-        "disponible_sur": [
-          "YP013"
         ],
         "nb_produits": 1
       },
@@ -758,18 +751,16 @@
           "YP019",
           "YP021",
           "YP022",
-          "YP023",
-          "YP013"
+          "YP023"
         ],
-        "nb_produits": 8
+        "nb_produits": 7
       },
       "offwhite": {
         "nom_ypersoa": "Offwhite",
         "disponible_sur": [
-          "YP019",
-          "YP013"
+          "YP019"
         ],
-        "nb_produits": 2
+        "nb_produits": 1
       },
       "pierre_naturelle": {
         "nom_ypersoa": "Pierre naturelle",
@@ -794,10 +785,9 @@
           "YP001",
           "YP004",
           "YP005",
-          "YP021",
-          "YP013"
+          "YP021"
         ],
-        "nb_produits": 5
+        "nb_produits": 4
       },
       "rose_vif": {
         "nom_ypersoa": "Rose vif",
@@ -806,15 +796,8 @@
         ],
         "nb_produits": 1
       },
-      "terracotta": {
-        "nom_ypersoa": "Terracotta",
-        "disponible_sur": [
-          "YP013"
-        ],
-        "nb_produits": 1
-      },
-      "vert_sapin": {
-        "nom_ypersoa": "Vert sapin",
+      "vert_olive": {
+        "nom_ypersoa": "Vert olive",
         "disponible_sur": [
           "YP013"
         ],
@@ -826,10 +809,9 @@
           "YP001",
           "YP004",
           "YP005",
-          "YP021",
-          "YP013"
+          "YP021"
         ],
-        "nb_produits": 5
+        "nb_produits": 4
       },
       "vert_terre": {
         "nom_ypersoa": "Vert terre",
@@ -844,7 +826,7 @@
   "couleurs_palette_indispo_aucun_produit": {
     "_alerte": "Ces couleurs existent dans palette_supports_vetements.json mais ne sont disponibles sur AUCUN produit. Pourquoi sont-elles dans la palette ? Couleurs candidates pour futur produit ? À vérifier.",
     "liste": [
-      "vert_olive"
+      "gris"
     ]
   },
   "validation_goldens_existants_2026-04-22": {
