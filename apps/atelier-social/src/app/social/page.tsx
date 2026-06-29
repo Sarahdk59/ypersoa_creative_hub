@@ -262,8 +262,14 @@ export default function Home() {
     // Logique format & angles
     const isPinterest = selectedPlatform === "pinterest";
     let aspectRatio: "1:1" | "4:5" | "2:3";
-    // Chaque "job" image porte son propre cadrage + composition (flatlay / porté).
-    type ImageJob = { angle: string; composition: "flatlay" | "worn"; canoniqueIds: string[] };
+    // Chaque "job" image porte son propre cadrage + composition (flatlay / porté) + format Pinterest.
+    type PinFormat = "hero" | "desir" | "association" | "lifestyle";
+    type ImageJob = {
+      angle: string;
+      composition: "flatlay" | "worn";
+      canoniqueIds: string[];
+      pinterestFormat?: PinFormat;
+    };
     let imageJobs: ImageJob[];
 
     if (isPinterest) {
@@ -272,14 +278,36 @@ export default function Home() {
         pinterestStrategy && selectedFicheId
           ? getFiche(pinterestStrategy, selectedFicheId)
           : undefined;
-      const heroPrompt = pinterestStrategy?.formats.hero.prompt ?? PINTEREST_ANGLES[0];
-      const desirPrompt = pinterestStrategy?.formats.desir.prompt ?? PINTEREST_ANGLES[1];
+      const fmts = pinterestStrategy?.formats;
       const motifHint = fiche ? ` Motif intention: ${fiche.intention}.` : "";
       const heroHint = fiche ? `${motifHint} Styling hint: ${fiche.format_hero_hint}.` : "";
-      // HERO = flatlay détail brodé (sans personnage) ; DÉSIR = porté serré sur la zone brodée.
+      // 4 formats clients : Hero détail (flatlay) · Désir porté serré · Association
+      // (flatlay groupé multi-couleurs) · Lifestyle scène.
       imageJobs = [
-        { angle: heroPrompt + heroHint, composition: "flatlay", canoniqueIds: [] },
-        { angle: desirPrompt + motifHint, composition: "worn", canoniqueIds: selectedCanoniqueIds },
+        {
+          angle: (fmts?.hero.prompt ?? PINTEREST_ANGLES[0]) + heroHint,
+          composition: "flatlay",
+          canoniqueIds: [],
+          pinterestFormat: "hero",
+        },
+        {
+          angle: (fmts?.desir.prompt ?? PINTEREST_ANGLES[1]) + motifHint,
+          composition: "worn",
+          canoniqueIds: selectedCanoniqueIds,
+          pinterestFormat: "desir",
+        },
+        {
+          angle: (fmts?.association.prompt ?? PINTEREST_ANGLES[0]) + motifHint,
+          composition: "flatlay",
+          canoniqueIds: [],
+          pinterestFormat: "association",
+        },
+        {
+          angle: (fmts?.lifestyle.prompt ?? PINTEREST_ANGLES[2]) + motifHint,
+          composition: "worn",
+          canoniqueIds: selectedCanoniqueIds,
+          pinterestFormat: "lifestyle",
+        },
       ];
     } else if (withOverlay) {
       aspectRatio = "4:5"; // Insta + overlay
@@ -332,6 +360,7 @@ export default function Home() {
             composition: job.composition,
             selectedProduct,
             selectedGarmentColor,
+            pinterestFormat: job.pinterestFormat,
           });
           successfulImages.push(img);
           setGeneratedImages([...successfulImages]);
@@ -383,7 +412,7 @@ export default function Home() {
     }
   };
 
-  const expectedImages = selectedPlatform === "pinterest" ? 2 : 5;
+  const expectedImages = selectedPlatform === "pinterest" ? 4 : 5;
 
   // Dérivés Pinterest : fiche sélectionnée, mots-clés, texte de surimpression
   const selectedFiche: PinterestFiche | undefined =
@@ -576,7 +605,8 @@ export default function Home() {
                         </p>
                       )}
                       <p className="text-[10px] text-brand-muted leading-snug">
-                        Hero = flatlay détail brodé · Désir = porté serré sur la zone brodée
+                        4 visuels : Hero (flatlay détail) · Désir (porté serré) · Association
+                        (déclinaisons couleurs) · Lifestyle (scène). Broderie plate naturelle.
                       </p>
                     </div>
                   )}
@@ -680,13 +710,13 @@ export default function Home() {
                 {isGeneratingImage || isGeneratingText ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Création... ({selectedPlatform === "pinterest" ? "2-4" : "5-7"} min)
+                    Création... ({selectedPlatform === "pinterest" ? "4-6" : "5-7"} min)
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4" />
                     {selectedPlatform === "pinterest"
-                      ? "Générer mes 2 épingles (Hero + Désir)"
+                      ? "Générer mon shooting Pinterest (4 visuels)"
                       : "Générer mon carrousel (5 slides)"}
                   </>
                 )}

@@ -13,6 +13,7 @@ export interface GenerateImageInput {
   composition?: "flatlay" | "worn";
   selectedProduct?: string;
   selectedGarmentColor?: string;
+  pinterestFormat?: "hero" | "desir" | "association" | "lifestyle";
 }
 
 export interface GenerateCopyInput {

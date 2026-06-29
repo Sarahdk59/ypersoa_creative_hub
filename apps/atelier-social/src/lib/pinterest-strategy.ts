@@ -44,7 +44,12 @@ export interface PinterestStrategy {
   vocabulaire: { autorise: string[]; interdit: string[] };
   ancres_generiques: string[];
   slots_saisonniers: Record<string, string | null>;
-  formats: { hero: PinterestFormat; desir: PinterestFormat };
+  formats: {
+    hero: PinterestFormat;
+    desir: PinterestFormat;
+    association: PinterestFormat;
+    lifestyle: PinterestFormat;
+  };
   fiches: PinterestFiche[];
   mapping_occasions: Record<string, string[]>;
 }

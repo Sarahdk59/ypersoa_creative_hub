@@ -1054,10 +1054,13 @@ Le moteur d'achat Ypersoa = **voir la personnalisation**. Sur Pinterest (moteur 
 
 ### 11.2 Décisions verrouillées
 
-- **2 formats clients** (remplacent les 3 angles best-performers génériques, conservés en fallback) :
-  - **Hero** = flatlay détail brodé, SANS personnage, surface texturée + props + lumière chaude, jamais fond blanc → déclencheur de save.
-  - **Désir** = porté, cadré serré sur la zone brodée (poitrine/poignet) → projection + lisibilité.
+- **4 formats clients** (shooting subtil façon Émoï-Émoï ; remplacent les 3 angles best-performers, gardés en fallback) :
+  - **Hero** = flatlay détail brodé, SANS personnage, props + lumière chaude, jamais fond blanc → save.
+  - **Désir** = porté, cadré serré sur la zone brodée → projection + lisibilité.
+  - **Association** = flatlay groupé multi-couleurs (déclinaisons) → épingler la gamme / variantes.
+  - **Lifestyle** = scène de vie (table, intérieur) → inspiration aspirationnelle.
   - **Vidéo process** (notoriété, levier 2026) reconnue mais **hors V1** (moteur = images fixes uniquement).
+- **Verrou produit (PRODUCT LOCK)** : injection du packshot du produit sélectionné comme réf Gemini + flag obligatoire (interdit pull laine/maille, t-shirt gris chiné, autre type/couleur). Association = plusieurs packshots couleurs. Broderie forcée **plate et fine** (constante `EMBROIDERY_REALISM`) car Gemini extrudait un relief 3D mousse non naturel.
 - **2:3 (1000×1500)** systématique.
 - **Overlay réactivé** : surimpression de l'occasion sur l'image (cf. §7).
 - **Vocabulaire consumer-facing** : « brodé à la commande », « à ton image », « personnalisation », « durable », « Hauts-de-France ». **JAMAIS** de référence machine (« métier Tajima » est interdit côté Pinterest, contrairement au prompt Insta) ni « fait main ». Cf. mémoire `feedback_vocab_fabrication`.

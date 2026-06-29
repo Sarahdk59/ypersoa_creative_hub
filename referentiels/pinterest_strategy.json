@@ -72,6 +72,20 @@
       "role": "Combine projection (porté) + lisibilité du détail brodé.",
       "composition": "worn",
       "prompt": "WORN CLOSE-UP — the garment worn on the body, framed TIGHTLY on the embroidered zone (left chest, wrist / cuff, or back of neck depending on placement). Crop in close so the embroidered detail is large and perfectly legible, while still clearly reading as worn (a shoulder, a forearm, fabric folds, natural skin texture at the edge of frame). Combines desire/projection with readability of the personalized detail. Warm natural light, 35mm film aesthetic, soft focus background. Vertical 2:3 composition."
+    },
+    "association": {
+      "id": "association",
+      "label": "Association — flatlay groupé (déclinaisons)",
+      "role": "Montre la gamme/déclinaisons → invite à épingler les variantes, multiplie les mots-clés.",
+      "composition": "flatlay",
+      "prompt": "ASSOCIATION FLATLAY — styled editorial flat lay grouping SEVERAL pieces of the SAME embroidered product in different colorways, arranged together as a cohesive product family (in the spirit of an Émoï-Émoï grouped flatlay: 2 to 4 pieces overlapping naturally). NO person, NO face. Warm textured surface (raw linen, pale wood), tasteful natural props (dried flowers, ceramic, a linen napkin), warm directional light, soft shadows. Each piece carries the SAME flat fine embroidery. Subtle, natural, desirable — it should make the viewer want to pin the whole range. Vertical 2:3 composition."
+    },
+    "lifestyle": {
+      "id": "lifestyle",
+      "label": "Lifestyle — scène de vie",
+      "role": "Ancre le produit dans un quotidien aspirationnel (slow living), pinnable en inspiration.",
+      "composition": "worn",
+      "prompt": "LIFESTYLE SCENE — the embroidered product naturally integrated into a warm, lived-in scene (a set table, a sunny windowsill, a cozy interior, a morning coffee moment, gentle daylight). Editorial slow-living mood, 35mm film aesthetic. The product is clearly present and its embroidery legible, but woven into the scene rather than centered. A partial human presence (a hand, a shoulder, someone reaching) is welcome but never posed. Vertical 2:3 composition. Subtle and aspirational, like an Émoï-Émoï / Sézane lifestyle pin."
     }
   },
   "fiches": [
