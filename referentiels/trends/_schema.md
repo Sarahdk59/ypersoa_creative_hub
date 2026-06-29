@@ -8,7 +8,9 @@ Voir le cahier des charges complet : `docs/CDC_ATELIER_TRENDS.md`.
 - **Lot 2** — **Pinterest** : API Trends v5 si `PINTEREST_ACCESS_TOKEN` fourni (app validée),
   sinon **mots-clés curés à la main** dans `_pinterest_manuel.json` (rail principal actuel).
   Les deux sources sont fusionnées (dédup par terme, Pinterest prioritaire).
-- **Lot 3** (à venir) — couche de synthèse IA (champs `enrichissement` ci-dessous).
+- **Lot 3** — couche de synthèse IA (gpt-4o) : remplit `enrichissement` (score,
+  occasion, motif YPM snapé sur `pinterest_strategy.json`, créneau J-45, angle).
+  Déclenchée par POST `/api/trends/enrich` → passe le snapshot en `status: "enriched"`.
 
 Pas de scraping de DOM, pas de login.
 
