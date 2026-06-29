@@ -1,0 +1,25 @@
+{
+  "id": "2026-06-29",
+  "date": "2026-06-29",
+  "generated_at": "2026-06-29T13:10:00.000Z",
+  "sources": ["google"],
+  "status": "raw",
+  "trends": [
+    { "terme": "avion", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "10000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=avion&geo=FR", "enrichissement": null },
+    { "terme": "charlene wittstock", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "5000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=charlene%20wittstock&geo=FR", "enrichissement": null },
+    { "terme": "jannik sinner", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "2000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=jannik%20sinner&geo=FR", "enrichissement": null },
+    { "terme": "journaliste", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "2000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=journaliste&geo=FR", "enrichissement": null },
+    { "terme": "acteur", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "2000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=acteur&geo=FR", "enrichissement": null },
+    { "terme": "stade allemagne", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "500+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=stade%20allemagne&geo=FR", "enrichissement": null },
+    { "terme": "mathieu raynal", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "500+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=mathieu%20raynal&geo=FR", "enrichissement": null },
+    { "terme": "parquet européen", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "200+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=parquet%20europ%C3%A9en&geo=FR", "enrichissement": null },
+    { "terme": "oman", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "200+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=oman&geo=FR", "enrichissement": null },
+    { "terme": "ivresse", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "200+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=ivresse&geo=FR", "enrichissement": null }
+  ],
+  "meta": {
+    "trends_count": 10,
+    "source_url": "https://trends.google.com/trending/rss?geo=FR",
+    "note": "Lot 1 — snapshot d'amorçage (recherches tendances Google FR du 29/06). Tendances brutes, sans enrichissement IA. Le filtrage broderie + mapping motif/occasion arrive au Lot 3."
+  },
+  "errors": []
+}

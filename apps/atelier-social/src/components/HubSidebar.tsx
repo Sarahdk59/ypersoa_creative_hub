@@ -6,7 +6,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MessageCircle, Camera, BookImage, Compass, Cpu } from "lucide-react";
+import { MessageCircle, Camera, BookImage, Compass, Cpu, TrendingUp } from "lucide-react";
 import { HubSidebarIcon } from "./HubSidebarIcon";
 import { useAuth } from "./auth/AuthProvider";
 import { canAccess } from "@/lib/access";
@@ -65,6 +65,14 @@ export function HubSidebar() {
           label="Atelier DA"
           href="/atelier-da"
           active={isActive("/atelier-da")}
+        />
+      )}
+      {show("/atelier-trends") && (
+        <HubSidebarIcon
+          icon={<TrendingUp size={20} strokeWidth={1.6} />}
+          label="Atelier Trends"
+          href="/atelier-trends"
+          active={isActive("/atelier-trends")}
         />
       )}
       {show("/atelier-production") && (

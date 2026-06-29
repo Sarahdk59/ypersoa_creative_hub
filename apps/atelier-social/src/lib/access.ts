@@ -42,6 +42,8 @@ export function sectionForPath(pathname: string): Section {
   )
     return "referentiels-prod";
   if (pathname.startsWith("/atelier-production")) return "atelier-production";
+  // Atelier Trends = veille créative/comm → même périmètre qu'Atelier DA (admin + crea).
+  if (pathname.startsWith("/atelier-trends")) return "atelier-da";
   if (pathname.startsWith("/atelier-da")) return "atelier-da";
   if (pathname.startsWith("/lookbook") || pathname.startsWith("/shooting"))
     return "atelier-da";
