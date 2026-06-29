@@ -91,6 +91,48 @@ export interface PinterestKeywords {
 
 const norm = (s: string) => s.trim().toLowerCase();
 
+// Nom consumer du produit (pour que la copy parle du VRAI vêtement sélectionné,
+// pas de celui implicite dans les mots-clés de la fiche). Ex. fiche Le Roman =
+// casquette, mais si Sarah sélectionne un hoodie → on parle de « sweat à capuche ».
+export const PRODUCT_NOUNS: Record<string, string> = {
+  YP001: "sweat à capuche",
+  YP004: "sweat à capuche enfant",
+  YP005: "sweat",
+  YP019: "t-shirt",
+  YP021: "hoodie zippé",
+  YP013: "casquette",
+  YP022: "t-shirt",
+  YP023: "t-shirt",
+};
+
+export function productNounFor(productId?: string): string | undefined {
+  return productId ? PRODUCT_NOUNS[productId] : undefined;
+}
+
+// Noms de vêtement détectables dans un mot-clé, du plus long au plus court.
+const GARMENT_NOUNS = [
+  "sweat à capuche",
+  "hoodie zippé",
+  "tee-shirt",
+  "t-shirt",
+  "casquette",
+  "hoodie",
+  "sweat",
+  "body",
+];
+
+/** Remplace le nom de vêtement présent dans un texte par le produit réellement sélectionné. */
+function adaptGarment(text: string, productNoun?: string): string {
+  if (!productNoun) return text;
+  if (text.toLowerCase().includes(productNoun.toLowerCase())) return text;
+  for (const g of GARMENT_NOUNS) {
+    if (g.toLowerCase() === productNoun.toLowerCase()) continue;
+    const re = new RegExp(g.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    if (re.test(text)) return text.replace(re, productNoun);
+  }
+  return text;
+}
+
 /**
  * Assemble les mots-clés d'une épingle :
  *  - principal = slot saisonnier de l'occasion s'il existe, sinon 1er mot-clé niche
@@ -101,14 +143,16 @@ export function buildPinterestKeywords(
   strategy: PinterestStrategy,
   ficheId: string,
   occasionId: string,
+  productNoun?: string,
   maxTags = 10
 ): PinterestKeywords | null {
   const fiche = getFiche(strategy, ficheId);
   if (!fiche) return null;
 
   const slot = strategy.slots_saisonniers[occasionId] ?? null;
-  const niche = fiche.mots_cles;
-  const principal = slot ?? niche[0];
+  // On adapte le nom de vêtement des mots-clés au produit réellement sélectionné.
+  const niche = fiche.mots_cles.map((k) => adaptGarment(k, productNoun));
+  const principal = adaptGarment(slot ?? niche[0], productNoun);
 
   const ordered: string[] = [principal];
   const seen = new Set<string>([norm(principal)]);
@@ -123,13 +167,13 @@ export function buildPinterestKeywords(
   // 1. mots-clés niche (cœur du ciblage)
   niche.forEach(push);
   // 2. ancres génériques (longue traîne réutilisable)
-  strategy.ancres_generiques.forEach(push);
+  strategy.ancres_generiques.forEach((a) => push(adaptGarment(a, productNoun)));
 
   const tous = ordered.slice(0, maxTags);
   return {
     principal,
     secondaires: tous.slice(1),
     tous,
-    surimpression: fiche.texte_surimpression,
+    surimpression: adaptGarment(fiche.texte_surimpression, productNoun),
   };
 }

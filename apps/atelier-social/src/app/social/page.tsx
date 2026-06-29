@@ -29,6 +29,7 @@ import {
   defaultFicheForOccasion,
   suggestFichesForOccasion,
   getFiche,
+  productNounFor,
 } from "@/lib/pinterest-strategy";
 import {
   Instagram,
@@ -343,6 +344,7 @@ export default function Home() {
           canoniqueContext,
           pinterestFicheId: isPinterest ? selectedFicheId : undefined,
           occasionId: selectedOccasion,
+          productId: selectedProduct,
         }),
       });
 
@@ -419,9 +421,15 @@ export default function Home() {
     pinterestStrategy && selectedFicheId ? getFiche(pinterestStrategy, selectedFicheId) : undefined;
   const pinterestKeywords =
     pinterestStrategy && selectedFiche
-      ? buildPinterestKeywords(pinterestStrategy, selectedFiche.id, selectedOccasion)
+      ? buildPinterestKeywords(
+          pinterestStrategy,
+          selectedFiche.id,
+          selectedOccasion,
+          productNounFor(selectedProduct)
+        )
       : null;
-  const surimpressionText = selectedFiche?.texte_surimpression ?? "";
+  // Surimpression adaptée au produit réel (ex. « Ta casquette… » → « Ton sweat… » si hoodie).
+  const surimpressionText = pinterestKeywords?.surimpression ?? selectedFiche?.texte_surimpression ?? "";
   const suggestedFiches = pinterestStrategy
     ? suggestFichesForOccasion(pinterestStrategy, selectedOccasion)
     : [];
