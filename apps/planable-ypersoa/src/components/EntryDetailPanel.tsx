@@ -7,6 +7,8 @@ import type { PlanableCalendarEntryRow, PlanablePackRow } from "@/lib/supabase/t
 
 interface DetailEntry extends PlanableCalendarEntryRow {
   planable_packs?: PlanablePackRow | null;
+  /** Nom lisible du thème (résolu côté API depuis occasion_slug). */
+  occasion_name?: string | null;
 }
 
 const ATELIER_SOCIAL_URL = process.env.NEXT_PUBLIC_ATELIER_SOCIAL_URL ?? "http://localhost:3000";
@@ -70,8 +72,11 @@ export function EntryDetailPanel({
         <dd style={ddStyle}>{entry.format}</dd>
         <dt style={dtStyle}>Motif</dt>
         <dd style={ddStyle}><code>{entry.motif_code}</code></dd>
-        <dt style={dtStyle}>Occasion</dt>
-        <dd style={ddStyle}>{entry.occasion_slug ?? "—"}</dd>
+        <dt style={dtStyle}>Thème</dt>
+        <dd style={ddStyle}>
+          {entry.occasion_name
+            ?? (entry.occasion_slug ? OCCASION_LABEL[entry.occasion_slug] ?? entry.occasion_slug : "—")}
+        </dd>
         <dt style={dtStyle}>Statut</dt>
         <dd style={ddStyle}>
           <StatusBadge status={entry.status} />

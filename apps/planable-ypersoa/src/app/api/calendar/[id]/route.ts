@@ -32,7 +32,18 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       .maybeSingle();
     if (error) throw error;
     if (!data) return NextResponse.json({ ok: false, error: "Introuvable" }, { status: 404 });
-    return NextResponse.json({ ok: true, data });
+
+    // Rattache le nom lisible du thème (occasion) pour l'affichage du panneau détail.
+    let occasion_name: string | null = null;
+    if (data.occasion_slug) {
+      const { data: occ } = await supabase
+        .from("planable_occasions")
+        .select("name_fr")
+        .eq("slug", data.occasion_slug)
+        .maybeSingle();
+      occasion_name = occ?.name_fr ?? null;
+    }
+    return NextResponse.json({ ok: true, data: { ...data, occasion_name } });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : String(err) },
