@@ -8,7 +8,7 @@
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film, FileBox, Palette } from "lucide-react";
+import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film, FileBox, Palette, CalendarClock } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -90,6 +90,14 @@ const SUBMODULES: SubmoduleCard[] = [
     description: "Associations motif × fils validées en production. Référence couleur pour briefer un visuel ou composer un pack.",
     href: "/atelier-production/palettes",
     icon: <Palette size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 12,
+    title: "Planning commun (créa / prod / comm)",
+    description: "Rétroplanning 2027 piloté au même endroit pour les 3 équipes : 4 drops de collection (réunion, dév motifs, tests prod, présentation, mise en ligne) + temps forts comm (Pinterest J-45/60/75, Insta, cutoff). Dates et statuts éditables.",
+    href: "/atelier-da/planning",
+    icon: <CalendarClock size={22} strokeWidth={1.4} />,
     status: "v0",
   },
   {

@@ -72,7 +72,7 @@
       "variantes": [
         {
           "file": "YPM-001-G.PNG",
-          "label": "G",
+          "label": "Brigitte G",
           "destinataires": [],
           "occasions": [
             "naissance"
@@ -81,7 +81,7 @@
         },
         {
           "file": "YPM-001-A.PNG",
-          "label": "A",
+          "label": "Brigitte A",
           "destinataires": [
             "amis"
           ],
@@ -90,21 +90,21 @@
         },
         {
           "file": "YPM-001-ypm-001-s.png",
-          "label": "ypm-001-s",
+          "label": "Brigitte S",
           "destinataires": [],
           "occasions": [],
           "produits": []
         },
         {
           "file": "YPM-001-BRIGITTE.PNG",
-          "label": "BRIGITTE",
+          "label": "La Brigitte",
           "destinataires": [],
           "occasions": [],
           "produits": []
         },
         {
           "file": "YPM-001-alphabet-ypm-001-la-brigitte.png",
-          "label": "Alphabet YPM-001 La Brigitte",
+          "label": "Brigitte — Alphabet",
           "tags": [
             "Brigitte",
             "Alphabet",
@@ -146,15 +146,15 @@
       "variantes": [
         {
           "file": "YPM-002-AMBRE.PNG",
-          "label": "AMBRE"
+          "label": "L'Ambre"
         },
         {
           "file": "YPM-002-Anaïs.PNG",
-          "label": "Anaïs"
+          "label": "Ambre — Anaïs"
         },
         {
           "file": "YPM-002-AMBRE-chaton.PNG",
-          "label": "AMBRE-chaton",
+          "label": "Ambre Chaton",
           "tags": [
             "prenom",
             "typo"
@@ -167,7 +167,7 @@
         },
         {
           "file": "YPM-002-AMBRE-nounou.PNG",
-          "label": "AMBRE-nounou",
+          "label": "Ambre Nounou",
           "tags": [
             "famille",
             "garde-enfant",
@@ -206,7 +206,7 @@
       "variantes": [
         {
           "file": "YPM-003-club-flower.png",
-          "label": "club-flower",
+          "label": "Club Fleur",
           "destinataires": [],
           "occasions": [
             "intemporel"
@@ -215,7 +215,7 @@
         },
         {
           "file": "YPM-003-wedding-club.png",
-          "label": "wedding-club",
+          "label": "Wedding Club",
           "destinataires": [],
           "occasions": [
             "mariage"
@@ -224,7 +224,7 @@
         },
         {
           "file": "YPM-003-CLUB-sista.PNG",
-          "label": "CLUB-sista",
+          "label": "Sista Club",
           "destinataires": [
             "sœur"
           ],
@@ -233,16 +233,19 @@
         },
         {
           "file": "YPM-003-CLUB.PNG",
-          "label": "CLUB",
+          "label": "Mama Club",
           "destinataires": [
             "maman"
           ],
-          "occasions": [],
+          "occasions": [
+            "fete_des_meres",
+            "intemporel"
+          ],
           "produits": []
         },
         {
           "file": "YPM-003-CLUB-famille club.PNG",
-          "label": "CLUB-famille club",
+          "label": "Famille Club",
           "tags": [
             "amitie",
             "famille",
@@ -255,7 +258,7 @@
         },
         {
           "file": "YPM-003-CLUBv2.png",
-          "label": "CLUBv2",
+          "label": "Le Club (classique)",
           "tags": [
             "amitie",
             "groupe",
@@ -270,7 +273,7 @@
         },
         {
           "file": "YPM-003-Club_Amour_PXF.PNG",
-          "label": "Club_Amour_PXF",
+          "label": "Amour Club",
           "tags": [
             "amitie",
             "amour",
@@ -280,6 +283,7 @@
           ],
           "destinataires": [],
           "occasions": [
+            "saint_valentin",
             "déclaration",
             "intemporel"
           ],
@@ -287,7 +291,7 @@
         },
         {
           "file": "YPM-003-Club_Bride.PNG",
-          "label": "Club_Bride",
+          "label": "Bride Club",
           "tags": [
             "amitie",
             "couple",
@@ -355,7 +359,7 @@
       "variantes": [
         {
           "file": "YPM-004-joseph-nicolas-gaspard.png",
-          "label": "joseph-nicolas-gaspard",
+          "label": "Héritage Famille (3 prénoms)",
           "destinataires": [
             "frère",
             "papy",
@@ -375,7 +379,7 @@
         },
         {
           "file": "YPM-004-3-generations.png",
-          "label": "3-generations",
+          "label": "Héritage 3 générations",
           "destinataires": [
             "papa",
             "papy",
@@ -387,7 +391,7 @@
         },
         {
           "file": "YPM-004-ANNEE.PNG",
-          "label": "ANNEE",
+          "label": "Héritage Dates",
           "destinataires": [
             "couple",
             "frère",
@@ -406,7 +410,7 @@
         },
         {
           "file": "YPM-004-ANNEE oui.PNG",
-          "label": "ANNEE oui",
+          "label": "Héritage Dates (mariage)",
           "tags": [
             "anniversaire-date",
             "date",
@@ -420,7 +424,7 @@
         },
         {
           "file": "YPM-004-ANNEE-v3.PNG",
-          "label": "ANNEE-v3",
+          "label": "Héritage Dates (couple)",
           "tags": [
             "anniversaire-date",
             "date",
@@ -435,7 +439,7 @@
         },
         {
           "file": "YPM-004-ANNEEv2.PNG",
-          "label": "ANNEEv2",
+          "label": "Héritage Dates (v2)",
           "tags": [
             "anniversaire-date",
             "date",
@@ -522,7 +526,7 @@
       "variantes": [
         {
           "file": "YPM-005-ANNONCE.PNG",
-          "label": "ANNONCE",
+          "label": "L'Annonce",
           "destinataires": [
             "maman"
           ],
@@ -532,7 +536,7 @@
         },
         {
           "file": "YPM-005-ANNONCE Annonce.PNG",
-          "label": "ANNONCE Annonce",
+          "label": "Annonce (faire-part)",
           "tags": [
             "annonce",
             "naissance",
@@ -546,7 +550,7 @@
         },
         {
           "file": "YPM-005-ANNONCE Madame.PNG",
-          "label": "ANNONCE Madame",
+          "label": "Annonce Madame",
           "tags": [
             "annonce",
             "couple",
@@ -562,7 +566,7 @@
         },
         {
           "file": "YPM-005-ANNONCE Monsieur.PNG",
-          "label": "ANNONCE Monsieur",
+          "label": "Annonce Monsieur",
           "tags": [
             "annonce",
             "couple",
@@ -576,7 +580,7 @@
         },
         {
           "file": "YPM-005-ANNONCE Papa.PNG",
-          "label": "ANNONCE Papa",
+          "label": "Annonce Papa",
           "tags": [
             "annonce",
             "famille",
@@ -590,7 +594,7 @@
         },
         {
           "file": "YPM-005-ANNONCE chanceuse.PNG",
-          "label": "ANNONCE chanceuse",
+          "label": "Annonce Chanceuse",
           "tags": [
             "amour",
             "annonce",
@@ -606,7 +610,7 @@
         },
         {
           "file": "YPM-005-ANNONCE lover.PNG",
-          "label": "ANNONCE lover",
+          "label": "Annonce Lover",
           "tags": [
             "amour",
             "annonce",
@@ -620,7 +624,7 @@
         },
         {
           "file": "YPM-005-ANNONCE papa cheri.png",
-          "label": "ANNONCE papa cheri",
+          "label": "Annonce Papa chéri",
           "tags": [
             "amour",
             "annonce",
@@ -654,7 +658,7 @@
       "variantes": [
         {
           "file": "YPM-006-CALIN.PNG",
-          "label": "CALIN",
+          "label": "Le Câlin",
           "destinataires": [],
           "occasions": [],
           "produits": [],
@@ -687,7 +691,7 @@
       "variantes": [
         {
           "file": "YPM-007-CHOUCHOU.PNG",
-          "label": "CHOUCHOU",
+          "label": "Le Chouchou",
           "destinataires": [
             "maman"
           ],
@@ -700,7 +704,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU marié.PNG",
-          "label": "CHOUCHOU marié",
+          "label": "Chouchou Marié",
           "tags": [
             "couple",
             "famille",
@@ -713,7 +717,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU mariée_v2.PNG",
-          "label": "CHOUCHOU mariée_v2",
+          "label": "Chouchou Mariée",
           "tags": [
             "couple",
             "famille",
@@ -726,7 +730,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU-amour.PNG",
-          "label": "CHOUCHOU-amour",
+          "label": "Chouchou Amour",
           "tags": [
             "amour",
             "couple",
@@ -739,7 +743,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU-beurre.PNG",
-          "label": "CHOUCHOU-beurre",
+          "label": "Chouchou Beurre",
           "tags": [
             "amour",
             "famille",
@@ -752,7 +756,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU-mamie.PNG",
-          "label": "CHOUCHOU-mamie",
+          "label": "Chouchou Mamie",
           "tags": [
             "famille",
             "grand-parents",
@@ -764,7 +768,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU-nounou.PNG",
-          "label": "CHOUCHOU-nounou",
+          "label": "Chouchou Nounou",
           "tags": [
             "famille",
             "garde-enfant",
@@ -776,7 +780,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU-poulette.PNG",
-          "label": "CHOUCHOU-poulette",
+          "label": "Chouchou Poulette",
           "tags": [
             "amour",
             "animal",
@@ -790,7 +794,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU-tempete.PNG",
-          "label": "CHOUCHOU-tempete",
+          "label": "Chouchou Tempête",
           "tags": [
             "caractere",
             "famille",
@@ -802,7 +806,7 @@
         },
         {
           "file": "YPM-007-CHOUCHOU_mariée.PNG",
-          "label": "CHOUCHOU_mariée",
+          "label": "Chouchou Mariée bis",
           "tags": [
             "couple",
             "famille",
@@ -834,7 +838,7 @@
       "variantes": [
         {
           "file": "YPM-008-FELINE-maman.PNG",
-          "label": "FELINE-maman",
+          "label": "Féline Maman",
           "destinataires": [
             "maman"
           ],
@@ -844,7 +848,7 @@
         },
         {
           "file": "YPM-008-FELINE.png",
-          "label": "FELINE",
+          "label": "La Féline",
           "destinataires": [],
           "occasions": [],
           "produits": [],
@@ -852,7 +856,7 @@
         },
         {
           "file": "YPM-008-FELINE-Amour fou.png",
-          "label": "FELINE-Amour fou",
+          "label": "Féline Amour fou",
           "tags": [
             "amour",
             "animal",
@@ -866,7 +870,7 @@
         },
         {
           "file": "YPM-008-FELINE-maman cherie.PNG",
-          "label": "FELINE-maman cherie",
+          "label": "Féline Maman chérie",
           "tags": [
             "animal",
             "famille",
@@ -880,7 +884,7 @@
         },
         {
           "file": "YPM-008-FELINEv1.png",
-          "label": "FELINEv1",
+          "label": "Féline (v1)",
           "tags": [
             "animal",
             "feminin",
@@ -914,7 +918,7 @@
       "variantes": [
         {
           "file": "YPM-009-PALETTE.PNG",
-          "label": "PALETTE",
+          "label": "La Palette",
           "destinataires": [
             "maman"
           ],
@@ -926,7 +930,7 @@
         },
         {
           "file": "YPM-009-PALETTE-Madame.png",
-          "label": "PALETTE-Madame",
+          "label": "Palette Madame",
           "destinataires": [
             "couple"
           ],
@@ -938,7 +942,7 @@
         },
         {
           "file": "YPM-009-PALETTE-la mariee.png",
-          "label": "PALETTE-la mariee",
+          "label": "Palette La Mariée",
           "destinataires": [],
           "occasions": [],
           "produits": [],
@@ -946,7 +950,7 @@
         },
         {
           "file": "YPM-009-PALETTE_TeamMariee_PXF.PNG",
-          "label": "PALETTE_TeamMariee_PXF",
+          "label": "Palette Team Mariée",
           "destinataires": [],
           "occasions": [],
           "produits": [],
@@ -954,7 +958,7 @@
         },
         {
           "file": "YPM-009-PALETTE-vert.png",
-          "label": "PALETTE-vert",
+          "label": "Palette Verte",
           "destinataires": [],
           "occasions": [
             "intemporel"
@@ -964,7 +968,7 @@
         },
         {
           "file": "YPM-009-PALETTE - Amoureuse.PNG",
-          "label": "PALETTE - Amoureuse",
+          "label": "Palette Amoureuse",
           "tags": [
             "amitie",
             "amour",
@@ -980,7 +984,7 @@
         },
         {
           "file": "YPM-009-PALETTE-beige.png",
-          "label": "PALETTE-beige",
+          "label": "Palette Beige",
           "tags": [
             "couleurs",
             "mariage",
@@ -1019,7 +1023,7 @@
       "variantes": [
         {
           "file": "YPM-010-RONDE monsieur.PNG",
-          "label": "RONDE monsieur",
+          "label": "Ronde Monsieur",
           "destinataires": [
             "couple"
           ],
@@ -1031,7 +1035,7 @@
         },
         {
           "file": "YPM-010-RONDE madame_PXF.PNG",
-          "label": "RONDE madame_PXF",
+          "label": "Ronde Madame",
           "destinataires": [
             "couple"
           ],
@@ -1044,7 +1048,7 @@
         },
         {
           "file": "YPM-010-RONDE.PNG",
-          "label": "RONDE",
+          "label": "La Ronde",
           "destinataires": [],
           "occasions": [
             "mariage",
@@ -1058,7 +1062,7 @@
         },
         {
           "file": "YPM-010-RONDE-love.PNG",
-          "label": "RONDE-love",
+          "label": "Ronde Love",
           "tags": [
             "amour",
             "couple",
@@ -1074,7 +1078,7 @@
         },
         {
           "file": "YPM-010-RONDE-mamie.JPG",
-          "label": "RONDE-mamie",
+          "label": "Ronde Mamie",
           "tags": [
             "famille",
             "grand-parents",
@@ -1089,7 +1093,7 @@
         },
         {
           "file": "YPM-010-RONDE-soeur.PNG",
-          "label": "RONDE-soeur",
+          "label": "Ronde Sœur",
           "tags": [
             "famille",
             "fratrie",
@@ -1133,7 +1137,7 @@
       "variantes": [
         {
           "file": "YPM-011-CONFIDENCE-Maman.PNG",
-          "label": "CONFIDENCE-Maman",
+          "label": "Confidence Maman",
           "destinataires": [
             "maman"
           ],
@@ -1145,7 +1149,7 @@
         },
         {
           "file": "YPM-011-CONFIDENCE Viens.png",
-          "label": "CONFIDENCE Viens",
+          "label": "Confidence Viens",
           "destinataires": [],
           "occasions": [
             "déclaration"
@@ -1155,7 +1159,7 @@
         },
         {
           "file": "YPM-011-CONFIDENCE-Maman d amour.png",
-          "label": "CONFIDENCE-Maman d amour",
+          "label": "Confidence Maman d'amour",
           "tags": [
             "amitie",
             "amour",
@@ -1170,7 +1174,7 @@
         },
         {
           "file": "YPM-011-CONFIDENCE-Maman ensemble.png",
-          "label": "CONFIDENCE-Maman ensemble",
+          "label": "Confidence Maman ensemble",
           "tags": [
             "amitie",
             "amour",
@@ -1190,7 +1194,7 @@
         },
         {
           "file": "YPM-011-CONFIDENCE-Mamaninette.PNG",
-          "label": "CONFIDENCE-Mamaninette",
+          "label": "Confidence Mamaninette",
           "tags": [
             "amitie",
             "amour",
@@ -1205,7 +1209,7 @@
         },
         {
           "file": "YPM-011-CONFIDENCE-Mamie.PNG",
-          "label": "CONFIDENCE-Mamie",
+          "label": "Confidence Mamie",
           "tags": [
             "amitie",
             "amour",
@@ -1219,7 +1223,7 @@
         },
         {
           "file": "YPM-011-pere-du-fils.png",
-          "label": "Père du fils",
+          "label": "Confidence Père & Fils",
           "destinataires": [
             "papa"
           ],
@@ -1245,7 +1249,7 @@
       "variantes": [
         {
           "file": "YPM-012-MEUTE.PNG",
-          "label": "MEUTE",
+          "label": "Meute Maman",
           "destinataires": [
             "maman"
           ],
@@ -1257,7 +1261,7 @@
         },
         {
           "file": "YPM-012-La Meute- mamie ours.PNG",
-          "label": "La Meute- mamie ours",
+          "label": "Meute Mamie ours",
           "tags": [
             "animal",
             "famille",
@@ -1273,7 +1277,7 @@
         },
         {
           "file": "YPM-012-La Meute-papie.PNG",
-          "label": "La Meute-papie",
+          "label": "Meute Papy",
           "tags": [
             "famille",
             "grand-parents",
@@ -1288,7 +1292,7 @@
         },
         {
           "file": "YPM-012-La Meute.PNG",
-          "label": "La Meute",
+          "label": "Meute Papa",
           "tags": [
             "famille",
             "groupe",
@@ -1304,7 +1308,7 @@
         },
         {
           "file": "YPM-012-MEUTEv1.PNG",
-          "label": "MEUTEv1",
+          "label": "Meute (v1)",
           "tags": [
             "famille",
             "groupe",
@@ -1343,11 +1347,11 @@
       "variantes": [
         {
           "file": "YPM-013-DEPUIS.PNG",
-          "label": "DEPUIS"
+          "label": "Le Depuis"
         },
         {
           "file": "YPM-013-DEPUIS-frere.PNG",
-          "label": "DEPUIS-frere",
+          "label": "Depuis Frère",
           "tags": [
             "anniversaire-date",
             "couple",
@@ -1359,7 +1363,7 @@
         },
         {
           "file": "YPM-013-DEPUIS_madame_PXF.PNG",
-          "label": "DEPUIS_madame_PXF",
+          "label": "Depuis Madame",
           "tags": [
             "anniversaire-date",
             "couple",
@@ -1385,11 +1389,11 @@
       "variantes": [
         {
           "file": "YPM-014-TIGRESSE.png",
-          "label": "TIGRESSE"
+          "label": "La Tigresse"
         },
         {
           "file": "YPM-014-TIGRESSE alba.png",
-          "label": "TIGRESSE alba",
+          "label": "Tigresse Alba",
           "tags": [
             "animal",
             "feminin",
@@ -1399,7 +1403,7 @@
         },
         {
           "file": "YPM-014-TIGRESSE celine.png",
-          "label": "TIGRESSE celine",
+          "label": "Tigresse Céline",
           "tags": [
             "animal",
             "feminin",
@@ -1423,7 +1427,7 @@
       "variantes": [
         {
           "file": "YPM-015-DECLARATION.png",
-          "label": "DECLARATION",
+          "label": "La Déclaration",
           "destinataires": [
             "maman"
           ],
@@ -1435,7 +1439,7 @@
         },
         {
           "file": "YPM-015-AMOUR un jour.png",
-          "label": "AMOUR un jour",
+          "label": "Déclaration Amour un jour",
           "tags": [
             "amour",
             "couple",
@@ -1447,7 +1451,7 @@
         },
         {
           "file": "YPM-015-DECLARATION bichette.png",
-          "label": "DECLARATION bichette",
+          "label": "Déclaration Bichette",
           "tags": [
             "amour",
             "couple",
@@ -1460,7 +1464,7 @@
         },
         {
           "file": "YPM-015-DECLARATION camille&hugo.PNG",
-          "label": "DECLARATION camille&hugo",
+          "label": "Déclaration Camille & Hugo",
           "tags": [
             "amour",
             "couple",
@@ -1472,7 +1476,7 @@
         },
         {
           "file": "YPM-015-DECLARATION declaration maitresse.PNG",
-          "label": "DECLARATION declaration maitresse",
+          "label": "Déclaration Maîtresse",
           "tags": [],
           "destinataires": [
             "maîtresse"
@@ -1484,7 +1488,7 @@
         },
         {
           "file": "YPM-015-DECLARATION_bride team.png",
-          "label": "DECLARATION_bride team",
+          "label": "Déclaration Bride Team",
           "tags": [
             "amitie",
             "amour",
@@ -1499,7 +1503,7 @@
         },
         {
           "file": "YPM-015-DECLARATION_bride.PNG",
-          "label": "DECLARATION_bride",
+          "label": "Déclaration Bride",
           "tags": [
             "amour",
             "couple",
@@ -1512,7 +1516,7 @@
         },
         {
           "file": "YPM-015-DECLARATION_madame.PNG",
-          "label": "DECLARATION_madame",
+          "label": "Déclaration Madame",
           "tags": [
             "amour",
             "couple",
@@ -1525,7 +1529,7 @@
         },
         {
           "file": "YPM-015-DECLARATION_monsieur.png",
-          "label": "DECLARATION_monsieur",
+          "label": "Déclaration Monsieur",
           "tags": [
             "amour",
             "couple",
@@ -1558,7 +1562,7 @@
       "variantes": [
         {
           "file": "YPM-016-SIGNATURE papachou.PNG",
-          "label": "SIGNATURE papachou",
+          "label": "Signature Papachou",
           "destinataires": [
             "papa"
           ],
@@ -1568,7 +1572,7 @@
         },
         {
           "file": "YPM-016-SIGNATURE.PNG",
-          "label": "SIGNATURE",
+          "label": "La Signature",
           "destinataires": [
             "maman"
           ],
@@ -1578,7 +1582,7 @@
         },
         {
           "file": "YPM-016-SIGNATURE franck.PNG",
-          "label": "SIGNATURE franck",
+          "label": "Signature Franck",
           "tags": [
             "signature",
             "typo",
@@ -1590,7 +1594,7 @@
         },
         {
           "file": "YPM-016-SIGNATURE maman.PNG",
-          "label": "SIGNATURE maman",
+          "label": "Signature Maman",
           "tags": [
             "famille",
             "maman",
@@ -1603,7 +1607,7 @@
         },
         {
           "file": "YPM-016-SIGNATURE nounou.PNG",
-          "label": "SIGNATURE nounou",
+          "label": "Signature Nounou",
           "tags": [
             "famille",
             "garde-enfant",
@@ -1618,7 +1622,7 @@
         },
         {
           "file": "YPM-016-SIGNATURE raleuse.PNG",
-          "label": "SIGNATURE raleuse",
+          "label": "Signature Râleuse",
           "tags": [
             "feminin",
             "humour",
@@ -1654,7 +1658,7 @@
       "variantes": [
         {
           "file": "YPM-017-FLORALE  lettrage_emma3.PNG",
-          "label": "FLORALE  lettrage_emma3",
+          "label": "Florale Lettrage (Emma)",
           "tags": [
             "feminin",
             "floral",
@@ -1663,7 +1667,7 @@
         },
         {
           "file": "YPM-017-FLORALE maman.png",
-          "label": "FLORALE maman",
+          "label": "Florale Maman",
           "tags": [
             "famille",
             "feminin",
@@ -1674,7 +1678,7 @@
         },
         {
           "file": "YPM-017-FLORALE parisienne.PNG",
-          "label": "FLORALE parisienne",
+          "label": "Florale Parisienne",
           "tags": [
             "chic",
             "feminin",
@@ -1684,7 +1688,7 @@
         },
         {
           "file": "YPM-017-FLORALE_love.png",
-          "label": "FLORALE_love",
+          "label": "Florale Love",
           "tags": [
             "amour",
             "couple",
