@@ -14,6 +14,9 @@ const ATELIER_SOCIAL_URL = process.env.NEXT_PUBLIC_ATELIER_SOCIAL_URL ?? "http:/
 function buildAtelierUrl(entry: PlanableCalendarEntryRow): string {
   const url = new URL("/atelier-da/shooting-book", ATELIER_SOCIAL_URL);
   url.searchParams.set("motif", entry.motif_code);
+  // Deep-link retour : le Shooting Book pourra « Envoyer vers Planable » sur cette entrée.
+  url.searchParams.set("planable_entry", entry.id);
+  url.searchParams.set("planable_url", window.location.origin);
   if (entry.occasion_slug) {
     const label = OCCASION_LABEL[entry.occasion_slug] ?? entry.occasion_slug;
     const platform = PLATFORM_LABEL[entry.platform] ?? entry.platform;

@@ -3,34 +3,32 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download, Upload, X, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download, Upload, X, CheckCircle2, Send } from "lucide-react";
 import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder";
 import { listActiveLookbookAmbiances, type ActiveLookbookAmbiance } from "@/lib/active-ambiances";
 import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 import { AMBIANCES_OFFICIELLES } from "@/lib/ambiances-officielles";
+import { PRODUITS_CATALOGUE, PRODUIT_LABEL, sortByCatalogueOrder } from "@/lib/produits-catalogue";
 
-const PRODUITS_YP = [
-  { id: "YP019", label: "T-shirt adulte", short: "T-shirt" },
-  { id: "YP005", label: "Sweat adulte (col rond)", short: "Sweat" },
-  { id: "YP001", label: "Hoodie adulte (capuche)", short: "Hoodie" },
-  { id: "YP021", label: "Zoodie (sweat zippé)", short: "Zoodie" },
-  { id: "YP004", label: "Hoodie enfant", short: "Hoodie enfant" },
-];
+// Fallback synchrone (chargement / API indispo). La liste réelle vient de
+// /api/hub/products via `hubProduits` (cf. plus bas) → tous les produits du
+// référentiel apparaissent automatiquement, casquette et slims compris.
+const PRODUITS_YP = PRODUITS_CATALOGUE;
 
-/** Couleurs supports neutres Ypersoa (extrait palette_supports_par_produit.json YP019).
- *  Pour V1 hardcodé. À remplacer par fetch dynamique du référentiel produits en V2. */
-const SUPPORT_COLORS = [
-  { id: "blanc", label: "Blanc", hex: "#FFFFFF" },
-  { id: "offwhite", label: "Écru", hex: "#F4EFEA" },
-  { id: "mastic", label: "Mastic", hex: "#C5C0B3" },
-  { id: "rose_pastel", label: "Rose pastel", hex: "#F2D6CF" },
-  { id: "bleu_pastel", label: "Bleu pastel", hex: "#BCD4DE" },
-  { id: "canard", label: "Canard", hex: "#1F4D4D" },
-  { id: "marine", label: "Marine", hex: "#1A2E4F" },
-  { id: "kaki", label: "Kaki", hex: "#5C6B4A" },
-  { id: "gris_fonce", label: "Gris foncé", hex: "#3A3A3A" },
-  { id: "noir", label: "Noir", hex: "#1A1614" },
-] as const;
+/** Couleur de support réelle d'un produit (issue de palette_supports_par_produit.json).
+ *  Chargée dynamiquement par produit → la couleur sélectionnée a toujours un packshot
+ *  correspondant, qui sert de verrou produit côté Gemini. */
+interface HubColor {
+  id_palette: string;
+  nom_ypersoa: string;
+  hex_palette_officiel: string;
+  packshot_reference?: string;
+}
+interface HubProduitLite {
+  id: string;
+  nom_commercial?: string;
+  couleurs_detaillees: HubColor[];
+}
 
 const MOTIFS_YPM_FALLBACK = [
   { id: "YPM-001", nom: "La Brigitte" },
@@ -92,15 +90,46 @@ function ShootingBookContent() {
   }, []);
 
   // Deep-link Planable : pré-remplit motif + brief depuis ?motif=YPM-XXX&brief=...
+  // + capte l'entrée Planable cible (planable_entry / planable_url) pour le renvoi d'image.
+  const [planableEntryId, setPlanableEntryId] = useState<string | null>(null);
+  const [planableUrl, setPlanableUrl] = useState<string | null>(null);
   useEffect(() => {
     if (!searchParams) return;
     const m = searchParams.get("motif");
     const b = searchParams.get("brief");
     if (m) setMotifId(m);
     if (b) setBriefTexte(b);
+    const pe = searchParams.get("planable_entry");
+    const pu = searchParams.get("planable_url");
+    if (pe) setPlanableEntryId(pe);
+    setPlanableUrl(pu || process.env.NEXT_PUBLIC_PLANABLE_URL || "http://localhost:3002");
     // Mount only — Sarah peut ensuite éditer librement
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // État du renvoi « Envoyer vers Planable » (clé = identifiant du visuel : "hero" ou shotIndex)
+  const [sendingTo, setSendingTo] = useState<string | null>(null);
+  const [sentKeys, setSentKeys] = useState<Record<string, boolean>>({});
+  const [sendError, setSendError] = useState<string | null>(null);
+
+  const sendToPlanable = async (key: string, dataUrl: string, angle: string) => {
+    if (!planableEntryId || !planableUrl || sendingTo) return;
+    setSendingTo(key);
+    setSendError(null);
+    try {
+      const res = await fetch(`${planableUrl}/api/calendar/${planableEntryId}/attach-image`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ image_data_url: dataUrl, angle }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error || "Échec de l'envoi");
+      setSentKeys((prev) => ({ ...prev, [key]: true }));
+    } catch (e) {
+      setSendError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setSendingTo(null);
+    }
+  };
   const [ambiances, setAmbiances] = useState<string[]>([]);
   const [lookbookAmbianceIds, setLookbookAmbianceIds] = useState<string[]>([]);
   const [format, setFormat] = useState<string>("instagram");
@@ -114,6 +143,26 @@ function ShootingBookContent() {
   const [motifPngFilename, setMotifPngFilename] = useState<string | null>(null);
   const [motifSize, setMotifSize] = useState<"petit" | "moyen" | "grand">("moyen");
   const [supportColor, setSupportColor] = useState<string>("blanc");
+
+  // Palettes réelles par produit (verrou couleur + packshot Gemini)
+  const [hubProduits, setHubProduits] = useState<HubProduitLite[]>([]);
+  useEffect(() => {
+    fetch("/api/hub/products", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.ok) setHubProduits(res.data.produits as HubProduitLite[]);
+      })
+      .catch(() => undefined);
+  }, []);
+  const availableColors: HubColor[] =
+    hubProduits.find((p) => p.id === produitId)?.couleurs_detaillees ?? [];
+  // Si la couleur courante n'existe pas pour le produit choisi → bascule sur la première dispo
+  useEffect(() => {
+    if (availableColors.length === 0) return;
+    if (!availableColors.some((c) => c.id_palette === supportColor)) {
+      setSupportColor(availableColors[0].id_palette);
+    }
+  }, [produitId, hubProduits, supportColor, availableColors]);
 
   // Sélection manuelle d'un dispositif casting (radio-like, default top 1)
   const [selectedDispositifId, setSelectedDispositifId] = useState<string | null>(null);
@@ -171,7 +220,7 @@ function ShootingBookContent() {
     setRenderedImage(null);
     setImageError(null);
     try {
-      const supportLabel = SUPPORT_COLORS.find((c) => c.id === supportColor)?.label ?? supportColor;
+      const supportLabel = availableColors.find((c) => c.id_palette === supportColor)?.nom_ypersoa ?? supportColor;
       const briefWithSupport = `${briefTexte.trim()}\n\nSupport : t-shirt/sweat ${supportLabel} (couleur Ypersoa officielle).`;
       const res = await fetch("/api/da/shooting-plan", {
         method: "POST",
@@ -218,6 +267,7 @@ function ShootingBookContent() {
           motif_png_data_url: motifPngDataUrl,
           motif_size: motifSize,
           produit_yp_id: produitId,
+          selected_garment_color: supportColor,
           shot_index: 0,
         }),
       });
@@ -250,6 +300,7 @@ function ShootingBookContent() {
           motif_png_data_url: motifPngDataUrl,
           motif_size: motifSize,
           produit_yp_id: produitId,
+          selected_garment_color: supportColor,
           shot_index: shotIndex,
         }),
       });
@@ -422,7 +473,13 @@ function ShootingBookContent() {
               color: "var(--hub-foreground)",
             }}
           >
-            {PRODUITS_YP.map((p) => (
+            {(hubProduits.length
+              ? sortByCatalogueOrder(hubProduits).map((p) => ({
+                  id: p.id,
+                  label: p.nom_commercial ?? PRODUIT_LABEL[p.id] ?? p.id,
+                }))
+              : PRODUITS_YP
+            ).map((p) => (
               <option key={p.id} value={p.id}>
                 {p.id} · {p.label}
               </option>
@@ -674,14 +731,19 @@ function ShootingBookContent() {
             Couleur du support
           </label>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {SUPPORT_COLORS.map((c) => {
-              const active = supportColor === c.id;
+            {availableColors.length === 0 && (
+              <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontStyle: "italic", opacity: 0.5 }}>
+                Chargement des couleurs…
+              </span>
+            )}
+            {availableColors.map((c) => {
+              const active = supportColor === c.id_palette;
               return (
                 <button
-                  key={c.id}
+                  key={c.id_palette}
                   type="button"
-                  onClick={() => setSupportColor(c.id)}
-                  title={`${c.label} · ${c.hex}`}
+                  onClick={() => setSupportColor(c.id_palette)}
+                  title={`${c.nom_ypersoa} · ${c.hex_palette_officiel}`}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -698,11 +760,11 @@ function ShootingBookContent() {
                 >
                   <span style={{
                     width: 14, height: 14, borderRadius: 999,
-                    background: c.hex,
+                    background: c.hex_palette_officiel,
                     border: "0.5px solid rgba(0,0,0,0.15)",
                     display: "inline-block",
                   }} />
-                  {c.label}
+                  {c.nom_ypersoa}
                 </button>
               );
             })}
@@ -1075,10 +1137,39 @@ function ShootingBookContent() {
                         >
                           <Download size={12} /> Télécharger PNG
                         </button>
+                        {planableEntryId && renderedImage && (
+                          <button
+                            type="button"
+                            onClick={() => sendToPlanable("hero", renderedImage.data_url, "Hero")}
+                            disabled={sendingTo === "hero" || sentKeys["hero"]}
+                            title="Attacher ce visuel à l'entrée Planable d'origine"
+                            style={{
+                              padding: "8px 14px", borderRadius: 999, border: "none",
+                              background: sentKeys["hero"] ? "#2f7a3e" : "var(--hub-terracotta, #B4665F)",
+                              color: "white", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
+                              cursor: sentKeys["hero"] ? "default" : "pointer",
+                              display: "flex", alignItems: "center", gap: 6,
+                              opacity: sendingTo === "hero" ? 0.6 : 1,
+                            }}
+                          >
+                            {sendingTo === "hero" ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                            {sentKeys["hero"] ? "Envoyé ✓" : "Envoyer vers Planable"}
+                          </button>
+                        )}
                       </>
                     )}
                   </div>
                 </div>
+
+                {sendError && planableEntryId && (
+                  <div style={{
+                    padding: 10, borderRadius: 10, background: "#fff3f0",
+                    border: "1px solid #ffcfb6", fontFamily: "var(--font-sans)",
+                    fontSize: 12, color: "#a13a16",
+                  }}>
+                    Envoi Planable : {sendError}
+                  </div>
+                )}
 
                 {imageError && (
                   <div
@@ -1431,6 +1522,25 @@ function ShootingBookContent() {
                                 }}
                               >
                                 <Download size={11} /> PNG
+                              </button>
+                            )}
+                            {img && planableEntryId && (
+                              <button
+                                type="button"
+                                onClick={() => sendToPlanable(`shot-${idx}`, img.data_url, s.angle)}
+                                disabled={sendingTo === `shot-${idx}` || sentKeys[`shot-${idx}`]}
+                                title="Attacher ce shot à l'entrée Planable d'origine"
+                                style={{
+                                  padding: "6px 12px", borderRadius: 999, border: "none",
+                                  background: sentKeys[`shot-${idx}`] ? "#2f7a3e" : "var(--hub-terracotta, #B4665F)",
+                                  color: "white", fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500,
+                                  cursor: sentKeys[`shot-${idx}`] ? "default" : "pointer",
+                                  display: "flex", alignItems: "center", gap: 4,
+                                  opacity: sendingTo === `shot-${idx}` ? 0.6 : 1,
+                                }}
+                              >
+                                {sendingTo === `shot-${idx}` ? <Loader2 size={11} className="animate-spin" /> : <Send size={11} />}
+                                {sentKeys[`shot-${idx}`] ? "Envoyé ✓" : "→ Planable"}
                               </button>
                             )}
                           </div>
