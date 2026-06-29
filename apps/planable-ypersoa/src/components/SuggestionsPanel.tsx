@@ -33,12 +33,14 @@ export function SuggestionsPanel({
   onExpandCampaign,
   onResetCampaign,
   plannedCountBySlug,
+  orientation = "vertical",
 }: {
   suggestions: SuggestionPayload[];
   loading: boolean;
   onExpandCampaign: (slug: string) => Promise<void>;
   onResetCampaign: (slug: string) => Promise<void>;
   plannedCountBySlug: Map<string, number>;
+  orientation?: "vertical" | "horizontal";
 }) {
   const [bankOpen, setBankOpen] = useState(false);
 
@@ -46,6 +48,96 @@ export function SuggestionsPanel({
   // Banque = tous les evergreen (la bibliothèque d'angles, repliable).
   const mainFlow = suggestions.filter((s) => !s.is_evergreen || s.featured_this_week);
   const evergreenBank = suggestions.filter((s) => s.is_evergreen && !s.featured_this_week);
+
+  const isHorizontal = orientation === "horizontal";
+
+  if (isHorizontal) {
+    return (
+      <section style={{
+        background: "white", borderBottom: "0.5px solid var(--color-border)",
+        padding: "12px 24px", display: "flex", flexDirection: "column", gap: 8,
+      }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 16, fontWeight: 500, margin: 0 }}>
+            À planifier
+          </h2>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.55 }}>
+            Temps forts des 60 prochains jours · fais défiler horizontalement →
+          </span>
+        </div>
+
+        {loading && (
+          <div style={{ padding: 16, opacity: 0.5 }}>
+            <Loader2 size={18} className="animate-spin" />
+          </div>
+        )}
+
+        {!loading && suggestions.length === 0 && (
+          <div style={{
+            padding: "12px 16px", opacity: 0.55, fontSize: 12,
+            border: "1px dashed var(--color-border)", borderRadius: 10,
+          }}>
+            Aucune occasion dans les 60 jours. Profite-en pour respirer.
+          </div>
+        )}
+
+        {!loading && mainFlow.length > 0 && (
+          <div style={{
+            display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4,
+            scrollbarWidth: "thin",
+          }}>
+            {mainFlow.map((s) => (
+              <div key={s.occasion.slug} style={{ flex: "0 0 280px", width: 280 }}>
+                <SuggestionCard
+                  sugg={s}
+                  onExpand={onExpandCampaign}
+                  onReset={onResetCampaign}
+                  plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!loading && evergreenBank.length > 0 && (
+          <div>
+            <button
+              type="button"
+              onClick={() => setBankOpen((v) => !v)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "6px 12px", borderRadius: 999, cursor: "pointer",
+                background: "var(--color-cream)", border: "0.5px solid var(--color-border)",
+                fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, color: "var(--color-ink)",
+              }}
+            >
+              <Lightbulb size={13} style={{ color: "#8C7BB0" }} />
+              Evergreen — une idée ? <span style={{ opacity: 0.55, fontWeight: 400 }}>· {evergreenBank.length} angles dispo</span>
+              {bankOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            </button>
+
+            {bankOpen && (
+              <div style={{
+                display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, marginTop: 8,
+                scrollbarWidth: "thin",
+              }}>
+                {evergreenBank.map((s) => (
+                  <div key={s.occasion.slug} style={{ flex: "0 0 280px", width: 280 }}>
+                    <SuggestionCard
+                      sugg={s}
+                      onExpand={onExpandCampaign}
+                      onReset={onResetCampaign}
+                      plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+    );
+  }
 
   return (
     <aside style={{

@@ -311,18 +311,19 @@ export default function PlanablePage() {
         </div>
       )}
 
+      <SuggestionsPanel
+        suggestions={suggestions}
+        loading={loadingSugg}
+        onExpandCampaign={expandCampaign}
+        onResetCampaign={resetCampaign}
+        plannedCountBySlug={plannedCountBySlug}
+        orientation="horizontal"
+      />
+
       <main style={{
-        flex: 1, display: "grid", gridTemplateColumns: "300px 1fr 340px",
+        flex: 1, display: "grid", gridTemplateColumns: "1fr 340px",
         gap: 12, padding: 16, minHeight: 0, overflow: "hidden",
       }}>
-        <SuggestionsPanel
-          suggestions={suggestions}
-          loading={loadingSugg}
-          onExpandCampaign={expandCampaign}
-          onResetCampaign={resetCampaign}
-          plannedCountBySlug={plannedCountBySlug}
-        />
-
         <div style={{ minHeight: 0, overflow: "hidden" }}>
           {loadingEntries && entries.length === 0 ? (
             <div style={{ padding: 60, textAlign: "center", opacity: 0.5 }}>Chargement…</div>
