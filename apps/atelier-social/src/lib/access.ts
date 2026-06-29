@@ -12,18 +12,35 @@ export type Section =
   | "dashboard"
   | "atelier-da"
   | "atelier-production"
+  | "referentiels-prod"
   | "planable"
   | "admin";
 
 export const ROLE_SECTIONS: Record<AppRole, Section[]> = {
-  admin: ["dashboard", "atelier-da", "atelier-production", "planable", "admin"],
-  crea: ["dashboard", "atelier-da", "planable"],
-  prod: ["dashboard", "atelier-production"],
+  admin: [
+    "dashboard",
+    "atelier-da",
+    "atelier-production",
+    "referentiels-prod",
+    "planable",
+    "admin",
+  ],
+  // La comm (crea) consulte motifs + palettes d'associations sans avoir le
+  // reste de la prod (kanban, commandes, fils, règles…).
+  crea: ["dashboard", "atelier-da", "referentiels-prod", "planable"],
+  prod: ["dashboard", "atelier-production", "referentiels-prod"],
   viewer: ["dashboard"],
 };
 
 /** Déduit la section métier d'un chemin. */
 export function sectionForPath(pathname: string): Section {
+  // Référentiels production lisibles aussi par la comm (crea) : motifs YPM +
+  // palettes d'associations. Doit passer AVANT le préfixe générique prod.
+  if (
+    pathname.startsWith("/atelier-production/motifs") ||
+    pathname.startsWith("/atelier-production/palettes")
+  )
+    return "referentiels-prod";
   if (pathname.startsWith("/atelier-production")) return "atelier-production";
   if (pathname.startsWith("/atelier-da")) return "atelier-da";
   if (pathname.startsWith("/lookbook") || pathname.startsWith("/shooting"))

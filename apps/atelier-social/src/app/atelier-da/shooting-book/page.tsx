@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Sparkles, Loader2, AlertCircle, MapPin, Users, Camera as CameraIcon, Calendar, Lightbulb, Heart, Image as ImageIcon, Download, Upload, X, CheckCircle2 } from "lucide-react";
 import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder";
 import { listActiveLookbookAmbiances, type ActiveLookbookAmbiance } from "@/lib/active-ambiances";
+import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 import { AMBIANCES_OFFICIELLES } from "@/lib/ambiances-officielles";
 
 const PRODUITS_YP = [
@@ -67,7 +68,7 @@ function ShootingBookContent() {
   const [briefTexte, setBriefTexte] = useState("");
   const [produitId, setProduitId] = useState<string>("YP019");
   const [motifId, setMotifId] = useState("");
-  const [motifsList, setMotifsList] = useState<{ id: string; nom: string; asset_principal?: string }[]>(MOTIFS_YPM_FALLBACK);
+  const [motifsList, setMotifsList] = useState<{ id: string; nom: string; asset_principal?: string; asset_principal_url?: string }[]>(MOTIFS_YPM_FALLBACK);
 
   // Charge les motifs réels (avec asset_principal) depuis le référentiel
   useEffect(() => {
@@ -78,10 +79,11 @@ function ShootingBookContent() {
         const motifs = res.data?.motifs?.motifs;
         if (Array.isArray(motifs)) {
           setMotifsList(
-            motifs.map((m: { id: string; nom_commercial: string; asset_principal?: string }) => ({
+            motifs.map((m: { id: string; nom_commercial: string; asset_principal?: string; asset_principal_url?: string }) => ({
               id: m.id,
               nom: m.nom_commercial,
               asset_principal: m.asset_principal,
+              asset_principal_url: m.asset_principal_url,
             }))
           );
         }
@@ -261,15 +263,31 @@ function ShootingBookContent() {
     }
   };
 
+  // fetch → blob → objectURL : Safari ignore l'attribut `download` d'une ancre
+  // sur les grosses data: URL (l'image s'ouvre au lieu de se télécharger).
+  const downloadDataUrl = async (src: string, filename: string) => {
+    try {
+      const response = await fetch(src);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("Téléchargement échoué", err);
+      alert("Le téléchargement a échoué. Réessaie.");
+    }
+  };
+
   const handleDownloadImage = () => {
     if (!renderedImage) return;
     const slug = (plan?.brief_resume || "ypersoa-hero").slice(0, 40).replace(/[^a-z0-9]+/gi, "-").toLowerCase();
-    const a = document.createElement("a");
-    a.href = renderedImage.data_url;
-    a.download = `ypersoa-shooting-book-${slug}-${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    void downloadDataUrl(renderedImage.data_url, `ypersoa-shooting-book-${slug}-${Date.now()}.png`);
   };
 
   const handleDownloadShot = (shotIndex: number) => {
@@ -277,12 +295,7 @@ function ShootingBookContent() {
     if (!img || !plan) return;
     const angle = plan.shotlist[shotIndex]?.angle || `shot-${shotIndex + 1}`;
     const slug = (plan.brief_resume || "ypersoa").slice(0, 30).replace(/[^a-z0-9]+/gi, "-").toLowerCase();
-    const a = document.createElement("a");
-    a.href = img.data_url;
-    a.download = `ypersoa-${slug}-${angle.toLowerCase()}-${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    void downloadDataUrl(img.data_url, `ypersoa-${slug}-${angle.toLowerCase()}-${Date.now()}.png`);
   };
 
   return (
@@ -453,7 +466,7 @@ function ShootingBookContent() {
               {motifSelected?.asset_principal ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
-                  src={`/motifs/${encodeURIComponent(motifSelected.asset_principal)}`}
+                  src={motifImageSrc(motifSelected.asset_principal, motifSelected.asset_principal_url)}
                   alt={motifSelected.nom}
                   style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
                   onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}

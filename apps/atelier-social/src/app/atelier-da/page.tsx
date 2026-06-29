@@ -8,7 +8,7 @@
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film } from "lucide-react";
+import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film, FileBox, Palette } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -78,14 +78,22 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 8,
-    title: "Atelier Production",
-    description: "Fiche technique des motifs, fils, palettes + moteur d'attribution. Lien raccourci quand la DA a besoin de la vue prod.",
-    href: "/atelier-production",
-    icon: <Compass size={22} strokeWidth={1.4} />,
+    title: "Motifs — fiches techniques",
+    description: "Référentiel technique des motifs YPM (dimensions, nombre de points, fils Gunold). La vue prod, en lecture pour la comm.",
+    href: "/atelier-production/motifs",
+    icon: <FileBox size={22} strokeWidth={1.4} />,
     status: "v0",
   },
   {
     id: 9,
+    title: "Palettes d'associations",
+    description: "Associations motif × fils validées en production. Référence couleur pour briefer un visuel ou composer un pack.",
+    href: "/atelier-production/palettes",
+    icon: <Palette size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 10,
     title: "Bible de marque visuelle",
     description: "Palette officielle, typos (Cormorant, DM Sans, Josefin), red lines vocabulaires, références muses (Sézane × A.P.C.).",
     href: null,
@@ -93,7 +101,7 @@ const SUBMODULES: SubmoduleCard[] = [
     status: "v2",
   },
   {
-    id: 10,
+    id: 11,
     title: "Décisions DA archivées",
     description: "Trace des grandes décisions DA (29/04 Camille→Clémence, 01/05 refonte 3 lignées). Histoire éditoriale Ypersoa.",
     href: null,

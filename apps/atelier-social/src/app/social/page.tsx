@@ -741,19 +741,37 @@ function ResultPanelImagesOnly({
   onToggleBest,
   onRemove,
 }: ResultPanelImagesOnlyProps) {
-  const handleDownload = (url: string, index: number) => {
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ypersoa-slide-${index + 1}-${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  const handleDownload = async (url: string, index: number) => {
+    // fetch → blob → objectURL : seule méthode fiable pour FORCER un vrai
+    // téléchargement sur le disque. L'attribut `download` d'une ancre est
+    // ignoré par Safari sur les grosses data: URL (l'image s'ouvre au lieu de
+    // se télécharger) et par tous les navigateurs sur une URL cross-origin
+    // (Supabase Storage). On passe donc systématiquement par un Blob local.
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const ext = (blob.type.split("/")[1] || "png").replace("jpeg", "jpg");
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = `ypersoa-slide-${index + 1}-${Date.now()}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("Téléchargement échoué", err);
+      alert("Le téléchargement a échoué. Réessaie, ou télécharge depuis la bibliothèque.");
+    }
   };
 
-  const handleDownloadAll = () => {
-    imageUrls.forEach((url, i) => {
-      setTimeout(() => handleDownload(url, i), i * 300);
-    });
+  const handleDownloadAll = async () => {
+    // Séquentiel : Safari bloque les téléchargements programmatiques en rafale.
+    for (let i = 0; i < imageUrls.length; i++) {
+      await handleDownload(imageUrls[i], i);
+      await new Promise((r) => setTimeout(r, 300));
+    }
   };
 
   const handlePrev = () => setCurrentSlide(Math.max(currentSlide - 1, 0));
