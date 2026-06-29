@@ -64,6 +64,36 @@ export function generateAutoPlan(
     ? occasion.recommended_motifs
     : ["YPM-001"];
 
+  // ÉVERGREEN / ÉDITORIAL → empreinte légère : 1 reel + 1 pin, PAS de cadence multi-semaines.
+  // (Sarah 30/06 : « pour les evergreen, ex. tennis_club, uniquement 1-2 reels, pas sur 8 semaines ».)
+  if (isEditorial) {
+    const base = maxDate(today, igStart);
+    const pinDate = nextDow(base, 3); // mercredi
+    const reelDate = nextDow(base, 5); // vendredi
+    return {
+      slots: [
+        {
+          date: toIsoDate(pinDate),
+          time: "09:00",
+          platform: "pinterest_pin",
+          motif_code: motifs[0],
+          format: "2:3",
+          focus: `Pin évergreen ${occasion.name_fr} — découverte SEO long terme (1 seule pin, pas de cadence).`,
+        },
+        {
+          date: toIsoDate(reelDate),
+          time: "19:00",
+          platform: "instagram_reel",
+          motif_code: motifs[motifs.length > 1 ? 1 : 0],
+          format: "9:16",
+          focus: `Reel évergreen ${occasion.name_fr} — making-of broderie ou détail textile, ton de marque (1 seul reel, pas de cadence multi-semaines).`,
+        },
+      ],
+      occurrence,
+      deadline,
+    };
+  }
+
   const slots: AutoSlot[] = [];
   let cursor = minDate(igStart, pinStart);
   const end = maxDate(igEnd, pinEnd);
@@ -108,7 +138,7 @@ export function generateAutoPlan(
         platform: "instagram_reel",
         motif_code: motif,
         format: "9:16",
-        focus: `Reel ${occasion.name_fr} — making-of broderie Tajima ou détail textile (semaine ${week + 1}).`,
+        focus: `Reel ${occasion.name_fr} — making-of broderie ou détail textile (semaine ${week + 1}).`,
       });
     }
     if (dow === 5) week++; // rotation motif déterministe (incrémentée chaque vendredi)
@@ -139,6 +169,12 @@ function igFocus(
     return `Post hero ${occasion.name_fr} — conversion, CTA achat affirmé + rappel deadline (J-${daysToDeadline}).`;
   }
   return `Post hero ${occasion.name_fr} — désir / storytelling, hook ÉMOTION, CTA discret (semaine ${week + 1}).`;
+}
+
+/** Prochaine date (incluse) tombant sur le jour de semaine `dow` (0=dim … 5=ven). */
+function nextDow(from: Date, dow: number): Date {
+  const diff = (dow - getDay(from) + 7) % 7;
+  return addDays(from, diff);
 }
 
 function maxDate(a: Date, b: Date): Date {

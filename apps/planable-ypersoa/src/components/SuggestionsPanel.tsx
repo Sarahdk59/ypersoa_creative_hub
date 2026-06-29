@@ -330,7 +330,7 @@ function SuggestionCard({
             setExpanding(false);
           }}
           disabled={expanding || resetting}
-          title={sugg.has_special_campaign ? "Brief Ypersoa hardcodé (19 entrées spécifiques)" : isEditorial ? "Plan éditorial : posts engagement + pins, ton de marque, sans CTA deadline" : "Plan auto : 2 posts/sem + 1 pin/2 sem sur la fenêtre de campagne"}
+          title={sugg.has_special_campaign ? "Brief Ypersoa hardcodé (19 entrées spécifiques)" : isEditorial ? "Évergreen / éditorial : empreinte légère = 1 reel + 1 pin, pas de cadence multi-semaines" : "Plan auto : 2 posts/sem + 1 pin/2 sem sur la fenêtre de campagne"}
           style={{
             display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center",
             padding: "8px 12px", borderRadius: 999,
@@ -345,7 +345,7 @@ function SuggestionCard({
             : sugg.has_special_campaign
               ? "Planifier la campagne complète"
               : isEditorial
-                ? "Planifier (éditorial · 2/sem)"
+                ? "Planifier (évergreen · 1 reel + 1 pin)"
                 : "Planifier (auto · 2/sem)"}
         </button>
 
