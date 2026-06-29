@@ -34,6 +34,12 @@ export interface AutoSlot {
   focus: string;
 }
 
+/** Parse 'YYYY-MM-DD' en date LOCALE minuit (cohérent avec suggestions.ts). */
+function parseLocalDate(d: string): Date {
+  const [y, m, day] = d.slice(0, 10).split("-").map(Number);
+  return new Date(y, m - 1, day);
+}
+
 const SEASON_END_DAYS = 90;           // Pour saisons ouvertes type Mariage / thèmes (été, automne…)
 const PINTEREST_FRONTLOAD_DAYS = 21;  // Pinterest = semé tôt : on ne pin plus passé ce front-load
 const MS_PER_DAY = 86_400_000;
@@ -42,7 +48,10 @@ export function generateAutoPlan(
   occasion: PlanableOccasionRow,
   today: Date = new Date()
 ): { slots: AutoSlot[]; occurrence: Date; deadline: Date } {
-  const occurrence = nextOccurrence(occasion.date_strategy, today);
+  // Temps fort : date explicite éditée par Sarah si présente, sinon calculée.
+  const occurrence = occasion.temps_fort_date
+    ? parseLocalDate(occasion.temps_fort_date)
+    : nextOccurrence(occasion.date_strategy, today);
   const deadline = buyByDeadline(occurrence, occasion.lead_days);
   const isSeasonal = occasion.date_strategy.startsWith("season:");
   // Moment éditorial = engagement / reach, pas de deadline commande : on publie
@@ -64,34 +73,92 @@ export function generateAutoPlan(
     ? occasion.recommended_motifs
     : ["YPM-001"];
 
-  // ÉVERGREEN / ÉDITORIAL → empreinte légère : 1 reel + 1 pin, PAS de cadence multi-semaines.
-  // (Sarah 30/06 : « pour les evergreen, ex. tennis_club, uniquement 1-2 reels, pas sur 8 semaines ».)
   if (isEditorial) {
-    const base = maxDate(today, igStart);
-    const pinDate = nextDow(base, 3); // mercredi
-    const reelDate = nextDow(base, 5); // vendredi
-    return {
-      slots: [
-        {
-          date: toIsoDate(pinDate),
-          time: "09:00",
-          platform: "pinterest_pin",
-          motif_code: motifs[0],
-          format: "2:3",
-          focus: `Pin évergreen ${occasion.name_fr} — découverte SEO long terme (1 seule pin, pas de cadence).`,
-        },
-        {
-          date: toIsoDate(reelDate),
-          time: "19:00",
-          platform: "instagram_reel",
-          motif_code: motifs[motifs.length > 1 ? 1 : 0],
-          format: "9:16",
-          focus: `Reel évergreen ${occasion.name_fr} — making-of broderie ou détail textile, ton de marque (1 seul reel, pas de cadence multi-semaines).`,
-        },
-      ],
-      occurrence,
-      deadline,
-    };
+    const isEvergreen = occasion.date_strategy === "season:1-12";
+
+    // ÉVERGREEN (always-on, sans date) → empreinte légère : 1 reel + 1 pin, pas de cadence.
+    // (Sarah 30/06 : « pour les evergreen, ex. tennis_club, uniquement 1-2 reels ».)
+    if (isEvergreen) {
+      const base = maxDate(today, igStart);
+      const pinDate = nextDow(base, 3); // mercredi
+      const reelDate = nextDow(base, 5); // vendredi
+      return {
+        slots: [
+          {
+            date: toIsoDate(pinDate), time: "09:00", platform: "pinterest_pin",
+            motif_code: motifs[0], format: "2:3",
+            focus: `Pin évergreen ${occasion.name_fr} — découverte SEO long terme (1 seule pin, pas de cadence).`,
+          },
+          {
+            date: toIsoDate(reelDate), time: "19:00", platform: "instagram_reel",
+            motif_code: motifs[motifs.length > 1 ? 1 : 0], format: "9:16",
+            focus: `Reel évergreen ${occasion.name_fr} — making-of broderie ou détail textile, ton de marque (1 seul reel).`,
+          },
+        ],
+        occurrence,
+        deadline,
+      };
+    }
+
+    // ÉDITORIAL DATÉ (temps fort réel, ex. 14 juillet) → RUNWAY complet (Sarah 30/06) :
+    //  • post d'ouverture à J-campaign_lead (désir),
+    //  • posts hebdo de montée,
+    //  • reel « moment ou jamais » à la deadline commande (= dernière broderie possible à temps),
+    //  • post final LE JOUR J = engagement pur, AUCUN CTA (trop tard pour broder pour le jour même).
+    const start = maxDate(today, addDays(occurrence, -occasion.campaign_lead_days));
+    const lastOrder = deadline; // occurrence - lead_days
+    const m0 = motifs[0];
+    const m1 = motifs[motifs.length > 1 ? 1 : 0];
+    const fr = (d: Date) => `${d.getDate()}/${d.getMonth() + 1}`;
+    const datedSlots: AutoSlot[] = [];
+
+    // Pinterest semée tôt (mercredi proche du début)
+    const pinDate = nextDow(start, 3);
+    if (pinDate <= occurrence) {
+      datedSlots.push({
+        date: toIsoDate(pinDate), time: "09:00", platform: "pinterest_pin",
+        motif_code: m0, format: "2:3",
+        focus: `Pin ${occasion.name_fr} — semée tôt, découverte SEO long terme.`,
+      });
+    }
+    // Post d'ouverture (désir) au début du runway
+    datedSlots.push({
+      date: toIsoDate(start), time: "19:00", platform: "instagram_post",
+      motif_code: m0, format: "4:5",
+      focus: `Ouverture ${occasion.name_fr} — désir / storytelling, ton de marque (drôle, complice). Commande ouverte jusqu'au ${fr(lastOrder)}.`,
+    });
+    // Posts hebdo de montée entre l'ouverture et la deadline commande
+    for (let c = addDays(start, 7); c < lastOrder; c = addDays(c, 7)) {
+      datedSlots.push({
+        date: toIsoDate(c), time: "19:00", platform: "instagram_post",
+        motif_code: m1, format: "4:5",
+        focus: `${occasion.name_fr} — montée du désir, CTA doux : commande avant le ${fr(lastOrder)} pour broder à temps.`,
+      });
+    }
+    // Reel « moment ou jamais » à la deadline commande
+    if (lastOrder > today && lastOrder < occurrence) {
+      datedSlots.push({
+        date: toIsoDate(lastOrder), time: "19:00", platform: "instagram_reel",
+        motif_code: m0, format: "9:16",
+        focus: `${occasion.name_fr} — C'EST LE MOMENT OU JAMAIS : dernière commande aujourd'hui pour broder à temps. Après, trop tard.`,
+      });
+    }
+    // Post final LE JOUR J = engagement pur, aucun CTA commande
+    datedSlots.push({
+      date: toIsoDate(occurrence), time: "11:00", platform: "instagram_post",
+      motif_code: m0, format: "4:5",
+      focus: `${occasion.name_fr} — JOUR J : post engagement pur, célébration. AUCUN CTA commande (trop tard pour broder pour aujourd'hui).`,
+    });
+
+    // Dédupe (date + plateforme)
+    const seen = new Set<string>();
+    const slots = datedSlots.filter((s) => {
+      const k = `${s.date}|${s.platform}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    return { slots, occurrence, deadline };
   }
 
   const slots: AutoSlot[] = [];
