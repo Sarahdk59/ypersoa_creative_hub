@@ -88,6 +88,13 @@ export interface MetiersHub {
 export interface MotifVariante {
   file: string;
   label: string;
+  /**
+   * URL publique Supabase Storage (bucket `motifs-png`) pour les PNG uploadés
+   * au runtime. Absente pour les fichiers historiques commités dans
+   * assets/motifs/ (servis via /motifs/<file>). Le filesystem du conteneur étant
+   * éphémère en prod, tout PNG ajouté via l'UI doit passer par Storage.
+   */
+  url?: string;
   tags?: string[];
   /**
    * Catalogue site-web fine-grained : tags propres à CETTE variante.
@@ -113,6 +120,8 @@ export interface MotifVariante {
 export interface ShootingPng {
   file: string;
   label: string;
+  /** URL publique Supabase Storage (cf. MotifVariante.url). */
+  url?: string;
   tags?: string[];
 }
 
@@ -172,6 +181,12 @@ export interface MotifYpm {
   id: string;
   nom_commercial: string;
   asset_principal: string;
+  /**
+   * URL publique Supabase Storage de l'asset_principal quand ce hero provient
+   * d'un PNG uploadé au runtime (cf. MotifVariante.url). Absente pour les heros
+   * historiques commités (servis via /motifs/<asset_principal>).
+   */
+  asset_principal_url?: string;
   nb_variantes: number;
   variantes: MotifVariante[];
   tags?: string[];

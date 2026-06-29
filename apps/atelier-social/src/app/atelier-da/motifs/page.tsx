@@ -19,6 +19,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, X, Sparkles, Camera, Filter } from "lucide-react";
 import type { MotifYpm, MotifVariante } from "@/lib/atelier-da/referentiels-loader";
+import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 import { listCatalogShots, deleteCatalogShot, type CatalogShot } from "@/lib/catalog-shots";
 import { listProductSheets, deleteProductSheet, type ProductSheetWithShots } from "@/lib/product-sheets";
 import { EditCatalogShotModal } from "@/components/EditCatalogShotModal";
@@ -368,7 +369,7 @@ function VarianteCard({
       <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--hub-bg)", padding: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`/motifs/${encodeURIComponent(variante.file)}`}
+          src={motifImageSrc(variante.file, variante.url)}
           alt={variante.label}
           style={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
           onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
@@ -472,7 +473,7 @@ function MotifCard({ motif, onOpen }: { motif: MotifYpm; onOpen: () => void }) {
       <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--hub-bg)", padding: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`/motifs/${encodeURIComponent(motif.asset_principal)}`}
+          src={motifImageSrc(motif.asset_principal, motif.asset_principal_url)}
           alt={motif.nom_commercial}
           style={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
           onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
@@ -837,7 +838,7 @@ function MotifCatalogModal({
         <div style={{ background: "var(--hub-bg)", padding: 24, display: "flex", flexDirection: "column", alignItems: "center", gap: 16, overflow: "auto", minHeight: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`/motifs/${encodeURIComponent(motif.asset_principal)}`}
+            src={motifImageSrc(motif.asset_principal, motif.asset_principal_url)}
             alt={motif.nom_commercial}
             style={{ width: "100%", height: "auto", maxHeight: 240, objectFit: "contain" }}
           />
@@ -933,7 +934,7 @@ function MotifCatalogModal({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={`/motifs/${encodeURIComponent(motif.asset_principal)}`}
+                src={motifImageSrc(motif.asset_principal, motif.asset_principal_url)}
                 alt={motif.nom_commercial}
                 style={{ width: 48, height: 48, objectFit: "contain", background: "var(--hub-bg)", borderRadius: 6, flexShrink: 0 }}
                 onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
@@ -991,7 +992,7 @@ function MotifCatalogModal({
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={`/motifs/${encodeURIComponent(v.file)}`}
+                      src={motifImageSrc(v.file, v.url)}
                       alt={v.label}
                       style={{ width: 48, height: 48, objectFit: "contain", background: "var(--hub-bg)", borderRadius: 6, flexShrink: 0 }}
                       onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}

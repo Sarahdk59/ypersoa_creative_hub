@@ -19,6 +19,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Loader2, Camera } from "lucide-react";
 import type { MotifYpm, MotifVariante } from "@/lib/atelier-da/referentiels-loader";
+import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 
 const SHOOTING_URL = process.env.NEXT_PUBLIC_SHOOTING_URL || "http://localhost:3001";
 
@@ -221,7 +222,7 @@ export default function DestinataireCataloguePage() {
               <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--hub-bg)", padding: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`/motifs/${encodeURIComponent(row.variante.file)}`}
+                  src={motifImageSrc(row.variante.file, row.variante.url)}
                   alt={row.variante.label}
                   style={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
                   onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}

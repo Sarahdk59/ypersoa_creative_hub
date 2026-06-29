@@ -64,9 +64,13 @@ export async function POST(
 
     const newHero = variantIdx !== -1 ? variantes[variantIdx] : shootingPngs[shootingIdx];
     const oldHeroFile = target.asset_principal;
+    const oldHeroUrl = target.asset_principal_url;
     const oldHeroAsVariante: MotifVariante = {
       file: oldHeroFile,
       label: deriveLabelFromFilename(oldHeroFile, id),
+      // Préserve l'URL Supabase de l'ancien hero quand il était un PNG uploadé,
+      // sinon elle serait perdue en le rétrogradant en variante (preview cassée).
+      ...(oldHeroUrl ? { url: oldHeroUrl } : {}),
     };
 
     if (variantIdx !== -1) {
@@ -78,6 +82,13 @@ export async function POST(
     variantes.unshift(oldHeroAsVariante);
     target.variantes = variantes;
     target.asset_principal = newHero.file;
+    // Le nouveau hero porte son URL Supabase si c'était un PNG uploadé ; sinon on
+    // retire le champ pour retomber sur le service statique /motifs/<file>.
+    if (newHero.url) {
+      target.asset_principal_url = newHero.url;
+    } else {
+      delete target.asset_principal_url;
+    }
     target.nb_variantes = variantes.length;
 
     data._meta.nb_variantes_total = data.motifs.reduce(

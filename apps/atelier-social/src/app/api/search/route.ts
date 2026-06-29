@@ -57,6 +57,7 @@ interface MotifHitData {
   id: string;
   nom_commercial: string;
   asset_principal: string;
+  asset_principal_url?: string;
   tags: string[];
   variantes_matchees: Array<{ label: string; file: string }>;
   matched_in: string[];
@@ -200,6 +201,7 @@ export async function GET(req: NextRequest) {
             id: m.id,
             nom_commercial: m.nom_commercial,
             asset_principal: m.asset_principal,
+            ...(m.asset_principal_url ? { asset_principal_url: m.asset_principal_url } : {}),
             tags: m.tags ?? [],
             variantes_matchees: matchedVariantes,
             matched_in: matchedIn.length > 0 ? matchedIn : matchedVariantes.length > 0 ? ["variantes"] : [],

@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { Layers, Loader2, Camera, Star } from "lucide-react";
+import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 
 interface MotifVariante {
   file: string;
   label: string;
+  url?: string;
   tags?: string[];
 }
 
@@ -20,6 +22,7 @@ interface Motif {
   id: string;
   nom_commercial: string;
   asset_principal: string;
+  asset_principal_url?: string;
   variantes?: MotifVariante[];
   shooting_pngs?: MotifVariante[];
   prod_files?: ProdFile[];
@@ -61,7 +64,7 @@ export function MotifPickerPanel({ onImport }: Props) {
     : [
         {
           source: "principal" as const,
-          url: `/motifs/${encodeURIComponent(selected.asset_principal)}`,
+          url: motifImageSrc(selected.asset_principal, selected.asset_principal_url),
           label: "Principal",
           filename: selected.asset_principal,
         },
@@ -75,13 +78,13 @@ export function MotifPickerPanel({ onImport }: Props) {
           })),
         ...(selected.variantes ?? []).map((v) => ({
           source: "variante" as const,
-          url: `/motifs/${encodeURIComponent(v.file)}`,
+          url: motifImageSrc(v.file, v.url),
           label: v.label,
           filename: v.file,
         })),
         ...(selected.shooting_pngs ?? []).map((v) => ({
           source: "shooting" as const,
-          url: `/motifs/${encodeURIComponent(v.file)}`,
+          url: motifImageSrc(v.file, v.url),
           label: v.label,
           filename: v.file,
         })),

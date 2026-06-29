@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Loader2, Pencil, X, Plus, Star, Download, FileBox, LayoutGrid, Table, FileText, Upload } from "lucide-react";
 import type { MotifBible, MotifYpm, MotifProdFile, HubFil, Palette } from "@/lib/atelier-da/referentiels-loader";
+import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 
 interface MotifsBundle {
   motifs: { motifs: MotifYpm[]; _meta: { nb_motifs: number; nb_variantes_total: number } };
@@ -149,7 +150,7 @@ export default function MotifsPage() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={`/motifs/${encodeURIComponent(m.asset_principal)}`}
+                src={motifImageSrc(m.asset_principal, m.asset_principal_url)}
                 alt={m.nom_commercial}
                 style={{
                   display: "block",
@@ -237,7 +238,7 @@ function BiblesTableView({
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={`/motifs/${encodeURIComponent(m.asset_principal)}`}
+                      src={motifImageSrc(m.asset_principal, m.asset_principal_url)}
                       alt={m.nom_commercial}
                       style={{ width: 36, height: 36, objectFit: "contain", background: "var(--hub-bg)", borderRadius: 6, padding: 3, flexShrink: 0 }}
                       onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
@@ -369,7 +370,7 @@ function MotifModal({
           <div style={{ aspectRatio: "1/1", background: "var(--hub-bg)", borderRadius: 12, padding: 24, display: "flex", alignItems: "center", justifyContent: "center" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`/motifs/${encodeURIComponent(motif.asset_principal)}`}
+              src={motifImageSrc(motif.asset_principal, motif.asset_principal_url)}
               alt={motif.nom_commercial}
               style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
               onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
@@ -904,7 +905,7 @@ function PngGrid({
   motifId,
   onUpdated,
 }: {
-  items: { file: string; label: string }[];
+  items: { file: string; label: string; url?: string }[];
   motifId?: string;
   onUpdated?: () => Promise<void>;
 }) {
@@ -984,7 +985,7 @@ function PngGrid({
           <div style={{ aspectRatio: "1/1", background: "white", borderRadius: 6, padding: 8, marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`/motifs/${encodeURIComponent(v.file)}`}
+              src={motifImageSrc(v.file, v.url)}
               alt={v.label}
               style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
               onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}

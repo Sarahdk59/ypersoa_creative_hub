@@ -19,6 +19,10 @@ import {
   type MotifsYpmRef,
   type MotifVariante,
 } from "@/lib/atelier-da/referentiels-loader";
+import { createClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase";
+
+const STORAGE_BUCKET = "motifs-png";
 
 function deriveLabelFromFilename(filename: string, motifId: string): string {
   let base = filename.replace(/\.[^.]+$/, "");
@@ -53,12 +57,30 @@ export async function POST(
       );
     }
 
-    if (!existsSync(ASSETS_MOTIFS_DIR)) {
-      mkdirSync(ASSETS_MOTIFS_DIR, { recursive: true });
-    }
+    // Le PNG prod (assets/motifs png/) est commité, mais le dupliquer dans
+    // assets/motifs/ au runtime ne suffit pas en prod (fs éphémère + public figé).
+    // On le pousse donc sur Supabase Storage et on garde son URL pour le hero.
     const src = join(ASSETS_MOTIFS_PNG_DIR, entry.png);
-    const dest = join(ASSETS_MOTIFS_DIR, entry.png);
-    copyFileSync(src, dest);
+    let promotedUrl: string | undefined;
+    if (isSupabaseConfigured()) {
+      const buffer = readFileSync(src);
+      const supabase = await createClient();
+      const { error } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .upload(entry.png, buffer, { contentType: "image/png", upsert: true });
+      if (error) {
+        return NextResponse.json(
+          { ok: false, error: `Upload Storage échoué : ${error.message}` },
+          { status: 500 }
+        );
+      }
+      promotedUrl = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(entry.png).data.publicUrl;
+    } else {
+      if (!existsSync(ASSETS_MOTIFS_DIR)) {
+        mkdirSync(ASSETS_MOTIFS_DIR, { recursive: true });
+      }
+      copyFileSync(src, join(ASSETS_MOTIFS_DIR, entry.png));
+    }
 
     const raw = readFileSync(MOTIFS_REF_PATH, "utf-8");
     const data = JSON.parse(raw) as MotifsYpmRef;
@@ -71,9 +93,12 @@ export async function POST(
     if (!isAlreadyHero) {
       const variantes = target.variantes || [];
       const oldHeroFile = target.asset_principal;
+      const oldHeroUrl = target.asset_principal_url;
       const oldHeroAsVariante: MotifVariante = {
         file: oldHeroFile,
         label: deriveLabelFromFilename(oldHeroFile, id),
+        // Préserve l'URL Supabase de l'ancien hero (PNG uploadé) en le rétrogradant.
+        ...(oldHeroUrl ? { url: oldHeroUrl } : {}),
       };
 
       const existingIdx = variantes.findIndex((v) => v.file === entry.png);
@@ -83,6 +108,11 @@ export async function POST(
       variantes.unshift(oldHeroAsVariante);
       target.variantes = variantes;
       target.asset_principal = entry.png;
+      if (promotedUrl) {
+        target.asset_principal_url = promotedUrl;
+      } else {
+        delete target.asset_principal_url;
+      }
       target.nb_variantes = variantes.length;
 
       data._meta.nb_variantes_total = data.motifs.reduce(
@@ -91,6 +121,13 @@ export async function POST(
       );
       data._meta.last_updated = new Date().toISOString().slice(0, 10);
 
+      writeFileSync(MOTIFS_REF_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
+      clearMotifsCache();
+    } else if (promotedUrl && target.asset_principal_url !== promotedUrl) {
+      // Déjà hero mais sans URL Supabase (ex. hero promu avant cette migration,
+      // preview cassée en prod) : re-cliquer la Star répare le lien.
+      target.asset_principal_url = promotedUrl;
+      data._meta.last_updated = new Date().toISOString().slice(0, 10);
       writeFileSync(MOTIFS_REF_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
       clearMotifsCache();
     }

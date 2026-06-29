@@ -1,6 +1,15 @@
 /**
  * POST /api/da/motifs/[id]/upload
- * Upload d'un PNG dans assets/motifs/ + patch de referentiels/motifs/motifs_ypm.json.
+ * Upload d'un PNG + patch de referentiels/motifs/motifs_ypm.json.
+ *
+ * Stockage du binaire :
+ *  - Supabase configuré (prod + dev avec env) → bucket Storage `motifs-png`,
+ *    URL publique persistante stockée dans la variante (`url`). C'est le mode
+ *    nominal : le filesystem du conteneur est éphémère en prod, donc un PNG
+ *    écrit sur disque n'est ni servi par Next (public figé au build) ni
+ *    conservé au redéploiement.
+ *  - Sinon (dev sans Supabase) → fallback écriture dans assets/motifs/, servi
+ *    via le symlink public/motifs (`/motifs/<file>`), sans `url`.
  *
  * FormData :
  *  - file   : PNG (<=5MB)
@@ -18,8 +27,11 @@ import {
   ASSETS_MOTIFS_DIR,
   type MotifsYpmRef,
 } from "@/lib/atelier-da/referentiels-loader";
+import { createClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const STORAGE_BUCKET = "motifs-png";
 
 function slugify(input: string): string {
   return input
@@ -81,10 +93,37 @@ export async function POST(
       return NextResponse.json({ ok: false, error: "Libellé non slugifiable" }, { status: 400 });
     }
     const base = `${id}-${slugLabel}`;
-    const filename = uniqueFilename(base, "png");
-
     const buffer = Buffer.from(await file.arrayBuffer());
-    writeFileSync(join(ASSETS_MOTIFS_DIR, filename), buffer);
+
+    // Stockage du binaire : Supabase Storage en nominal, fs en fallback dev.
+    let filename: string;
+    let publicUrl: string | undefined;
+    if (isSupabaseConfigured()) {
+      const supabase = await createClient();
+      // Upload avec anti-collision : retente avec un suffixe numérique si le nom existe.
+      let candidate = `${base}.png`;
+      let n = 2;
+      for (;;) {
+        const { error } = await supabase.storage
+          .from(STORAGE_BUCKET)
+          .upload(candidate, buffer, { contentType: "image/png", upsert: false });
+        if (!error) break;
+        // 409 / duplicate → on tente le nom suivant ; sinon on remonte l'erreur.
+        if (!/exist|dupl|409/i.test(error.message) || n > 50) {
+          return NextResponse.json(
+            { ok: false, error: `Upload Storage échoué : ${error.message}` },
+            { status: 500 }
+          );
+        }
+        candidate = `${base}-${n}.png`;
+        n++;
+      }
+      filename = candidate;
+      publicUrl = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filename).data.publicUrl;
+    } else {
+      filename = uniqueFilename(base, "png");
+      writeFileSync(join(ASSETS_MOTIFS_DIR, filename), buffer);
+    }
 
     const tags = tagsRaw
       ? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
@@ -98,14 +137,20 @@ export async function POST(
       return NextResponse.json({ ok: false, error: `Motif ${id} disparu` }, { status: 500 });
     }
 
+    const entry = {
+      file: filename,
+      label,
+      ...(publicUrl ? { url: publicUrl } : {}),
+      ...(tags ? { tags } : {}),
+    };
     if (type === "variante") {
       target.variantes = target.variantes || [];
-      target.variantes.push({ file: filename, label, ...(tags ? { tags } : {}) });
+      target.variantes.push(entry);
       target.nb_variantes = target.variantes.length;
       data._meta.nb_variantes_total = data.motifs.reduce((s, m) => s + (m.nb_variantes || 0), 0);
     } else {
       target.shooting_pngs = target.shooting_pngs || [];
-      target.shooting_pngs.push({ file: filename, label, ...(tags ? { tags } : {}) });
+      target.shooting_pngs.push(entry);
     }
     data._meta.last_updated = new Date().toISOString().slice(0, 10);
 
@@ -114,7 +159,7 @@ export async function POST(
 
     return NextResponse.json({
       ok: true,
-      data: { id, type, file: filename, label, tags },
+      data: { id, type, file: filename, label, tags, url: publicUrl },
     });
   } catch (err) {
     return NextResponse.json(

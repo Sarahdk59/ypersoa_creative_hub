@@ -14,11 +14,13 @@ import { useEffect, useState, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search as SearchIcon, Loader2, Layers, Camera, BookOpen, AlertTriangle, Image as ImageIcon, Trello, Palette as PaletteIcon, Droplet, ShoppingBag, Archive, RefreshCw, Clock } from "lucide-react";
+import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 
 interface MotifHit {
   id: string;
   nom_commercial: string;
   asset_principal: string;
+  asset_principal_url?: string;
   tags: string[];
   variantes_matchees: Array<{ label: string; file: string }>;
   matched_in: string[];
@@ -368,7 +370,7 @@ function SearchContent() {
                     <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--hub-bg)", padding: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={`/motifs/${encodeURIComponent(h.item.asset_principal)}`}
+                        src={motifImageSrc(h.item.asset_principal, h.item.asset_principal_url)}
                         alt={h.item.nom_commercial}
                         style={{ width: "100%", height: "100%", objectFit: "contain" }}
                         onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
