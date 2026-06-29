@@ -23,6 +23,14 @@ import { OverlayPanel } from "@/components/OverlayPanel";
 import { generateImageVariation } from "@/lib/api-client";
 import { CANONIQUES } from "@/lib/canoniques";
 import {
+  type PinterestStrategy,
+  type PinterestFiche,
+  buildPinterestKeywords,
+  defaultFicheForOccasion,
+  suggestFichesForOccasion,
+  getFiche,
+} from "@/lib/pinterest-strategy";
+import {
   Instagram,
   Pin,
   Sparkles,
@@ -91,6 +99,31 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<string>("YP001");
   const [selectedGarmentColor, setSelectedGarmentColor] = useState<string>("beige");
   const [withOverlay, setWithOverlay] = useState(false);
+
+  // Stratégie Pinterest (fiches motifs, formats, ancres, mapping occasions)
+  const [pinterestStrategy, setPinterestStrategy] = useState<PinterestStrategy | null>(null);
+  const [selectedFicheId, setSelectedFicheId] = useState<string>("");
+  useEffect(() => {
+    fetch("/api/social/pinterest-strategy", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.ok) setPinterestStrategy(res.data as PinterestStrategy);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  // Auto-suggestion : quand l'occasion change (ou au chargement), propose la fiche
+  // recommandée pour cette occasion. Ne touche pas à un choix manuel encore valide.
+  useEffect(() => {
+    if (!pinterestStrategy || selectedPlatform !== "pinterest") return;
+    const suggestions = suggestFichesForOccasion(pinterestStrategy, selectedOccasion);
+    const stillValid = selectedFicheId && suggestions.some((f) => f.id === selectedFicheId);
+    if (!stillValid) {
+      const def = defaultFicheForOccasion(pinterestStrategy, selectedOccasion);
+      if (def) setSelectedFicheId(def.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pinterestStrategy, selectedPlatform, selectedOccasion]);
 
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [generatedText, setGeneratedText] = useState<string | null>(null);
@@ -229,21 +262,43 @@ export default function Home() {
     // Logique format & angles
     const isPinterest = selectedPlatform === "pinterest";
     let aspectRatio: "1:1" | "4:5" | "2:3";
-    let angles: string[];
+    // Chaque "job" image porte son propre cadrage + composition (flatlay / porté).
+    type ImageJob = { angle: string; composition: "flatlay" | "worn"; canoniqueIds: string[] };
+    let imageJobs: ImageJob[];
 
     if (isPinterest) {
-      aspectRatio = "2:3"; // Standard Pinterest
-      angles = PINTEREST_ANGLES; // 3 angles
+      aspectRatio = "2:3"; // 2:3 vertical systématique (1000×1500)
+      const fiche =
+        pinterestStrategy && selectedFicheId
+          ? getFiche(pinterestStrategy, selectedFicheId)
+          : undefined;
+      const heroPrompt = pinterestStrategy?.formats.hero.prompt ?? PINTEREST_ANGLES[0];
+      const desirPrompt = pinterestStrategy?.formats.desir.prompt ?? PINTEREST_ANGLES[1];
+      const motifHint = fiche ? ` Motif intention: ${fiche.intention}.` : "";
+      const heroHint = fiche ? `${motifHint} Styling hint: ${fiche.format_hero_hint}.` : "";
+      // HERO = flatlay détail brodé (sans personnage) ; DÉSIR = porté serré sur la zone brodée.
+      imageJobs = [
+        { angle: heroPrompt + heroHint, composition: "flatlay", canoniqueIds: [] },
+        { angle: desirPrompt + motifHint, composition: "worn", canoniqueIds: selectedCanoniqueIds },
+      ];
     } else if (withOverlay) {
-      aspectRatio = "4:5"; // Insta + Pinterest si overlay
-      angles = ALL_ANGLES; // 5 angles
+      aspectRatio = "4:5"; // Insta + overlay
+      imageJobs = ALL_ANGLES.map((a) => ({
+        angle: a,
+        composition: "worn" as const,
+        canoniqueIds: selectedCanoniqueIds,
+      }));
     } else {
       aspectRatio = "1:1"; // Insta classique
-      angles = ALL_ANGLES; // 5 angles
+      imageJobs = ALL_ANGLES.map((a) => ({
+        angle: a,
+        composition: "worn" as const,
+        canoniqueIds: selectedCanoniqueIds,
+      }));
     }
 
     console.log(
-      `[FRONT] Mode: ${isPinterest ? "Pinterest" : "Instagram"} | aspectRatio: ${aspectRatio} | angles: ${angles.length}`
+      `[FRONT] Mode: ${isPinterest ? "Pinterest" : "Instagram"} | aspectRatio: ${aspectRatio} | jobs: ${imageJobs.length}`
     );
 
     try {
@@ -258,25 +313,30 @@ export default function Home() {
           occasionContext,
           customPrompt,
           canoniqueContext,
+          pinterestFicheId: isPinterest ? selectedFicheId : undefined,
+          occasionId: selectedOccasion,
         }),
       });
 
       const successfulImages: string[] = [];
-      for (const angle of angles) {
+      for (const job of imageJobs) {
         try {
           const img = await generateImageVariation({
             base64Image: base64Data,
             mimeType,
             vibePrompt,
-            angle,
+            angle: job.angle,
             customPrompt,
-            canoniqueIds: selectedCanoniqueIds,
+            canoniqueIds: job.canoniqueIds,
             aspectRatio,
+            composition: job.composition,
+            selectedProduct,
+            selectedGarmentColor,
           });
           successfulImages.push(img);
           setGeneratedImages([...successfulImages]);
         } catch (e) {
-          console.error("Failed to generate image for angle:", angle.substring(0, 60), e);
+          console.error("Failed to generate image for job:", job.angle.substring(0, 60), e);
         }
       }
 
@@ -304,7 +364,7 @@ export default function Home() {
         if (data.brandSafety) setBrandSafety(data.brandSafety);
         if (data.hooks) {
           setGeneratedHooks(data.hooks);
-          if (withOverlay && !isPinterest) {
+          if (withOverlay) {
             setTimeout(() => setRightPanelTab("overlay"), 500);
           }
         }
@@ -323,7 +383,22 @@ export default function Home() {
     }
   };
 
-  const expectedImages = selectedPlatform === "pinterest" ? 3 : 5;
+  const expectedImages = selectedPlatform === "pinterest" ? 2 : 5;
+
+  // Dérivés Pinterest : fiche sélectionnée, mots-clés, texte de surimpression
+  const selectedFiche: PinterestFiche | undefined =
+    pinterestStrategy && selectedFicheId ? getFiche(pinterestStrategy, selectedFicheId) : undefined;
+  const pinterestKeywords =
+    pinterestStrategy && selectedFiche
+      ? buildPinterestKeywords(pinterestStrategy, selectedFiche.id, selectedOccasion)
+      : null;
+  const surimpressionText = selectedFiche?.texte_surimpression ?? "";
+  const suggestedFiches = pinterestStrategy
+    ? suggestFichesForOccasion(pinterestStrategy, selectedOccasion)
+    : [];
+  const otherFiches = pinterestStrategy
+    ? pinterestStrategy.fiches.filter((f) => !suggestedFiches.some((s) => s.id === f.id))
+    : [];
 
   return (
     <div className="h-screen flex flex-col bg-brand-bg text-brand-text font-sans selection:bg-brand-rose/20 selection:text-brand-rose overflow-hidden">
@@ -456,19 +531,69 @@ export default function Home() {
                 />
               </section>
 
+              {selectedPlatform === "pinterest" && pinterestStrategy && (
+                <section>
+                  <h2 className="font-serif text-sm font-medium mb-1 flex items-center gap-1.5">
+                    <Pin className="w-3.5 h-3.5 text-red-600" />
+                    Fiche Pinterest
+                    <span className="text-[10px] font-normal text-brand-muted italic">
+                      — motif &amp; mots-clés
+                    </span>
+                  </h2>
+                  <select
+                    value={selectedFicheId}
+                    onChange={(e) => setSelectedFicheId(e.target.value)}
+                    className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-red-300"
+                  >
+                    {suggestedFiches.length > 0 && (
+                      <optgroup label="Recommandées pour cette occasion">
+                        {suggestedFiches.map((f) => (
+                          <option key={f.id} value={f.id}>
+                            {f.nom} · {f.intention}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                    {otherFiches.length > 0 && (
+                      <optgroup label="Tous les motifs">
+                        {otherFiches.map((f) => (
+                          <option key={f.id} value={f.id}>
+                            {f.nom} · {f.intention}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                  </select>
+                  {selectedFiche && (
+                    <div className="mt-2 rounded-lg bg-red-50/60 border border-red-100 p-2 space-y-1">
+                      <p className="text-[11px] text-brand-text">
+                        <span className="font-semibold">Surimpression :</span> «&nbsp;{surimpressionText}&nbsp;»
+                      </p>
+                      {pinterestKeywords && (
+                        <p className="text-[11px] text-brand-text">
+                          <span className="font-semibold">Mot-clé principal :</span>{" "}
+                          {pinterestKeywords.principal}
+                        </p>
+                      )}
+                      <p className="text-[10px] text-brand-muted leading-snug">
+                        Hero = flatlay détail brodé · Désir = porté serré sur la zone brodée
+                      </p>
+                    </div>
+                  )}
+                </section>
+              )}
+
               <section>
                 <h2 className="font-serif text-sm font-medium mb-1">6. Style</h2>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setWithOverlay(false)}
-                    disabled={selectedPlatform === "pinterest"}
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium text-xs transition-all",
                       !withOverlay
                         ? "border-brand-rose bg-brand-rose/10 text-brand-rose ring-1 ring-brand-rose"
-                        : "border-brand-muted/20 bg-white hover:border-brand-rose/40 text-brand-text",
-                      selectedPlatform === "pinterest" && "opacity-50 cursor-not-allowed"
+                        : "border-brand-muted/20 bg-white hover:border-brand-rose/40 text-brand-text"
                     )}
                   >
                     <ImageIcon className="w-3.5 h-3.5" />
@@ -477,13 +602,11 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setWithOverlay(true)}
-                    disabled={selectedPlatform === "pinterest"}
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium text-xs transition-all",
                       withOverlay
                         ? "border-brand-rose bg-brand-rose/10 text-brand-rose ring-1 ring-brand-rose"
-                        : "border-brand-muted/20 bg-white hover:border-brand-rose/40 text-brand-text",
-                      selectedPlatform === "pinterest" && "opacity-50 cursor-not-allowed"
+                        : "border-brand-muted/20 bg-white hover:border-brand-rose/40 text-brand-text"
                     )}
                   >
                     <Type className="w-3.5 h-3.5" />
@@ -492,11 +615,12 @@ export default function Home() {
                 </div>
                 {selectedPlatform === "pinterest" ? (
                   <p className="text-[10px] text-brand-muted mt-1.5 italic">
-                    Mode Pinterest — overlay non disponible (V1). Format 2:3 vertical natif.
+                    Format 2:3 vertical (1000×1500). « Avec texte » = surimpression de l&apos;occasion
+                    dans l&apos;onglet Overlay (recommandé Pinterest).
                   </p>
                 ) : withOverlay ? (
                   <p className="text-[10px] text-brand-muted mt-1.5 italic">
-                    Format 4:5 (Insta + Pinterest), template sélectionnable après génération
+                    Format 4:5 (Insta), template sélectionnable après génération
                   </p>
                 ) : null}
               </section>
@@ -556,13 +680,13 @@ export default function Home() {
                 {isGeneratingImage || isGeneratingText ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Création... ({selectedPlatform === "pinterest" ? "3-5" : "5-7"} min)
+                    Création... ({selectedPlatform === "pinterest" ? "2-4" : "5-7"} min)
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4" />
                     {selectedPlatform === "pinterest"
-                      ? "Générer mes 3 épingles"
+                      ? "Générer mes 2 épingles (Hero + Désir)"
                       : "Générer mon carrousel (5 slides)"}
                   </>
                 )}
@@ -604,43 +728,61 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col min-h-0 overflow-hidden">
-              {/* Tabs uniquement si Insta (Pinterest = pas d'overlay V1) */}
-              {selectedPlatform === "instagram" && (
-                <div className="flex gap-1 mb-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setRightPanelTab("text")}
-                    className={cn(
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all",
-                      rightPanelTab === "text"
-                        ? "bg-brand-rose text-white"
-                        : "bg-white/60 text-brand-muted hover:bg-white"
-                    )}
-                  >
-                    <Quote className="w-3.5 h-3.5" />
-                    Caption + Hooks
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setRightPanelTab("overlay")}
-                    className={cn(
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all relative",
-                      rightPanelTab === "overlay"
-                        ? "bg-brand-rose text-white"
-                        : "bg-white/60 text-brand-muted hover:bg-white"
-                    )}
-                  >
-                    <Type className="w-3.5 h-3.5" />
-                    Overlay
-                    {generatedHooks.length > 0 && rightPanelTab !== "overlay" && (
-                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-rose rounded-full animate-pulse" />
-                    )}
-                  </button>
-                </div>
-              )}
+              {/* Tabs : texte (caption Insta / pin SEO Pinterest) + overlay */}
+              <div className="flex gap-1 mb-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setRightPanelTab("text")}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all",
+                    rightPanelTab === "text"
+                      ? "bg-brand-rose text-white"
+                      : "bg-white/60 text-brand-muted hover:bg-white"
+                  )}
+                >
+                  {selectedPlatform === "pinterest" ? (
+                    <>
+                      <Pin className="w-3.5 h-3.5" />
+                      Pin SEO
+                    </>
+                  ) : (
+                    <>
+                      <Quote className="w-3.5 h-3.5" />
+                      Caption + Hooks
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRightPanelTab("overlay")}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all relative",
+                    rightPanelTab === "overlay"
+                      ? "bg-brand-rose text-white"
+                      : "bg-white/60 text-brand-muted hover:bg-white"
+                  )}
+                >
+                  <Type className="w-3.5 h-3.5" />
+                  {selectedPlatform === "pinterest" ? "Surimpression" : "Overlay"}
+                  {generatedImages.length > 0 && rightPanelTab !== "overlay" && (
+                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-rose rounded-full animate-pulse" />
+                  )}
+                </button>
+              </div>
 
               <div className="flex-1 min-h-0 overflow-y-auto visible-scrollbar pr-2">
-                {selectedPlatform === "pinterest" ? (
+                {rightPanelTab === "overlay" ? (
+                  <OverlayPanel
+                    imageUrls={generatedImages}
+                    hooks={generatedHooks}
+                    caption={generatedText}
+                    currentSlideIndex={currentSlide}
+                    width={selectedPlatform === "pinterest" ? 1000 : 1080}
+                    height={selectedPlatform === "pinterest" ? 1500 : 1350}
+                    aspectClass={selectedPlatform === "pinterest" ? "aspect-[2/3]" : "aspect-[4/5]"}
+                    defaultText={selectedPlatform === "pinterest" ? surimpressionText : undefined}
+                  />
+                ) : selectedPlatform === "pinterest" ? (
                   <ResultPanelPinterest
                     title={pinterestTitle}
                     description={pinterestDescription}
@@ -649,20 +791,13 @@ export default function Home() {
                     brandSafety={brandSafety}
                     isGeneratingText={isGeneratingText}
                   />
-                ) : rightPanelTab === "text" ? (
+                ) : (
                   <ResultPanelTextOnly
                     text={generatedText}
                     hooks={generatedHooks}
                     brandSafety={brandSafety}
                     platform={selectedPlatform}
                     isGeneratingText={isGeneratingText}
-                  />
-                ) : (
-                  <OverlayPanel
-                    imageUrls={generatedImages}
-                    hooks={generatedHooks}
-                    caption={generatedText}
-                    currentSlideIndex={currentSlide}
                   />
                 )}
               </div>
@@ -784,7 +919,7 @@ function ResultPanelImagesOnly({
           <Sparkles className="w-5 h-5 text-brand-muted" />
         </div>
         <h3 className="font-serif text-base font-medium mb-1 text-brand-muted">
-          {expectedCount === 3 ? "3 épingles à venir" : "Carrousel à venir"}
+          {expectedCount < 5 ? "Épingles à venir" : "Carrousel à venir"}
         </h3>
       </div>
     );

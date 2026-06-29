@@ -1,0 +1,279 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "pinterest_strategy",
+    "last_updated": "2026-06-29",
+    "description": "Grille de déclinaison Pinterest par motif. Logique moteur de recherche (mots-clés longue traîne dans titre + description + texte image), PAS logique Etsy (tags courts). Vocabulaire consumer-facing : jamais de référence machine ni « fait main ».",
+    "format": {
+      "ratio": "2:3",
+      "px": "1000x1500",
+      "note": "Vertical 2:3 systématique. Texte en surimpression avec l'occasion."
+    },
+    "logique_seo": "1 épingle = 1 mot-clé principal (début du titre + début de description + surimpression image) + 4-6 mots-clés secondaires répartis naturellement. Nom du board aussi riche en mots-clés."
+  },
+  "vocabulaire": {
+    "autorise": [
+      "brodé à la commande",
+      "brodé pour toi",
+      "à ton image",
+      "personnalisation",
+      "personnalisé",
+      "durable",
+      "durabilité",
+      "Hauts-de-France",
+      "atelier français",
+      "made in France"
+    ],
+    "interdit": [
+      "fait main",
+      "faite main",
+      "brodé à la main",
+      "métier Tajima",
+      "Tajima",
+      "machine à broder",
+      "Etsy",
+      "Amazon",
+      "Vinted",
+      "marketplace"
+    ]
+  },
+  "ancres_generiques": [
+    "cadeau personnalisé",
+    "vêtement brodé personnalisé",
+    "idée cadeau originale",
+    "broderie personnalisée",
+    "personnalisation prénom",
+    "cadeau à ton image"
+  ],
+  "slots_saisonniers": {
+    "amour": "cadeau Saint-Valentin personnalisé",
+    "fete-des-meres": "cadeau fête des mères personnalisé",
+    "fete-des-peres": "cadeau fête des pères personnalisé",
+    "fete-grands-meres": "cadeau fête des grands-mères personnalisé",
+    "naissance": "cadeau de naissance personnalisé",
+    "mariage": "cadeau EVJF mariage personnalisé",
+    "rentree": "cadeau de rentrée personnalisé",
+    "ete": "cadeau d'été personnalisé",
+    "noel": "cadeau de Noël personnalisé",
+    "nounou": "cadeau maîtresse personnalisé",
+    "quotidien": null
+  },
+  "formats": {
+    "hero": {
+      "id": "hero",
+      "label": "Hero — flatlay détail brodé",
+      "role": "Déclencheur de save : montre la personnalisation en 0,5 seconde.",
+      "composition": "flatlay",
+      "prompt": "FLATLAY HERO — styled overhead flat composition, NO person, NO human body, NO face. Extreme focus on the embroidered detail (initial, name, motif) so the personalization reads instantly. The embroidered garment is styled flat on a warm textured surface (raw linen, pale wood, ceramic, dried flowers, a linen napkin, a coffee cup, seasonal natural props) with warm directional light and soft natural shadows. Editorial lifestyle flatlay, cozy and desirable. NEVER a clinical white studio background, NEVER a plain cut-out product shot. The embroidery is sharp and tactile, the thread texture clearly visible. Vertical 2:3 composition. Mood: 'I want this personalized for me'."
+    },
+    "desir": {
+      "id": "desir",
+      "label": "Désir — porté serré sur la zone brodée",
+      "role": "Combine projection (porté) + lisibilité du détail brodé.",
+      "composition": "worn",
+      "prompt": "WORN CLOSE-UP — the garment worn on the body, framed TIGHTLY on the embroidered zone (left chest, wrist / cuff, or back of neck depending on placement). Crop in close so the embroidered detail is large and perfectly legible, while still clearly reading as worn (a shoulder, a forearm, fabric folds, natural skin texture at the edge of frame). Combines desire/projection with readability of the personalized detail. Warm natural light, 35mm film aesthetic, soft focus background. Vertical 2:3 composition."
+    }
+  },
+  "fiches": [
+    {
+      "id": "la-brigitte",
+      "ypm_id": "YPM-001",
+      "nom": "La Brigitte",
+      "intention": "amour / couple",
+      "occasions_cles": ["amour", "noel"],
+      "format_hero_hint": "gros plan brodé cœur + initiale, flatlay habillé, lumière chaude",
+      "texte_surimpression": "Le cadeau couple à personnaliser",
+      "mots_cles": [
+        "cadeau couple personnalisé",
+        "cadeau Saint-Valentin original",
+        "sweat brodé initiale",
+        "idée cadeau amoureux",
+        "cadeau couple romantique",
+        "cadeau anniversaire de couple"
+      ]
+    },
+    {
+      "id": "le-calin",
+      "ypm_id": "YPM-006",
+      "nom": "Le Câlin",
+      "intention": "tendresse / famille / enfant",
+      "occasions_cles": ["fete-des-meres", "naissance", "fete-grands-meres"],
+      "format_hero_hint": "porté serré (enfant / maman) OU flatlay tendre tons clairs",
+      "texte_surimpression": "Brodé avec tendresse",
+      "mots_cles": [
+        "cadeau fête des mères personnalisé",
+        "cadeau naissance brodé",
+        "sweat enfant personnalisé",
+        "cadeau maman prénom",
+        "idée cadeau bébé personnalisé",
+        "vêtement enfant brodé"
+      ]
+    },
+    {
+      "id": "la-signature",
+      "ypm_id": "YPM-016",
+      "nom": "La Signature",
+      "intention": "personnalisation prénom libre, le plus polyvalent",
+      "occasions_cles": ["quotidien", "rentree", "fete-des-meres"],
+      "format_hero_hint": "gros plan du script brodé + variante portée",
+      "texte_surimpression": "Ton prénom, ton style",
+      "mots_cles": [
+        "sweat brodé prénom",
+        "cadeau prénom personnalisé",
+        "vêtement personnalisé femme",
+        "idée cadeau anniversaire",
+        "sweat personnalisé tendance",
+        "cadeau à personnaliser prénom"
+      ]
+    },
+    {
+      "id": "l-annonce",
+      "ypm_id": "YPM-005",
+      "nom": "L'Annonce",
+      "intention": "style college / varsity, esprit jeune",
+      "occasions_cles": ["rentree", "quotidien"],
+      "format_hero_hint": "porté (allure streetwear) + flatlay détail varsity",
+      "texte_surimpression": "L'esprit varsity, à ton nom",
+      "mots_cles": [
+        "sweat varsity personnalisé",
+        "cadeau ado personnalisé",
+        "sweat college brodé",
+        "cadeau rentrée original",
+        "vêtement personnalisé ado",
+        "sweat brodé tendance jeune"
+      ]
+    },
+    {
+      "id": "le-club",
+      "ypm_id": "YPM-003",
+      "nom": "Le Club",
+      "intention": "appartenance / communauté",
+      "occasions_cles": ["quotidien", "nounou"],
+      "format_hero_hint": "flatlay des 3 emblèmes côte à côte OU duo porté",
+      "texte_surimpression": "Choisis ton emblème",
+      "mots_cles": [
+        "cadeau personnalisé chien chat",
+        "sweat badge personnalisé",
+        "cadeau duo assorti",
+        "idée cadeau communauté",
+        "sweat brodé étoile",
+        "cadeau amoureux des animaux"
+      ]
+    },
+    {
+      "id": "notre-heritage",
+      "ypm_id": "YPM-004",
+      "nom": "Notre Héritage",
+      "intention": "famille / transmission",
+      "occasions_cles": ["fete-grands-meres", "fete-des-meres", "fete-des-peres", "noel"],
+      "format_hero_hint": "porté multi-générationnel OU flatlay famille (plusieurs tailles)",
+      "texte_surimpression": "De génération en génération",
+      "mots_cles": [
+        "cadeau famille personnalisé",
+        "cadeau grand-mère personnalisé",
+        "sweat famille assorti",
+        "cadeau de transmission",
+        "idée cadeau Noël famille",
+        "vêtement personnalisé famille"
+      ]
+    },
+    {
+      "id": "la-palette",
+      "ypm_id": "YPM-009",
+      "nom": "La Palette",
+      "intention": "couleurs / expression créative",
+      "occasions_cles": ["quotidien", "ete"],
+      "format_hero_hint": "flatlay très coloré (maximalisme couleur) + détail multicolore",
+      "texte_surimpression": "Toutes tes couleurs, brodées",
+      "mots_cles": [
+        "sweat brodé coloré",
+        "cadeau personnalisé original",
+        "broderie multicolore",
+        "idée cadeau créatif",
+        "vêtement personnalisé couleur",
+        "cadeau coloré à ton image"
+      ]
+    },
+    {
+      "id": "la-declaration",
+      "ypm_id": "YPM-015",
+      "nom": "La Déclaration",
+      "intention": "message fort (amour / amitié)",
+      "occasions_cles": ["amour", "mariage"],
+      "format_hero_hint": "gros plan du texte brodé + variante portée émotion",
+      "texte_surimpression": "Dis-le, brodé",
+      "mots_cles": [
+        "cadeau message personnalisé",
+        "sweat texte brodé",
+        "cadeau déclaration amour",
+        "idée cadeau symbolique",
+        "cadeau meilleure amie personnalisé",
+        "vêtement message personnalisé"
+      ]
+    },
+    {
+      "id": "la-team",
+      "ypm_id": "YPM-003",
+      "nom": "La Team",
+      "intention": "groupe / EVJF / mariage",
+      "occasions_cles": ["mariage"],
+      "format_hero_hint": "groupe porté (l'usage en bande = désir fort) + flatlay assorti",
+      "texte_surimpression": "La team, brodée à vos noms",
+      "mots_cles": [
+        "cadeau EVJF personnalisé",
+        "sweat équipe assorti",
+        "cadeau team mariage",
+        "idée EVJF originale",
+        "sweat brodé groupe",
+        "cadeau demoiselle d'honneur"
+      ]
+    },
+    {
+      "id": "la-feline",
+      "ypm_id": "YPM-008",
+      "nom": "La Féline",
+      "intention": "amoureux des chats",
+      "occasions_cles": ["quotidien"],
+      "format_hero_hint": "flatlay détail chat brodé + porté",
+      "texte_surimpression": "Pour les amoureux des chats",
+      "mots_cles": [
+        "cadeau amoureux des chats",
+        "sweat chat personnalisé",
+        "cadeau crazy cat lady",
+        "idée cadeau chat original",
+        "vêtement brodé chat",
+        "cadeau personnalisé félin"
+      ]
+    },
+    {
+      "id": "le-roman",
+      "ypm_id": "YPM-000",
+      "nom": "Le Roman",
+      "intention": "produit casquette (écriture muséo)",
+      "occasions_cles": ["ete", "fete-des-peres"],
+      "format_hero_hint": "porté (la casquette se projette mieux portée) + flatlay détail brodé",
+      "texte_surimpression": "Ta casquette, ton nom",
+      "mots_cles": [
+        "casquette personnalisée brodée",
+        "cadeau homme personnalisé",
+        "casquette prénom",
+        "idée cadeau été",
+        "casquette brodée tendance",
+        "cadeau casquette original"
+      ]
+    }
+  ],
+  "mapping_occasions": {
+    "amour": ["la-brigitte", "la-declaration"],
+    "fete-des-meres": ["le-calin", "notre-heritage", "la-signature"],
+    "fete-des-peres": ["notre-heritage", "le-roman", "la-signature"],
+    "fete-grands-meres": ["notre-heritage", "le-calin"],
+    "naissance": ["le-calin"],
+    "mariage": ["la-team", "la-declaration"],
+    "rentree": ["l-annonce", "la-signature"],
+    "ete": ["le-roman", "la-palette"],
+    "noel": ["la-brigitte", "notre-heritage", "la-signature"],
+    "nounou": ["la-signature", "le-club"],
+    "quotidien": ["la-signature", "le-club", "la-feline", "la-palette"]
+  }
+}

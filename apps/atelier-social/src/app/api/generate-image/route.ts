@@ -8,6 +8,7 @@ import { GoogleGenAI } from "@google/genai";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { CANONIQUES } from "@/lib/canoniques";
+import { getProduits } from "@/lib/hub-products";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -20,6 +21,83 @@ interface RequestBody {
   customPrompt?: string;
   canoniqueIds?: string[];
   aspectRatio?: "1:1" | "4:5" | "2:3"; // NEW
+  composition?: "flatlay" | "worn"; // Pinterest HERO = flatlay (sans humain), DÉSIR = worn
+  selectedProduct?: string; // YP001, YP005… → verrouille le support brodé
+  selectedGarmentColor?: string; // beige, noir… → couleur exacte
+}
+
+// Libellé vêtement par produit (pour ancrer le TYPE dans le prompt Gemini).
+const GARMENT_WORDS: Record<string, string> = {
+  YP001: "Awdis JH001 hoodie (pullover hooded sweatshirt)",
+  YP004: "Awdis JH001K kids hoodie",
+  YP005: "Awdis JH030 crewneck sweatshirt",
+  YP019: "B&C TU05T t-shirt",
+  YP021: "Awdis JH050 zip hoodie (zoodie)",
+  YP013: "Ypersoa vintage washed cap",
+  YP022: "slim-fit t-shirt",
+  YP023: "slim-fit t-shirt",
+};
+
+interface ResolvedProduct {
+  garmentLabel: string;
+  colorName: string;
+  packshotFile: string | null;
+}
+
+function resolveProduct(productId: string, colorId?: string): ResolvedProduct | null {
+  let produit;
+  try {
+    produit = getProduits().find((p) => p.id === productId);
+  } catch (e) {
+    console.error("[FAIL] getProduits:", e);
+    return null;
+  }
+  if (!produit) return null;
+  const col =
+    (colorId && produit.couleurs_detaillees.find((c) => c.id_palette === colorId)) ||
+    produit.couleurs_detaillees[0];
+  return {
+    garmentLabel:
+      GARMENT_WORDS[productId] ?? `${produit.nom_commercial} (${produit.fournisseur ?? ""})`.trim(),
+    colorName: col?.nom_ypersoa ?? colorId ?? "",
+    packshotFile: col?.packshot_reference ?? null,
+  };
+}
+
+async function loadPackshotImage(
+  productId: string,
+  file: string
+): Promise<{ data: string; mimeType: string } | null> {
+  const repoRoot = join(process.cwd(), "..", "..");
+  const filePath = join(repoRoot, "assets_produits", productId, file);
+  try {
+    const buffer = await readFile(filePath);
+    const mimeType = file.toLowerCase().endsWith(".png") ? "image/png" : "image/webp";
+    return { data: buffer.toString("base64"), mimeType };
+  } catch (error) {
+    console.error(`[FAIL] Failed to load packshot ${productId}/${file}:`, error);
+    return null;
+  }
+}
+
+// FLAG OBLIGATOIRE : le support brodé DOIT être le produit sélectionné.
+// Interdit explicitement les dérives observées (pull en laine, t-shirt gris chiné).
+function buildProductLockBlock(
+  garmentLabel: string,
+  colorName: string,
+  hasPackshot: boolean
+): string {
+  const what = `${garmentLabel}${colorName ? ` in ${colorName}` : ""}`;
+  return `
+
+# ⚠️ PRODUCT LOCK — NON-NEGOTIABLE
+The garment MUST be the ${what}.
+${
+  hasPackshot
+    ? `Among the attached images, the one showing a PLAIN garment with NO embroidery on a white/studio background is the OFFICIAL packshot of this exact product. Reproduce its SHAPE (cut, silhouette, neckline/hood, sleeves, rib finish) AND its exact COLOR. Apply the embroidery design (from the embroidery reference image) onto THIS garment, left chest.`
+    : ""
+}
+ABSOLUTELY FORBIDDEN: a knit / wool / cable-knit sweater or pullover, a grey marl / heather-grey t-shirt, any other garment type, any other color. If unsure, default to the packshot garment. The embroidered ${what} must be unmistakably the selected product.`;
 }
 
 async function loadCanoniqueImage(id: string): Promise<{ data: string; mimeType: string } | null> {
@@ -37,6 +115,12 @@ async function loadCanoniqueImage(id: string): Promise<{ data: string; mimeType:
 }
 
 function simplifyAngle(angle: string): string {
+  if (angle.startsWith("FLATLAY HERO")) {
+    return "FLATLAY : Styled flat lay of the embroidered garment on a warm textured surface (linen, wood) with natural props and warm light. NO person. Close focus on the embroidery, thread texture visible. NOT a white studio background.";
+  }
+  if (angle.startsWith("WORN CLOSE-UP")) {
+    return "CLOSE-UP : The garment worn, framed tightly on the embroidered zone (chest or wrist), embroidery large and legible, a glimpse of shoulder/forearm and fabric folds. Warm natural light.";
+  }
   if (angle.startsWith("DÉTAIL INTIMISTE")) {
     return "DÉTAIL : Close-up of the embroidery on the garment, with the person's hand naturally placed near it. Soft natural lighting, film photography aesthetic.";
   }
@@ -55,13 +139,48 @@ function simplifyAngle(angle: string): string {
   return angle;
 }
 
+function buildFlatlayPrompt(
+  angle: string,
+  vibePrompt: string,
+  customPrompt: string | undefined
+): string {
+  const customInstruction = customPrompt ? `\n\nART DIRECTOR REQUEST: "${customPrompt}".` : "";
+
+  return `Create an ultra-realistic, warm, editorial lifestyle FLATLAY photograph in the style of Sézane × Maison Labiche × Émoï-Émoï.
+
+# THE GARMENT
+The image must feature the exact embroidered textile item shown in the first reference image.
+
+⚠️ EMBROIDERY FIDELITY: The embroidery must MATCH EXACTLY the embroidery in the first reference image — same design, same letters, same colors, same placement. DO NOT add, remove, modify, or invent any letter or symbol. The embroidered detail is the HERO of the image and must be sharp, large, and instantly legible.
+
+# COMPOSITION
+${angle}
+
+Vibe / styling mood: ${vibePrompt}${customInstruction}
+
+# STYLE
+- Warm directional natural light, soft shadows
+- Textured surfaces and tasteful natural props (raw linen, pale wood, ceramic, dried flowers)
+- 35mm film photography aesthetic, cozy and desirable
+
+# ABSOLUTE NEGATIVE
+- NO person, NO human body, NO face, NO hands
+- NO clinical white studio background, NO plain cut-out product shot
+- NO printed text, signs, posters, labels, watermarks, brand names ANYWHERE. The ONLY text allowed is the embroidered text on the garment itself.`;
+}
+
 function buildPrompt(
   angle: string,
   vibePrompt: string,
   customPrompt: string | undefined,
   canoniques: Array<{ prenom: string; age: number; genre: string; signature: string }>,
-  isRetry: boolean = false
+  isRetry: boolean = false,
+  composition: "flatlay" | "worn" = "worn"
 ): string {
+  if (composition === "flatlay") {
+    return buildFlatlayPrompt(angle, vibePrompt, customPrompt);
+  }
+
   const customInstruction = customPrompt ? `\n\nART DIRECTOR REQUEST: "${customPrompt}".` : "";
 
   let canoniqueSection = "";
@@ -158,22 +277,47 @@ export async function POST(request: NextRequest) {
     customPrompt,
     canoniqueIds = [],
     aspectRatio = "1:1",
+    composition = "worn",
+    selectedProduct,
+    selectedGarmentColor,
   } = body;
 
+  // Un flatlay n'a pas de personnage : on ignore les canoniques pour ce format.
+  const effectiveCanoniqueIds = composition === "flatlay" ? [] : canoniqueIds;
+
   console.log("[INFO] Angle:", angle.substring(0, 80));
-  console.log("[INFO] Aspect ratio:", aspectRatio);
-  console.log("[INFO] Canoniques:", canoniqueIds);
+  console.log("[INFO] Aspect ratio:", aspectRatio, "| Composition:", composition);
+  console.log("[INFO] Canoniques:", effectiveCanoniqueIds);
+  console.log("[INFO] Produit:", selectedProduct, "| Couleur:", selectedGarmentColor);
 
   if (!base64Image || !mimeType || !vibePrompt || !angle) {
     return NextResponse.json({ message: "Paramètres requis manquants" }, { status: 400 });
   }
 
-  const canoniques = canoniqueIds
+  // Verrou produit : packshot du produit sélectionné comme référence + flag obligatoire.
+  let packshotImage: { data: string; mimeType: string } | null = null;
+  let productLockBlock = "";
+  if (selectedProduct) {
+    const resolved = resolveProduct(selectedProduct, selectedGarmentColor);
+    if (resolved) {
+      if (resolved.packshotFile) {
+        packshotImage = await loadPackshotImage(selectedProduct, resolved.packshotFile);
+      }
+      productLockBlock = buildProductLockBlock(
+        resolved.garmentLabel,
+        resolved.colorName,
+        Boolean(packshotImage)
+      );
+      console.log("[INFO] Product lock:", resolved.garmentLabel, resolved.colorName, "| packshot:", Boolean(packshotImage));
+    }
+  }
+
+  const canoniques = effectiveCanoniqueIds
     .map((id) => CANONIQUES.find((c) => c.id === id))
     .filter((c): c is NonNullable<typeof c> => Boolean(c));
 
   const canoniqueImages: Array<{ data: string; mimeType: string }> = [];
-  for (const id of canoniqueIds) {
+  for (const id of effectiveCanoniqueIds) {
     const img = await loadCanoniqueImage(id);
     if (img) canoniqueImages.push(img);
   }
@@ -182,10 +326,11 @@ export async function POST(request: NextRequest) {
 
   const attempt1 = await tryGenerate({
     ai,
-    prompt: buildPrompt(angle, vibePrompt, customPrompt, canoniques, false),
+    prompt: buildPrompt(angle, vibePrompt, customPrompt, canoniques, false, composition) + productLockBlock,
     base64Image,
     mimeType,
     canoniqueImages,
+    packshotImage,
     aspectRatio,
     attemptLabel: "ATTEMPT 1 (full prompt)",
   });
@@ -201,10 +346,11 @@ export async function POST(request: NextRequest) {
 
     const attempt2 = await tryGenerate({
       ai,
-      prompt: buildPrompt(simplifyAngle(angle), vibePrompt, customPrompt, canoniques, true),
+      prompt: buildPrompt(simplifyAngle(angle), vibePrompt, customPrompt, canoniques, true, composition) + productLockBlock,
       base64Image,
       mimeType,
       canoniqueImages,
+      packshotImage,
       aspectRatio,
       attemptLabel: "ATTEMPT 2 (simplified prompt)",
     });
@@ -220,10 +366,11 @@ export async function POST(request: NextRequest) {
 
       const attempt3 = await tryGenerate({
         ai,
-        prompt: buildPrompt(simplifyAngle(angle), vibePrompt, customPrompt, [], true),
+        prompt: buildPrompt(simplifyAngle(angle), vibePrompt, customPrompt, [], true, composition) + productLockBlock,
         base64Image,
         mimeType,
         canoniqueImages: [],
+        packshotImage,
         aspectRatio,
         attemptLabel: "ATTEMPT 3 (no canoniques)",
       });
@@ -250,6 +397,7 @@ async function tryGenerate({
   base64Image,
   mimeType,
   canoniqueImages,
+  packshotImage,
   aspectRatio,
   attemptLabel,
 }: {
@@ -258,6 +406,7 @@ async function tryGenerate({
   base64Image: string;
   mimeType: string;
   canoniqueImages: Array<{ data: string; mimeType: string }>;
+  packshotImage?: { data: string; mimeType: string } | null;
   aspectRatio: "1:1" | "4:5" | "2:3";
   attemptLabel: string;
 }): Promise<{
@@ -266,11 +415,16 @@ async function tryGenerate({
   shouldRetry?: boolean;
   errorMessage?: string;
 }> {
+  // Ordre parts[] : broderie (1ère réf) → canoniques → packshot (forme/couleur, APRÈS
+  // la broderie pour ne pas la parasiter) → texte. Cf. mémoire feedback_gemini_parts_order.
   const parts: Array<{ inlineData?: { data: string; mimeType: string }; text?: string }> = [
     { inlineData: { data: base64Image, mimeType } },
   ];
   for (const canImg of canoniqueImages) {
     parts.push({ inlineData: { data: canImg.data, mimeType: canImg.mimeType } });
+  }
+  if (packshotImage) {
+    parts.push({ inlineData: { data: packshotImage.data, mimeType: packshotImage.mimeType } });
   }
   parts.push({ text: prompt });
 

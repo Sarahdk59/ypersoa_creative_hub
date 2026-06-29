@@ -1,6 +1,17 @@
 "use client";
 
-import { Baby, Heart, Gift, Flower2, CalendarHeart, Sparkles } from "lucide-react";
+import {
+  Baby,
+  Heart,
+  Gift,
+  Flower2,
+  CalendarHeart,
+  Sparkles,
+  Users,
+  Backpack,
+  Sun,
+  Snowflake,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -17,6 +28,20 @@ export const OCCASIONS = [
     icon: Flower2,
     context:
       "C'est pour la Fête des Mères. Le contenu doit célébrer le lien mère-enfant, le cadeau qui touche en plein cœur, la transmission. Ton complice et chaleureux, pas mièvre. Sous-pilier P2 Émotion : Lien.",
+  },
+  {
+    id: "fete-des-peres",
+    label: "Fête des Pères",
+    icon: Gift,
+    context:
+      "C'est pour la Fête des Pères. Le contenu doit célébrer le lien au papa, la fierté, la transmission, sans cliché viril. Ton tendre et complice. Le cadeau personnalisé qui dit ce qu'on n'ose pas toujours dire. Sous-pilier P2 Émotion : Lien.",
+  },
+  {
+    id: "fete-grands-meres",
+    label: "Fête des Grands-Mères",
+    icon: Users,
+    context:
+      "C'est pour la Fête des grands-mères. Le contenu doit célébrer la transmission entre générations, la douceur de la mamie, le souvenir qui se garde. Ton tendre et chaleureux, jamais kitsch. Sous-pilier P2 Émotion : Souvenir.",
   },
   {
     id: "naissance",
@@ -45,6 +70,27 @@ export const OCCASIONS = [
     icon: CalendarHeart,
     context:
       "C'est un cadeau romantique (Saint-Valentin, anniversaire de couple, première rencontre). Le contenu évoque l'intimité du couple, la preuve d'amour qui dure. Ton intime et pudique, pas démonstratif. Émotion retenue.",
+  },
+  {
+    id: "rentree",
+    label: "Rentrée",
+    icon: Backpack,
+    context:
+      "C'est pour la rentrée. Le contenu évoque le renouveau, l'esprit varsity/college, le cadeau ado ou étudiant, la pièce personnalisée qu'on porte fièrement. Ton énergique et jeune, jamais scolaire. Sous-pilier P3 Produit / Usage.",
+  },
+  {
+    id: "ete",
+    label: "Été / Vacances",
+    icon: Sun,
+    context:
+      "C'est pour l'été et les vacances. Le contenu évoque la légèreté, le soleil, les accessoires de saison (casquette), les couleurs. Ton solaire et décontracté. Sous-pilier P3 Produit / Usage.",
+  },
+  {
+    id: "noel",
+    label: "Noël",
+    icon: Snowflake,
+    context:
+      "C'est pour Noël. Le contenu évoque le cadeau qui compte, le rituel familial, la chaleur de l'hiver, le sapin. Ton chaleureux et généreux, jamais commercial criard. Sous-pilier P2 Émotion : Lien.",
   },
   {
     id: "quotidien",

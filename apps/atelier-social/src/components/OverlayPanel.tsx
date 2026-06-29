@@ -17,6 +17,13 @@ interface OverlayPanelProps {
   hooks: string[];
   caption: string | null;
   currentSlideIndex: number;
+  /** Dimensions de composition — défaut 4:5 Insta. Pinterest = 1000×1500 (2:3). */
+  width?: number;
+  height?: number;
+  /** Classe Tailwind pour le ratio de l'aperçu (ex. "aspect-[2/3]"). */
+  aspectClass?: string;
+  /** Texte de surimpression pré-rempli (ex. texte de la fiche Pinterest). */
+  defaultText?: string;
 }
 
 export function OverlayPanel({
@@ -24,14 +31,27 @@ export function OverlayPanel({
   hooks,
   caption,
   currentSlideIndex,
+  width = 1080,
+  height = 1350,
+  aspectClass = "aspect-[4/5]",
+  defaultText,
 }: OverlayPanelProps) {
   const [selectedTemplate, setSelectedTemplate] = useState<OverlayTemplateId>("title-bottom");
   const [selectedHookIndex, setSelectedHookIndex] = useState<number>(0);
-  const [customText, setCustomText] = useState("");
-  const [useCustomText, setUseCustomText] = useState(false);
+  const [customText, setCustomText] = useState(defaultText ?? "");
+  const [useCustomText, setUseCustomText] = useState(Boolean(defaultText));
   const [colorMode, setColorMode] = useState<ColorMode>("auto");
   const [composedImage, setComposedImage] = useState<string | null>(null);
   const [isComposing, setIsComposing] = useState(false);
+
+  // Quand le texte de surimpression imposé change (changement de fiche Pinterest),
+  // on le pré-remplit et on bascule en mode texte libre.
+  useEffect(() => {
+    if (defaultText) {
+      setCustomText(defaultText);
+      setUseCustomText(true);
+    }
+  }, [defaultText]);
 
   const currentImage = imageUrls[currentSlideIndex];
   const textToUse = useCustomText
@@ -51,8 +71,8 @@ export function OverlayPanel({
       text: textToUse,
       templateId: selectedTemplate,
       colorMode,
-      width: 1080,
-      height: 1350,
+      width,
+      height,
     })
       .then((result) => {
         setComposedImage(result);
@@ -62,7 +82,7 @@ export function OverlayPanel({
         console.error("Compose failed:", err);
         setIsComposing(false);
       });
-  }, [currentImage, textToUse, selectedTemplate, colorMode]);
+  }, [currentImage, textToUse, selectedTemplate, colorMode, width, height]);
 
   const handleDownload = () => {
     if (!composedImage) return;
@@ -99,7 +119,7 @@ export function OverlayPanel({
             <Type className="w-4 h-4 text-brand-rose" />
             <h4 className="font-medium text-sm">Aperçu overlay</h4>
             <span className="text-[10px] text-brand-muted">
-              (4:5 — 1080×1350)
+              ({width}×{height})
             </span>
           </div>
           {composedImage && (
@@ -114,7 +134,7 @@ export function OverlayPanel({
           )}
         </div>
 
-        <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-brand-bg">
+        <div className={cn("relative rounded-xl overflow-hidden bg-brand-bg", aspectClass)}>
           {isComposing && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
               <RefreshCw className="w-6 h-6 text-brand-rose animate-spin" />

@@ -6,6 +6,8 @@
 
 **Addendum session handoff 22 mai 2026** : préparation passation à Keyvan (hébergement + auth) et structuration des docs. Voir section 10.
 
+**Addendum 29 juin 2026** : refonte du contenu Pinterest atelier-social (2 formats clients Hero/Désir, fiches par motif, mots-clés longue traîne, overlay surimpression réactivé, vocabulaire consumer sans référence machine). Voir section 11 + §1 + §7.
+
 ---
 
 ## 0. POINTS D'ENTRÉE DOCS
@@ -42,15 +44,19 @@
 - **Décision** :
   - Insta photo pure → 1:1 (1024×1024), 5 angles narratifs
   - Insta avec overlay → 4:5 (1080×1350), 5 angles narratifs
-  - Pinterest → 2:3 (1024×1536) systématique, 3 angles best-performers
+  - Pinterest → 2:3 (1000×1500) systématique, **2 formats clients** (Hero + Désir)
 - **Raison** : standard officiel chaque plateforme, optimisation algo natif
 - **Écarté** : 4:5 universel (perdait Pinterest natif), 2:3 universel (perdait Insta carrousel)
 
-### 5 angles narratifs Insta vs 3 Pinterest
+### Angles : 5 narratifs Insta vs 2 formats clients Pinterest (REFONTE 29/06/2026)
 - **Décision Insta** : Portrait Frontal / Demi-Figure 3/4 / Détail Intimiste / Scène Narrative / Lifestyle Wide
-- **Décision Pinterest** : 3 angles best-performers verticaux (Demi-Figure 3/4, Scène Narrative, Lifestyle Wide)
-- **Raison** : carrousel Insta narre une histoire, Pinterest = volume A/B test sur 3 angles différents
-- **Écarté** : 5 angles Pinterest (overkill coût), 1 seule épingle Pinterest (trop risqué A/B)
+- **Décision Pinterest (NOUVELLE)** : 2 formats orientés moteur d'achat, plus les anciens « angles best-performers » génériques.
+  - **Hero** = flatlay détail brodé, **SANS personnage**, surface texturée + props + lumière chaude, **jamais fond blanc** → montre la personnalisation en 0,5 s, déclenche le save. Côté technique : `composition: "flatlay"` dans `generate-image` (saute les canoniques + prompt dédié sans humain).
+  - **Désir** = porté, cadré **serré sur la zone brodée** (poitrine/poignet) → projection + lisibilité du détail. `composition: "worn"` + canoniques.
+  - **Format vidéo process (notoriété)** : reconnu comme levier 2026 mais **hors V1** (le moteur ne génère que des images fixes).
+- **Raison** : sur Pinterest le moteur d'achat = voir la personnalisation. Le flatlay détail et le porté serré battent les angles « lifestyle » génériques pour le save + le clic.
+- **Écarté** : les 3 anciens angles best-performers (Demi-Figure / Scène / Lifestyle Wide) — conservés seulement en fallback si la stratégie n'est pas chargée ; vidéo process en V1.
+- **Réf** : `referentiels/pinterest_strategy.json` + `lib/pinterest-strategy.ts` (voir §11).
 
 ### Système retry IMAGE_OTHER en 3 niveaux
 - **Décision** :
@@ -497,10 +503,10 @@ Structure `mannequins_lot1_5fiches.json` :
 - Question : vraiment efficace en production ?
 - **À monitorer en production**
 
-### Pinterest avec overlay (V2)
-- Aujourd'hui Pinterest = photo pure 2:3 (pas d'overlay)
-- Question : ajouter le toggle overlay sur Pinterest aussi ?
-- **Non tranché** — limitations algo Pinterest sur texte sur image à étudier
+### Pinterest avec overlay — TRANCHÉ 29/06/2026 (était V2)
+- ✅ **Overlay réactivé sur Pinterest** : onglet « Surimpression » en 2:3 (1000×1500), texte pré-rempli = `texte_surimpression` de la fiche (l'occasion sur l'image).
+- **Raison** : sur Pinterest le mot-clé doit vivre dans le titre + la description ET sur l'image. Le texte sur image est un atout, pas une limite.
+- Le toggle « Photo pure / Avec texte » est désormais actif aussi en mode Pinterest.
 
 ### Signature Clémence dans `canoniques.ts` est-elle trop longue ?
 - Bloc actuel : ~80 mots EN
@@ -1037,3 +1043,46 @@ Les **assets binaires** (`.DST`, `.PXF`, `.pdf` fiches techniques, PNG aperçus)
 > *"On documente et on explique pour keyvan le besoin d'heberger proprement pour tous les différentes app selon l'atelier metier"* (cadrage handoff Keyvan)
 
 > *"Expliquer spécifiquement ce qui a été testé vs non testé"* (honnêteté handoff)
+
+---
+
+## 11. SESSION 29 JUIN 2026 — STRATÉGIE PINTEREST PAR MOTIF (atelier-social)
+
+### 11.1 Contexte
+
+Le moteur d'achat Ypersoa = **voir la personnalisation**. Sur Pinterest (moteur de recherche, pas réseau social), le mot-clé est une **requête longue traîne** qui doit vivre dans le **titre + la description + le texte sur l'image** — c'est le piège classique de copier-coller la logique Etsy (tags courts). Refonte du contenu Pinterest généré pour coller aux besoins clients.
+
+### 11.2 Décisions verrouillées
+
+- **2 formats clients** (remplacent les 3 angles best-performers génériques, conservés en fallback) :
+  - **Hero** = flatlay détail brodé, SANS personnage, surface texturée + props + lumière chaude, jamais fond blanc → déclencheur de save.
+  - **Désir** = porté, cadré serré sur la zone brodée (poitrine/poignet) → projection + lisibilité.
+  - **Vidéo process** (notoriété, levier 2026) reconnue mais **hors V1** (moteur = images fixes uniquement).
+- **2:3 (1000×1500)** systématique.
+- **Overlay réactivé** : surimpression de l'occasion sur l'image (cf. §7).
+- **Vocabulaire consumer-facing** : « brodé à la commande », « à ton image », « personnalisation », « durable », « Hauts-de-France ». **JAMAIS** de référence machine (« métier Tajima » est interdit côté Pinterest, contrairement au prompt Insta) ni « fait main ». Cf. mémoire `feedback_vocab_fabrication`.
+- **Mots-clés pilotés par fiche** : 1 principal (slot saisonnier de l'occasion sinon 1er mot-clé niche) + secondaires (niche + 6 ancres génériques). Tags déterministes (pas inventés par GPT).
+- Bloc générique (6 ancres + slot saisonnier rotatif) + bloc niche par motif + mapping occasions→motifs.
+
+### 11.3 Mapping motifs (11 fiches Pinterest → YPM)
+
+La Brigitte→YPM-001, Le Câlin→YPM-006, La Signature→YPM-016, L'Annonce→YPM-005, Le Club→YPM-003, Notre Héritage→YPM-004, La Palette→YPM-009, La Déclaration→YPM-015, La Féline→YPM-008, **La Team→YPM-003** (variante du Club), **Le Roman (casquette)→YPM-000** (écriture muséo).
+
+Occasions ajoutées dans `OccasionSelector` : Fête des Pères, Fête des grands-mères, Rentrée, Été/Vacances, Noël.
+
+### 11.4 Inventaire fichiers livrés
+
+- `referentiels/pinterest_strategy.json` — référentiel canonique éditable (vocab, ancres, slots, 2 formats, 11 fiches, mapping occasions).
+- `apps/atelier-social/src/lib/pinterest-strategy.ts` — types + helpers purs (`buildPinterestKeywords`, `suggestFichesForOccasion`, `defaultFicheForOccasion`).
+- `apps/atelier-social/src/lib/pinterest-strategy.server.ts` — loader fs (cache mémoire).
+- `apps/atelier-social/src/app/api/social/pinterest-strategy/route.ts` — GET stratégie pour le client.
+- `generate-image/route.ts` — param `composition: "flatlay" | "worn"` + prompt flatlay sans humain + `simplifyAngle` (FLATLAY HERO / WORN CLOSE-UP).
+- `generate-copy/route.ts` — prompt Pinterest réécrit (longue traîne, vocab consumer), injection mots-clés fiche, tags déterministes, brand-safety `FORBIDDEN_TERMS_MACHINE`.
+- `OverlayPanel.tsx` — props `width`/`height`/`aspectClass`/`defaultText` (2:3 + surimpression pré-remplie).
+- `social/page.tsx` — sélecteur fiche Pinterest (auto-suggéré par occasion), 2 jobs image, overlay réactivé, params copy.
+- `OccasionSelector.tsx` — +5 occasions.
+
+### 11.5 À monitorer / ajuster
+
+- Le **flatlay HERO** est le format le plus neuf pour Gemini : si rendu fade ou personnage parasite, ajuster `formats.hero.prompt` dans le JSON (pas de code à toucher).
+- Le format **vidéo process** reste un TODO (levier notoriété 2026).

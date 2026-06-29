@@ -7,6 +7,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { loadPinterestStrategy } from "@/lib/pinterest-strategy.server";
+import { buildPinterestKeywords } from "@/lib/pinterest-strategy";
 
 export const runtime = "nodejs";
 export const maxDuration = 90;
@@ -19,6 +21,9 @@ interface RequestBody {
   occasionContext: string;
   customPrompt?: string;
   canoniqueContext?: string;
+  // Pinterest : fiche stratégie + occasion → mots-clés longue traîne pilotés
+  pinterestFicheId?: string;
+  occasionId?: string;
 }
 
 interface BrandViolation {
@@ -56,12 +61,20 @@ const FORBIDDEN_TERMS_WARNING = [
   "Bonsoir",
 ];
 
-function checkBrandSafety(text: string): BrandSafety {
+// Pinterest = consumer-facing : aucune référence machine/équipement (cf. mémoire
+// feedback_vocab_fabrication → préférer « brodé à la commande »).
+const FORBIDDEN_TERMS_MACHINE = [
+  "métier Tajima",
+  "Tajima",
+  "machine à broder",
+];
+
+function checkBrandSafety(text: string, extraCritical: string[] = []): BrandSafety {
   const lower = text.toLowerCase();
   const criticalViolations: BrandViolation[] = [];
   const warnings: BrandViolation[] = [];
 
-  for (const term of FORBIDDEN_TERMS_CRITICAL) {
+  for (const term of [...FORBIDDEN_TERMS_CRITICAL, ...extraCritical]) {
     const idx = lower.indexOf(term.toLowerCase());
     if (idx !== -1) {
       criticalViolations.push({ term, position: idx, severity: "critical" });
@@ -105,23 +118,31 @@ const SYSTEM_PROMPT_INSTAGRAM = `Tu es la voix Ypersoa pour Instagram — broder
 
 Réponds UNIQUEMENT en JSON valide, rien d'autre.`;
 
-const SYSTEM_PROMPT_PINTEREST = `Tu es la voix Ypersoa pour Pinterest — broderie premium sur métier Tajima depuis un atelier français.
+const SYSTEM_PROMPT_PINTEREST = `Tu es la voix Ypersoa pour Pinterest — vêtements brodés personnalisés, brodés à la commande dans notre atelier des Hauts-de-France.
 
-# CONTEXTE PINTEREST
-Pinterest est une plateforme de découverte SEO. Les utilisateurs cherchent des idées, inspirations, cadeaux. La description doit contenir des mots-clés naturels que les gens tapent.
+# CONTEXTE PINTEREST = MOTEUR DE RECHERCHE (pas un réseau social)
+Sur Pinterest, le mot-clé est une REQUÊTE longue traîne — une phrase que les gens tapent vraiment ("idée cadeau fête des mères personnalisé"), PAS un tag court façon Etsy. Le mot-clé doit vivre dans le TITRE, la DESCRIPTION et (côté image) la surimpression.
+Règle d'or : 1 épingle = 1 mot-clé PRINCIPAL longue traîne + 4-6 mots-clés secondaires répartis naturellement.
 
 # RÈGLES ABSOLUES
-- TOUJOURS tutoyer ("tu", "ton", "ta")
-- JAMAIS "vous", "votre", "vos"
-- JAMAIS "brodé à la main" / "fait main" → toujours "brodé sur métier Tajima" ou "brodé dans notre atelier"
-- JAMAIS Etsy, Amazon, marketplace
-- Ton inspirationnel, descriptif (pas narratif personnel comme Insta)
+- TOUJOURS tutoyer ("tu", "ton", "ta") — JAMAIS "vous", "votre", "vos"
+- JAMAIS "brodé à la main" / "fait main" → dis "brodé à la commande", "brodé pour toi", "à ton image"
+- JAMAIS de référence machine/équipement (pas de "métier Tajima", pas de "machine à broder")
+- JAMAIS Etsy, Amazon, Vinted, marketplace
+- Vocabulaire de marque : personnalisation, à ton image, brodé à la commande, durable, Hauts-de-France, atelier français, made in France
+- Ton inspirationnel et descriptif (pas narratif personnel comme Insta)
+
+# MOTS-CLÉS IMPOSÉS
+Une liste de mots-clés t'est fournie dans le message (1 PRINCIPAL + des secondaires). Tu DOIS :
+- commencer le titre par le mot-clé PRINCIPAL
+- ouvrir la description par le mot-clé PRINCIPAL puis tisser 4-6 secondaires en phrases naturelles
+- ne pas inventer d'autres axes : reste sur ces mots-clés et l'occasion donnée
 
 # OUTPUT REQUIS — JSON STRICT — STANDARD PINTEREST OFFICIEL
 {
-  "title": "Titre épingle MAX 100 caractères (compte les caractères !) — accrocheur SEO, mots-clés en début",
-  "description": "Description SEO MAX 500 caractères. Phrases naturelles avec mots-clés intégrés. Décris ce que c'est, pour qui, pourquoi c'est unique. Pas de hashtags. Pas de #.",
-  "tags": ["8-10 tags", "sans dièse", "minuscules", "séparés", "mots-clés naturels"],
+  "title": "Titre épingle MAX 100 caractères (compte les caractères !) — commence par le mot-clé PRINCIPAL",
+  "description": "Description SEO MAX 500 caractères. Phrases naturelles, mot-clé principal en ouverture + secondaires intégrés. Décris ce que c'est, pour qui, pourquoi unique (personnalisé, brodé à la commande, durable). PAS de hashtags, PAS de #.",
+  "tags": ["8-10 mots-clés longue traîne", "minuscules", "sans dièse", "phrases naturelles"],
   "hooks": [
     "Hook ÉMOTION (12-15 mots) — phrase qui touche directement",
     "Hook QUESTION (8-12 mots) — question qui interpelle",
@@ -131,10 +152,10 @@ Pinterest est une plateforme de découverte SEO. Les utilisateurs cherchent des 
   ]
 }
 
-# EXEMPLES BONNES PRATIQUES PINTEREST
-- Titre : "Sweat brodé Mama Club — Cadeau Fête des Mères personnalisé"
-- Description : "Offre à ta maman un sweat unique brodé sur métier Tajima dans notre atelier français. Personnalisable, doux, durable. Le cadeau qui raconte votre lien — fabriqué à la commande, prêt en 7 jours. Idéal pour la Fête des Mères, un anniversaire, ou simplement lui dire merci."
-- Tags : ["cadeau fête des mères", "broderie personnalisée", "sweat brodé", "atelier français", "made in france", "cadeau maman", "mama club", "broderie sur mesure"]
+# EXEMPLE BONNE PRATIQUE
+- Titre : "Cadeau fête des mères personnalisé — sweat brodé prénom à ton image"
+- Description : "Cadeau fête des mères personnalisé : offre à ta maman un sweat brodé prénom, brodé à la commande dans notre atelier des Hauts-de-France. Une broderie personnalisée, douce et durable, qui raconte votre lien. Idée cadeau maman unique, à ton image, prête à offrir."
+- Tags : ["cadeau fête des mères personnalisé", "sweat brodé prénom", "broderie personnalisée", "cadeau maman prénom", "vêtement brodé personnalisé", "idée cadeau originale"]
 
 Réponds UNIQUEMENT en JSON valide, rien d'autre.`;
 
@@ -161,6 +182,8 @@ export async function POST(request: NextRequest) {
     occasionContext,
     customPrompt,
     canoniqueContext,
+    pinterestFicheId,
+    occasionId,
   } = body;
 
   console.log("[INFO] Platform:", platform);
@@ -170,17 +193,39 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Image manquante" }, { status: 400 });
   }
 
+  // Pinterest : on calcule les mots-clés longue traîne pilotés par la fiche stratégie.
+  let pinterestKeywords: ReturnType<typeof buildPinterestKeywords> = null;
+  let pinterestFicheNom = "";
+  if (platform === "pinterest" && pinterestFicheId && occasionId) {
+    try {
+      const strategy = await loadPinterestStrategy();
+      pinterestKeywords = buildPinterestKeywords(strategy, pinterestFicheId, occasionId);
+      pinterestFicheNom = strategy.fiches.find((f) => f.id === pinterestFicheId)?.nom ?? "";
+    } catch (e) {
+      console.error("[WARN] Pinterest strategy load failed:", e);
+    }
+  }
+
   const openai = new OpenAI({ apiKey });
 
   const systemPrompt =
     platform === "pinterest" ? SYSTEM_PROMPT_PINTEREST : SYSTEM_PROMPT_INSTAGRAM;
+
+  const keywordsBlock = pinterestKeywords
+    ? `
+
+🔑 MOTS-CLÉS À UTILISER (longue traîne) :
+- PRINCIPAL (tête de titre + ouverture description) : "${pinterestKeywords.principal}"
+- SECONDAIRES (à tisser dans la description) : ${pinterestKeywords.secondaires.map((k) => `"${k}"`).join(", ")}
+${pinterestFicheNom ? `- MOTIF : ${pinterestFicheNom}` : ""}`
+    : "";
 
   const userMessage = `Voici les éléments du visuel à promouvoir :
 
 📸 AMBIANCE : ${vibeLabel}
 🎁 OCCASION : ${occasionContext}
 ${canoniqueContext ? `👤 PERSONNAGES : ${canoniqueContext}` : ""}
-${customPrompt ? `💡 VISION CRÉATIVE : "${customPrompt}"` : ""}
+${customPrompt ? `💡 VISION CRÉATIVE : "${customPrompt}"` : ""}${keywordsBlock}
 
 Analyse l'image attentivement (motif brodé, couleurs, support textile) et produis le contenu pour ${platform === "pinterest" ? "Pinterest (standard officiel : titre + description + tags + 5 hooks)" : "Instagram (légende narrative + 5 hooks)"}.
 
@@ -223,12 +268,28 @@ Analyse l'image attentivement (motif brodé, couleurs, support textile) et produ
     if (platform === "pinterest") {
       const title = parsed.title || "";
       const description = parsed.description || "";
-      const tags = Array.isArray(parsed.tags) ? parsed.tags : [];
+      const gptTags: string[] = Array.isArray(parsed.tags) ? parsed.tags : [];
       const hooks = Array.isArray(parsed.hooks) ? parsed.hooks : [];
 
-      // Brand safety check sur titre + description
+      // Tags = mots-clés stratégie en priorité (déterministes, alignés Sarah),
+      // complétés par les tags GPT jusqu'à 10. Si pas de fiche → tags GPT seuls.
+      let tags: string[] = gptTags;
+      if (pinterestKeywords) {
+        const seen = new Set<string>();
+        tags = [];
+        for (const kw of [...pinterestKeywords.tous, ...gptTags]) {
+          const n = kw.trim().toLowerCase();
+          if (n && !seen.has(n)) {
+            seen.add(n);
+            tags.push(kw.trim());
+          }
+          if (tags.length >= 10) break;
+        }
+      }
+
+      // Brand safety check sur titre + description (+ interdiction machine sur Pinterest)
       const fullText = `${title} ${description}`;
-      const brandSafety = checkBrandSafety(fullText);
+      const brandSafety = checkBrandSafety(fullText, FORBIDDEN_TERMS_MACHINE);
 
       console.log("[OK] Pinterest output - title:", title.length, "chars, desc:", description.length, "chars, tags:", tags.length);
       console.log("========== END ==========\n");

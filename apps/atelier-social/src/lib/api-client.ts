@@ -10,6 +10,9 @@ export interface GenerateImageInput {
   customPrompt?: string;
   canoniqueIds?: string[];
   aspectRatio?: "1:1" | "4:5" | "2:3";
+  composition?: "flatlay" | "worn";
+  selectedProduct?: string;
+  selectedGarmentColor?: string;
 }
 
 export interface GenerateCopyInput {
@@ -20,6 +23,8 @@ export interface GenerateCopyInput {
   occasionContext: string;
   customPrompt?: string;
   canoniqueContext?: string;
+  pinterestFicheId?: string;
+  occasionId?: string;
 }
 
 export async function generateImageVariation(input: GenerateImageInput): Promise<string> {
