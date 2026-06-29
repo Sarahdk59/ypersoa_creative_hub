@@ -51,7 +51,47 @@ export interface TrendsSnapshot {
   errors: string[];
 }
 
+/** Mot-clé Pinterest saisi/curé manuellement (rail principal tant que l'API
+ *  Pinterest Trends n'est pas validée — cf. CDC §1.2). Stocké dans
+ *  `referentiels/trends/_pinterest_manuel.json`, fusionné à chaque run. */
+export interface PinterestManualKeyword {
+  terme: string;
+  trafic_estime?: string | null;
+  signal?: TrendSignal;
+  note?: string;
+}
+
 // ── Helpers purs ──────────────────────────────────────────────────────────
+
+/** Convertit un mot-clé Pinterest manuel en Trend (lien explore Pinterest). */
+export function manualKeywordToTrend(kw: PinterestManualKeyword): Trend {
+  return {
+    terme: kw.terme,
+    source: "pinterest",
+    type: "mot",
+    signal: kw.signal ?? "stable",
+    trafic_estime: kw.trafic_estime ?? null,
+    contexte: kw.note ? [kw.note] : [],
+    url: `https://trends.pinterest.com/?country=FR&query=${encodeURIComponent(kw.terme)}`,
+    enrichissement: null,
+  };
+}
+
+/** Fusionne plusieurs listes de tendances en dédupliquant par terme (casse/espaces
+ *  ignorés). Priorité au 1er rencontré → passer Pinterest avant Google. */
+export function mergeTrends(...lists: Trend[][]): Trend[] {
+  const seen = new Set<string>();
+  const out: Trend[] = [];
+  for (const list of lists) {
+    for (const t of list) {
+      const key = t.terme.toLowerCase().trim();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(t);
+    }
+  }
+  return out;
+}
 
 /** Convertit "200 000+" / "1 M+" en nombre pour le tri (best-effort). */
 export function parseTrafic(trafic: string | null): number {

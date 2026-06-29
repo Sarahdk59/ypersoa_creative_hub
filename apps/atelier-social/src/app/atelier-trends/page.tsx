@@ -7,20 +7,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingUp, RefreshCw, Loader2, AlertTriangle, ExternalLink } from "lucide-react";
+import { TrendingUp, RefreshCw, Loader2, AlertTriangle, ExternalLink, Plus, X } from "lucide-react";
 import {
   type TrendsSnapshot,
+  type TrendSource,
+  type PinterestManualKeyword,
   sortTrends,
   SIGNAL_LABELS,
   TYPE_LABELS,
   SOURCE_LABELS,
 } from "@/lib/trends/trends";
 
+type SourceFilter = "all" | TrendSource;
+
 export default function AtelierTrendsPage() {
   const [snapshot, setSnapshot] = useState<TrendsSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<SourceFilter>("all");
+  const [manual, setManual] = useState<PinterestManualKeyword[]>([]);
+  const [newKw, setNewKw] = useState("");
+  const [savingManual, setSavingManual] = useState(false);
 
   function load() {
     setLoading(true);
@@ -32,9 +40,49 @@ export default function AtelierTrendsPage() {
       })
       .catch((e) => setError(e instanceof Error ? e.message : String(e)))
       .finally(() => setLoading(false));
+    fetch("/api/trends/pinterest-manuel", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.ok) setManual(res.data);
+      })
+      .catch(() => {});
   }
 
   useEffect(load, []);
+
+  function saveManual(next: PinterestManualKeyword[]) {
+    setSavingManual(true);
+    setError(null);
+    setManual(next);
+    fetch("/api/trends/pinterest-manuel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ keywords: next }),
+    })
+      .then((r) => r.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(res.error);
+        setManual(res.data.keywords);
+        setSnapshot(res.data.snapshot);
+      })
+      .catch((e) => setError(e instanceof Error ? e.message : String(e)))
+      .finally(() => setSavingManual(false));
+  }
+
+  function addKeyword() {
+    const terme = newKw.trim();
+    if (!terme) return;
+    if (manual.some((k) => k.terme.toLowerCase() === terme.toLowerCase())) {
+      setNewKw("");
+      return;
+    }
+    saveManual([...manual, { terme, signal: "saisonnier" }]);
+    setNewKw("");
+  }
+
+  function removeKeyword(terme: string) {
+    saveManual(manual.filter((k) => k.terme !== terme));
+  }
 
   function refresh() {
     setRunning(true);
@@ -49,7 +97,9 @@ export default function AtelierTrendsPage() {
       .finally(() => setRunning(false));
   }
 
-  const trends = snapshot ? sortTrends(snapshot.trends) : [];
+  const allTrends = snapshot ? sortTrends(snapshot.trends) : [];
+  const trends = filter === "all" ? allTrends : allTrends.filter((t) => t.source === filter);
+  const countBySource = (s: TrendSource) => allTrends.filter((t) => t.source === s).length;
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -140,6 +190,126 @@ export default function AtelierTrendsPage() {
           <span>Sources : {snapshot.sources.map((s) => SOURCE_LABELS[s]).join(", ")}</span>
         </div>
       )}
+
+      {/* Filtre par source */}
+      {snapshot && allTrends.length > 0 && (
+        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+          <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
+            Tous ({allTrends.length})
+          </FilterChip>
+          <FilterChip active={filter === "google"} onClick={() => setFilter("google")}>
+            Google ({countBySource("google")})
+          </FilterChip>
+          <FilterChip active={filter === "pinterest"} onClick={() => setFilter("pinterest")}>
+            Pinterest ({countBySource("pinterest")})
+          </FilterChip>
+        </div>
+      )}
+
+      {/* Panneau mots-clés Pinterest (saisie manuelle) */}
+      <details
+        style={{
+          marginBottom: 24,
+          border: "0.5px solid var(--hub-border)",
+          borderRadius: 12,
+          background: "white",
+          padding: "0 20px",
+        }}
+      >
+        <summary
+          style={{
+            cursor: "pointer",
+            padding: "14px 0",
+            fontFamily: "var(--font-sans)",
+            fontSize: 13,
+            fontWeight: 500,
+            color: "var(--hub-foreground)",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          Mots-clés Pinterest (saisie manuelle)
+          <span style={{ opacity: 0.5, fontWeight: 400 }}>— {manual.length} mot{manual.length > 1 ? "s" : ""}</span>
+          {savingManual && <Loader2 size={13} className="animate-spin" style={{ opacity: 0.6 }} />}
+        </summary>
+        <div style={{ paddingBottom: 18 }}>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)", opacity: 0.6, lineHeight: 1.5, marginTop: 0 }}>
+            En attendant la validation de l&apos;API Pinterest, cure ici les requêtes Pinterest à suivre
+            (ex. « cadeau fête des mères personnalisé »). Elles sont fusionnées au run.
+            Pour les figer durablement, édite <code>referentiels/trends/_pinterest_manuel.json</code> et committe.
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+            {manual.map((k) => (
+              <span
+                key={k.terme}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 12,
+                  padding: "5px 8px 5px 12px",
+                  borderRadius: 999,
+                  background: "var(--hub-bg)",
+                  border: "0.5px solid var(--hub-border)",
+                  color: "var(--hub-foreground)",
+                }}
+              >
+                {k.terme}
+                <button
+                  onClick={() => removeKeyword(k.terme)}
+                  disabled={savingManual}
+                  aria-label={`Retirer ${k.terme}`}
+                  style={{ display: "inline-flex", border: "none", background: "transparent", cursor: "pointer", padding: 0, opacity: 0.5 }}
+                >
+                  <X size={13} strokeWidth={2} />
+                </button>
+              </span>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              value={newKw}
+              onChange={(e) => setNewKw(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addKeyword()}
+              placeholder="Ajouter un mot-clé Pinterest…"
+              disabled={savingManual}
+              style={{
+                flex: 1,
+                fontFamily: "var(--font-sans)",
+                fontSize: 13,
+                padding: "9px 12px",
+                borderRadius: 9,
+                border: "0.5px solid var(--hub-border)",
+                background: "var(--hub-bg)",
+                color: "var(--hub-foreground)",
+              }}
+            />
+            <button
+              onClick={addKeyword}
+              disabled={savingManual || !newKw.trim()}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: "var(--font-sans)",
+                fontSize: 13,
+                fontWeight: 500,
+                padding: "9px 14px",
+                borderRadius: 9,
+                border: "0.5px solid var(--hub-border)",
+                background: "var(--hub-bg)",
+                color: "var(--hub-foreground)",
+                cursor: savingManual || !newKw.trim() ? "default" : "pointer",
+                opacity: savingManual || !newKw.trim() ? 0.5 : 1,
+              }}
+            >
+              <Plus size={14} strokeWidth={1.8} /> Ajouter
+            </button>
+          </div>
+        </div>
+      </details>
 
       {/* Erreurs non bloquantes du run */}
       {snapshot && snapshot.errors.length > 0 && (
@@ -299,6 +469,36 @@ export default function AtelierTrendsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function FilterChip({
+  children,
+  active,
+  onClick,
+}: {
+  children: React.ReactNode;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        fontFamily: "var(--font-sans)",
+        fontSize: 12,
+        fontWeight: 500,
+        padding: "6px 14px",
+        borderRadius: 999,
+        cursor: "pointer",
+        background: active ? "var(--hub-foreground)" : "white",
+        color: active ? "var(--hub-bg)" : "var(--hub-foreground)",
+        border: "0.5px solid var(--hub-border)",
+        opacity: active ? 1 : 0.7,
+      }}
+    >
+      {children}
+    </button>
   );
 }
 

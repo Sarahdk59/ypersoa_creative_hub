@@ -1,10 +1,18 @@
 {
   "id": "2026-06-29",
   "date": "2026-06-29",
-  "generated_at": "2026-06-29T13:10:00.000Z",
-  "sources": ["google"],
+  "generated_at": "2026-06-29T13:40:00.000Z",
+  "sources": ["google", "pinterest"],
   "status": "raw",
   "trends": [
+    { "terme": "cadeau fête des mères personnalisé", "source": "pinterest", "type": "mot", "signal": "saisonnier", "trafic_estime": null, "contexte": ["Pic avant fête des mères — angle prénom/initiale."], "url": "https://trends.pinterest.com/?country=FR&query=cadeau%20f%C3%AAte%20des%20m%C3%A8res%20personnalis%C3%A9", "enrichissement": null },
+    { "terme": "sweat brodé prénom", "source": "pinterest", "type": "mot", "signal": "stable", "trafic_estime": null, "contexte": ["Requête evergreen forte sur Pinterest."], "url": "https://trends.pinterest.com/?country=FR&query=sweat%20brod%C3%A9%20pr%C3%A9nom", "enrichissement": null },
+    { "terme": "t-shirt brodé personnalisé femme", "source": "pinterest", "type": "mot", "signal": "stable", "trafic_estime": null, "contexte": [], "url": "https://trends.pinterest.com/?country=FR&query=t-shirt%20brod%C3%A9%20personnalis%C3%A9%20femme", "enrichissement": null },
+    { "terme": "cadeau naissance personnalisé", "source": "pinterest", "type": "mot", "signal": "saisonnier", "trafic_estime": null, "contexte": ["Body/bavoir prénom brodé."], "url": "https://trends.pinterest.com/?country=FR&query=cadeau%20naissance%20personnalis%C3%A9", "enrichissement": null },
+    { "terme": "cadeau couple personnalisé", "source": "pinterest", "type": "mot", "signal": "saisonnier", "trafic_estime": null, "contexte": ["Saint-Valentin + anniversaires."], "url": "https://trends.pinterest.com/?country=FR&query=cadeau%20couple%20personnalis%C3%A9", "enrichissement": null },
+    { "terme": "idée cadeau fête des pères", "source": "pinterest", "type": "mot", "signal": "saisonnier", "trafic_estime": null, "contexte": [], "url": "https://trends.pinterest.com/?country=FR&query=id%C3%A9e%20cadeau%20f%C3%AAte%20des%20p%C3%A8res", "enrichissement": null },
+    { "terme": "sweat famille assorti", "source": "pinterest", "type": "mot", "signal": "stable", "trafic_estime": null, "contexte": ["Looks coordonnés famille — Le Club / La Team."], "url": "https://trends.pinterest.com/?country=FR&query=sweat%20famille%20assorti", "enrichissement": null },
+    { "terme": "tote bag brodé personnalisé", "source": "pinterest", "type": "mot", "signal": "stable", "trafic_estime": null, "contexte": [], "url": "https://trends.pinterest.com/?country=FR&query=tote%20bag%20brod%C3%A9%20personnalis%C3%A9", "enrichissement": null },
     { "terme": "avion", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "10000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=avion&geo=FR", "enrichissement": null },
     { "terme": "charlene wittstock", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "5000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=charlene%20wittstock&geo=FR", "enrichissement": null },
     { "terme": "jannik sinner", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "2000+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=jannik%20sinner&geo=FR", "enrichissement": null },
@@ -17,9 +25,9 @@
     { "terme": "ivresse", "source": "google", "type": "mot", "signal": "montant", "trafic_estime": "200+", "contexte": [], "url": "https://trends.google.com/trends/explore?q=ivresse&geo=FR", "enrichissement": null }
   ],
   "meta": {
-    "trends_count": 10,
+    "trends_count": 18,
     "source_url": "https://trends.google.com/trending/rss?geo=FR",
-    "note": "Lot 1 — snapshot d'amorçage (recherches tendances Google FR du 29/06). Tendances brutes, sans enrichissement IA. Le filtrage broderie + mapping motif/occasion arrive au Lot 3."
+    "note": "Lot 2 — snapshot d'amorçage : Google Trends FR (29/06) + mots-clés Pinterest curés. Tendances brutes, sans enrichissement IA (Lot 3). Le filtrage broderie + mapping motif/occasion arrive au Lot 3."
   },
   "errors": []
 }

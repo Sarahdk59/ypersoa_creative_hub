@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "last_updated": "2026-06-29",
+    "note": "Mots-clés Pinterest curés à la main (rail principal tant que l'API Pinterest Trends n'est pas validée — cf. docs/CDC_ATELIER_TRENDS.md §1.2). Édite cette liste OU utilise le panneau 'Mots-clés Pinterest' du dashboard. Fusionnés à chaque run de veille. signal: montant | saisonnier | stable.",
+    "source": "trends.pinterest.com (saisie manuelle)"
+  },
+  "keywords": [
+    { "terme": "cadeau fête des mères personnalisé", "signal": "saisonnier", "note": "Pic avant fête des mères — angle prénom/initiale." },
+    { "terme": "sweat brodé prénom", "signal": "stable", "note": "Requête evergreen forte sur Pinterest." },
+    { "terme": "t-shirt brodé personnalisé femme", "signal": "stable" },
+    { "terme": "cadeau naissance personnalisé", "signal": "saisonnier", "note": "Body/bavoir prénom brodé." },
+    { "terme": "cadeau couple personnalisé", "signal": "saisonnier", "note": "Saint-Valentin + anniversaires." },
+    { "terme": "idée cadeau fête des pères", "signal": "saisonnier" },
+    { "terme": "sweat famille assorti", "signal": "stable", "note": "Looks coordonnés famille — Le Club / La Team." },
+    { "terme": "tote bag brodé personnalisé", "signal": "stable" }
+  ]
+}

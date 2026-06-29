@@ -8,11 +8,64 @@
 
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
-import type { TrendsSnapshot } from "./trends";
+import {
+  manualKeywordToTrend,
+  mergeTrends,
+  type PinterestManualKeyword,
+  type TrendsSnapshot,
+  type TrendSource,
+} from "./trends";
 import { fetchGoogleTrends } from "./google-trends";
+import { fetchPinterestTrends } from "./pinterest-trends";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
 export const TRENDS_DIR = join(REFS_DIR, "trends");
+const PINTEREST_MANUEL_PATH = join(TRENDS_DIR, "_pinterest_manuel.json");
+
+interface PinterestManuelFile {
+  _meta?: Record<string, unknown>;
+  keywords: PinterestManualKeyword[];
+}
+
+/** Lit la liste de mots-clés Pinterest curés à la main (vide si absente). */
+export function getPinterestManuel(): PinterestManualKeyword[] {
+  if (!existsSync(PINTEREST_MANUEL_PATH)) return [];
+  try {
+    const parsed = JSON.parse(readFileSync(PINTEREST_MANUEL_PATH, "utf-8")) as PinterestManuelFile;
+    return Array.isArray(parsed.keywords) ? parsed.keywords : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Remplace la liste de mots-clés Pinterest manuels (dédup par terme). */
+export function setPinterestManuel(keywords: PinterestManualKeyword[]): PinterestManualKeyword[] {
+  ensureTrendsDir();
+  const seen = new Set<string>();
+  const clean = keywords
+    .map((k) => ({ ...k, terme: (k.terme || "").trim() }))
+    .filter((k) => {
+      const key = k.terme.toLowerCase();
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  const existing: Record<string, unknown> = existsSync(PINTEREST_MANUEL_PATH)
+    ? (() => {
+        try {
+          return JSON.parse(readFileSync(PINTEREST_MANUEL_PATH, "utf-8"))._meta ?? {};
+        } catch {
+          return {};
+        }
+      })()
+    : {};
+  const file: PinterestManuelFile = {
+    _meta: { ...existing, last_updated: new Date().toISOString().slice(0, 10) },
+    keywords: clean,
+  };
+  writeFileSync(PINTEREST_MANUEL_PATH, JSON.stringify(file, null, 2) + "\n", "utf-8");
+  return clean;
+}
 
 function ensureTrendsDir(): void {
   if (!existsSync(TRENDS_DIR)) mkdirSync(TRENDS_DIR, { recursive: true });
@@ -52,42 +105,59 @@ export function writeSnapshot(snapshot: TrendsSnapshot): void {
 }
 
 /**
- * Lance un run de veille (Lot 1 : Google Trends uniquement, status "raw").
- * Écrit le snapshot du jour (écrase si déjà lancé aujourd'hui) et le renvoie.
- * Si la source est injoignable et qu'un run antérieur existe, on conserve
- * l'ancien snapshot et on remonte l'erreur (garde-fou CDC §6).
+ * Lance un run de veille (Lot 2 : Google + Pinterest API + mots-clés Pinterest
+ * manuels, status "raw"). Écrit le snapshot du jour (écrase si déjà lancé) et
+ * le renvoie. Si TOUTES les sources sont vides et qu'un run antérieur existe,
+ * on conserve l'ancien snapshot et on remonte l'erreur (garde-fou CDC §6).
  */
 export async function runTrends(): Promise<TrendsSnapshot> {
   const now = new Date();
   const date = now.toISOString().slice(0, 10);
-  const google = await fetchGoogleTrends();
 
-  if (google.trends.length === 0) {
+  const [google, pinterest] = await Promise.all([
+    fetchGoogleTrends(),
+    fetchPinterestTrends(),
+  ]);
+  const manual = getPinterestManuel().map(manualKeywordToTrend);
+
+  // Pinterest avant Google : si un terme apparaît des 2 côtés, on garde la
+  // version Pinterest (plateforme prioritaire pour Ypersoa).
+  const trends = mergeTrends(pinterest.trends, manual, google.trends);
+  const errors = [...google.errors, ...pinterest.errors];
+
+  if (trends.length === 0) {
     const previous = getLatestSnapshot();
     if (previous) {
       return {
         ...previous,
         errors: [
-          "Run du " + date + " : Google Trends injoignable, snapshot précédent conservé.",
-          ...google.errors,
+          `Run du ${date} : toutes les sources vides, snapshot précédent conservé.`,
+          ...errors,
         ],
       };
     }
   }
 
+  const sources: TrendSource[] = [];
+  if (trends.some((t) => t.source === "google")) sources.push("google");
+  if (trends.some((t) => t.source === "pinterest")) sources.push("pinterest");
+
   const snapshot: TrendsSnapshot = {
     id: date,
     date,
     generated_at: now.toISOString(),
-    sources: ["google"],
+    sources,
     status: "raw",
-    trends: google.trends,
+    trends,
     meta: {
-      trends_count: google.trends.length,
+      trends_count: trends.length,
       source_url: google.source_url,
-      note: "Lot 1 — tendances brutes Google Trends FR, sans enrichissement IA.",
+      note:
+        "Lot 2 — Google Trends FR + Pinterest" +
+        (pinterest.configured ? " (API)" : " (saisie manuelle)") +
+        ", sans enrichissement IA.",
     },
-    errors: google.errors,
+    errors,
   };
   writeSnapshot(snapshot);
   return snapshot;

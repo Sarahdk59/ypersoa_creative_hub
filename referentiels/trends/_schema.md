@@ -3,10 +3,20 @@
 Chaque run de veille tendances Ypersoa est stocké comme `referentiels/trends/{YYYY-MM-DD}.json`.
 Voir le cahier des charges complet : `docs/CDC_ATELIER_TRENDS.md`.
 
-## Source (V1 — Lot 1)
-Flux **Google Trends — recherches tendances FR** (RSS public, gratuit, sans clé).
-Pas de scraping de DOM, pas de login. Lot 2 ajoutera Pinterest Trends ;
-Lot 3 ajoutera la couche de synthèse IA (champs `enrichissement` ci-dessous).
+## Sources
+- **Lot 1** — Flux **Google Trends — recherches tendances FR** (RSS public, gratuit, sans clé).
+- **Lot 2** — **Pinterest** : API Trends v5 si `PINTEREST_ACCESS_TOKEN` fourni (app validée),
+  sinon **mots-clés curés à la main** dans `_pinterest_manuel.json` (rail principal actuel).
+  Les deux sources sont fusionnées (dédup par terme, Pinterest prioritaire).
+- **Lot 3** (à venir) — couche de synthèse IA (champs `enrichissement` ci-dessous).
+
+Pas de scraping de DOM, pas de login.
+
+## Fichier annexe `_pinterest_manuel.json`
+Liste éditable de mots-clés Pinterest curés (préfixe `_` → ignoré comme snapshot).
+`{ _meta, keywords: [{ terme, trafic_estime?, signal?, note? }] }`. Éditable à la main
+(git-traçable) OU via le panneau « Mots-clés Pinterest » du dashboard
+(POST `/api/trends/pinterest-manuel` — runtime, éphémère sur Railway).
 
 ## État (`status`)
 - `raw` — Lot 1 : tendances brutes Google, pas encore filtrées/mappées Ypersoa.
