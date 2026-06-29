@@ -21,6 +21,7 @@ const RENTREE: PlanableOccasionRow = {
   notes: null,
   auto_campaign_disabled_year: null,
   kind: "marche",
+  temps_fort_date: null,
   created_at: null,
 };
 

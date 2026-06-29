@@ -173,6 +173,19 @@ export default function PlanablePage() {
     await fetchEntries();
   };
 
+  const updateOccasionDate = async (slug: string, date: string | null) => {
+    const res = await fetch(`/api/occasions/${slug}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ temps_fort_date: date }),
+    }).then((r) => r.json());
+    if (!res.ok) {
+      alert(typeof res.error === "string" ? res.error : "Échec de la mise à jour de la date");
+      return;
+    }
+    await fetchSuggestions();
+  };
+
   const expandCampaign = async (slug: string) => {
     const res = await fetch(`/api/campaigns/${slug}/expand`, { method: "POST" }).then((r) => r.json());
     if (!res.ok) {
@@ -316,6 +329,7 @@ export default function PlanablePage() {
         loading={loadingSugg}
         onExpandCampaign={expandCampaign}
         onResetCampaign={resetCampaign}
+        onUpdateDate={updateOccasionDate}
         plannedCountBySlug={plannedCountBySlug}
         orientation="horizontal"
       />

@@ -1,5 +1,5 @@
 "use client";
-import { ChevronDown, ChevronRight, Lightbulb, Loader2, RotateCcw, Sparkles } from "lucide-react";
+import { Check, ChevronDown, ChevronRight, Lightbulb, Loader2, Pencil, RotateCcw, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { frDate, shortFrDate } from "@/lib/utils/date";
 import type { OccasionUrgency } from "@/lib/occasions/calculator";
@@ -17,6 +17,15 @@ export interface SuggestionPayload {
   featured_this_week: boolean;
 }
 
+/** ISO → "YYYY-MM-DD" en heure LOCALE (pour préremplir un <input type=date> sans décalage UTC). */
+function toDateInput(iso: string): string {
+  const d = new Date(iso);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 const URGENCY_DOT: Record<string, string> = {
   critical: "#c53030",
   high: "#B4665F",
@@ -32,6 +41,7 @@ export function SuggestionsPanel({
   loading,
   onExpandCampaign,
   onResetCampaign,
+  onUpdateDate,
   plannedCountBySlug,
   orientation = "vertical",
 }: {
@@ -39,6 +49,7 @@ export function SuggestionsPanel({
   loading: boolean;
   onExpandCampaign: (slug: string) => Promise<void>;
   onResetCampaign: (slug: string) => Promise<void>;
+  onUpdateDate: (slug: string, date: string | null) => Promise<void>;
   plannedCountBySlug: Map<string, number>;
   orientation?: "vertical" | "horizontal";
 }) {
@@ -92,6 +103,7 @@ export function SuggestionsPanel({
                   sugg={s}
                   onExpand={onExpandCampaign}
                   onReset={onResetCampaign}
+                  onUpdateDate={onUpdateDate}
                   plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
                 />
               </div>
@@ -127,6 +139,7 @@ export function SuggestionsPanel({
                       sugg={s}
                       onExpand={onExpandCampaign}
                       onReset={onResetCampaign}
+                      onUpdateDate={onUpdateDate}
                       plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
                     />
                   </div>
@@ -176,6 +189,7 @@ export function SuggestionsPanel({
             sugg={s}
             onExpand={onExpandCampaign}
             onReset={onResetCampaign}
+            onUpdateDate={onUpdateDate}
             plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
           />
         ))}
@@ -212,6 +226,7 @@ export function SuggestionsPanel({
                     sugg={s}
                     onExpand={onExpandCampaign}
                     onReset={onResetCampaign}
+                    onUpdateDate={onUpdateDate}
                     plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
                   />
                 ))}
@@ -228,15 +243,20 @@ function SuggestionCard({
   sugg,
   onExpand,
   onReset,
+  onUpdateDate,
   plannedCount,
 }: {
   sugg: SuggestionPayload;
   onExpand: (slug: string) => Promise<void>;
   onReset: (slug: string) => Promise<void>;
+  onUpdateDate: (slug: string, date: string | null) => Promise<void>;
   plannedCount: number;
 }) {
   const [expanding, setExpanding] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [editingDate, setEditingDate] = useState(false);
+  const [savingDate, setSavingDate] = useState(false);
+  const [draftDate, setDraftDate] = useState(toDateInput(sugg.occurrence));
   const dot = URGENCY_DOT[sugg.urgency.kind] ?? "#1A1614";
   const isEngagementOnly = sugg.urgency.kind === "engagement_only";
   const isEditorial = sugg.urgency.kind === "editorial";
@@ -267,8 +287,58 @@ function SuggestionCard({
       </div>
 
       <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, lineHeight: 1.5, opacity: 0.85 }}>
-        {!isRolling && (
-          <div>{isEditorial ? "Temps fort" : "Occurrence"} : <strong>{shortFrDate(sugg.occurrence)}</strong></div>
+        {!isRolling && !editingDate && (
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            <span>{isEditorial ? "Temps fort" : "Occurrence"} : <strong>{shortFrDate(sugg.occurrence)}</strong></span>
+            <button
+              type="button"
+              onClick={() => { setDraftDate(toDateInput(sugg.occurrence)); setEditingDate(true); }}
+              title="Modifier la date du temps fort"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 3, padding: "1px 6px",
+                borderRadius: 999, border: "0.5px solid var(--color-border)", background: "white",
+                cursor: "pointer", fontSize: 10, opacity: 0.7, fontFamily: "var(--font-sans)",
+              }}
+            >
+              <Pencil size={10} /> modifier
+            </button>
+          </div>
+        )}
+        {!isRolling && editingDate && (
+          <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+            <input
+              type="date"
+              value={draftDate}
+              onChange={(e) => setDraftDate(e.target.value)}
+              style={{
+                fontSize: 11, padding: "3px 6px", borderRadius: 6,
+                border: "0.5px solid var(--color-border)", fontFamily: "var(--font-sans)",
+              }}
+            />
+            <button
+              type="button"
+              disabled={savingDate || !draftDate}
+              onClick={async () => { setSavingDate(true); await onUpdateDate(sugg.occasion.slug, draftDate); setSavingDate(false); setEditingDate(false); }}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 3, padding: "3px 8px", borderRadius: 999,
+                border: "none", background: "var(--color-ink)", color: "var(--color-cream)",
+                cursor: "pointer", fontSize: 10, fontWeight: 600, fontFamily: "var(--font-sans)",
+                opacity: savingDate ? 0.6 : 1,
+              }}
+            >
+              {savingDate ? <Loader2 size={10} className="animate-spin" /> : <Check size={10} />} OK
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditingDate(false)}
+              style={{
+                padding: "3px 8px", borderRadius: 999, border: "0.5px solid var(--color-border)",
+                background: "white", cursor: "pointer", fontSize: 10, fontFamily: "var(--font-sans)",
+              }}
+            >
+              Annuler
+            </button>
+          </div>
         )}
         {!isEngagementOnly && !isEditorial && !isRolling && (
           <div>

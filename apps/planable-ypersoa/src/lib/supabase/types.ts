@@ -47,6 +47,8 @@ export interface PlanableOccasionRow {
   auto_campaign_disabled_year: number | null;
   /** 'marche' = cadeau avec deadline commande | 'editorial' = moment de vie / engagement sans deadline. */
   kind: "marche" | "editorial";
+  /** Date de temps fort explicite (override la date calculée). Éditable côté UI. Null → fallback date_strategy. */
+  temps_fort_date: string | null;
   created_at: string | null;
 }
 

@@ -17,6 +17,7 @@ function evergreenOcc(slug: string): PlanableOccasionRow {
     notes: null,
     auto_campaign_disabled_year: null,
     kind: "editorial",
+    temps_fort_date: null,
     created_at: null,
   };
 }

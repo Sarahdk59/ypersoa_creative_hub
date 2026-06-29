@@ -33,6 +33,12 @@ export interface OccasionSuggestion {
   featured_this_week: boolean;
 }
 
+/** Parse une date 'YYYY-MM-DD' en date LOCALE minuit (évite le décalage UTC). */
+function parseLocalDate(d: string): Date {
+  const [y, m, day] = d.slice(0, 10).split("-").map(Number);
+  return new Date(y, m - 1, day);
+}
+
 const SUGGESTIONS_HORIZON_DAYS = 60;
 /** Nombre d'evergreen mis à la une chaque semaine (rotation déterministe). */
 const EVERGREEN_FEATURED_PER_WEEK = 3;
@@ -100,6 +106,9 @@ const AMBIANCE_BY_OCCASION: Record<string, number[]> = {
   bilan_annee: [1, 3],
   dans_atelier: [1, 2],
   nouvelle_collection: [1, 2],
+  // Série Club — France / Vélo
+  france_club: [4, 1],
+  velo_club: [4, 5],
 };
 
 export function buildSuggestions(
@@ -112,7 +121,10 @@ export function buildSuggestions(
   const out: OccasionSuggestion[] = [];
 
   for (const occ of occasions) {
-    const occurrence = nextOccurrence(occ.date_strategy, today);
+    // Date de temps fort : explicite (éditée par Sarah) sinon calculée par date_strategy.
+    const occurrence = occ.temps_fort_date
+      ? parseLocalDate(occ.temps_fort_date)
+      : nextOccurrence(occ.date_strategy, today);
 
     // Filtre horizon : on ne montre que les occasions dont l'occurrence
     // est dans les SUGGESTIONS_HORIZON_DAYS prochains jours.
