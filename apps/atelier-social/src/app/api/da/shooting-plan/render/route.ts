@@ -12,11 +12,20 @@ import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { createClient } from "@supabase/supabase-js";
 import type { ShootingPlanOutput } from "@/lib/atelier-da/shooting-plan-builder";
+import { getProduits } from "@/lib/hub-products";
 
 const GEMINI_MODEL = "gemini-3.1-flash-image-preview";
 
 // Symlink apps/atelier-social/public/canoniques → ../../assets/canoniques (à créer)
 const CANONIQUES_DIR = join(process.cwd(), "..", "..", "assets", "canoniques");
+
+// Broderie réaliste : Gemini extrude sinon un relief mousse 3D. On force le plat (réf Émoï-Émoï / Sézane).
+const EMBROIDERY_REALISM =
+  "EMBROIDERY REALISM (CRITICAL): render the embroidery as FLAT, fine, delicate flat machine embroidery — the thread sits almost flush with the fabric, subtle natural satin-stitch sheen, soft and matte, gently following the fabric weave. ABSOLUTELY NOT puffy, NOT 3D, NOT foam/puff embroidery, NOT thick raised or embossed lettering, NOT a bulky plastic-like patch, NO heavy drop shadow under the stitches. Understated and elegant like Émoï-Émoï / Sézane / Maison Labiche embroidery.";
+
+// Flag obligatoire : interdit les dérives observées (pull laine/maille, t-shirt gris chiné, col en V).
+const GARMENT_FORBIDDEN =
+  "ABSOLUTELY FORBIDDEN: a knit / wool / cable-knit sweater or pullover, a grey marl / heather-grey garment (unless that exact color was selected), a V-neck or any other neckline than the official one, any other garment type or color. Flat fine embroidery only (never puffy/3D).";
 
 interface RenderInput {
   plan: ShootingPlanOutput;
@@ -30,6 +39,8 @@ interface RenderInput {
   motif_size?: "petit" | "moyen" | "grand";
   /** Code produit Ypersoa (YP001 hoodie, YP004 hoodie enfant, YP005 sweat, YP019 t-shirt, YP021 zoodie). */
   produit_yp_id?: string;
+  /** id_palette de la couleur de support sélectionnée (verrou couleur + injection packshot). */
+  selected_garment_color?: string;
   /** Index du shot dans plan.shotlist (0 = premier = hero). Default 0. */
   shot_index?: number;
 }
@@ -37,10 +48,71 @@ interface RenderInput {
 const PRODUITS_YP_DESCRIPTIONS: Record<string, { fr: string; en: string }> = {
   YP001: { fr: "Hoodie adulte (sweat à capuche avec cordons)", en: "adult hoodie (cotton sweatshirt with hood and round drawstrings)" },
   YP004: { fr: "Hoodie enfant", en: "kids hoodie (cotton sweatshirt with hood, no drawstrings)" },
-  YP005: { fr: "Sweat adulte col rond (crewneck)", en: "adult crewneck sweatshirt (round neck, no hood, premium cotton)" },
-  YP019: { fr: "T-shirt adulte épais (premium cotton)", en: "adult t-shirt (premium thick cotton, short sleeves, round neck)" },
+  YP005: { fr: "Sweat adulte col rond (crewneck)", en: "adult crewneck sweatshirt (round CREW neck, no hood, no V-neck, premium cotton)" },
+  YP019: { fr: "T-shirt adulte épais (premium cotton)", en: "adult t-shirt (premium thick cotton, short sleeves, round crew neck)" },
   YP021: { fr: "Zoodie (sweat à capuche zippé)", en: "adult zoodie (zip-up hooded sweatshirt with metal zipper)" },
 };
+
+interface ResolvedProduct {
+  garmentLabel: string;
+  colorName: string;
+  packshotFile: string | null;
+}
+
+/** Résout le libellé vêtement + nom couleur + fichier packshot pour le verrou produit. */
+function resolveProduct(produitYpId: string, colorId?: string): ResolvedProduct | null {
+  let produit;
+  try {
+    produit = getProduits().find((p) => p.id === produitYpId);
+  } catch (e) {
+    console.error("[FAIL] getProduits:", e);
+    return null;
+  }
+  if (!produit) return null;
+  const col =
+    (colorId && produit.couleurs_detaillees.find((c) => c.id_palette === colorId)) ||
+    produit.couleurs_detaillees[0];
+  const en = PRODUITS_YP_DESCRIPTIONS[produitYpId]?.en;
+  return {
+    garmentLabel: en ?? `${produit.nom_commercial} (${produit.fournisseur ?? ""})`.trim(),
+    colorName: col?.nom_ypersoa ?? colorId ?? "",
+    packshotFile: col?.packshot_reference ?? null,
+  };
+}
+
+/** Charge un packshot (vêtement nu sur fond studio) depuis assets_produits/{id}/{file}. */
+function loadPackshotImage(
+  produitYpId: string,
+  file: string
+): { data: string; mimeType: string } | null {
+  const filePath = join(process.cwd(), "..", "..", "assets_produits", produitYpId, file);
+  try {
+    const buffer = readFileSync(filePath);
+    const mimeType = file.toLowerCase().endsWith(".png")
+      ? "image/png"
+      : file.toLowerCase().endsWith(".webp")
+        ? "image/webp"
+        : "image/jpeg";
+    return { data: buffer.toString("base64"), mimeType };
+  } catch (error) {
+    console.error(`[FAIL] packshot ${produitYpId}/${file}:`, error);
+    return null;
+  }
+}
+
+/** Bloc verrou produit injecté en fin de prompt (forme + couleur exactes du packshot). */
+function buildProductLockBlock(garmentLabel: string, colorName: string, hasPackshot: boolean): string {
+  const what = `${garmentLabel}${colorName ? ` in ${colorName}` : ""}`;
+  return `
+
+# ⚠️ PRODUCT LOCK — NON-NEGOTIABLE
+The garment MUST be the ${what} from the Ypersoa catalog.${
+    hasPackshot
+      ? ` Among the attached images, the one showing a PLAIN garment with NO embroidery on a white/studio background is the OFFICIAL packshot of this exact product. Reproduce its SHAPE (cut, silhouette, neckline, sleeves, rib finish) AND its exact COLOR. Apply the embroidery onto THIS garment, left chest.`
+      : ""
+  }
+${GARMENT_FORBIDDEN} No other color than ${colorName || "the selected one"}.${hasPackshot ? " If unsure, default to the packshot garment." : ""}`;
+}
 
 function loadCanoniqueAsBase64(id: string): { data: string; mimeType: string } | null {
   try {
@@ -103,6 +175,8 @@ interface BuildHeroPromptArgs {
   hasMotifPng?: boolean;
   motifSize?: "petit" | "moyen" | "grand";
   produitYpId?: string;
+  resolvedProduct?: ResolvedProduct | null;
+  hasPackshot?: boolean;
   shotIndex?: number;
 }
 
@@ -125,8 +199,9 @@ function buildHeroPrompt(args: BuildHeroPromptArgs): {
   promptEn: string;
   canoniqueIds: string[];
 } {
-  const { plan, lookbookAmbiances, selectedDispositifId, hasMotifPng, motifSize = "moyen", produitYpId = "YP019", shotIndex = 0 } = args;
-  const produitDesc = PRODUITS_YP_DESCRIPTIONS[produitYpId] || PRODUITS_YP_DESCRIPTIONS.YP019;
+  const { plan, lookbookAmbiances, selectedDispositifId, hasMotifPng, motifSize = "moyen", produitYpId = "YP019", resolvedProduct, hasPackshot = false, shotIndex = 0 } = args;
+  const garmentLabel = resolvedProduct?.garmentLabel || PRODUITS_YP_DESCRIPTIONS[produitYpId]?.en || PRODUITS_YP_DESCRIPTIONS.YP019.en;
+  const colorName = resolvedProduct?.colorName || "";
 
   // Dispositif sélectionné par Sarah si présent, sinon top 1
   const topCasting =
@@ -168,9 +243,10 @@ function buildHeroPrompt(args: BuildHeroPromptArgs): {
 
 CASTING: ${topCasting?.prenoms.join(" + ") || "natural French model"}.
 LOCATION: ${lieu}.
-GARMENT: ${produitDesc.en} (${produitYpId} from the Ypersoa catalog) — neutral natural color (heather grey, ecru, or black depending on the casting profile). The model wears this exact type of garment, NOT a different shape.
+GARMENT: ${garmentLabel} (${produitYpId} from the Ypersoa catalog)${colorName ? ` in ${colorName}` : ""}. The model wears this EXACT garment type and color — NOT a different shape, neckline or color.
 ${ambianceDesc}.
 ${motifLine}
+${EMBROIDERY_REALISM}
 
 CRITICAL BRAND RULES:
 - Real human skin texture, lived-in, natural imperfections (visible pores, freckles, expression lines).
@@ -181,7 +257,7 @@ CRITICAL BRAND RULES:
 - Tutoiement French aesthetic: intimate, narrative, never marketing-loud.
 - ${heroShot.cadrage_type}.
 
-Editorial 35mm film photography, slightly diffused light. Brand reference: Sézane, A.P.C., Maison Labiche, Émoï-Émoï, Octobre Éditions.`;
+Editorial 35mm film photography, slightly diffused light. Brand reference: Sézane, A.P.C., Maison Labiche, Émoï-Émoï, Octobre Éditions.${buildProductLockBlock(garmentLabel, colorName, hasPackshot)}`;
 
   return { promptEn, canoniqueIds };
 }
@@ -200,13 +276,22 @@ export async function POST(req: NextRequest) {
 
     const lookbookAmbiances = await fetchLookbookAmbiances(body.lookbook_ambiance_ids || []);
     const hasMotifPng = Boolean(body.motif_png_data_url);
+
+    // Verrou produit : packshot du produit + couleur sélectionnés injecté comme réf Gemini.
+    const produitYpId = body.produit_yp_id || "YP019";
+    const resolvedProduct = resolveProduct(produitYpId, body.selected_garment_color);
+    const packshotImage =
+      resolvedProduct?.packshotFile && loadPackshotImage(produitYpId, resolvedProduct.packshotFile);
+
     const { promptEn, canoniqueIds } = buildHeroPrompt({
       plan: body.plan,
       lookbookAmbiances,
       selectedDispositifId: body.selected_dispositif_id,
       hasMotifPng,
       motifSize: body.motif_size || "moyen",
-      produitYpId: body.produit_yp_id || "YP019",
+      produitYpId,
+      resolvedProduct,
+      hasPackshot: Boolean(packshotImage),
       shotIndex: body.shot_index ?? 0,
     });
     const aspectRatio = aspectRatioFromFormat(body.plan);
@@ -238,7 +323,13 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 3) Prompt texte
+    // 3) Packshot du produit (forme + couleur exactes), APRÈS la broderie + canoniques
+    //    pour ne pas parasiter la priorité visuelle (cf. mémoire feedback_gemini_parts_order).
+    if (packshotImage) {
+      parts.push({ inlineData: packshotImage });
+    }
+
+    // 4) Prompt texte
     parts.push({ text: promptEn });
 
     const response = await ai.models.generateContent({
@@ -276,7 +367,9 @@ export async function POST(req: NextRequest) {
         dispositif_utilise: body.selected_dispositif_id || body.plan.casting_propose[0]?.id || null,
         motif_png_inject: hasMotifPng,
         motif_size: body.motif_size || "moyen",
-        produit_yp_id: body.produit_yp_id || "YP019",
+        produit_yp_id: produitYpId,
+        garment_color: resolvedProduct?.colorName || body.selected_garment_color || null,
+        packshot_inject: Boolean(packshotImage),
         shot_index: body.shot_index ?? 0,
         shot_angle: body.plan.shotlist[body.shot_index ?? 0]?.angle || null,
         prompt_used: promptEn,

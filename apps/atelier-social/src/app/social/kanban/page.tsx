@@ -25,6 +25,7 @@ import {
   type SocialProject,
   type SocialProjectStatut,
 } from "@/lib/social-projects";
+import { PRODUITS_ORDER } from "@/lib/produits-catalogue";
 
 const DESTINATAIRES = [
   "papa", "maman", "mamie", "papy", "parrain", "marraine", "témoins",
@@ -37,7 +38,7 @@ const OCCASIONS = [
   "déclaration", "transmission", "intemporel", "noël", "saint-valentin", "rentrée scolaire",
 ];
 
-const PRODUITS = ["YP001", "YP022", "YP005", "YP019", "YP023", "YP021", "YP004", "YP013"];
+const PRODUITS = PRODUITS_ORDER;
 
 export default function KanbanSocialPage() {
   const [projects, setProjects] = useState<SocialProject[]>([]);
