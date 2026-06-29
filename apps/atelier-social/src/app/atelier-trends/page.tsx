@@ -12,6 +12,8 @@ import {
   type Trend,
   type TrendsSnapshot,
   type TrendSource,
+  type TrendSignal,
+  type TrendType,
   type PinterestManualKeyword,
   sortTrends,
   SIGNAL_LABELS,
@@ -21,6 +23,8 @@ import {
 } from "@/lib/trends/trends";
 
 type SourceFilter = "all" | TrendSource;
+type SignalFilter = "all" | TrendSignal;
+type TypeFilter = "all" | TrendType;
 
 export default function AtelierTrendsPage() {
   const [snapshot, setSnapshot] = useState<TrendsSnapshot | null>(null);
@@ -29,6 +33,8 @@ export default function AtelierTrendsPage() {
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<SourceFilter>("all");
+  const [signalFilter, setSignalFilter] = useState<SignalFilter>("all");
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [manual, setManual] = useState<PinterestManualKeyword[]>([]);
   const [newKw, setNewKw] = useState("");
   const [savingManual, setSavingManual] = useState(false);
@@ -114,8 +120,20 @@ export default function AtelierTrendsPage() {
   }
 
   const allTrends = snapshot ? sortTrends(snapshot.trends) : [];
-  const trends = filter === "all" ? allTrends : allTrends.filter((t) => t.source === filter);
-  const countBySource = (s: TrendSource) => allTrends.filter((t) => t.source === s).length;
+
+  // Filtres combinables (Source × Signal × Type). Compteurs croisés : chaque
+  // chip compte ce qui resterait si on l'activait, en gardant les autres filtres.
+  const matches = (t: Trend, src: SourceFilter, sig: SignalFilter, typ: TypeFilter) =>
+    (src === "all" || t.source === src) &&
+    (sig === "all" || t.signal === sig) &&
+    (typ === "all" || t.type === typ);
+  const trends = allTrends.filter((t) => matches(t, filter, signalFilter, typeFilter));
+  const countSource = (s: SourceFilter) =>
+    allTrends.filter((t) => matches(t, s, signalFilter, typeFilter)).length;
+  const countSignal = (s: SignalFilter) =>
+    allTrends.filter((t) => matches(t, filter, s, typeFilter)).length;
+  const countType = (s: TypeFilter) =>
+    allTrends.filter((t) => matches(t, filter, signalFilter, s)).length;
 
   const enriched = snapshot?.status === "enriched";
   const isActionnable = (t: Trend) =>
@@ -238,18 +256,46 @@ export default function AtelierTrendsPage() {
         </div>
       )}
 
-      {/* Filtre par source */}
+      {/* Filtres combinables : Source × Signal × Type */}
       {snapshot && allTrends.length > 0 && (
-        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-          <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
-            Tous ({allTrends.length})
-          </FilterChip>
-          <FilterChip active={filter === "google"} onClick={() => setFilter("google")}>
-            Google ({countBySource("google")})
-          </FilterChip>
-          <FilterChip active={filter === "pinterest"} onClick={() => setFilter("pinterest")}>
-            Pinterest ({countBySource("pinterest")})
-          </FilterChip>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+          <FilterRow
+            label="Source"
+            value={filter}
+            onChange={setFilter}
+            options={[
+              { key: "all", label: "Toutes", count: countSource("all") },
+              { key: "google", label: SOURCE_LABELS.google, count: countSource("google") },
+              { key: "pinterest", label: SOURCE_LABELS.pinterest, count: countSource("pinterest") },
+            ]}
+          />
+          <FilterRow
+            label="Signal"
+            value={signalFilter}
+            onChange={setSignalFilter}
+            options={[
+              { key: "all", label: "Tous", count: countSignal("all") },
+              { key: "montant", label: SIGNAL_LABELS.montant, count: countSignal("montant") },
+              { key: "saisonnier", label: SIGNAL_LABELS.saisonnier, count: countSignal("saisonnier") },
+              { key: "stable", label: SIGNAL_LABELS.stable, count: countSignal("stable") },
+            ]}
+          />
+          <FilterRow
+            label="Type"
+            value={typeFilter}
+            onChange={setTypeFilter}
+            options={[
+              { key: "all", label: "Tous", count: countType("all") },
+              { key: "mot", label: TYPE_LABELS.mot, count: countType("mot") },
+              { key: "look", label: "Look / outfit", count: countType("look") },
+              { key: "motif", label: "Motif brodé", count: countType("motif") },
+            ]}
+          />
+          {!enriched && (
+            <p style={{ margin: 0, fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--hub-foreground)", opacity: 0.5 }}>
+              Le type (look / motif) est attribué par « Analyser (IA) » — avant analyse, tout est « mot-clé ».
+            </p>
+          )}
         </div>
       )}
 
@@ -652,6 +698,44 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
     >
       {children}
     </h2>
+  );
+}
+
+function FilterRow<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: { key: T; label: string; count: number }[];
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+      <span
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 11,
+          fontWeight: 600,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "var(--hub-foreground)",
+          opacity: 0.45,
+          minWidth: 54,
+        }}
+      >
+        {label}
+      </span>
+      {options.map((o) =>
+        o.count === 0 && o.key !== "all" ? null : (
+          <FilterChip key={o.key} active={value === o.key} onClick={() => onChange(o.key)}>
+            {o.label} ({o.count})
+          </FilterChip>
+        ),
+      )}
+    </div>
   );
 }
 
