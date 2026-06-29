@@ -6,11 +6,13 @@
  */
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
-import type { MediaWithTags } from "@/types/mediatheque";
+import type { MediaStatut, MediaWithTags } from "@/types/mediatheque";
 import { STATUT_LABELS } from "@/types/mediatheque";
+import { updateMedia } from "@/lib/mediatheque/api-client";
 
 interface MediaCardProps {
   media: MediaWithTags;
@@ -30,7 +32,27 @@ export function MediaCard({ media, selectMode, selected, onToggleSelect }: Media
   const incarnation = media.tags.find((t) => t.category === "incarnation");
   const motif = media.tags.find((t) => t.category === "motif");
   const gabarit = media.tags.find((t) => t.category === "gabarit");
-  const statutCol = STATUT_COLORS[media.statut];
+
+  // Statut optimiste local (validation 1 clic depuis la galerie)
+  const [statut, setStatut] = useState<MediaStatut>(media.statut);
+  const [validating, setValidating] = useState(false);
+  const statutCol = STATUT_COLORS[statut];
+
+  const validate = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (validating) return;
+    setValidating(true);
+    const prev = statut;
+    setStatut("validee");
+    try {
+      await updateMedia(media.id, { statut: "validee" });
+    } catch {
+      setStatut(prev);
+    } finally {
+      setValidating(false);
+    }
+  };
 
   const inner = (
     <article
@@ -87,8 +109,42 @@ export function MediaCard({ media, selectMode, selected, onToggleSelect }: Media
             color: statutCol.fg,
           }}
         >
-          {STATUT_LABELS[media.statut]}
+          {STATUT_LABELS[statut]}
         </span>
+
+        {/* Valider en 1 clic (hover, uniquement si à valider) */}
+        {!selectMode && statut === "a_valider" && (
+          <button
+            type="button"
+            onClick={validate}
+            style={{
+              position: "absolute",
+              bottom: 8,
+              right: 8,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              padding: "5px 11px",
+              borderRadius: 999,
+              border: "none",
+              background: "#365D40",
+              color: "#fff",
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              cursor: "pointer",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
+            }}
+          >
+            {validating ? (
+              <Loader2 size={12} className="animate-spin" />
+            ) : (
+              <Check size={12} strokeWidth={2.6} />
+            )}
+            Valider
+          </button>
+        )}
 
         {/* Checkbox sélection */}
         <button

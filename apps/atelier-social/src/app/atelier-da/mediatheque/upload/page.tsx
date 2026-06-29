@@ -6,17 +6,19 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 
 import type { Tag } from "@/types/mediatheque";
 import { fetchTags } from "@/lib/mediatheque/api-client";
 import { UploadDropzone } from "@/components/mediatheque/UploadDropzone";
+import { QuickAddPanel } from "@/components/mediatheque/QuickAddPanel";
 
 export default function MediathequeUploadPage() {
   const router = useRouter();
   const [tagsByCategory, setTagsByCategory] = useState<Record<string, Tag[]>>({});
   const [tagsLoaded, setTagsLoaded] = useState(false);
   const [uploadedCount, setUploadedCount] = useState(0);
+  const [batchOpen, setBatchOpen] = useState(false);
 
   useEffect(() => {
     fetchTags()
@@ -69,10 +71,8 @@ export default function MediathequeUploadPage() {
             margin: 0,
           }}
         >
-          Glisse plusieurs photos d&apos;un coup. Définis source + date + photographe en métadonnées globales,
-          puis applique les tags à tous les fichiers en un clic. Les patterns du nom de fichier
-          (<code style={codeStyle}>mama-club</code>, <code style={codeStyle}>hoodie</code>,
-          <code style={codeStyle}>creme</code>…) sont auto-détectés.
+          Ajout rapide d&apos;un shooting en quelques clics : motif, gabarit, couleur, puis les photos.
+          Besoin de tags fins ou de réglages source/date par lot ? L&apos;ajout détaillé est plus bas.
         </p>
       </header>
 
@@ -120,20 +120,46 @@ export default function MediathequeUploadPage() {
           <Loader2 size={22} className="animate-spin" />
         </div>
       ) : (
-        <UploadDropzone
-          tagsByCategory={tagsByCategory}
-          onUploaded={setUploadedCount}
-        />
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <QuickAddPanel
+            tagsByCategory={tagsByCategory}
+            onUploaded={setUploadedCount}
+          />
+
+          <div>
+            <button
+              type="button"
+              onClick={() => setBatchOpen((v) => !v)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: "var(--font-sans)",
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: "0.04em",
+                color: "var(--hub-foreground)",
+                opacity: 0.7,
+                padding: "8px 0",
+              }}
+            >
+              {batchOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              Ajout détaillé (tags avancés, source + date par lot)
+            </button>
+            {batchOpen && (
+              <div style={{ marginTop: 8 }}>
+                <UploadDropzone
+                  tagsByCategory={tagsByCategory}
+                  onUploaded={setUploadedCount}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
 }
-
-const codeStyle: React.CSSProperties = {
-  fontFamily: "ui-monospace, SFMono-Regular, monospace",
-  fontSize: 11,
-  background: "var(--hub-bg)",
-  padding: "1px 6px",
-  borderRadius: 4,
-  margin: "0 2px",
-};
