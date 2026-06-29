@@ -1,12 +1,25 @@
 /**
  * Génération auto d'un publication_plan pour les occasions sans SPECIAL_CAMPAIGN hardcodée.
  *
- * Logique :
- *  - Démarre à `max(today, occurrence - campaign_lead_days)`
- *  - Termine à `buy_by_deadline` (sauf saison ouverte = `endDate` plus loin)
- *  - 2 posts par semaine : Lundi 19h Insta post hero + Vendredi 19h Insta reel
- *  - 1 Pinterest pin / 2 semaines (le mercredi 9h)
- *  - Alterne sur les `recommended_motifs` de l'occasion
+ * RÈGLE DES 45 JOURS (validée Sarah, juin 2026) — deux canaux, deux temporalités :
+ *
+ *  • PINTEREST = semé TÔT (slow-burn / moteur de recherche). Une pin a besoin de
+ *    plusieurs semaines pour remonter dans les résultats : on la publie en avance,
+ *    concentrée en DÉBUT de runway, pas jusqu'à l'événement.
+ *      → fenêtre = [occurrence − pinterest_lead_days ; +PINTEREST_FRONTLOAD_DAYS]
+ *      → pinterest_lead_days ≥ campaign_lead_days (Noël = 75 : trafic Pinterest dès octobre)
+ *      → 1 pin / semaine (A/B test motifs) pendant le front-load
+ *
+ *  • INSTAGRAM = fenêtre de CONVERSION. On pousse le désir puis l'achat depuis J-45
+ *    jusqu'à la date limite de commande (buy_by_deadline), avec montée d'urgence.
+ *      → fenêtre = [occurrence − campaign_lead_days ; buy_by_deadline]
+ *      → Lundi 19h post hero + Vendredi 19h reel
+ *
+ * Exemple (Rentrée = mar. 1 sept) : campaign_lead_days=45, pinterest_lead_days=45, lead_days=10.
+ *   - Pinterest semée à partir du ~18 juillet (J-45), 3 pins jusqu'au ~8 août.
+ *   - Instagram du ~18 juillet (J-45) jusqu'au 22 août (deadline commande), countdown final.
+ *
+ * Au-delà du deadline → fenêtre "engagement only" (émotion sans CTA), gérée côté urgence.
  */
 import { addDays, getDay } from "date-fns";
 import type { PlanableMediaFormat, PlanablePlatform, PlanableOccasionRow } from "@/lib/supabase/types";
@@ -21,7 +34,9 @@ export interface AutoSlot {
   focus: string;
 }
 
-const SEASON_END_DAYS = 90; // Pour saisons ouvertes type Mariage
+const SEASON_END_DAYS = 90;           // Pour saisons ouvertes type Mariage / thèmes (été, automne…)
+const PINTEREST_FRONTLOAD_DAYS = 21;  // Pinterest = semé tôt : on ne pin plus passé ce front-load
+const MS_PER_DAY = 86_400_000;
 
 export function generateAutoPlan(
   occasion: PlanableOccasionRow,
@@ -31,63 +46,100 @@ export function generateAutoPlan(
   const deadline = buyByDeadline(occurrence, occasion.lead_days);
   const isSeasonal = occasion.date_strategy.startsWith("season:");
 
-  const startDate = maxDate(today, addDays(occurrence, -occasion.campaign_lead_days));
-  const endDate = isSeasonal ? addDays(today, SEASON_END_DAYS) : deadline;
+  // --- Fenêtre Instagram : J-{campaign_lead_days} → deadline commande (conversion) ---
+  const igStart = maxDate(today, addDays(occurrence, -occasion.campaign_lead_days));
+  const igEnd = isSeasonal ? addDays(today, SEASON_END_DAYS) : deadline;
+
+  // --- Fenêtre Pinterest : semée tôt, concentrée en début de runway ---
+  const pinLead = occasion.pinterest_lead_days ?? occasion.campaign_lead_days;
+  const pinStart = maxDate(today, addDays(occurrence, -pinLead));
+  const pinEnd = isSeasonal
+    ? igEnd
+    : minDate(addDays(pinStart, PINTEREST_FRONTLOAD_DAYS), deadline);
 
   const motifs = occasion.recommended_motifs.length > 0
     ? occasion.recommended_motifs
     : ["YPM-001"];
 
   const slots: AutoSlot[] = [];
-  let cursor = startDate;
-  let weekIndex = 0;
-  while (cursor <= endDate) {
+  let cursor = minDate(igStart, pinStart);
+  const end = maxDate(igEnd, pinEnd);
+  let week = 0;
+  while (cursor <= end) {
     const dow = getDay(cursor); // 0 = dim, 1 = lun, ..., 5 = ven, 6 = sam
-    if (dow === 1) {
-      // Lundi 19h — Insta post hero
-      const motif = motifs[weekIndex % motifs.length];
-      slots.push({
-        date: toIsoDate(cursor),
-        time: "19:00",
-        platform: "instagram_post",
-        motif_code: motif,
-        format: "4:5",
-        focus: `Post hero ${occasion.name_fr} — semaine ${weekIndex + 1}.`,
-      });
-    }
-    if (dow === 3 && weekIndex % 2 === 0) {
-      // Mercredi 9h, 1 sem / 2 — Pinterest pin
-      const motif = motifs[(weekIndex + 1) % motifs.length];
+    const inIg = cursor >= igStart && cursor <= igEnd;
+    const inPin = cursor >= pinStart && cursor <= pinEnd;
+    const daysToDeadline = Math.round((deadline.getTime() - cursor.getTime()) / MS_PER_DAY);
+    const daysToOccurrence = Math.round((occurrence.getTime() - cursor.getTime()) / MS_PER_DAY);
+
+    if (inPin && dow === 3) {
+      // Mercredi 9h — Pinterest semée tôt (1 pin / semaine pendant le front-load)
+      const motif = motifs[(week + 1) % motifs.length];
       slots.push({
         date: toIsoDate(cursor),
         time: "09:00",
         platform: "pinterest_pin",
         motif_code: motif,
         format: "2:3",
-        focus: `Pin Pinterest ${occasion.name_fr} — A/B test motif ${motif}.`,
+        focus: `Pin Pinterest ${occasion.name_fr} — semée tôt (J-${daysToOccurrence}), trafic long terme. A/B test motif ${motif}.`,
       });
     }
-    if (dow === 5) {
+    if (inIg && dow === 1) {
+      // Lundi 19h — Insta post hero
+      const motif = motifs[week % motifs.length];
+      slots.push({
+        date: toIsoDate(cursor),
+        time: "19:00",
+        platform: "instagram_post",
+        motif_code: motif,
+        format: "4:5",
+        focus: igFocus(occasion, week, daysToDeadline, isSeasonal),
+      });
+    }
+    if (inIg && dow === 5) {
       // Vendredi 19h — Insta reel
-      const motif = motifs[weekIndex % motifs.length];
+      const motif = motifs[week % motifs.length];
       slots.push({
         date: toIsoDate(cursor),
         time: "19:00",
         platform: "instagram_reel",
         motif_code: motif,
         format: "9:16",
-        focus: `Reel ${occasion.name_fr} — making-of ou détail textile.`,
+        focus: `Reel ${occasion.name_fr} — making-of broderie Tajima ou détail textile (semaine ${week + 1}).`,
       });
-      weekIndex++;
     }
+    if (dow === 5) week++; // rotation motif déterministe (incrémentée chaque vendredi)
     cursor = addDays(cursor, 1);
   }
 
   return { slots, occurrence, deadline };
 }
 
+/** Note éditoriale du post hero Insta, montée d'urgence vers le deadline. */
+function igFocus(
+  occasion: PlanableOccasionRow,
+  week: number,
+  daysToDeadline: number,
+  isSeasonal: boolean
+): string {
+  if (isSeasonal) {
+    return `Post de saison ${occasion.name_fr} — contenu d'ambiance, hook ÉMOTION (semaine ${week + 1}).`;
+  }
+  if (daysToDeadline <= 7) {
+    return `Post hero ${occasion.name_fr} — DERNIÈRE LIGNE, countdown J-${daysToDeadline} avant clôture commande, CTA très clair.`;
+  }
+  if (daysToDeadline <= 21) {
+    return `Post hero ${occasion.name_fr} — conversion, CTA achat affirmé + rappel deadline (J-${daysToDeadline}).`;
+  }
+  return `Post hero ${occasion.name_fr} — désir / storytelling, hook ÉMOTION, CTA discret (semaine ${week + 1}).`;
+}
+
 function maxDate(a: Date, b: Date): Date {
   return a.getTime() > b.getTime() ? a : b;
+}
+
+function minDate(a: Date, b: Date): Date {
+  return a.getTime() < b.getTime() ? a : b;
 }
 
 function toIsoDate(d: Date): string {

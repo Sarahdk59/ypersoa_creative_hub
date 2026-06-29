@@ -5,6 +5,7 @@
  *  - "fixed:MM-DD"            → date calendaire fixe (ex: Saint-Valentin "fixed:02-14")
  *  - "last_sunday_of:M"       → dernier dimanche du mois M (ex: Fête des Mères "last_sunday_of:5")
  *  - "nth_sunday_of:M:N"      → N-ième dimanche du mois M (ex: Fête des Pères "nth_sunday_of:6:3")
+ *  - "nth_weekday_of:M:W:N"   → N-ième jour W (0=dim..6=sam) du mois M (ex: Black Friday "nth_weekday_of:11:5:4")
  *  - "season:Mstart-Mend"     → fenêtre saisonnière ouverte (ex: Mariage "season:5-9")
  *
  * Formule deadline (validée Sarah) :
@@ -43,6 +44,16 @@ export function nextOccurrence(strategy: string, from: Date = new Date()): Date 
     return candidate;
   }
 
+  if (strategy.startsWith("nth_weekday_of:")) {
+    const [month, weekday, n] = strategy.slice("nth_weekday_of:".length).split(":").map(Number);
+    let year = from.getFullYear();
+    let candidate = computeNthWeekdayOf(year, month, weekday, n);
+    if (candidate < startOfDay(from)) {
+      candidate = computeNthWeekdayOf(year + 1, month, weekday, n);
+    }
+    return candidate;
+  }
+
   if (strategy.startsWith("season:")) {
     const [start] = strategy.slice("season:".length).split("-").map(Number);
     const startDate = new Date(from.getFullYear(), start - 1, 1);
@@ -63,8 +74,12 @@ function computeLastSundayOf(year: number, month: number): Date {
 }
 
 function computeNthSundayOf(year: number, month: number, n: number): Date {
+  return computeNthWeekdayOf(year, month, 0, n);
+}
+
+function computeNthWeekdayOf(year: number, month: number, weekday: number, n: number): Date {
   let d = new Date(year, month - 1, 1);
-  while (getDay(d) !== 0) d = addDays(d, 1);
+  while (getDay(d) !== weekday) d = addDays(d, 1);
   return addDays(d, (n - 1) * 7);
 }
 

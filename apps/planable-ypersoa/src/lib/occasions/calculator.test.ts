@@ -41,6 +41,14 @@ describe("nextOccurrence", () => {
     expect(nextOccurrence("season:5-9", new Date(2026, 0, 15))).toEqual(new Date(2026, 4, 1));
   });
 
+  it("nth_sunday_of:3:1 depuis 01/01/2027 → 07/03/2027 (1er dim mars 2027 = fête des grands-mères)", () => {
+    expect(nextOccurrence("nth_sunday_of:3:1", new Date(2027, 0, 1))).toEqual(new Date(2027, 2, 7));
+  });
+
+  it("nth_weekday_of:11:5:4 depuis 01/07/2026 → 27/11/2026 (4e vendredi nov = Black Friday)", () => {
+    expect(nextOccurrence("nth_weekday_of:11:5:4", new Date(2026, 6, 1))).toEqual(new Date(2026, 10, 27));
+  });
+
   it("strategy inconnue → throw", () => {
     expect(() => nextOccurrence("foo:bar")).toThrow();
   });

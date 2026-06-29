@@ -41,8 +41,19 @@ const AMBIANCE_BY_OCCASION: Record<string, number[]> = {
   saint_valentin: [3, 5],      // L'Aube Intime, Lumière Sépia
   noel: [2, 5],                // Loft Organique, Lumière Sépia
   rentree: [1, 2],             // Studio Brut, Loft Organique
+  rentree_universitaire: [1, 2],
   mariage: [3, 5],             // L'Aube Intime, Lumière Sépia
   naissance: [3, 2],           // L'Aube Intime, Loft Organique
+  fete_des_grands_meres: [3, 5], // L'Aube Intime, Lumière Sépia
+  fete_des_grands_peres: [2, 1], // Loft Organique, Studio Brut
+  merci_maitresse: [3, 2],
+  anniversaire: [2, 1],
+  voila_lete: [4, 5],          // Échappée Sauvage, Lumière Sépia
+  automne: [2, 5],             // Loft Organique, Lumière Sépia
+  hiver: [2, 5],
+  printemps: [3, 2],           // L'Aube Intime, Loft Organique
+  halloween: [1, 5],
+  black_friday: [1, 2],        // Studio Brut, Loft Organique (offre, sobre)
 };
 
 export function buildSuggestions(

@@ -36,6 +36,8 @@ export interface PlanableOccasionRow {
   name_fr: string;
   date_strategy: string;
   campaign_lead_days: number;
+  /** Avance Pinterest (≥ campaign_lead_days). Pinterest = slow-burn, on sème tôt. Fallback = campaign_lead_days si null. */
+  pinterest_lead_days: number | null;
   lead_days: number;
   recommended_motifs: string[];
   recommended_casting: string[];
