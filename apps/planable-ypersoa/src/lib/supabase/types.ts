@@ -45,6 +45,8 @@ export interface PlanableOccasionRow {
   hashtags_brand: string[];
   notes: string | null;
   auto_campaign_disabled_year: number | null;
+  /** 'marche' = cadeau avec deadline commande | 'editorial' = moment de vie / engagement sans deadline. */
+  kind: "marche" | "editorial";
   created_at: string | null;
 }
 

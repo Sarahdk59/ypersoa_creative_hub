@@ -100,7 +100,9 @@ export type OccasionUrgency =
   | { kind: "high"; daysToDeadline: number }
   | { kind: "medium"; daysToDeadline: number }
   | { kind: "low"; daysToDeadline: number }
-  | { kind: "engagement_only"; daysToOccurrence: number };
+  | { kind: "engagement_only"; daysToOccurrence: number }
+  | { kind: "editorial"; daysToOccurrence: number }
+  | { kind: "rolling"; leadDays: number };
 
 const MS_PER_DAY = 86_400_000;
 
@@ -129,5 +131,7 @@ export function urgencyEmoji(u: OccasionUrgency): string {
     case "medium": return "🟡";
     case "low": return "🟢";
     case "engagement_only": return "⚫";
+    case "editorial": return "✨";
+    case "rolling": return "🛒";
   }
 }

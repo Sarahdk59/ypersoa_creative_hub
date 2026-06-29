@@ -1,5 +1,5 @@
 "use client";
-import { Loader2, RotateCcw, Sparkles } from "lucide-react";
+import { ChevronDown, ChevronRight, Lightbulb, Loader2, RotateCcw, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { frDate, shortFrDate } from "@/lib/utils/date";
 import type { OccasionUrgency } from "@/lib/occasions/calculator";
@@ -13,6 +13,8 @@ export interface SuggestionPayload {
   has_special_campaign: boolean;
   candidate_packs: { motif_code: string; ambiance_id: number; casting_ids: string[]; rationale: string }[];
   disabled_this_cycle: boolean;
+  is_evergreen: boolean;
+  featured_this_week: boolean;
 }
 
 const URGENCY_DOT: Record<string, string> = {
@@ -21,6 +23,8 @@ const URGENCY_DOT: Record<string, string> = {
   medium: "#d4a017",
   low: "#7A9E7E",
   engagement_only: "#1A1614",
+  editorial: "#8C7BB0",
+  rolling: "#7A9E7E",
 };
 
 export function SuggestionsPanel({
@@ -36,6 +40,13 @@ export function SuggestionsPanel({
   onResetCampaign: (slug: string) => Promise<void>;
   plannedCountBySlug: Map<string, number>;
 }) {
+  const [bankOpen, setBankOpen] = useState(false);
+
+  // Flux principal = tout ce qui est daté/commerce + les 3 evergreen "à la une" de la semaine.
+  // Banque = tous les evergreen (la bibliothèque d'angles, repliable).
+  const mainFlow = suggestions.filter((s) => !s.is_evergreen || s.featured_this_week);
+  const evergreenBank = suggestions.filter((s) => s.is_evergreen && !s.featured_this_week);
+
   return (
     <aside style={{
       display: "flex", flexDirection: "column", height: "100%",
@@ -47,7 +58,7 @@ export function SuggestionsPanel({
           À planifier
         </h2>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.6, margin: "4px 0 0 0" }}>
-          Occasions à venir dans les 60 prochains jours · triées par deadline
+          Temps forts des 60 prochains jours · 3 angles evergreen à la une cette semaine
         </p>
       </header>
 
@@ -67,7 +78,7 @@ export function SuggestionsPanel({
       )}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {suggestions.map((s) => (
+        {mainFlow.map((s) => (
           <SuggestionCard
             key={s.occasion.slug}
             sugg={s}
@@ -77,6 +88,46 @@ export function SuggestionsPanel({
           />
         ))}
       </div>
+
+      {!loading && evergreenBank.length > 0 && (
+        <section style={{ marginTop: 4 }}>
+          <button
+            type="button"
+            onClick={() => setBankOpen((v) => !v)}
+            style={{
+              display: "flex", alignItems: "center", gap: 8, width: "100%",
+              padding: "10px 12px", borderRadius: 10, cursor: "pointer",
+              background: "var(--color-cream)", border: "0.5px solid var(--color-border)",
+              fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, color: "var(--color-ink)",
+            }}
+          >
+            <Lightbulb size={14} style={{ color: "#8C7BB0" }} />
+            <span style={{ flex: 1, textAlign: "left" }}>
+              Evergreen — une idée ? <span style={{ opacity: 0.55, fontWeight: 400 }}>· {evergreenBank.length} angles dispo</span>
+            </span>
+            {bankOpen ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
+          </button>
+
+          {bankOpen && (
+            <>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 10.5, opacity: 0.55, lineHeight: 1.5, margin: "8px 2px 8px" }}>
+                Banque d&apos;angles always-on, à dégainer quand le calendrier a un trou. 3 tournent « à la une » chaque semaine (✨ ci-dessus).
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {evergreenBank.map((s) => (
+                  <SuggestionCard
+                    key={s.occasion.slug}
+                    sugg={s}
+                    onExpand={onExpandCampaign}
+                    onReset={onResetCampaign}
+                    plannedCount={plannedCountBySlug.get(s.occasion.slug) ?? 0}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </section>
+      )}
     </aside>
   );
 }
@@ -96,6 +147,8 @@ function SuggestionCard({
   const [resetting, setResetting] = useState(false);
   const dot = URGENCY_DOT[sugg.urgency.kind] ?? "#1A1614";
   const isEngagementOnly = sugg.urgency.kind === "engagement_only";
+  const isEditorial = sugg.urgency.kind === "editorial";
+  const isRolling = sugg.urgency.kind === "rolling";
   const hasPlanned = plannedCount > 0;
 
   return (
@@ -106,19 +159,41 @@ function SuggestionCard({
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={{ width: 10, height: 10, borderRadius: 999, background: dot, flexShrink: 0 }} />
-        <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 15, fontWeight: 500, margin: 0 }}>
+        <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 15, fontWeight: 500, margin: 0, flex: 1 }}>
           {sugg.occasion.name_fr}
         </h3>
+        {sugg.is_evergreen && sugg.featured_this_week && (
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 3, flexShrink: 0,
+            fontFamily: "var(--font-sans)", fontSize: 9, fontWeight: 700, letterSpacing: "0.04em",
+            textTransform: "uppercase", color: "#8C7BB0",
+            background: "rgba(140,123,176,0.12)", padding: "2px 6px", borderRadius: 999,
+          }}>
+            ✨ à la une
+          </span>
+        )}
       </div>
 
       <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, lineHeight: 1.5, opacity: 0.85 }}>
-        <div>Occurrence : <strong>{shortFrDate(sugg.occurrence)}</strong></div>
-        {!isEngagementOnly && (
+        {!isRolling && (
+          <div>{isEditorial ? "Temps fort" : "Occurrence"} : <strong>{shortFrDate(sugg.occurrence)}</strong></div>
+        )}
+        {!isEngagementOnly && !isEditorial && !isRolling && (
           <div>
             ⚠ Deadline commande : <strong>{shortFrDate(sugg.buy_by_deadline)}</strong>
             {sugg.urgency.kind !== "low" && "daysToDeadline" in sugg.urgency && (
               <> · J−{sugg.urgency.daysToDeadline}</>
             )}
+          </div>
+        )}
+        {isRolling && (
+          <div style={{ color: "#54744f", fontWeight: 600, marginTop: 4 }}>
+            🛒 Commande au fil de l'eau · livraison ~J+{"leadDays" in sugg.urgency ? sugg.urgency.leadDays : 10} après commande
+          </div>
+        )}
+        {isEditorial && (
+          <div style={{ color: "#8C7BB0", fontWeight: 600, marginTop: 4 }}>
+            ✨ Moment éditorial — engagement / reach · pas de deadline commande
           </div>
         )}
         {isEngagementOnly && (
@@ -163,7 +238,7 @@ function SuggestionCard({
             setExpanding(false);
           }}
           disabled={expanding || resetting}
-          title={sugg.has_special_campaign ? "Brief Ypersoa hardcodé (19 entrées spécifiques)" : "Plan auto : 2 posts/sem + 1 pin/2 sem sur la fenêtre de campagne"}
+          title={sugg.has_special_campaign ? "Brief Ypersoa hardcodé (19 entrées spécifiques)" : isEditorial ? "Plan éditorial : posts engagement + pins, ton de marque, sans CTA deadline" : "Plan auto : 2 posts/sem + 1 pin/2 sem sur la fenêtre de campagne"}
           style={{
             display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center",
             padding: "8px 12px", borderRadius: 999,
@@ -177,7 +252,9 @@ function SuggestionCard({
             ? "Création…"
             : sugg.has_special_campaign
               ? "Planifier la campagne complète"
-              : "Planifier (auto · 2/sem)"}
+              : isEditorial
+                ? "Planifier (éditorial · 2/sem)"
+                : "Planifier (auto · 2/sem)"}
         </button>
 
         {hasPlanned && (

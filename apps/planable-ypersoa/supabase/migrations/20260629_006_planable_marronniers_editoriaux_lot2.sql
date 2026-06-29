@@ -1,0 +1,106 @@
+-- Planable Ypersoa — Marronniers ÉDITORIAUX lot 2 (idées Sarah, 29/06/2026)
+-- 12 moments de plus, même esprit : drôle, décomplexé, ton de marque.
+-- La punchline vit dans `notes` → s'affiche sur la carte. kind = 'editorial' (pas de deadline).
+-- Plug motifs : Le Câlin (YPM-006) sur doudou/câlin/réconciliation/parents,
+-- Le Club (YPM-003) sur les moments collectifs/bureau, La Brigitte/Le Club sur le Nord.
+
+insert into planable_occasions
+  (slug, name_fr, date_strategy, campaign_lead_days, pinterest_lead_days, lead_days,
+   recommended_motifs, recommended_casting, recommended_duos,
+   hashtags_brand, notes, auto_campaign_disabled_year, kind) values
+
+('cadeau_derniere_minute', 'Le Cadeau de Dernière Minute', 'season:1-12', 21, 30, 10,
+  '{YPM-016, YPM-013}',
+  '{MAN-P01}',
+  '{}',
+  '{#CadeauDeDernièreMinute, #Retardataire, #YPERSOA}',
+  'Pour le retardataire chronique : « T''as oublié. On le sait. On brode quand même. » À dégainer juste avant chaque pic (Noël, fêtes des mères/pères). Motif rapide : initiale / prénom.',
+  null, 'editorial'),
+
+('secret_santa', 'Secret Santa Premium', 'fixed:12-05', 30, 45, 10,
+  '{YPM-003, YPM-016}',
+  '{MAN-P03, MAN-P06}',
+  '{}',
+  '{#SecretSanta, #CadeauCollègue, #YPERSOA}',
+  'Échapper au mug et à la bougie du CE : « Cette année, c''est toi le collègue préféré. » Le Club ou initiale pour le tirage au sort de bureau de décembre.',
+  null, 'editorial'),
+
+('anti_cadeau_nul', 'L''Anti-Cadeau Nul', 'fixed:12-10', 30, 45, 10,
+  '{YPM-015, YPM-016}',
+  '{MAN-P01}',
+  '{}',
+  '{#AntiCadeauNul, #CadeauQuiADuSens, #YPERSOA}',
+  'Manifeste anti-coffret gel-douche : « Personne n''a jamais pleuré de joie devant des chaussettes. » Le cadeau qui a du sens vs le cadeau corvée. Ton frondeur.',
+  null, 'editorial'),
+
+('il_a_deja_tout', 'Il a Déjà Tout', 'season:1-12', 30, 45, 10,
+  '{YPM-016}',
+  '{MAN-P06, MAN-S19}',
+  '{}',
+  '{#IlADéjàTout, #CadeauPourLui, #YPERSOA}',
+  'La personne impossible à gâter : « Il a tout ? Pas ton prénom brodé, non. » Initiale homme, fond sobre. Anniv ou Noël.',
+  null, 'editorial'),
+
+('pot_de_depart', 'Le Pot de Départ', 'season:1-12', 30, 45, 10,
+  '{YPM-003, YPM-011}',
+  '{MAN-P03, MAN-P06}',
+  '{}',
+  '{#PotDeDépart, #CadeauCollègue, #YPERSOA}',
+  'Remplace la carte qui circule au bureau : « On a tous signé. On a brodé en plus. » Cadeau collectif de départ / retraite. Le Club prénoms d''équipe.',
+  null, 'editorial'),
+
+('cremaillere', 'La Crémaillère', 'season:4-10', 30, 45, 10,
+  '{YPM-010, YPM-007}',
+  '{MAN-S20, MAN-S21}',
+  '{}',
+  '{#Crémaillère, #NouveauChezMoi, #YPERSOA}',
+  'Nouveau chez-soi : « Nouveau canap'', nouveau plaid à ton nom. » Le textile maison brodé pour pendaison de crémaillère. Loft Organique.',
+  null, 'editorial'),
+
+('doudou_de_grand', 'Le Doudou de Grand', 'season:10-12', 30, 45, 10,
+  '{YPM-006}',
+  '{MAN-P01, MAN-P10}',
+  '{}',
+  '{#DoudouDeGrand, #Cocooning, #YPERSOA}',
+  'Adultes qui assument le réconfort : « Oui c''est un doudou. Oui j''ai 34 ans. Oui je l''assume. » Plug Le Câlin, grand sweat doudou. L''Aube Intime cocooning.',
+  null, 'editorial'),
+
+('je_me_fais_cadeau', 'Je Me Fais un Cadeau', 'fixed:01-03', 30, 45, 10,
+  '{YPM-016, YPM-002}',
+  '{MAN-P01}',
+  '{}',
+  '{#JeMeGâte, #SelfCare, #YPERSOA}',
+  'Self-gift décomplexé post-fêtes : « Le seul avis que j''ai consulté : le mien. » On se gâte soi-même en janvier. Initiale, fond cream.',
+  null, 'editorial'),
+
+('braderie_lille', 'La Braderie de Lille', 'nth_weekday_of:9:6:1', 30, 45, 10,
+  '{YPM-003, YPM-001}',
+  '{MAN-P03, MAN-P01}',
+  '{}',
+  '{#BraderieDeLille, #MadeInNord, #YPERSOA}',
+  'Ancrage Nord fort (1er week-end de septembre) : « À la braderie tout se brade. Ta broderie, elle reste. » Clin d''œil régional — atelier Wattrelos. Le Club / La Brigitte typo.',
+  null, 'editorial'),
+
+('journee_du_calin', 'La Journée du Câlin', 'fixed:01-21', 30, 45, 10,
+  '{YPM-006, YPM-001}',
+  '{MAN-P05, MAN-P08}',
+  '{DUO_BEATRICE_FELICIE}',
+  '{#JournéeDuCâlin, #LeCâlin, #YPERSOA}',
+  'Journée mondiale du câlin (21 janvier) : « Le seul jour gratuit. Le reste de l''année, c''est brodé. » Plug Le Câlin / La Brigitte.',
+  null, 'editorial'),
+
+('cadeau_reconciliation', 'Le Cadeau Réconciliation', 'season:1-12', 30, 45, 10,
+  '{YPM-006, YPM-011}',
+  '{MAN-P01, MAN-P03}',
+  '{}',
+  '{#OnSeRéconcilie, #LeCâlin, #YPERSOA}',
+  'Après la dispute : « Plus efficace qu''un bouquet. Et ça tient plus longtemps. » Le geste qui répare, brodé. Le Câlin / La Confidence.',
+  null, 'editorial'),
+
+('parents_epuises', 'Pour les Parents Épuisés', 'season:1-12', 30, 45, 10,
+  '{YPM-006, YPM-011}',
+  '{MAN-P06, MAN-S21}',
+  '{}',
+  '{#PourLesParents, #JeunesParents, #YPERSOA}',
+  'Naissance détournée vers les parents : « Le bébé a 14 bodys. Les parents, zéro café au calme. À méditer. » On pense (enfin) aux parents épuisés. Le Câlin / La Confidence.',
+  null, 'editorial');

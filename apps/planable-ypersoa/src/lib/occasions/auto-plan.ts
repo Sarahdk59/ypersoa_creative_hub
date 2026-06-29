@@ -45,17 +45,20 @@ export function generateAutoPlan(
   const occurrence = nextOccurrence(occasion.date_strategy, today);
   const deadline = buyByDeadline(occurrence, occasion.lead_days);
   const isSeasonal = occasion.date_strategy.startsWith("season:");
+  // Moment éditorial = engagement / reach, pas de deadline commande : on publie
+  // jusqu'au temps fort (date fixe) ou sur toute la saison, sans countdown CTA.
+  const isEditorial = occasion.kind === "editorial";
 
   // --- Fenêtre Instagram : J-{campaign_lead_days} → deadline commande (conversion) ---
   const igStart = maxDate(today, addDays(occurrence, -occasion.campaign_lead_days));
-  const igEnd = isSeasonal ? addDays(today, SEASON_END_DAYS) : deadline;
+  const igEnd = isSeasonal ? addDays(today, SEASON_END_DAYS) : isEditorial ? occurrence : deadline;
 
   // --- Fenêtre Pinterest : semée tôt, concentrée en début de runway ---
   const pinLead = occasion.pinterest_lead_days ?? occasion.campaign_lead_days;
   const pinStart = maxDate(today, addDays(occurrence, -pinLead));
   const pinEnd = isSeasonal
     ? igEnd
-    : minDate(addDays(pinStart, PINTEREST_FRONTLOAD_DAYS), deadline);
+    : minDate(addDays(pinStart, PINTEREST_FRONTLOAD_DAYS), isEditorial ? occurrence : deadline);
 
   const motifs = occasion.recommended_motifs.length > 0
     ? occasion.recommended_motifs
@@ -93,7 +96,7 @@ export function generateAutoPlan(
         platform: "instagram_post",
         motif_code: motif,
         format: "4:5",
-        focus: igFocus(occasion, week, daysToDeadline, isSeasonal),
+        focus: igFocus(occasion, week, daysToDeadline, isSeasonal, isEditorial),
       });
     }
     if (inIg && dow === 5) {
@@ -120,8 +123,12 @@ function igFocus(
   occasion: PlanableOccasionRow,
   week: number,
   daysToDeadline: number,
-  isSeasonal: boolean
+  isSeasonal: boolean,
+  isEditorial: boolean
 ): string {
+  if (isEditorial) {
+    return `Post éditorial ${occasion.name_fr} — engagement / reach, ton de marque (drôle, complice), hook QUESTION ou POV, AUCUN CTA deadline (semaine ${week + 1}).`;
+  }
   if (isSeasonal) {
     return `Post de saison ${occasion.name_fr} — contenu d'ambiance, hook ÉMOTION (semaine ${week + 1}).`;
   }

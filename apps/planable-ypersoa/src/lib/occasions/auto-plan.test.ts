@@ -20,6 +20,7 @@ const RENTREE: PlanableOccasionRow = {
   hashtags_brand: ["#Rentrée"],
   notes: null,
   auto_campaign_disabled_year: null,
+  kind: "marche",
   created_at: null,
 };
 
