@@ -30,7 +30,8 @@ export function HubShell({ children }: HubShellProps) {
     <AuthProvider>
       <div
       style={{
-        minHeight: "100vh",
+        height: "100vh",
+        overflow: "hidden",
         background: "var(--hub-bg)",
         color: "var(--hub-foreground)",
         display: "flex",
@@ -44,6 +45,7 @@ export function HubShell({ children }: HubShellProps) {
           style={{
             flex: 1,
             minWidth: 0,
+            overflowY: "auto",
             padding: "var(--content-padding)",
             background: "var(--hub-bg)",
           }}
