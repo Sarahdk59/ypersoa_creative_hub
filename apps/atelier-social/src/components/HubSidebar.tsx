@@ -6,7 +6,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MessageCircle, Camera, BookImage, Compass, Cpu, TrendingUp } from "lucide-react";
+import { MessageCircle, Camera, BookImage, Compass, Cpu, TrendingUp, BookOpen } from "lucide-react";
 import { HubSidebarIcon } from "./HubSidebarIcon";
 import { useAuth } from "./auth/AuthProvider";
 import { canAccess } from "@/lib/access";
@@ -83,6 +83,16 @@ export function HubSidebar() {
           active={isActive("/atelier-production")}
         />
       )}
+
+      {/* Guide d'utilisation — épinglé en bas, visible par tous les rôles */}
+      <div style={{ marginTop: "auto", paddingBottom: 12 }}>
+        <HubSidebarIcon
+          icon={<BookOpen size={20} strokeWidth={1.6} />}
+          label="Guide d'utilisation"
+          href="/guide"
+          active={isActive("/guide")}
+        />
+      </div>
     </nav>
   );
 }

@@ -38,6 +38,17 @@ export function ImportedShotsPanel({ onImport }: Props) {
 
   useEffect(() => {
     refresh();
+    // Re-fetch quand on revient sur l'onglet (retour depuis Atelier Shooting
+    // après avoir liké des shots) → la liste se met à jour sans clic manuel.
+    const onFocus = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
   }, []);
 
   const handlePick = async (shot: ImportedShot) => {

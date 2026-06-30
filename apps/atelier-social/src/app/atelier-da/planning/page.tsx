@@ -24,31 +24,58 @@ const STATUT_META: Record<StatutAction, { label: string; bg: string; fg: string 
   fait: { label: "Fait", bg: "#E5F0E8", fg: "#2F7A3E" },
 };
 const TYPE_LABEL: Record<TypeAction, string> = {
-  inspiration: "Inspiration",
-  plan_collection: "Plan collection",
+  // CRÉA
+  inspiration: "Inspiration / motif",
+  plan_collection: "Plan de collection",
+  choix_produits_motifs: "Choix motifs/produits",
   sourcing: "Sourcing",
-  base_dst: "Base DST",
   reunion: "Réunion collection",
-  choix_produits_motifs: "Choix produits/motifs",
+  validation_collection: "Validation collection",
+  generation_variantes: "Génération variantes",
+  shooting_photo: "Shooting photo",
+  fiche_produit: "Fiche produit",
+  integration_shopify: "Intégration Shopify",
+  liquid_perso: "Liquid perso",
   dev_motifs: "Dév motifs",
+  mise_en_ligne: "Mise en ligne site",
+  seo: "Amélioration SEO",
+  // PROD
+  base_dst: "Base DST / PXF",
   tests_motifs: "Test broderie",
-  creation_contenu: "Création contenu",
-  validation_fiches: "Validation fiches",
-  presentation: "Présentation",
-  mise_en_ligne: "Mise en ligne",
-  pinterest: "Pinterest",
-  insta: "Instagram",
+  correction_tests: "Correction tests",
+  creation_png: "Création PNG",
   production: "Production",
   cutoff: "Cutoff",
+  // COMM
+  creation_contenu: "Création contenus",
+  photos_carrousels: "Photos carrousels",
+  videos: "Vidéos",
+  validation_contenus: "Validation contenus",
+  validation_tags: "Validation tags",
+  planning_publi: "Planning publi & tags",
+  validation_fiches: "Validation fiches",
+  presentation: "Présentation",
+  pinterest: "Pinterest",
+  insta: "Instagram",
 };
 const TYPE_ICON: Record<TypeAction, string> = {
-  inspiration: "💡", plan_collection: "🗂️", sourcing: "📦", base_dst: "⌗",
-  reunion: "👥", choix_produits_motifs: "✎", dev_motifs: "✎", tests_motifs: "🧵",
-  creation_contenu: "🎬", validation_fiches: "✓", presentation: "📣", mise_en_ligne: "🌐",
-  pinterest: "📌", insta: "◎", production: "⚙️", cutoff: "⛔",
+  inspiration: "💡", plan_collection: "🗂️", choix_produits_motifs: "✎", sourcing: "📦",
+  reunion: "★", validation_collection: "★", generation_variantes: "🎨", shooting_photo: "📷",
+  fiche_produit: "📄", integration_shopify: "🛒", liquid_perso: "🧩", dev_motifs: "✎",
+  mise_en_ligne: "🌐", seo: "🔎",
+  base_dst: "⌗", tests_motifs: "🧵", correction_tests: "🛠️", creation_png: "🖼️", production: "⚙️", cutoff: "⛔",
+  creation_contenu: "🎬", photos_carrousels: "🎞️", videos: "🎥", validation_contenus: "✔︎",
+  validation_tags: "🏷️", planning_publi: "🗓️", validation_fiches: "✓", presentation: "📣",
+  pinterest: "📌", insta: "◎",
 };
+// Jalons "réunion de collection" → rendus en ÉTOILE pleine hauteur (deadline qui réunit tout le monde),
+// hors des lanes. reunion = présentation, validation_collection = validation. 2 par thématique.
+const MILESTONE_TYPES = new Set<TypeAction>(["reunion", "validation_collection"]);
 // Tâches "préparation" → comptées dans la bande Charge (tension = collections préparées en parallèle).
-const PREP_TYPES = new Set<TypeAction>(["inspiration", "plan_collection", "sourcing", "base_dst", "reunion", "choix_produits_motifs", "dev_motifs", "tests_motifs", "creation_contenu", "validation_fiches", "presentation"]);
+// On exclut le lancement/diffusion (SEO, mise en ligne, planning publi, pinterest, insta, production, cutoff)
+// et les jalons réunion (1 jour, pas une charge de prépa).
+const LAUNCH_TYPES = new Set<TypeAction>(["seo", "mise_en_ligne", "planning_publi", "pinterest", "insta", "production", "cutoff"]);
+const PREP_TYPES = new Set<TypeAction>((Object.keys(TYPE_LABEL) as TypeAction[]).filter((t) => !LAUNCH_TYPES.has(t) && !MILESTONE_TYPES.has(t)));
 const TYPE_OPTIONS = Object.keys(TYPE_LABEL) as TypeAction[];
 const STATUT_CYCLE: StatutAction[] = ["a_faire", "en_cours", "fait"];
 const PX_PER_DAY = 4;
@@ -188,6 +215,44 @@ export default function PlanningCommunPage() {
 
 // ──────────────────────────────────────────────────────────────── GANTT
 const PILL_H = 22, V_GAP = 4, LANE_PAD = 7;
+const STAR_ROW_H = 50;
+const MS_PRES = { color: "#B4665F", role: "Présentation" };
+const MS_VALID = { color: "#2F7A3E", role: "Validation" };
+
+type MilestonePair = { camp: string; pres: ActionPlanning | null; valid: ActionPlanning | null; presX: number | null; valX: number | null; labelX: number };
+
+function MilestoneMarker({ m, selected, onSelect }: { m: MilestonePair; selected: string | null; onSelect: (id: string | null) => void }) {
+  const BASE = 30; // ligne de base des étoiles dans la rangée
+  return (
+    <>
+      {/* connecteur présentation ⟶ validation (fenêtre de préparation) */}
+      {m.presX != null && m.valX != null && (
+        <div style={{ position: "absolute", left: m.presX, width: Math.max(0, m.valX - m.presX), top: BASE + 7, height: 0, borderTop: "1px dotted rgba(26,22,20,0.35)", pointerEvents: "none" }} />
+      )}
+      {/* nom de la collection, centré entre les 2 réunions */}
+      <div style={{ position: "absolute", left: m.labelX, top: 4, transform: "translateX(-50%)", fontFamily: "var(--font-sans)", fontSize: 9.5, fontWeight: 700, color: "var(--hub-foreground)", whiteSpace: "nowrap", letterSpacing: "0.01em", pointerEvents: "none" }}>{m.camp}</div>
+      {m.pres && m.presX != null && <Star x={m.presX} top={BASE} a={m.pres} kind={MS_PRES} selected={selected === m.pres.id} onSelect={onSelect} />}
+      {m.valid && m.valX != null && <Star x={m.valX} top={BASE} a={m.valid} kind={MS_VALID} selected={selected === m.valid.id} onSelect={onSelect} />}
+    </>
+  );
+}
+
+function Star({ x, top, a, kind, selected, onSelect }: { x: number; top: number; a: ActionPlanning; kind: { color: string; role: string }; selected: boolean; onSelect: (id: string | null) => void }) {
+  const done = a.statut === "fait";
+  return (
+    <button type="button" onClick={() => onSelect(selected ? null : a.id)}
+      title={`${kind.role} · ${a.campagne} · ${dayLabel(a.date)} · ${STATUT_META[a.statut].label}${a.responsable ? " · " + a.responsable : ""}`}
+      style={{
+        position: "absolute", left: x, top, transform: "translateX(-50%)",
+        width: 22, height: 22, lineHeight: "22px", textAlign: "center", padding: 0,
+        borderRadius: 999, cursor: "pointer", border: "none", background: "transparent",
+        color: done ? "rgba(26,22,20,0.35)" : kind.color, fontSize: 18,
+        textShadow: selected ? `0 0 0 ${kind.color}` : "none",
+        filter: selected ? "drop-shadow(0 0 3px rgba(0,0,0,0.35))" : "none",
+        transformOrigin: "center", scale: selected ? "1.25" : "1",
+      }}>★</button>
+  );
+}
 
 function GanttView({ actions, selected, onSelect }: { actions: ActionPlanning[]; selected: string | null; onSelect: (id: string | null) => void }) {
   const model = useMemo(() => {
@@ -202,10 +267,14 @@ function GanttView({ actions, selected, onSelect }: { actions: ActionPlanning[];
     const xOf = (s: string) => daysBetween(start, parseDate(s)) * PX_PER_DAY;
     const labelW = (a: ActionPlanning) => TYPE_LABEL[a.type].length * 6.1 + 30; // icône + texte + padding
 
+    // Les jalons "réunion" sortent des lanes → étoiles pleine hauteur.
+    const laneActions = actions.filter((a) => !MILESTONE_TYPES.has(a.type));
+    const milestoneActions = actions.filter((a) => MILESTONE_TYPES.has(a.type));
+
     // Lanes par campagne. Tri chronologique : datées par date de fin (deadline) croissante,
     // evergreen (événements de vie) regroupées en bas.
     const laneMap = new Map<string, ActionPlanning[]>();
-    for (const a of actions) { const k = a.campagne || "—"; if (!laneMap.has(k)) laneMap.set(k, []); laneMap.get(k)!.push(a); }
+    for (const a of laneActions) { const k = a.campagne || "—"; if (!laneMap.has(k)) laneMap.set(k, []); laneMap.get(k)!.push(a); }
     const laneArr = [...laneMap.entries()].map(([camp, items]) => {
       const evergreen = items.some((i) => i.drop === "evergreen");
       const maxD = items.reduce((m, i) => (i.date_fin || i.date) > m ? (i.date_fin || i.date) : m, items[0].date);
@@ -251,13 +320,25 @@ function GanttView({ actions, selected, onSelect }: { actions: ActionPlanning[];
       weeks.push({ x: off * PX_PER_DAY, w: 7 * PX_PER_DAY - 1, count: camps.size, camps: [...camps] });
     }
 
+    // Jalons réunion groupés par thématique (présentation = reunion, validation = validation_collection)
+    const msMap = new Map<string, ActionPlanning[]>();
+    for (const a of milestoneActions) { const k = a.campagne || "—"; if (!msMap.has(k)) msMap.set(k, []); msMap.get(k)!.push(a); }
+    const milestones = [...msMap.entries()].map(([camp, items]) => {
+      const pres = items.find((i) => i.type === "reunion") || null;
+      const valid = items.find((i) => i.type === "validation_collection") || null;
+      const presX = pres ? xOf(pres.date) : null;
+      const valX = valid ? xOf(valid.date) : null;
+      const labelX = presX != null && valX != null ? (presX + valX) / 2 : (presX ?? valX ?? 0);
+      return { camp, pres, valid, presX, valX, labelX };
+    }).sort((a, b) => a.labelX - b.labelX);
+
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const todayX = today >= start && today <= end ? daysBetween(start, today) * PX_PER_DAY : null;
-    return { width, lanes: laneArr, months, weeks, todayX };
+    return { width, lanes: laneArr, months, weeks, milestones, todayX };
   }, [actions]);
 
   if (!model) return <Empty />;
-  const { width, lanes, months, weeks, todayX } = model;
+  const { width, lanes, months, weeks, milestones, todayX } = model;
   const loadColor = (n: number) => n >= 3 ? "rgba(197,48,48,0.32)" : n === 2 ? "rgba(214,138,30,0.30)" : n === 1 ? "rgba(122,158,126,0.16)" : "transparent";
 
   return (
@@ -282,6 +363,13 @@ function GanttView({ actions, selected, onSelect }: { actions: ActionPlanning[];
                   {w.count >= 2 ? `×${w.count}` : ""}
                 </div>
               ))}
+            </div>
+          </div>
+          {/* Réunions de collection — jalons étoile (présentation ⟶ validation) */}
+          <div style={{ display: "flex", height: STAR_ROW_H, borderBottom: "0.5px solid var(--hub-border)", background: "var(--hub-bg)" }}>
+            <div style={{ ...stickyLabel(STAR_ROW_H), fontWeight: 700, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", opacity: 0.55, display: "flex", alignItems: "center", paddingLeft: 12 }}>Réunions</div>
+            <div style={{ position: "relative", width }}>
+              {milestones.map((m) => <MilestoneMarker key={m.camp} m={m} selected={selected} onSelect={onSelect} />)}
             </div>
           </div>
           {/* Lanes */}
@@ -312,6 +400,11 @@ function GanttView({ actions, selected, onSelect }: { actions: ActionPlanning[];
               </div>
             </div>
           ))}
+          {/* Lignes-guides des réunions (pleine hauteur = la deadline traverse toutes les équipes) */}
+          {milestones.flatMap((m) => [
+            m.presX != null && <div key={m.camp + "-gp"} style={{ position: "absolute", left: LANE_W + m.presX, top: STAR_ROW_H + 56, bottom: 0, width: 0, borderLeft: `1px dashed ${MS_PRES.color}`, opacity: selected === m.pres?.id ? 0.6 : 0.16, pointerEvents: "none" }} />,
+            m.valX != null && <div key={m.camp + "-gv"} style={{ position: "absolute", left: LANE_W + m.valX, top: STAR_ROW_H + 56, bottom: 0, width: 0, borderLeft: `1px dashed ${MS_VALID.color}`, opacity: selected === m.valid?.id ? 0.6 : 0.16, pointerEvents: "none" }} />,
+          ])}
           {/* Trait aujourd'hui (overlay pleine hauteur) */}
           {todayX != null && <div style={{ position: "absolute", left: LANE_W + todayX, top: 0, bottom: 0, width: 2, background: "#C53030", opacity: 0.55, pointerEvents: "none" }} />}
         </div>
@@ -325,7 +418,9 @@ function GanttView({ actions, selected, onSelect }: { actions: ActionPlanning[];
         ))}
         <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ width: 14, height: 11, borderRadius: 3, background: "rgba(214,138,30,0.5)" }} /> ×2 double run</span>
         <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ width: 14, height: 11, borderRadius: 3, background: "rgba(197,48,48,0.5)" }} /> ×3 triple run</span>
-        <span style={{ opacity: 0.65 }}>🧵 test broderie · ⚙️ production · 👥 réunion · 📌 Pinterest · trait rouge = aujourd'hui · clic = détail</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ color: MS_PRES.color, fontSize: 14 }}>★</span> réunion présentation</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ color: MS_VALID.color, fontSize: 14 }}>★</span> réunion validation</span>
+        <span style={{ opacity: 0.65 }}>🧵 test broderie · ⚙️ production · 📌 Pinterest · trait rouge = aujourd'hui · clic = détail</span>
       </div>
     </div>
   );

@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "schema_version": "2.0",
+    "referentiel": "instagram_hashtags",
+    "last_updated": "2026-06-30",
+    "description": "Banque evergreen de hashtags Instagram Ypersoa orientés ENGAGEMENT + ACQUISITION. On pioche 5 tags ciblés et variés par post selon la formule : 1 socle marque/broderie + 1 produit + 1 occasion + 1 niche/style + 1 communauté/local.",
+    "formule": "socle_marque + produit + occasion + niche_style + communaute_local",
+    "logique_reach": "Instagram plafonne à 5 hashtags depuis déc. 2025. Les hashtags = signaux de CLASSEMENT, plus des sources de trafic. Viser un MIX de tiers : 2-3 larges (>500k posts, catégorisation) + 1-2 moyens (10k-500k, vraie découverte où on peut exister) + 1 niche (<10k, où on ranke en top). La formule 5-slots produit ce mix naturellement.",
+    "accents": "Sur IG accentué ≠ non-accentué (2 tags distincts). Forme retenue = la plus RECHERCHÉE par tag (souvent sans accent sur les gros génériques : #ideecadeau, #cadeaudenoel, #fetedesmeres ; accentuée sur les tags brand : #broderiepersonnalisée, #cadeaupersonnalisé).",
+    "regles_brand": "JAMAIS #faitmain #handmade #DIY #etsy (même s'ils ont du volume en broderie). JAMAIS de référence machine. Tutoiement. Vocabulaire : brodé à la commande, personnalisé, made in France.",
+    "tiers_indicatifs": {
+      "larges": ["#cadeau", "#ideecadeau", "#madeinfrance", "#broderie", "#sweatshirt", "#tshirt", "#noel", "#cadeaudenoel"],
+      "moyens": ["#cadeaupersonnalisé", "#cadeauoriginal", "#cadeauunique", "#broderiepersonnalisée", "#sweatpersonnalisé", "#tshirtpersonnalisé", "#fabriqueenfrance", "#createurfrancais", "#artisanatfrançais", "#slowfashion", "#cadeaunaissance", "#cadeaumaman", "#cadeaucouple"],
+      "niches": ["#broderiecustom", "#vetementbrodé", "#prénombrodé", "#sweatbrodé", "#casquettebrodée", "#ypersoa", "#hautsdefrance"]
+    }
+  },
+
+  "socle_marque": [
+    "#broderie",
+    "#broderiepersonnalisée",
+    "#broderiecustom",
+    "#broderiemachine",
+    "#vetementbrodé",
+    "#personnalisation",
+    "#ypersoa"
+  ],
+
+  "communaute_local": [
+    "#madeinfrance",
+    "#fabriqueenfrance",
+    "#createurfrancais",
+    "#artisanatfrançais",
+    "#slowfashion",
+    "#consommerlocal",
+    "#hautsdefrance"
+  ],
+
+  "niche_style": [
+    "#cadeaupersonnalisé",
+    "#prénombrodé",
+    "#cadeauoriginal",
+    "#cadeauunique",
+    "#vetementbrodé",
+    "#broderiecustom"
+  ],
+
+  "niche_groupes": {
+    "a_deux": ["#cadeaucouple", "#saintvalentin", "#cadeauamoureux"],
+    "mariage": ["#cadeautémoin", "#futuremariée", "#teammariée"],
+    "cadeau_homme": ["#cadeauhomme", "#cadeaupapa", "#cadeaupourlui"],
+    "cadeau_femme": ["#cadeaufemme", "#cadeaumaman", "#cadeaupourelle"],
+    "bebe": ["#cadeaunaissance", "#cadeaubébé", "#futuremaman"],
+    "varsity": ["#vesteuniversitaire", "#backtoschool", "#teddy"],
+    "famille": ["#cadeaufamille", "#cadeaugrandmere", "#souvenir"]
+  },
+
+  "produits": {
+    "sweat": ["#sweatpersonnalisé", "#sweatshirt", "#hoodiepersonnalisé", "#sweatbrodé"],
+    "sweat_enfant": ["#cadeauenfantpersonnalisé", "#modeenfant", "#vêtementenfant"],
+    "tshirt": ["#tshirtpersonnalisé", "#tshirt", "#teeshirtpersonnalisé"],
+    "casquette": ["#casquettepersonnalisée", "#casquette"],
+    "totebag": ["#totebagpersonnalisé", "#totebag", "#sacpersonnalisé"],
+    "teddy": ["#teddypersonnalisé", "#vesteuniversitaire", "#teddy"]
+  },
+
+  "occasions": {
+    "fete_meres": ["#cadeaufetedesmeres", "#cadeaumaman", "#fetedesmeres"],
+    "fete_peres": ["#cadeaufetedesperes", "#cadeaupapa", "#fetedesperes"],
+    "fete_grands_meres": ["#cadeaumamie", "#fetedesgrandsmeres", "#cadeaugrandmere"],
+    "naissance": ["#cadeaunaissance", "#listenaissance", "#futuremaman"],
+    "mariage": ["#cadeaumariage", "#evjf", "#teammariée"],
+    "merci_nounou": ["#cadeaumaitresse", "#mercimaitresse", "#cadeaunounou"],
+    "couple": ["#cadeaucouple", "#saintvalentin", "#cadeauamoureux"],
+    "rentree": ["#backtoschool", "#rentree", "#cadeauetudiant"],
+    "ete": ["#cadeaupersonnalisé", "#summervibes", "#vacances"],
+    "noel": ["#cadeaudenoel", "#noel", "#cadeauxdenoel"],
+    "cadeau": ["#ideecadeau", "#cadeaupersonnalisé", "#cadeauoriginal", "#cadeauunique"]
+  },
+
+  "produit_mapping": {
+    "YP001": "sweat",
+    "YP004": "sweat_enfant",
+    "YP005": "sweat",
+    "YP019": "tshirt",
+    "YP021": "sweat",
+    "YP013": "casquette",
+    "YP022": "tshirt",
+    "YP023": "tshirt"
+  },
+
+  "occasion_mapping": {
+    "fete-des-meres": { "occasion": "fete_meres", "niche": "cadeau_femme" },
+    "fete-des-peres": { "occasion": "fete_peres", "niche": "cadeau_homme" },
+    "fete-grands-meres": { "occasion": "fete_grands_meres", "niche": "famille" },
+    "naissance": { "occasion": "naissance", "niche": "bebe" },
+    "mariage": { "occasion": "mariage", "niche": "mariage" },
+    "nounou": { "occasion": "merci_nounou", "niche": null },
+    "amour": { "occasion": "couple", "niche": "a_deux" },
+    "rentree": { "occasion": "rentree", "niche": "varsity" },
+    "ete": { "occasion": "ete", "niche": null },
+    "noel": { "occasion": "noel", "niche": "famille" },
+    "quotidien": { "occasion": "cadeau", "niche": null }
+  }
+}

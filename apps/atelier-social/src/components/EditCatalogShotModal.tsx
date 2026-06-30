@@ -14,6 +14,7 @@
 import { useEffect, useState } from "react";
 import { X, Trash2 } from "lucide-react";
 import { updateCatalogShot, deleteCatalogShot, type CatalogShot } from "@/lib/catalog-shots";
+import { PRODUITS_ORDER } from "@/lib/produits-catalogue";
 
 const DESTINATAIRES = [
   "papa", "maman", "mamie", "papy", "parrain", "marraine", "témoins",
@@ -26,7 +27,7 @@ const OCCASIONS = [
   "déclaration", "transmission", "intemporel", "noël", "saint-valentin", "rentrée scolaire", "lifestyle",
 ];
 
-const PRODUITS = ["YP001", "YP022", "YP005", "YP019", "YP023", "YP021", "YP004", "YP013"];
+const PRODUITS = PRODUITS_ORDER;
 
 interface Motif {
   id: string;

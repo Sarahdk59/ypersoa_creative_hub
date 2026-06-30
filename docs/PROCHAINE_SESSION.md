@@ -18,6 +18,16 @@ La prochaine session **technique** doit trancher les questions ci-dessous avant 
 
 ---
 
+## À FAIRE — Atelier Trends Lot 4 (cadré 29/06/2026)
+
+Lots 1-3 livrés en prod (socle Google + Pinterest + synthèse IA). **Reste le Lot 4 = bouton « Générer ce post »** (le pont trend → atelier-social).
+Détail complet : `docs/CDC_ATELIER_TRENDS.md` §8. En résumé :
+- **~1 session** : deep-link `/social?occasion=…&motif=…&fiche=…&plateforme=pinterest&brief=…` (copier le pattern `useSearchParams` du shooting-book) + 2 contrats à réconcilier (mapping 11 occasions `pinterest_strategy` → 6 ids `OccasionSelector` ; pré-sélection motif par YPM dans MotifPicker).
+- **Persistance Supabase reportée** (Sarah redéploie rarement → FS éphémère OK) ; **cron hebdo optionnel**.
+- À trancher en codant : bouton « pré-remplir seul » vs « pré-remplir + générer » ; portée actionnable-only vs toutes cartes.
+
+---
+
 ## 1. Incohérences à résoudre
 
 ### 1.1 Le dossier `apps/atelier-mediateque/` est vide

@@ -7,8 +7,18 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 import { loadPinterestStrategy } from "@/lib/pinterest-strategy.server";
-import { buildPinterestKeywords, productNounFor } from "@/lib/pinterest-strategy";
+import {
+  buildPinterestKeywords,
+  productNounFor,
+  type PinterestKeywords,
+} from "@/lib/pinterest-strategy";
+import { loadInstagramHashtags } from "@/lib/instagram-hashtags.server";
+import {
+  buildInstagramHashtags,
+  type InstagramHashtags,
+} from "@/lib/instagram-hashtags";
 
 export const runtime = "nodejs";
 export const maxDuration = 90;
@@ -105,9 +115,12 @@ const SYSTEM_PROMPT_INSTAGRAM = `Tu es la voix Ypersoa pour Instagram — broder
 - JAMAIS mentionner Etsy, Amazon, marketplace
 - Ton sobre, intime, narratif — JAMAIS marketing criard
 
+# HASHTAGS — N'EN ÉCRIS AUCUN
+N'ajoute AUCUN hashtag dans la caption. Les hashtags d'engagement et d'acquisition (produit, occasion, communauté…) sont ajoutés automatiquement après, depuis une banque pilotée. Écris une légende propre, narrative, SANS aucun "#".
+
 # OUTPUT REQUIS — JSON STRICT
 {
-  "caption": "Légende Instagram complète, 600-1200 chars, narrative, avec 5-8 hashtags brand à la fin",
+  "caption": "Légende Instagram complète, 600-1200 chars, narrative, SANS aucun hashtag (ils sont ajoutés ensuite)",
   "hooks": [
     "Hook ÉMOTION (12-15 mots) — phrase qui touche directement",
     "Hook QUESTION (8-12 mots) — question qui interpelle",
@@ -166,6 +179,143 @@ Une liste de mots-clés t'est fournie dans le message (1 PRINCIPAL + des seconda
 
 Réponds UNIQUEMENT en JSON valide, rien d'autre.`;
 
+// ──────────────────────────────────────────────────────────────────────────
+// Moteurs de génération de copy. On essaie OpenAI (qualité éditoriale FR de
+// référence) puis Gemini en secours (clé qui marche déjà pour les images), puis
+// un repli déterministe construit sur les mots-clés stratégie — pour que le
+// texte, les tags et le SEO ne reviennent JAMAIS vides, même OpenAI à sec.
+// ──────────────────────────────────────────────────────────────────────────
+
+const errMsg = (e: unknown) => (e instanceof Error ? e.message : String(e));
+
+async function runOpenAI(
+  apiKey: string,
+  systemPrompt: string,
+  userMessage: string,
+  mimeType: string,
+  base64Image: string
+): Promise<Record<string, unknown>> {
+  const openai = new OpenAI({ apiKey });
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    response_format: { type: "json_object" },
+    messages: [
+      { role: "system", content: systemPrompt },
+      {
+        role: "user",
+        content: [
+          { type: "text", text: userMessage },
+          { type: "image_url", image_url: { url: `data:${mimeType};base64,${base64Image}` } },
+        ],
+      },
+    ],
+    max_tokens: 1500,
+    temperature: 0.85,
+  });
+  const raw = completion.choices[0]?.message?.content;
+  if (!raw) throw new Error("Pas de contenu OpenAI");
+  return JSON.parse(raw);
+}
+
+async function runGemini(
+  apiKey: string,
+  systemPrompt: string,
+  userMessage: string,
+  mimeType: string,
+  base64Image: string
+): Promise<Record<string, unknown>> {
+  const ai = new GoogleGenAI({ apiKey });
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: {
+      parts: [
+        { inlineData: { data: base64Image, mimeType } },
+        { text: userMessage },
+      ],
+    },
+    config: {
+      systemInstruction: systemPrompt,
+      responseMimeType: "application/json",
+      temperature: 0.85,
+    },
+  });
+  const raw = response.text;
+  if (!raw) throw new Error("Pas de contenu Gemini");
+  return JSON.parse(raw);
+}
+
+const clip = (s: string, n: number) =>
+  s.length <= n ? s : s.slice(0, n - 1).trimEnd() + "…";
+const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+
+/**
+ * Repli déterministe Pinterest : construit titre + description + tags + hooks à
+ * partir des mots-clés stratégie et du produit réel. Garantit un SEO correct
+ * (mot-clé longue traîne, personnalisation, produit) sans aucun LLM.
+ */
+function fallbackPinterest(
+  kw: PinterestKeywords | null,
+  productNoun: string | undefined,
+  occasionContext: string
+): Record<string, unknown> {
+  const noun = productNoun ?? "vêtement brodé";
+  const principal = kw?.principal ?? `${noun} personnalisé`;
+  const secondaires = kw?.secondaires ?? [];
+  const tags =
+    kw?.tous ?? [
+      principal,
+      "cadeau personnalisé",
+      "vêtement brodé personnalisé",
+      "broderie personnalisée",
+      "made in France",
+    ];
+  const weave = secondaires.slice(0, 4).join(", ");
+  const title = clip(`${cap(principal)} — un ${noun} brodé à ton image`, 100);
+  const description = clip(
+    `${cap(principal)} : et si tu offrais un ${noun} brodé à la commande, rien qu'à son image ? ` +
+      `Brodé pour toi dans notre atelier des Hauts-de-France, c'est une attention personnalisée et durable qui se garde longtemps. ` +
+      (weave ? `On pense aussi à ${weave}. ` : "") +
+      `Un cadeau qui dit « je pense à toi » sans un mot.`,
+    500
+  );
+  return {
+    title,
+    description,
+    tags,
+    hooks: [
+      "Une attention brodée à son image, le genre de cadeau qui se garde des années ❤️",
+      "Et si ton cadeau était brodé rien que pour elle ?",
+      `POV : tu offres un ${noun} personnalisé qu'elle ne quittera plus.`,
+      `Un ${noun} qui parle à sa place, un point à la fois.`,
+      "Brodé à la commande, à ton image, fait pour durer.",
+    ],
+    _occasion: occasionContext,
+  };
+}
+
+/** Repli déterministe Instagram : caption narrative brand + 5 hooks. */
+function fallbackInstagram(
+  productNoun: string | undefined,
+  occasionContext: string
+): Record<string, unknown> {
+  const noun = productNoun ?? "vêtement brodé";
+  const caption =
+    `Il y a des cadeaux qui se gardent. Ce ${noun}, brodé dans notre atelier, en fait partie — ` +
+    `personnalisé à ton image, pensé pour durer. Pas un objet de plus : une attention qui raconte quelque chose. ` +
+    (occasionContext ? `${occasionContext}. ` : "") +
+    `Brodé à la commande, un point à la fois.`;
+  return {
+    caption,
+    hooks: [
+      "Une attention brodée à ton image, le genre de cadeau qui se garde des années ❤️",
+      "Et si ton cadeau racontait vraiment quelque chose ?",
+      `POV : tu offres un ${noun} brodé qu'on ne quitte plus.`,
+      `Un ${noun} qui dit « je t'aime » sans un mot.`,
+      "Brodé à la commande, à ton image, fait pour durer.",
+    ],
+  };
+}
+
 export async function POST(request: NextRequest) {
   console.log("\n========== /api/generate-copy START ==========");
 
@@ -216,8 +366,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const openai = new OpenAI({ apiKey });
-
   const systemPrompt =
     platform === "pinterest" ? SYSTEM_PROMPT_PINTEREST : SYSTEM_PROMPT_INSTAGRAM;
 
@@ -245,98 +393,125 @@ Analyse l'image attentivement (motif brodé, couleurs, support textile) et produ
 
 ⚠️ CRITIQUE : Si tu vois un design "Mama Club" mais l'occasion est "Fête des Pères", ADAPTE le ton pour parler aux papas (et inversement). La VISION CRÉATIVE doit dicter l'occasion mentionnée, pas le visuel produit.`;
 
+  // Cascade : OpenAI → Gemini → repli déterministe. La copy ne revient jamais vide.
+  let parsed: Record<string, unknown> | null = null;
+  let source: "openai" | "gemini" | "fallback" = "openai";
+  const engineErrors: string[] = [];
+
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: systemPrompt },
-        {
-          role: "user",
-          content: [
-            { type: "text", text: userMessage },
-            {
-              type: "image_url",
-              image_url: { url: `data:${mimeType};base64,${base64Image}` },
-            },
-          ],
-        },
-      ],
-      max_tokens: 1500,
-      temperature: 0.85,
-    });
-
-    const rawContent = completion.choices[0]?.message?.content;
-    if (!rawContent) {
-      return NextResponse.json({ message: "Pas de contenu généré" }, { status: 500 });
-    }
-
-    let parsed;
-    try {
-      parsed = JSON.parse(rawContent);
-    } catch (e) {
-      console.error("[FAIL] JSON parse:", rawContent);
-      return NextResponse.json({ message: "Réponse OpenAI mal formée" }, { status: 500 });
-    }
-
-    if (platform === "pinterest") {
-      const title = parsed.title || "";
-      const description = parsed.description || "";
-      const gptTags: string[] = Array.isArray(parsed.tags) ? parsed.tags : [];
-      const hooks = Array.isArray(parsed.hooks) ? parsed.hooks : [];
-
-      // Tags = mots-clés stratégie en priorité (déterministes, alignés Sarah),
-      // complétés par les tags GPT jusqu'à 10. Si pas de fiche → tags GPT seuls.
-      let tags: string[] = gptTags;
-      if (pinterestKeywords) {
-        const seen = new Set<string>();
-        tags = [];
-        for (const kw of [...pinterestKeywords.tous, ...gptTags]) {
-          const n = kw.trim().toLowerCase();
-          if (n && !seen.has(n)) {
-            seen.add(n);
-            tags.push(kw.trim());
-          }
-          if (tags.length >= 10) break;
-        }
+    parsed = await runOpenAI(apiKey, systemPrompt, userMessage, mimeType, base64Image);
+  } catch (e) {
+    engineErrors.push(`openai: ${errMsg(e)}`);
+    console.warn("[WARN] OpenAI copy KO → fallback Gemini:", errMsg(e));
+    const geminiKey = process.env.GEMINI_API_KEY;
+    if (geminiKey) {
+      try {
+        parsed = await runGemini(geminiKey, systemPrompt, userMessage, mimeType, base64Image);
+        source = "gemini";
+      } catch (e2) {
+        engineErrors.push(`gemini: ${errMsg(e2)}`);
+        console.warn("[WARN] Gemini copy KO aussi:", errMsg(e2));
       }
-
-      // Brand safety check sur titre + description (+ interdiction machine sur Pinterest)
-      const fullText = `${title} ${description}`;
-      const brandSafety = checkBrandSafety(fullText, FORBIDDEN_TERMS_MACHINE);
-
-      console.log("[OK] Pinterest output - title:", title.length, "chars, desc:", description.length, "chars, tags:", tags.length);
-      console.log("========== END ==========\n");
-
-      return NextResponse.json({
-        // Pour compatibilité backwards : on remplit aussi text avec tout combiné
-        text: `**${title}**\n\n${description}\n\n_Tags : ${tags.join(", ")}_`,
-        title,
-        description,
-        tags,
-        hooks,
-        brandSafety,
-        platform: "pinterest",
-      });
     }
+  }
 
-    // Instagram (existant)
-    const caption = parsed.caption || "";
+  if (!parsed) {
+    source = "fallback";
+    parsed =
+      platform === "pinterest"
+        ? fallbackPinterest(pinterestKeywords, productNoun, occasionContext)
+        : fallbackInstagram(productNoun, occasionContext);
+    console.warn("[WARN] Copy en repli déterministe (LLMs KO):", engineErrors.join(" | "));
+  }
+
+  // Note non-bloquante affichée côté UI quand la copy ne vient pas d'OpenAI.
+  const notice =
+    source === "openai"
+      ? null
+      : source === "gemini"
+        ? "Copy générée via Gemini (OpenAI indisponible — vérifie le crédit OpenAI)."
+        : "OpenAI et Gemini indisponibles : copy de secours générée depuis les mots-clés. Recharge le crédit OpenAI pour la qualité éditoriale.";
+
+  if (platform === "pinterest") {
+    const title = (parsed.title as string) || "";
+    const description = (parsed.description as string) || "";
+    const gptTags: string[] = Array.isArray(parsed.tags) ? (parsed.tags as string[]) : [];
     const hooks = Array.isArray(parsed.hooks) ? parsed.hooks : [];
-    const brandSafety = checkBrandSafety(caption);
 
-    console.log("[OK] Instagram output - caption:", caption.length, "chars, hooks:", hooks.length);
+    // Tags 100% déterministes quand une fiche est sélectionnée (mix saisonnier /
+    // produit / evergreen / permanent, alignés Sarah). Sans fiche → tags LLM seuls.
+    const tags: string[] = pinterestKeywords ? pinterestKeywords.tous : gptTags;
+    const tagCategories = pinterestKeywords ? pinterestKeywords.categories : null;
+
+    // Brand safety check sur titre + description (+ interdiction machine sur Pinterest)
+    const fullText = `${title} ${description}`;
+    const brandSafety = checkBrandSafety(fullText, FORBIDDEN_TERMS_MACHINE);
+
+    console.log(
+      `[OK:${source}] Pinterest output - title: ${title.length} chars, desc: ${description.length} chars, tags: ${tags.length}`
+    );
     console.log("========== END ==========\n");
 
     return NextResponse.json({
-      text: caption,
+      // Pour compatibilité backwards : on remplit aussi text avec tout combiné
+      text: `**${title}**\n\n${description}\n\n_Tags : ${tags.join(", ")}_`,
+      title,
+      description,
+      tags,
+      tagCategories,
       hooks,
       brandSafety,
-      platform: "instagram",
+      platform: "pinterest",
+      source,
+      notice,
     });
-  } catch (error) {
-    console.error("[FAIL] OpenAI error:", error);
-    const message = error instanceof Error ? error.message : "Erreur inconnue";
-    return NextResponse.json({ message: `Erreur OpenAI: ${message}` }, { status: 500 });
   }
+
+  // Instagram
+  const rawCaption = (parsed.caption as string) || "";
+  const hooks = Array.isArray(parsed.hooks) ? parsed.hooks : [];
+
+  // Hashtags d'engagement/acquisition déterministes (formule 5 emplacements :
+  // socle marque + produit + occasion + niche/style + communauté/local). Pilotés
+  // par la banque evergreen — pas par le LLM qui produisait des tags littéraires
+  // (#PassionCerise…) sans valeur de trafic. La rotation varie les combos.
+  let igHashtags: InstagramHashtags | null = null;
+  try {
+    const bank = await loadInstagramHashtags();
+    // Rotation dérivée du temps + des entrées → paquet varié d'un post à l'autre,
+    // tout en restant pertinent (produit/occasion fixent les slots ciblés).
+    const rotate =
+      Math.floor(Date.now() / 1000) + occasionContext.length + (productId?.length ?? 0);
+    igHashtags = buildInstagramHashtags(bank, { productId, occasionId, rotate });
+  } catch (e) {
+    console.error("[WARN] Instagram hashtags load failed:", e);
+  }
+
+  // La caption ne doit plus porter de hashtags (le LLM en glisse parfois malgré
+  // la consigne) : on retire toute traîne de "#tag" en fin de légende, puis on
+  // appose notre bloc piloté.
+  const cleanedCaption = rawCaption
+    .replace(/\n*(?:#[^\s#]+(?:\s+|$))+$/u, "")
+    .trimEnd();
+  const caption = igHashtags?.tags.length
+    ? `${cleanedCaption}\n\n${igHashtags.ligne}`
+    : cleanedCaption;
+
+  const brandSafety = checkBrandSafety(caption);
+
+  console.log(
+    `[OK:${source}] Instagram output - caption: ${caption.length} chars, hooks: ${hooks.length}, hashtags: ${igHashtags?.tags.length ?? 0}`
+  );
+  console.log("========== END ==========\n");
+
+  return NextResponse.json({
+    text: caption,
+    hooks,
+    hashtags: igHashtags?.tags ?? [],
+    hashtagSlots: igHashtags?.slots ?? null,
+    brandSafety,
+    platform: "instagram",
+    source,
+    notice,
+  });
 }

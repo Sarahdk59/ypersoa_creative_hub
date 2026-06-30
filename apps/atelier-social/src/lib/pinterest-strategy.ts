@@ -43,6 +43,8 @@ export interface PinterestStrategy {
   };
   vocabulaire: { autorise: string[]; interdit: string[] };
   ancres_generiques: string[];
+  /** Tags présents sur CHAQUE épingle (trafic large). Le tag produit s'adapte au produit réel. */
+  tags_permanents?: string[];
   slots_saisonniers: Record<string, string | null>;
   formats: {
     hero: PinterestFormat;
@@ -78,6 +80,18 @@ export function defaultFicheForOccasion(
   return suggestFichesForOccasion(strategy, occasionId)[0] ?? strategy.fiches[0];
 }
 
+/** Tags Pinterest groupés par intention de trafic (pour affichage + ordre). */
+export interface PinterestTagCategories {
+  /** Lié à l'occasion / la saison (slot saisonnier). */
+  saisonnier: string[];
+  /** Lié au motif + au type de produit (mots-clés niche + produit). */
+  produit: string[];
+  /** Trafic constant toute l'année (ancres génériques). */
+  evergreen: string[];
+  /** Présents sur chaque épingle (trafic large garanti). */
+  permanent: string[];
+}
+
 export interface PinterestKeywords {
   /** Mot-clé principal longue traîne — tête de titre + début de description + surimpression. */
   principal: string;
@@ -85,6 +99,8 @@ export interface PinterestKeywords {
   secondaires: string[];
   /** Liste complète ordonnée (principal en tête) — sert de tags Pinterest. */
   tous: string[];
+  /** Mêmes tags que `tous`, groupés par intention de trafic. */
+  categories: PinterestTagCategories;
   /** Texte de surimpression recommandé pour l'image. */
   surimpression: string;
 }
@@ -134,17 +150,23 @@ function adaptGarment(text: string, productNoun?: string): string {
 }
 
 /**
- * Assemble les mots-clés d'une épingle :
- *  - principal = slot saisonnier de l'occasion s'il existe, sinon 1er mot-clé niche
- *  - secondaires = mots-clés niche restants + ancres génériques (longue traîne)
- *  - capés à `maxTags` au total (Pinterest tags 8-10)
+ * Assemble les mots-clés d'une épingle en mixant 4 intentions de trafic :
+ *  - SAISONNIER : slot saisonnier de l'occasion (cadeau fête des mères personnalisé…)
+ *  - PRODUIT    : mots-clés niche du motif + type de produit réel (t-shirt personnalisé…)
+ *  - EVERGREEN  : ancres génériques (trafic constant toute l'année)
+ *  - PERMANENT  : `tags_permanents`, présents sur CHAQUE épingle (trafic large garanti)
+ *
+ * Le mot-clé `principal` (tête de titre + ouverture description) = slot saisonnier
+ * sinon 1er mot-clé niche. Le tout est dédupliqué (précédence permanent > saisonnier
+ * > produit > evergreen pour le classement) et capé à `maxTags`, les permanents
+ * étant toujours conservés.
  */
 export function buildPinterestKeywords(
   strategy: PinterestStrategy,
   ficheId: string,
   occasionId: string,
   productNoun?: string,
-  maxTags = 10
+  maxTags = 15
 ): PinterestKeywords | null {
   const fiche = getFiche(strategy, ficheId);
   if (!fiche) return null;
@@ -154,26 +176,58 @@ export function buildPinterestKeywords(
   const niche = fiche.mots_cles.map((k) => adaptGarment(k, productNoun));
   const principal = adaptGarment(slot ?? niche[0], productNoun);
 
-  const ordered: string[] = [principal];
-  const seen = new Set<string>([norm(principal)]);
-  const push = (kw: string) => {
+  // Sources brutes par catégorie (déjà adaptées au produit réel).
+  const saisonnierRaw = slot ? [adaptGarment(slot, productNoun)] : [];
+  const produitRaw = [
+    ...niche,
+    ...(productNoun
+      ? [`${productNoun} personnalisé`, `${productNoun} brodé prénom`]
+      : []),
+  ];
+  const evergreenRaw = strategy.ancres_generiques.map((a) => adaptGarment(a, productNoun));
+  const permanentRaw = (strategy.tags_permanents ?? []).map((a) => adaptGarment(a, productNoun));
+
+  // Liste plate ordonnée : saisonnier → produit → evergreen (le principal arrive
+  // naturellement en tête), puis permanents toujours ajoutés en réserve.
+  const seen = new Set<string>();
+  const tous: string[] = [];
+  const tryPush = (kw: string, limit: number) => {
     const n = norm(kw);
-    if (!seen.has(n)) {
-      seen.add(n);
-      ordered.push(kw);
-    }
+    if (!kw || seen.has(n) || tous.length >= limit) return;
+    seen.add(n);
+    tous.push(kw);
   };
 
-  // 1. mots-clés niche (cœur du ciblage)
-  niche.forEach(push);
-  // 2. ancres génériques (longue traîne réutilisable)
-  strategy.ancres_generiques.forEach((a) => push(adaptGarment(a, productNoun)));
+  const nonPermLimit = Math.max(0, maxTags - permanentRaw.length);
+  [...saisonnierRaw, ...produitRaw, ...evergreenRaw].forEach((kw) =>
+    tryPush(kw, nonPermLimit)
+  );
+  // Permanents : toujours présents (réserve garantie en fin de liste).
+  permanentRaw.forEach((kw) => tryPush(kw, maxTags));
 
-  const tous = ordered.slice(0, maxTags);
+  // Classement par catégorie (précédence permanent > saisonnier > produit > evergreen).
+  const permSet = new Set(permanentRaw.map(norm));
+  const saisSet = new Set(saisonnierRaw.map(norm));
+  const prodSet = new Set(produitRaw.map(norm));
+  const categories: PinterestTagCategories = {
+    saisonnier: [],
+    produit: [],
+    evergreen: [],
+    permanent: [],
+  };
+  for (const tag of tous) {
+    const n = norm(tag);
+    if (permSet.has(n)) categories.permanent.push(tag);
+    else if (saisSet.has(n)) categories.saisonnier.push(tag);
+    else if (prodSet.has(n)) categories.produit.push(tag);
+    else categories.evergreen.push(tag);
+  }
+
   return {
     principal,
-    secondaires: tous.slice(1),
+    secondaires: tous.filter((t) => norm(t) !== norm(principal)),
     tous,
+    categories,
     surimpression: adaptGarment(fiche.texte_surimpression, productNoun),
   };
 }

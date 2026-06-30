@@ -45,6 +45,12 @@
     "personnalisation prénom",
     "cadeau à ton image"
   ],
+  "_doc_tags_permanents": "Tags présents sur CHAQUE épingle (trafic large, evergreen permanent). Le tag de type produit (ex. « t-shirt personnalisé ») s'adapte automatiquement au produit réellement sélectionné (sweat → « sweat personnalisé »).",
+  "tags_permanents": [
+    "cadeau personnalisé",
+    "idée cadeau",
+    "t-shirt personnalisé"
+  ],
   "slots_saisonniers": {
     "amour": "cadeau Saint-Valentin personnalisé",
     "fete-des-meres": "cadeau fête des mères personnalisé",
