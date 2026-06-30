@@ -87,7 +87,23 @@ const PINTEREST_ANGLES = [
   "LIFESTYLE WIDE VERTICAL : Vertical 2:3 composition. Person in full body, integrated naturally into a rich environment. The environment breathes around the person. Vertical format perfect for Pinterest pin. Aspirational lifestyle composition.",
 ];
 
+// Mode "J'ai déjà mon visuel" : types de contenu proposés (contexte pour l'IA).
+const CONTENT_TYPES = [
+  { id: "post-photo", label: "Post photo" },
+  { id: "carrousel", label: "Carrousel" },
+  { id: "story-reel", label: "Story / Reel" },
+  { id: "flatlay", label: "Flatlay / packshot produit" },
+  { id: "lifestyle", label: "Lifestyle / scène de vie" },
+  { id: "citation", label: "Citation / texte sur visuel" },
+];
+
 export default function Home() {
+  // Mode de la page : "full" = générer visuels + texte (historique),
+  // "copyOnly" = visuel déjà fait, on génère seulement description + tags.
+  const [mode, setMode] = useState<"full" | "copyOnly">("full");
+  const [contentType, setContentType] = useState<string>(CONTENT_TYPES[0].id);
+  const [postDate, setPostDate] = useState<string>("");
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customPrompt, setCustomPrompt] = useState("");
@@ -433,7 +449,117 @@ export default function Home() {
     }
   };
 
-  const expectedImages = selectedPlatform === "pinterest" ? 4 : 5;
+  // Mode "J'ai déjà mon visuel" : on saute toute la génération d'image et on
+  // ne lance QUE la copy (description + tags) sur le visuel déposé tel quel.
+  const handleGenerateCopyOnly = async () => {
+    if (!selectedImage || !selectedFile) return;
+    setError(null);
+    setCopyNotice(null);
+    setIsGeneratingText(true);
+    setBrandSafety(null);
+    setGeneratedHooks([]);
+    setInstagramHashtags([]);
+    setInstagramHashtagSlots(null);
+    setPinterestTitle("");
+    setPinterestDescription("");
+    setPinterestTags([]);
+    setPinterestTagCategories(null);
+    setSavedPackId(null);
+    // Le visuel déposé devient l'unique "slide" (aperçu gauche + sauvegarde).
+    setGeneratedImages([selectedImage]);
+    setCurrentSlide(0);
+    setBestSlideIndices(new Set());
+    setRightPanelTab("text");
+
+    const occasionContext = OCCASIONS.find((o) => o.id === selectedOccasion)?.context || "";
+    const mimeType = selectedFile.type;
+    const base64Data = selectedImage.split(",")[1];
+    const isPinterest = selectedPlatform === "pinterest";
+
+    const contentTypeLabel = CONTENT_TYPES.find((c) => c.id === contentType)?.label || "";
+    const dateLabel = postDate
+      ? new Date(postDate).toLocaleDateString("fr-FR", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })
+      : "";
+    // On enrichit la vision avec le briefing du mode copy-only : c'est un contenu
+    // DÉJÀ créé (à décrire fidèlement), son type, et sa période de publication.
+    const augmentedPrompt = [
+      "Le visuel fourni est un contenu DÉJÀ CRÉÉ par l'équipe Ypersoa : décris fidèlement ce que tu vois (motif brodé, support, couleurs, scène), ne l'imagine pas et n'invente pas un autre produit.",
+      contentTypeLabel ? `Type de contenu : ${contentTypeLabel}.` : "",
+      dateLabel ? `Publication prévue le ${dateLabel} — adapte la saisonnalité et les mots-clés en conséquence.` : "",
+      customPrompt ? `Contexte ajouté : ${customPrompt}` : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    try {
+      const res = await fetch("/api/generate-copy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64Image: base64Data,
+          mimeType,
+          platform: selectedPlatform,
+          vibeLabel: contentTypeLabel || "Contenu déjà créé",
+          occasionContext,
+          customPrompt: augmentedPrompt,
+          pinterestFicheId: isPinterest ? selectedFicheId : undefined,
+          occasionId: selectedOccasion,
+          // Pas de productId : on laisse l'IA décrire le vêtement réellement visible.
+        }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Copy generation failed");
+      }
+      const data = await res.json();
+      if (data.platform === "pinterest") {
+        setPinterestTitle(data.title || "");
+        setPinterestDescription(data.description || "");
+        setPinterestTags(data.tags || []);
+        setPinterestTagCategories(data.tagCategories || null);
+        setGeneratedText(data.text);
+      } else {
+        setGeneratedText(data.text);
+        setInstagramHashtags(data.hashtags || []);
+        setInstagramHashtagSlots(data.hashtagSlots || null);
+      }
+      if (data.brandSafety) setBrandSafety(data.brandSafety);
+      if (data.notice) setCopyNotice(data.notice);
+      if (data.hooks) setGeneratedHooks(data.hooks);
+    } catch (e) {
+      console.error("Copy-only generation failed:", e);
+      setError("Impossible de générer le texte. Réessaie.");
+    } finally {
+      setIsGeneratingText(false);
+    }
+  };
+
+  // Bascule de mode : on repart propre (résultats + onglet texte).
+  const switchMode = (m: "full" | "copyOnly") => {
+    if (m === mode) return;
+    setMode(m);
+    setRightPanelTab("text");
+    setGeneratedImages([]);
+    setGeneratedText(null);
+    setGeneratedHooks([]);
+    setInstagramHashtags([]);
+    setInstagramHashtagSlots(null);
+    setPinterestTitle("");
+    setPinterestDescription("");
+    setPinterestTags([]);
+    setPinterestTagCategories(null);
+    setBrandSafety(null);
+    setError(null);
+    setCopyNotice(null);
+    setSavedPackId(null);
+    if (m === "copyOnly") setWithOverlay(false);
+  };
+
+  const expectedImages = mode === "copyOnly" ? 1 : selectedPlatform === "pinterest" ? 4 : 5;
 
   // Dérivés Pinterest : fiche sélectionnée, mots-clés, texte de surimpression
   const selectedFiche: PinterestFiche | undefined =
@@ -460,19 +586,53 @@ export default function Home() {
     <div className="h-screen flex flex-col bg-brand-bg text-brand-text font-sans selection:bg-brand-rose/20 selection:text-brand-rose overflow-hidden">
       <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 shrink-0">
         <div className="max-w-[1920px] mx-auto px-6 h-full flex items-center justify-between">
-          <h1
-            style={{
-              fontFamily: "var(--font-editorial)",
-              fontSize: 24,
-              fontWeight: 500,
-              letterSpacing: "-0.01em",
-              color: "var(--hub-foreground)",
-              lineHeight: 1,
-              margin: 0,
-            }}
-          >
-            Atelier Social
-          </h1>
+          <div className="flex items-center gap-5">
+            <h1
+              style={{
+                fontFamily: "var(--font-editorial)",
+                fontSize: 24,
+                fontWeight: 500,
+                letterSpacing: "-0.01em",
+                color: "var(--hub-foreground)",
+                lineHeight: 1,
+                margin: 0,
+              }}
+            >
+              Atelier Social
+            </h1>
+
+            {/* Toggle de mode : générer un visuel vs. visuel déjà créé */}
+            <div className="flex items-center bg-brand-muted/10 rounded-full p-0.5 border border-brand-muted/15">
+              <button
+                type="button"
+                onClick={() => switchMode("full")}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all",
+                  mode === "full"
+                    ? "bg-white text-brand-rose shadow-sm"
+                    : "text-brand-muted hover:text-brand-text"
+                )}
+                title="Générer les visuels + la description + les tags"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Générer un visuel
+              </button>
+              <button
+                type="button"
+                onClick={() => switchMode("copyOnly")}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all",
+                  mode === "copyOnly"
+                    ? "bg-white text-brand-rose shadow-sm"
+                    : "text-brand-muted hover:text-brand-text"
+                )}
+                title="J'ai déjà mon visuel — génère juste la description + les tags"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                J&apos;ai déjà mon visuel
+              </button>
+            </div>
+          </div>
 
           <div className="flex items-center gap-3">
             {(isGeneratingImage || isGeneratingText) && (
@@ -530,7 +690,70 @@ export default function Home() {
           {/* COLONNE 1 — CONFIG */}
           <div className="col-span-12 lg:col-span-4 flex flex-col h-full min-h-0 bg-white/30 rounded-2xl">
             <div className="flex-1 min-h-0 overflow-y-auto visible-scrollbar p-3 space-y-3">
-              <section>
+              {/* MODE "J'AI DÉJÀ MON VISUEL" — dépose + type de contenu + période */}
+              {mode === "copyOnly" && (
+                <>
+                  <section>
+                    <h2 className="font-serif text-sm font-medium mb-1">1. Ton visuel</h2>
+                    <p className="text-[11px] text-brand-muted mb-1.5">
+                      Dépose le post que tu as déjà créé. L&apos;IA l&apos;analyse pour écrire la
+                      description et les tags.
+                    </p>
+                    <div className="h-40 max-h-40 overflow-hidden rounded-xl">
+                      <ImageUploader
+                        selectedImage={selectedImage}
+                        onImageSelected={handleImageSelected}
+                      />
+                    </div>
+                  </section>
+
+                  <section>
+                    <h2 className="font-serif text-sm font-medium mb-1">2. Type de contenu</h2>
+                    <select
+                      value={contentType}
+                      onChange={(e) => setContentType(e.target.value)}
+                      className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                    >
+                      {CONTENT_TYPES.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
+                  </section>
+
+                  <section>
+                    <h2 className="font-serif text-sm font-medium mb-1 flex items-center gap-1.5">
+                      3. Période de publication
+                      <span className="text-[10px] font-normal text-brand-muted italic">— optionnel</span>
+                    </h2>
+                    <input
+                      type="date"
+                      value={postDate}
+                      onChange={(e) => setPostDate(e.target.value)}
+                      className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs text-brand-text focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                    />
+                    <p className="text-[10px] text-brand-muted mt-1 italic">
+                      Aide l&apos;IA à coller à la saison / au marronnier.
+                    </p>
+                  </section>
+
+                  <section>
+                    <h2 className="font-serif text-sm font-medium mb-1 flex items-center gap-1.5">
+                      4. Contexte
+                      <span className="text-[10px] font-normal text-brand-muted italic">— optionnel</span>
+                    </h2>
+                    <textarea
+                      value={customPrompt}
+                      onChange={(e) => setCustomPrompt(e.target.value)}
+                      placeholder="Précise le message, l'angle, le destinataire… (facultatif)"
+                      className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white focus:outline-none focus:ring-1 focus:ring-brand-rose/50 resize-none h-14 text-xs text-brand-text placeholder:text-brand-muted/50"
+                    />
+                  </section>
+                </>
+              )}
+
+              <section className={cn(mode !== "full" && "hidden")}>
                 <h2 className="font-serif text-sm font-medium mb-1 text-brand-text flex items-center gap-1.5">
                   1. Ta vision
                   <span className="text-[10px] font-normal text-brand-muted italic">— optionnel</span>
@@ -543,7 +766,7 @@ export default function Home() {
                 />
               </section>
 
-              <section>
+              <section className={cn(mode !== "full" && "hidden")}>
                 <h2 className="font-serif text-sm font-medium mb-1">2. Ton produit</h2>
                 <ImportedShotsPanel onImport={handleImageSelected} />
                 <MotifPickerPanel onImport={handleImageSelected} />
@@ -565,7 +788,7 @@ export default function Home() {
                 </div>
               </section>
 
-              <section>
+              <section className={cn(mode !== "full" && "hidden")}>
                 <h2 className="font-serif text-sm font-medium mb-1">3. Tes mannequins</h2>
                 <CanoniqueSelector
                   selectedIds={selectedCanoniqueIds}
@@ -574,7 +797,7 @@ export default function Home() {
                 />
               </section>
 
-              <section>
+              <section className={cn(mode !== "full" && "hidden")}>
                 <h2 className="font-serif text-sm font-medium mb-1">4. L&apos;ambiance</h2>
                 <VibeSelector selectedVibe={selectedVibe} onSelectVibe={setSelectedVibe} />
               </section>
@@ -640,7 +863,7 @@ export default function Home() {
                 </section>
               )}
 
-              <section>
+              <section className={cn(mode !== "full" && "hidden")}>
                 <h2 className="font-serif text-sm font-medium mb-1">6. Style</h2>
                 <div className="flex gap-2">
                   <button
@@ -737,14 +960,21 @@ export default function Home() {
 
               <button
                 type="button"
-                onClick={handleGenerate}
+                onClick={mode === "copyOnly" ? handleGenerateCopyOnly : handleGenerate}
                 disabled={!selectedImage || isGeneratingImage || isGeneratingText}
                 className="w-full primary-button flex items-center justify-center gap-2 text-sm py-3 rounded-xl shadow-md shadow-brand-rose/20"
               >
                 {isGeneratingImage || isGeneratingText ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Création... ({selectedPlatform === "pinterest" ? "4-6" : "5-7"} min)
+                    {mode === "copyOnly"
+                      ? "Rédaction... (~20 s)"
+                      : `Création... (${selectedPlatform === "pinterest" ? "4-6" : "5-7"} min)`}
+                  </>
+                ) : mode === "copyOnly" ? (
+                  <>
+                    <FileText className="w-4 h-4" />
+                    Générer la description + les tags
                   </>
                 ) : (
                   <>
@@ -816,22 +1046,24 @@ export default function Home() {
                     </>
                   )}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setRightPanelTab("overlay")}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all relative",
-                    rightPanelTab === "overlay"
-                      ? "bg-brand-rose text-white"
-                      : "bg-white/60 text-brand-muted hover:bg-white"
-                  )}
-                >
-                  <Type className="w-3.5 h-3.5" />
-                  {selectedPlatform === "pinterest" ? "Surimpression" : "Overlay"}
-                  {generatedImages.length > 0 && rightPanelTab !== "overlay" && (
-                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-rose rounded-full animate-pulse" />
-                  )}
-                </button>
+                {mode === "full" && (
+                  <button
+                    type="button"
+                    onClick={() => setRightPanelTab("overlay")}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all relative",
+                      rightPanelTab === "overlay"
+                        ? "bg-brand-rose text-white"
+                        : "bg-white/60 text-brand-muted hover:bg-white"
+                    )}
+                  >
+                    <Type className="w-3.5 h-3.5" />
+                    {selectedPlatform === "pinterest" ? "Surimpression" : "Overlay"}
+                    {generatedImages.length > 0 && rightPanelTab !== "overlay" && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-rose rounded-full animate-pulse" />
+                    )}
+                  </button>
+                )}
               </div>
 
               <div className="flex-1 min-h-0 overflow-y-auto visible-scrollbar pr-2">
