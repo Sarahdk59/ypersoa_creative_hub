@@ -1,7 +1,7 @@
 /**
  * API Route: /api/generate-copy
  *
- * Insta : caption narrative + 5 hooks
+ * Insta : caption courte structurée (hook/corps/question/CTA) + 5 hooks
  * Pinterest : titre court (100 chars) + description SEO (500 chars) + tags + 5 hooks
  */
 
@@ -106,21 +106,34 @@ function checkBrandSafety(text: string, extraCritical: string[] = []): BrandSafe
   };
 }
 
-const SYSTEM_PROMPT_INSTAGRAM = `Tu es la voix Ypersoa pour Instagram — broderie premium sur métier Tajima depuis un atelier français.
+const SYSTEM_PROMPT_INSTAGRAM = `Tu es la voix Ypersoa pour Instagram — vêtements et accessoires brodés personnalisés, brodés à la commande dans notre atelier des Hauts-de-France.
+
+# STRUCTURE DE LA LÉGENDE (OBLIGATOIRE — exactement cet ordre, séparé par des retours à la ligne)
+Légende COURTE, punchy, conversationnelle (200-500 caractères MAX). JAMAIS un long paragraphe littéraire. 4 temps :
+1. HOOK — 1 ligne avec 1 emoji : accroche stop-scroll (une idée, un teaser, une scène, un chiffre, ou une question forte).
+2. CORPS — 1 à 2 lignes COURTES et CONCRÈTES : un détail vrai (le mot brodé, la couleur du fil, l'occasion, le destinataire). Du concret, pas du lyrisme.
+3. QUESTION D'ENGAGEMENT — 1 ligne qui invite à répondre en commentaire ("Et toi, tu l'offrirais à qui ?", "C'est quoi ta team ?", "Tu en ajouterais laquelle ?").
+4. CTA — sur sa propre ligne, EXACTEMENT : "→ ypersoa.fr"
+
+# TON
+- Conversationnel, complice, direct — tu parles à une copine.
+- Phrases courtes, du rythme. 1 à 3 emojis MAX sur toute la légende.
+- CONCRET avant tout : un mot brodé, une couleur, une occasion, une mini-histoire vraie.
+- INTERDIT le registre "poème" : pas de "chaque courbe raconte une histoire", "affirmation douce mais forte de ton identité", "sublimer ton quotidien avec authenticité". On bannit ce ton ampoulé.
 
 # RÈGLES ABSOLUES
-- TOUJOURS tutoyer ("tu", "ton", "ta")
-- JAMAIS "vous", "votre", "vos"
-- JAMAIS "brodé à la main" / "fait main" → toujours "brodé sur métier Tajima" ou "brodé dans notre atelier"
-- JAMAIS mentionner Etsy, Amazon, marketplace
-- Ton sobre, intime, narratif — JAMAIS marketing criard
+- TOUJOURS tutoyer ("tu", "ton", "ta") — JAMAIS "vous", "votre", "vos"
+- JAMAIS "brodé à la main" / "fait main" → dis "brodé à la commande", "brodé dans notre atelier des Hauts-de-France", "brodé avec attention"
+- JAMAIS de référence machine/équipement (PAS de "métier Tajima", PAS de "machine à broder", PAS de "atelier français" générique → dis "Hauts-de-France")
+- JAMAIS Etsy, Amazon, Vinted, marketplace
+- Vocabulaire de marque : personnalisation, à ton image, brodé à la commande, durable, Hauts-de-France
 
 # HASHTAGS — N'EN ÉCRIS AUCUN
-N'ajoute AUCUN hashtag dans la caption. Les hashtags d'engagement et d'acquisition (produit, occasion, communauté…) sont ajoutés automatiquement après, depuis une banque pilotée. Écris une légende propre, narrative, SANS aucun "#".
+N'ajoute AUCUN hashtag dans la caption (ils sont ajoutés automatiquement après). La dernière ligne reste le CTA "→ ypersoa.fr".
 
 # OUTPUT REQUIS — JSON STRICT
 {
-  "caption": "Légende Instagram complète, 600-1200 chars, narrative, SANS aucun hashtag (ils sont ajoutés ensuite)",
+  "caption": "Légende COURTE 200-500 chars. Structure Hook / Corps concret / Question d'engagement / CTA (→ ypersoa.fr) avec retours à la ligne. AUCUN hashtag.",
   "hooks": [
     "Hook ÉMOTION (12-15 mots) — phrase qui touche directement",
     "Hook QUESTION (8-12 mots) — question qui interpelle",
@@ -129,6 +142,12 @@ N'ajoute AUCUN hashtag dans la caption. Les hashtags d'engagement et d'acquisiti
     "Hook AFFIRMATION (8-12 mots) — promesse forte courte"
   ]
 }
+
+# EXEMPLE DE BONNE LÉGENDE (produit = casquette brodée "SOEUR")
+Il y a des liens qui se passent de mots 💛
+Une casquette beige, le mot « SOEUR » brodé en bordeaux : le clin d'œil discret à LA personne qui compte.
+Et toi, tu l'offrirais à qui ?
+→ ypersoa.fr
 
 Réponds UNIQUEMENT en JSON valide, rien d'autre.`;
 
@@ -293,17 +312,18 @@ function fallbackPinterest(
   };
 }
 
-/** Repli déterministe Instagram : caption narrative brand + 5 hooks. */
+/** Repli déterministe Instagram : caption structurée (hook/corps/question/CTA) + 5 hooks. */
 function fallbackInstagram(
   productNoun: string | undefined,
   occasionContext: string
 ): Record<string, unknown> {
   const noun = productNoun ?? "vêtement brodé";
+  // Structure : hook / corps concret / question d'engagement / CTA.
   const caption =
-    `Il y a des cadeaux qui se gardent. Ce ${noun}, brodé dans notre atelier, en fait partie — ` +
-    `personnalisé à ton image, pensé pour durer. Pas un objet de plus : une attention qui raconte quelque chose. ` +
-    (occasionContext ? `${occasionContext}. ` : "") +
-    `Brodé à la commande, un point à la fois.`;
+    `Le petit détail qui change tout ✨\n` +
+    `Un ${noun} brodé à ton image, dans notre atelier des Hauts-de-France — le mot qui compte, juste pour toi.\n` +
+    `Et toi, tu le ferais broder comment ?\n` +
+    `→ ypersoa.fr`;
   return {
     caption,
     hooks: [
@@ -389,7 +409,7 @@ ${pinterestFicheNom ? `- MOTIF : ${pinterestFicheNom}` : ""}`
 ${canoniqueContext ? `👤 PERSONNAGES : ${canoniqueContext}` : ""}
 ${customPrompt ? `💡 VISION CRÉATIVE : "${customPrompt}"` : ""}${productBlock}${keywordsBlock}
 
-Analyse l'image attentivement (motif brodé, couleurs, support textile) et produis le contenu pour ${platform === "pinterest" ? "Pinterest (standard officiel : titre + description + tags + 5 hooks)" : "Instagram (légende narrative + 5 hooks)"}.
+Analyse l'image attentivement (motif brodé, couleurs, support textile) et produis le contenu pour ${platform === "pinterest" ? "Pinterest (standard officiel : titre + description + tags + 5 hooks)" : "Instagram (légende COURTE structurée : hook / corps concret / question d'engagement / CTA → ypersoa.fr + 5 hooks)"}.
 
 ⚠️ CRITIQUE : Si tu vois un design "Mama Club" mais l'occasion est "Fête des Pères", ADAPTE le ton pour parler aux papas (et inversement). La VISION CRÉATIVE doit dicter l'occasion mentionnée, pas le visuel produit.`;
 
