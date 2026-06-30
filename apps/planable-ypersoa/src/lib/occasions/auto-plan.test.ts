@@ -25,6 +25,66 @@ const RENTREE: PlanableOccasionRow = {
   created_at: null,
 };
 
+/** Éditorial DATÉ — ex. La France Club (14 juillet), temps fort explicite. */
+const FRANCE_CLUB: PlanableOccasionRow = {
+  slug: "france_club",
+  name_fr: "La France Club",
+  date_strategy: "fixed:07-14",
+  campaign_lead_days: 30,
+  pinterest_lead_days: 30,
+  lead_days: 10,
+  recommended_motifs: ["YPM-003", "YPM-001"],
+  recommended_casting: ["MAN-P03"],
+  recommended_duos: [],
+  hashtags_brand: ["#FranceClub"],
+  notes: null,
+  auto_campaign_disabled_year: null,
+  kind: "editorial",
+  temps_fort_date: "2026-07-14",
+  created_at: null,
+};
+
+/** Éditorial ÉVERGREEN — ex. Team Brunch (always-on). */
+const BRUNCH: PlanableOccasionRow = {
+  ...FRANCE_CLUB,
+  slug: "brunch_club",
+  name_fr: "Team Brunch",
+  date_strategy: "season:1-12",
+  temps_fort_date: null,
+};
+
+describe("generateAutoPlan — éditorial daté (runway France Club)", () => {
+  const today = new Date(2026, 4, 20); // 20/05/2026, bien avant le 14/07
+  const { slots, occurrence } = generateAutoPlan(FRANCE_CLUB, today);
+
+  it("ancre l'occurrence sur la date de temps fort éditée (14/07)", () => {
+    expect(occurrence.getMonth()).toBe(6);
+    expect(occurrence.getDate()).toBe(14);
+  });
+  it("a un reel « moment ou jamais » à la deadline commande", () => {
+    const reel = slots.find((s) => s.platform === "instagram_reel");
+    expect(reel?.focus).toMatch(/MOMENT OU JAMAIS/);
+  });
+  it("a un post final LE JOUR J en engagement pur (aucun CTA)", () => {
+    const jourJ = slots.find((s) => s.date === "2026-07-14" && s.platform === "instagram_post");
+    expect(jourJ).toBeTruthy();
+    expect(jourJ?.focus).toMatch(/AUCUN CTA/);
+  });
+  it("ouvre le runway ~J-30 (post d'ouverture le 14/06)", () => {
+    const first = slots.filter((s) => s.platform === "instagram_post").sort((a, b) => a.date.localeCompare(b.date))[0];
+    expect(first.date).toBe("2026-06-14");
+  });
+});
+
+describe("generateAutoPlan — éditorial évergreen (léger)", () => {
+  it("reste léger : 1 pin + 1 reel, pas de cadence", () => {
+    const { slots } = generateAutoPlan(BRUNCH, new Date(2026, 5, 1));
+    expect(slots).toHaveLength(2);
+    expect(slots.filter((s) => s.platform === "pinterest_pin")).toHaveLength(1);
+    expect(slots.filter((s) => s.platform === "instagram_reel")).toHaveLength(1);
+  });
+});
+
 describe("generateAutoPlan — règle des 45 jours (Rentrée)", () => {
   const today = new Date(2026, 5, 1); // 01/06/2026, bien avant la fenêtre
   const { slots, occurrence, deadline } = generateAutoPlan(RENTREE, today);

@@ -20,6 +20,7 @@ import Link from "next/link";
 import { ArrowLeft, Loader2, X, Sparkles, Camera, Filter } from "lucide-react";
 import type { MotifYpm, MotifVariante } from "@/lib/atelier-da/referentiels-loader";
 import { motifImageSrc } from "@/lib/atelier-da/motif-image";
+import { PRODUITS_CATALOGUE, PRODUITS_ORDER } from "@/lib/produits-catalogue";
 import { listCatalogShots, deleteCatalogShot, type CatalogShot } from "@/lib/catalog-shots";
 import { listProductSheets, deleteProductSheet, type ProductSheetWithShots } from "@/lib/product-sheets";
 import { EditCatalogShotModal } from "@/components/EditCatalogShotModal";
@@ -45,13 +46,8 @@ const OCCASIONS = [
 ];
 
 // Produits Ypersoa applicables à un motif/variante. Source : palette_supports_par_produit.json
-const PRODUITS = [
-  { id: "YP001", label: "Hoodie adulte" },
-  { id: "YP005", label: "Sweat col rond" },
-  { id: "YP019", label: "T-shirt" },
-  { id: "YP021", label: "Zoodie zippé" },
-  { id: "YP004", label: "Hoodie enfant" },
-];
+// (liste partagée → casquette, slims et futurs produits inclus automatiquement).
+const PRODUITS = PRODUITS_CATALOGUE;
 
 type CatalogView = "motifs" | "variantes" | "catalogue";
 
@@ -1103,8 +1099,7 @@ function CatalogShotsGallery({ motifId }: { motifId: string }) {
   const productTabs = useMemo(() => {
     const seen = new Set<string>();
     for (const s of shots) if (s.product_id) seen.add(s.product_id);
-    const order = ["YP019", "YP023", "YP005", "YP001", "YP022", "YP021", "YP004", "YP013"];
-    return order.filter((p) => seen.has(p));
+    return PRODUITS_ORDER.filter((p) => seen.has(p));
   }, [shots]);
 
   const onDelete = async (shot: CatalogShot) => {
@@ -1386,7 +1381,7 @@ function CatalogueView({
   const productsPresent = useMemo(() => {
     const s = new Set<string>();
     for (const x of shots) if (x.product_id) s.add(x.product_id);
-    return ["YP019", "YP023", "YP005", "YP001", "YP022", "YP021", "YP004", "YP013"].filter((p) => s.has(p));
+    return PRODUITS_ORDER.filter((p) => s.has(p));
   }, [shots]);
 
   const motifsPresent = useMemo(() => {

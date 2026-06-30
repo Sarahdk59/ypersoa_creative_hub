@@ -25,12 +25,14 @@ import { CANONIQUES } from "@/lib/canoniques";
 import {
   type PinterestStrategy,
   type PinterestFiche,
+  type PinterestTagCategories,
   buildPinterestKeywords,
   defaultFicheForOccasion,
   suggestFichesForOccasion,
   getFiche,
   productNounFor,
 } from "@/lib/pinterest-strategy";
+import { type InstagramHashtagSlots } from "@/lib/instagram-hashtags";
 import {
   Instagram,
   Pin,
@@ -129,16 +131,22 @@ export default function Home() {
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [generatedText, setGeneratedText] = useState<string | null>(null);
   const [generatedHooks, setGeneratedHooks] = useState<string[]>([]);
+  const [instagramHashtags, setInstagramHashtags] = useState<string[]>([]);
+  const [instagramHashtagSlots, setInstagramHashtagSlots] =
+    useState<InstagramHashtagSlots | null>(null);
   // Pinterest spécifique
   const [pinterestTitle, setPinterestTitle] = useState<string>("");
   const [pinterestDescription, setPinterestDescription] = useState<string>("");
   const [pinterestTags, setPinterestTags] = useState<string[]>([]);
+  const [pinterestTagCategories, setPinterestTagCategories] =
+    useState<PinterestTagCategories | null>(null);
   const [brandSafety, setBrandSafety] = useState<BrandSafety | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [isGeneratingText, setIsGeneratingText] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [copyNotice, setCopyNotice] = useState<string | null>(null);
 
   const [rightPanelTab, setRightPanelTab] = useState<"text" | "overlay">("text");
 
@@ -214,9 +222,12 @@ export default function Home() {
     setGeneratedImages([]);
     setGeneratedText(null);
     setGeneratedHooks([]);
+    setInstagramHashtags([]);
+    setInstagramHashtagSlots(null);
     setPinterestTitle("");
     setPinterestDescription("");
     setPinterestTags([]);
+    setPinterestTagCategories(null);
     setBrandSafety(null);
     setError(null);
   };
@@ -234,13 +245,17 @@ export default function Home() {
   const handleGenerate = async () => {
     if (!selectedImage || !selectedFile) return;
     setError(null);
+    setCopyNotice(null);
     setIsGeneratingImage(true);
     setIsGeneratingText(true);
     setBrandSafety(null);
     setGeneratedHooks([]);
+    setInstagramHashtags([]);
+    setInstagramHashtagSlots(null);
     setPinterestTitle("");
     setPinterestDescription("");
     setPinterestTags([]);
+    setPinterestTagCategories(null);
     setCurrentSlide(0);
     setBestSlideIndices(new Set());
     setSavedPackId(null);
@@ -387,12 +402,16 @@ export default function Home() {
           setPinterestTitle(data.title || "");
           setPinterestDescription(data.description || "");
           setPinterestTags(data.tags || []);
+          setPinterestTagCategories(data.tagCategories || null);
           setGeneratedText(data.text); // Combined version pour fallback
         } else {
           setGeneratedText(data.text);
+          setInstagramHashtags(data.hashtags || []);
+          setInstagramHashtagSlots(data.hashtagSlots || null);
         }
 
         if (data.brandSafety) setBrandSafety(data.brandSafety);
+        if (data.notice) setCopyNotice(data.notice);
         if (data.hooks) {
           setGeneratedHooks(data.hooks);
           if (withOverlay) {
@@ -709,6 +728,13 @@ export default function Home() {
                 </div>
               )}
 
+              {copyNotice && (
+                <div className="mb-2 p-2 bg-amber-50 text-amber-800 border border-amber-200 rounded-lg flex items-start gap-2 text-xs">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                  <p>{copyNotice}</p>
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={handleGenerate}
@@ -825,6 +851,7 @@ export default function Home() {
                     title={pinterestTitle}
                     description={pinterestDescription}
                     tags={pinterestTags}
+                    tagCategories={pinterestTagCategories}
                     hooks={generatedHooks}
                     brandSafety={brandSafety}
                     isGeneratingText={isGeneratingText}
@@ -833,6 +860,8 @@ export default function Home() {
                   <ResultPanelTextOnly
                     text={generatedText}
                     hooks={generatedHooks}
+                    hashtags={instagramHashtags}
+                    hashtagSlots={instagramHashtagSlots}
                     brandSafety={brandSafety}
                     platform={selectedPlatform}
                     isGeneratingText={isGeneratingText}
@@ -1102,20 +1131,39 @@ function ResultPanelImagesOnly({
 interface ResultPanelTextOnlyProps {
   text: string | null;
   hooks: string[];
+  hashtags?: string[];
+  hashtagSlots?: InstagramHashtagSlots | null;
   brandSafety: BrandSafety | null;
   platform: "instagram" | "pinterest";
   isGeneratingText: boolean;
 }
 
+const HASHTAG_SLOT_META: { key: keyof InstagramHashtagSlots; label: string }[] = [
+  { key: "socle", label: "Marque" },
+  { key: "produit", label: "Produit" },
+  { key: "occasion", label: "Occasion" },
+  { key: "niche", label: "Niche / style" },
+  { key: "communaute", label: "Communauté" },
+];
+
 function ResultPanelTextOnly({
   text,
   hooks,
+  hashtags = [],
+  hashtagSlots = null,
   brandSafety,
-  platform,
   isGeneratingText,
 }: ResultPanelTextOnlyProps) {
   const [copiedCaption, setCopiedCaption] = useState(false);
   const [copiedHookIdx, setCopiedHookIdx] = useState<number | null>(null);
+  const [copiedHashtags, setCopiedHashtags] = useState(false);
+
+  const handleCopyHashtags = () => {
+    if (hashtags.length === 0) return;
+    navigator.clipboard.writeText(hashtags.join(" "));
+    setCopiedHashtags(true);
+    setTimeout(() => setCopiedHashtags(false), 2000);
+  };
 
   const handleCopyCaption = () => {
     if (text) {
@@ -1215,6 +1263,75 @@ function ResultPanelTextOnly({
         </div>
       </div>
 
+      {hashtags.length > 0 && !isGeneratingText && (
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
+          <div className="flex items-center justify-between mb-2 pb-2 border-b border-brand-muted/10">
+            <div className="flex items-center gap-2">
+              <Hash className="w-4 h-4 text-brand-rose" />
+              <h4 className="font-medium text-sm">
+                Hashtags ciblés
+                <span className="ml-1 text-[11px] font-normal text-brand-muted">
+                  ({hashtags.length} — engagement & acquisition)
+                </span>
+              </h4>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyHashtags}
+              className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+            >
+              {copiedHashtags ? (
+                <Check className="w-3 h-3 text-green-600" />
+              ) : (
+                <Copy className="w-3 h-3" />
+              )}
+              {copiedHashtags ? "Copié" : "Copier"}
+            </button>
+          </div>
+
+          {hashtagSlots ? (
+            <div className="space-y-1.5">
+              {HASHTAG_SLOT_META.map(({ key, label }) => {
+                const items = hashtagSlots[key];
+                if (!items || items.length === 0) return null;
+                return (
+                  <div key={key} className="flex items-start gap-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-rose mt-1 shrink-0 w-20">
+                      {label}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {items.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 rounded-full bg-brand-bg/70 text-xs text-brand-text"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {hashtags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-0.5 rounded-full bg-brand-bg/70 text-xs text-brand-text"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+          <p className="mt-2 text-[10px] text-brand-muted">
+            Formule : marque + produit + occasion + niche + communauté. Combo varié
+            à chaque génération.
+          </p>
+        </div>
+      )}
+
       {hooks && hooks.length > 0 && (
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
           <div className="flex items-center gap-2 mb-2 pb-2 border-b border-brand-muted/10">
@@ -1261,6 +1378,7 @@ interface ResultPanelPinterestProps {
   title: string;
   description: string;
   tags: string[];
+  tagCategories: PinterestTagCategories | null;
   hooks: string[];
   brandSafety: BrandSafety | null;
   isGeneratingText: boolean;
@@ -1270,6 +1388,7 @@ function ResultPanelPinterest({
   title,
   description,
   tags,
+  tagCategories,
   hooks,
   brandSafety,
   isGeneratingText,
@@ -1415,7 +1534,7 @@ function ResultPanelPinterest({
               <Hash className="w-4 h-4 text-red-600" />
               <h4 className="font-medium text-sm">Tags</h4>
               <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-green-100 text-green-700">
-                {tags.length}/10
+                {tags.length} tags
               </span>
             </div>
             <button
@@ -1432,16 +1551,50 @@ function ResultPanelPinterest({
             </button>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
-            {tags.map((tag, i) => (
-              <span
-                key={i}
-                className="text-[11px] px-2 py-1 bg-brand-bg rounded-md text-brand-text"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          {tagCategories ? (
+            <div className="space-y-2.5">
+              {[
+                { key: "saisonnier", label: "Saisonnier", chip: "bg-amber-50 text-amber-800 border border-amber-200", dot: "bg-amber-400" },
+                { key: "produit", label: "Produit", chip: "bg-rose-50 text-rose-800 border border-rose-200", dot: "bg-rose-400" },
+                { key: "evergreen", label: "Evergreen", chip: "bg-emerald-50 text-emerald-800 border border-emerald-200", dot: "bg-emerald-400" },
+                { key: "permanent", label: "Permanent", chip: "bg-sky-50 text-sky-800 border border-sky-200", dot: "bg-sky-400" },
+              ].map((cat) => {
+                const items = tagCategories[cat.key as keyof PinterestTagCategories];
+                if (!items || items.length === 0) return null;
+                return (
+                  <div key={cat.key}>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className={`w-1.5 h-1.5 rounded-full ${cat.dot}`} />
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted">
+                        {cat.label}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {items.map((tag, i) => (
+                        <span
+                          key={i}
+                          className={`text-[11px] px-2 py-1 rounded-md ${cat.chip}`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {tags.map((tag, i) => (
+                <span
+                  key={i}
+                  className="text-[11px] px-2 py-1 bg-brand-bg rounded-md text-brand-text"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

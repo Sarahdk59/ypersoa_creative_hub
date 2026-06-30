@@ -285,6 +285,28 @@ The CANONICAL REFERENCE PORTRAIT dictates the hair length and texture — match 
 }
 
 /**
+ * Bloc capillaire VERROUILLÉ (mode canonique) — contrairement à buildHairBlock
+ * qui fait TOURNER le placement par shot, ici on FIGE la coupe sur le portrait
+ * canonique de référence : MÊME coupe, MÊME longueur, MÊME raie/frange, MÊME
+ * texture sur TOUS les shots du pack.
+ *
+ * Demande Sarah (29/06) : « je veux la même coupe de cheveux sur l'intégralité
+ * des photos du shooting ». En mode canonique on ne cherche PAS la variété
+ * capillaire (qui faisait paraître la coupe différente d'une photo à l'autre) —
+ * on cherche la cohérence d'identité : le même mannequin, la même coupe partout.
+ */
+function buildCanoniqueHairLock(length: HairLength): string {
+  const lengthLabel =
+    length === "short"  ? "short, exactly as in the reference (pixel / cropped) — NEVER extended past the reference length" :
+    length === "medium" ? "medium-length, exactly as in the reference (jawline / shoulder) — NEVER extended past the shoulders" :
+    "long, exactly as in the reference";
+
+  return `
+
+💇 HAIR LOCK (ABSOLUTE — IDENTICAL on every shot of the pack) : The hairstyle is EXACTLY the one in the canonical reference portrait — same haircut, same ${lengthLabel} length, same parting, same fringe / bangs, same texture, same color. DO NOT restyle between shots, DO NOT change the cut, DO NOT switch to a ponytail / bun / updo if the reference is worn loose (and vice-versa). The hair may settle naturally with the pose and head angle, but the CUT and the overall STYLE stay 100% identical across the whole series, so it is unmistakably the SAME person with the SAME haircut in every single image. The canonical reference portrait dictates the hair — match it EXACTLY, on every shot.`;
+}
+
+/**
  * Convertit le data URL du PNG poignet en bloc inlineData pour parts[].
  * Retourne null si pas d'image fournie. Le PNG est injecté en parts[] APRÈS
  * le PNG broderie principale (Gemini interprète l'ordre comme « 1ʳᵉ broderie =
@@ -389,26 +411,35 @@ function getDecorDescription(
 }
 
 async function generateSingleShot(settings: GenerationSettings, shotType: string, seedOffset: number): Promise<{url: string, label: string}> {
-  // Variation capillaire : 6 placements qui tournent par index de shot pour éviter
-  // que Gemini reproduise toujours la même coiffure de la photo canonique de réf.
-  // Injecté en mode mannequin / family / full uniquement (pas packshot — pas de
-  // mannequin visible). La LONGUEUR du bloc s'adapte au canonique sélectionné
-  // (cf. detectHairLength) — crucial pour éviter "cheveux longs hybridés sur
-  // un canonique pixel cut" (Sarah MAN-P11).
+  // Bloc capillaire. La LONGUEUR s'adapte au canonique sélectionné (cf.
+  // detectHairLength) — crucial pour éviter "cheveux longs hybridés sur un
+  // canonique pixel cut" (Sarah MAN-P11).
+  //
+  // Deux régimes selon le casting (demande Sarah 29/06 : « même coupe sur
+  // l'intégralité des photos du shooting ») :
+  //  - MODE CANONIQUE (1 mannequin) → buildCanoniqueHairLock : coupe VERROUILLÉE
+  //    sur le portrait de référence, IDENTIQUE sur tous les shots. On ne fait PAS
+  //    tourner le placement (ça faisait paraître la coupe différente d'une photo
+  //    à l'autre). Le visage est déjà ancré par le portrait injecté en parts[] ;
+  //    on verrouille aussi la coupe pour que ce soit clairement le même mannequin.
+  //  - MODE DIVERSITY (aucun canonique) → buildHairBlock : 6 placements qui
+  //    tournent par index de shot. Aucun visage de référence à respecter, donc la
+  //    variété capillaire est bienvenue.
+  //  - 2+ canoniques → aucun bloc : chaque portrait porte déjà sa propre coupe, et
+  //    un bloc "the model" au singulier serait ambigu avec plusieurs personnes.
+  //  - packshot → aucun bloc (mannequin invisible).
   const firstCanon = settings.castingMode === 'canonique' && settings.canoniqueIds?.[0]
     ? getCanoniqueById(settings.canoniqueIds[0])
     : null;
   const hairLength: HairLength = firstCanon ? detectHairLength(firstCanon.signature) : "long";
-  // Le bloc capillaire rotatif parle "the model" au singulier avec des placements
-  // épaule gauche/droite : ambigu dès qu'il y a 2+ personnes ancrées. On ne l'applique
-  // que pour un seul canonique (ou diversity) hors packshot — sinon les portraits
-  // canoniques portent déjà la coiffure exacte de chaque membre.
   const appliedCanonCount = (settings.castingMode === 'canonique' && settings.mode !== 'packshot')
     ? settings.canoniqueIds.length
     : 0;
-  const hairBlock = (settings.mode !== 'packshot' && appliedCanonCount < 2)
-    ? buildHairBlock(seedOffset, hairLength)
-    : "";
+  const hairBlock =
+    settings.mode === 'packshot' ? "" :
+    appliedCanonCount >= 2       ? "" :
+    appliedCanonCount === 1      ? buildCanoniqueHairLock(hairLength) :
+    buildHairBlock(seedOffset, hairLength);
 
   const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   const match = settings.embroideryImage!.match(/^data:(image\/[a-zA-Z+]+);base64,/);
@@ -630,9 +661,9 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     promptText = promptText + buildWristBlock(settings.wristSize ?? 4, settings.product);
   }
 
-  // Hook 4 — variation capillaire : force une coiffure différente par shot pour
-  // briser la convergence Gemini sur "un côté épaule, un côté dos" reproduit
-  // de la photo canonique de référence.
+  // Hook 4 — bloc capillaire (cf. construction plus haut) :
+  //  - canonique → coupe VERROUILLÉE, identique sur tous les shots ;
+  //  - diversity → coiffure rotative par shot pour casser la convergence Gemini.
   if (hairBlock) {
     promptText = promptText + hairBlock;
   }

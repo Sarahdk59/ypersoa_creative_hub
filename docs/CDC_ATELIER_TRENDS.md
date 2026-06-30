@@ -130,9 +130,35 @@ Règles de la synthèse :
 
 ---
 
-## 7. Découpage de livraison suggéré
+## 7. Découpage de livraison
 
-1. **Lot 1 — socle** : `trends-loader` + schéma JSON + connecteur Google Trends + run manuel + dashboard read-only.
-2. **Lot 2 — Pinterest** : connecteur Pinterest (API ou saisie manuelle) + fusion des deux sources.
-3. **Lot 3 — synthèse IA** : couche gpt-4o + scoring + mapping motif/occasion/45j + brand-safety.
-4. **Lot 4 — action** : bouton « Générer ce post » → pré-remplissage atelier-social + cron hebdo Railway.
+1. ✅ **Lot 1 — socle** (prod, commit a40c6df) : `trends-loader` + schéma JSON + connecteur Google Trends + dashboard read-only.
+2. ✅ **Lot 2 — Pinterest** (prod, commit 45246b2) : connecteur API v5 (si token) + saisie manuelle + fusion des deux sources.
+3. ✅ **Lot 3 — synthèse IA** (prod, commit 0e8e1d2) : gpt-4o + scoring + mapping motif/occasion + créneau J-45 + brand-safety + filtres Source×Signal×Type.
+4. ⏳ **Lot 4 — action** : voir §8 ci-dessous (à faire).
+
+---
+
+## 8. Lot 4 — À FAIRE (cadré 29/06/2026)
+
+### Décisions prises (29/06)
+- **OpenAI** : la prod dispose d'une clé OpenAI fonctionnelle (≠ clé locale en 429) → l'« Analyser (IA) » tourne en prod. Pas de blocage.
+- **Persistance Supabase → REPORTÉE.** Sarah redéploie très rarement (modifs en cours puis ~2 mois de calme). Le FS Railway éphémère ne se réinitialise qu'au redeploy → les snapshots survivent les périodes calmes. Perdre l'historique ancien est sans enjeu pour un outil de veille. À ne faire QUE si un vrai historique archivé devient nécessaire. **Économie ~1 session.**
+- **Cron hebdo → OPTIONNEL.** Vu la fréquence d'usage, les boutons « Rafraîchir » + « Analyser » à la demande suffisent. Si voulu un jour : endpoint protégé `POST /api/trends/cron` (header `CRON_SECRET`) qui enchaîne `runTrends()` + `enrichSnapshot()`, déclenché par un Railway Cron (config côté Keyvan).
+
+### Le chantier réel = le bouton « Générer ce post » (~1 session)
+Le pont qui ferme la boucle **trend → post**. Sur chaque carte *actionnable*, un bouton qui ouvre l'atelier-social pré-rempli.
+
+- **Mécanique** : deep-link `/social?occasion=…&motif=YPM-006&fiche=le-calin&plateforme=pinterest&brief=<angle_caption>`. Ajouter dans `/social` un lecteur `useSearchParams` au montage qui pré-sélectionne OccasionSelector + MotifPicker + plateforme Pinterest + colle l'angle de caption dans le brief.
+- **Précédent fiable** : le shooting-book lit déjà `planable_entry` via `useSearchParams` (`app/atelier-da/shooting-book/page.tsx`) → modèle à copier, risque faible.
+- **2 contrats à réconcilier** :
+  1. **Mapping occasions** : 11 clés `pinterest_strategy.json` (`amour`, `fete-des-meres`…) → 6 ids brand-safe de `OccasionSelector`. Dictionnaire de correspondance.
+  2. **Pré-sélection motif** : la carte fournit un `YPM-XXX` → le MotifPicker doit accepter un motif pré-choisi par id.
+
+### Décisions encore ouvertes (à trancher au moment de coder)
+- **Comportement du bouton** : pré-remplir + s'arrêter là (contrôle total, reco) **ou** pré-remplir ET lancer la génération auto (plus rapide, consomme un crédit à chaque clic).
+- **Portée** : bouton sur les cartes *actionnable* uniquement (reco) **ou** sur toutes les cartes enrichies.
+
+### Hors Lot 4 (= V2)
+- Création **auto** d'une entrée Planable depuis le créneau J-45 (le bouton reste manuel).
+- Musique / sons tendances (TikTok), validation API Pinterest, images de looks en masse.

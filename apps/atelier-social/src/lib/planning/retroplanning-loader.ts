@@ -15,22 +15,39 @@ export const RETROPLANNING_PATH = join(REFS_DIR, "retroplanning", "actions_2027.
 export type Equipe = "crea" | "prod" | "comm";
 export type StatutAction = "a_faire" | "en_cours" | "fait";
 export type TypeAction =
+  // CRÉA
   | "inspiration"
   | "plan_collection"
-  | "sourcing"
-  | "base_dst"
-  | "reunion"
   | "choix_produits_motifs"
+  | "sourcing"
+  | "reunion"
+  | "validation_collection"
+  | "generation_variantes"
+  | "shooting_photo"
+  | "fiche_produit"
+  | "integration_shopify"
+  | "liquid_perso"
   | "dev_motifs"
+  | "mise_en_ligne"
+  | "seo"
+  // PROD
+  | "base_dst"
   | "tests_motifs"
+  | "correction_tests"
+  | "creation_png"
+  | "production"
+  | "cutoff"
+  // COMM
   | "creation_contenu"
+  | "photos_carrousels"
+  | "videos"
+  | "validation_contenus"
+  | "validation_tags"
+  | "planning_publi"
   | "validation_fiches"
   | "presentation"
-  | "mise_en_ligne"
   | "pinterest"
-  | "insta"
-  | "production"
-  | "cutoff";
+  | "insta";
 
 export interface ActionPlanning {
   id: string;
