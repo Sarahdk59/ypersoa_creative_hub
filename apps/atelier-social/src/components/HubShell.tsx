@@ -12,6 +12,7 @@ import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { HubTopbar } from "./HubTopbar";
 import { HubSidebar } from "./HubSidebar";
+import { HubAssistant } from "./HubAssistant";
 import { AuthProvider } from "./auth/AuthProvider";
 
 interface HubShellProps {
@@ -53,6 +54,8 @@ export function HubShell({ children }: HubShellProps) {
           {children}
         </main>
       </div>
+      {/* Assistant conversationnel flottant — présent sur toutes les pages. */}
+      <HubAssistant />
       </div>
     </AuthProvider>
   );
