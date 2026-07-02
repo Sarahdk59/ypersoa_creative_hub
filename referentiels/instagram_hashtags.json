@@ -1,82 +1,204 @@
 {
   "_meta": {
-    "schema_version": "2.0",
+    "schema_version": "2.3",
     "referentiel": "instagram_hashtags",
-    "last_updated": "2026-06-30",
-    "description": "Banque evergreen de hashtags Instagram Ypersoa orientés ENGAGEMENT + ACQUISITION. On pioche 5 tags ciblés et variés par post selon la formule : 1 socle marque/broderie + 1 produit + 1 occasion + 1 niche/style + 1 communauté/local.",
+    "last_updated": "2026-07-01",
+    "changelog": "2.3 : retrait de #broderiemachine du socle (référence machine interdite en public) → remplacé par #broderiesurmesure (consumer, SEO). 2.2 : alignement de TOUT le bank en sans-accent au singulier (forme la plus recherchée sur IG) — 24 tags normalisés, #cadeauxdenoel → #cadeaunoel. 2.1 : ajout du bloc `tags_valides` (Guide d'exécution Maï p.33-34) — principe d'alternance, packs Reels, socle par post, tuiles thématiques, add-ons concours/UGC.",
+    "description": "Banque evergreen de hashtags Instagram Ypersoa orientés ENGAGEMENT + ACQUISITION. On pioche 5 tags ciblés et variés par post selon la formule : 1 socle marque/broderie + 1 produit + 1 occasion + 1 niche/style + 1 communauté/local. Le bloc `tags_valides` reproduit fidèlement les tags validés par Maï (référence éditable).",
     "formule": "socle_marque + produit + occasion + niche_style + communaute_local",
     "logique_reach": "Instagram plafonne à 5 hashtags depuis déc. 2025. Les hashtags = signaux de CLASSEMENT, plus des sources de trafic. Viser un MIX de tiers : 2-3 larges (>500k posts, catégorisation) + 1-2 moyens (10k-500k, vraie découverte où on peut exister) + 1 niche (<10k, où on ranke en top). La formule 5-slots produit ce mix naturellement.",
-    "accents": "Sur IG accentué ≠ non-accentué (2 tags distincts). Forme retenue = la plus RECHERCHÉE par tag (souvent sans accent sur les gros génériques : #ideecadeau, #cadeaudenoel, #fetedesmeres ; accentuée sur les tags brand : #broderiepersonnalisée, #cadeaupersonnalisé).",
+    "accents": "Sur IG accentué ≠ non-accentué (2 tags distincts) et la forme SANS accent est presque toujours la plus recherchée (clavier mobile, vitesse). RÈGLE : tout le bank est en sans-accent ET au singulier — ex. #broderiepersonnalisee, #cadeaupersonnalise, #prenombrode, #cadeaunoel. Seuls les pluriels figés des expressions restent tels quels (#fetedesmeres, #hautsdefrance, #coulisses).",
     "regles_brand": "JAMAIS #faitmain #handmade #DIY #etsy (même s'ils ont du volume en broderie). JAMAIS de référence machine. Tutoiement. Vocabulaire : brodé à la commande, personnalisé, made in France.",
     "tiers_indicatifs": {
-      "larges": ["#cadeau", "#ideecadeau", "#madeinfrance", "#broderie", "#sweatshirt", "#tshirt", "#noel", "#cadeaudenoel"],
-      "moyens": ["#cadeaupersonnalisé", "#cadeauoriginal", "#cadeauunique", "#broderiepersonnalisée", "#sweatpersonnalisé", "#tshirtpersonnalisé", "#fabriqueenfrance", "#createurfrancais", "#artisanatfrançais", "#slowfashion", "#cadeaunaissance", "#cadeaumaman", "#cadeaucouple"],
-      "niches": ["#broderiecustom", "#vetementbrodé", "#prénombrodé", "#sweatbrodé", "#casquettebrodée", "#ypersoa", "#hautsdefrance"]
+      "larges": [
+        "#cadeau",
+        "#ideecadeau",
+        "#madeinfrance",
+        "#broderie",
+        "#sweatshirt",
+        "#tshirt",
+        "#noel",
+        "#cadeaudenoel"
+      ],
+      "moyens": [
+        "#cadeaupersonnalise",
+        "#cadeauoriginal",
+        "#cadeauunique",
+        "#broderiepersonnalisee",
+        "#sweatpersonnalise",
+        "#tshirtpersonnalise",
+        "#fabriqueenfrance",
+        "#createurfrancais",
+        "#artisanatfrancais",
+        "#slowfashion",
+        "#cadeaunaissance",
+        "#cadeaumaman",
+        "#cadeaucouple"
+      ],
+      "niches": [
+        "#broderiecustom",
+        "#vetementbrode",
+        "#prenombrode",
+        "#sweatbrode",
+        "#casquettebrodee",
+        "#ypersoa",
+        "#hautsdefrance"
+      ]
     }
   },
-
   "socle_marque": [
     "#broderie",
-    "#broderiepersonnalisée",
+    "#broderiepersonnalisee",
     "#broderiecustom",
-    "#broderiemachine",
-    "#vetementbrodé",
+    "#broderiesurmesure",
+    "#vetementbrode",
     "#personnalisation",
     "#ypersoa"
   ],
-
   "communaute_local": [
     "#madeinfrance",
     "#fabriqueenfrance",
     "#createurfrancais",
-    "#artisanatfrançais",
+    "#artisanatfrancais",
     "#slowfashion",
     "#consommerlocal",
     "#hautsdefrance"
   ],
-
   "niche_style": [
-    "#cadeaupersonnalisé",
-    "#prénombrodé",
+    "#cadeaupersonnalise",
+    "#prenombrode",
     "#cadeauoriginal",
     "#cadeauunique",
-    "#vetementbrodé",
+    "#vetementbrode",
     "#broderiecustom"
   ],
-
   "niche_groupes": {
-    "a_deux": ["#cadeaucouple", "#saintvalentin", "#cadeauamoureux"],
-    "mariage": ["#cadeautémoin", "#futuremariée", "#teammariée"],
-    "cadeau_homme": ["#cadeauhomme", "#cadeaupapa", "#cadeaupourlui"],
-    "cadeau_femme": ["#cadeaufemme", "#cadeaumaman", "#cadeaupourelle"],
-    "bebe": ["#cadeaunaissance", "#cadeaubébé", "#futuremaman"],
-    "varsity": ["#vesteuniversitaire", "#backtoschool", "#teddy"],
-    "famille": ["#cadeaufamille", "#cadeaugrandmere", "#souvenir"]
+    "a_deux": [
+      "#cadeaucouple",
+      "#saintvalentin",
+      "#cadeauamoureux"
+    ],
+    "mariage": [
+      "#cadeautemoin",
+      "#futuremariee",
+      "#teammariee"
+    ],
+    "cadeau_homme": [
+      "#cadeauhomme",
+      "#cadeaupapa",
+      "#cadeaupourlui"
+    ],
+    "cadeau_femme": [
+      "#cadeaufemme",
+      "#cadeaumaman",
+      "#cadeaupourelle"
+    ],
+    "bebe": [
+      "#cadeaunaissance",
+      "#cadeaubebe",
+      "#futuremaman"
+    ],
+    "varsity": [
+      "#vesteuniversitaire",
+      "#backtoschool",
+      "#teddy"
+    ],
+    "famille": [
+      "#cadeaufamille",
+      "#cadeaugrandmere",
+      "#souvenir"
+    ]
   },
-
   "produits": {
-    "sweat": ["#sweatpersonnalisé", "#sweatshirt", "#hoodiepersonnalisé", "#sweatbrodé"],
-    "sweat_enfant": ["#cadeauenfantpersonnalisé", "#modeenfant", "#vêtementenfant"],
-    "tshirt": ["#tshirtpersonnalisé", "#tshirt", "#teeshirtpersonnalisé"],
-    "casquette": ["#casquettepersonnalisée", "#casquette"],
-    "totebag": ["#totebagpersonnalisé", "#totebag", "#sacpersonnalisé"],
-    "teddy": ["#teddypersonnalisé", "#vesteuniversitaire", "#teddy"]
+    "sweat": [
+      "#sweatpersonnalise",
+      "#sweatshirt",
+      "#hoodiepersonnalise",
+      "#sweatbrode"
+    ],
+    "sweat_enfant": [
+      "#cadeauenfantpersonnalise",
+      "#modeenfant",
+      "#vetementenfant"
+    ],
+    "tshirt": [
+      "#tshirtpersonnalise",
+      "#tshirt",
+      "#teeshirtpersonnalise"
+    ],
+    "casquette": [
+      "#casquettepersonnalisee",
+      "#casquette"
+    ],
+    "totebag": [
+      "#totebagpersonnalise",
+      "#totebag",
+      "#sacpersonnalise"
+    ],
+    "teddy": [
+      "#teddypersonnalise",
+      "#vesteuniversitaire",
+      "#teddy"
+    ]
   },
-
   "occasions": {
-    "fete_meres": ["#cadeaufetedesmeres", "#cadeaumaman", "#fetedesmeres"],
-    "fete_peres": ["#cadeaufetedesperes", "#cadeaupapa", "#fetedesperes"],
-    "fete_grands_meres": ["#cadeaumamie", "#fetedesgrandsmeres", "#cadeaugrandmere"],
-    "naissance": ["#cadeaunaissance", "#listenaissance", "#futuremaman"],
-    "mariage": ["#cadeaumariage", "#evjf", "#teammariée"],
-    "merci_nounou": ["#cadeaumaitresse", "#mercimaitresse", "#cadeaunounou"],
-    "couple": ["#cadeaucouple", "#saintvalentin", "#cadeauamoureux"],
-    "rentree": ["#backtoschool", "#rentree", "#cadeauetudiant"],
-    "ete": ["#cadeaupersonnalisé", "#summervibes", "#vacances"],
-    "noel": ["#cadeaudenoel", "#noel", "#cadeauxdenoel"],
-    "cadeau": ["#ideecadeau", "#cadeaupersonnalisé", "#cadeauoriginal", "#cadeauunique"]
+    "fete_meres": [
+      "#cadeaufetedesmeres",
+      "#cadeaumaman",
+      "#fetedesmeres"
+    ],
+    "fete_peres": [
+      "#cadeaufetedesperes",
+      "#cadeaupapa",
+      "#fetedesperes"
+    ],
+    "fete_grands_meres": [
+      "#cadeaumamie",
+      "#fetedesgrandsmeres",
+      "#cadeaugrandmere"
+    ],
+    "naissance": [
+      "#cadeaunaissance",
+      "#listenaissance",
+      "#futuremaman"
+    ],
+    "mariage": [
+      "#cadeaumariage",
+      "#evjf",
+      "#teammariee"
+    ],
+    "merci_nounou": [
+      "#cadeaumaitresse",
+      "#mercimaitresse",
+      "#cadeaunounou"
+    ],
+    "couple": [
+      "#cadeaucouple",
+      "#saintvalentin",
+      "#cadeauamoureux"
+    ],
+    "rentree": [
+      "#backtoschool",
+      "#rentree",
+      "#cadeauetudiant"
+    ],
+    "ete": [
+      "#cadeaupersonnalise",
+      "#summervibes",
+      "#vacances"
+    ],
+    "noel": [
+      "#cadeaudenoel",
+      "#noel",
+      "#cadeaunoel"
+    ],
+    "cadeau": [
+      "#ideecadeau",
+      "#cadeaupersonnalise",
+      "#cadeauoriginal",
+      "#cadeauunique"
+    ]
   },
-
   "produit_mapping": {
     "YP001": "sweat",
     "YP004": "sweat_enfant",
@@ -87,18 +209,254 @@
     "YP022": "tshirt",
     "YP023": "tshirt"
   },
-
   "occasion_mapping": {
-    "fete-des-meres": { "occasion": "fete_meres", "niche": "cadeau_femme" },
-    "fete-des-peres": { "occasion": "fete_peres", "niche": "cadeau_homme" },
-    "fete-grands-meres": { "occasion": "fete_grands_meres", "niche": "famille" },
-    "naissance": { "occasion": "naissance", "niche": "bebe" },
-    "mariage": { "occasion": "mariage", "niche": "mariage" },
-    "nounou": { "occasion": "merci_nounou", "niche": null },
-    "amour": { "occasion": "couple", "niche": "a_deux" },
-    "rentree": { "occasion": "rentree", "niche": "varsity" },
-    "ete": { "occasion": "ete", "niche": null },
-    "noel": { "occasion": "noel", "niche": "famille" },
-    "quotidien": { "occasion": "cadeau", "niche": null }
+    "fete-des-meres": {
+      "occasion": "fete_meres",
+      "niche": "cadeau_femme"
+    },
+    "fete-des-peres": {
+      "occasion": "fete_peres",
+      "niche": "cadeau_homme"
+    },
+    "fete-grands-meres": {
+      "occasion": "fete_grands_meres",
+      "niche": "famille"
+    },
+    "naissance": {
+      "occasion": "naissance",
+      "niche": "bebe"
+    },
+    "mariage": {
+      "occasion": "mariage",
+      "niche": "mariage"
+    },
+    "nounou": {
+      "occasion": "merci_nounou",
+      "niche": null
+    },
+    "amour": {
+      "occasion": "couple",
+      "niche": "a_deux"
+    },
+    "rentree": {
+      "occasion": "rentree",
+      "niche": "varsity"
+    },
+    "ete": {
+      "occasion": "ete",
+      "niche": null
+    },
+    "noel": {
+      "occasion": "noel",
+      "niche": "famille"
+    },
+    "quotidien": {
+      "occasion": "cadeau",
+      "niche": null
+    }
+  },
+  "tags_valides": {
+    "_source": "Plan d'acquisition · Guide d'exécution (Maï) — p.33 « Les tags validés » + p.34 « Tes tags, par tuile »",
+    "_note": "Tags validés par Maï (slides p.33-34), normalisés en sans-accent au singulier comme le reste du bank. Bloc de référence éditable : source de vérité pour les packs Reels, le socle par post et les tuiles thématiques. Les pools opérationnels au-dessus (socle_marque, occasions, niche_groupes, produits) restent ceux que la formule 5-slots pioche automatiquement.",
+    "principe_alterne": {
+      "_note": "Le principe (p.33) : on alterne entre ces familles d'un post à l'autre.",
+      "produits": [
+        "#tshirt",
+        "#hoodie",
+        "#pull",
+        "#sweat"
+      ],
+      "occasion": [
+        "#Cadeau",
+        "#ideecadeau",
+        "#cadeauUnique",
+        "#cadeaumaman",
+        "#Cadeaupersonnalise"
+      ],
+      "mix": [
+        "#tshirtbrode",
+        "#tshirtpersonnalise",
+        "#broderiepersonnalisee",
+        "#broderie",
+        "#textile",
+        "#textilepersonnalise"
+      ],
+      "artisanat": [
+        "#artisanat",
+        "#faitenfrance",
+        "#lille",
+        "#madeinfrance",
+        "#broderie",
+        "#entreprisefrancaise"
+      ],
+      "trends": [
+        "#love",
+        "#amour",
+        "#club",
+        "#declaration",
+        "#nomdumotifsurlaboutique"
+      ]
+    },
+    "reels_packs": {
+      "_note": "Paquets prêts à coller pour les Reels (p.33).",
+      "cadeau_perso_generique": {
+        "label": "Reel cadeau/perso (générique)",
+        "tags": [
+          "#ideecadeau",
+          "#cadeaupersonnalise",
+          "#broderiepersonnalisee",
+          "#sweatpersonnalise",
+          "#prenombrode",
+          "#cadeauoriginal",
+          "#broderie",
+          "#madeinfrance",
+          "#hautsdefrance",
+          "#sweat"
+        ]
+      },
+      "mariage_evjf": {
+        "label": "Reel mariage/EVJF",
+        "tags": [
+          "#evjf",
+          "#teamdelamariee",
+          "#bridetobe",
+          "#cadeauevjf",
+          "#futuremariee",
+          "#broderiepersonnalisee",
+          "#sweatpersonnalise",
+          "#cadeaupersonnalise",
+          "#mariage2026",
+          "#madeinfrance"
+        ]
+      },
+      "fete_meres_maman": {
+        "label": "Reel Fête des mères / Maman",
+        "tags": [
+          "#cadeaumaman",
+          "#fetedesmeres",
+          "#ideecadeau",
+          "#cadeaupersonnalise",
+          "#broderiepersonnalisee",
+          "#coeurbrode",
+          "#prenombrode",
+          "#cadeauoriginal",
+          "#madeinfrance",
+          "#hautsdefrance"
+        ]
+      }
+    },
+    "socle_post": {
+      "_note": "SOCLE — 5-6 dans chaque post (p.34).",
+      "tags": [
+        "#cadeaupersonnalise",
+        "#broderiepersonnalisee",
+        "#ideecadeau",
+        "#brodealacommande",
+        "#madeinfrance",
+        "#hautsdefrance"
+      ]
+    },
+    "tuiles": {
+      "_note": "Tes tags par tuile (p.34) : à combiner avec le socle selon le thème du post.",
+      "sprint_coulisses": {
+        "label": "Sprint · coulisses",
+        "tags": [
+          "#coulisses",
+          "#atelier",
+          "#savoirfaire",
+          "#broderie",
+          "#wattrelos"
+        ]
+      },
+      "mariage_evjf": {
+        "label": "Mariage / EVJF",
+        "tags": [
+          "#evjf",
+          "#teamdelamariee",
+          "#bridetobe",
+          "#futuremariee",
+          "#cadeauevjf"
+        ]
+      },
+      "coeur_ete": {
+        "label": "Cœur d'été",
+        "tags": [
+          "#vacances",
+          "#famille",
+          "#tenueassortie",
+          "#cadeauanimal",
+          "#couplegoals"
+        ]
+      },
+      "pre_rentree": {
+        "label": "Pré-rentrée",
+        "tags": [
+          "#rentree2026",
+          "#cadeaurentree",
+          "#prenombrode",
+          "#troussepersonnalisee",
+          "#totebagpersonnalise"
+        ]
+      },
+      "rentree_sportive_univ": {
+        "label": "Rentrée sportive / univ.",
+        "tags": [
+          "#rentreeuniversitaire",
+          "#vieetudiante",
+          "#bde",
+          "#clubsportif",
+          "#teamsport"
+        ]
+      },
+      "rentree_cocooning_teddy": {
+        "label": "Rentrée · cocooning · teddy",
+        "tags": [
+          "#teddy",
+          "#vestebrodee",
+          "#cocooning",
+          "#lookcosy",
+          "#cadeaurentree"
+        ]
+      },
+      "runway_cadeaux": {
+        "label": "Runway cadeaux",
+        "tags": [
+          "#cadeaunoel",
+          "#noel2026",
+          "#cadeaucouple",
+          "#cadeaufamille",
+          "#cadeauoriginal"
+        ]
+      },
+      "anniversaire": {
+        "label": "Anniversaire (axe)",
+        "tags": [
+          "#cadeauanniversaire",
+          "#joyeuxanniversaire",
+          "#cadeaupourelle",
+          "#cadeaupourlui",
+          "#datebrodee"
+        ]
+      }
+    },
+    "add_on": {
+      "_note": "Compléments ponctuels (p.34).",
+      "concours": {
+        "label": "Add-on concours",
+        "tags": [
+          "#jeuconcours",
+          "#concours",
+          "#giveaway",
+          "#aglagner",
+          "#tentezvotrechance"
+        ]
+      },
+      "ugc": {
+        "label": "UGC",
+        "tags": [
+          "#ypersoa"
+        ]
+      }
+    }
   }
 }
