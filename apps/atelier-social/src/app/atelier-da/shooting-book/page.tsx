@@ -143,6 +143,8 @@ function ShootingBookContent() {
   const [motifPngFilename, setMotifPngFilename] = useState<string | null>(null);
   const [motifSize, setMotifSize] = useState<"petit" | "moyen" | "grand">("moyen");
   const [supportColor, setSupportColor] = useState<string>("blanc");
+  // Type de prise de vue : porté sur canonique ou flatlay lifestyle (pinterestable, sans personne)
+  const [composition, setComposition] = useState<"worn" | "flatlay">("worn");
 
   // Palettes réelles par produit (verrou couleur + packshot Gemini)
   const [hubProduits, setHubProduits] = useState<HubProduitLite[]>([]);
@@ -269,6 +271,7 @@ function ShootingBookContent() {
           produit_yp_id: produitId,
           selected_garment_color: supportColor,
           shot_index: 0,
+          composition,
         }),
       });
       const data = await res.json();
@@ -302,6 +305,7 @@ function ShootingBookContent() {
           produit_yp_id: produitId,
           selected_garment_color: supportColor,
           shot_index: shotIndex,
+          composition,
         }),
       });
       const data = await res.json();
@@ -659,6 +663,63 @@ function ShootingBookContent() {
                 <X size={14} />
               </button>
             </div>
+          )}
+
+          {/* Type de prise de vue : porté vs flatlay */}
+          <label
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--hub-foreground)",
+              opacity: 0.6,
+              display: "block",
+              marginTop: 16,
+              marginBottom: 8,
+            }}
+          >
+            Type de prise de vue
+          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, padding: 4, background: "var(--hub-bg)", borderRadius: 10, border: "0.5px solid var(--hub-border)" }}>
+            {([
+              { v: "worn", label: "Porté", sub: "sur canonique" },
+              { v: "flatlay", label: "Flatlay", sub: "mise à plat · pinterest" },
+            ] as const).map((c) => {
+              const active = composition === c.v;
+              return (
+                <button
+                  key={c.v}
+                  type="button"
+                  onClick={() => setComposition(c.v)}
+                  style={{
+                    padding: "8px 6px",
+                    border: "none",
+                    background: active ? "var(--hub-foreground)" : "transparent",
+                    color: active ? "var(--hub-bg)" : "var(--hub-foreground)",
+                    borderRadius: 6,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 11,
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    transition: "all 150ms ease",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
+                  <span style={{ fontWeight: 600 }}>{c.label}</span>
+                  <span style={{ fontSize: 9, opacity: 0.7 }}>{c.sub}</span>
+                </button>
+              );
+            })}
+          </div>
+          {composition === "flatlay" && (
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 10, opacity: 0.55, marginTop: 6, lineHeight: 1.4 }}>
+              Mise à plat lifestyle sans personne : le casting proposé est ignoré, la scène est composée autour du produit + props chaleureux assortis à l&apos;ambiance.
+            </p>
           )}
 
           {/* Taille du motif */}
