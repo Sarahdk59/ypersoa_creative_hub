@@ -6,7 +6,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MessageCircle, Camera, BookImage, Compass, Cpu, TrendingUp, BookOpen } from "lucide-react";
+import { MessageCircle, Camera, BookImage, Compass, Cpu, TrendingUp, BookOpen, Palette } from "lucide-react";
 import { HubSidebarIcon } from "./HubSidebarIcon";
 import { useAuth } from "./auth/AuthProvider";
 import { canAccess } from "@/lib/access";
@@ -84,8 +84,14 @@ export function HubSidebar() {
         />
       )}
 
-      {/* Guide d'utilisation — épinglé en bas, visible par tous les rôles */}
-      <div style={{ marginTop: "auto", paddingBottom: 12 }}>
+      {/* Aperçu Brand — référence Design System v1, visible par tous les rôles */}
+      <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, paddingBottom: 12 }}>
+        <HubSidebarIcon
+          icon={<Palette size={20} strokeWidth={1.6} />}
+          label="Aperçu Brand"
+          href="/brand"
+          active={isActive("/brand")}
+        />
         <HubSidebarIcon
           icon={<BookOpen size={20} strokeWidth={1.6} />}
           label="Guide d'utilisation"
