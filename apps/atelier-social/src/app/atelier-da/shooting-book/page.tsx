@@ -177,6 +177,65 @@ function ShootingBookContent() {
   const [renderingShotIndex, setRenderingShotIndex] = useState<number | null>(null);
   const [shotErrors, setShotErrors] = useState<Record<number, string>>({});
 
+  // Planification Planable depuis le shooting-book (crée une nouvelle entrée)
+  const [sbSchedDate, setSbSchedDate] = useState("2026-07-30");
+  const [sbSchedTime, setSbSchedTime] = useState("09:00");
+  const [sbScheduling, setSbScheduling] = useState(false);
+  const [sbScheduled, setSbScheduled] = useState(false);
+  const [sbSchedError, setSbSchedError] = useState<string | null>(null);
+
+  const handlePlanifyInPlanable = async () => {
+    if (sbScheduling) return;
+    setSbScheduling(true);
+    setSbSchedError(null);
+    try {
+      const pUrl = planableUrl || process.env.NEXT_PUBLIC_PLANABLE_URL || "http://localhost:3002";
+      const scheduledAt = new Date(`${sbSchedDate}T${sbSchedTime}:00+02:00`).toISOString();
+      const createRes = await fetch(`${pUrl}/api/calendar`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          scheduled_at: scheduledAt,
+          platform: format === "pinterest" ? "pinterest_pin" : "instagram_post",
+          motif_code: motifId || "YPM-003",
+          variante_file: null,
+          occasion_slug: null,
+          format: format === "pinterest" ? "2:3" : "4:5",
+          notes: plan ? `Shooting Book : ${briefTexte.slice(0, 200)}` : null,
+        }),
+      }).then((r) => r.json());
+
+      if (!createRes.ok) {
+        const errMsg = typeof createRes.error === "string"
+          ? createRes.error
+          : Array.isArray(createRes.error)
+          ? createRes.error.map((e: { message: string }) => e.message).join(", ")
+          : "Erreur création entrée Planable";
+        throw new Error(errMsg);
+      }
+
+      const entryId: string | undefined = createRes.data?.id;
+      // Attache l'image hero si disponible
+      const heroImg = renderedImage?.data_url ?? Object.values(shotImages)[0]?.data_url;
+      if (entryId && heroImg) {
+        await fetch(`${pUrl}/api/calendar/${entryId}/attach-image`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            image_data_url: heroImg,
+            angle: plan?.shotlist?.[0]?.angle ?? "Shooting Book — hero shot",
+            caption: plan ? `Shooting : ${plan.brief_resume?.slice(0, 300) ?? briefTexte.slice(0, 300)}` : null,
+          }),
+        });
+      }
+      setSbScheduled(true);
+    } catch (e) {
+      setSbSchedError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setSbScheduling(false);
+    }
+  };
+
   useEffect(() => {
     listActiveLookbookAmbiances().then(setActiveLookbookAmbiances).catch(() => undefined);
   }, []);
@@ -1712,6 +1771,94 @@ function ShootingBookContent() {
                 </section>
               )}
 
+              {/* Planifier dans Planable */}
+              <section
+                style={{
+                  background: "#F0F6F6",
+                  border: "0.5px solid #B8D8DA",
+                  borderRadius: 16,
+                  padding: 20,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                  <Calendar size={16} strokeWidth={1.6} color="#1E6E77" />
+                  <h3 style={{ fontFamily: "var(--font-editorial)", fontSize: 16, fontWeight: 500, margin: 0, color: "#1E6E77" }}>
+                    Planifier dans Planable
+                  </h3>
+                </div>
+                {sbScheduled ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-sans)", fontSize: 13, color: "#3D7A3A" }}>
+                    <CheckCircle2 size={16} />
+                    Entrée créée dans Planable !
+                    {planableUrl && (
+                      <a
+                        href={planableUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ marginLeft: "auto", color: "#1E6E77", fontSize: 12, textDecoration: "underline" }}
+                      >
+                        Ouvrir Planable →
+                      </a>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 10 }}>
+                      <div>
+                        <label style={planLabelStyle}>Date de publication</label>
+                        <input
+                          type="date"
+                          value={sbSchedDate}
+                          onChange={(e) => setSbSchedDate(e.target.value)}
+                          style={planInputStyle}
+                        />
+                      </div>
+                      <div>
+                        <label style={planLabelStyle}>Heure</label>
+                        <input
+                          type="time"
+                          value={sbSchedTime}
+                          onChange={(e) => setSbSchedTime(e.target.value)}
+                          style={planInputStyle}
+                        />
+                      </div>
+                    </div>
+                    {sbSchedError && (
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "#a13a16", marginBottom: 8 }}>
+                        ⚠ {sbSchedError}
+                      </p>
+                    )}
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.6, margin: "0 0 10px", lineHeight: 1.4 }}>
+                      {renderedImage || Object.keys(shotImages).length > 0
+                        ? "Crée l'entrée Planable et y attache le visuel hero généré."
+                        : "Crée l'entrée Planable (génère un visuel d'abord pour l'attacher)."}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handlePlanifyInPlanable}
+                      disabled={sbScheduling}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "9px 18px",
+                        borderRadius: 999,
+                        border: "none",
+                        background: sbScheduling ? "#aaa" : "#1E6E77",
+                        color: "white",
+                        fontFamily: "var(--font-sans)",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        cursor: sbScheduling ? "default" : "pointer",
+                      }}
+                    >
+                      <Calendar size={13} />
+                      {sbScheduling ? "Programmation…" : `Planifier pour le ${new Date(sbSchedDate + "T12:00:00").toLocaleDateString("fr-FR", { day: "2-digit", month: "long" })}`}
+                    </button>
+                  </>
+                )}
+              </section>
+
               {/* Meta technique */}
               <p style={{ fontFamily: "var(--font-sans)", fontSize: 10, opacity: 0.4, textAlign: "right" }}>
                 Plan généré en {plan.meta.duration_ms}ms · {plan.meta.nb_dispositifs_examines} dispositifs · {plan.meta.nb_canoniques_examines} canoniques
@@ -1723,6 +1870,31 @@ function ShootingBookContent() {
     </div>
   );
 }
+
+// ── Styles Planable scheduling ─────────────────────────────────────────────────
+const planLabelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-sans)",
+  fontSize: 9,
+  fontWeight: 700,
+  letterSpacing: 0.5,
+  textTransform: "uppercase",
+  color: "#1E6E77",
+  opacity: 0.7,
+  display: "block",
+  marginBottom: 3,
+};
+
+const planInputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "7px 10px",
+  borderRadius: 8,
+  border: "0.5px solid #B8D8DA",
+  fontFamily: "var(--font-sans)",
+  fontSize: 12,
+  background: "white",
+  color: "#1A1614",
+  boxSizing: "border-box",
+};
 
 export default function ShootingBookPage() {
   return (

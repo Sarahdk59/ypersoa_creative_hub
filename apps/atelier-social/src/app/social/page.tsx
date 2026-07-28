@@ -8,7 +8,8 @@ import { ProductColorPicker } from "@/components/ProductColorPicker";
 import { SavePackDialog } from "@/components/SavePackDialog";
 import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { Heart, FolderOpen, X, Calendar, Layers, Trello } from "lucide-react";
+import { Heart, FolderOpen, X, Calendar, Layers, Trello, Newspaper } from "lucide-react";
+import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
 import {
@@ -165,6 +166,7 @@ export default function Home() {
   const [copyNotice, setCopyNotice] = useState<string | null>(null);
 
   const [rightPanelTab, setRightPanelTab] = useState<"text" | "overlay">("text");
+  const [ficheOpen, setFicheOpen] = useState(false);
 
   // Hub : Sauvegarde des packs RS dans Supabase + bibliothèque collections.
   const supabaseOn = isSupabaseConfigured();
@@ -987,14 +989,27 @@ export default function Home() {
               </button>
 
               {canSavePack && (
-                <button
-                  type="button"
-                  onClick={() => setSaveDialogOpen(true)}
-                  className="w-full mt-2 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold transition-all"
-                >
-                  <Heart className="w-3.5 h-3.5" />
-                  {savedPackId ? "Sauvegarder à nouveau" : "Sauvegarder dans le hub"}
-                </button>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setSaveDialogOpen(true)}
+                    className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold transition-all"
+                  >
+                    <Heart className="w-3.5 h-3.5" />
+                    {savedPackId ? "Sauvegarder à nouveau" : "Sauvegarder"}
+                  </button>
+                  {selectedPlatform === "instagram" && (
+                    <button
+                      type="button"
+                      onClick={() => setFicheOpen(true)}
+                      className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 font-semibold transition-all"
+                      title="Voir la fiche éditoriale + programmer dans Planable"
+                    >
+                      <Newspaper className="w-3.5 h-3.5" />
+                      Fiche + Planable
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -1104,6 +1119,20 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {ficheOpen && (
+        <PostCard
+          image={generatedImages[currentSlide] ?? null}
+          caption={generatedText}
+          hooks={generatedHooks}
+          hashtags={instagramHashtags}
+          brandSafety={brandSafety}
+          platform={selectedPlatform}
+          occasion={selectedOccasion}
+          customPrompt={customPrompt}
+          onClose={() => setFicheOpen(false)}
+        />
+      )}
 
       {supabaseOn && saveDialogOpen && (
         <SavePackDialog
