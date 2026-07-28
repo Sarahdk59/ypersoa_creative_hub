@@ -141,6 +141,7 @@ function ShootingBookContent() {
   // PNG motif optionnel (référence broderie pour Gemini)
   const [motifPngDataUrl, setMotifPngDataUrl] = useState<string | null>(null);
   const [motifPngFilename, setMotifPngFilename] = useState<string | null>(null);
+  const [motifPngIsHub, setMotifPngIsHub] = useState(false);
   const [motifSize, setMotifSize] = useState<"petit" | "moyen" | "grand">("moyen");
   const [supportColor, setSupportColor] = useState<string>("blanc");
   // Type de prise de vue : porté sur canonique ou flatlay lifestyle (pinterestable, sans personne)
@@ -205,6 +206,7 @@ function ShootingBookContent() {
     reader.onloadend = () => {
       setMotifPngDataUrl(reader.result as string);
       setMotifPngFilename(file.name);
+      setMotifPngIsHub(false);
     };
     reader.readAsDataURL(file);
   };
@@ -212,7 +214,38 @@ function ShootingBookContent() {
   const clearMotifPng = () => {
     setMotifPngDataUrl(null);
     setMotifPngFilename(null);
+    setMotifPngIsHub(false);
   };
+
+  // Auto-injecte le PNG Hub quand un motif YPM avec asset est sélectionné
+  useEffect(() => {
+    if (!motifId) return;
+    const m = motifsList.find((x) => x.id === motifId);
+    const url = m?.asset_principal_url;
+    if (!url) return;
+    let cancelled = false;
+    fetch(url)
+      .then((r) => r.blob())
+      .then(
+        (blob) =>
+          new Promise<string>((res, rej) => {
+            const reader = new FileReader();
+            reader.onloadend = () => res(reader.result as string);
+            reader.onerror = rej;
+            reader.readAsDataURL(blob);
+          })
+      )
+      .then((dataUrl) => {
+        if (cancelled) return;
+        setMotifPngDataUrl(dataUrl);
+        setMotifPngFilename(m?.asset_principal || `${motifId}.png`);
+        setMotifPngIsHub(true);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [motifId, motifsList]);
 
   const handleGenerate = async () => {
     if (!briefTexte.trim() || generating) return;
@@ -490,7 +523,7 @@ function ShootingBookContent() {
             ))}
           </select>
 
-          {/* Motif YPM */}
+          {/* Référentiel motifs YPM — galerie visuelle cliquable */}
           <label
             style={{
               fontFamily: "var(--font-sans)",
@@ -500,67 +533,118 @@ function ShootingBookContent() {
               textTransform: "uppercase",
               color: "var(--hub-foreground)",
               opacity: 0.6,
-              display: "block",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
               marginTop: 16,
               marginBottom: 8,
             }}
           >
-            Motif YPM (optionnel)
+            <span>Référentiel motifs YPM</span>
+            {motifId && (
+              <button
+                type="button"
+                onClick={() => setMotifId("")}
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 10,
+                  color: "var(--hub-foreground)",
+                  opacity: 0.5,
+                  cursor: "pointer",
+                  padding: "2px 6px",
+                }}
+              >
+                Effacer
+              </button>
+            )}
           </label>
-          <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
-            {/* Vignette du motif sélectionné — fallback en placeholder cream si rien */}
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                flexShrink: 0,
-                borderRadius: 10,
-                background: "var(--hub-bg)",
-                border: "0.5px solid var(--hub-border)",
-                overflow: "hidden",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 4,
-              }}
-            >
-              {motifSelected?.asset_principal ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={motifImageSrc(motifSelected.asset_principal, motifSelected.asset_principal_url)}
-                  alt={motifSelected.nom}
-                  style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
-                  onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
-                />
-              ) : (
-                <span style={{ fontSize: 10, opacity: 0.4 }}>—</span>
-              )}
-            </div>
-            <select
-              value={motifId}
-              onChange={(e) => setMotifId(e.target.value)}
-              style={{
-                flex: 1,
-                padding: 10,
-                borderRadius: 10,
-                border: "1px solid var(--hub-border)",
-                fontFamily: "var(--font-sans)",
-                fontSize: 13,
-                outline: "none",
-                background: "var(--hub-bg)",
-                color: "var(--hub-foreground)",
-              }}
-            >
-              <option value="">— Pas de motif spécifique —</option>
-              {motifsList.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.id} · {m.nom}
-                </option>
-              ))}
-            </select>
+          {/* Grille 3 colonnes scrollable */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 5,
+              maxHeight: 220,
+              overflowY: "auto",
+              border: "0.5px solid var(--hub-border)",
+              borderRadius: 10,
+              padding: 6,
+              background: "var(--hub-bg)",
+            }}
+          >
+            {motifsList.map((m) => {
+              const active = motifId === m.id;
+              return (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setMotifId(active ? "" : m.id)}
+                  title={`${m.id} · ${m.nom}`}
+                  style={{
+                    padding: "5px 4px",
+                    borderRadius: 7,
+                    border: active
+                      ? "1.5px solid var(--hub-foreground)"
+                      : "0.5px solid transparent",
+                    background: active ? "white" : "transparent",
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 3,
+                    transition: "all 120ms ease",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 60,
+                      height: 60,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: active ? "var(--hub-bg)" : "white",
+                      borderRadius: 5,
+                      overflow: "hidden",
+                      border: "0.5px solid var(--hub-border)",
+                    }}
+                  >
+                    {m.asset_principal ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={motifImageSrc(m.asset_principal, m.asset_principal_url)}
+                        alt={m.nom}
+                        style={{ maxWidth: "90%", maxHeight: "90%", objectFit: "contain" }}
+                        onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.15")}
+                      />
+                    ) : (
+                      <span style={{ fontSize: 20, opacity: 0.15 }}>✦</span>
+                    )}
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 8,
+                      color: "var(--hub-foreground)",
+                      opacity: active ? 1 : 0.6,
+                      fontWeight: active ? 700 : 400,
+                      textAlign: "center",
+                      lineHeight: 1.2,
+                      width: "100%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {m.nom}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Upload PNG du motif (référence broderie pour Gemini) */}
+          {/* PNG motif — auto-injecté depuis Hub ou upload manuel (override) */}
           <label
             style={{
               fontFamily: "var(--font-sans)",
@@ -575,7 +659,7 @@ function ShootingBookContent() {
               marginBottom: 8,
             }}
           >
-            PNG du motif (optionnel)
+            PNG référence Gemini
           </label>
           {!motifPngDataUrl ? (
             <label
@@ -639,7 +723,7 @@ function ShootingBookContent() {
                   {motifPngFilename || "motif.png"}
                 </div>
                 <div style={{ fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-foreground)", opacity: 0.6 }}>
-                  Référence broderie injectée Gemini
+                  {motifPngIsHub ? "PNG Hub (auto-injecté depuis le référentiel)" : "PNG personnalisé · référence Gemini"}
                 </div>
               </div>
               <button
