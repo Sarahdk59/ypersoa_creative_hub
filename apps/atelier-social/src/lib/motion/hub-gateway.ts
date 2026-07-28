@@ -127,94 +127,50 @@ export async function getLookbookSource(
   return all.find((l) => l.id === id) ?? null;
 }
 
-// ─── Collections Shooting (stub Sprint 1) ──────────────────────────────────
+// ─── Collections Motion (persistées en Supabase via collections-store) ─────────
 
-/**
- * Stub : en attendant le branchement réel sur apps/atelier-shooting (qui
- * stocke ses collections en localStorage / IndexedDB côté client), on
- * propose 2 collections types pour démo l'UI Motion.
- *
- * Sprint 2 : ajouter un endpoint /api/da/shooting/collections qui lit l'archive.
- */
-const STUB_COLLECTIONS: MotionSourceCollection[] = [
-  {
-    type: "collection",
-    id: "stub-yp001-nicolas",
-    label: "YP001 — Nicolas — 22:59:25",
-    shots: [
-      {
-        id: "stub-shot-1",
-        shot_type: "MACRO BRODERIE",
-        public_url: "https://picsum.photos/seed/ypersoa-shoot-macro-1/1080/1350",
-        ordre: 1,
-      },
-      {
-        id: "stub-shot-2",
-        shot_type: "LIFESTYLE MODE",
-        public_url: "https://picsum.photos/seed/ypersoa-shoot-life-2/1080/1350",
-        ordre: 2,
-      },
-      {
-        id: "stub-shot-3",
-        shot_type: "PORTRAIT ÉDITORIAL",
-        public_url: "https://picsum.photos/seed/ypersoa-shoot-portrait-3/1080/1350",
-        ordre: 3,
-      },
-      {
-        id: "stub-shot-4",
-        shot_type: "LIFESTYLE EXTÉRIEUR",
-        public_url: "https://picsum.photos/seed/ypersoa-shoot-ext-4/1080/1350",
-        ordre: 4,
-      },
-      {
-        id: "stub-shot-5",
-        shot_type: "SCÈNE LARGE",
-        public_url: "https://picsum.photos/seed/ypersoa-shoot-scene-5/1080/1350",
-        ordre: 5,
-      },
-    ],
-  },
-  {
-    type: "collection",
-    id: "stub-yp019-mama-club",
-    label: "YP019 — MAMA CLUB — 14:30:18",
-    shots: [
-      {
-        id: "stub-mama-1",
-        shot_type: "MACRO BRODERIE",
-        public_url: "https://picsum.photos/seed/ypersoa-mama-macro/1080/1350",
-        ordre: 1,
-      },
-      {
-        id: "stub-mama-2",
-        shot_type: "PORTRAIT ÉDITORIAL",
-        public_url: "https://picsum.photos/seed/ypersoa-mama-portrait/1080/1350",
-        ordre: 2,
-      },
-      {
-        id: "stub-mama-3",
-        shot_type: "LIFESTYLE MODE",
-        public_url: "https://picsum.photos/seed/ypersoa-mama-life/1080/1350",
-        ordre: 3,
-      },
-      {
-        id: "stub-mama-4",
-        shot_type: "OBJET / PROP",
-        public_url: "https://picsum.photos/seed/ypersoa-mama-prop/1080/1350",
-        ordre: 4,
-      },
-    ],
-  },
-];
+import {
+  listCollections,
+  getCollection,
+} from "./collections-store";
 
 export async function listCollectionSources(): Promise<MotionSourceCollection[]> {
-  return STUB_COLLECTIONS;
+  try {
+    const cols = await listCollections();
+    return cols
+      .filter((c) => c.shot_count > 0)
+      .map((c) => ({
+        type: "collection" as const,
+        id: c.id,
+        label: c.label,
+        // shots sera peuplé par getCollectionSource — ici on expose juste la liste
+        shots: [],
+      }));
+  } catch {
+    return [];
+  }
 }
 
 export async function getCollectionSource(
   id: string,
 ): Promise<MotionSourceCollection | null> {
-  return STUB_COLLECTIONS.find((c) => c.id === id) ?? null;
+  try {
+    const col = await getCollection(id);
+    if (!col) return null;
+    return {
+      type: "collection",
+      id: col.id,
+      label: col.label,
+      shots: col.shots.map((s) => ({
+        id: s.id,
+        shot_type: s.shot_type,
+        public_url: s.public_url,
+        ordre: s.ordre,
+      })),
+    };
+  } catch {
+    return null;
+  }
 }
 
 // ─── Likes cross-app (table Supabase liked_shots) ──────────────────────────

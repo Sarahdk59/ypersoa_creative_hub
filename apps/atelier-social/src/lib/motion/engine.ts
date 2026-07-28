@@ -90,7 +90,6 @@ class Veo31Engine implements MotionEngineClient {
         aspectRatio: "9:16",
         durationSeconds: plan.duree_sec,
         sampleCount: 1,
-        generateAudio: false,
       },
     };
     const res = await fetch(
@@ -177,7 +176,6 @@ class OmniFlashEngine implements MotionEngineClient {
         aspectRatio: "9:16",
         durationSeconds: plan.duree_sec,
         sampleCount: 1,
-        generateAudio: false,
       },
     };
     const res = await fetch(
