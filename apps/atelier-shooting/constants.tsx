@@ -303,6 +303,37 @@ export const SHOTS_CONFIG = {
   }
 };
 
+/**
+ * FLATLAY — mode 'flatlay' : 4 mises à plat lifestyle SANS personne, pinterestables.
+ * Chaque variation injecte [DECOR] (description full de l'ambiance sélectionnée) pour
+ * que les props + la palette matchent le décor choisi. Le produit (garment OU casquette)
+ * est décrit par [PRODUIT] / [EMPLACEMENT] (buildEmplacement gère la coiffe front-calotte).
+ * Esthétique Émoï-Émoï / Sézane / Maison Labiche, save-worthy Pinterest.
+ * Invariants partagés : top-down/overhead, aucune personne, broderie EXTRÊMEMENT PLATE et
+ * lisible face caméra, aucun fond studio blanc découpé, aucun texte imprimé (seule la
+ * broderie sur le produit est autorisée), lumière chaude directionnelle.
+ */
+const FLATLAY_COMMON = `Le produit est le HÉROS unique de la scène, posé à plat (ou délicatement drapé/rembourré), sa zone brodée ([EMPLACEMENT]) DÉPLIÉE et bien FACE à la caméra, nette et parfaitement lisible. S'il s'agit d'une casquette, elle repose panneau frontal vers le haut, légèrement rembourrée pour garder sa forme arrondie (jamais écrasée). Broderie en fil [COULEUR FIL], [DIMENSION] max. ⚠️ COULEUR FIL OBLIGATOIRE : broderie en fil [COULEUR FIL] même si le PNG source montre une autre couleur (forme et typographie du PNG uniquement). ATTENTION : broderie EXTRÊMEMENT PLATE, SANS RELIEF, SANS EFFET 3D NI GONFLÉ, intégrée au tissu. AUCUNE personne, aucun corps, aucune main, aucun visage. AUCUN fond studio blanc découpé. AUCUN texte imprimé, étiquette, panneau ni watermark — le SEUL texte autorisé est la broderie sur le produit. Photographie éditoriale 35mm, chaleureuse et intime, lumière naturelle directionnelle et ombres dorées douces, palette cohérente et harmonieuse. Esthétique Sézane × Maison Labiche × Émoï-Émoï × Octobre Éditions, très pinnable (save-worthy Pinterest).`;
+
+export const FLATLAY_CONFIG = {
+  HERO_DETAIL: {
+    label: "Flatlay Détail",
+    prompt: `Generate an image of: Mise à plat (flat lay) éditoriale en vue plongeante serrée d'un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) sur une surface texturée chaude (lin froissé, bois lavé ou sable clair) accordée à l'ambiance. Cadrage rapproché : la broderie remplit une part généreuse du cadre, les points de couture et le grain du tissu sont nets. 2-3 petits props discrets seulement, beaucoup d'espace négatif. Ambiance : [DECOR]. ${FLATLAY_COMMON}\${COPYRIGHT_DISCLAIMER}`
+  },
+  STILL_LIFE: {
+    label: "Flatlay Nature Morte",
+    prompt: `Generate an image of: Mise à plat (flat lay) éditoriale chaleureuse en vue de dessus d'un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]), entouré d'une nature morte soignée de 4-6 props naturels et saisonniers accordés à l'ambiance et à la palette (fruits frais, céramique, fleurs séchées ou fraîches, appareil photo argentique, lunettes, carnet, eucalyptus) — disposés avec goût, jamais encombrés, respiration préservée. Le produit reste le point focal central. Ambiance : [DECOR]. ${FLATLAY_COMMON}\${COPYRIGHT_DISCLAIMER}`
+  },
+  LIFESTYLE_TABLE: {
+    label: "Flatlay Lifestyle",
+    prompt: `Generate an image of: Mise à plat (flat lay) éditoriale en vue de dessus d'un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) posé sur une table/surface de vie, dans un contexte lifestyle aspirationnel (tasse de café, livre ouvert, lunettes de soleil, feuillage) accordé à l'ambiance. Lumière chaude rasante, longues ombres douces, sensation de moment vécu. Ambiance : [DECOR]. ${FLATLAY_COMMON}\${COPYRIGHT_DISCLAIMER}`
+  },
+  TONAL_FOLD: {
+    label: "Flatlay Tonal",
+    prompt: `Generate an image of: Mise à plat (flat lay) éditoriale minimaliste et aérée d'un [PRODUIT] en [COULEUR SWEAT] ([MATERIAL]) délicatement plié/drapé, accompagné de 2-3 compagnons ton sur ton (une maille, une paire de chaussettes, un foulard) dans une harmonie de couleurs douce et sophistiquée. Beaucoup d'espace négatif, composition calme et élégante. Ambiance : [DECOR]. ${FLATLAY_COMMON}\${COPYRIGHT_DISCLAIMER}`
+  }
+};
+
 export const FULL_PACK_PARISIEN = {
   GHOST: {
     label: "Ghost Packshot",

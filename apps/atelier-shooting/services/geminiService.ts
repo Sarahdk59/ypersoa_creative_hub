@@ -1,7 +1,7 @@
 
 import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from "@google/genai";
 import { GenerationSettings } from "../types";
-import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT, FULL_PACK_SERRE, FULL_PACK_AUBE, FULL_PACK_SAUVAGE, FULL_PACK_SEPIA, DECOR_DESCRIPTIONS, isHeadwear, HEADWEAR_OVERRIDE, CAP_PACKSHOT_PROMPT, CAP_MACRO_SUFFIX } from "../constants";
+import { PROMPT_BASE, PACKSHOT_PROMPT, MODEL_DESCRIPTION, FAMILY_DESCRIPTION, SHOTS_CONFIG, FLATLAY_CONFIG, PRODUCT_MATERIALS, PRODUCT_DESCRIPTION_FR, THREAD_COLORS, FULL_PACK_PARISIEN, FULL_PACK_MINIMALIST, FULL_PACK_LOFT, FULL_PACK_SERRE, FULL_PACK_AUBE, FULL_PACK_SAUVAGE, FULL_PACK_SEPIA, DECOR_DESCRIPTIONS, isHeadwear, HEADWEAR_OVERRIDE, CAP_PACKSHOT_PROMPT, CAP_MACRO_SUFFIX } from "../constants";
 import { DecorStyle } from "../types";
 import { fetchCanoniqueAsBase64, getCanoniqueById, Canonique } from "../lib/canoniques";
 import { getGarmentById, HUB_FILS } from "../lib/hub-data";
@@ -334,6 +334,7 @@ function dataUrlToInlinePart(dataUrl: string): { inlineData: { data: string; mim
  */
 function shotShowsWrist(mode: string, shotType: string): boolean {
   if (mode === 'packshot') return false;
+  if (mode === 'flatlay') return false; // pas de personne → pas de poignet visible
   if (mode === 'family') return true;
   if (mode === 'mannequin') {
     return shotType === 'LIFESTYLE' || shotType === 'OUTDOOR';
@@ -437,6 +438,7 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
     : 0;
   const hairBlock =
     settings.mode === 'packshot' ? "" :
+    settings.mode === 'flatlay'  ? "" :
     appliedCanonCount >= 2       ? "" :
     appliedCanonCount === 1      ? buildCanoniqueHairLock(hairLength) :
     buildHairBlock(seedOffset, hairLength);
@@ -501,6 +503,22 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       const canoniqueContext = buildCanoniqueContext(canoniques);
       promptText = canoniqueContext + "\n\n" + promptText;
     }
+  } else if (settings.mode === 'flatlay') {
+    // Flatlay : mise à plat SANS personne, composée autour du décor sélectionné.
+    // Prompt standalone (comme les FULL_PACK) avec injection [DECOR] full pour matcher l'ambiance.
+    const shot = FLATLAY_CONFIG[shotType as keyof typeof FLATLAY_CONFIG];
+    label = shot.label;
+    const emplacement = buildEmplacement(settings.product, settings.size);
+    const decor = getDecorDescription(settings.decorStyle, settings);
+
+    promptText = shot.prompt
+      .replace(/\[PRODUIT\]/g, productDescription)
+      .replace(/\[COULEUR SWEAT\]/g, garmentColorText)
+      .replace(/\[COULEUR FIL\]/g, threadColorText)
+      .replace(/\[EMPLACEMENT\]/g, emplacement)
+      .replace(/\[DIMENSION\]/g, embroideryBlock)
+      .replace(/\[MATERIAL\]/g, material)
+      .replace(/\[DECOR\]/g, decor.full);
   } else {
     const shot = SHOTS_CONFIG[shotType as keyof typeof SHOTS_CONFIG];
     label = shot.label;
@@ -636,7 +654,8 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
   const canoniqueParts = (
     settings.castingMode === 'canonique' &&
     settings.canoniqueIds.length > 0 &&
-    settings.mode !== 'packshot'
+    settings.mode !== 'packshot' &&
+    settings.mode !== 'flatlay'
   )
     ? await loadCanoniqueParts(settings.canoniqueIds)
     : [];
@@ -708,13 +727,16 @@ async function generateSingleShot(settings: GenerationSettings, shotType: string
       : `Use it to anchor BOTH the garment SHAPE (cut, silhouette, neckline shape, sleeve length, rib finish) AND the EXACT COLOR. ⚠️ COLOR ANCHOR (ABSOLUTE) : the body color of the packshot IS the requested color (${garmentColorText}) — match it pixel-perfectly, same hue, same saturation, same value. Do NOT shift the color tone, do NOT brighten or darken, do NOT reinterpret. The packshot IS the color reference.`;
 
     const embroideryZone = headwear ? "cap-front" : "chest";
-    promptText = promptText + `\n\n⚠️ ${headwear ? "CAP" : "GARMENT"} REFERENCE (PACKSHOT) : Among the attached images, the one showing a PLAIN ${itemWord} with NO embroidery on a WHITE STUDIO BACKGROUND is the official ${productLabel} packshot. ${shapeBlock} The final image must show ${settings.mode === 'packshot' ? `the same ${itemWord}` : `the model ${wornPhrase}`}, in ${garmentColorText}. DO NOT copy the packshot's white studio background — keep the scene environment as described in the prompt.\n\n⚠️ ABSOLUTE EMBROIDERY PRIORITY : The embroidery PNG reference(s) (the smaller image(s) showing a motif on a plain background) take ABSOLUTE PRECEDENCE over the packshot for EVERYTHING embroidery-related : exact letters, exact shape, exact typography, exact placement. The packshot shows a ${itemWord} with NO embroidery on purpose — it MUST NOT influence how the embroidery is rendered. The ${embroideryZone} embroidery in the final image MUST match the embroidery PNG pixel-perfectly (form, letters, geometry) ; only the thread color follows the prompt.`;
+    promptText = promptText + `\n\n⚠️ ${headwear ? "CAP" : "GARMENT"} REFERENCE (PACKSHOT) : Among the attached images, the one showing a PLAIN ${itemWord} with NO embroidery on a WHITE STUDIO BACKGROUND is the official ${productLabel} packshot. ${shapeBlock} The final image must show ${settings.mode === 'packshot' ? `the same ${itemWord}` : settings.mode === 'flatlay' ? `the same ${itemWord} laid flat / styled in the scene (NO model, NO person)` : `the model ${wornPhrase}`}, in ${garmentColorText}. DO NOT copy the packshot's white studio background — keep the scene environment as described in the prompt.\n\n⚠️ ABSOLUTE EMBROIDERY PRIORITY : The embroidery PNG reference(s) (the smaller image(s) showing a motif on a plain background) take ABSOLUTE PRECEDENCE over the packshot for EVERYTHING embroidery-related : exact letters, exact shape, exact typography, exact placement. The packshot shows a ${itemWord} with NO embroidery on purpose — it MUST NOT influence how the embroidery is rendered. The ${embroideryZone} embroidery in the final image MUST match the embroidery PNG pixel-perfectly (form, letters, geometry) ; only the thread color follows the prompt.`;
   }
 
   // Coiffe : override final (placement front-calotte, port sur la tête, pas de
   // poche/capuche/cordon/col/torse). Appendé en DERNIER pour dominer toute
   // mention "côté cœur / torse / oversize" héritée des prompts génériques.
-  if (isHeadwear(settings.product)) {
+  // En flatlay, HEADWEAR_OVERRIDE est exclu : il interdit "casquette posée sur une table"
+  // et impose le port sur la tête → incompatible avec la mise à plat. Le placement
+  // front-calotte est déjà porté par PRODUCT_DESCRIPTION_FR + buildEmplacement + le prompt flatlay.
+  if (isHeadwear(settings.product) && settings.mode !== 'flatlay') {
     promptText = promptText + HEADWEAR_OVERRIDE;
   }
 
@@ -916,6 +938,8 @@ export async function generateYpersoaPack(settings: GenerationSettings): Promise
   if (settings.mode === 'full') {
     const packPrompts = getFullPackPrompts(settings.decorStyle, settings);
     shotKeys = Object.keys(packPrompts);
+  } else if (settings.mode === 'flatlay') {
+    shotKeys = Object.keys(FLATLAY_CONFIG);
   } else {
     shotKeys = Object.keys(SHOTS_CONFIG);
   }
