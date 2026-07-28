@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { GenerationSettings, GeneratedImagePack } from './types';
 import Sidebar from './components/Sidebar';
 import { generateYpersoaPack } from './services/geminiService';
-import { SHOTS_CONFIG } from './constants';
+import { SHOTS_CONFIG, FLATLAY_CONFIG } from './constants';
 import { isSupabaseConfigured } from './lib/supabase';
 import { likeShot, listLikedShots, unlikeShot, LikedShot } from './lib/liked-shots';
 import CatalogShotModal from './components/CatalogShotModal';
@@ -190,7 +190,10 @@ const App: React.FC = () => {
 
   // Find the current pack in history to get its labels, or fallback to default
   const currentHistoryPack = history.find(p => p.urls === currentPack);
-  const shotLabels = currentHistoryPack?.labels || Object.values(SHOTS_CONFIG).map(s => s.label);
+  const shotLabels = currentHistoryPack?.labels
+    || (settings.mode === 'flatlay'
+      ? Object.values(FLATLAY_CONFIG).map(s => s.label)
+      : Object.values(SHOTS_CONFIG).map(s => s.label));
 
   if (hasApiKey === false) {
     return (

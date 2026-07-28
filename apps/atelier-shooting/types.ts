@@ -8,7 +8,9 @@ export type ProductType = 'YP001' | 'YP004' | 'YP005' | 'YP019' | 'YP021' | 'YP0
 
 export type EmbroiderySize = 2 | 4 | 8 | 24;
 
-export type ShotMode = 'mannequin' | 'packshot' | 'family' | 'full';
+// 'flatlay' = mise à plat lifestyle SANS personne (pinterestable), composée autour
+// du décor/ambiance sélectionné (props + palette assortis). Cf. FLATLAY_CONFIG.
+export type ShotMode = 'mannequin' | 'packshot' | 'family' | 'full' | 'flatlay';
 
 // Compositions adulte/adulte (couples) + duos enfant/adulte (parent-enfant, grand-parent-enfant).
 // Les "enfant-*" forment naturellement un duo avec childrenCount=1 (valeur par défaut).

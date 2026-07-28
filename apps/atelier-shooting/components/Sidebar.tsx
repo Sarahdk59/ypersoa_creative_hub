@@ -520,7 +520,22 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
             >
               <i className="fa-solid fa-layer-group text-base"></i> Pack Complet (6)
             </button>
+            <button
+              onClick={() => setSettings(prev => ({ ...prev, mode: 'flatlay' }))}
+              className={`col-span-2 py-3 rounded-lg text-[10px] flex flex-col items-center justify-center gap-1 border transition-all ${
+                settings.mode === 'flatlay'
+                  ? 'bg-yp-linen border-yp-sable text-yp-olive font-semibold'
+                  : 'bg-white border-slate-200 text-slate-500'
+              }`}
+            >
+              <i className="fa-solid fa-table-cells-large text-base"></i> Flatlay (4) · pinterest
+            </button>
           </div>
+          {settings.mode === 'flatlay' && (
+            <p className="text-[10px] text-slate-400 leading-snug mb-2">
+              Mise à plat sans personne, composée autour de l'ambiance choisie (props + palette assortis). Le casting est ignoré.
+            </p>
+          )}
 
           {/* Casting (Diversity ↔ Canonique Hub) — visible dans TOUS les modes (29/05).
               Les sous-champs Diversity (ethnie/âge/morpho) restent gated à mannequin/full

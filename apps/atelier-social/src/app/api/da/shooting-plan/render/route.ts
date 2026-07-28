@@ -43,6 +43,8 @@ interface RenderInput {
   selected_garment_color?: string;
   /** Index du shot dans plan.shotlist (0 = premier = hero). Default 0. */
   shot_index?: number;
+  /** Type de prise de vue : "worn" (porté sur canonique) ou "flatlay" (mise à plat lifestyle, sans personne). Default "worn". */
+  composition?: "worn" | "flatlay";
 }
 
 const PRODUITS_YP_DESCRIPTIONS: Record<string, { fr: string; en: string }> = {
@@ -195,6 +197,23 @@ const MOTIF_SIZE_DESCRIPTIONS: Record<"petit" | "moyen" | "grand", { dimension: 
   },
 };
 
+/** Description ambiance partagée (hero porté + flatlay) : lookbook custom, sinon ambiance préfaite, sinon générique. */
+function resolveAmbianceDesc(
+  plan: ShootingPlanOutput,
+  lookbookAmbiances: LookbookAmbianceFromSupabase[]
+): string {
+  if (lookbookAmbiances.length > 0 && lookbookAmbiances[0].ambiance_extraite) {
+    const a = lookbookAmbiances[0].ambiance_extraite;
+    const palette = a.palette?.length ? a.palette.join(", ") : "warm cream tones";
+    const lieux = a.lieux?.length ? a.lieux.join(" or ") : "intimate French interior";
+    return `Custom ambiance from curated Ypersoa lookbook "${lookbookAmbiances[0].titre}" — color palette: ${palette}; setting: ${lieux}; lighting: ${a.lumiere || "soft natural editorial"}; grain: ${a.grain || "premium digital"}; body language: ${a.postures || "natural relaxed"}`;
+  }
+  if (plan.ambiances_recommandees.length > 0) {
+    return `Editorial ambiance: ${plan.ambiances_recommandees.join(", ")}, French quiet luxury, Sézane × A.P.C. aesthetic`;
+  }
+  return "soft natural daylight, French quiet luxury, Sézane × A.P.C. × Octobre Éditions aesthetic, cream and ink tones";
+}
+
 function buildHeroPrompt(args: BuildHeroPromptArgs): {
   promptEn: string;
   canoniqueIds: string[];
@@ -215,16 +234,7 @@ function buildHeroPrompt(args: BuildHeroPromptArgs): {
 
   const sizeDesc = MOTIF_SIZE_DESCRIPTIONS[motifSize];
 
-  // Description ambiance — soit lookbook custom, soit ambiance préfaite, soit générique
-  let ambianceDesc = "soft natural daylight, French quiet luxury, Sézane × A.P.C. × Octobre Éditions aesthetic, cream and ink tones";
-  if (lookbookAmbiances.length > 0 && lookbookAmbiances[0].ambiance_extraite) {
-    const a = lookbookAmbiances[0].ambiance_extraite;
-    const palette = a.palette?.length ? a.palette.join(", ") : "warm cream tones";
-    const lieux = a.lieux?.length ? a.lieux.join(" or ") : "intimate French interior";
-    ambianceDesc = `Custom ambiance from curated Ypersoa lookbook "${lookbookAmbiances[0].titre}" — color palette: ${palette}; setting: ${lieux}; lighting: ${a.lumiere || "soft natural editorial"}; grain: ${a.grain || "premium digital"}; body language: ${a.postures || "natural relaxed"}`;
-  } else if (plan.ambiances_recommandees.length > 0) {
-    ambianceDesc = `Editorial ambiance: ${plan.ambiances_recommandees.join(", ")}, French quiet luxury, Sézane × A.P.C. aesthetic`;
-  }
+  const ambianceDesc = resolveAmbianceDesc(plan, lookbookAmbiances);
 
   // Lieu
   const lieu = topCasting?.lieu || "France";
@@ -262,6 +272,57 @@ Editorial 35mm film photography, slightly diffused light. Brand reference: Séza
   return { promptEn, canoniqueIds };
 }
 
+/**
+ * Prompt flatlay (mise à plat lifestyle, SANS personne) — pinterestable.
+ * Réutilise l'ambiance + le verrou produit du hero, mais compose une scène
+ * de mise à plat éditoriale (surface texturée + props chaleureux) au lieu d'un porté.
+ */
+function buildFlatlayPrompt(args: BuildHeroPromptArgs): string {
+  const { plan, lookbookAmbiances, hasMotifPng, motifSize = "moyen", produitYpId = "YP019", resolvedProduct, hasPackshot = false } = args;
+  const garmentLabel = resolvedProduct?.garmentLabel || PRODUITS_YP_DESCRIPTIONS[produitYpId]?.en || PRODUITS_YP_DESCRIPTIONS.YP019.en;
+  const colorName = resolvedProduct?.colorName || "";
+  const sizeDesc = MOTIF_SIZE_DESCRIPTIONS[motifSize];
+  const ambianceDesc = resolveAmbianceDesc(plan, lookbookAmbiances);
+
+  // Un chapeau/casquette se pose à plat panneau frontal vers la caméra ; un textile se plie/se pose
+  // à plat, zone brodée dépliée et lisible.
+  const isHeadwear = produitYpId === "YP013";
+  const layPlacement = isHeadwear
+    ? "the cap lies flat with its curved FRONT PANEL facing straight up to the camera so the embroidery reads perfectly; softly stuffed to keep a natural rounded shape (never crushed flat)"
+    : "the garment is laid flat or loosely folded, the embroidered zone smoothed out and fully facing the camera, natural fabric folds and lived-in texture";
+
+  // Fidélité motif : PNG uploadé = reproduction verbatim, sinon YPM référencé.
+  let motifLine: string;
+  if (hasMotifPng) {
+    motifLine = `EMBROIDERY MOTIF FIDELITY: The first attached image is the EXACT embroidery motif that must be reproduced verbatim on the item. Same shape, same letters, same colors, same proportions. Size on the item: ${sizeDesc.dimension}. The embroidery faces the camera, sharp and fully legible. DO NOT add, remove, modify, or invent any element of this motif. Brand: Ypersoa "${plan.motif_ypm?.nom || plan.motif_ypm?.id || "motif"}".`;
+  } else if (plan.motif_ypm?.id) {
+    motifLine = `The item carries the embroidered motif "${plan.motif_ypm.nom || plan.motif_ypm.id}" (Ypersoa collection). Size on the item: ${sizeDesc.dimension}. The embroidery faces the camera, sharp and fully legible.`;
+  } else {
+    motifLine = `The item carries a fine Ypersoa embroidered motif facing the camera, sharp and fully legible. Size on the item: ${sizeDesc.dimension}.`;
+  }
+
+  return `Ultra-realistic, warm, editorial lifestyle FLATLAY photograph in the style of Sézane × Maison Labiche × Émoï-Émoï × Octobre Éditions. Highly pinnable, save-worthy Pinterest aesthetic.
+
+# THE HERO ITEM
+The scene is built around ONE hero item: the ${garmentLabel} (${produitYpId} from the Ypersoa catalog)${colorName ? ` in ${colorName}` : ""}. ${layPlacement}. It is the clear focal point, placed near the center with generous negative space around it.
+${motifLine}
+${EMBROIDERY_REALISM}
+
+# COMPOSITION & STYLING
+- Top-down or gentle 3/4 overhead flat lay on a soft textured surface (natural linen, warm washed wood, or pale sand) whose tone matches the palette.
+- A few tasteful, natural props echoing the ambiance and season, colour-matched to the hero item and never cluttering it: e.g. fresh fruit, ceramic cup, dried or fresh flowers, a vintage film camera, a folded knit, sunglasses, a notebook, eucalyptus. Choose 3-6 props max, artfully arranged, breathing room preserved.
+- Warm directional natural light, soft golden shadows, gentle sun dappling. Cohesive, harmonious colour story.
+${ambianceDesc}.
+
+# ABSOLUTE NEGATIVE
+- NO person, NO human body, NO face, NO hands, NO worn/on-body shot.
+- NO clinical white studio background, NO plain cut-out packshot, NO harsh flat lighting.
+- NO printed text, signs, posters, labels, tags, watermarks, brand names ANYWHERE. The ONLY text allowed is the embroidery on the hero item itself.
+- Embroidery FLAT and legible — never puffy, 3D, foam or embossed.
+
+Editorial 35mm film photography, warm and intimate. Brand reference: Sézane, Maison Labiche, Émoï-Émoï, Octobre Éditions.${buildProductLockBlock(garmentLabel, colorName, hasPackshot)}`;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as RenderInput;
@@ -283,7 +344,8 @@ export async function POST(req: NextRequest) {
     const packshotImage =
       resolvedProduct?.packshotFile && loadPackshotImage(produitYpId, resolvedProduct.packshotFile);
 
-    const { promptEn, canoniqueIds } = buildHeroPrompt({
+    const composition = body.composition === "flatlay" ? "flatlay" : "worn";
+    const promptArgs: BuildHeroPromptArgs = {
       plan: body.plan,
       lookbookAmbiances,
       selectedDispositifId: body.selected_dispositif_id,
@@ -293,7 +355,12 @@ export async function POST(req: NextRequest) {
       resolvedProduct,
       hasPackshot: Boolean(packshotImage),
       shotIndex: body.shot_index ?? 0,
-    });
+    };
+    // Flatlay = mise à plat sans personne → aucun canonique injecté.
+    const { promptEn, canoniqueIds } =
+      composition === "flatlay"
+        ? { promptEn: buildFlatlayPrompt(promptArgs), canoniqueIds: [] as string[] }
+        : buildHeroPrompt(promptArgs);
     const aspectRatio = aspectRatioFromFormat(body.plan);
 
     const ai = new GoogleGenAI({ apiKey });
@@ -372,6 +439,7 @@ export async function POST(req: NextRequest) {
         packshot_inject: Boolean(packshotImage),
         shot_index: body.shot_index ?? 0,
         shot_angle: body.plan.shotlist[body.shot_index ?? 0]?.angle || null,
+        composition,
         prompt_used: promptEn,
         lookbook_ambiances_resolved: lookbookAmbiances.map((l) => ({ id: l.id, titre: l.titre })),
       },
