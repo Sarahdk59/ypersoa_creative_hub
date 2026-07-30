@@ -111,10 +111,10 @@ const SUBMODULES: SubmoduleCard[] = [
   {
     id: 10,
     title: "Bible de marque visuelle",
-    description: "Palette officielle, typos (Cormorant, DM Sans, Josefin), red lines vocabulaires, références muses (Sézane × A.P.C.).",
-    href: null,
+    description: "Brandbook v1.0 · 2026. Palette épine dorsale (marine · teal · crème) + pop signature (rouge coquelicot · blush). Typos, funnel 4 surfaces, rubriques de contenu, vocabulaire autorisé/interdit, garde-fous.",
+    href: "/brand",
     icon: <BookOpen size={22} strokeWidth={1.4} />,
-    status: "v2",
+    status: "v0",
   },
   {
     id: 11,
@@ -177,6 +177,25 @@ export default function AtelierDaHome() {
           >
             <Newspaper size={15} strokeWidth={1.8} />
             Ouvrir Atelier Blog
+          </Link>
+          <Link
+            href="/brand"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 14px",
+              borderRadius: 999,
+              background: "#C23A2D",
+              color: "#FAF7F2",
+              textDecoration: "none",
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              fontWeight: 600,
+            }}
+          >
+            <BookOpen size={15} strokeWidth={1.8} />
+            Brandbook v1.0
           </Link>
         </div>
       </header>
@@ -334,7 +353,7 @@ export default function AtelierDaHome() {
           textAlign: "center",
         }}
       >
-        Atelier DA • V1 — 5 sous-modules opérationnels (Casting, Shooting Book, Ambiances, Motifs, Atelier Production) • 3 sous-modules à venir V2.
+        Atelier DA • V1 — Bible de marque visuelle activée (Brandbook v1.0 · 2026) • 2 sous-modules à venir V2.
       </p>
     </div>
   );
