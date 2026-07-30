@@ -1,0 +1,40 @@
+{
+  "_commentaire": "Brief prêt à poster sur POST /api/geo/generate. C'est l'article P0 identifié dans le classeur de suivi : SERP molle (blogs de brodeuses amateurs, aucune boutique optimisée) et angle que la concurrence locale ne peut pas tenir, puisqu'elle vend aussi le flocage et la sérigraphie.",
+
+  "targetQuery": "Broderie ou flocage : lequel dure le plus longtemps ?",
+
+  "angle": "La tenue dans le temps au lavage et au frottement, comparée technique par technique, du point de vue de quelqu'un qui hésite avant d'offrir un vêtement personnalisé.",
+
+  "subQueries": [
+    "Pourquoi le flocage se craquelle ou se décolle avec le temps ?",
+    "Qu'est-ce qui fait tenir une broderie au lavage ?",
+    "Dans quels cas le flocage reste-t-il le bon choix ?",
+    "Comment reconnaître une broderie qui va durer avant d'acheter ?"
+  ],
+
+  "outOfScope": [
+    "La sérigraphie et le transfert numérique — techniques distinctes, à traiter dans un article séparé",
+    "Les prix et devis — hors sujet ici, l'article répond à une question de durabilité",
+    "Le détail des étapes de production — argumentaire interne, pas public"
+  ],
+
+  "serpSoftness": 4,
+  "conversionGoal": "club",
+
+  "internalLinks": [
+    { "label": "Guide des tailles", "url": "/pages/guide-des-tailles" },
+    { "label": "Le Club Ypersoa", "url": "/pages/cercle" }
+  ],
+
+  "model": "claude-opus-5",
+
+  "_attendu": {
+    "h1": "identique mot pour mot à targetQuery",
+    "slug": "broderie-ou-flocage-lequel-dure-le-plus-longtemps",
+    "direct_answer": "2-3 phrases factuelles répondant immédiatement — le bloc que les moteurs extraient",
+    "sections": 4,
+    "faq": "3 à 5 entrées",
+    "cta": "orienté Club (guide d'entretien), pas achat immédiat",
+    "coverage_note": "doit nommer la sérigraphie et les prix comme volontairement exclus"
+  }
+}

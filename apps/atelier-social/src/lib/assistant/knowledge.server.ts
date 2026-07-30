@@ -65,6 +65,12 @@ export const HUB_MAP: HubRoute[] = [
     pitch: "Le catalogue créatif des motifs YPM (noms commerciaux, déclinaisons, templates de poignets).",
   },
   {
+    href: "/atelier-da/blog",
+    atelier: "Atelier DA · Blog",
+    pitch:
+      "Le generateur d'articles GEO pour Shopify : brief longue traine, angle editorial, lint qualite, export HTML Shopify, bloc Liquid et FAQ JSON-LD.",
+  },
+  {
     href: "/atelier-da/planning",
     atelier: "Atelier DA · Planning",
     pitch: "Le rétroplanning commun de l'année : drops de collection, marronniers, beats de comm (J-45 Pinterest…).",
@@ -162,7 +168,8 @@ let cached: string | null = null;
 
 /** Assemble (et met en cache) toute la base de connaissances de l'assistant. */
 export async function loadAssistantKnowledge(): Promise<string> {
-  if (cached) return cached;
+  const isDev = process.env.NODE_ENV !== "production";
+  if (!isDev && cached) return cached;
 
   let charteText = "";
   try {
@@ -177,7 +184,7 @@ export async function loadAssistantKnowledge(): Promise<string> {
     charteText = "(charte éditoriale indisponible)";
   }
 
-  cached = [
+  const assembled = [
     "===== CARTE DU HUB (routes réelles) =====",
     renderHubMap(),
     "",
@@ -191,5 +198,6 @@ export async function loadAssistantKnowledge(): Promise<string> {
     charteText,
   ].join("\n");
 
-  return cached;
+  if (!isDev) cached = assembled;
+  return assembled;
 }

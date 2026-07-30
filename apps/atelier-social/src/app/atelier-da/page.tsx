@@ -8,7 +8,7 @@
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film, FileBox, Palette, CalendarClock } from "lucide-react";
+import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film, FileBox, Palette, CalendarClock, Newspaper } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -50,6 +50,14 @@ const SUBMODULES: SubmoduleCard[] = [
     description: "Vue site-web des motifs YPM, filtrable par destinataire (papa, maman, parrain, témoins…) et occasion (mariage, naissance, fête des mères…). Click → utiliser dans Shooting.",
     href: "/atelier-da/motifs",
     icon: <Sparkles size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 13,
+    title: "Atelier Blog",
+    description: "Generation d'articles GEO pour Shopify : brief longue traine, angle, lint, export HTML/Liquid et FAQ JSON-LD. Tone of voice Ypersoa avec une touche editoriale plus magazine.",
+    href: "/atelier-da/blog",
+    icon: <Newspaper size={22} strokeWidth={1.4} />,
     status: "v0",
   },
   {
@@ -150,6 +158,27 @@ export default function AtelierDaHome() {
           L&apos;espace de travail du Directeur Artistique. 10 sous-modules pour penser, décider et orienter
           la direction artistique d&apos;Ypersoa, du casting au shooting, de la médiathèque aux motions vidéo.
         </p>
+        <div style={{ marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <Link
+            href="/atelier-da/blog"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 14px",
+              borderRadius: 999,
+              background: "#1E2D4A",
+              color: "#FAF7F2",
+              textDecoration: "none",
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              fontWeight: 600,
+            }}
+          >
+            <Newspaper size={15} strokeWidth={1.8} />
+            Ouvrir Atelier Blog
+          </Link>
+        </div>
       </header>
 
       {/* Grille des 7 sous-modules */}
