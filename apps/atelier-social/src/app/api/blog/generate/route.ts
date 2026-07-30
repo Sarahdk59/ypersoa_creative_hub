@@ -176,29 +176,40 @@ export async function POST(req: NextRequest) {
   const articleBodyHtml = toShopifyArticleBody(article);
   const jsonld = toFaqJsonLd(article);
   const shopify = toShopifyLiquidBundle(article);
-  const saved = await saveBlogArticle({
-    target_query: body.targetQuery,
-    angle: body.angle,
-    serp_softness: body.serpSoftness,
-    conversion_goal: body.conversionGoal,
-    sub_queries: body.subQueries,
-    out_of_scope: body.outOfScope,
-    internal_links: body.internalLinks ?? [],
-    brand_facts: brief.brandFacts,
-    status: lint.passed ? "ready_for_review" : "lint_failed",
-    repaired,
-    article,
-    lint,
-    html,
-    article_body_html: articleBodyHtml,
-    jsonld,
-    shopify,
-  });
+  let savedId: string | null = null;
+  let persistenceWarning: string | null = null;
+
+  try {
+    const saved = await saveBlogArticle({
+      target_query: body.targetQuery,
+      angle: body.angle,
+      serp_softness: body.serpSoftness,
+      conversion_goal: body.conversionGoal,
+      sub_queries: body.subQueries,
+      out_of_scope: body.outOfScope,
+      internal_links: body.internalLinks ?? [],
+      brand_facts: brief.brandFacts,
+      status: lint.passed ? "ready_for_review" : "lint_failed",
+      repaired,
+      article,
+      lint,
+      html,
+      article_body_html: articleBodyHtml,
+      jsonld,
+      shopify,
+    });
+    savedId = saved.id;
+  } catch (error) {
+    persistenceWarning =
+      error instanceof Error
+        ? `Article genere, mais non sauvegarde dans la bibliotheque : ${error.message}`
+        : "Article genere, mais non sauvegarde dans la bibliotheque.";
+  }
 
   return NextResponse.json({
     ok: true,
     stage: "done",
-    id: saved.id,
+    id: savedId,
     repaired,
     lint,
     article,
@@ -206,5 +217,6 @@ export async function POST(req: NextRequest) {
     articleBodyHtml,
     jsonld,
     shopify,
+    warning: persistenceWarning,
   });
 }

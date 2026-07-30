@@ -25,6 +25,7 @@ interface GenerateResponse {
   stage?: string;
   reasons?: string[];
   error?: string;
+  warning?: string | null;
   repaired?: boolean;
   lint?: { passed: boolean; errors: string[]; warnings: string[]; wordCount: number };
   article?: ArticlePayload;
@@ -137,6 +138,9 @@ export default function AtelierBlogPage() {
         throw new Error(json.error || json.reasons?.join(" ") || "Generation impossible.");
       }
       setData(json);
+      if (json.warning) {
+        setError(json.warning);
+      }
       void loadHistory();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -245,7 +249,7 @@ export default function AtelierBlogPage() {
             </div>
             <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, lineHeight: 1.6, color: "rgba(250,247,242,0.84)" }}>
               <li>Ypersoa : utile, concret, cadeau, taille, entretien, atelier.</li>
-              <li>Breizh Club : un peu plus magazine, chaleureux, ancre dans la fabrication.</li>
+              <li>Direction souhaitee : plus editoriale, plus chaleureuse, plus ancree dans la fabrication.</li>
               <li>Sortie prete pour Shopify : HTML simple, body enrichi, bloc Liquid et FAQ JSON-LD.</li>
             </ul>
           </div>
@@ -400,6 +404,13 @@ export default function AtelierBlogPage() {
                   </div>
                 )}
 
+                {data.warning && (
+                  <div style={{ marginBottom: 12, ...noticeStyle("#7A4A14", "rgba(122,74,20,0.08)") }}>
+                    <AlertTriangle size={16} />
+                    <span>{data.warning}</span>
+                  </div>
+                )}
+
                 {data.lint && data.lint.errors.length > 0 && (
                   <div style={{ marginBottom: 12, ...noticeStyle("#A76059", "rgba(167,96,89,0.08)") }}>
                     <AlertTriangle size={16} />
@@ -459,7 +470,7 @@ export default function AtelierBlogPage() {
               body="Cartes claires, sujets tres concrets, ancrage cadeau / atelier / entretien, ton simple et premium."
             />
             <MiniCard
-              title="Ce qu'on reprend de Breizh Club"
+              title="Ce qu'on ajoute au ton"
               body="Une touche plus editoriale et magazine, sans perdre l'utilite SEO. Plus de desirabilite, moins de robot."
             />
             <MiniCard

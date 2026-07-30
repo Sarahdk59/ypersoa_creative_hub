@@ -61,6 +61,16 @@ function now(): string {
 
 const TBL = "geo_articles";
 
+function isMissingTableError(message: string): boolean {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("could not find the table") ||
+    lower.includes("relation") ||
+    lower.includes("does not exist") ||
+    lower.includes("schema cache")
+  );
+}
+
 function normalizeRow(row: Partial<BlogArticleRecord> & { id: string }): BlogArticleRecord {
   return {
     id: row.id,
@@ -91,7 +101,12 @@ export async function listBlogArticles(): Promise<BlogArticleRecord[]> {
   }
 
   const { data, error } = await supabase.from(TBL).select("*").order("created_at", { ascending: false }).limit(50);
-  if (error) throw new Error(`Lecture geo_articles echouee : ${error.message}`);
+  if (error) {
+    if (isMissingTableError(error.message)) {
+      return Array.from(mem().articles.values()).sort((a, b) => b.created_at.localeCompare(a.created_at));
+    }
+    throw new Error(`Lecture geo_articles echouee : ${error.message}`);
+  }
   return (data ?? []).map((row) => normalizeRow(row as BlogArticleRecord));
 }
 
@@ -101,7 +116,12 @@ export async function getBlogArticle(id: string): Promise<BlogArticleRecord | nu
   }
 
   const { data, error } = await supabase.from(TBL).select("*").eq("id", id).maybeSingle();
-  if (error) throw new Error(`Lecture article echouee : ${error.message}`);
+  if (error) {
+    if (isMissingTableError(error.message)) {
+      return mem().articles.get(id) ?? null;
+    }
+    throw new Error(`Lecture article echouee : ${error.message}`);
+  }
   return data ? normalizeRow(data as BlogArticleRecord) : null;
 }
 
@@ -113,6 +133,14 @@ export async function saveBlogArticle(input: SaveBlogArticleInput): Promise<Blog
     mem().articles.set(id, row);
     return row;
   }
+
+  const fallbackToMemory = () => {
+    const id = makeId();
+    const ts = now();
+    const row: BlogArticleRecord = { id, created_at: ts, updated_at: ts, ...input };
+    mem().articles.set(id, row);
+    return row;
+  };
 
   const { data, error } = await supabase
     .from(TBL)
@@ -137,6 +165,11 @@ export async function saveBlogArticle(input: SaveBlogArticleInput): Promise<Blog
     .select("*")
     .single();
 
-  if (error) throw new Error(`Sauvegarde article echouee : ${error.message}`);
+  if (error) {
+    if (isMissingTableError(error.message)) {
+      return fallbackToMemory();
+    }
+    throw new Error(`Sauvegarde article echouee : ${error.message}`);
+  }
   return normalizeRow(data as BlogArticleRecord);
 }
