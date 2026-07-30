@@ -71,6 +71,19 @@ function isMissingTableError(message: string): boolean {
   );
 }
 
+function isRecoverablePersistenceError(message: string): boolean {
+  const lower = message.toLowerCase();
+  return (
+    isMissingTableError(message) ||
+    lower.includes("the string did not match the expected pattern") ||
+    lower.includes("failed to parse url") ||
+    lower.includes("invalid url") ||
+    lower.includes("fetch failed") ||
+    lower.includes("networkerror") ||
+    lower.includes("network request failed")
+  );
+}
+
 function normalizeRow(row: Partial<BlogArticleRecord> & { id: string }): BlogArticleRecord {
   return {
     id: row.id,
@@ -102,7 +115,7 @@ export async function listBlogArticles(): Promise<BlogArticleRecord[]> {
 
   const { data, error } = await supabase.from(TBL).select("*").order("created_at", { ascending: false }).limit(50);
   if (error) {
-    if (isMissingTableError(error.message)) {
+    if (isRecoverablePersistenceError(error.message)) {
       return Array.from(mem().articles.values()).sort((a, b) => b.created_at.localeCompare(a.created_at));
     }
     throw new Error(`Lecture geo_articles echouee : ${error.message}`);
@@ -117,7 +130,7 @@ export async function getBlogArticle(id: string): Promise<BlogArticleRecord | nu
 
   const { data, error } = await supabase.from(TBL).select("*").eq("id", id).maybeSingle();
   if (error) {
-    if (isMissingTableError(error.message)) {
+    if (isRecoverablePersistenceError(error.message)) {
       return mem().articles.get(id) ?? null;
     }
     throw new Error(`Lecture article echouee : ${error.message}`);
@@ -166,7 +179,7 @@ export async function saveBlogArticle(input: SaveBlogArticleInput): Promise<Blog
     .single();
 
   if (error) {
-    if (isMissingTableError(error.message)) {
+    if (isRecoverablePersistenceError(error.message)) {
       return fallbackToMemory();
     }
     throw new Error(`Sauvegarde article echouee : ${error.message}`);
