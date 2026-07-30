@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Film, Loader2, Plus } from "lucide-react";
+import { ArrowLeft, Film, FolderOpen, Loader2, Plus } from "lucide-react";
 
 import type { MotionEngineStatus } from "@/lib/motion/api-client";
 import type { MotionJobListResponse } from "@/types/motion";
@@ -87,9 +87,14 @@ export default function MotionListPage() {
             maillon manquant du Hub : image → vidéo.
           </p>
         </div>
-        <Link href="/atelier-da/motion/new" style={primaryButton}>
-          <Plus size={14} strokeWidth={1.8} /> Nouvelle vidéo
-        </Link>
+        <div style={{ display: "flex", gap: 8 }}>
+          <Link href="/atelier-da/motion/collections" style={secondaryButton}>
+            <FolderOpen size={13} strokeWidth={1.6} /> Mes Collections
+          </Link>
+          <Link href="/atelier-da/motion/new" style={primaryButton}>
+            <Plus size={14} strokeWidth={1.8} /> Nouvelle vidéo
+          </Link>
+        </div>
       </header>
 
       {/* Engine status banner */}
@@ -213,6 +218,22 @@ const primaryButton: React.CSSProperties = {
   fontFamily: "var(--font-sans)",
   fontSize: 12,
   fontWeight: 500,
+  letterSpacing: "0.04em",
+};
+
+const secondaryButton: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  background: "white",
+  color: "var(--hub-foreground)",
+  textDecoration: "none",
+  borderRadius: 9999,
+  padding: "10px 18px",
+  fontFamily: "var(--font-sans)",
+  fontSize: 12,
+  fontWeight: 500,
+  border: "0.5px solid var(--hub-border)",
   letterSpacing: "0.04em",
 };
 

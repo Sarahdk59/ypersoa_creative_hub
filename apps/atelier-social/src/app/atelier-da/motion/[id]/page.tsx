@@ -8,7 +8,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import { ArrowLeft, Loader2, RefreshCw, Trash2 } from "lucide-react";
 
 import type { MotionJob } from "@/types/motion";
 import {
@@ -17,7 +17,7 @@ import {
   STATUT_COLORS,
   STATUT_LABELS,
 } from "@/types/motion";
-import { deleteMotionJob, fetchMotionJob } from "@/lib/motion/api-client";
+import { createMotionJob, deleteMotionJob, fetchMotionJob } from "@/lib/motion/api-client";
 import { ClipPreview } from "@/components/motion/ClipPreview";
 
 export default function MotionJobDetailPage() {

@@ -1,11 +1,27 @@
 /**
  * GET  /api/calendar?from=ISO&to=ISO&platform=&status=
  * POST /api/calendar  body { scheduled_at, platform, motif_code, occasion_slug?, format, notes? }
+ *
+ * CORS ouvert (*) — appelé cross-origin depuis atelier-social (port 3000).
  */
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import type { PlanablePlatform, PlanableMediaFormat, PlanableEntryStatus } from "@/lib/supabase/types";
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "content-type",
+};
+
+function json(body: unknown, status = 200) {
+  return NextResponse.json(body, { status, headers: CORS_HEADERS });
+}
+
+export function OPTIONS() {
+  return new Response(null, { status: 204, headers: CORS_HEADERS });
+}
 
 const platformEnum: [PlanablePlatform, ...PlanablePlatform[]] = [
   "instagram_post", "instagram_reel", "instagram_story", "pinterest_pin",
@@ -46,12 +62,9 @@ export async function GET(request: Request) {
 
     const { data, error } = await q;
     if (error) throw error;
-    return NextResponse.json({ ok: true, data });
+    return json({ ok: true, data });
   } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : String(err) },
-      { status: 500 }
-    );
+    return json({ ok: false, error: err instanceof Error ? err.message : String(err) }, 500);
   }
 }
 
@@ -60,7 +73,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const parsed = createSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ ok: false, error: parsed.error.issues }, { status: 400 });
+      return json({ ok: false, error: parsed.error.issues }, 400);
     }
     const supabase = getSupabaseServer();
     const { data, error } = await supabase
@@ -69,11 +82,8 @@ export async function POST(request: Request) {
       .select()
       .single();
     if (error) throw error;
-    return NextResponse.json({ ok: true, data });
+    return json({ ok: true, data });
   } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : String(err) },
-      { status: 500 }
-    );
+    return json({ ok: false, error: err instanceof Error ? err.message : String(err) }, 500);
   }
 }

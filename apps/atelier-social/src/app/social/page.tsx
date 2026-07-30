@@ -8,7 +8,8 @@ import { ProductColorPicker } from "@/components/ProductColorPicker";
 import { SavePackDialog } from "@/components/SavePackDialog";
 import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { Heart, FolderOpen, X, Calendar, Layers, Trello } from "lucide-react";
+import { Heart, FolderOpen, X, Calendar, Layers, Trello, Newspaper } from "lucide-react";
+import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
 import {
@@ -165,6 +166,7 @@ export default function Home() {
   const [copyNotice, setCopyNotice] = useState<string | null>(null);
 
   const [rightPanelTab, setRightPanelTab] = useState<"text" | "overlay">("text");
+  const [ficheOpen, setFicheOpen] = useState(false);
 
   // Hub : Sauvegarde des packs RS dans Supabase + bibliothèque collections.
   const supabaseOn = isSupabaseConfigured();
@@ -987,14 +989,27 @@ export default function Home() {
               </button>
 
               {canSavePack && (
-                <button
-                  type="button"
-                  onClick={() => setSaveDialogOpen(true)}
-                  className="w-full mt-2 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold transition-all"
-                >
-                  <Heart className="w-3.5 h-3.5" />
-                  {savedPackId ? "Sauvegarder à nouveau" : "Sauvegarder dans le hub"}
-                </button>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setSaveDialogOpen(true)}
+                    className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold transition-all"
+                  >
+                    <Heart className="w-3.5 h-3.5" />
+                    {savedPackId ? "Sauvegarder à nouveau" : "Sauvegarder"}
+                  </button>
+                  {selectedPlatform === "instagram" && (
+                    <button
+                      type="button"
+                      onClick={() => setFicheOpen(true)}
+                      className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 font-semibold transition-all"
+                      title="Voir la fiche éditoriale + programmer dans Planable"
+                    >
+                      <Newspaper className="w-3.5 h-3.5" />
+                      Fiche + Planable
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -1096,6 +1111,9 @@ export default function Home() {
                     hashtagSlots={instagramHashtagSlots}
                     brandSafety={brandSafety}
                     platform={selectedPlatform}
+                    imageUrl={generatedImages[currentSlide] ?? null}
+                    occasion={selectedOccasion}
+                    customPrompt={customPrompt}
                     isGeneratingText={isGeneratingText}
                   />
                 )}
@@ -1104,6 +1122,20 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {ficheOpen && (
+        <PostCard
+          image={generatedImages[currentSlide] ?? null}
+          caption={generatedText}
+          hooks={generatedHooks}
+          hashtags={instagramHashtags}
+          brandSafety={brandSafety}
+          platform={selectedPlatform}
+          occasion={selectedOccasion}
+          customPrompt={customPrompt}
+          onClose={() => setFicheOpen(false)}
+        />
+      )}
 
       {supabaseOn && saveDialogOpen && (
         <SavePackDialog
@@ -1236,12 +1268,14 @@ function ResultPanelImagesOnly({
           </div>
         ) : imageUrls.length > 0 ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageUrls[currentSlide]}
-              alt={`Slide ${currentSlide + 1}`}
-              className="w-full h-full object-contain transition-opacity duration-300"
-            />
+            <div className={cn("flex h-full w-full items-center justify-center bg-[#f6f1e7]", aspectClass)}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imageUrls[currentSlide]}
+                alt={`Slide ${currentSlide + 1}`}
+                className="max-h-full max-w-full object-contain transition-opacity duration-300"
+              />
+            </div>
 
             {imageUrls.length > 1 && (
               <>
@@ -1367,6 +1401,9 @@ interface ResultPanelTextOnlyProps {
   hashtagSlots?: InstagramHashtagSlots | null;
   brandSafety: BrandSafety | null;
   platform: "instagram" | "pinterest";
+  imageUrl?: string | null;
+  occasion?: string;
+  customPrompt?: string;
   isGeneratingText: boolean;
 }
 
@@ -1378,17 +1415,74 @@ const HASHTAG_SLOT_META: { key: keyof InstagramHashtagSlots; label: string }[] =
   { key: "communaute", label: "Communauté" },
 ];
 
+const BRAND_HASHTAG_SLUGS = new Set([
+  "ypersoa",
+  "leclubypersoa",
+  "brode",
+  "broderie",
+  "broderiepersonnalisee",
+  "brodesurcommande",
+  "hautsdefrance",
+  "atelierhdf",
+  "cadeaupersonnalise",
+  "atelier",
+  "iconeclub",
+  "teeblanc",
+  "brodepersonnalise",
+]);
+
+function isBrandHashtag(tag: string) {
+  const slug = tag
+    .replace(/^#/, "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+  return BRAND_HASHTAG_SLUGS.has(slug);
+}
+
 function ResultPanelTextOnly({
   text,
   hooks,
   hashtags = [],
   hashtagSlots = null,
   brandSafety,
+  platform,
+  imageUrl = null,
+  occasion = "",
+  customPrompt = "",
   isGeneratingText,
 }: ResultPanelTextOnlyProps) {
   const [copiedCaption, setCopiedCaption] = useState(false);
   const [copiedHookIdx, setCopiedHookIdx] = useState<number | null>(null);
   const [copiedHashtags, setCopiedHashtags] = useState(false);
+  const [copiedVariant, setCopiedVariant] = useState<"a" | "b" | null>(null);
+
+  const variantA = hooks[4] || hooks[0] || "";
+  const variantB = hooks[1] || hooks[2] || "";
+  const editorialTitle = variantA || "Comme si on y etait.";
+  const teaser = customPrompt?.trim()
+    ? customPrompt.trim()
+    : "Un post feed lifestyle, ecrit au present, au tutoiement. Une intention, un CTA.";
+  const ctaLabel = "ypersoa.fr";
+  const occasionLabel = occasion
+    ? occasion.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+    : "Occasion libre";
+  const brandHashtags = hashtags.filter(isBrandHashtag);
+  const discoveryHashtags = hashtags.filter((tag) => !isBrandHashtag(tag));
+  const hashtagSections = hashtagSlots
+    ? HASHTAG_SLOT_META.map(({ key, label }) => ({ label, tags: hashtagSlots[key] ?? [] })).filter(
+        (section) => section.tags.length > 0
+      )
+    : [];
+  const captionBody = text
+    ? text
+        .replace(/\r/g, "")
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+    : [];
+  const captionPreviewLines = captionBody.slice(0, 4);
 
   const handleCopyHashtags = () => {
     if (hashtags.length === 0) return;
@@ -1409,6 +1503,13 @@ function ResultPanelTextOnly({
     navigator.clipboard.writeText(hook);
     setCopiedHookIdx(idx);
     setTimeout(() => setCopiedHookIdx(null), 2000);
+  };
+
+  const handleCopyVariant = (value: string, key: "a" | "b") => {
+    if (!value) return;
+    navigator.clipboard.writeText(value);
+    setCopiedVariant(key);
+    setTimeout(() => setCopiedVariant(null), 2000);
   };
 
   if (!text && !isGeneratingText && hooks.length === 0) {
@@ -1455,11 +1556,247 @@ function ResultPanelTextOnly({
         </div>
       )}
 
+      <div className="rounded-[28px] border border-[#d5c8ba] bg-[#f4eee2] p-5 shadow-sm">
+        <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#b46f65]">
+          Ypersoa · contenu de post
+        </p>
+        <h3 className="mt-2 font-serif text-[28px] leading-tight text-[#16324c]">
+          {editorialTitle}
+        </h3>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#4b6278]">
+          {teaser}
+        </p>
+
+        <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)]">
+          <div className="rounded-[24px] border border-slate-200 bg-white p-3 shadow-[0_18px_40px_rgba(26,22,20,0.08)]">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#b46f65] text-sm font-semibold text-white">
+                y
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-[#16324c]">ypersoa</p>
+                <p className="text-xs text-slate-500">Wattrelos · Hauts-de-France</p>
+              </div>
+            </div>
+
+            <div className="mt-3 aspect-[4/5] overflow-hidden rounded-[20px] bg-[#ece3d5]">
+              {imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={imageUrl}
+                  alt="Preview du post"
+                  className="h-full w-full object-contain bg-[#ece3d5]"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-xs text-brand-muted">
+                  Preview du post
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3 flex items-center justify-between text-[#16324c]">
+              <div className="flex items-center gap-3 text-lg">
+                <span>♥</span>
+                <span>◌</span>
+                <span>✈</span>
+              </div>
+              <span className="text-base opacity-60">⌑</span>
+            </div>
+
+            <p className="mt-3 text-sm font-semibold text-[#16324c]">
+              Aimé par leclubypersoa et 312 autres personnes
+            </p>
+            <div className="mt-2 space-y-2 text-sm leading-relaxed text-[#16324c]">
+              {captionPreviewLines.length > 0 ? (
+                <>
+                  <p>
+                    <span className="font-semibold">ypersoa </span>
+                    {captionPreviewLines[0]}
+                  </p>
+                  {captionPreviewLines.slice(1).map((line, idx) => (
+                    <p key={idx}>{line}</p>
+                  ))}
+                </>
+              ) : (
+                <p className="text-slate-500">La légende apparaitra ici.</p>
+              )}
+            </div>
+
+            {hashtags.length > 0 && (
+              <p className="mt-4 text-sm leading-relaxed text-[#1e6e77]">
+                {hashtags.join(" ")}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <div className="rounded-[22px] border border-[#cbbcaf] bg-[#f7f1e6]">
+              <div className="grid grid-cols-[150px_1fr] border-b border-[#d9ccbf] text-sm">
+                <div className="px-4 py-3 font-mono uppercase tracking-[0.15em] text-[#b46f65]">
+                  Plateforme
+                </div>
+                <div className="px-4 py-3 font-semibold text-[#16324c]">
+                  {platform === "instagram" ? "Post feed · lifestyle (4:5)" : "Pin · vertical (2:3)"}
+                </div>
+              </div>
+              <div className="grid grid-cols-[150px_1fr] border-b border-[#d9ccbf] text-sm">
+                <div className="px-4 py-3 font-mono uppercase tracking-[0.15em] text-[#b46f65]">
+                  Occasion
+                </div>
+                <div className="px-4 py-3 font-semibold text-[#16324c]">{occasionLabel}</div>
+              </div>
+              <div className="grid grid-cols-[150px_1fr] border-b border-[#d9ccbf] text-sm">
+                <div className="px-4 py-3 font-mono uppercase tracking-[0.15em] text-[#b46f65]">
+                  Angle
+                </div>
+                <div className="px-4 py-3 font-semibold text-[#16324c]">
+                  {hooks[0] || "Feed lifestyle, present, tutoiement"}
+                </div>
+              </div>
+              <div className="grid grid-cols-[150px_1fr] text-sm">
+                <div className="px-4 py-3 font-mono uppercase tracking-[0.15em] text-[#b46f65]">
+                  CTA unique
+                </div>
+                <div className="px-4 py-3">
+                  <span className="inline-flex rounded-full bg-[#1e6e77] px-3 py-1 text-sm font-semibold text-white shadow-sm">
+                    {ctaLabel}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#1e6e77]">
+                Variantes de légende
+              </p>
+
+              <div className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <p className="text-sm uppercase tracking-[0.25em] text-[#b46f65]">
+                    A · courte, punchy
+                  </p>
+                  {variantA && (
+                    <button
+                      type="button"
+                      onClick={() => handleCopyVariant(variantA, "a")}
+                      className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+                    >
+                      {copiedVariant === "a" ? (
+                        <Check className="w-3 h-3 text-green-600" />
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
+                      {copiedVariant === "a" ? "Copie" : "Copier"}
+                    </button>
+                  )}
+                </div>
+                <p className="text-base leading-relaxed text-[#16324c]">
+                  {variantA || "La variante courte apparaitra ici."}
+                </p>
+              </div>
+
+              <div className="rounded-[20px] border border-slate-200 bg-white p-4 shadow-sm">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <p className="text-sm uppercase tracking-[0.25em] text-[#b46f65]">
+                    B · engagement / commentaires
+                  </p>
+                  {variantB && (
+                    <button
+                      type="button"
+                      onClick={() => handleCopyVariant(variantB, "b")}
+                      className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+                    >
+                      {copiedVariant === "b" ? (
+                        <Check className="w-3 h-3 text-green-600" />
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
+                      {copiedVariant === "b" ? "Copie" : "Copier"}
+                    </button>
+                  )}
+                </div>
+                <p className="text-base leading-relaxed text-[#16324c]">
+                  {variantB || "La variante engagement apparaitra ici."}
+                </p>
+              </div>
+            </div>
+
+            {hashtags.length > 0 && !isGeneratingText && (
+              <div className="rounded-[20px] border border-[#d6d0c5] bg-[#f7f1e6] p-4">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#1e6e77]">
+                    Jeu de hashtags · {hashtags.length}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleCopyHashtags}
+                    className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+                  >
+                    {copiedHashtags ? (
+                      <Check className="w-3 h-3 text-green-600" />
+                    ) : (
+                      <Copy className="w-3 h-3" />
+                    )}
+                    {copiedHashtags ? "Copie" : "Copier"}
+                  </button>
+                </div>
+
+                {hashtagSections.length > 0 && (
+                  <div className="mb-3 space-y-2">
+                    {hashtagSections.map((section) => (
+                      <div key={section.label} className="flex flex-wrap items-center gap-2">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#b46f65]">
+                          {section.label}
+                        </span>
+                        {section.tags.map((tag) => (
+                          <span
+                            key={`${section.label}-${tag}`}
+                            className="rounded-full bg-white px-3 py-1 text-sm text-[#16324c] shadow-sm"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {brandHashtags.length > 0 && (
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {brandHashtags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-[#1e6e77] px-3 py-1 text-sm font-medium text-white"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {discoveryHashtags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {discoveryHashtags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-[#e7e1d4] px-3 py-1 text-sm text-[#16324c]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
         <div className="flex items-center justify-between mb-2 pb-2 border-b border-brand-muted/10">
           <div className="flex items-center gap-2">
             <Instagram className="w-4 h-4 text-pink-600" />
-            <h4 className="font-medium text-sm">Légende Instagram</h4>
+            <h4 className="font-medium text-sm">Légende complète</h4>
           </div>
           {text && !isGeneratingText && (
             <button
@@ -1472,7 +1809,7 @@ function ResultPanelTextOnly({
               ) : (
                 <Copy className="w-3 h-3" />
               )}
-              {copiedCaption ? "Copié" : "Copier"}
+              {copiedCaption ? "Copie" : "Copier"}
             </button>
           )}
         </div>
@@ -1494,75 +1831,6 @@ function ResultPanelTextOnly({
           ) : null}
         </div>
       </div>
-
-      {hashtags.length > 0 && !isGeneratingText && (
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
-          <div className="flex items-center justify-between mb-2 pb-2 border-b border-brand-muted/10">
-            <div className="flex items-center gap-2">
-              <Hash className="w-4 h-4 text-brand-rose" />
-              <h4 className="font-medium text-sm">
-                Hashtags ciblés
-                <span className="ml-1 text-[11px] font-normal text-brand-muted">
-                  ({hashtags.length} — engagement & acquisition)
-                </span>
-              </h4>
-            </div>
-            <button
-              type="button"
-              onClick={handleCopyHashtags}
-              className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
-            >
-              {copiedHashtags ? (
-                <Check className="w-3 h-3 text-green-600" />
-              ) : (
-                <Copy className="w-3 h-3" />
-              )}
-              {copiedHashtags ? "Copié" : "Copier"}
-            </button>
-          </div>
-
-          {hashtagSlots ? (
-            <div className="space-y-1.5">
-              {HASHTAG_SLOT_META.map(({ key, label }) => {
-                const items = hashtagSlots[key];
-                if (!items || items.length === 0) return null;
-                return (
-                  <div key={key} className="flex items-start gap-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-rose mt-1 shrink-0 w-20">
-                      {label}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {items.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-0.5 rounded-full bg-brand-bg/70 text-xs text-brand-text"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="flex flex-wrap gap-1.5">
-              {hashtags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-0.5 rounded-full bg-brand-bg/70 text-xs text-brand-text"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-          <p className="mt-2 text-[10px] text-brand-muted">
-            Formule : marque + produit + occasion + niche + communauté. Combo varié
-            à chaque génération.
-          </p>
-        </div>
-      )}
 
       {hooks && hooks.length > 0 && (
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
