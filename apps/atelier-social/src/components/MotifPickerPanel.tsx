@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Layers, Loader2, Camera, Star } from "lucide-react";
+import { Layers, Loader2, Camera, Star, ChevronDown, ChevronRight } from "lucide-react";
 import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 
 interface MotifVariante {
@@ -45,6 +45,7 @@ export function MotifPickerPanel({ onImport }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [importingKey, setImportingKey] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/da/referentiels", { cache: "no-store" })
@@ -114,86 +115,101 @@ export function MotifPickerPanel({ onImport }: Props) {
   };
 
   return (
-    <div className="border border-teal-200 rounded-2xl bg-teal-50/40 p-3 mb-3">
-      <div className="flex items-center gap-2 mb-2">
-        <Layers className="w-4 h-4 text-teal-700" />
-        <h3 className="text-xs font-bold text-teal-800">Référentiel motifs Hub</h3>
-        {motifs.length > 0 && (
-          <span className="text-[10px] bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full font-semibold">
-            {motifs.length}
-          </span>
-        )}
-      </div>
-
-      {loading && (
-        <div className="flex items-center gap-2 text-[10px] text-slate-500 italic py-2">
-          <Loader2 className="w-3 h-3 animate-spin" /> Chargement des motifs…
+    <div className="border border-teal-200 rounded-xl bg-teal-50/40 mb-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-teal-50/60 transition-colors"
+      >
+        <div className="flex items-center gap-2">
+          <Layers className="w-4 h-4 text-teal-700" />
+          <span className="text-xs font-bold text-teal-800">Référentiel motifs Hub</span>
+          {motifs.length > 0 && (
+            <span className="text-[10px] bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded-full font-semibold">
+              {motifs.length}
+            </span>
+          )}
         </div>
-      )}
-      {error && <div className="text-[10px] text-red-600 mb-2">{error}</div>}
+        {open ? (
+          <ChevronDown className="w-3.5 h-3.5 text-teal-600" />
+        ) : (
+          <ChevronRight className="w-3.5 h-3.5 text-teal-600" />
+        )}
+      </button>
 
-      {!loading && motifs.length > 0 && (
-        <select
-          value={selectedId}
-          onChange={(e) => setSelectedId(e.target.value)}
-          className="w-full p-1.5 rounded-md border border-teal-200 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-teal-400 mb-2"
-        >
-          <option value="">Choisir un motif…</option>
-          {motifs.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.nom_commercial} · {m.id}
-            </option>
-          ))}
-        </select>
-      )}
+      {open && (
+        <div className="px-3 pb-3">
+          {loading && (
+            <div className="flex items-center gap-2 text-[10px] text-slate-500 italic py-2">
+              <Loader2 className="w-3 h-3 animate-spin" /> Chargement des motifs…
+            </div>
+          )}
+          {error && <div className="text-[10px] text-red-600 mb-2">{error}</div>}
 
-      {selected && images.length > 0 && (
-        <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
-          {images.map((img) => {
-            const k = `${img.source}-${img.filename}`;
-            const isImporting = importingKey === k;
-            return (
-              <button
-                key={k}
-                type="button"
-                onClick={() => handlePick(img)}
-                disabled={isImporting}
-                className="group relative aspect-square rounded-md overflow-hidden border border-teal-200 hover:border-teal-400 transition-all bg-white disabled:opacity-60"
-                title={`${img.label} (${img.source})`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img.url}
-                  alt={img.label}
-                  className="w-full h-full object-contain p-1"
-                  onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
-                />
-                <div className="absolute inset-0 bg-teal-500/0 group-hover:bg-teal-500/20 transition-all flex items-center justify-center">
-                  {isImporting ? (
-                    <Loader2 className="w-4 h-4 text-teal-800 animate-spin" />
-                  ) : (
-                    <Camera className="w-4 h-4 text-teal-800 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  )}
-                </div>
-                {img.source === "principal" && (
-                  <span
-                    className="absolute top-0.5 left-0.5 bg-amber-500 text-white rounded-full p-0.5"
-                    title="Hero"
+          {!loading && motifs.length > 0 && (
+            <select
+              value={selectedId}
+              onChange={(e) => setSelectedId(e.target.value)}
+              className="w-full p-1.5 rounded-md border border-teal-200 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-teal-400 mb-2"
+            >
+              <option value="">Choisir un motif…</option>
+              {motifs.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.nom_commercial} · {m.id}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {selected && images.length > 0 && (
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
+              {images.map((img) => {
+                const k = `${img.source}-${img.filename}`;
+                const isImporting = importingKey === k;
+                return (
+                  <button
+                    key={k}
+                    type="button"
+                    onClick={() => handlePick(img)}
+                    disabled={isImporting}
+                    className="group relative aspect-square rounded-md overflow-hidden border border-teal-200 hover:border-teal-400 transition-all bg-white disabled:opacity-60"
+                    title={`${img.label} (${img.source})`}
                   >
-                    <Star className="w-2.5 h-2.5" />
-                  </span>
-                )}
-                {img.source === "prod" && (
-                  <span
-                    className="absolute top-0.5 left-0.5 text-[8px] bg-teal-700 text-white px-1 rounded font-bold"
-                    title="Fichier prod"
-                  >
-                    {img.label.length <= 2 ? img.label : "PROD"}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.url}
+                      alt={img.label}
+                      className="w-full h-full object-contain p-1"
+                      onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
+                    />
+                    <div className="absolute inset-0 bg-teal-500/0 group-hover:bg-teal-500/20 transition-all flex items-center justify-center">
+                      {isImporting ? (
+                        <Loader2 className="w-4 h-4 text-teal-800 animate-spin" />
+                      ) : (
+                        <Camera className="w-4 h-4 text-teal-800 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      )}
+                    </div>
+                    {img.source === "principal" && (
+                      <span
+                        className="absolute top-0.5 left-0.5 bg-amber-500 text-white rounded-full p-0.5"
+                        title="Hero"
+                      >
+                        <Star className="w-2.5 h-2.5" />
+                      </span>
+                    )}
+                    {img.source === "prod" && (
+                      <span
+                        className="absolute top-0.5 left-0.5 text-[8px] bg-teal-700 text-white px-1 rounded font-bold"
+                        title="Fichier prod"
+                      >
+                        {img.label.length <= 2 ? img.label : "PROD"}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>

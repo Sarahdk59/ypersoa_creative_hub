@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Heart, Camera, Loader2, Check } from "lucide-react";
+import { Heart, Camera, Loader2, Check, ChevronDown, ChevronRight } from "lucide-react";
 import {
   ImportedShot,
   listImportedShots,
@@ -19,6 +19,7 @@ export function ImportedShotsPanel({ onImport }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [importingId, setImportingId] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
 
   const supabaseOn = isSupabaseConfigured();
 
@@ -67,76 +68,90 @@ export function ImportedShotsPanel({ onImport }: Props) {
   if (!supabaseOn) return null;
 
   return (
-    <div className="border border-rose-200 rounded-2xl bg-rose-50/40 p-5 mb-6">
-      <div className="flex items-center justify-between mb-3">
+    <div className="border border-rose-200 rounded-xl bg-rose-50/40 mb-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-rose-50/60 transition-colors"
+      >
         <div className="flex items-center gap-2">
-          <Heart className="w-5 h-5 text-rose-500 fill-rose-500" />
-          <h3 className="text-sm font-bold text-rose-700">
+          <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
+          <span className="text-xs font-bold text-rose-700">
             Shots favoris depuis Atelier Shooting
-          </h3>
+          </span>
           {shots.length > 0 && (
-            <span className="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-semibold">
+            <span className="text-[10px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full font-semibold">
               {shots.length}
             </span>
           )}
         </div>
-        <button
-          onClick={refresh}
-          disabled={loading}
-          className="text-xs text-rose-600 hover:underline disabled:opacity-50"
-        >
-          {loading ? "Chargement…" : "Rafraîchir"}
-        </button>
-      </div>
-
-      {error && (
-        <div className="text-xs text-red-600 mb-3">{error}</div>
-      )}
-
-      {!loading && shots.length === 0 && (
-        <div className="text-xs text-slate-500 italic py-4 text-center">
-          Aucun shot liké pour l&apos;instant. Likez un shot dans Atelier Shooting pour le retrouver ici.
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); refresh(); }}
+            disabled={loading}
+            className="text-[10px] text-rose-500 hover:underline disabled:opacity-50"
+          >
+            {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : "↺"}
+          </button>
+          {open ? (
+            <ChevronDown className="w-3.5 h-3.5 text-rose-500" />
+          ) : (
+            <ChevronRight className="w-3.5 h-3.5 text-rose-500" />
+          )}
         </div>
-      )}
+      </button>
 
-      {shots.length > 0 && (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-          {shots.map((shot) => {
-            const isImporting = importingId === shot.id;
-            const wasUsed = Boolean(shot.used_in_caption_at);
-            return (
-              <button
-                key={shot.id}
-                onClick={() => handlePick(shot)}
-                disabled={isImporting}
-                className="group relative aspect-[3/4] rounded-lg overflow-hidden border border-rose-200 hover:border-rose-400 transition-all disabled:opacity-60"
-                title={shot.shot_label || "Shot importé"}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={shot.image_url}
-                  alt={shot.shot_label || "shot"}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-1 left-1 right-1 flex items-center justify-between gap-1">
-                  <span className="text-[9px] text-white font-semibold uppercase tracking-tight truncate">
-                    {shot.shot_label || "Shot"}
-                  </span>
-                  {wasUsed && (
-                    <Check className="w-3 h-3 text-green-300" aria-label="déjà utilisé" />
-                  )}
-                </div>
-                <div className="absolute inset-0 bg-rose-500/0 group-hover:bg-rose-500/20 transition-all flex items-center justify-center">
-                  {isImporting ? (
-                    <Loader2 className="w-5 h-5 text-white animate-spin" />
-                  ) : (
-                    <Camera className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                  )}
-                </div>
-              </button>
-            );
-          })}
+      {open && (
+        <div className="px-3 pb-3">
+          {error && <div className="text-xs text-red-600 mb-2">{error}</div>}
+
+          {!loading && shots.length === 0 && (
+            <div className="text-xs text-slate-500 italic py-3 text-center">
+              Aucun shot liké. Likez un shot dans Atelier Shooting pour le retrouver ici.
+            </div>
+          )}
+
+          {shots.length > 0 && (
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+              {shots.map((shot) => {
+                const isImporting = importingId === shot.id;
+                const wasUsed = Boolean(shot.used_in_caption_at);
+                return (
+                  <button
+                    key={shot.id}
+                    onClick={() => handlePick(shot)}
+                    disabled={isImporting}
+                    className="group relative aspect-[3/4] rounded-lg overflow-hidden border border-rose-200 hover:border-rose-400 transition-all disabled:opacity-60"
+                    title={shot.shot_label || "Shot importé"}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={shot.image_url}
+                      alt={shot.shot_label || "shot"}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-1 left-1 right-1 flex items-center justify-between gap-1">
+                      <span className="text-[9px] text-white font-semibold uppercase tracking-tight truncate">
+                        {shot.shot_label || "Shot"}
+                      </span>
+                      {wasUsed && (
+                        <Check className="w-3 h-3 text-green-300" aria-label="déjà utilisé" />
+                      )}
+                    </div>
+                    <div className="absolute inset-0 bg-rose-500/0 group-hover:bg-rose-500/20 transition-all flex items-center justify-center">
+                      {isImporting ? (
+                        <Loader2 className="w-5 h-5 text-white animate-spin" />
+                      ) : (
+                        <Camera className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
