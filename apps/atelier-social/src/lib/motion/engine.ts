@@ -2,20 +2,16 @@
  * Atelier Motion — engine factory.
  *
  * 3 moteurs supportés :
- *  - omni-flash : Gemini Omni Flash (preview, accès dev annoncé "in the coming
- *    weeks" post Google I/O 2026 du 19-20/05/2026). Implémentation
- *    best-guess basée sur le pattern Veo (predictLongRunning) en attendant
- *    la doc officielle.
- *  - veo-3.1    : Veo 3.1 (stable, fonctionnel aujourd'hui).
+ *  - omni-flash : Gemini Omni Flash (preview, non disponible en prod).
+ *  - veo-3.1    : Veo 3.1 via @google/genai SDK (stable, fonctionnel).
  *  - stub       : sans API, pour dev / démo UI.
  *
  * Le choix par défaut est piloté par ATELIER_MOTION_ENGINE (env).
  * Par sécurité on tombe sur "stub" si GEMINI_API_KEY n'est pas définie.
  */
 
+import { GoogleGenAI } from "@google/genai";
 import type { ClipPlan, MotionEngine } from "@/types/motion";
-
-const BASE = "https://generativelanguage.googleapis.com/v1beta";
 
 export interface EngineConfig {
   engine: MotionEngine;
@@ -52,165 +48,80 @@ class StubEngine implements MotionEngineClient {
   }
 }
 
-// ─── Veo 3.1 engine (image→video) ──────────────────────────────────────────
+// ─── Veo 3.1 engine (image→video via @google/genai SDK) ───────────────────
 
 class Veo31Engine implements MotionEngineClient {
   name: MotionEngine = "veo-3.1";
-  private model = "veo-3.1-generate-preview";
+  private ai: GoogleGenAI;
+
   constructor(private cfg: EngineConfig) {
     if (!cfg.apiKey) throw new Error("Veo 3.1: GEMINI_API_KEY requise");
+    this.ai = new GoogleGenAI({ apiKey: cfg.apiKey });
   }
 
   async generateClip(plan: ClipPlan): Promise<GenerateResult> {
     try {
-      const opId = await this.launch(plan);
-      const video = await this.poll(opId);
-      return { clip_url: video.uri ?? toDataUrl(video.b64), operation_id: opId };
+      const subject = await urlToBase64(plan.asset_sujet_url);
+      const mimeType = sniffMimeFromUrl(plan.asset_sujet_url);
+
+      let operation = await this.ai.models.generateVideos({
+        model: "veo-3.1-generate-preview",
+        prompt: plan.prompt_mouvement,
+        image: { imageBytes: subject, mimeType },
+        config: {
+          aspectRatio: "9:16",
+          durationSeconds: plan.duree_sec,
+          numberOfVideos: 1,
+          personGeneration: "allow_all",
+        },
+      });
+
+      const pollMs = this.cfg.pollMs ?? 10_000;
+      const timeout = this.cfg.timeoutMs ?? 6 * 60_000;
+      const t0 = Date.now();
+
+      while (!operation.done) {
+        if (Date.now() - t0 > timeout) throw new Error(`Veo poll timeout ${timeout}ms`);
+        await new Promise((r) => setTimeout(r, pollMs));
+        operation = await this.ai.operations.getVideosOperation({ operation });
+      }
+
+      if (operation.error) throw new Error(`Veo: ${JSON.stringify(operation.error)}`);
+
+      const video = operation.response?.generatedVideos?.[0]?.video;
+      if (!video) throw new Error("Veo: réponse sans clip généré");
+
+      const clip_url = video.uri ?? toDataUrl(video.videoBytes as string | undefined);
+      return { clip_url, operation_id: operation.name };
     } catch (e) {
       return { clip_url: null, error: e instanceof Error ? e.message : String(e) };
-    }
-  }
-
-  private async launch(plan: ClipPlan): Promise<string> {
-    const subject = await urlToBase64(plan.asset_sujet_url);
-    const subjectMime = sniffMimeFromUrl(plan.asset_sujet_url);
-    // Format REST Veo 3.1 via generativelanguage.googleapis.com:predictLongRunning :
-    //   instances[].image.{ bytesBase64Encoded, mimeType }
-    // (Le format `inlineData` qu'on lit dans la doc ai.google.dev s'applique au
-    // SDK JS, pas à l'appel REST direct. La REST attend `bytesBase64Encoded`
-    // au même niveau que `mimeType`, comme Imagen / Vertex AI.)
-    const body = {
-      instances: [
-        {
-          prompt: plan.prompt_mouvement,
-          image: { bytesBase64Encoded: subject, mimeType: subjectMime },
-        },
-      ],
-      parameters: {
-        aspectRatio: "9:16",
-        durationSeconds: plan.duree_sec,
-        sampleCount: 1,
-      },
-    };
-    const res = await fetch(
-      `${BASE}/models/${this.model}:predictLongRunning?key=${this.cfg.apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      },
-    );
-    if (!res.ok) throw new Error(`Veo launch HTTP ${res.status}: ${await res.text()}`);
-    const name = (await res.json())?.name;
-    if (!name) throw new Error("Veo : nom d'opération absent");
-    return name;
-  }
-
-  private async poll(opId: string): Promise<{ uri?: string; b64?: string }> {
-    const pollMs = this.cfg.pollMs ?? 8000;
-    const timeout = this.cfg.timeoutMs ?? 6 * 60_000;
-    const t0 = Date.now();
-    while (true) {
-      if (Date.now() - t0 > timeout) throw new Error(`Veo poll timeout ${timeout}ms`);
-      const res = await fetch(`${BASE}/${opId}?key=${this.cfg.apiKey}`);
-      if (!res.ok) throw new Error(`Veo poll HTTP ${res.status}: ${await res.text()}`);
-      const o = await res.json();
-      if (o.done) {
-        if (o.error) throw new Error(`Veo: ${JSON.stringify(o.error)}`);
-        const v = o?.response?.generatedVideos?.[0]?.video ?? o?.response?.videos?.[0];
-        return { uri: v?.uri, b64: v?.bytesBase64Encoded };
-      }
-      await new Promise((r) => setTimeout(r, pollMs));
     }
   }
 }
 
-// ─── Gemini Omni Flash engine (preview) ────────────────────────────────────
+// ─── Gemini Omni Flash engine (preview — non disponible) ───────────────────
 
 /**
- * Best-guess client Omni Flash en attendant la doc officielle développeur.
- *
- * Annoncé à Google I/O 2026 (19-20/05/2026). L'API dev "landing in the
- * coming weeks" — donc actuellement non-fonctionnelle. Cette classe est là
- * pour qu'on n'ait QU'À changer le model ID et le format de payload quand
- * la doc sortira, sans toucher le reste du pipeline.
- *
- * Hypothèses :
- *  - même endpoint generativelanguage.googleapis.com
- *  - même pattern predictLongRunning + polling
- *  - inputs multimodaux : texte + images (sujet, style)
- *  - sortie : URI signée
+ * Omni Flash annoncé à Google I/O 2026. Pas encore disponible en prod.
+ * Utilise le même SDK que Veo 3.1 — à activer dès que le model ID est connu.
  */
 class OmniFlashEngine implements MotionEngineClient {
   name: MotionEngine = "omni-flash";
-  // À ajuster dès que Google publie le model ID officiel.
-  private model = "gemini-omni-flash-preview";
+  private ai: GoogleGenAI;
+
   constructor(private cfg: EngineConfig) {
     if (!cfg.apiKey) throw new Error("Omni Flash: GEMINI_API_KEY requise");
+    this.ai = new GoogleGenAI({ apiKey: cfg.apiKey });
   }
 
   async generateClip(plan: ClipPlan): Promise<GenerateResult> {
-    try {
-      const opId = await this.launch(plan);
-      const video = await this.poll(opId);
-      return { clip_url: video.uri ?? toDataUrl(video.b64), operation_id: opId };
-    } catch (e) {
-      return { clip_url: null, error: e instanceof Error ? e.message : String(e) };
-    }
-  }
-
-  private async launch(plan: ClipPlan): Promise<string> {
-    const subject = await urlToBase64(plan.asset_sujet_url);
-    const subjectMime = sniffMimeFromUrl(plan.asset_sujet_url);
-    // Best-guess Omni Flash : on suit le pattern REST Veo 3.1 actuel
-    // (image.bytesBase64Encoded + mimeType) tant que la doc dev officielle
-    // n'est pas publiée. À ajuster dès parution.
-    const body = {
-      instances: [
-        {
-          prompt: plan.prompt_mouvement,
-          image: { bytesBase64Encoded: subject, mimeType: subjectMime },
-        },
-      ],
-      parameters: {
-        aspectRatio: "9:16",
-        durationSeconds: plan.duree_sec,
-        sampleCount: 1,
-      },
+    // Model ID officiel non encore publié — renvoie une erreur explicite.
+    void plan;
+    void this.ai;
+    return {
+      clip_url: null,
+      error: "Omni Flash non disponible (preview API pas encore ouverte aux développeurs).",
     };
-    const res = await fetch(
-      `${BASE}/models/${this.model}:predictLongRunning?key=${this.cfg.apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      },
-    );
-    if (!res.ok) {
-      const txt = await res.text();
-      throw new Error(`Omni launch HTTP ${res.status}: ${txt}`);
-    }
-    const name = (await res.json())?.name;
-    if (!name) throw new Error("Omni : nom d'opération absent");
-    return name;
-  }
-
-  private async poll(opId: string): Promise<{ uri?: string; b64?: string }> {
-    const pollMs = this.cfg.pollMs ?? 8000;
-    const timeout = this.cfg.timeoutMs ?? 6 * 60_000;
-    const t0 = Date.now();
-    while (true) {
-      if (Date.now() - t0 > timeout) throw new Error(`Omni poll timeout ${timeout}ms`);
-      const res = await fetch(`${BASE}/${opId}?key=${this.cfg.apiKey}`);
-      if (!res.ok) throw new Error(`Omni poll HTTP ${res.status}: ${await res.text()}`);
-      const o = await res.json();
-      if (o.done) {
-        if (o.error) throw new Error(`Omni: ${JSON.stringify(o.error)}`);
-        const v = o?.response?.generatedVideos?.[0]?.video ?? o?.response?.videos?.[0];
-        return { uri: v?.uri, b64: v?.bytesBase64Encoded };
-      }
-      await new Promise((r) => setTimeout(r, pollMs));
-    }
   }
 }
 
@@ -245,12 +156,10 @@ export function createMotionEngine(cfg?: Partial<EngineConfig>): MotionEngineCli
 // ─── Utils ─────────────────────────────────────────────────────────────────
 
 async function urlToBase64(url: string): Promise<string> {
-  // Data URL : on extrait directement le base64
   if (url.startsWith("data:")) {
     const idx = url.indexOf(",");
     return idx >= 0 ? url.slice(idx + 1) : "";
   }
-  // URL relative servie par Next.js (ex: /canoniques/MAN-P01.jpg) : la rendre absolue
   const absolute = url.startsWith("/")
     ? `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}${url}`
     : url;

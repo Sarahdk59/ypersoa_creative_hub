@@ -373,6 +373,9 @@ export function PostCard({
                   background: "#ECE3D5",
                   position: "relative",
                   overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 {image ? (
@@ -380,7 +383,13 @@ export function PostCard({
                   <img
                     src={image}
                     alt="Visuel généré"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      display: "block",
+                      background: "#ECE3D5",
+                    }}
                   />
                 ) : (
                   <div

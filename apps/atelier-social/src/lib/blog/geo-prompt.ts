@@ -34,7 +34,7 @@ Repere Ypersoa :
 - sujets proches du quotidien : cadeau, broderie, taille, entretien, atelier, inspiration
 - ton simple, premium, sans jargon
 
-Repere Breizh Club :
+Repere editorial souhaite :
 - sens du decor editorial : une entree en matiere qui donne envie
 - angle assume, visuel, presque magazine
 - chaleur humaine, attachement a l'atelier, a la fabrication et au territoire
