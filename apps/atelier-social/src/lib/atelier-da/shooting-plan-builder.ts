@@ -29,7 +29,7 @@ export interface ShootingBriefInput {
   ambiances_lookbook_ids?: string[];
   exclusions?: string[];
   date_cible?: string;
-  format_attendu?: "instagram" | "pinterest" | "lookbook" | "shooting" | "hero-banner";
+  format_attendu?: "instagram" | "pinterest" | "lookbook" | "shooting" | "hero-banner" | "post-feed";
 }
 
 export interface ShootingPlanCanoniqueSuggestion {
@@ -93,6 +93,14 @@ const SHOTLIST_TEMPLATE_5: Array<{ angle: string; description: string; cadrage_t
     angle: "LIFESTYLE_WIDE",
     description: "Plan large environnement, personne intégrée naturellement. Architecture/lumière/matières respirent autour.",
     cadrage_type: "Plan large, golden ratio, environnement éloquent",
+  },
+];
+
+const SHOTLIST_TEMPLATE_1_POSTFEED: Array<{ angle: string; description: string; cadrage_type: string }> = [
+  {
+    angle: "POST_FEED_4_5",
+    description: "Portrait 4:5 face caméra, regard direct, broderie lisible au buste. Format optimisé feed Instagram — stop-scroll immédiat.",
+    cadrage_type: "4:5 vertical, plan poitrine, broderie en évidence",
   },
 ];
 
@@ -284,7 +292,12 @@ export async function buildShootingPlan(input: ShootingBriefInput): Promise<Shoo
 
   // Shotlist selon format
   const isPinterest = input.format_attendu === "pinterest";
-  const shotlistTemplate = isPinterest ? SHOTLIST_TEMPLATE_3_PINTEREST : SHOTLIST_TEMPLATE_5;
+  const isPostFeed = input.format_attendu === "post-feed";
+  const shotlistTemplate = isPinterest
+    ? SHOTLIST_TEMPLATE_3_PINTEREST
+    : isPostFeed
+      ? SHOTLIST_TEMPLATE_1_POSTFEED
+      : SHOTLIST_TEMPLATE_5;
   const shotlist: ShotlistEntry[] = shotlistTemplate.map((s, idx) => ({
     ordre: idx + 1,
     angle: s.angle,

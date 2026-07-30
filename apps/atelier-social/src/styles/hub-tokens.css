@@ -10,6 +10,11 @@
   --hub-foreground: #1E2D4A;
   --hub-border:     #E8E1D6;
 
+  /* Brand accent — CTA signatures */
+  --hub-cta:        #C23A2D;   /* Coquelicot — CTA principal, max 1 par zone */
+  --hub-teal:       #1E6E77;   /* Teal canard — accent secondaire, liens, planification */
+  --hub-blush:      #EAB4C4;   /* Blush — doux, badges, tags */
+
   --sidebar-width:    64px;
   --sidebar-icon:     20px;
   --topbar-height:    56px;

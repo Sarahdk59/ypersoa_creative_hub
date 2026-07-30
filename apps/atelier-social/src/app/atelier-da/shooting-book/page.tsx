@@ -54,7 +54,8 @@ const MOTIFS_YPM_FALLBACK = [
 const AMBIANCES_PREFAITES = AMBIANCES_OFFICIELLES.map((a) => ({ id: a.id, label: a.label }));
 
 const FORMATS = [
-  { value: "instagram", label: "Instagram (5 angles 4:5)" },
+  { value: "post-feed", label: "Post feed (1 angle 4:5)" },
+  { value: "instagram", label: "Pack Instagram (5 angles 4:5)" },
   { value: "pinterest", label: "Pinterest (3 angles 2:3)" },
   { value: "lookbook", label: "Lookbook (12-20 visuels)" },
   { value: "shooting", label: "Shooting full pack" },
@@ -132,7 +133,7 @@ function ShootingBookContent() {
   };
   const [ambiances, setAmbiances] = useState<string[]>([]);
   const [lookbookAmbianceIds, setLookbookAmbianceIds] = useState<string[]>([]);
-  const [format, setFormat] = useState<string>("instagram");
+  const [format, setFormat] = useState<string>("post-feed");
   const [generating, setGenerating] = useState(false);
   const [plan, setPlan] = useState<ShootingPlanOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -146,6 +147,11 @@ function ShootingBookContent() {
   const [supportColor, setSupportColor] = useState<string>("blanc");
   // Type de prise de vue : porté sur canonique ou flatlay lifestyle (pinterestable, sans personne)
   const [composition, setComposition] = useState<"worn" | "flatlay">("worn");
+  // Quand un PNG est fourni : produit + couleur + taille deviennent facultatifs.
+  // productOverride = true si Sarah veut forcer un produit malgré le PNG.
+  const [productOverride, setProductOverride] = useState(false);
+  // Reset de l'override quand le PNG est effacé
+  useEffect(() => { if (!motifPngDataUrl) setProductOverride(false); }, [motifPngDataUrl]);
 
   // Palettes réelles par produit (verrou couleur + packshot Gemini)
   const [hubProduits, setHubProduits] = useState<HubProduitLite[]>([]);
@@ -313,15 +319,20 @@ function ShootingBookContent() {
     setPlan(null);
     setRenderedImage(null);
     setImageError(null);
+    // PNG fourni sans override produit → pas de contrainte support dans le brief
+    const pngProvided = Boolean(motifPngDataUrl);
+    const showProduct = !pngProvided || productOverride;
     try {
       const supportLabel = availableColors.find((c) => c.id_palette === supportColor)?.nom_ypersoa ?? supportColor;
-      const briefWithSupport = `${briefTexte.trim()}\n\nSupport : t-shirt/sweat ${supportLabel} (couleur Ypersoa officielle).`;
+      const briefWithSupport = showProduct
+        ? `${briefTexte.trim()}\n\nSupport : t-shirt/sweat ${supportLabel} (couleur Ypersoa officielle).`
+        : briefTexte.trim();
       const res = await fetch("/api/da/shooting-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           texte_libre: briefWithSupport,
-          produit_yp_id: produitId,
+          produit_yp_id: showProduct ? produitId : undefined,
           motif_ypm_id: motifId || undefined,
           motif_ypm_nom: motifNom,
           ambiances_preferees: ambiances,
@@ -350,6 +361,8 @@ function ShootingBookContent() {
     setRenderingImage(true);
     setImageError(null);
     setRenderedImage(null);
+    const pngProvided = Boolean(motifPngDataUrl);
+    const showProduct = !pngProvided || productOverride;
     try {
       const res = await fetch("/api/da/shooting-plan/render", {
         method: "POST",
@@ -359,9 +372,9 @@ function ShootingBookContent() {
           lookbook_ambiance_ids: lookbookAmbianceIds,
           selected_dispositif_id: selectedDispositifId,
           motif_png_data_url: motifPngDataUrl,
-          motif_size: motifSize,
-          produit_yp_id: produitId,
-          selected_garment_color: supportColor,
+          motif_size: pngProvided ? undefined : motifSize,
+          produit_yp_id: showProduct ? produitId : undefined,
+          selected_garment_color: showProduct ? supportColor : undefined,
           shot_index: 0,
           composition,
         }),
@@ -384,6 +397,8 @@ function ShootingBookContent() {
       delete next[shotIndex];
       return next;
     });
+    const pngProvided = Boolean(motifPngDataUrl);
+    const showProduct = !pngProvided || productOverride;
     try {
       const res = await fetch("/api/da/shooting-plan/render", {
         method: "POST",
@@ -393,9 +408,9 @@ function ShootingBookContent() {
           lookbook_ambiance_ids: lookbookAmbianceIds,
           selected_dispositif_id: selectedDispositifId,
           motif_png_data_url: motifPngDataUrl,
-          motif_size: motifSize,
-          produit_yp_id: produitId,
-          selected_garment_color: supportColor,
+          motif_size: pngProvided ? undefined : motifSize,
+          produit_yp_id: showProduct ? produitId : undefined,
+          selected_garment_color: showProduct ? supportColor : undefined,
           shot_index: shotIndex,
           composition,
         }),
@@ -537,7 +552,40 @@ function ShootingBookContent() {
             {briefTexte.length}/400
           </div>
 
-          {/* Produit Ypersoa */}
+          {/* Produit Ypersoa — facultatif si PNG fourni */}
+          {motifPngDataUrl && (
+            <div
+              style={{
+                marginTop: 16,
+                padding: "10px 12px",
+                borderRadius: 10,
+                background: "rgba(30,110,119,0.07)",
+                border: "0.5px solid rgba(30,110,119,0.25)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--hub-teal)", lineHeight: 1.4 }}>
+                PNG fourni — taille et support déduits de l&apos;image
+              </span>
+              <label style={{ display: "flex", alignItems: "center", gap: 5, cursor: "pointer", flexShrink: 0 }}>
+                <input
+                  type="checkbox"
+                  checked={productOverride}
+                  onChange={(e) => setProductOverride(e.target.checked)}
+                  style={{ accentColor: "var(--hub-teal)", cursor: "pointer" }}
+                />
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-teal)", whiteSpace: "nowrap" }}>
+                  Forcer un produit
+                </span>
+              </label>
+            </div>
+          )}
+
+          {(!motifPngDataUrl || productOverride) && (
+            <>
           <label
             style={{
               fontFamily: "var(--font-sans)",
@@ -581,6 +629,8 @@ function ShootingBookContent() {
               </option>
             ))}
           </select>
+            </>
+          )}
 
           {/* Référentiel motifs YPM — galerie visuelle cliquable */}
           <label
@@ -865,7 +915,9 @@ function ShootingBookContent() {
             </p>
           )}
 
-          {/* Taille du motif */}
+          {/* Taille du motif brodé — masquée si PNG fourni (Gemini hérite la taille du visuel) */}
+          {!motifPngDataUrl ? (
+            <>
           <label
             style={{
               fontFamily: "var(--font-sans)",
@@ -917,7 +969,15 @@ function ShootingBookContent() {
               );
             })}
           </div>
+            </>
+          ) : (
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-teal)", marginTop: 6, marginBottom: 0, lineHeight: 1.4 }}>
+              Taille héritée du PNG — Gemini respecte les proportions de l&apos;image fournie.
+            </p>
+          )}
 
+          {(!motifPngDataUrl || productOverride) && (
+          <>
           <label
             style={{
               fontFamily: "var(--font-sans)",
@@ -973,6 +1033,8 @@ function ShootingBookContent() {
               );
             })}
           </div>
+          </>
+          )}
 
           {/* Ambiances préférées (multi-select chips) */}
           <label
@@ -1173,11 +1235,11 @@ function ShootingBookContent() {
               padding: "12px 16px",
               borderRadius: 999,
               border: "none",
-              background: "var(--hub-foreground)",
-              color: "var(--hub-bg)",
+              background: "var(--hub-cta)",
+              color: "#FAF7F2",
               fontFamily: "var(--font-sans)",
               fontSize: 13,
-              fontWeight: 500,
+              fontWeight: 600,
               letterSpacing: "0.05em",
               cursor: briefTexte.trim() && !generating ? "pointer" : "not-allowed",
               opacity: briefTexte.trim() && !generating ? 1 : 0.4,
@@ -1267,12 +1329,12 @@ function ShootingBookContent() {
                           padding: "8px 14px",
                           borderRadius: 999,
                           border: "none",
-                          background: "var(--hub-foreground)",
-                          color: "var(--hub-bg)",
+                          background: "var(--hub-teal)",
+                          color: "#FAF7F2",
                           fontFamily: "var(--font-sans)",
                           fontSize: 12,
-                          fontWeight: 500,
-                          letterSpacing: "0.05em",
+                          fontWeight: 600,
+                          letterSpacing: "0.04em",
                           cursor: renderingImage ? "wait" : "pointer",
                           opacity: renderingImage ? 0.5 : 1,
                           display: "flex",
@@ -1300,11 +1362,12 @@ function ShootingBookContent() {
                           style={{
                             padding: "8px 14px",
                             borderRadius: 999,
-                            border: "0.5px solid var(--hub-border)",
-                            background: "white",
-                            color: "var(--hub-foreground)",
+                            border: "1px solid var(--hub-teal)",
+                            background: "transparent",
+                            color: "var(--hub-teal)",
                             fontFamily: "var(--font-sans)",
                             fontSize: 12,
+                            fontWeight: 500,
                             cursor: renderingImage ? "wait" : "pointer",
                             display: "flex",
                             alignItems: "center",
@@ -1678,12 +1741,12 @@ function ShootingBookContent() {
                               style={{
                                 padding: "6px 12px",
                                 borderRadius: 999,
-                                border: img ? "0.5px solid var(--hub-border)" : "none",
-                                background: img ? "white" : "var(--hub-foreground)",
-                                color: img ? "var(--hub-foreground)" : "var(--hub-bg)",
+                                border: img ? "1px solid var(--hub-teal)" : "none",
+                                background: img ? "transparent" : "var(--hub-teal)",
+                                color: img ? "var(--hub-teal)" : "#FAF7F2",
                                 fontFamily: "var(--font-sans)",
                                 fontSize: 11,
-                                fontWeight: 500,
+                                fontWeight: img ? 500 : 600,
                                 cursor: isRendering || someoneElseRendering ? "wait" : "pointer",
                                 opacity: someoneElseRendering ? 0.4 : 1,
                                 display: "flex",
