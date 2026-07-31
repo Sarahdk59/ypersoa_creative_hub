@@ -36,6 +36,15 @@ interface RequestBody {
   brandFacts?: BrandFact[];
 }
 
+function shuffleArray<T>(items: T[]): T[] {
+  const next = [...items];
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
+}
+
 const DEFAULT_BRAND_FACTS: BrandFact[] = [
   { topic: "atelier", fact: "La broderie est realisee dans notre atelier a Wattrelos, dans les Hauts-de-France." },
   { topic: "production", fact: "Chaque piece est brodee a la commande, apres validation, ce qui evite le surstock." },
@@ -132,7 +141,7 @@ export async function POST(req: NextRequest) {
   const brief: ArticleBrief = {
     targetQuery: body.targetQuery,
     angle: body.angle,
-    subQueries: body.subQueries,
+    subQueries: shuffleArray(body.subQueries),
     outOfScope: body.outOfScope,
     conversionGoal: body.conversionGoal,
     brandFacts: body.brandFacts?.length ? body.brandFacts : DEFAULT_BRAND_FACTS,
@@ -185,7 +194,7 @@ export async function POST(req: NextRequest) {
       angle: body.angle,
       serp_softness: body.serpSoftness,
       conversion_goal: body.conversionGoal,
-      sub_queries: body.subQueries,
+      sub_queries: brief.subQueries,
       out_of_scope: body.outOfScope,
       internal_links: body.internalLinks ?? [],
       brand_facts: brief.brandFacts,

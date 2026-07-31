@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Copy, Loader2, Sparkles, AlertTriangle, CheckCircle2, FileJson2, FileText, ScrollText, Wand2 } from "lucide-react";
+import { Copy, Loader2, Sparkles, AlertTriangle, CheckCircle2, FileJson2, FileText, ScrollText, Wand2, ArrowUpRight, Shuffle } from "lucide-react";
 
 type ConversionGoal = "club" | "defensif_marque" | "occasion";
 
@@ -75,7 +75,7 @@ const card: React.CSSProperties = {
 const blogFactsDefault = [
   { topic: "atelier", fact: "La broderie est realisee dans notre atelier a Wattrelos, dans les Hauts-de-France." },
   { topic: "production", fact: "Chaque piece est brodee a la commande, apres validation, ce qui evite le surstock." },
-  { topic: "technique", fact: "Ypersoa travaille la broderie personnalisee, pensee pour durer dans le temps." },
+  { topic: "technique", fact: "La broderie personnalisee est pensee pour durer dans le temps." },
   { topic: "delais", fact: "Les delais de fabrication annonces sont de 5 a 11 jours ouvres selon le modele." },
   { topic: "fil", fact: "La personnalisation couvre la couleur du vetement et la couleur du fil, avec 9 coloris de fil au choix." },
 ];
@@ -95,7 +95,7 @@ export default function AtelierBlogPage() {
     "Le detail interne des etapes de production",
   ]);
   const [internalLinks, setInternalLinks] = useState([
-    { label: "Le Club Ypersoa", url: "/pages/cercle" },
+    { label: "Le Club", url: "/pages/cercle" },
     { label: "Guide des tailles", url: "/pages/guide-des-tailles" },
   ]);
   const [serpSoftness, setSerpSoftness] = useState(4);
@@ -107,7 +107,7 @@ export default function AtelierBlogPage() {
   const [data, setData] = useState<GenerateResponse | null>(null);
   const [history, setHistory] = useState<SavedArticleRecord[]>([]);
   const [copied, setCopied] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"article" | "html" | "liquid" | "jsonld">("article");
+  const [activeTab, setActiveTab] = useState<"preview" | "article" | "html" | "liquid" | "jsonld">("preview");
 
   const payload = useMemo(
     () => ({
@@ -208,6 +208,17 @@ export default function AtelierBlogPage() {
     setter(next);
   }
 
+  function shuffleSubQueries() {
+    setSubQueries((prev) => {
+      const next = [...prev];
+      for (let i = next.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [next[i], next[j]] = [next[j], next[i]];
+      }
+      return next;
+    });
+  }
+
   return (
     <div style={pageWrap}>
       <section
@@ -222,7 +233,7 @@ export default function AtelierBlogPage() {
         }}
       >
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 30%)" }} />
-        <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 24 }}>
+          <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 24 }}>
           <div>
             <Link href="/atelier-da" style={{ color: "rgba(250,247,242,0.76)", textDecoration: "none", fontSize: 12 }}>
               ← Retour Atelier DA
@@ -231,8 +242,8 @@ export default function AtelierBlogPage() {
               Atelier Blog
             </h1>
             <p style={{ maxWidth: 720, fontSize: 15, lineHeight: 1.7, color: "rgba(250,247,242,0.82)", margin: 0 }}>
-              Generateur d&apos;articles GEO pour le journal Ypersoa. Le brief reste utile et SEO, mais l&apos;ecriture garde
-              une tenue editoriale inspiree des blogs de marque qui melangent clarte, desirabilite et ancrage atelier.
+              Generateur d&apos;articles GEO pour un journal e-commerce. Ici, on ne remplit pas un formulaire:
+              on construit un angle fort, un plan cit able et une page qui ressemble davantage a un vrai article deja en ligne.
             </p>
           </div>
           <div
@@ -245,12 +256,12 @@ export default function AtelierBlogPage() {
             }}
           >
             <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.14em", color: "rgba(250,247,242,0.62)", marginBottom: 10 }}>
-              Direction editoriale
+              Posture mentor GEO
             </div>
             <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 13, lineHeight: 1.6, color: "rgba(250,247,242,0.84)" }}>
-              <li>Ypersoa : utile, concret, cadeau, taille, entretien, atelier.</li>
-              <li>Direction souhaitee : plus editoriale, plus chaleureuse, plus ancree dans la fabrication.</li>
-              <li>Sortie prete pour Shopify : HTML simple, body enrichi, bloc Liquid et FAQ JSON-LD.</li>
+              <li>On cherche un angle qui peut etre cite, pas un guide qui parle de tout.</li>
+              <li>Le plan peut alterner a chaque generation pour trouver une meilleure progression editoriale.</li>
+              <li>Le rendu vise la sensation d&apos;un journal premium : grand titre, respiration, aside CTA, lecture elegante.</li>
             </ul>
           </div>
         </div>
@@ -262,7 +273,7 @@ export default function AtelierBlogPage() {
             <div>
               <h2 style={{ margin: 0, fontFamily: "var(--font-editorial)", fontSize: 28, fontWeight: 500 }}>Brief</h2>
               <p style={{ margin: "6px 0 0", fontSize: 13, lineHeight: 1.6, color: "rgba(26,22,20,0.62)" }}>
-                On cadre l&apos;angle, la SERP et l&apos;objectif avant la generation.
+                On cadre l&apos;angle, la SERP et l&apos;objectif avant la generation. L&apos;atelier peut aussi brasser l&apos;ordre des sous-questions pour casser les plans trop mecaniques.
               </p>
             </div>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(26,22,20,0.6)" }}>
@@ -307,6 +318,12 @@ export default function AtelierBlogPage() {
           </FormField>
 
           <ListEditor title="Sous-questions" values={subQueries} onChange={setSubQueries} updateList={updateList} />
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: -6, marginBottom: 16 }}>
+            <button onClick={shuffleSubQueries} style={secondaryButton}>
+              <Shuffle size={14} />
+              Melanger les sous-questions
+            </button>
+          </div>
           <ListEditor title="Hors perimetre" values={outOfScope} onChange={setOutOfScope} updateList={updateList} />
 
           <FormField label="Liens internes">
@@ -359,7 +376,7 @@ export default function AtelierBlogPage() {
               <div>
                 <h2 style={{ margin: 0, fontFamily: "var(--font-editorial)", fontSize: 30, fontWeight: 500 }}>Sortie</h2>
                 <p style={{ margin: "6px 0 0", fontSize: 13, lineHeight: 1.6, color: "rgba(26,22,20,0.62)" }}>
-                  Article JSON, export Shopify, Liquid et JSON-LD au meme endroit.
+                  Apercu editorial, article JSON, export Shopify, Liquid et JSON-LD au meme endroit.
                 </p>
               </div>
 
@@ -375,6 +392,7 @@ export default function AtelierBlogPage() {
             </div>
 
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+              <TabButton icon={<Sparkles size={14} />} active={activeTab === "preview"} onClick={() => setActiveTab("preview")}>Apercu</TabButton>
               <TabButton icon={<FileText size={14} />} active={activeTab === "article"} onClick={() => setActiveTab("article")}>Article</TabButton>
               <TabButton icon={<ScrollText size={14} />} active={activeTab === "html"} onClick={() => setActiveTab("html")}>Shopify HTML</TabButton>
               <TabButton icon={<Wand2 size={14} />} active={activeTab === "liquid"} onClick={() => setActiveTab("liquid")}>Liquid</TabButton>
@@ -425,6 +443,10 @@ export default function AtelierBlogPage() {
                   </div>
                 )}
 
+                {activeTab === "preview" && data.article && (
+                  <ArticlePreview article={data.article} />
+                )}
+
                 {activeTab === "article" && data.article && (
                   <OutputPanel
                     label="JSON article"
@@ -466,16 +488,16 @@ export default function AtelierBlogPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 18 }}>
             <MiniCard
-              title="Ce qu'on reprend du blog Ypersoa"
-              body="Cartes claires, sujets tres concrets, ancrage cadeau / atelier / entretien, ton simple et premium."
+              title="Ce qu'on vise"
+              body="Une page qui pense comme un mentor GEO: angle net, progression lisible, phrases extractibles et conclusion utile."
             />
             <MiniCard
               title="Ce qu'on ajoute au ton"
-              body="Une touche plus editoriale et magazine, sans perdre l'utilite SEO. Plus de desirabilite, moins de robot."
+              body="Une touche plus editoriale et magazine, sans perdre l'utilite SEO. Plus de desirabilite, moins de robot, plus de respiration."
             />
             <MiniCard
               title="Ce qu'on evite"
-              body="Les guides fourre-tout, le jargon machine, les phrases marketing creuses et les CTA trop agressifs."
+              body="Les guides fourre-tout, les plans toujours identiques, le jargon machine, les phrases marketing creuses et les CTA trop agressifs."
             />
           </div>
         </section>
@@ -530,6 +552,170 @@ export default function AtelierBlogPage() {
             ))}
           </div>
         </aside>
+      </div>
+    </div>
+  );
+}
+
+function ArticlePreview({ article }: { article: ArticlePayload }) {
+  return (
+    <div
+      style={{
+        background: "#F7F1E8",
+        border: "1px solid rgba(26,22,20,0.08)",
+        borderRadius: 26,
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ padding: "22px 26px 10px", color: "#1E2D4A" }}>
+        <div style={{ fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "#0E6B70", marginBottom: 14 }}>
+          Broderie
+        </div>
+        <h3
+          style={{
+            margin: 0,
+            fontFamily: "var(--font-editorial)",
+            fontSize: 54,
+            fontWeight: 500,
+            lineHeight: 0.96,
+            letterSpacing: "-0.03em",
+          }}
+        >
+          {article.h1}
+        </h3>
+        <div style={{ marginTop: 18, fontSize: 13, color: "#7C8B97", display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <span>2 min de lecture</span>
+          <span>•</span>
+          <span>Atelier en France</span>
+        </div>
+      </div>
+
+      <div style={{ padding: "0 26px 26px", display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: 26, alignItems: "start" }}>
+        <div>
+          <div
+            style={{
+              height: 260,
+              borderRadius: 22,
+              background:
+                "linear-gradient(135deg, rgba(246,236,220,1) 0%, rgba(240,229,212,1) 100%)",
+              border: "1px solid rgba(26,22,20,0.06)",
+              marginBottom: 28,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div style={{ position: "absolute", inset: "0 0 auto auto", width: 180, height: 180, background: "radial-gradient(circle, rgba(14,107,112,0.12), transparent 65%)" }} />
+            <div style={{ position: "absolute", left: 26, top: 26, width: 180, height: 220, borderRadius: 22, background: "rgba(255,255,255,0.42)" }} />
+            <div style={{ position: "absolute", right: 46, bottom: 26, color: "#A76059", fontFamily: "var(--font-editorial)", fontSize: 64 }}>
+              Y
+            </div>
+          </div>
+
+          <p
+            style={{
+              margin: 0,
+              fontSize: 18,
+              lineHeight: 1.8,
+              color: "#2A2C33",
+            }}
+          >
+            <span style={{ float: "left", fontSize: 74, lineHeight: 0.8, paddingRight: 12, color: "#0E6B70", fontFamily: "var(--font-editorial)" }}>
+              {article.direct_answer.charAt(0)}
+            </span>
+            {article.direct_answer.slice(1)}
+          </p>
+
+          <div style={{ display: "grid", gap: 28, marginTop: 34 }}>
+            {article.sections.map((section) => (
+              <section key={section.h2}>
+                <h4
+                  style={{
+                    margin: "0 0 14px",
+                    fontFamily: "var(--font-editorial)",
+                    fontSize: 34,
+                    fontWeight: 500,
+                    color: "#0E6B70",
+                    lineHeight: 1.02,
+                  }}
+                >
+                  {section.h2}
+                </h4>
+                <p style={{ margin: 0, fontSize: 17, lineHeight: 1.8, color: "#2A2C33", whiteSpace: "pre-wrap" }}>{section.body}</p>
+              </section>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gap: 18, position: "sticky", top: 18 }}>
+          <aside
+            style={{
+              background: "#0E6B70",
+              color: "#F7F1E8",
+              borderRadius: 18,
+              padding: 22,
+            }}
+          >
+            <div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#D6B0A6", marginBottom: 16 }}>
+              Atelier · France
+            </div>
+            <div style={{ fontSize: 20, lineHeight: 1.25, marginBottom: 14 }}>Pret a personnaliser ta piece ?</div>
+            <p style={{ margin: "0 0 20px", fontSize: 14, lineHeight: 1.65, color: "rgba(247,241,232,0.84)" }}>
+              {article.cta.body}
+            </p>
+            <button
+              style={{
+                width: "100%",
+                border: "none",
+                borderRadius: 12,
+                background: "#F7F1E8",
+                color: "#0E6B70",
+                padding: "14px 16px",
+                fontSize: 15,
+                fontWeight: 600,
+                display: "inline-flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              {article.cta.label}
+              <ArrowUpRight size={16} />
+            </button>
+            <div style={{ marginTop: 18, paddingTop: 18, borderTop: "1px solid rgba(247,241,232,0.16)", fontSize: 13, color: "rgba(247,241,232,0.72)" }}>
+              Expedie sous 5 a 11 jours ouvres
+            </div>
+          </aside>
+
+          <aside
+            style={{
+              border: "1px solid rgba(26,22,20,0.1)",
+              borderRadius: 18,
+              padding: 20,
+              background: "rgba(255,255,255,0.6)",
+            }}
+          >
+            <div style={{ fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color: "#0E6B70", marginBottom: 14 }}>
+              Liens internes
+            </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              {article.internal_links.map((link) => (
+                <span
+                  key={link}
+                  style={{
+                    borderRadius: 999,
+                    border: "1px solid rgba(14,107,112,0.18)",
+                    padding: "10px 14px",
+                    fontSize: 13,
+                    color: "#0E6B70",
+                    background: "#FFFDF9",
+                  }}
+                >
+                  {link}
+                </span>
+              ))}
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

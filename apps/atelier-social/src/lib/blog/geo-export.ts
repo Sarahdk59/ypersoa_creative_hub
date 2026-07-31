@@ -39,7 +39,7 @@ export function toShopifyHtml(a: ArticlePayload): string {
     ? `<ul>\n${a.internal_links.map((l) => `  <li>${esc(l)}</li>`).join("\n")}\n</ul>`
     : "";
 
-  return `<!-- Ypersoa · article GEO -->
+  return `<!-- article GEO -->
 <div class="ypersoa-answer">
   <p><strong>${esc(a.direct_answer)}</strong></p>
 </div>
@@ -146,12 +146,12 @@ export function toShopifyLiquidBundle(a: ArticlePayload) {
     admin: {
       title: a.h1,
       blog_handle: "journal",
-      tags: ["geo", "seo-longue-traine", "ypersoa"],
+      tags: ["geo", "seo-longue-traine"],
     },
     seo,
     article_body_html: articleBody,
     faq_jsonld: faqJsonLd,
-    liquid_section: `{% comment %} Ypersoa GEO article block {% endcomment %}
+    liquid_section: `{% comment %} article GEO block {% endcomment %}
 <article class="article-template__content rte">
 ${articleBody}
 </article>
