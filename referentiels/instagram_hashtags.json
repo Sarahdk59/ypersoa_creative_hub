@@ -2,18 +2,17 @@
   "_meta": {
     "schema_version": "2.3",
     "referentiel": "instagram_hashtags",
-    "last_updated": "2026-07-01",
-    "changelog": "2.3 : retrait de #broderiemachine du socle (référence machine interdite en public) → remplacé par #broderiesurmesure (consumer, SEO). 2.2 : alignement de TOUT le bank en sans-accent au singulier (forme la plus recherchée sur IG) — 24 tags normalisés, #cadeauxdenoel → #cadeaunoel. 2.1 : ajout du bloc `tags_valides` (Guide d'exécution Maï p.33-34) — principe d'alternance, packs Reels, socle par post, tuiles thématiques, add-ons concours/UGC.",
+    "last_updated": "2026-07-31",
+    "changelog": "2.4 : retrait de #madeinfrance (risque DGCCRF — vêtements confectionnés en Chine, broderie uniquement en France) → remplacé par #hautsdefrance / #createurfrancais selon contexte. 2.3 : retrait de #broderiemachine du socle (référence machine interdite en public) → remplacé par #broderiesurmesure (consumer, SEO). 2.2 : alignement de TOUT le bank en sans-accent au singulier (forme la plus recherchée sur IG) — 24 tags normalisés, #cadeauxdenoel → #cadeaunoel. 2.1 : ajout du bloc `tags_valides` (Guide d'exécution Maï p.33-34) — principe d'alternance, packs Reels, socle par post, tuiles thématiques, add-ons concours/UGC.",
     "description": "Banque evergreen de hashtags Instagram Ypersoa orientés ENGAGEMENT + ACQUISITION. On pioche 5 tags ciblés et variés par post selon la formule : 1 socle marque/broderie + 1 produit + 1 occasion + 1 niche/style + 1 communauté/local. Le bloc `tags_valides` reproduit fidèlement les tags validés par Maï (référence éditable).",
     "formule": "socle_marque + produit + occasion + niche_style + communaute_local",
     "logique_reach": "Instagram plafonne à 5 hashtags depuis déc. 2025. Les hashtags = signaux de CLASSEMENT, plus des sources de trafic. Viser un MIX de tiers : 2-3 larges (>500k posts, catégorisation) + 1-2 moyens (10k-500k, vraie découverte où on peut exister) + 1 niche (<10k, où on ranke en top). La formule 5-slots produit ce mix naturellement.",
     "accents": "Sur IG accentué ≠ non-accentué (2 tags distincts) et la forme SANS accent est presque toujours la plus recherchée (clavier mobile, vitesse). RÈGLE : tout le bank est en sans-accent ET au singulier — ex. #broderiepersonnalisee, #cadeaupersonnalise, #prenombrode, #cadeaunoel. Seuls les pluriels figés des expressions restent tels quels (#fetedesmeres, #hautsdefrance, #coulisses).",
-    "regles_brand": "JAMAIS #faitmain #handmade #DIY #etsy (même s'ils ont du volume en broderie). JAMAIS de référence machine. Tutoiement. Vocabulaire : brodé à la commande, personnalisé, made in France.",
+    "regles_brand": "JAMAIS #faitmain #handmade #DIY #etsy (même s'ils ont du volume en broderie). JAMAIS #madeinfrance #fabriqueenfrance #faitenfrance #artisanat #artisanatfrancais (risque DGCCRF ou lié au lexique fait-main interdit). JAMAIS de référence machine. Tutoiement. Préférer #hautsdefrance #createurfrancais.",
     "tiers_indicatifs": {
       "larges": [
         "#cadeau",
         "#ideecadeau",
-        "#madeinfrance",
         "#broderie",
         "#sweatshirt",
         "#tshirt",
@@ -27,9 +26,7 @@
         "#broderiepersonnalisee",
         "#sweatpersonnalise",
         "#tshirtpersonnalise",
-        "#fabriqueenfrance",
         "#createurfrancais",
-        "#artisanatfrancais",
         "#slowfashion",
         "#cadeaunaissance",
         "#cadeaumaman",
@@ -56,13 +53,11 @@
     "#ypersoa"
   ],
   "communaute_local": [
-    "#madeinfrance",
-    "#fabriqueenfrance",
     "#createurfrancais",
-    "#artisanatfrancais",
+    "#hautsdefrance",
     "#slowfashion",
     "#consommerlocal",
-    "#hautsdefrance"
+    "#wattrelos"
   ],
   "niche_style": [
     "#cadeaupersonnalise",
@@ -281,11 +276,10 @@
         "#textile",
         "#textilepersonnalise"
       ],
-      "artisanat": [
-        "#artisanat",
-        "#faitenfrance",
+      "local_france": [
+        "#hautsdefrance",
+        "#wattrelos",
         "#lille",
-        "#madeinfrance",
         "#broderie",
         "#entreprisefrancaise"
       ],
@@ -309,7 +303,6 @@
           "#prenombrode",
           "#cadeauoriginal",
           "#broderie",
-          "#madeinfrance",
           "#hautsdefrance",
           "#sweat"
         ]
@@ -326,7 +319,7 @@
           "#sweatpersonnalise",
           "#cadeaupersonnalise",
           "#mariage2026",
-          "#madeinfrance"
+          "#createurfrancais"
         ]
       },
       "fete_meres_maman": {
@@ -340,7 +333,7 @@
           "#coeurbrode",
           "#prenombrode",
           "#cadeauoriginal",
-          "#madeinfrance",
+          "#createurfrancais",
           "#hautsdefrance"
         ]
       }
@@ -352,7 +345,7 @@
         "#broderiepersonnalisee",
         "#ideecadeau",
         "#brodealacommande",
-        "#madeinfrance",
+        "#createurfrancais",
         "#hautsdefrance"
       ]
     },

@@ -31,6 +31,22 @@ export const BRAND_FORBIDDEN_TERMS = [
   "marketplace",
   "marketplaces",
 
+  // Origine interdite (risque DGCCRF — confection en Chine, broderie seule insuffisante)
+  "made in France",
+  "Made in France",
+  "Made In France",
+  "#madeinfrance",
+  "#fabriqueenfrance",
+  "#faitenfrance",
+  "fabriqué en France",
+  "fabriqué en france",
+  "fait en France",
+  "fait en france",
+
+  // Artisanat — lié au lexique fait-main interdit
+  "#artisanat",
+  "#artisanatfrancais",
+
   // Jargon technique banni
   "Tajima TMEZ",
   "TMEZ",
