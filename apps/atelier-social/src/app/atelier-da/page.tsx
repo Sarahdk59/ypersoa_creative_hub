@@ -8,7 +8,7 @@
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film, FileBox, Palette, CalendarClock, Newspaper } from "lucide-react";
+import { Users, Camera, Sparkles, Image as ImageIcon, BookOpen, Archive, ArrowRight, Compass, Library, Shapes, Film, FileBox, Palette, CalendarClock, Newspaper, Clapperboard } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -115,6 +115,14 @@ const SUBMODULES: SubmoduleCard[] = [
     href: "/brand",
     icon: <BookOpen size={22} strokeWidth={1.4} />,
     status: "v0",
+  },
+  {
+    id: 14,
+    title: "Studio Mood brodé",
+    description: "Planifie tes épisodes Reels / TikTok — humeur, mot brodé, motif YPM. Génère hook + légende-question dans la voix de marque (Anthropic) + storyboard 4 frames prêt pour Maï (CapCut / AE).",
+    href: "/atelier-da/studio-mood",
+    icon: <Clapperboard size={22} strokeWidth={1.4} />,
+    status: "v0" as const,
   },
   {
     id: 11,
