@@ -24,14 +24,14 @@ interface Msg {
 
 const SUGGESTIONS = [
   "Où je crée un visuel Pinterest ?",
-  "Aide-moi à écrire une caption pour la Fête des Pères",
-  "C'est quoi la différence entre un format Hero et Désir ?",
+  "Comment préparer un épisode vidéo dans Studio Mood ?",
+  "Comment générer un article de blog pour Shopify ?",
   "Comment importer une commande Shopify ?",
 ];
 
 /** Routes connues du Hub — pour linkifier les chemins bruts en sortie LLM. */
 const KNOWN_ROUTE =
-  "(?:social|shooting|lookbook|atelier-da|atelier-trends|atelier-production|search|guide)";
+  "(?:social|shooting|lookbook|atelier-da|atelier-trends|atelier-production|search|guide|blog|studio-mood)";
 
 /**
  * Rend un texte d'assistant en nœuds React : liens Markdown [label](/route),

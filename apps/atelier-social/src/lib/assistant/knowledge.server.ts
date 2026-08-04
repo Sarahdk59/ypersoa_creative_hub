@@ -65,10 +65,16 @@ export const HUB_MAP: HubRoute[] = [
     pitch: "Le catalogue créatif des motifs YPM (noms commerciaux, déclinaisons, templates de poignets).",
   },
   {
+    href: "/atelier-da/studio-mood",
+    atelier: "Atelier DA · Studio Mood brodé",
+    pitch:
+      "Préparer et piloter des épisodes vidéo (Reels, Stories) autour des motifs brodés : brief, storyboard scène par scène, copy brand-safe, visuel de test. Statuts : Brouillon → Prêt à tourner → Tourné → Monté → Publié.",
+  },
+  {
     href: "/atelier-da/blog",
     atelier: "Atelier DA · Blog",
     pitch:
-      "Le generateur d'articles GEO pour Shopify : brief longue traine, angle editorial, lint qualite, export HTML Shopify, bloc Liquid et FAQ JSON-LD.",
+      "Le générateur d'articles GEO pour Shopify : brief longue traîne, angle éditorial, lint qualité, export HTML Shopify, bloc Liquid et FAQ JSON-LD.",
   },
   {
     href: "/atelier-da/planning",

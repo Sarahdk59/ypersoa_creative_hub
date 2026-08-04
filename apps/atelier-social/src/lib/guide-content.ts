@@ -822,6 +822,58 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         ],
       },
       {
+        id: "da-studio-mood",
+        name: "Studio Mood brodé (épisodes vidéo)",
+        aQuoiCaSert:
+          "Préparer et piloter des épisodes vidéo (Reels, Stories) autour des motifs brodés : brief, storyboard scène par scène, copy brand-safe et visuel de test, du brouillon à la publication.",
+        quandUtiliser:
+          "Quand tu veux créer du contenu vidéo ou Reel pour un motif ou une occasion. Pour les images fixes (carrousel, Pinterest), reste sur l'Atelier Social.",
+        commentFaire: [
+          "Ouvre Atelier DA, puis la carte « Studio Mood brodé ».",
+          "Clique « + Nouvel épisode » ou injecte la banque pré-remplie (12 épisodes) via « Injecter la banque ».",
+          "Dans la fiche épisode, renseigne le titre, l'humeur (Tendresse, Fierté, Complicité…), le mot brodé, le motif YPM, le support et l'occasion.",
+          "Clique « Générer le storyboard » pour obtenir un plan scène par scène (frames avec durée, description, note de montage).",
+          "Clique « Générer le copy » pour obtenir le hook + la légende-question + les hashtags, vérifiés brand-safe.",
+          "Génère un visuel de test en choisissant composition (flatlay ou porté), ratio (9:16 / 1:1 / 4:5) et canonique.",
+          "Fais avancer le statut : Brouillon → Prêt à tourner → Tourné → Monté → Publié.",
+        ],
+        exemple:
+          "Pour la Fête des Mères tu crées l'épisode « Tendresse matinale » sur le motif MAMA CLUB, sweat beige, humeur Tendresse. Tu génères le storyboard (5 frames) et le copy. L'épisode passe en « Prêt à tourner » : tu peux filer le plan à l'équipe.",
+        resultat:
+          "Un épisode complet avec storyboard scène par scène, hook + légende + hashtags brand-safe, et un visuel de test téléchargeable. Statut qui évolue jusqu'à « Publié ».",
+        limites: [
+          "Le storyboard est un guide de tournage, pas un script final : adapte les frames à ton matériel.",
+          "La banque pré-remplie (12 épisodes) : ne clique « Injecter la banque » qu'une seule fois, sinon tu doubles les épisodes.",
+          "La génération du visuel de test utilise Gemini : si IMAGE_OTHER s'affiche, change la composition ou le ratio et régénère.",
+        ],
+      },
+      {
+        id: "da-blog",
+        name: "Blog — générateur d'articles GEO",
+        aQuoiCaSert:
+          "Générer des articles de blog optimisés SEO/GEO pour Shopify, à partir d'une requête longue traîne : H1, sections H2, FAQ, CTA, export HTML, bloc Liquid Shopify et FAQ JSON-LD.",
+        quandUtiliser:
+          "Quand tu veux publier un article sur le blog Ypersoa (ex. « sweat brodé personnalisé fête des mères »). Pas pour les posts réseaux sociaux — ça c'est l'Atelier Social.",
+        commentFaire: [
+          "Ouvre Atelier DA, puis la carte « Blog ».",
+          "Renseigne la « Requête cible » (longue traîne) et le « Softness score » de la SERP.",
+          "Choisis l'angle éditorial (Conversion Club / Défensif marque / Occasion).",
+          "Ajoute les sous-requêtes couvertes, les liens internes et les faits brand à injecter.",
+          "Clique « Générer l'article ».",
+          "Lis le rapport de lint (✓ ou ✗) : si la qualité échoue, l'article est réparé automatiquement une fois.",
+          "Copie l'export voulu : HTML brut, bloc Liquid Shopify ou FAQ JSON-LD.",
+        ],
+        exemple:
+          "Tu veux positionner Ypersoa sur « idée cadeau broderie maman ». Tu saisis la requête, choisis l'angle Occasion, cliques « Générer ». L'article sort avec H1, 4 sections H2, une FAQ 3 questions et un CTA. Le lint affiche ✓. Tu copies le bloc Liquid dans le thème Shopify.",
+        resultat:
+          "Un article complet (H1, slug, meta title/description, sections, FAQ, CTA) + rapport de qualité lint + exports HTML / Liquid Shopify / JSON-LD, sauvegardés dans l'onglet « Articles existants ».",
+        limites: [
+          "La génération prend 20-30 secondes : ne ferme pas la page pendant le chargement.",
+          "Si le lint échoue deux fois de suite, ajuste la requête cible ou enrichis les faits brand.",
+          "Les articles générés sont en brouillon : c'est à toi de les relire, corriger et coller dans Shopify.",
+        ],
+      },
+      {
         id: "da-autres-entrees",
         name: "Autres entrées du hub DA",
         aQuoiCaSert: "Comprendre les cartes de l'accueil DA qui renvoient ailleurs ou ne sont pas encore actives.",
