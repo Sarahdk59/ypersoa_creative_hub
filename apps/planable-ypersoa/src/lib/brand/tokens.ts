@@ -4,16 +4,17 @@
  */
 export const BRAND = {
   cream: "#FAF7F2",
-  ink: "#1A1614",
-  terracotta: "#B4665F",
-  marine: "#1A2E4F",
-  sage: "#A8B5A0",
-  border: "rgba(26, 22, 20, 0.12)",
+  ink: "#1E2D4A",
+  terracotta: "#A75F59",
+  marine: "#1E2D4A",
+  sage: "#8A9E8C",
+  border: "rgba(30, 45, 74, 0.12)",
 } as const;
 
 export const FONTS = {
-  serif: '"Playfair Display", "Cormorant Garamond", serif',
-  sans: '"Inter", "DM Sans", sans-serif',
+  logo: '"Josefin Sans", sans-serif',
+  serif: '"Cormorant Garamond", serif',
+  sans: '"DM Sans", sans-serif',
 } as const;
 
 /** Couleur par plateforme — utilisée par les vignettes calendrier. */

@@ -2,19 +2,20 @@
  * Hub Ypersoa — design tokens (cf. _passations/DESIGN_SYSTEM_hub.md)
  *
  * 3 couleurs SEULEMENT pour la chrome (bg / foreground / border).
- * Les apps conservent leurs propres tokens accent (brand-rose,
- * brand-sage…) qui ne doivent JAMAIS contaminer la chrome.
+ * Les couleurs d'app vivent dans leur contenu, jamais dans la chrome.
  */
 :root {
-  --hub-bg:         #F4EEE2;
-  --hub-foreground: #16324C;
-  --hub-border:     #E3D9C8;
+  --hub-bg: #faf7f2;
+  --hub-foreground: #1e2d4a;
+  --hub-border: #e8e1d6;
 
-  /* Brand accent — CTA signatures */
-  --hub-cta:        #A75F59;   /* Terracotta — CTA principal, max 1 par zone */
-  --hub-teal:       #1E6E77;   /* Teal canard — accent secondaire, liens, planification */
-  --hub-terracotta: #A75F59;   /* Terracotta = hub-cta alias */
-  --hub-blush:      #EAB4C4;   /* Blush — doux, badges, tags */
+  --brand-bg: #faf7f2;
+  --brand-ink: #1e2d4a;
+  --brand-terracotta: #a75f59;
+  --brand-terracotta-soft: #ba7b75;
+  --brand-sage: #8a9e8c;
+  --brand-blush: #eab4c4;
+  --brand-line: rgba(30, 45, 74, 0.12);
 
   --sidebar-width:    64px;
   --sidebar-icon:     20px;

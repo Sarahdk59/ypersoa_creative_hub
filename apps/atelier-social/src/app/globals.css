@@ -1,29 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Josefin+Sans:wght@400;500&display=swap');
 @import "../styles/hub-tokens.css";
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Newsreader", Georgia, serif;
-  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-editorial: "Newsreader", Georgia, serif;
+  --font-logo: "Josefin Sans", ui-sans-serif, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-editorial: "Cormorant Garamond", Georgia, serif;
 
-  --color-brand-bg: #F4EEE2;
-  --color-brand-rose: #A75F59;
-  --color-brand-rose-light: #c07068;
-  --color-brand-sage: #8A9E8C;
-  --color-brand-text: #16324C;
-  --color-brand-muted: #9a9a9a;
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-rose: var(--brand-terracotta);
+  --color-brand-rose-light: var(--brand-terracotta-soft);
+  --color-brand-sage: var(--brand-sage);
+  --color-brand-text: var(--brand-ink);
+  --color-brand-muted: rgba(30, 45, 74, 0.45);
+  --color-brand-border: var(--brand-line);
+}
+
+html {
+  background: var(--hub-bg);
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-brand-bg);
-  color: var(--color-brand-text);
+  background-color: var(--hub-bg);
+  color: var(--hub-foreground);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 h1, h2, h3, h4, h5, h6, .font-serif {
   font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+.font-logo {
+  font-family: var(--font-logo);
+  letter-spacing: 0.08em;
 }
 
 .primary-button {
@@ -58,4 +72,9 @@ h1, h2, h3, h4, h5, h6, .font-serif {
 ::-webkit-scrollbar-thumb {
   background: var(--color-brand-muted);
   border-radius: 10px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand-blush) 55%, white);
+  color: var(--hub-foreground);
 }

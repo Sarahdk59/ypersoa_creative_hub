@@ -64,17 +64,17 @@ export function HubTopbar() {
             height: 28,
             background: "var(--hub-foreground)",
             color: "var(--hub-bg)",
-            fontFamily: "var(--font-serif)",
+            fontFamily: "var(--font-logo)",
             fontSize: 13,
             fontWeight: 500,
-            letterSpacing: "0.04em",
+            letterSpacing: "0.06em",
           }}
         >
           Y
         </div>
         <span
           style={{
-            fontFamily: "var(--font-serif)",
+            fontFamily: "var(--font-logo)",
             fontSize: 13,
             fontWeight: 500,
             letterSpacing: "0.08em",
@@ -117,7 +117,7 @@ export function HubTopbar() {
             padding: "6px 12px 6px 32px",
             borderRadius: 999,
             border: "0.5px solid var(--hub-border)",
-            background: "white",
+            background: "color-mix(in srgb, var(--hub-bg) 82%, white)",
             fontFamily: "var(--font-sans)",
             fontSize: 12,
             color: "var(--hub-foreground)",
@@ -179,7 +179,7 @@ export function HubTopbar() {
             height: 30,
             borderRadius: 8,
             border: "0.5px solid var(--hub-border)",
-            background: "white",
+            background: "color-mix(in srgb, var(--hub-bg) 82%, white)",
             color: "var(--hub-foreground)",
             cursor: "pointer",
           }}
