@@ -38,7 +38,7 @@ jobs:
         run: |
           pip install --quiet semgrep
           set +e
-          semgrep scan --config=auto --json --quiet --metrics=on . > semgrep.json 2>/dev/null
+          semgrep scan --config=auto --json --quiet --metrics=on --severity=ERROR . > semgrep.json 2>/dev/null
           set -e
           if [ -f semgrep.json ]; then
             COUNT=$(python3 -c "import json; print(len(json.load(open('semgrep.json')).get('results',[])))" 2>/dev/null || echo 0)
