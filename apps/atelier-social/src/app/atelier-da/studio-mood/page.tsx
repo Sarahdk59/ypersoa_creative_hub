@@ -10,6 +10,7 @@ import {
   AlertCircle,
   RefreshCw,
   Filter,
+  BookOpen,
 } from "lucide-react";
 import type { StudioMoodEpisode, StatutEpisode } from "@/lib/studio-mood/types";
 import { STATUT_META, SUPPORT_LABELS } from "@/lib/studio-mood/types";
@@ -91,6 +92,9 @@ export default function StudioMoodListPage() {
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <Link href="/atelier-da/studio-mood/kit" style={secondaryBtnStyle}>
+            <BookOpen size={14} /> Kit Mood brodé
+          </Link>
           <button onClick={handleSeed} disabled={seeding} style={secondaryBtnStyle}>
             {seeding ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
             {seeding ? "Injection…" : "Injecter les 12 épisodes"}
