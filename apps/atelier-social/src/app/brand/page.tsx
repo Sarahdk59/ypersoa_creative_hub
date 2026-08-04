@@ -120,10 +120,10 @@ export default function BrandPage() {
       {/* ── En-tête ── */}
       <header style={{ marginBottom: 48 }}>
         <p style={{ fontSize: 11, letterSpacing: 2.5, textTransform: "uppercase", color: "#1E6E77", fontWeight: 700, margin: "0 0 10px" }}>
-          Brandbook v1.0 · 2026 · source de vérité unique
+          Brand Book v1.0 · 2026 · source de vérité unique
         </p>
         <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: 48, lineHeight: 1.0, margin: "0 0 14px", letterSpacing: "-0.01em" }}>
-          Aperçu Brand —{" "}
+          Brand Book —{" "}
           <em style={{ color: "#C23A2D" }}>trame sûre pour créer.</em>
         </h1>
         <p style={{ maxWidth: 680, fontSize: 15, lineHeight: 1.6, color: "#4a5a68", margin: "0 0 20px" }}>
@@ -423,7 +423,7 @@ export default function BrandPage() {
       </Section>
 
       {/* ── Tokens JSON ── */}
-      <Section title="10 · Tokens — câbler dans le Hub" sub="Variables à aligner en CSS / thème Tailwind. Source : §9 du Brandbook.">
+      <Section title="10 · Tokens — câbler dans le Hub" sub="Variables à aligner en CSS / thème Tailwind. Source : §9 du Brand Book.">
         <pre style={{ fontFamily: "monospace", fontSize: 12, lineHeight: 1.6, background: "#F4EEE2", borderRadius: 12, padding: 20, overflowX: "auto", color: "#16324C" }}>
 {`{
   "colors": {
@@ -447,7 +447,7 @@ export default function BrandPage() {
       </Section>
 
       <p style={{ fontSize: 12, color: "#8a8f96", marginTop: 8, lineHeight: 1.5, marginBottom: 48 }}>
-        Source de vérité : <code>referentiels/brand voice design system/</code> · Brandbook global v1.0 · 2026.
+        Source de vérité : <code>referentiels/brand voice design system/</code> · Brand Book global v1.0 · 2026.
         Ce document fait foi pour l&apos;identité visuelle et le discours public.
       </p>
     </div>

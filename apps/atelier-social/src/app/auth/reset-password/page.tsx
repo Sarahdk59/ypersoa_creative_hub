@@ -133,7 +133,7 @@ export default function ResetPasswordPage() {
 
         {phase === "invalid" && (
           <>
-            <p style={{ fontSize: 13, color: "#b4665f", margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: 13, color: "#C23A2D", margin: 0, lineHeight: 1.5 }}>
               Ce lien de réinitialisation est invalide ou a expiré. Demande un
               nouveau lien pour continuer.
             </p>
@@ -143,7 +143,7 @@ export default function ResetPasswordPage() {
                 marginTop: 6,
                 padding: "11px 16px",
                 borderRadius: 10,
-                background: "#b4665f",
+                background: "#1E6E77",
                 color: "#fff",
                 fontSize: 14,
                 fontWeight: 600,
@@ -205,7 +205,7 @@ export default function ResetPasswordPage() {
             </label>
 
             {error && (
-              <p style={{ fontSize: 13, color: "#b4665f", margin: 0 }}>{error}</p>
+              <p style={{ fontSize: 13, color: "#C23A2D", margin: 0 }}>{error}</p>
             )}
 
             <button
@@ -216,7 +216,7 @@ export default function ResetPasswordPage() {
                 padding: "11px 16px",
                 borderRadius: 10,
                 border: "none",
-                background: "#b4665f",
+                background: "#1E6E77",
                 color: "#fff",
                 fontSize: 14,
                 fontWeight: 600,

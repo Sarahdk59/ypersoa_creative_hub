@@ -110,8 +110,8 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 10,
-    title: "Bible de marque visuelle",
-    description: "Brandbook v1.0 · 2026. Palette épine dorsale (marine · teal · crème) + pop signature (rouge coquelicot · blush). Typos, funnel 4 surfaces, rubriques de contenu, vocabulaire autorisé/interdit, garde-fous.",
+    title: "Brand Book",
+    description: "Brand Book v1.0 · 2026. Palette épine dorsale (marine · teal · crème) + pop signature (rouge coquelicot · blush). Typos, funnel 4 surfaces, rubriques de contenu, vocabulaire autorisé/interdit, garde-fous.",
     href: "/brand",
     icon: <BookOpen size={22} strokeWidth={1.4} />,
     status: "v0",
@@ -175,8 +175,8 @@ export default function AtelierDaHome() {
               gap: 8,
               padding: "10px 14px",
               borderRadius: 999,
-              background: "#1E2D4A",
-              color: "#FAF7F2",
+              background: "var(--hub-foreground)",
+              color: "var(--hub-bg)",
               textDecoration: "none",
               fontFamily: "var(--font-sans)",
               fontSize: 13,
@@ -194,8 +194,8 @@ export default function AtelierDaHome() {
               gap: 8,
               padding: "10px 14px",
               borderRadius: 999,
-              background: "#C23A2D",
-              color: "#FAF7F2",
+              background: "var(--brand-rouge)",
+              color: "var(--hub-bg)",
               textDecoration: "none",
               fontFamily: "var(--font-sans)",
               fontSize: 13,
@@ -203,7 +203,7 @@ export default function AtelierDaHome() {
             }}
           >
             <BookOpen size={15} strokeWidth={1.8} />
-            Brandbook v1.0
+            Brand Book
           </Link>
         </div>
       </header>
@@ -264,8 +264,8 @@ export default function AtelierDaHome() {
                   textTransform: "uppercase",
                   padding: "3px 8px",
                   borderRadius: 999,
-                  background: m.status === "v0" ? "#1E2D4A" : "transparent",
-                  color: m.status === "v0" ? "#FAF7F2" : "var(--hub-foreground)",
+                  background: m.status === "v0" ? "var(--hub-foreground)" : "transparent",
+                  color: m.status === "v0" ? "var(--hub-bg)" : "var(--hub-foreground)",
                   border: m.status !== "v0" ? "0.5px solid var(--hub-border)" : "none",
                   opacity: m.status === "v0" ? 1 : 0.6,
                 }}
@@ -361,7 +361,7 @@ export default function AtelierDaHome() {
           textAlign: "center",
         }}
       >
-        Atelier DA • V1 — Bible de marque visuelle activée (Brandbook v1.0 · 2026) • 2 sous-modules à venir V2.
+        Atelier DA • V1 — Brand Book activé (v1.0 · 2026) • 2 sous-modules à venir V2.
       </p>
     </div>
   );

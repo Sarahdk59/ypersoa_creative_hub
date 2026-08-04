@@ -1412,7 +1412,7 @@ function ShootingBookContent() {
                             title="Attacher ce visuel à l'entrée Planable d'origine"
                             style={{
                               padding: "8px 14px", borderRadius: 999, border: "none",
-                              background: sentKeys["hero"] ? "#2f7a3e" : "var(--hub-terracotta, #B4665F)",
+                              background: sentKeys["hero"] ? "#2f7a3e" : "var(--brand-teal, #1E6E77)",
                               color: "white", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
                               cursor: sentKeys["hero"] ? "default" : "pointer",
                               display: "flex", alignItems: "center", gap: 6,
@@ -1799,7 +1799,7 @@ function ShootingBookContent() {
                                 title="Attacher ce shot à l'entrée Planable d'origine"
                                 style={{
                                   padding: "6px 12px", borderRadius: 999, border: "none",
-                                  background: sentKeys[`shot-${idx}`] ? "#2f7a3e" : "var(--hub-terracotta, #B4665F)",
+                                  background: sentKeys[`shot-${idx}`] ? "#2f7a3e" : "var(--brand-teal, #1E6E77)",
                                   color: "white", fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500,
                                   cursor: sentKeys[`shot-${idx}`] ? "default" : "pointer",
                                   display: "flex", alignItems: "center", gap: 4,

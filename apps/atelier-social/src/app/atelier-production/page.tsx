@@ -187,8 +187,8 @@ export default function AtelierProductionHome() {
                   textTransform: "uppercase",
                   padding: "3px 8px",
                   borderRadius: 999,
-                  background: m.status === "v0" ? "#1E2D4A" : "transparent",
-                  color: m.status === "v0" ? "#FAF7F2" : "var(--hub-foreground)",
+                  background: m.status === "v0" ? "var(--hub-foreground)" : "transparent",
+                  color: m.status === "v0" ? "var(--hub-bg)" : "var(--hub-foreground)",
                   border: m.status !== "v0" ? "0.5px solid var(--hub-border)" : "none",
                   opacity: m.status === "v0" ? 1 : 0.6,
                 }}

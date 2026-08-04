@@ -96,7 +96,7 @@ export default function ForgotPasswordPage() {
                 marginTop: 6,
                 padding: "11px 16px",
                 borderRadius: 10,
-                background: "#b4665f",
+                background: "#1E6E77",
                 color: "#fff",
                 fontSize: 14,
                 fontWeight: 600,
@@ -130,7 +130,7 @@ export default function ForgotPasswordPage() {
             </label>
 
             {error && (
-              <p style={{ fontSize: 13, color: "#b4665f", margin: 0 }}>{error}</p>
+              <p style={{ fontSize: 13, color: "#C23A2D", margin: 0 }}>{error}</p>
             )}
 
             <button
@@ -141,7 +141,7 @@ export default function ForgotPasswordPage() {
                 padding: "11px 16px",
                 borderRadius: 10,
                 border: "none",
-                background: "#b4665f",
+                background: "#1E6E77",
                 color: "#fff",
                 fontSize: 14,
                 fontWeight: 600,

@@ -1,19 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Josefin+Sans:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Josefin+Sans:wght@400;500&display=swap');
 @import "../styles/hub-tokens.css";
 @import "tailwindcss";
 
 @theme {
   --font-logo: "Josefin Sans", ui-sans-serif, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-editorial: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader", Georgia, serif;
+  --font-editorial: "Newsreader", Georgia, serif;
 
   --color-brand-bg: var(--brand-bg);
-  --color-brand-rose: var(--brand-terracotta);
-  --color-brand-rose-light: var(--brand-terracotta-soft);
+  --color-brand-rose: var(--brand-teal);
+  --color-brand-rose-light: var(--brand-teal-soft);
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-rouge: var(--brand-rouge);
+  --color-brand-blush: var(--brand-blush);
   --color-brand-sage: var(--brand-sage);
   --color-brand-text: var(--brand-ink);
-  --color-brand-muted: rgba(30, 45, 74, 0.45);
+  --color-brand-muted: rgba(22, 50, 76, 0.45);
   --color-brand-border: var(--brand-line);
 }
 

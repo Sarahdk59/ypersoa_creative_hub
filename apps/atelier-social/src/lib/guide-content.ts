@@ -882,13 +882,13 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         commentFaire: [
           "Sur l'accueil Atelier DA, repère les cartes « Motifs — fiches techniques » et « Palettes d'associations ».",
           "Sache qu'elles t'emmènent vers les pages de l'Atelier Production (mêmes écrans, vue technique).",
-          "Les cartes « Bible de marque visuelle » et « Décisions DA archivées » sont des V2 : elles sont affichées mais désactivées.",
+          "Les cartes « Brand Book » et « Décisions DA archivées » sont des V2 : elles sont affichées mais désactivées.",
         ],
         exemple:
           "Tu cliques « Palettes d'associations » depuis l'accueil DA en pensant rester en créa : tu arrives en fait sur la page Palettes de l'Atelier Production. C'est normal, c'est un raccourci.",
         resultat: "Une compréhension claire : certaines cartes DA sont des raccourcis vers la Production, d'autres sont « à venir ».",
         limites: [
-          "Les cartes V2 (« Bible de marque visuelle », « Décisions DA archivées ») occupent de l'espace mais ne sont pas cliquables : c'est attendu, pas un bug.",
+          "Les cartes V2 (« Brand Book », « Décisions DA archivées ») occupent de l'espace mais ne sont pas cliquables : c'est attendu, pas un bug.",
           "Les motifs et palettes « techniques » sont gérés côté Production, pas ici.",
         ],
       },

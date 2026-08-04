@@ -148,7 +148,7 @@ function PaletteCard({ palette, fils, onClick, onToggleFavori }: { palette: Pale
       style={{
         position: "relative",
         background: "white",
-        border: palette.favori ? "0.5px solid #B4665F" : "0.5px solid var(--hub-border)",
+        border: palette.favori ? "0.5px solid #1E6E77" : "0.5px solid var(--hub-border)",
         borderRadius: 12,
         overflow: "hidden",
         transition: "transform 200ms ease, box-shadow 200ms ease",
@@ -204,7 +204,7 @@ function PaletteCard({ palette, fils, onClick, onToggleFavori }: { palette: Pale
           height: 32,
           borderRadius: 999,
           border: "none",
-          background: palette.favori ? "#B4665F" : "rgba(255,255,255,0.92)",
+          background: palette.favori ? "#1E6E77" : "rgba(255,255,255,0.92)",
           color: palette.favori ? "white" : "#1A1614",
           display: "flex",
           alignItems: "center",
@@ -434,7 +434,7 @@ function PaletteModal({ palette, fils, motifs, onClose, onSaved }: { palette: Pa
                 {TYPE_LABEL[palette.type]}
               </span>
               {palette.favori && (
-                <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, padding: "2px 10px", background: "#B4665F", color: "white", borderRadius: 999, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, padding: "2px 10px", background: "#1E6E77", color: "white", borderRadius: 999, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 }}>
                   <Heart size={10} strokeWidth={2} fill="white" /> Favorite
                 </span>
               )}
@@ -451,7 +451,7 @@ function PaletteModal({ palette, fils, motifs, onClose, onSaved }: { palette: Pa
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 4,
                     padding: "5px 12px", borderRadius: 999,
-                    background: palette.favori ? "#B4665F" : "white",
+                    background: palette.favori ? "#1E6E77" : "white",
                     color: palette.favori ? "white" : "var(--hub-foreground)",
                     border: palette.favori ? "none" : "0.5px solid var(--hub-border)",
                     fontFamily: "var(--font-sans)", fontSize: 11, cursor: busy ? "default" : "pointer",

@@ -1,27 +1,36 @@
 /**
  * Hub Ypersoa — design tokens (cf. _passations/DESIGN_SYSTEM_hub.md)
  *
- * 3 couleurs SEULEMENT pour la chrome (bg / foreground / border).
- * Les couleurs d'app vivent dans leur contenu, jamais dans la chrome.
+ * Brand v1.0 · 2026 — épine dorsale marine/teal/crème.
+ * Propagé depuis referentiels/brand voice design system/ (30/06/2026).
+ * Couleurs d'app vivent dans leur contenu, jamais dans la chrome.
  */
 :root {
-  --hub-bg: #faf7f2;
-  --hub-foreground: #1e2d4a;
+  /* Chrome hub — 3 couleurs */
+  --hub-bg: #F4EEE2;        /* crème brand */
+  --hub-foreground: #16324C; /* marine dominante */
   --hub-border: #e8e1d6;
 
-  --brand-bg: #faf7f2;
-  --brand-ink: #1e2d4a;
-  --brand-terracotta: #a75f59;
+  /* Palette épine dorsale */
+  --brand-bg: #F4EEE2;
+  --brand-ink: #16324C;
+  --brand-marine: #16324C;
+  --brand-teal: #1E6E77;
+  --brand-teal-soft: #2a8a94;
+  --brand-terracotta: #A75F59;
   --brand-terracotta-soft: #ba7b75;
-  --brand-sage: #8a9e8c;
-  --brand-blush: #eab4c4;
-  --brand-line: rgba(30, 45, 74, 0.12);
+  --brand-rouge: #C23A2D;
+  --brand-blush: #EAB4C4;
+  --brand-sage: #9CAE92;
+  --brand-line: rgba(22, 50, 76, 0.12);
 
+  /* Chrome layout */
   --sidebar-width:    64px;
   --sidebar-icon:     20px;
   --topbar-height:    56px;
   --content-padding:  32px;
 
+  /* Espacement */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;

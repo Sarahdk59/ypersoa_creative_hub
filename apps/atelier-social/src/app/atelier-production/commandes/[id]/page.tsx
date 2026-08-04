@@ -337,7 +337,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
               style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "8px 14px", borderRadius: 6, border: "none",
-                background: "#B4665F", color: "white",
+                background: "#1E6E77", color: "white",
                 fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
                 cursor: planLoading ? "wait" : "pointer", opacity: planLoading ? 0.6 : 1,
               }}
@@ -613,7 +613,7 @@ function JournalProd({
               style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "8px 14px", borderRadius: 6, border: "none",
-                background: "#B4665F", color: "white",
+                background: "#1E6E77", color: "white",
                 fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
                 cursor: "pointer",
               }}
@@ -965,7 +965,7 @@ function RebroderModal({
             style={{
               display: "inline-flex", alignItems: "center", gap: 6,
               padding: "8px 14px", borderRadius: 6, border: "none",
-              background: canSubmit ? "#B4665F" : "#D1CABF", color: "white",
+              background: canSubmit ? "#1E6E77" : "#D1CABF", color: "white",
               fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
               cursor: canSubmit ? "pointer" : "not-allowed",
             }}

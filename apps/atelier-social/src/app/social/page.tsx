@@ -8,7 +8,7 @@ import { ProductColorPicker } from "@/components/ProductColorPicker";
 import { SavePackDialog } from "@/components/SavePackDialog";
 import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { Heart, FolderOpen, X, Calendar, Layers, Trello, Newspaper } from "lucide-react";
+import { Heart, FolderOpen, X, Calendar, Layers, Trello, Newspaper, Book, ChevronDown } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
@@ -34,6 +34,7 @@ import {
   productNounFor,
 } from "@/lib/pinterest-strategy";
 import { type InstagramHashtagSlots } from "@/lib/instagram-hashtags";
+import { PLAYBOOK_CONTENT } from "@/lib/playbook-instagram";
 import {
   Instagram,
   Pin,
@@ -176,6 +177,8 @@ export default function Home() {
   const [savedPackId, setSavedPackId] = useState<string | null>(null);
   // Best slides marquées dans le carrousel courant — persisté en notes au save.
   const [bestSlideIndices, setBestSlideIndices] = useState<Set<number>>(new Set());
+  const [contextDropdownOpen, setContextDropdownOpen] = useState(false);
+  const [playbookOpen, setPlaybookOpen] = useState(false);
 
   const handleToggleBestSlide = (idx: number) => {
     setBestSlideIndices((prev) => {
@@ -563,6 +566,19 @@ export default function Home() {
 
   const expectedImages = mode === "copyOnly" ? 1 : selectedPlatform === "pinterest" ? 4 : 5;
 
+  // Labels affichés dans le dropdown Contexte du header
+  const currentVibeLabel = (() => {
+    if (selectedVibe.startsWith(LOOKBOOK_VIBE_PREFIX)) {
+      const lbId = selectedVibe.slice(LOOKBOOK_VIBE_PREFIX.length);
+      const lb = activeAmbiances.find((a) => a.id === lbId);
+      return lb ? lb.titre : "Lookbook";
+    }
+    return VIBES.find((v) => v.id === selectedVibe)?.label || selectedVibe;
+  })();
+  const currentOccasionLabel = selectedOccasion
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (l) => l.toUpperCase());
+
   // Dérivés Pinterest : fiche sélectionnée, mots-clés, texte de surimpression
   const selectedFiche: PinterestFiche | undefined =
     pinterestStrategy && selectedFicheId ? getFiche(pinterestStrategy, selectedFicheId) : undefined;
@@ -637,6 +653,68 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Dropdown Contexte — accès rapide Ambiance + Occasion */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setContextDropdownOpen((o) => !o)}
+                className="flex items-center gap-1.5 text-xs font-medium text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+                title="Changer l'ambiance et l'occasion"
+              >
+                <span className="text-brand-muted text-[11px] shrink-0">Contexte</span>
+                <span className="font-semibold truncate max-w-[180px]">
+                  {currentVibeLabel} · {currentOccasionLabel}
+                </span>
+                <ChevronDown
+                  className={cn(
+                    "w-3 h-3 text-brand-muted transition-transform shrink-0",
+                    contextDropdownOpen && "rotate-180"
+                  )}
+                />
+              </button>
+              {contextDropdownOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setContextDropdownOpen(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-2 z-50 bg-white rounded-2xl shadow-xl border border-brand-muted/10 p-4 w-80">
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted mb-2">
+                          Ambiance
+                        </p>
+                        <VibeSelector
+                          selectedVibe={selectedVibe}
+                          onSelectVibe={setSelectedVibe}
+                        />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted mb-2">
+                          Occasion
+                        </p>
+                        <OccasionSelector
+                          selectedOccasion={selectedOccasion}
+                          onSelectOccasion={setSelectedOccasion}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Bouton Playbook */}
+            <button
+              type="button"
+              onClick={() => setPlaybookOpen(true)}
+              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              title="Playbook Instagram — stratégie de contenu Ypersoa"
+            >
+              <Book className="w-3.5 h-3.5" />
+              Playbook
+            </button>
+
             {(isGeneratingImage || isGeneratingText) && (
               <div className="flex items-center gap-2 text-xs text-brand-muted">
                 <div className="w-3 h-3 border-2 border-brand-rose/30 border-t-brand-rose rounded-full animate-spin" />
@@ -1155,6 +1233,39 @@ export default function Home() {
           onClose={() => setLibraryOpen(false)}
           refreshKey={librarySaveBump}
         />
+      )}
+
+      {/* PLAYBOOK DRAWER */}
+      {playbookOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            onClick={() => setPlaybookOpen(false)}
+          />
+          <div className="fixed right-0 top-0 h-screen w-[700px] max-w-full bg-[#FAF7F2] z-50 flex flex-col shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-brand-muted/10 shrink-0 bg-white">
+              <div className="flex items-center gap-2">
+                <Book className="w-4 h-4 text-brand-rose" />
+                <h2
+                  style={{ fontFamily: "var(--font-editorial)", fontWeight: 500, fontSize: 18 }}
+                  className="text-brand-text"
+                >
+                  Playbook Instagram
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPlaybookOpen(false)}
+                className="text-brand-muted hover:text-brand-text p-1.5 rounded-full hover:bg-brand-muted/10 transition-all"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 py-5 visible-scrollbar prose prose-sm max-w-none prose-headings:font-serif prose-headings:text-[#16324c] prose-a:text-brand-rose prose-strong:text-[#16324c] prose-blockquote:border-brand-rose/40 prose-blockquote:text-brand-muted prose-table:text-xs prose-th:bg-brand-bg prose-th:text-brand-text">
+              <Markdown>{PLAYBOOK_CONTENT}</Markdown>
+            </div>
+          </div>
+        </>
       )}
 
       <style jsx global>{`

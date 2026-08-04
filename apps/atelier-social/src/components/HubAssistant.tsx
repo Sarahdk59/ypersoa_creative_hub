@@ -15,7 +15,7 @@ import { useEffect, useRef, useState, Fragment, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { MessageCircle, X, Send, Sparkles } from "lucide-react";
 
-const ROSE = "var(--color-brand-rose, #B4665F)";
+const ROSE = "var(--color-brand-rose, #1E6E77)";
 
 interface Msg {
   role: "user" | "assistant";

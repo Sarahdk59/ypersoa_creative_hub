@@ -84,11 +84,11 @@ export function HubSidebar() {
         />
       )}
 
-      {/* Aperçu Brand — référence Design System v1, visible par tous les rôles */}
+      {/* Brand Book — référence Design System v1, visible par tous les rôles */}
       <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, paddingBottom: 12 }}>
         <HubSidebarIcon
           icon={<Palette size={20} strokeWidth={1.6} />}
-          label="Aperçu Brand"
+          label="Brand Book"
           href="/brand"
           active={isActive("/brand")}
         />
