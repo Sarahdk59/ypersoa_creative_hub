@@ -92,6 +92,9 @@ export default function StudioMoodListPage() {
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <Link href="/atelier-da/studio-mood/collage" style={{ ...secondaryBtnStyle, background: "#1E6E77", color: "#fff", borderColor: "#1E6E77" }}>
+            🎨 Collage
+          </Link>
           <Link href="/atelier-da/studio-mood/kit" style={secondaryBtnStyle}>
             <BookOpen size={14} /> Kit Mood brodé
           </Link>
