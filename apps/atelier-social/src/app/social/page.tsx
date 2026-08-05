@@ -8,7 +8,7 @@ import { ProductColorPicker } from "@/components/ProductColorPicker";
 import { SavePackDialog } from "@/components/SavePackDialog";
 import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { Heart, FolderOpen, X, Calendar, Layers, Trello, Newspaper, Book, ChevronDown } from "lucide-react";
+import { Heart, FolderOpen, X, Calendar, Layers, Trello, Newspaper, ChevronDown } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
@@ -34,7 +34,6 @@ import {
   productNounFor,
 } from "@/lib/pinterest-strategy";
 import { type InstagramHashtagSlots } from "@/lib/instagram-hashtags";
-import { PLAYBOOK_CONTENT } from "@/lib/playbook-instagram";
 import {
   Instagram,
   Pin,
@@ -178,7 +177,6 @@ export default function Home() {
   // Best slides marquées dans le carrousel courant — persisté en notes au save.
   const [bestSlideIndices, setBestSlideIndices] = useState<Set<number>>(new Set());
   const [contextDropdownOpen, setContextDropdownOpen] = useState(false);
-  const [playbookOpen, setPlaybookOpen] = useState(false);
 
   const handleToggleBestSlide = (idx: number) => {
     setBestSlideIndices((prev) => {
@@ -678,42 +676,56 @@ export default function Home() {
                     className="fixed inset-0 z-40"
                     onClick={() => setContextDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 top-full mt-2 z-50 bg-white rounded-2xl shadow-xl border border-brand-muted/10 p-4 w-80">
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted mb-2">
-                          Ambiance
-                        </p>
-                        <VibeSelector
-                          selectedVibe={selectedVibe}
-                          onSelectVibe={setSelectedVibe}
-                        />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted mb-2">
-                          Occasion
-                        </p>
-                        <OccasionSelector
-                          selectedOccasion={selectedOccasion}
-                          onSelectOccasion={setSelectedOccasion}
-                        />
-                      </div>
+                  <div className="absolute right-0 top-full mt-2 z-50 bg-white rounded-2xl shadow-xl border border-brand-muted/10 p-4 w-72 space-y-3">
+                    <div>
+                      <label className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted block mb-1.5">
+                        Ambiance
+                      </label>
+                      <select
+                        value={selectedVibe}
+                        onChange={(e) => setSelectedVibe(e.target.value)}
+                        className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                      >
+                        {VIBES.map((v) => (
+                          <option key={v.id} value={v.id}>
+                            {v.label}
+                          </option>
+                        ))}
+                        {activeAmbiances.length > 0 && (
+                          <>
+                            <option disabled>──────</option>
+                            {activeAmbiances.map((a) => (
+                              <option
+                                key={a.id}
+                                value={`${LOOKBOOK_VIBE_PREFIX}${a.id}`}
+                              >
+                                ❤️ {a.titre}
+                              </option>
+                            ))}
+                          </>
+                        )}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted block mb-1.5">
+                        Occasion
+                      </label>
+                      <select
+                        value={selectedOccasion}
+                        onChange={(e) => setSelectedOccasion(e.target.value)}
+                        className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                      >
+                        {OCCASIONS.map((o) => (
+                          <option key={o.id} value={o.id}>
+                            {o.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 </>
               )}
             </div>
-
-            {/* Bouton Playbook */}
-            <button
-              type="button"
-              onClick={() => setPlaybookOpen(true)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
-              title="Playbook Instagram — stratégie de contenu Ypersoa"
-            >
-              <Book className="w-3.5 h-3.5" />
-              Playbook
-            </button>
 
             {(isGeneratingImage || isGeneratingText) && (
               <div className="flex items-center gap-2 text-xs text-brand-muted">
@@ -1233,39 +1245,6 @@ export default function Home() {
           onClose={() => setLibraryOpen(false)}
           refreshKey={librarySaveBump}
         />
-      )}
-
-      {/* PLAYBOOK DRAWER */}
-      {playbookOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
-            onClick={() => setPlaybookOpen(false)}
-          />
-          <div className="fixed right-0 top-0 h-screen w-[700px] max-w-full bg-[#FAF7F2] z-50 flex flex-col shadow-2xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-brand-muted/10 shrink-0 bg-white">
-              <div className="flex items-center gap-2">
-                <Book className="w-4 h-4 text-brand-rose" />
-                <h2
-                  style={{ fontFamily: "var(--font-editorial)", fontWeight: 500, fontSize: 18 }}
-                  className="text-brand-text"
-                >
-                  Playbook Instagram
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setPlaybookOpen(false)}
-                className="text-brand-muted hover:text-brand-text p-1.5 rounded-full hover:bg-brand-muted/10 transition-all"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto px-6 py-5 visible-scrollbar prose prose-sm max-w-none prose-headings:font-serif prose-headings:text-[#16324c] prose-a:text-brand-rose prose-strong:text-[#16324c] prose-blockquote:border-brand-rose/40 prose-blockquote:text-brand-muted prose-table:text-xs prose-th:bg-brand-bg prose-th:text-brand-text">
-              <Markdown>{PLAYBOOK_CONTENT}</Markdown>
-            </div>
-          </div>
-        </>
       )}
 
       <style jsx global>{`

@@ -69,10 +69,13 @@ export function ImportedShotsPanel({ onImport }: Props) {
 
   return (
     <div className="border border-rose-200 rounded-xl bg-rose-50/40 mb-2">
-      <button
-        type="button"
+      {/* Accordion header — div (not button) pour permettre le bouton refresh imbriqué */}
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-rose-50/60 transition-colors"
+        onKeyDown={(e) => e.key === "Enter" && setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-rose-50/60 transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-2">
           <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
@@ -100,7 +103,7 @@ export function ImportedShotsPanel({ onImport }: Props) {
             <ChevronRight className="w-3.5 h-3.5 text-rose-500" />
           )}
         </div>
-      </button>
+      </div>
 
       {open && (
         <div className="px-3 pb-3">
