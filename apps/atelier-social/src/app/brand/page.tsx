@@ -14,7 +14,7 @@ const SPINE = [
 
 const POP = [
   { name: "Rouge coquelicot", hex: "#C23A2D", role: "Pop signature — CTA, carte héros, touche forte. 1 pour 6–9 cases.", ink: "#F4EEE2" },
-  { name: "Blush", hex: "#EAB4C4", role: "Compagnon doux — fonds citation, filets newsletter, tags, verso carte", ink: "#16324C" },
+  { name: "Blush", hex: "#F4B4D2", role: "Compagnon doux — fonds citation, filets newsletter, tags, verso carte", ink: "#16324C" },
 ];
 
 const SECONDARY = [
@@ -67,7 +67,7 @@ const FUNNEL: {
   {
     surface: "Cartes de remerciement",
     role: "Fidélisation + UGC + passerelle print → digital",
-    bg: "#EAB4C4",
+    bg: "#F4B4D2",
     steps: [
       { label: "Recto : mémorable", desc: "Fond rouge coquelicot, cœur blush, « merci » manuscrit, quatrefoil." },
       { label: "Verso : invitation", desc: "QR → le Club + place pour le prénom + hashtag de marque." },
@@ -107,6 +107,27 @@ const VOCAB_NON = [
   "Cormorant · DM Sans (dépréciées)",
   "Aucune référence à des concurrents",
 ];
+
+const PRINT_CARDS = [
+  {
+    name: "Carte Club Ypersoa",
+    purpose: "Le cadeau pour toi · fidélisation et activation du Club",
+    recto: "/brand/cartes/club-recto.png",
+    verso: "/brand/cartes/club-verso.png",
+  },
+  {
+    name: "Carte Merci",
+    purpose: "À glisser dans chaque commande · remerciement et invitation au partage",
+    recto: "/brand/cartes/merci-recto.png",
+    verso: "/brand/cartes/merci-verso.png",
+  },
+  {
+    name: "Carte C'est cadeau",
+    purpose: "À compléter d'un mot pour une commande offerte",
+    recto: "/brand/cartes/cadeau-recto.png",
+    verso: "/brand/cartes/cadeau-verso.png",
+  },
+] as const;
 
 const SERIF = 'var(--font-serif, "Newsreader", Georgia, serif)';
 const SANS = 'var(--font-sans, "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif)';
@@ -222,14 +243,14 @@ export default function BrandPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
           {FUNNEL.map((f) => (
             <div key={f.surface} style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(22,50,76,.1)" }}>
-              <div style={{ background: f.surface === "Cartes de remerciement" ? "#EAB4C4" : f.bg, color: f.surface === "Cartes de remerciement" ? "#16324C" : "#F4EEE2", padding: "14px 18px" }}>
+              <div style={{ background: f.surface === "Cartes de remerciement" ? "#F4B4D2" : f.bg, color: f.surface === "Cartes de remerciement" ? "#16324C" : "#F4EEE2", padding: "14px 18px" }}>
                 <p style={{ fontFamily: SANS, fontWeight: 700, fontSize: 14, margin: 0 }}>{f.surface}</p>
                 <p style={{ fontFamily: SANS, fontSize: 11, opacity: 0.8, margin: "3px 0 0" }}>{f.role}</p>
               </div>
               <div style={{ background: "#fff", padding: "14px 18px" }}>
                 {f.steps.map((step, i) => (
                   <div key={i} style={{ display: "flex", gap: 10, marginBottom: i < f.steps.length - 1 ? 10 : 0 }}>
-                    <span style={{ background: f.surface === "Cartes de remerciement" ? "#EAB4C4" : f.bg, color: f.surface === "Cartes de remerciement" ? "#16324C" : "#F4EEE2", borderRadius: 999, width: 20, height: 20, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>
+                    <span style={{ background: f.surface === "Cartes de remerciement" ? "#F4B4D2" : f.bg, color: f.surface === "Cartes de remerciement" ? "#16324C" : "#F4EEE2", borderRadius: 999, width: 20, height: 20, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>
                       {i + 1}
                     </span>
                     <div>
@@ -269,11 +290,11 @@ export default function BrandPage() {
           <SocialCard
             formatLabel="Post feed · lifestyle (4:5)"
             chip="le Club Ypersoa"
-            chipBg="#EAB4C4"
+            chipBg="#F4B4D2"
             chipInk="#16324C"
             headline="Ça s'écrit comment,"
             headlineAccent="ton prénom ?"
-            accentColor="#EAB4C4"
+            accentColor="#F4B4D2"
             cta="Je crée le mien →"
           />
           <SocialCard
@@ -283,7 +304,7 @@ export default function BrandPage() {
             chipInk="#F4EEE2"
             headline="Un mot brodé,"
             headlineAccent="juste pour elle."
-            accentColor="#EAB4C4"
+            accentColor="#F4B4D2"
             cta="Je commande →"
           />
           <SocialCard
@@ -300,10 +321,10 @@ export default function BrandPage() {
             formatLabel="Post feed · Affirmation"
             chip="Produit"
             chipBg="#16324C"
-            chipInk="#EAB4C4"
+            chipInk="#F4B4D2"
             headline="Ton mot."
             headlineAccent="Ta couleur de fil."
-            accentColor="#EAB4C4"
+            accentColor="#F4B4D2"
             cta="Voir les motifs →"
           />
         </div>
@@ -355,7 +376,7 @@ export default function BrandPage() {
             { kind: "typo", bg: "#16324C", ink: "#F4EEE2", label: "Produit", text: "Le Club — brodé pour toi." },
             { kind: "photo", label: "Flat-lay crème" },
             { kind: "photo", label: "Moment cadeau" },
-            { kind: "typo", bg: "#EAB4C4", ink: "#16324C", label: "Question", text: "Ça s'écrit comment ?" },
+            { kind: "typo", bg: "#F4B4D2", ink: "#16324C", label: "Question", text: "Ça s'écrit comment ?" },
             { kind: "photo", label: "Détail initiale" },
           ].map((t, i) =>
             t.kind === "photo" ? (
@@ -376,8 +397,28 @@ export default function BrandPage() {
         </p>
       </Section>
 
-      {/* ── §8 : Vocabulaire ── */}
-      <Section title="8 · Le vocabulaire" sub="Ce qu'on dit, ce qu'on ne dit jamais. Le produit n'est jamais « fait main » ni lié à la machine.">
+      {/* ── §8 : Cartes print ── */}
+      <Section title="8 · Les cartes à glisser dans les commandes" sub="Références visuelles pour la production et la communication. Toujours utiliser ces versions recto-verso, sans les recréer ni les modifier.">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
+          {PRINT_CARDS.map((card) => (
+            <article key={card.name} style={{ background: "#fff", border: "1px solid rgba(22,50,76,.12)", borderRadius: 16, padding: 14 }}>
+              <h3 style={{ fontFamily: SERIF, fontSize: 20, margin: "0 0 5px" }}>{card.name}</h3>
+              <p style={{ fontSize: 12.5, lineHeight: 1.45, color: "#56636e", margin: "0 0 14px", minHeight: 37 }}>{card.purpose}</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                {[{ label: "Recto", src: card.recto }, { label: "Verso", src: card.verso }].map((side) => (
+                  <figure key={side.label} style={{ margin: 0 }}>
+                    <img src={side.src} alt={`${card.name} · ${side.label}`} style={{ display: "block", width: "100%", aspectRatio: "0.7 / 1", objectFit: "cover", borderRadius: 8, border: "1px solid rgba(22,50,76,.1)" }} />
+                    <figcaption style={{ color: "#7a8894", fontSize: 11, fontWeight: 700, letterSpacing: 0.8, textTransform: "uppercase", marginTop: 6 }}>{side.label}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── §9 : Vocabulaire ── */}
+      <Section title="9 · Le vocabulaire" sub="Ce qu'on dit, ce qu'on ne dit jamais. Le produit n'est jamais « fait main » ni lié à la machine.">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
           <div style={{ border: "1px solid rgba(30,110,119,.25)", borderRadius: 14, padding: "18px 20px", background: "#fff" }}>
             <p style={{ fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700, color: "#1E6E77", margin: "0 0 12px" }}>✓ Autorisé public</p>
@@ -396,8 +437,8 @@ export default function BrandPage() {
         </div>
       </Section>
 
-      {/* ── §9 : Garde-fous ── */}
-      <Section title="9 · Les garde-fous" sub="Verrouillés. En cas de doute entre « joli » et « conforme » : les garde-fous gagnent.">
+      {/* ── §10 : Garde-fous ── */}
+      <Section title="10 · Les garde-fous" sub="Verrouillés. En cas de doute entre « joli » et « conforme » : les garde-fous gagnent.">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
           <GuardCard tone="no" items={[
             "Rouge + teal en grands aplats côte à côte",
@@ -423,12 +464,12 @@ export default function BrandPage() {
       </Section>
 
       {/* ── Tokens JSON ── */}
-      <Section title="10 · Tokens — câbler dans le Hub" sub="Variables à aligner en CSS / thème Tailwind. Source : §9 du Brand Book.">
+      <Section title="11 · Tokens — câbler dans le Hub" sub="Variables à aligner en CSS / thème Tailwind. Source : §9 du Brand Book.">
         <pre style={{ fontFamily: "monospace", fontSize: 12, lineHeight: 1.6, background: "#F4EEE2", borderRadius: 12, padding: 20, overflowX: "auto", color: "#16324C" }}>
 {`{
   "colors": {
     "spine": { "marine": "#16324C", "teal": "#1E6E77", "creme": "#F4EEE2" },
-    "pop":   { "rouge": "#C23A2D", "blush": "#EAB4C4" },
+    "pop":   { "rouge": "#C23A2D", "blush": "#F4B4D2" },
     "secondary": { "ambre": "#E0942E", "sauge": "#97A886" }
   },
   "typography": { "display": "Newsreader", "text": "Hanken Grotesk",
