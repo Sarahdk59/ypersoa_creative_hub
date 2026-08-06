@@ -1,0 +1,73 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "referentiel": "social_palette",
+    "description": "Palette socle du brand book Hub Ypersoa + amplificateurs saisonniers propres à l'Atelier Social. Les amplificateurs ne sont PAS remontés au brand book officiel — ils vivent uniquement ici pour pouvoir régénérer une série de posts (ex: kaki pour la rentrée scolaire).",
+    "source_socle": "apps/atelier-social/src/styles/hub-tokens.css (propagé depuis referentiels/brand voice design system/)",
+    "last_updated": "2026-08-05"
+  },
+  "socle": [
+    {
+      "id": "marine",
+      "nom": "Marine",
+      "hex": "#16324C",
+      "role": "dominante"
+    },
+    {
+      "id": "teal",
+      "nom": "Teal",
+      "hex": "#1E6E77",
+      "role": "primaire"
+    },
+    {
+      "id": "creme",
+      "nom": "Crème",
+      "hex": "#F4EEE2",
+      "role": "fond"
+    },
+    {
+      "id": "terracotta",
+      "nom": "Terracotta",
+      "hex": "#A75F59",
+      "role": "accent"
+    }
+  ],
+  "saisonnier_officiel": [
+    {
+      "id": "rouge",
+      "nom": "Rouge",
+      "hex": "#C23A2D"
+    },
+    {
+      "id": "blush",
+      "nom": "Blush",
+      "hex": "#F4B4D2"
+    },
+    {
+      "id": "sauge",
+      "nom": "Sauge",
+      "hex": "#9CAE92"
+    },
+    {
+      "id": "ambre",
+      "nom": "Ocre / Ambre",
+      "hex": "#D98A3D"
+    },
+    {
+      "id": "moutarde",
+      "nom": "Moutarde",
+      "hex": "#C9A227"
+    },
+    {
+      "id": "bleu_paon",
+      "nom": "Bleu paon",
+      "hex": "#2E6E8E"
+    },
+    {
+      "id": "bordeaux",
+      "nom": "Bordeaux",
+      "hex": "#7E2F3B"
+    }
+  ],
+  "amplificateurs": []
+}
