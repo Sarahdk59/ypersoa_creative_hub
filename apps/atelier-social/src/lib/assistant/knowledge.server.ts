@@ -42,6 +42,18 @@ export const HUB_MAP: HubRoute[] = [
       "Générer les visuels + textes pour les réseaux : carrousels Instagram (5 slides) et shootings Pinterest (formats Hero flatlay / Désir porté). Captions, hooks, overlay texte sur l'image, et bibliothèque des packs sauvegardés.",
   },
   {
+    href: "/social/fonds",
+    atelier: "Atelier Social · Fonds",
+    pitch:
+      "Générer des fonds de posts Instagram (motifs procéduraux : uni, rayures, pois, carreaux, cœurs, fleurs) ou recolorer un motif SVG fourni (tulipes, oiseau…) sur la palette du Hub. Palette = socle brand book + amplificateurs saisonniers propres à l'atelier social (ex. kaki Rentrée). Export PNG ou SVG, déterministe, sans IA.",
+  },
+  {
+    href: "/social/avis",
+    atelier: "Atelier Social · Avis",
+    pitch:
+      "Générer la légende Instagram d'un avis client (squelette verrouillé : étoiles + merci, citation, mini-histoire, phrase-pont personnalisation, CTA, hashtags) à partir de l'avis, du prénom, du produit et de l'occasion. La carte visuelle (étoiles + citation) reste composée à la main dans Illustrator.",
+  },
+  {
     href: "/shooting",
     atelier: "Atelier Shooting",
     pitch:

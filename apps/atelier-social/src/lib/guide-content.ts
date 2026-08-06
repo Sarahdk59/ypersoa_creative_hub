@@ -558,6 +558,53 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Un shot mal tagué se perd dans la masse : prends 30 secondes pour bien remplir les champs.",
         ],
       },
+      {
+        id: "social-fonds",
+        name: "Générer un fond ou recolorer un motif SVG",
+        aQuoiCaSert:
+          "Créer des fonds de posts Instagram (motifs procéduraux) ou recolorer un motif SVG que tu fournis (tulipes, oiseau, cœur-prénoms…) sur ta palette de marque, sans passer par une génération IA.",
+        quandUtiliser:
+          "Quand tu as besoin d'un visuel graphique rapide et déterministe (fond de carrousel, carte, story) plutôt qu'une photo générée — ou quand tu veux réutiliser un motif signature existant dans de nouvelles couleurs.",
+        commentFaire: [
+          "Depuis Atelier Social, clique « Fonds » dans l'en-tête.",
+          "Onglet « Générer un fond » : choisis un motif (Uni, Rayures, Pois, Carreaux, Cœurs, Fleurs), assigne une couleur de la palette à chaque rôle (Fond / Motif / Secondaire), règle densité et taille, choisis un format.",
+          "Onglet « Recolorer un SVG » : colle ton SVG, le moteur détecte ses couleurs et propose de les remapper sur les couleurs de la palette (ou de garder l'originale).",
+          "Si la couleur qu'il te faut n'est pas dans la palette, ajoute un « Amplificateur » (nom + hex + occasion optionnelle) — il reste propre à l'atelier social, pas remonté au brand book.",
+          "Télécharge en PNG (raster, prêt à poster) ou en SVG (vectoriel, réutilisable).",
+        ],
+        exemple:
+          "Pour la rentrée scolaire, tu ajoutes l'amplificateur « Rentrée · Kaki », tu l'assignes au rôle Motif sur un fond Pois en Crème, tu regénères 12 fonds avec des tirages différents pour ta série de posts.",
+        resultat:
+          "Un visuel vectoriel déterministe (même réglages = même rendu), aux couleurs exactes de ta palette, téléchargeable en PNG ou SVG.",
+        limites: [
+          "Aucune IA ici : c'est un moteur de génération procédurale, pas un générateur de scènes ou de mannequins.",
+          "La recoloration reconnaît les couleurs en hex ou rgb() dans le SVG collé — les dégradés ou couleurs nommées (ex. « red ») ne sont pas détectés.",
+          "Les amplificateurs sont propres à l'atelier social : ils n'apparaissent pas dans le brand book officiel.",
+        ],
+      },
+      {
+        id: "social-avis",
+        name: "Générer la légende d'un avis client",
+        aQuoiCaSert:
+          "Transformer un avis client (copié depuis Shopify/Insta/mail) en légende Instagram complète — étoiles + merci, citation, mini-histoire, phrase-pont personnalisation, CTA, hashtags — pour accompagner la carte visuelle composée à la main dans Illustrator.",
+        quandUtiliser:
+          "Chaque fois que tu veux publier un avis client en post « Merci » : tu as l'avis, le prénom, le produit acheté et l'occasion, et tu veux la légende prête à coller sans réécrire le squelette à chaque fois.",
+        commentFaire: [
+          "Depuis Atelier Social, clique « Avis » dans l'en-tête.",
+          "Colle le prénom de la cliente et l'avis tel quel (obligatoires).",
+          "Précise le produit acheté et l'occasion / pourquoi si tu les as — la légende et les hashtags sont plus justes.",
+          "Clique « Générer la légende », puis « Copier » pour coller la légende sous ton visuel Illustrator.",
+        ],
+        exemple:
+          "Prénom « Justine », avis « Super qualité et broderie au top », produit « Sweat S&J brodé », occasion « Anniversaire de rencontre » → légende avec étoiles, citation, histoire du couple, phrase-pont et hashtags #broderiepersonnalisee #cadeaucouple #cadeauamoureux #hautsdefrance.",
+        resultat:
+          "Une légende Instagram complète, brand-safe (jamais « fait main », jamais vouvoiement, jamais référence machine), avec 6 hashtags dont #hautsdefrance toujours en dernier.",
+        limites: [
+          "Le squelette (étoiles, citation, structure) est verrouillé côté serveur — seule la mini-histoire est écrite par l'IA (OpenAI puis Gemini en repli, sinon un texte déterministe minimal).",
+          "Produit et occasion sont détectés par mots-clés simples sur le texte libre pour choisir les hashtags — un texte inhabituel peut retomber sur des hashtags génériques.",
+          "Ne génère pas le visuel (carte étoiles + citation) : ça reste composé à la main dans Illustrator.",
+        ],
+      },
     ],
   },
   {
