@@ -189,11 +189,21 @@ export async function composeOverlay({
       }
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 
-      // 2. Détection auto si nécessaire
+      // 2. S'assure que Cafeteria Black (Typekit) est chargée avant de dessiner sur le canvas —
+      // sans ça, le premier rendu après chargement de page retombe sur le fallback serif.
+      if (typeof document !== "undefined" && document.fonts) {
+        try {
+          await document.fonts.load("800 16px 'cafeteria'");
+        } catch {
+          // Police indisponible (offline, Typekit down) — fallback silencieux vers Playfair Display.
+        }
+      }
+
+      // 3. Détection auto si nécessaire
       const { isDarkBackground } = await detectTextColor(imageDataUrl);
       const colors = resolveColors(colorMode, isDarkBackground);
 
-      // 3. Render template
+      // 4. Render template
       renderTemplate(ctx, text, templateId, width, height, colors);
 
       resolve(canvas.toDataURL("image/png", 0.95));
@@ -238,7 +248,7 @@ function renderTemplate(
     // === TEMPLATE 1 : Titre en bas (inchangé) ===
     case "title-bottom": {
       const fontSize = 56;
-      const font = `600 ${fontSize}px 'Playfair Display', 'Times New Roman', serif`;
+      const font = `800 ${fontSize}px 'cafeteria', 'Playfair Display', 'Times New Roman', serif`;
       const maxWidth = width * 0.85;
       const lines = wrapText(text, maxWidth, font);
       const lineHeight = fontSize * 1.15;
@@ -269,7 +279,7 @@ function renderTemplate(
     case "quote-center": {
       // 1. Guillemets ouvrants GÉANTS en arrière-plan (watermark)
       const quoteSize = 380;
-      const quoteFont = `300 ${quoteSize}px 'Playfair Display', 'Times New Roman', serif`;
+      const quoteFont = `800 ${quoteSize}px 'cafeteria', 'Playfair Display', 'Times New Roman', serif`;
       ctx.font = quoteFont;
       ctx.textBaseline = "alphabetic";
 
@@ -290,7 +300,7 @@ function renderTemplate(
 
       // 2. Texte principal italique serif au centre
       const fontSize = 52;
-      const font = `italic 500 ${fontSize}px 'Playfair Display', 'Times New Roman', serif`;
+      const font = `800 ${fontSize}px 'cafeteria', 'Playfair Display', 'Times New Roman', serif`;
       const maxWidth = width * 0.78;
       const lines = wrapText(text, maxWidth, font);
       const lineHeight = fontSize * 1.35;
@@ -334,7 +344,7 @@ function renderTemplate(
     // === TEMPLATE 3 : Titre haut grand (inchangé) ===
     case "title-top-large": {
       const fontSize = 90;
-      const font = `700 ${fontSize}px 'Playfair Display', serif`;
+      const font = `800 ${fontSize}px 'cafeteria', 'Playfair Display', serif`;
       const maxWidth = width * 0.9;
       const lines = wrapText(text, maxWidth, font);
       const lineHeight = fontSize * 1.05;
@@ -362,7 +372,7 @@ function renderTemplate(
     // === TEMPLATE 4 : Signature coin (inchangé) ===
     case "signature-corner": {
       const fontSize = 28;
-      const font = `400 ${fontSize}px 'Playfair Display', serif`;
+      const font = `800 ${fontSize}px 'cafeteria', 'Playfair Display', serif`;
       const maxWidth = width * 0.5;
       const lines = wrapText(text, maxWidth, font);
       const lineHeight = fontSize * 1.3;

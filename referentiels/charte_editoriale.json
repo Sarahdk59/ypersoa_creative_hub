@@ -282,6 +282,41 @@
     }
   },
 
+  "piliers_editoriaux_hub": {
+    "systeme": "6 piliers (tableau blanc Sarah, 10/08/2026) : connexion, reassurance, qualification, preuve, occasions, communaute. Coexiste avec l'ancien piliers_de_contenu (P1-P4, toujours utilisé par l'assistant) — seul le pilier connexion est détaillé pour l'instant, les autres sont des jalons pour les sessions suivantes.",
+    "connexion": {
+      "nom": "Pourquoi Ypersoa",
+      "objectif": "Créer un lien identitaire avec la marque, hors produit/occasion précis — manifeste, valeurs, promesse.",
+      "angles": {
+        "qui_sommes_nous": {
+          "nom": "Qui sommes-nous",
+          "objectif": "Présenter l'atelier, l'équipe, la promesse — origine et légitimité.",
+          "contexte_usage": "post d'introduction, présentation d'équipe, storytelling atelier"
+        },
+        "lien": {
+          "nom": "Lien",
+          "hook_reference": "Pas un cadeau. Un lien. Pour toujours.",
+          "contexte_usage": "couple, famille, amis proches"
+        },
+        "souvenir": {
+          "nom": "Souvenir / Occasion",
+          "hook_reference": "Certains cadeaux deviennent des souvenirs.",
+          "contexte_usage": "naissance, diplôme, départ, anniversaire, fêtes calendaires"
+        },
+        "presence": {
+          "nom": "Présence",
+          "hook_reference": "Même loin. Ta présence. Brodée.",
+          "contexte_usage": "distance, expatrié, deuil"
+        }
+      }
+    },
+    "reassurance": { "nom": "Les avis", "statut": "outillé — voir /social/avis" },
+    "qualification": { "nom": "Ce qu'on brode", "statut": "outillé — voir /social (générateur principal)" },
+    "preuve": { "nom": "Atelier & prod", "statut": "a_faire" },
+    "occasions": { "nom": "Les occasions", "statut": "outillé — voir pinterest_strategy.json + OccasionSelector" },
+    "communaute": { "nom": "La communauté", "statut": "a_faire" }
+  },
+
   "formats_de_contenu": {
     "post_statique": {
       "ratios": ["4:5 (portrait, préféré)", "1:1 (carré)"],

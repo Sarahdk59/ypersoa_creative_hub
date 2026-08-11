@@ -770,6 +770,14 @@ export default function Home() {
               <MessageSquareQuote className="w-3.5 h-3.5" />
               Avis
             </Link>
+            <Link
+              href="/social/connexion"
+              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              title="Générateur de posts « Pourquoi Ypersoa » — pilier connexion"
+            >
+              <Heart className="w-3.5 h-3.5" />
+              Connexion
+            </Link>
             <a
               href={process.env.NEXT_PUBLIC_PLANABLE_URL ?? "http://localhost:3002"}
               target="_blank"

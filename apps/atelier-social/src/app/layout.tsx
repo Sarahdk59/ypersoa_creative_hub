@@ -14,6 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/jam4mtl.css" />
+      </head>
       <body>
         <HubShell>{children}</HubShell>
       </body>
