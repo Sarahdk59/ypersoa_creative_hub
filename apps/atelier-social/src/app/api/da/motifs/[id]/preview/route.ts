@@ -1,6 +1,6 @@
 /**
  * GET /api/da/motifs/[id]/preview?key=<key>
- * Stream le PNG preview depuis assets/motifs png/.
+ * Stream le preview (PNG ou JPG) depuis assets/motifs png/.
  * Utilisé par les cards "Fichiers prod" pour afficher le rendu de chaque variante.
  */
 import { NextResponse } from "next/server";
@@ -9,6 +9,7 @@ import { join } from "path";
 import {
   scanProdFilesByMotif,
   ASSETS_MOTIFS_PNG_DIR,
+  mimeTypeForImageFile,
 } from "@/lib/atelier-da/referentiels-loader";
 
 export async function GET(
@@ -26,14 +27,14 @@ export async function GET(
     const list = scanProdFilesByMotif().get(id);
     const entry = list?.find((f) => f.key === key);
     if (!entry?.png) {
-      return NextResponse.json({ ok: false, error: `PNG preview absent pour ${id}-${key}` }, { status: 404 });
+      return NextResponse.json({ ok: false, error: `Preview absent pour ${id}-${key}` }, { status: 404 });
     }
 
     const buffer = readFileSync(join(ASSETS_MOTIFS_PNG_DIR, entry.png));
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
-        "Content-Type": "image/png",
+        "Content-Type": mimeTypeForImageFile(entry.png),
         "Cache-Control": "public, max-age=60",
       },
     });

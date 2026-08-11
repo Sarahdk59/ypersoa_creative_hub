@@ -12,7 +12,7 @@
  *    via le symlink public/motifs (`/motifs/<file>`), sans `url`.
  *
  * FormData :
- *  - file   : PNG (<=5MB)
+ *  - file   : PNG ou JPG/JPEG (<=5MB)
  *  - label  : string (libellé éditorial, sera slugifié pour le nom de fichier)
  *  - type   : "variante" | "shooting"
  *  - tags   : string optionnel, csv (ex. "couple,annee")
@@ -32,6 +32,10 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const STORAGE_BUCKET = "motifs-png";
+const EXT_BY_MIME: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+};
 
 function slugify(input: string): string {
   return input
@@ -78,8 +82,9 @@ export async function POST(
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json({ ok: false, error: "Fichier > 5 MB" }, { status: 400 });
     }
-    if (file.type !== "image/png") {
-      return NextResponse.json({ ok: false, error: "PNG uniquement" }, { status: 400 });
+    const ext = EXT_BY_MIME[file.type];
+    if (!ext) {
+      return NextResponse.json({ ok: false, error: "PNG ou JPG uniquement" }, { status: 400 });
     }
 
     const ref = getMotifs();
@@ -101,12 +106,12 @@ export async function POST(
     if (isSupabaseConfigured()) {
       const supabase = await createClient();
       // Upload avec anti-collision : retente avec un suffixe numérique si le nom existe.
-      let candidate = `${base}.png`;
+      let candidate = `${base}.${ext}`;
       let n = 2;
       for (;;) {
         const { error } = await supabase.storage
           .from(STORAGE_BUCKET)
-          .upload(candidate, buffer, { contentType: "image/png", upsert: false });
+          .upload(candidate, buffer, { contentType: file.type, upsert: false });
         if (!error) break;
         // 409 / duplicate → on tente le nom suivant ; sinon on remonte l'erreur.
         if (!/exist|dupl|409/i.test(error.message) || n > 50) {
@@ -115,13 +120,13 @@ export async function POST(
             { status: 500 }
           );
         }
-        candidate = `${base}-${n}.png`;
+        candidate = `${base}-${n}.${ext}`;
         n++;
       }
       filename = candidate;
       publicUrl = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filename).data.publicUrl;
     } else {
-      filename = uniqueFilename(base, "png");
+      filename = uniqueFilename(base, ext);
       writeFileSync(join(ASSETS_MOTIFS_DIR, filename), buffer);
     }
 

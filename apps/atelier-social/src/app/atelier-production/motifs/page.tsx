@@ -404,7 +404,7 @@ function MotifModal({
                   cursor: "pointer",
                 }}
               >
-                <Plus size={13} /> Ajouter un PNG
+                <Plus size={13} /> Ajouter un PNG/JPG
               </button>
             </div>
 
@@ -571,7 +571,7 @@ function ProdFileUploadForm({ motifId, variant = "buste", onUploaded }: { motifI
       const ext = f.name.split(".").pop()?.toLowerCase();
       if (ext === "pxf") setType("pxf");
       else if (ext === "dst") setType("dst");
-      else if (ext === "png") setType("png");
+      else if (ext === "png" || ext === "jpg" || ext === "jpeg") setType("png");
       else if (ext === "pdf") setType("ft");
     }
   };
@@ -619,7 +619,7 @@ function ProdFileUploadForm({ motifId, variant = "buste", onUploaded }: { motifI
       <div>
         <input
           type="file"
-          accept=".pxf,.dst,.png,.pdf"
+          accept=".pxf,.dst,.png,.jpg,.jpeg,.pdf"
           onChange={onFileChange}
           style={{ ...inputStyle, width: "100%", padding: "6px 10px" }}
         />
@@ -634,7 +634,7 @@ function ProdFileUploadForm({ motifId, variant = "buste", onUploaded }: { motifI
       <select value={type} onChange={(e) => setType(e.target.value as "pxf" | "dst" | "png" | "ft")} style={inputStyle}>
         <option value="pxf">PXF</option>
         <option value="dst">DST</option>
-        <option value="png">PNG</option>
+        <option value="png">PNG/JPG</option>
         <option value="ft">FT (PDF)</option>
       </select>
       <button
@@ -654,7 +654,7 @@ function ProdFileUploadForm({ motifId, variant = "buste", onUploaded }: { motifI
       </button>
       {err && <div style={{ gridColumn: "1 / -1", color: "#a13a16", fontSize: 12, fontFamily: "var(--font-sans)" }}>{err}</div>}
       <p style={{ gridColumn: "1 / -1", margin: 0, fontSize: 11, opacity: 0.55, fontFamily: "var(--font-sans)" }}>
-        Le fichier sera renommé <code style={{ fontSize: 10 }}>{motifId}-{finalKey || "<key>"}.{type === "ft" ? "pdf" : type}</code> et déposé dans <code style={{ fontSize: 10 }}>assets/motifs {type}/</code>. Si un fichier avec la même key existe déjà, il sera écrasé.
+        Le fichier sera renommé <code style={{ fontSize: 10 }}>{motifId}-{finalKey || "<key>"}.{type === "ft" ? "pdf" : file ? file.name.split(".").pop()?.toLowerCase() : type}</code> et déposé dans <code style={{ fontSize: 10 }}>assets/motifs {type}/</code>. Si un fichier avec la même key existe déjà, il sera écrasé.
       </p>
     </form>
   );
@@ -1238,10 +1238,10 @@ function UploadForm({
       }}
     >
       <div>
-        <label style={labelStyle}>Fichier PNG</label>
+        <label style={labelStyle}>Fichier PNG ou JPG</label>
         <input
           type="file"
-          accept="image/png"
+          accept="image/png,image/jpeg"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
           style={{ ...inputStyle, padding: "6px" }}
         />

@@ -16,6 +16,7 @@ import {
   ASSETS_MOTIFS_DIR,
   ASSETS_MOTIFS_PNG_DIR,
   MOTIFS_REF_PATH,
+  mimeTypeForImageFile,
   type MotifsYpmRef,
   type MotifVariante,
 } from "@/lib/atelier-da/referentiels-loader";
@@ -67,7 +68,7 @@ export async function POST(
       const supabase = await createClient();
       const { error } = await supabase.storage
         .from(STORAGE_BUCKET)
-        .upload(entry.png, buffer, { contentType: "image/png", upsert: true });
+        .upload(entry.png, buffer, { contentType: mimeTypeForImageFile(entry.png), upsert: true });
       if (error) {
         return NextResponse.json(
           { ok: false, error: `Upload Storage échoué : ${error.message}` },

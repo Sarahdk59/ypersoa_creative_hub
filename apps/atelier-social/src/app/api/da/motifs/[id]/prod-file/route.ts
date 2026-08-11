@@ -42,12 +42,9 @@ const CONTENT_TYPE_BY_TYPE: Record<string, string> = {
   ft: "application/pdf",
 };
 
-const EXT_BY_TYPE: Record<"pxf" | "dst" | "png" | "ft", string> = {
-  pxf: "pxf",
-  dst: "dst",
-  png: "png",
-  ft: "pdf",
-};
+function extOf(filename: string): string {
+  return filename.split(".").pop()?.toLowerCase() ?? "";
+}
 
 function sanitizeKey(input: string): string {
   return input
@@ -190,7 +187,7 @@ export async function PATCH(
       const filename = entry[type];
       if (!filename) continue;
       const dir = ALL_DIR_BY_TYPE[type];
-      const to = join(dir, `${id}-${newKey}.${EXT_BY_TYPE[type]}`);
+      const to = join(dir, `${id}-${newKey}.${extOf(filename)}`);
       if (existsSync(to)) {
         return NextResponse.json(
           { ok: false, error: `Un fichier ${type.toUpperCase()} existe déjà pour la key "${newKey}"` },

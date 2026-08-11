@@ -42,6 +42,7 @@ import {
   Type,
   ImageIcon,
   Palette,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Markdown from "react-markdown";
@@ -777,6 +778,14 @@ export default function Home() {
             >
               <Heart className="w-3.5 h-3.5" />
               Connexion
+            </Link>
+            <Link
+              href="/social/playbook"
+              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              title="Playbook Instagram — fiches-recettes Preuve & Communauté"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              Playbook
             </Link>
             <a
               href={process.env.NEXT_PUBLIC_PLANABLE_URL ?? "http://localhost:3002"}

@@ -1,8 +1,9 @@
 /**
  * POST /api/da/motifs/[id]/prod-file-upload
- * Upload d'un fichier prod (PXF / DST / PNG / FT-pdf) dans le bon dossier
- * `assets/motifs <type>/`. La source de vérité est le disque (scanné par
- * scanProdFilesByMotif). Convention de nom : {motif_id}-{key}.{ext}
+ * Upload d'un fichier prod (PXF / DST / PNG ou JPG / FT-pdf) dans le bon
+ * dossier `assets/motifs <type>/`. La source de vérité est le disque (scanné
+ * par scanProdFilesByMotif). Convention de nom : {motif_id}-{key}.{ext}
+ * (l'extension du fichier stocké suit celle du fichier uploadé pour le type "png").
  *
  * FormData :
  *  - file : fichier binaire
@@ -29,11 +30,12 @@ const DIR_BY_TYPE: Record<string, string> = {
   ft: ASSETS_MOTIFS_FT_DIR,
 };
 
-const EXT_BY_TYPE: Record<string, string> = {
-  pxf: "pxf",
-  dst: "dst",
-  png: "png",
-  ft: "pdf",
+// Extensions acceptées par type — "png" accepte aussi les JPG/JPEG.
+const EXT_BY_TYPE: Record<string, string[]> = {
+  pxf: ["pxf"],
+  dst: ["dst"],
+  png: ["png", "jpg", "jpeg"],
+  ft: ["pdf"],
 };
 
 function sanitizeKey(input: string): string {
@@ -78,11 +80,16 @@ export async function POST(
       );
     }
 
-    const expectedExt = EXT_BY_TYPE[type];
+    const allowedExts = EXT_BY_TYPE[type];
     const fileExt = file.name.split(".").pop()?.toLowerCase() ?? "";
-    if (fileExt !== expectedExt) {
+    if (!allowedExts.includes(fileExt)) {
       return NextResponse.json(
-        { ok: false, error: `Extension ${fileExt} ne correspond pas au type ${type} (attendu : .${expectedExt})` },
+        {
+          ok: false,
+          error: `Extension ${fileExt} ne correspond pas au type ${type} (attendu : ${allowedExts
+            .map((e) => `.${e}`)
+            .join(" ou ")})`,
+        },
         { status: 400 }
       );
     }
@@ -97,7 +104,7 @@ export async function POST(
       mkdirSync(dir, { recursive: true });
     }
 
-    const filename = `${id}-${key}.${expectedExt}`;
+    const filename = `${id}-${key}.${fileExt}`;
     const target = join(dir, filename);
     const buffer = Buffer.from(await file.arrayBuffer());
     writeFileSync(target, buffer);

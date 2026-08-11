@@ -481,6 +481,12 @@ export const ASSETS_MOTIFS_FT_DIR = join(process.cwd(), "..", "..", "assets", "m
 // Ex. "YPM-001-A.pxf" et "YPM-000 Russ Times.pxf" sont tous deux capturés.
 const buildProdRe = (ext: string) => new RegExp(`^(YPM-\\d{3})[- ](.+)\\.(${ext})$`, "i");
 
+/** image/png pour un .png, image/jpeg pour un .jpg/.jpeg — utilisé pour servir les previews. */
+export function mimeTypeForImageFile(filename: string): string {
+  const ext = filename.split(".").pop()?.toLowerCase();
+  return ext === "jpg" || ext === "jpeg" ? "image/jpeg" : "image/png";
+}
+
 /**
  * Scanne les dossiers `assets/motifs pxf/` et `assets/motifs dst/`,
  * regroupe par motif id puis par key. Source de vérité = le disque.
@@ -515,7 +521,7 @@ export function scanProdFilesByMotif(): Map<string, MotifProdFile[]> {
 
   ingest(ASSETS_MOTIFS_PXF_DIR, "pxf", "pxf");
   ingest(ASSETS_MOTIFS_DST_DIR, "dst", "dst");
-  ingest(ASSETS_MOTIFS_PNG_DIR, "png", "png");
+  ingest(ASSETS_MOTIFS_PNG_DIR, "png", "png|jpe?g");
   ingest(ASSETS_MOTIFS_FT_DIR, "ft", "pdf");
 
   const out = new Map<string, MotifProdFile[]>();
