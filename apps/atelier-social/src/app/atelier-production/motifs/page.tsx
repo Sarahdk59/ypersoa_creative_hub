@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Loader2, Pencil, X, Plus, Star, Download, FileBox, LayoutGrid, Table, FileText, Upload } from "lucide-react";
+import { ArrowLeft, BookOpen, Loader2, Pencil, X, Plus, Star, Download, FileBox, LayoutGrid, Table, FileText, Upload, Trash2, Check } from "lucide-react";
 import type { MotifBible, MotifYpm, MotifProdFile, HubFil, Palette } from "@/lib/atelier-da/referentiels-loader";
 import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 
@@ -660,6 +660,20 @@ function ProdFileUploadForm({ motifId, variant = "buste", onUploaded }: { motifI
   );
 }
 
+const miniBtnStyle: React.CSSProperties = {
+  width: 20,
+  height: 20,
+  borderRadius: 999,
+  border: "0.5px solid var(--hub-border)",
+  background: "rgba(255,255,255,0.92)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 0,
+  backdropFilter: "blur(4px)",
+  cursor: "pointer",
+};
+
 function ProdFileCard({
   motifId,
   file,
@@ -670,6 +684,11 @@ function ProdFileCard({
   onUpdated: () => Promise<void>;
 }) {
   const [promoting, setPromoting] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState(file.key);
+  const [savingRename, setSavingRename] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [uploadingType, setUploadingType] = useState<"pxf" | "dst" | "ft" | null>(null);
   const isComplete = !!(file.pxf && file.dst);
   const downloadUrl = (type: "pxf" | "dst" | "ft") =>
     `/api/da/motifs/${encodeURIComponent(motifId)}/prod-file?type=${type}&key=${encodeURIComponent(file.key)}`;
@@ -692,6 +711,70 @@ function ProdFileCard({
       alert(e instanceof Error ? e.message : String(e));
     } finally {
       setPromoting(false);
+    }
+  };
+
+  const quickUpload = async (type: "pxf" | "dst" | "ft", selected: File) => {
+    setUploadingType(type);
+    try {
+      const fd = new FormData();
+      fd.append("file", selected);
+      fd.append("key", file.key);
+      fd.append("type", type);
+      const res = await fetch(`/api/da/motifs/${encodeURIComponent(motifId)}/prod-file-upload`, {
+        method: "POST",
+        body: fd,
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(typeof res.error === "string" ? res.error : "Échec");
+      await onUpdated();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+    } finally {
+      setUploadingType(null);
+    }
+  };
+
+  const startRename = () => {
+    setRenameValue(file.key);
+    setRenaming(true);
+  };
+
+  const cancelRename = () => setRenaming(false);
+
+  const submitRename = async () => {
+    const next = renameValue.trim();
+    if (!next || next === file.key) { setRenaming(false); return; }
+    setSavingRename(true);
+    try {
+      const res = await fetch(`/api/da/motifs/${encodeURIComponent(motifId)}/prod-file`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: file.key, newKey: next }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error || "Échec du renommage");
+      setRenaming(false);
+      await onUpdated();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+    } finally {
+      setSavingRename(false);
+    }
+  };
+
+  const submitDelete = async () => {
+    if (deleting) return;
+    if (!confirm(`Supprimer tous les fichiers prod (PXF/DST/FT/PNG) pour "${file.key}" ? Action irréversible.`)) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(
+        `/api/da/motifs/${encodeURIComponent(motifId)}/prod-file?key=${encodeURIComponent(file.key)}`,
+        { method: "DELETE" }
+      ).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error || "Échec de la suppression");
+      await onUpdated();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+      setDeleting(false);
     }
   };
 
@@ -779,12 +862,57 @@ function ProdFileCard({
           </button>
         )}
 
+        <div style={{ position: "absolute", top: 4, left: 4, display: "flex", gap: 3 }}>
+          <button
+            type="button"
+            onClick={startRename}
+            title="Renommer"
+            aria-label="Renommer"
+            style={miniBtnStyle}
+          >
+            <Pencil size={10} strokeWidth={1.6} />
+          </button>
+          <button
+            type="button"
+            onClick={submitDelete}
+            disabled={deleting}
+            title="Supprimer tous les fichiers de cette key"
+            aria-label="Supprimer"
+            style={{ ...miniBtnStyle, cursor: deleting ? "default" : "pointer" }}
+          >
+            {deleting ? <Loader2 size={10} className="animate-spin" /> : <Trash2 size={10} strokeWidth={1.6} />}
+          </button>
+        </div>
+
         {/* Boutons « Utiliser dans Shooting/Shooting Book » retirés de la vue
             Production — Adriana n'accède qu'à la fiche technique et aux fichiers
             prod. Pour shooter un PNG, passer par /atelier-da/motifs. */}
       </div>
 
-      {!isShortKey && (
+      {renaming ? (
+        <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
+          <input
+            autoFocus
+            type="text"
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submitRename();
+              if (e.key === "Escape") cancelRename();
+            }}
+            style={{
+              flex: 1, minWidth: 0, fontSize: 10, padding: "3px 5px", borderRadius: 5,
+              border: "0.5px solid var(--hub-border)", fontFamily: "var(--font-sans)",
+            }}
+          />
+          <button type="button" onClick={submitRename} disabled={savingRename} title="Valider" style={miniBtnStyle}>
+            {savingRename ? <Loader2 size={10} className="animate-spin" /> : <Check size={10} />}
+          </button>
+          <button type="button" onClick={cancelRename} disabled={savingRename} title="Annuler" style={miniBtnStyle}>
+            <X size={10} />
+          </button>
+        </div>
+      ) : !isShortKey && (
         <div
           title={file.key}
           style={{
@@ -810,12 +938,18 @@ function ProdFileCard({
           present={!!file.pxf}
           href={file.pxf ? downloadUrl("pxf") : null}
           downloadName={file.pxf ?? undefined}
+          accept=".pxf"
+          uploading={uploadingType === "pxf"}
+          onQuickUpload={(f) => quickUpload("pxf", f)}
         />
         <ProdFileButton
           label="DST"
           present={!!file.dst}
           href={file.dst ? downloadUrl("dst") : null}
           downloadName={file.dst ?? undefined}
+          accept=".dst"
+          uploading={uploadingType === "dst"}
+          onQuickUpload={(f) => quickUpload("dst", f)}
         />
         <ProdFileButton
           label="FT"
@@ -823,6 +957,9 @@ function ProdFileCard({
           href={file.ft ? `${downloadUrl("ft")}&inline=1` : null}
           inline
           icon="ft"
+          accept=".pdf"
+          uploading={uploadingType === "ft"}
+          onQuickUpload={(f) => quickUpload("ft", f)}
         />
       </div>
     </div>
@@ -836,6 +973,9 @@ function ProdFileButton({
   downloadName,
   inline,
   icon,
+  accept,
+  uploading,
+  onQuickUpload,
 }: {
   label: string;
   present: boolean;
@@ -844,11 +984,17 @@ function ProdFileButton({
   /** Si true, ouvre dans un nouvel onglet (PDF FT à consulter) au lieu de download. */
   inline?: boolean;
   icon?: "download" | "ft";
+  /** Extension acceptée pour l'upload direct quand le fichier est manquant. */
+  accept?: string;
+  uploading?: boolean;
+  /** Si fourni, le badge "manquant" devient cliquable pour uploader directement ce type sur cette key. */
+  onQuickUpload?: (file: File) => void;
 }) {
   if (!present || !href) {
+    const clickable = !!onQuickUpload;
     return (
-      <span
-        title={`${label} manquant`}
+      <label
+        title={clickable ? `Ajouter ${label} pour cette key` : `${label} manquant`}
         style={{
           flex: 1,
           display: "inline-flex",
@@ -864,11 +1010,26 @@ function ProdFileButton({
           fontWeight: 600,
           color: "#a8784e",
           letterSpacing: "0.05em",
-          opacity: 0.75,
+          opacity: uploading ? 0.9 : 0.75,
+          cursor: clickable && !uploading ? "pointer" : "default",
         }}
       >
+        {uploading ? <Loader2 size={10} className="animate-spin" /> : (clickable ? <Plus size={10} /> : null)}
         {label}
-      </span>
+        {clickable && (
+          <input
+            type="file"
+            accept={accept}
+            disabled={uploading}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = "";
+              if (f && onQuickUpload) onQuickUpload(f);
+            }}
+            style={{ display: "none" }}
+          />
+        )}
+      </label>
     );
   }
   return (
