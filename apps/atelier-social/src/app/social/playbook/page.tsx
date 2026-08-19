@@ -4,23 +4,46 @@
  * /social/playbook — Playbook Instagram, version visuelle « brand book ».
  *
  * Rend le contenu de docs/FICHES_RECETTES_ATELIER_SOCIAL.md en pages web :
- * mêmes tokens que app/brand/page.tsx (marine/teal/crème/rouge coquelicot,
- * Newsreader + Hanken Grotesk), même grammaire de composants (Section,
- * cartes-mockup façon SocialCard/Slide) — pour que ce soit un compagnon du
- * brand book, pas un document à part.
+ * mêmes tokens que app/brand/page.tsx (marine/teal/crème/rouge coquelicot),
+ * même grammaire de composants (Section, cartes-mockup façon SocialCard/Slide)
+ * — pour que ce soit un compagnon du brand book, pas un document à part.
  *
- * Les fiches (mockup post) affichent leur texte dans la police réellement
- * prescrite par la traduction anti-beige : Cafeteria/Arial Rounded pour les
- * overlays "embroidery" (compteurs, mots à commenter), Newsreader pour les
- * titres éditoriaux.
+ * Typo des TITRES (H1, sections, piliers, noms de fiche) : Arial Rounded MT
+ * Bold ou Cafeteria (Typekit) — décision Sarah 10/08/2026, même logique que
+ * lib/brand-card.ts §SocialCard : plus moderne, plus « peps » que Newsreader.
+ * Toggle en haut de page pour comparer les deux au feu à l'œil.
+ *
+ * Newsreader reste réservé au contenu de citation (hooks, gabarits, exemples
+ * de commentaires) et aux mockups post dont la traduction anti-beige prescrit
+ * explicitement un titre éditorial — ce n'est pas un « titre » de cette page,
+ * c'est une spec de production reproduite telle quelle.
  */
 
+import { createContext, useContext, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, GlassWater, Ban, Link2, Sparkles, MessageCircle } from "lucide-react";
+import type { FontChoice } from "@/lib/brand-card";
 
 const SERIF = 'var(--font-serif, "Newsreader", Georgia, serif)';
 const SANS = 'var(--font-sans, "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif)';
 const OVERLAY_CAFETERIA = '"cafeteria", "Playfair Display", "Times New Roman", serif';
+
+// Police des titres — même paire que le reste du hub (lib/brand-card.ts).
+const TITLE_STACKS: Record<FontChoice, string> = {
+  arial: `"Arial Rounded MT Bold", "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif`,
+  cafeteria: `"cafeteria", "Playfair Display", "Times New Roman", serif`,
+};
+const TITLE_WEIGHTS: Record<FontChoice, number> = { arial: 700, cafeteria: 800 };
+const FONT_OPTIONS: { id: FontChoice; label: string }[] = [
+  { id: "arial", label: "Arial Rounded" },
+  { id: "cafeteria", label: "Cafeteria" },
+];
+
+const TitleFontCtx = createContext<FontChoice>("arial");
+function useTitleFont() {
+  const choice = useContext(TitleFontCtx);
+  return { fontFamily: TITLE_STACKS[choice], fontWeight: TITLE_WEIGHTS[choice] };
+}
 
 const MARINE = "#16324C";
 const TEAL = "#1E6E77";
@@ -246,41 +269,69 @@ const METRICS = [
 // ── Page ─────────────────────────────────────────────────────────────────
 
 export default function PlaybookPage() {
+  const [titleFont, setTitleFont] = useState<FontChoice>("arial");
+  const titleStyle = { fontFamily: TITLE_STACKS[titleFont], fontWeight: TITLE_WEIGHTS[titleFont] };
+
   return (
     <div className="min-h-screen bg-brand-bg text-brand-text font-sans">
       <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 sticky top-0 z-20">
-        <div className="max-w-[1400px] mx-auto px-6 h-full flex items-center gap-4">
-          <Link
-            href="/social"
-            className="flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-text transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Atelier Social
-          </Link>
-          <div className="w-px h-4 bg-brand-muted/20" />
-          <h1
-            style={{
-              fontFamily: "var(--font-editorial)",
-              fontSize: 20,
-              fontWeight: 500,
-              letterSpacing: "-0.01em",
-              color: "var(--hub-foreground)",
-              margin: 0,
-            }}
-          >
-            Playbook Instagram
-          </h1>
+        <div className="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/social"
+              className="flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-text transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              Atelier Social
+            </Link>
+            <div className="w-px h-4 bg-brand-muted/20" />
+            <h1
+              style={{
+                fontFamily: "var(--font-editorial)",
+                fontSize: 20,
+                fontWeight: 500,
+                letterSpacing: "-0.01em",
+                color: "var(--hub-foreground)",
+                margin: 0,
+              }}
+            >
+              Playbook Instagram
+            </h1>
+          </div>
+
+          {/* Toggle typo titres — Arial Rounded / Cafeteria, décision Sarah 10/08/2026 */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted">Titres</span>
+            <div className="flex items-center bg-brand-muted/10 rounded-full p-0.5 border border-brand-muted/15">
+              {FONT_OPTIONS.map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setTitleFont(f.id)}
+                  className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
+                  style={{
+                    background: titleFont === f.id ? "#fff" : "transparent",
+                    color: titleFont === f.id ? ROUGE : "#7a8894",
+                    boxShadow: titleFont === f.id ? "0 1px 2px rgba(0,0,0,.06)" : "none",
+                  }}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </header>
 
+      <TitleFontCtx.Provider value={titleFont}>
       <main style={{ maxWidth: 1100, margin: "0 auto", color: MARINE, fontFamily: SANS, padding: "40px 24px 80px" }}>
         {/* ── En-tête ── */}
         <header style={{ marginBottom: 48 }}>
           <p style={{ fontSize: 11, letterSpacing: 2.5, textTransform: "uppercase", color: TEAL, fontWeight: 700, margin: "0 0 10px" }}>
             Fiches-recettes · le meuble opérationnel
           </p>
-          <h1 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: 44, lineHeight: 1.05, margin: "0 0 14px", letterSpacing: "-0.01em" }}>
-            Le bar est monté. <em style={{ color: ROUGE }}>Les fiches sont les recettes.</em>
+          <h1 style={{ ...titleStyle, fontSize: 42, lineHeight: 1.08, margin: "0 0 14px", letterSpacing: "-0.01em" }}>
+            Le bar est monté. <span style={{ color: ROUGE }}>Les fiches sont les recettes.</span>
           </h1>
           <p style={{ maxWidth: 680, fontSize: 15, lineHeight: 1.6, color: "#4a5a68", margin: "0 0 20px" }}>
             Six fournées à décortiquer ~80 visuels de comptes qui convertissent. On n&apos;a rien copié : on a{" "}
@@ -305,7 +356,7 @@ export default function PlaybookPage() {
                     <span style={{ color: meta.ink, fontFamily: SANS, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.6 }}>{meta.label}</span>
                   </div>
                   <div style={{ padding: "10px 12px 14px" }}>
-                    <div style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 13.5, marginBottom: 4 }}>{m.title.split("—")[1]?.trim() ?? m.title}</div>
+                    <div style={{ ...titleStyle, fontSize: 13.5, marginBottom: 4 }}>{m.title.split("—")[1]?.trim() ?? m.title}</div>
                     <p style={{ margin: 0, fontSize: 12, lineHeight: 1.45, color: "#56636e" }}>{m.desc}</p>
                   </div>
                 </div>
@@ -484,7 +535,7 @@ export default function PlaybookPage() {
                   <p style={{ fontFamily: SANS, fontWeight: 700, fontSize: 13.5, margin: "6px 0 0" }}>{m.label}</p>
                 </div>
                 <div style={{ background: "#fff", padding: "14px 18px" }}>
-                  <p style={{ fontFamily: SERIF, fontSize: 15, fontWeight: 600, margin: "0 0 4px", color: MARINE }}>{m.metric}</p>
+                  <p style={{ ...titleStyle, fontSize: 15, margin: "0 0 4px", color: MARINE }}>{m.metric}</p>
                   <p style={{ fontSize: 12, lineHeight: 1.5, color: "#56636e", margin: 0 }}>{m.desc}</p>
                 </div>
               </div>
@@ -500,6 +551,7 @@ export default function PlaybookPage() {
           <Link href="/brand" style={{ color: TEAL, fontWeight: 600 }}>Brand Book</Link> — même épine dorsale, même règles, appliquées au calendrier Instagram.
         </p>
       </main>
+      </TitleFontCtx.Provider>
     </div>
   );
 }
@@ -507,11 +559,12 @@ export default function PlaybookPage() {
 // ── Sous-composants ─────────────────────────────────────────────────────
 
 function Section({ title, sub, icon, children }: { title: string; sub: string; icon?: React.ReactNode; children: React.ReactNode }) {
+  const titleStyle = useTitleFont();
   return (
     <section style={{ marginBottom: 56 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "0 0 4px" }}>
         {icon}
-        <h2 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 24, margin: 0, letterSpacing: "-0.01em" }}>{title}</h2>
+        <h2 style={{ ...titleStyle, fontSize: 24, margin: 0, letterSpacing: "-0.01em" }}>{title}</h2>
       </div>
       <p style={{ fontSize: 13.5, color: "#56636e", margin: "0 0 20px", maxWidth: 680, lineHeight: 1.5 }}>{sub}</p>
       {children}
@@ -520,10 +573,11 @@ function Section({ title, sub, icon, children }: { title: string; sub: string; i
 }
 
 function PillarBanner({ emoji, title, color, ink, desc }: { emoji: string; title: string; color: string; ink: string; desc: string }) {
+  const titleStyle = useTitleFont();
   return (
     <div style={{ background: color, color: ink, borderRadius: 18, padding: "22px 26px", marginBottom: 20 }}>
       <p style={{ fontSize: 11, letterSpacing: 2, textTransform: "uppercase", fontWeight: 700, opacity: 0.85, margin: "0 0 6px" }}>{emoji} Pilier</p>
-      <h2 style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 500, margin: "0 0 8px" }}>{title}</h2>
+      <h2 style={{ ...titleStyle, fontSize: 28, margin: "0 0 8px" }}>{title}</h2>
       <p style={{ fontFamily: SANS, fontSize: 13.5, lineHeight: 1.55, opacity: 0.92, maxWidth: 660, margin: 0 }}>{desc}</p>
     </div>
   );
@@ -542,6 +596,7 @@ function MojitoChip({ id }: { id: string }) {
 
 function FicheCard({ fiche, pillarColor, pillarInk }: { fiche: Fiche; pillarColor: string; pillarInk: string }) {
   const f = fiche;
+  const titleStyle = useTitleFont();
   return (
     <article style={{ border: "1px solid rgba(22,50,76,.12)", borderRadius: 18, background: "#fff", overflow: "hidden" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 20px 0" }}>
@@ -549,7 +604,7 @@ function FicheCard({ fiche, pillarColor, pillarInk }: { fiche: Fiche; pillarColo
           {f.id}
         </span>
         <div>
-          <h3 style={{ fontFamily: SERIF, fontSize: 18, margin: 0, display: "flex", alignItems: "center", gap: 6 }}>
+          <h3 style={{ ...titleStyle, fontSize: 18, margin: 0, display: "flex", alignItems: "center", gap: 6 }}>
             {f.nom}
             {f.star && <Sparkles size={14} color={pillarColor} />}
           </h3>

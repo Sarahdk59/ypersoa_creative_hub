@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useRef, useState, use } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -18,11 +18,66 @@ import {
 import type { StudioMoodEpisode, StatutEpisode, GeneratedCopy, Storyboard } from "@/lib/studio-mood/types";
 import { STATUT_META, SUPPORT_LABELS } from "@/lib/studio-mood/types";
 import { CANONIQUES } from "@/lib/canoniques";
+import {
+  FORMATS,
+  BG_PRESETS,
+  LABEL_COLORS,
+  drawCollage,
+  loadImageFromSvg,
+  recolorLogoSvg,
+  pickContrastingBg,
+} from "@/lib/studio-mood/collage-render";
+import type { MotifYpm } from "@/lib/atelier-da/referentiels-loader";
+import type { HubProduit } from "@/lib/hub-products";
 
 const STATUT_ORDER: StatutEpisode[] = ["brouillon", "ready", "tourne", "monte", "publie"];
 
-type AspectRatio = "9:16" | "1:1" | "4:5";
-type Composition = "flatlay" | "worn";
+type AspectRatio = "9:16" | "1:1" | "3:4";
+type Composition = "flatlay" | "worn" | "cutout";
+
+// Défauts de collage pilotés par les données de l'épisode — humeur → fond,
+// occasion → props. Point de départ raisonnable, pas une vérité figée : le
+// résultat reste un PNG normal, régénérable en changeant l'humeur/l'occasion.
+const HUMEUR_BG_ID: Record<string, string> = {
+  Tendresse: "rose",
+  Fierté: "corail",
+  Complicité: "lavande",
+  "Joyeux bordel": "rouge",
+  "Nostalgie douce": "lavande",
+  Surprise: "teal",
+  "Quotidien magique": "creme",
+  Espièglerie: "olive",
+  "Amour assumé": "rouge",
+  "Retour en forme": "olive",
+  "Tendresse senior": "rose",
+  "Fête et surprise": "rouge",
+};
+
+const OCCASION_PROPS: Record<string, string[]> = {
+  "Fête des Mères": ["heart", "flower"],
+  "Fête des Pères": ["coffee", "star"],
+  "Fête des Grands-mères": ["flower", "heart"],
+  Noël: ["star", "sparkle"],
+  "Saint-Valentin": ["heart", "sparkle"],
+  Naissance: ["heart", "star"],
+  Mariage: ["heart", "sparkle"],
+  Anniversaire: ["star", "sparkle"],
+  Rentrée: ["scissors", "thread"],
+  "Été / Vacances": ["lemon", "sparkle"],
+  Evergreen: ["sparkle", "star"],
+};
+
+function pickCollageDefaults(ep: StudioMoodEpisode, garmentHex?: string | null) {
+  const bgId = HUMEUR_BG_ID[ep.humeur] ?? "teal";
+  const preferred = BG_PRESETS.find((b) => b.id === bgId) ?? BG_PRESETS[3];
+  // Le fond ne doit jamais avoir une couleur trop proche du vêtement porté
+  // (silhouette qui se fond dans le fond) — bascule sur la meilleure alternative si besoin,
+  // en gardant le choix "humeur" en priorité quand le contraste est déjà correct.
+  const candidates = [preferred, ...BG_PRESETS.filter((b) => b.id !== preferred.id)];
+  const bg = garmentHex ? pickContrastingBg(garmentHex, candidates, 90) : preferred;
+  const selectedProps = ep.occasion ? (OCCASION_PROPS[ep.occasion] ?? ["sparkle", "thread"]) : ["sparkle", "thread"];
+  return { bgColor: bg.color, selectedProps };
+}
 
 export default function EpisodeDetailPage({
   params,
@@ -49,6 +104,17 @@ export default function EpisodeDetailPage({
   const [generatingVisual, setGeneratingVisual] = useState(false);
   const [visualImage, setVisualImage] = useState<string | null>(null);
   const [visualNote, setVisualNote] = useState<string | null>(null);
+  const collageCanvasRef = useRef<HTMLCanvasElement>(null);
+  const [logoImg, setLogoImg] = useState<HTMLImageElement | null>(null);
+
+  // Bibliothèque motifs + produits — pour surcharger le motif/produit de
+  // l'épisode au moment de générer le visuel (cf. sélecteur "Motif" / "Produit").
+  const [motifsLib, setMotifsLib] = useState<MotifYpm[]>([]);
+  const [produitsLib, setProduitsLib] = useState<HubProduit[]>([]);
+  const [visualMotifId, setVisualMotifId] = useState<string>("");
+  const [visualVarianteFile, setVisualVarianteFile] = useState<string>("");
+  const [visualProduitId, setVisualProduitId] = useState<string>("");
+  const [visualCouleurId, setVisualCouleurId] = useState<string>("");
 
   // UI
   const [editingStatut, setEditingStatut] = useState(false);
@@ -70,6 +136,36 @@ export default function EpisodeDetailPage({
   };
 
   useEffect(() => { load(); }, [id]);
+
+  // Logo Ypersoa réel (assets/motifs-fonds-svg/logo.svg), recoloré blanc + pré-chargé une fois.
+  useEffect(() => {
+    fetch("/api/social/motifs-fonds")
+      .then((r) => r.json())
+      .then(async (json) => {
+        if (!json.ok) return;
+        const logo = (json.data as { filename: string; content: string }[]).find((f) => f.filename === "logo.svg");
+        if (!logo) return;
+        const img = await loadImageFromSvg(recolorLogoSvg(logo.content, "#FFFFFF"));
+        setLogoImg(img);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Bibliothèque motifs + produits (sélecteurs "Motif" / "Produit" du visuel hook).
+  useEffect(() => {
+    fetch("/api/da/referentiels", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((json) => { if (json.ok) setMotifsLib(json.data.motifs.motifs); })
+      .catch(() => {});
+    fetch("/api/hub/products")
+      .then((r) => r.json())
+      .then((json) => { if (json.ok) setProduitsLib(json.data.produits); })
+      .catch(() => {});
+  }, []);
+
+  const selectedMotif = motifsLib.find((m) => m.id === visualMotifId) ?? null;
+  const selectedProduit = produitsLib.find((p) => p.id === visualProduitId) ?? null;
+  const selectedCouleur = selectedProduit?.couleurs_detaillees.find((c) => c.id_palette === visualCouleurId) ?? null;
 
   const handleGenerateCopy = async () => {
     if (!ep) return;
@@ -116,7 +212,16 @@ export default function EpisodeDetailPage({
         body: JSON.stringify({
           composition: visualComposition,
           aspectRatio: visualAspectRatio,
-          canoniqueId: visualComposition === "worn" && visualCanoniqueId ? visualCanoniqueId : undefined,
+          canoniqueId:
+            (visualComposition === "worn" || visualComposition === "cutout") && visualCanoniqueId
+              ? visualCanoniqueId
+              : undefined,
+          motifOverride: visualMotifId
+            ? { motifId: visualMotifId, varianteFile: visualVarianteFile || undefined }
+            : undefined,
+          produitOverride: visualProduitId
+            ? { produitId: visualProduitId, couleurId: visualCouleurId || undefined }
+            : undefined,
         }),
       });
       const json = await res.json();
@@ -130,8 +235,62 @@ export default function EpisodeDetailPage({
     }
   };
 
+  // Mode "cutout" : le serveur renvoie déjà un PNG détouré (canal alpha réel).
+  // On le compose automatiquement en collage-sticker — fond + label mot brodé +
+  // props, pilotés par l'humeur/l'occasion de l'épisode (cf. pickCollageDefaults).
+  useEffect(() => {
+    if (visualComposition !== "cutout" || !visualImage || !ep) return;
+    const canvas = collageCanvasRef.current;
+    if (!canvas) return;
+    const img = new Image();
+    img.onload = () => {
+      const { w, h } = FORMATS[visualAspectRatio];
+      const scale = (h * 0.92) / img.naturalHeight;
+      // Contraste fond/vêtement : si un produit+couleur a été sélectionné pour la
+      // génération, on évite un fond trop proche de sa couleur réelle.
+      const garmentHex = selectedCouleur?.hex_palette_officiel ?? null;
+      const defaults = pickCollageDefaults(ep, garmentHex);
+      const lc = LABEL_COLORS.find((c) => c.id === "cream") ?? LABEL_COLORS[0];
+      drawCollage(canvas, {
+        format: visualAspectRatio,
+        bgColor: defaults.bgColor,
+        bgPatternImage: null,
+        photo: img,
+        photoBlendMode: "normal", // vrai canal alpha (détourage serveur), pas le hack multiply
+        photoScale: scale,
+        photoX: Math.round((w - img.naturalWidth * scale) / 2),
+        photoY: Math.round(h * 0.04),
+        labelText: ep.mot_brode,
+        labelShape: "postit",
+        labelBg: lc.bg,
+        labelFg: lc.text,
+        labelSize: Math.round(w * 0.065),
+        labelX: Math.round(w * 0.08),
+        labelY: Math.round(h * 0.78),
+        selectedProps: defaults.selectedProps,
+        showLogo: true,
+        logoImage: logoImg,
+      });
+    };
+    img.src = visualImage;
+  }, [visualComposition, visualImage, visualAspectRatio, ep, logoImg, selectedCouleur]);
+
   const handleDownloadVisual = () => {
     if (!visualImage) return;
+    if (visualComposition === "cutout") {
+      const canvas = collageCanvasRef.current;
+      if (!canvas) return;
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `sticker-${ep?.titre?.replace(/\s+/g, "-").toLowerCase() ?? id}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }, "image/png");
+      return;
+    }
     const a = document.createElement("a");
     a.href = visualImage;
     const ext = visualImage.startsWith("data:image/png") ? "png" : "jpg";
@@ -199,7 +358,7 @@ export default function EpisodeDetailPage({
   const aspectPaddingTop: Record<AspectRatio, string> = {
     "9:16": "177.78%",
     "1:1": "100%",
-    "4:5": "125%",
+    "3:4": "133.33%",
   };
 
   return (
@@ -336,7 +495,7 @@ export default function EpisodeDetailPage({
 
             {/* Contrôles composition */}
             <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
-              {(["flatlay", "worn"] as Composition[]).map((c) => (
+              {(["flatlay", "worn", "cutout"] as Composition[]).map((c) => (
                 <button
                   key={c}
                   onClick={() => setVisualComposition(c)}
@@ -348,14 +507,19 @@ export default function EpisodeDetailPage({
                     color: visualComposition === c ? "#fff" : "#5C5248",
                   }}
                 >
-                  {c === "flatlay" ? "Flatlay" : "Porté"}
+                  {c === "flatlay" ? "Flatlay" : c === "worn" ? "Porté" : "Sticker"}
                 </button>
               ))}
             </div>
+            {visualComposition === "cutout" && (
+              <p style={{ fontSize: 10.5, opacity: 0.55, fontFamily: "var(--font-sans)", margin: "-4px 0 8px", lineHeight: 1.4 }}>
+                Fond neutre + détourage automatique + collage (mot brodé en label, props selon l&apos;occasion).
+              </p>
+            )}
 
             {/* Contrôles format */}
             <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
-              {(["9:16", "1:1", "4:5"] as AspectRatio[]).map((ar) => (
+              {(["9:16", "1:1", "3:4"] as AspectRatio[]).map((ar) => (
                 <button
                   key={ar}
                   onClick={() => setVisualAspectRatio(ar)}
@@ -372,8 +536,8 @@ export default function EpisodeDetailPage({
               ))}
             </div>
 
-            {/* Sélecteur canonique (composition worn) */}
-            {visualComposition === "worn" && (
+            {/* Sélecteur canonique (composition worn / cutout) */}
+            {(visualComposition === "worn" || visualComposition === "cutout") && (
               <select
                 value={visualCanoniqueId}
                 onChange={(e) => setVisualCanoniqueId(e.target.value)}
@@ -387,6 +551,58 @@ export default function EpisodeDetailPage({
                 ))}
               </select>
             )}
+
+            {/* Sélecteur motif (bibliothèque de variantes) — override le motif de l'épisode */}
+            <div style={{ marginBottom: 8 }}>
+              <select
+                value={visualMotifId}
+                onChange={(e) => { setVisualMotifId(e.target.value); setVisualVarianteFile(""); }}
+                style={{ ...selectStyle, marginBottom: visualMotifId ? 4 : 0 }}
+              >
+                <option value="">— Motif de l&apos;épisode —</option>
+                {motifsLib.map((m) => (
+                  <option key={m.id} value={m.id}>{m.id} — {m.nom_commercial}</option>
+                ))}
+              </select>
+              {selectedMotif && selectedMotif.variantes.length > 0 && (
+                <select
+                  value={visualVarianteFile}
+                  onChange={(e) => setVisualVarianteFile(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="">— Variante (auto selon occasion) —</option>
+                  {selectedMotif.variantes.map((v) => (
+                    <option key={v.file} value={v.file}>{v.label}</option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            {/* Sélecteur produit + couleur (catalogue Hub) — override le produit de l'épisode */}
+            <div style={{ marginBottom: 8 }}>
+              <select
+                value={visualProduitId}
+                onChange={(e) => { setVisualProduitId(e.target.value); setVisualCouleurId(""); }}
+                style={{ ...selectStyle, marginBottom: visualProduitId ? 4 : 0 }}
+              >
+                <option value="">— Produit de l&apos;épisode —</option>
+                {produitsLib.map((p) => (
+                  <option key={p.id} value={p.id}>{p.id} — {p.nom_commercial}</option>
+                ))}
+              </select>
+              {selectedProduit && selectedProduit.couleurs_detaillees.length > 0 && (
+                <select
+                  value={visualCouleurId}
+                  onChange={(e) => setVisualCouleurId(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="">— Couleur (défaut catalogue) —</option>
+                  {selectedProduit.couleurs_detaillees.map((c) => (
+                    <option key={c.id_palette} value={c.id_palette}>{c.nom_ypersoa}</option>
+                  ))}
+                </select>
+              )}
+            </div>
 
             {/* Bouton générer */}
             <button
@@ -403,19 +619,29 @@ export default function EpisodeDetailPage({
             {/* Résultat image */}
             {visualImage && (
               <>
-                <div style={{ position: "relative", width: "100%", paddingTop: aspectPaddingTop[visualAspectRatio], borderRadius: 8, overflow: "hidden", background: "#F0EDE8", marginBottom: 8 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={visualImage}
-                    alt="Visuel hook généré"
-                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                </div>
                 {visualNote && (
-                  <p style={{ fontSize: 11, opacity: 0.6, fontFamily: "var(--font-sans)", margin: "0 0 6px", textAlign: "center" }}>
-                    ⚠️ {visualNote}
-                  </p>
+                  <div style={{ display: "flex", gap: 8, alignItems: "flex-start", background: "#FEF3C7", border: "1px solid #E0942E", borderRadius: 8, padding: "8px 10px", marginBottom: 8 }}>
+                    <span style={{ fontSize: 14, lineHeight: 1 }}>⚠️</span>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: "#92400E", fontFamily: "var(--font-sans)", margin: 0 }}>
+                      {visualNote}
+                    </p>
+                  </div>
                 )}
+                <div style={{ position: "relative", width: "100%", paddingTop: aspectPaddingTop[visualAspectRatio], borderRadius: 8, overflow: "hidden", background: "#F0EDE8", marginBottom: 8 }}>
+                  {visualComposition === "cutout" ? (
+                    <canvas
+                      ref={collageCanvasRef}
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+                    />
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={visualImage}
+                      alt="Visuel hook généré"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  )}
+                </div>
                 <button onClick={handleDownloadVisual} style={{ ...secondaryBtnStyle, width: "100%", justifyContent: "center" }}>
                   <Download size={13} /> Télécharger
                 </button>
@@ -426,7 +652,7 @@ export default function EpisodeDetailPage({
               <div style={{ textAlign: "center", padding: "16px 0", opacity: 0.4 }}>
                 <ImageIcon size={24} strokeWidth={1.2} />
                 <p style={{ fontSize: 11, fontFamily: "var(--font-sans)", margin: "6px 0 0" }}>
-                  Flatlay ou porté · 9:16 Reels
+                  Flatlay, porté ou sticker détouré · 9:16 Reels
                 </p>
               </div>
             )}

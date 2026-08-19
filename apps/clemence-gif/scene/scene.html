@@ -1,0 +1,125 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>
+  html,body{margin:0;padding:0;background:transparent}
+  #stage{position:relative;width:1080px;height:1350px;overflow:hidden;
+         font-family:"Poppins","Arial",sans-serif}
+  .layer{position:absolute;inset:0}
+  #bg{background:var(--bg)}
+  #motif{position:absolute;inset:-6%;opacity:.5;
+         background-size:cover;background-position:center;will-change:transform}
+  .pose{position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+        height:96%;will-change:opacity;object-fit:contain}
+  .obj{position:absolute;will-change:transform;filter:drop-shadow(0 8px 14px rgba(0,0,0,.18))}
+  #pill{position:absolute;left:7%;bottom:14%;max-width:62%;
+        padding:26px 40px;border-radius:34px;background:var(--pill);
+        color:var(--pillText);font-weight:800;font-size:64px;line-height:1.05;
+        transform:rotate(-3deg);will-change:transform,opacity}
+  .sparkle{position:absolute;font-size:70px;line-height:1;will-change:opacity}
+</style>
+
+<div id="stage">
+  <div id="bg" class="layer"></div>
+  <div id="motif" class="layer"></div>
+  <!-- poses, objets, pilule, sparkles injectés par buildScene() -->
+</div>
+
+<script>
+// slots d'objets : positions/tailles/déphasages autour du cadre (1080×1350)
+const SLOTS = [
+  { x: 60,  y: 120,  w: 300, phase: 0.0  }, // haut-gauche
+  { x: 760, y: 90,   w: 260, phase: 0.5  }, // haut-droite
+  { x: 40,  y: 760,  w: 300, phase: 0.25 }, // bas-gauche
+  { x: 800, y: 820,  w: 240, phase: 0.75 }, // bas-droite
+  { x: 470, y: 40,   w: 200, phase: 0.15 }  // haut-centre
+];
+const SPARKLES = [ {x:120,y:520}, {x:900,y:360}, {x:640,y:980} ];
+
+let POSES = [], OBJS = [], PILL = null, MOTIF = null, SPKS = [];
+
+window.buildScene = (spec) => {
+  const stage = document.getElementById('stage');
+  const root  = document.documentElement.style;
+  root.setProperty('--bg', spec.palette.bg);
+  root.setProperty('--pill', spec.palette.pill);
+  root.setProperty('--pillText', spec.palette.pillText);
+
+  MOTIF = document.getElementById('motif');
+  if (spec.motifUrl) MOTIF.style.backgroundImage = `url("${spec.motifUrl}")`;
+
+  // couche 1 : poses empilées (crossfade)
+  POSES = spec.poseSequence.map((_, i) => {
+    const img = document.createElement('img');
+    img.className = 'pose'; img.src = spec.poseUrls[i]; img.style.opacity = i===0?1:0;
+    stage.appendChild(img); return img;
+  });
+
+  // couche 2 : objets
+  OBJS = spec.objects.map(o => {
+    const s = SLOTS[o.slot % SLOTS.length];
+    const img = document.createElement('img');
+    img.className = 'obj'; img.src = o.url;
+    img.style.left = s.x+'px'; img.style.top = s.y+'px'; img.style.width = s.w+'px';
+    img.dataset.phase = s.phase; img.dataset.baseY = s.y;
+    stage.appendChild(img); return img;
+  });
+
+  // couche 3 : pilule hook
+  PILL = document.createElement('div');
+  PILL.id = 'pill'; PILL.textContent = spec.hook;
+  stage.appendChild(PILL);
+
+  // bulles
+  if (spec.palette.sparkle) SPKS = SPARKLES.map(p => {
+    const s = document.createElement('div');
+    s.className='sparkle'; s.textContent='✦';
+    s.style.left=p.x+'px'; s.style.top=p.y+'px'; s.style.color=spec.palette.motif;
+    stage.appendChild(s); return s;
+  });
+
+  window.seek(0);
+  return true;
+};
+
+const easeOutBack = x => { const c1=1.70158, c3=c1+1;
+  return 1 + c3*Math.pow(x-1,3) + c1*Math.pow(x-1,2); };
+
+window.seek = (t) => {
+  // 1) crossfade des poses sur segments égaux
+  const n = POSES.length, seg = 1/Math.max(1,n-1);
+  POSES.forEach((img,i) => {
+    let a = 0;
+    if (n===1) a = 1;
+    else {
+      const center = i*seg;
+      a = 1 - Math.min(1, Math.abs(t-center)/seg);
+      if (i===0 && t<center) a = 1;
+      if (i===n-1 && t>center) a = 1;
+    }
+    img.style.opacity = a.toFixed(3);
+  });
+
+  // 2) objets : flottement sinus + micro-rotation
+  OBJS.forEach(img => {
+    const ph = parseFloat(img.dataset.phase);
+    const y  = Math.sin(2*Math.PI*(t+ph)) * 14;
+    const r  = Math.sin(2*Math.PI*(t+ph)) * 2.2;
+    img.style.transform = `translateY(${y.toFixed(2)}px) rotate(${r.toFixed(2)}deg)`;
+  });
+
+  // 3) pilule : pop-in sur les 18 premiers % puis maintien
+  const p = Math.min(1, t/0.18);
+  PILL.style.opacity = p.toFixed(3);
+  const sc = 0.8 + 0.2*easeOutBack(p);
+  PILL.style.transform = `rotate(-3deg) scale(${sc.toFixed(3)})`;
+
+  // 4) motif : dérive lente
+  MOTIF.style.transform = `translate(${(Math.sin(t*Math.PI*2)*10).toFixed(1)}px, ${(Math.cos(t*Math.PI*2)*8).toFixed(1)}px)`;
+
+  // 5) bulles : scintillement déphasé
+  SPKS.forEach((s,i) => {
+    const a = 0.35 + 0.65*Math.abs(Math.sin(Math.PI*(t*2 + i*0.33)));
+    s.style.opacity = a.toFixed(3);
+  });
+};
+</script>

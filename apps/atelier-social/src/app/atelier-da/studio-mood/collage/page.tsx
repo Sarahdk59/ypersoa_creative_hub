@@ -3,269 +3,28 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, Download, Upload, X, Image as ImageIcon, Type, Sparkles } from "lucide-react";
+import {
+  FORMATS,
+  BG_PRESETS,
+  COLLAGE_FONDS,
+  LABEL_SHAPES,
+  LABEL_COLORS,
+  PROPS,
+  QuatrefoilSVG,
+  drawCollage,
+  buildFondSvg,
+  loadImageFromSvg,
+  recolorLogoSvg,
+  type CollageFormat,
+} from "@/lib/studio-mood/collage-render";
 
 // ── Brand tokens ──────────────────────────────────────────────────────────────
 const TEAL = "#1E6E77";
 const MARINE = "#16324C";
 const CREAM = "#F4EEE2";
 
-// ── Canvas dimensions ─────────────────────────────────────────────────────────
-const FORMATS = {
-  "4:5": { w: 1080, h: 1350, label: "Instagram Post (4:5)" },
-  "9:16": { w: 1080, h: 1920, label: "Reels / Story (9:16)" },
-  "1:1": { w: 1080, h: 1080, label: "Carré (1:1)" },
-};
-
-// ── Background presets ────────────────────────────────────────────────────────
-const BG_PRESETS = [
-  { id: "olive", color: "#8B9E6E", label: "Olive Mojito" },
-  { id: "rose", color: "#F2B5C5", label: "Rose poudré" },
-  { id: "rouge", color: "#D63A3A", label: "Rouge vif" },
-  { id: "teal", color: "#1E6E77", label: "Teal Ypersoa" },
-  { id: "marine", color: "#16324C", label: "Marine" },
-  { id: "creme", color: "#F4EEE2", label: "Crème" },
-  { id: "blanc", color: "#FFFFFF", label: "Blanc" },
-  { id: "corail", color: "#E87D5A", label: "Corail" },
-  { id: "lavande", color: "#B8A9C9", label: "Lavande" },
-];
-
-// ── Pattern options ───────────────────────────────────────────────────────────
-const PATTERNS = [
-  { id: "none", label: "Aucun" },
-  { id: "dots", label: "Polka dots" },
-  { id: "blobs", label: "Blobs organiques" },
-  { id: "circles", label: "Cercles" },
-];
-
-// ── Label shapes ──────────────────────────────────────────────────────────────
-const LABEL_SHAPES = [
-  { id: "pill", label: "Pill arrondi" },
-  { id: "blob", label: "Blob" },
-  { id: "rect", label: "Rectangle" },
-  { id: "sticker", label: "Sticker" },
-];
-
-// ── Label color presets ───────────────────────────────────────────────────────
-const LABEL_COLORS = [
-  { id: "yellow", bg: "#F2C94C", text: "#1A1614" },
-  { id: "red", bg: "#D63A3A", text: "#FFFFFF" },
-  { id: "teal", bg: "#1E6E77", text: "#FFFFFF" },
-  { id: "marine", bg: "#16324C", text: "#FFFFFF" },
-  { id: "white", bg: "#FFFFFF", text: "#1A1614" },
-  { id: "cream", bg: "#F4EEE2", text: "#16324C" },
-];
-
-// ── Built-in props ────────────────────────────────────────────────────────────
-const PROPS = [
-  { id: "thread", emoji: "🧵", label: "Bobine de fil" },
-  { id: "scissors", emoji: "✂️", label: "Ciseaux" },
-  { id: "flower", emoji: "🌸", label: "Fleur" },
-  { id: "heart", emoji: "❤️", label: "Cœur" },
-  { id: "star", emoji: "⭐", label: "Étoile" },
-  { id: "lemon", emoji: "🍋", label: "Citron" },
-  { id: "coffee", emoji: "☕", label: "Café" },
-  { id: "sparkle", emoji: "✨", label: "Étincelle" },
-];
-
-// ── Quatrefoil SVG path ───────────────────────────────────────────────────────
-function QuatrefoilSVG({ size, color }: { size: number; color: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
-      <circle cx="30" cy="30" r="22" stroke={color} strokeWidth="5" fill="none" />
-      <circle cx="70" cy="30" r="22" stroke={color} strokeWidth="5" fill="none" />
-      <circle cx="30" cy="70" r="22" stroke={color} strokeWidth="5" fill="none" />
-      <circle cx="70" cy="70" r="22" stroke={color} strokeWidth="5" fill="none" />
-    </svg>
-  );
-}
-
-// ── Canvas renderer ───────────────────────────────────────────────────────────
-function drawCollage(
-  canvas: HTMLCanvasElement,
-  opts: {
-    format: keyof typeof FORMATS;
-    bgColor: string;
-    pattern: string;
-    photo: HTMLImageElement | null;
-    photoScale: number;
-    photoX: number;
-    photoY: number;
-    labelText: string;
-    labelShape: string;
-    labelBg: string;
-    labelFg: string;
-    labelSize: number;
-    labelX: number;
-    labelY: number;
-    selectedProps: string[];
-    showLogo: boolean;
-    logoColor: string;
-  }
-) {
-  const { w, h } = FORMATS[opts.format];
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext("2d")!;
-
-  // Background
-  ctx.fillStyle = opts.bgColor;
-  ctx.fillRect(0, 0, w, h);
-
-  // Pattern overlay
-  if (opts.pattern === "dots") {
-    ctx.fillStyle = "rgba(255,255,255,0.18)";
-    const dot = 28;
-    const gap = 70;
-    for (let y = gap / 2; y < h + gap; y += gap) {
-      for (let x = gap / 2; x < w + gap; x += gap) {
-        ctx.beginPath();
-        ctx.arc(x, y, dot, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  } else if (opts.pattern === "blobs") {
-    ctx.fillStyle = "rgba(255,255,255,0.12)";
-    const blobs = [
-      [0.85 * w, 0.05 * h, 0.08 * w],
-      [0.92 * w, 0.15 * h, 0.05 * w],
-      [0.05 * w, 0.8 * h, 0.09 * w],
-      [0.12 * w, 0.92 * h, 0.06 * w],
-      [0.78 * w, 0.88 * h, 0.07 * w],
-    ];
-    blobs.forEach(([x, y, r]) => {
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    ctx.fillStyle = "rgba(255,255,255,0.08)";
-    const hearts = [
-      [0.1 * w, 0.1 * h, 0.06 * w],
-      [0.88 * w, 0.75 * h, 0.05 * w],
-    ];
-    hearts.forEach(([x, y, r]) => {
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-  } else if (opts.pattern === "circles") {
-    ctx.strokeStyle = "rgba(255,255,255,0.15)";
-    ctx.lineWidth = 4;
-    [[0.9 * w, 0.08 * h, 120], [0.08 * w, 0.9 * h, 100], [0.5 * w, 0.5 * h, 200]].forEach(([x, y, r]) => {
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.stroke();
-    });
-  }
-
-  // Photo avec mix-blend multiply
-  if (opts.photo) {
-    const imgW = opts.photo.naturalWidth * opts.photoScale;
-    const imgH = opts.photo.naturalHeight * opts.photoScale;
-    ctx.save();
-    ctx.globalCompositeOperation = "multiply";
-    ctx.drawImage(opts.photo, opts.photoX, opts.photoY, imgW, imgH);
-    ctx.restore();
-  }
-
-  // Label
-  if (opts.labelText.trim()) {
-    const fontSize = opts.labelSize;
-    ctx.font = `700 ${fontSize}px 'Arial', sans-serif`;
-    const textW = ctx.measureText(opts.labelText).width;
-    const padX = 40;
-    const padY = 24;
-    const lx = opts.labelX;
-    const ly = opts.labelY;
-    const lw = textW + padX * 2;
-    const lh = fontSize + padY * 2;
-
-    ctx.save();
-    ctx.fillStyle = opts.labelBg;
-
-    if (opts.labelShape === "pill") {
-      const r = lh / 2;
-      ctx.beginPath();
-      ctx.moveTo(lx + r, ly);
-      ctx.lineTo(lx + lw - r, ly);
-      ctx.arc(lx + lw - r, ly + r, r, -Math.PI / 2, Math.PI / 2);
-      ctx.lineTo(lx + r, ly + lh);
-      ctx.arc(lx + r, ly + r, r, Math.PI / 2, -Math.PI / 2);
-      ctx.closePath();
-      ctx.fill();
-    } else if (opts.labelShape === "blob") {
-      ctx.beginPath();
-      ctx.moveTo(lx + lw * 0.1, ly + lh * 0.2);
-      ctx.bezierCurveTo(lx - lw * 0.05, ly - lh * 0.1, lx + lw * 0.4, ly - lh * 0.15, lx + lw * 0.6, ly + lh * 0.05);
-      ctx.bezierCurveTo(lx + lw * 0.85, ly - lh * 0.05, lx + lw * 1.1, ly + lh * 0.4, lx + lw * 0.95, ly + lh * 0.75);
-      ctx.bezierCurveTo(lx + lw * 1.05, ly + lh * 1.1, lx + lw * 0.6, ly + lh * 1.15, lx + lw * 0.4, ly + lh * 0.95);
-      ctx.bezierCurveTo(lx + lw * 0.1, ly + lh * 1.2, lx - lw * 0.05, ly + lh * 0.8, lx + lw * 0.1, ly + lh * 0.2);
-      ctx.closePath();
-      ctx.fill();
-    } else if (opts.labelShape === "sticker") {
-      const r = 20;
-      ctx.shadowColor = "rgba(0,0,0,0.3)";
-      ctx.shadowBlur = 12;
-      ctx.shadowOffsetY = 4;
-      ctx.beginPath();
-      ctx.roundRect(lx, ly, lw, lh, r);
-      ctx.fill();
-      ctx.shadowColor = "transparent";
-    } else {
-      ctx.fillRect(lx, ly, lw, lh);
-    }
-
-    ctx.fillStyle = opts.labelFg;
-    ctx.font = `700 ${fontSize}px 'Arial', sans-serif`;
-    ctx.fillText(opts.labelText, lx + padX, ly + padY + fontSize * 0.78);
-    ctx.restore();
-  }
-
-  // Props (emoji)
-  const propPositions = [
-    [0.75 * w, 0.18 * h],
-    [0.15 * w, 0.55 * h],
-    [0.8 * w, 0.65 * h],
-    [0.2 * w, 0.82 * h],
-    [0.65 * w, 0.85 * h],
-    [0.05 * w, 0.3 * h],
-    [0.85 * w, 0.4 * h],
-    [0.5 * w, 0.12 * h],
-  ];
-  ctx.font = `${Math.round(w * 0.1)}px serif`;
-  ctx.textAlign = "center";
-  opts.selectedProps.forEach((propId, i) => {
-    const prop = PROPS.find((p) => p.id === propId);
-    if (!prop) return;
-    const [px, py] = propPositions[i % propPositions.length];
-    ctx.fillText(prop.emoji, px, py);
-  });
-  ctx.textAlign = "left";
-
-  // Quatrefoil logo
-  if (opts.showLogo) {
-    const logoSize = Math.round(w * 0.08);
-    const margin = Math.round(w * 0.04);
-    const lx2 = w - logoSize - margin;
-    const ly2 = h - logoSize - margin;
-    ctx.save();
-    ctx.strokeStyle = opts.logoColor;
-    ctx.lineWidth = Math.max(3, logoSize * 0.06);
-    const cx1 = lx2 + logoSize * 0.3;
-    const cy1 = ly2 + logoSize * 0.3;
-    const cx2 = lx2 + logoSize * 0.7;
-    const cy2 = ly2 + logoSize * 0.7;
-    const r = logoSize * 0.22;
-    [[cx1, cy1], [cx2, cy1], [cx1, cy2], [cx2, cy2]].forEach(([x, y]) => {
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.stroke();
-    });
-    ctx.restore();
-  }
-}
-
 // ── Preview Canvas component ──────────────────────────────────────────────────
-function PreviewCanvas({ renderFn, format }: { renderFn: (c: HTMLCanvasElement) => void; format: keyof typeof FORMATS }) {
+function PreviewCanvas({ renderFn, format }: { renderFn: (c: HTMLCanvasElement) => void; format: CollageFormat }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { w, h } = FORMATS[format];
 
@@ -290,10 +49,15 @@ function PreviewCanvas({ renderFn, format }: { renderFn: (c: HTMLCanvasElement) 
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function CollagePage() {
-  const [format, setFormat] = useState<keyof typeof FORMATS>("4:5");
+  const [format, setFormat] = useState<CollageFormat>("3:4");
   const [bgColor, setBgColor] = useState("#8B9E6E");
   const [customBg, setCustomBg] = useState(false);
-  const [pattern, setPattern] = useState("dots");
+  const [fondId, setFondId] = useState("aucun");
+  const [fondMotifColor, setFondMotifColor] = useState("#FFFFFF");
+  const [customFondMotifColor, setCustomFondMotifColor] = useState(false);
+  const [assetLibrary, setAssetLibrary] = useState<Record<string, string>>({});
+  const [bgPatternImg, setBgPatternImg] = useState<HTMLImageElement | null>(null);
+  const [logoImg, setLogoImg] = useState<HTMLImageElement | null>(null);
   const [photo, setPhoto] = useState<HTMLImageElement | null>(null);
   const [photoName, setPhotoName] = useState<string | null>(null);
   const [photoScale, setPhotoScale] = useState(1.0);
@@ -311,6 +75,39 @@ export default function CollagePage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const lc = LABEL_COLORS.find((c) => c.id === labelColorId) ?? LABEL_COLORS[0];
+  const fondDef = COLLAGE_FONDS.find((f) => f.id === fondId) ?? COLLAGE_FONDS[0];
+
+  // Bibliothèque de fonds réels (assets/motifs-fonds-svg/), pour recoloration
+  // fond/motif — mêmes fichiers que l'outil /social/fonds.
+  useEffect(() => {
+    fetch("/api/social/motifs-fonds")
+      .then((r) => r.json())
+      .then((json) => {
+        if (!json.ok) return;
+        const map: Record<string, string> = {};
+        (json.data as { filename: string; content: string }[]).forEach((f) => { map[f.filename] = f.content; });
+        setAssetLibrary(map);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Logo Ypersoa réel, recoloré selon logoColor.
+  useEffect(() => {
+    const raw = assetLibrary["logo.svg"];
+    if (!raw) return;
+    let cancelled = false;
+    loadImageFromSvg(recolorLogoSvg(raw, logoColor)).then((img) => { if (!cancelled) setLogoImg(img); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [assetLibrary, logoColor]);
+
+  // Fond décoratif rasterisé (générateur procédural ou asset recoloré fond/motif).
+  useEffect(() => {
+    if (fondDef.id === "aucun") { setBgPatternImg(null); return; }
+    let cancelled = false;
+    const svg = buildFondSvg(fondDef, bgColor, fondMotifColor, format, 42, assetLibrary);
+    loadImageFromSvg(svg).then((img) => { if (!cancelled) setBgPatternImg(img); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [fondDef, bgColor, fondMotifColor, format, assetLibrary]);
 
   const handlePhotoUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -340,8 +137,9 @@ export default function CollagePage() {
     drawCollage(canvas, {
       format,
       bgColor,
-      pattern,
+      bgPatternImage: bgPatternImg,
       photo,
+      photoBlendMode: "multiply",
       photoScale,
       photoX,
       photoY,
@@ -354,17 +152,18 @@ export default function CollagePage() {
       labelY,
       selectedProps,
       showLogo,
-      logoColor,
+      logoImage: logoImg,
     });
-  }, [format, bgColor, pattern, photo, photoScale, photoX, photoY, labelText, labelShape, lc, labelSize, labelX, labelY, selectedProps, showLogo, logoColor]);
+  }, [format, bgColor, bgPatternImg, photo, photoScale, photoX, photoY, labelText, labelShape, lc, labelSize, labelX, labelY, selectedProps, showLogo, logoImg]);
 
   const handleDownload = () => {
     const canvas = document.createElement("canvas");
     drawCollage(canvas, {
       format,
       bgColor,
-      pattern,
+      bgPatternImage: bgPatternImg,
       photo,
+      photoBlendMode: "multiply",
       photoScale,
       photoX,
       photoY,
@@ -377,7 +176,7 @@ export default function CollagePage() {
       labelY,
       selectedProps,
       showLogo,
-      logoColor,
+      logoImage: logoImg,
     });
     canvas.toBlob((blob) => {
       if (!blob) return;
@@ -420,7 +219,7 @@ export default function CollagePage() {
           {/* Format */}
           <Section title="Format">
             <div className="flex flex-col gap-1.5">
-              {(Object.keys(FORMATS) as Array<keyof typeof FORMATS>).map((f) => (
+              {(Object.keys(FORMATS) as Array<CollageFormat>).map((f) => (
                 <button
                   key={f}
                   onClick={() => setFormat(f)}
@@ -463,19 +262,51 @@ export default function CollagePage() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              {PATTERNS.map((p) => (
+            <p className="text-[10px] text-brand-muted font-semibold uppercase mb-1.5">Motif de fond</p>
+            <div className="flex flex-col gap-1.5 mb-3">
+              {COLLAGE_FONDS.map((f) => (
                 <button
-                  key={p.id}
-                  onClick={() => setPattern(p.id)}
+                  key={f.id}
+                  onClick={() => setFondId(f.id)}
                   className={`text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    pattern === p.id ? "bg-[#1E6E77] text-white" : "bg-[#FAF7F2] text-brand-text hover:bg-[#EFE9DB]"
+                    fondId === f.id ? "bg-[#1E6E77] text-white" : "bg-[#FAF7F2] text-brand-text hover:bg-[#EFE9DB]"
                   }`}
                 >
-                  {p.label}
+                  {f.label}
                 </button>
               ))}
             </div>
+            {fondId !== "aucun" && (
+              <>
+                <label className="text-[10px] text-brand-muted font-semibold uppercase block mb-1.5">Couleur motif</label>
+                <div className="flex gap-2 flex-wrap">
+                  {["#FFFFFF", "#1E6E77", "#16324C", "#F4EEE2", "#D63A3A", "#1A1614"].map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => { setFondMotifColor(c); setCustomFondMotifColor(false); }}
+                      className={`w-7 h-7 rounded-full transition-all ${
+                        fondMotifColor === c && !customFondMotifColor ? "ring-2 ring-offset-1 ring-[#1E6E77] scale-110" : ""
+                      }`}
+                      style={{ background: c, border: c === "#FFFFFF" ? "1px solid #ddd" : "none" }}
+                    />
+                  ))}
+                  <div className="relative">
+                    <input
+                      type="color"
+                      value={fondMotifColor}
+                      onChange={(e) => { setFondMotifColor(e.target.value); setCustomFondMotifColor(true); }}
+                      className="opacity-0 absolute inset-0 w-7 h-7 cursor-pointer"
+                    />
+                    <div
+                      className={`w-7 h-7 rounded-full border border-dashed border-brand-muted flex items-center justify-center text-brand-muted text-base cursor-pointer ${customFondMotifColor ? "ring-2 ring-offset-1 ring-[#1E6E77]" : ""}`}
+                      style={customFondMotifColor ? { background: fondMotifColor } : {}}
+                    >
+                      {!customFondMotifColor && "+"}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </Section>
 
           {/* Photo */}
@@ -640,7 +471,7 @@ export default function CollagePage() {
               >
                 <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${showLogo ? "left-5" : "left-1"}`} />
               </button>
-              <span className="text-sm text-brand-text">Quatrefoil (coin bas droit)</span>
+              <span className="text-sm text-brand-text">Logo Ypersoa (coin bas droit)</span>
             </div>
             {showLogo && (
               <div className="flex gap-2 flex-wrap">

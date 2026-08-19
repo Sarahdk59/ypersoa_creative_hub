@@ -346,15 +346,8 @@ export default function Home() {
           pinterestFormat: "lifestyle",
         },
       ];
-    } else if (withOverlay) {
-      aspectRatio = "4:5"; // Insta + overlay
-      imageJobs = ALL_ANGLES.map((a) => ({
-        angle: a,
-        composition: "worn" as const,
-        canoniqueIds: selectedCanoniqueIds,
-      }));
     } else {
-      aspectRatio = "1:1"; // Insta classique
+      aspectRatio = "4:5"; // Insta systématique (photo pure ou avec texte)
       imageJobs = ALL_ANGLES.map((a) => ({
         angle: a,
         composition: "worn" as const,
@@ -1024,11 +1017,11 @@ export default function Home() {
                     Format 2:3 vertical (1000×1500). « Avec texte » = surimpression de l&apos;occasion
                     dans l&apos;onglet Overlay (recommandé Pinterest).
                   </p>
-                ) : withOverlay ? (
+                ) : (
                   <p className="text-[10px] text-brand-muted mt-1.5 italic">
-                    Format 4:5 (Insta), template sélectionnable après génération
+                    Format 4:5 (1080×1350){withOverlay ? ", template sélectionnable après génération" : ""}
                   </p>
-                ) : null}
+                )}
               </section>
             </div>
 
@@ -1151,11 +1144,7 @@ export default function Home() {
                 onToggleBest={handleToggleBestSlide}
                 onRemove={handleRemoveSlide}
                 aspectClass={
-                  selectedPlatform === "pinterest"
-                    ? "aspect-[2/3]"
-                    : withOverlay
-                    ? "aspect-[4/5]"
-                    : "aspect-square"
+                  selectedPlatform === "pinterest" ? "aspect-[2/3]" : "aspect-[4/5]"
                 }
               />
             </div>

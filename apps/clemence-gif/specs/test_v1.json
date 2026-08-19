@@ -1,0 +1,19 @@
+{
+  "id": "test_v1",
+  "theme": "test",
+  "hook": "Le cadeau qui la fait craquer",
+  "poseSequence": ["neutre", "joie"],
+  "objects": [
+    { "name": "sweat-beige", "slot": 0 }
+  ],
+  "palette": {
+    "bg": "#16324C",
+    "motif": "#1E6E77",
+    "pill": "#A75F59",
+    "pillText": "#F4EEE2",
+    "sparkle": true
+  },
+  "durationSec": 3,
+  "fps": 12,
+  "outputs": ["gif", "mp4"]
+}

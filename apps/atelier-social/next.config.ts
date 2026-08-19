@@ -6,7 +6,10 @@ const nextConfig: NextConfig = {
   // Sans cette ligne, le bundler Next inlines le code mais perd le worker en
   // prod ("Cannot find module pdf.worker.mjs"). On garde les paquets externes
   // pour qu'ils soient résolus depuis node_modules à l'exécution.
-  serverExternalPackages: ["pdf-parse", "pdfjs-dist"],
+  // @imgly/background-removal-node (détourage studio-mood "cutout") embarque
+  // onnxruntime-node dont le binaire natif .node casse le bundle webpack s'il
+  // n'est pas externalisé (Module parse failed sur onnxruntime_binding.node).
+  serverExternalPackages: ["pdf-parse", "pdfjs-dist", "@imgly/background-removal-node", "onnxruntime-node"],
   experimental: {
     serverActions: {
       bodySizeLimit: "10mb", // pour images base64

@@ -5,3 +5,5 @@ allowBuilds:
   protobufjs: true
   sharp: true
   unrs-resolver: true
+  esbuild: true
+  onnxruntime-node: true
