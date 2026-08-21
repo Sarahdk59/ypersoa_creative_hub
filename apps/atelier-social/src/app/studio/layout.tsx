@@ -46,7 +46,10 @@ export default function StudioLayout({ children }: { children: React.ReactNode }
           ]}
         />
       </div>
-      <div style={{ flex: 1, minHeight: 0 }}>{children}</div>
+      {/* overflowY: auto — Shooting Book et Studio Mood sont des pages
+          normales plus hautes que le viewport, pas des iframes exact-fit :
+          sans ça leur bas (dont le bouton Générer) reste inaccessible. */}
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>{children}</div>
     </div>
   );
 }

@@ -24,7 +24,7 @@ import {
   Compass,
   Cpu,
   BookOpen,
-  Palette,
+  ScrollText,
   Settings,
 } from "lucide-react";
 import { HubSidebarItem } from "./HubSidebarItem";
@@ -131,7 +131,7 @@ export function HubSidebar() {
 
       <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
         <div className="hub-stitch" style={{ color: "var(--hub-border)", margin: "4px 16px 10px" }} />
-        <HubSidebarItem icon={<Palette size={17} strokeWidth={1.6} />} label="Brand Book" href="/brand" active={isActive("/brand")} />
+        <HubSidebarItem icon={<ScrollText size={17} strokeWidth={1.6} />} label="Le Livre" href="/le-livre" active={isActive("/le-livre") || isActive("/brand")} />
         <HubSidebarItem icon={<BookOpen size={17} strokeWidth={1.6} />} label="Guide d'utilisation" href="/guide" active={isActive("/guide")} />
 
         <div

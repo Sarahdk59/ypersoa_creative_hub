@@ -138,6 +138,16 @@ export async function getBlogArticle(id: string): Promise<BlogArticleRecord | nu
   return data ? normalizeRow(data as BlogArticleRecord) : null;
 }
 
+export async function deleteBlogArticle(id: string): Promise<void> {
+  mem().articles.delete(id);
+  if (!supabase) return;
+
+  const { error } = await supabase.from(TBL).delete().eq("id", id);
+  if (error && !isRecoverablePersistenceError(error.message)) {
+    throw new Error(`Suppression article echouee : ${error.message}`);
+  }
+}
+
 export async function saveBlogArticle(input: SaveBlogArticleInput): Promise<BlogArticleRecord> {
   if (!supabase) {
     const id = makeId();

@@ -54,7 +54,18 @@ VOIX, SANS NEGOCIATION :
   sont bienvenus. Evite le paragraphe "these + reassurance" en serie.
 - Tu DOIS tisser au moins 3 empreintes concretes de la BANQUE DE VRAI fournie.
   Garde les mots signatures, chiffres et noms intacts : ne les lisse jamais.
+  Garde aussi LA CHUTE du fait, pas seulement son mot-cle. Exemple : "le fil
+  est pris dans la maille" doit finir sur "JULES finit parfois en ULE", pas
+  sur une generalisation du genre "tienne aussi longtemps que tes plus belles
+  aventures". Si tu recopies le fait puis lui accroches une queue emotionnelle
+  vague, tu as rate l'empreinte : recommence.
 - densite avant quota : 650 mots denses valent mieux que 924 mots dilues.
+- INTERDIT ABSOLU : toute phrase construite comme "tienne/dure aussi
+  longtemps que tes/ses/vos plus belles aventures/souvenirs/moments". C'est
+  du remplissage emotionnel qui ne dit rien et ne fait sourire personne — le
+  genre de phrase qui pourrait vendre une assurance auto. Une empreinte
+  concrete et une chute qui fait sourire valent toujours mieux qu'une
+  promesse abstraite.
 
 BANQUE DE VRAI — tu peux piocher seulement si c'est pertinent pour le sujet :
 - le pull qui part a l'ecole le lundi et revient parfois sur le dos d'un autre
@@ -111,9 +122,12 @@ ${BLOG_DIRECTION}
 incomparable", "le secret d'un vetement qui plait et qui dure", "repartir du
 bon pied", "des nouveautes qui donnent le sourire", "un cadeau pense et
 prepare avec soin", "consommer mieux", "des objets qui ont du sens", "a portee
-de clic", "la qualite est au rendez-vous".
+de clic", "la qualite est au rendez-vous", "tienne aussi longtemps que tes
+plus belles aventures", "dure aussi longtemps que vos plus beaux souvenirs".
 
-Test : si la phrase pourrait vendre une assurance auto, elle degage.
+Test : si la phrase pourrait vendre une assurance auto, elle degage. Meme
+regle si la phrase est une reformulation habile d'un cliche de cette liste :
+c'est le motif qui est interdit, pas seulement la formulation exacte.
 
 ## REGLES DE VOCABULAIRE
 

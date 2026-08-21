@@ -78,6 +78,11 @@ export const DEFAULT_VOCAB_RULES: VocabRule[] = [
   { kind: "forbidden", pattern: "fait[\\s-]main", label: "Hors charte" },
   { kind: "forbidden", pattern: "handmade", label: "Hors charte" },
   { kind: "forbidden", pattern: "cousu\\s+main", label: "Hors charte" },
+  {
+    kind: "forbidden",
+    pattern: "(tienn|dur)\\w*\\s+aussi\\s+longtemps\\s+que\\s+(tes|ses|vos|leurs)",
+    label: "Promesse emotionnelle vague (motif banni, ex: \"tienne aussi longtemps que tes plus belles aventures\")",
+  },
   { kind: "required", pattern: "brod[ée]\\s+[àa]\\s+la\\s+commande", label: "A la commande" },
   { kind: "required", pattern: "Wattrelos|Hauts[\\s-]de[\\s-]France", label: "Ancrage regional" },
   { kind: "required", pattern: "cousu\\w*\\s+pour\\s+durer", label: "Durabilite" },

@@ -71,9 +71,9 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 10,
-    title: "Brand Book",
-    description: "Brand Book v1.0 · 2026. Palette épine dorsale (marine · teal · crème) + pop signature (rouge coquelicot · blush). Typos, funnel 4 surfaces, rubriques de contenu, vocabulaire autorisé/interdit, garde-fous.",
-    href: "/brand",
+    title: "Le Livre",
+    description: "Source unique v1.1 · 2026 : marque, voix (thermostat citron), vocabulaire brand-safe, Range Bisous, playbook et kit Mood — fusionnés en une seule page.",
+    href: "/le-livre",
     icon: <BookOpen size={22} strokeWidth={1.4} />,
     status: "v0",
   },
@@ -121,7 +121,7 @@ export default function AtelierDaHome() {
         </p>
         <div style={{ marginTop: 18, display: "flex", gap: 10, flexWrap: "wrap" }}>
           <Link
-            href="/brand"
+            href="/le-livre"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -137,7 +137,7 @@ export default function AtelierDaHome() {
             }}
           >
             <BookOpen size={15} strokeWidth={1.8} />
-            Brand Book
+            Le Livre
           </Link>
         </div>
       </header>
