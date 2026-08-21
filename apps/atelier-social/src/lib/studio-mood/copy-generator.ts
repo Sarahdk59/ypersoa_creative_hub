@@ -3,7 +3,7 @@
  * Cascade : Anthropic claude-sonnet-4-6 → OpenAI gpt-4o → repli déterministe.
  */
 import OpenAI from "openai";
-import { checkBrandSafety } from "@/lib/brand-rules";
+import { checkBrandSafety, voiceLevelForOccasion } from "@/lib/brand-rules";
 import type { GeneratedCopy, StudioMoodEpisode } from "./types";
 
 const SYSTEM_PROMPT = `Tu es la voix Ypersoa pour les Reels Instagram / TikTok — vêtements brodés personnalisés, brodés à la commande dans notre atelier des Hauts-de-France.
@@ -14,7 +14,8 @@ const SYSTEM_PROMPT = `Tu es la voix Ypersoa pour les Reels Instagram / TikTok �
 - JAMAIS "brodé à la main" / "fait main" → dis "brodé à la commande", "brodé dans notre atelier"
 - JAMAIS référence machine/équipement (Tajima, machine à broder)
 - JAMAIS Etsy, Amazon, Vinted, marketplace
-- Vocabulaire autorisé : personnalisation, à ton image, brodé à la commande, brodé en France, Hauts-de-France, personnalisé
+- Vocabulaire autorisé : personnalisation, à ton image, brodé à la commande, brodé dans notre atelier de Wattrelos, Hauts-de-France, personnalisé
+- JAMAIS "Made in France", "fabriqué en France" ou "brodé en France" (risque légal DGCCRF)
 
 # OUTPUT — JSON STRICT
 {
@@ -104,8 +105,7 @@ function fallback(ep: StudioMoodEpisode): Record<string, unknown> {
       "brodé à la commande",
       "vêtement personnalisé",
       ep.occasion?.toLowerCase().replace(/\s/g, "") ?? "cadeau personnalisé",
-      "haut de france",
-      "made in france",
+      "hauts de france",
       "personnalisation",
     ],
   };
@@ -150,7 +150,7 @@ export async function generateCopy(
     : [];
 
   const fullText = `${hook} ${legende_question}`;
-  const safety = checkBrandSafety(fullText);
+  const safety = checkBrandSafety(fullText, voiceLevelForOccasion(ep.occasion));
 
   return {
     hook,

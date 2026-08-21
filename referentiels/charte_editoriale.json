@@ -10,7 +10,7 @@
       "archives/ypersoa-content-studio.jsx (sous-piliers émotion)",
       "site ypersoa.fr (page Délais & livraisons)"
     ],
-    "autorite": "Ce document fait foi pour TOUT output éditorial Hub. En cas de conflit avec les motifs individuels, la charte motif prévaut pour les règles spécifiques au motif. La charte éditoriale prévaut pour tout le reste."
+    "autorite": "Ce document fait foi pour le catalogue produit, les délais de production et piliers_editoriaux_hub. Pour l'identité visuelle (couleurs/typos), le ton de voix et la hiérarchie des piliers de contenu, voir docs/VOIX_YPERSOA.md (21/08/2026) qui prévaut désormais — les sections charte_graphique, ton_de_voix et piliers_de_contenu ci-dessous sont historiques, conservées pour mémoire mais ne font plus foi. En cas de conflit avec les motifs individuels, la charte motif prévaut pour les règles spécifiques au motif."
   },
 
   "identite_marque": {
@@ -34,6 +34,7 @@
   },
 
   "charte_graphique": {
+    "_statut": "HISTORIQUE — remplacé par docs/VOIX_YPERSOA.md §1 (marine #16324C / teal #1E6E77 / crème #F4EEE2 / rouge coquelicot #C23A2D, Newsreader + Hanken Grotesk). Ne plus utiliser cette section pour du output.",
     "couleurs_officielles": {
       "cream": {
         "hex": "#F5F0EA",
@@ -89,6 +90,7 @@
   },
 
   "ton_de_voix": {
+    "_statut": "HISTORIQUE — remplacé par docs/VOIX_YPERSOA.md §2 (système de voix, thermostat citron 4 crans : Citron/Zeste/Crème/Coton). Ne plus utiliser cette section pour du output.",
     "regles_absolues": {
       "tutoiement": "systématique — toujours 'tu', jamais 'vous'",
       "registre": "élégant mais direct, poétique sans être précieux",
@@ -229,6 +231,7 @@
   },
 
   "piliers_de_contenu": {
+    "_statut": "HISTORIQUE comme hiérarchie principale — remplacé par les 6 piliers stratégiques (piliers_editoriaux_hub ci-dessous), avec correspondance documentée dans docs/VOIX_YPERSOA.md §5. Attention : le P4 'Preuve' ici (avis clients) correspond au pilier stratégique 'Réassurance', pas au pilier stratégique 'Preuve' (atelier/process) — les deux systèmes utilisent le même mot pour des choses différentes.",
     "systeme": "4 piliers P1 à P4 (inspiré de CONTENT_MACHINE) avec sous-piliers Émotion (extraits de CLAUDE.md)",
 
     "p1_process": {

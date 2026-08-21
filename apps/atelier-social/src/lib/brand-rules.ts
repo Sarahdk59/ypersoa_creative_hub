@@ -42,6 +42,8 @@ export const BRAND_FORBIDDEN_TERMS = [
   "fabriqué en france",
   "fait en France",
   "fait en france",
+  "brodé en France",
+  "brodé en france",
 
   // Artisanat — lié au lexique fait-main interdit
   "#artisanat",
@@ -63,6 +65,92 @@ export const TAJIMA_ALLOWED_CONTEXTS = [
   "video_process",
   "fiche_backend_hub",
 ] as const;
+
+// ============================================================================
+// THERMOSTAT CITRON — 4 crans de voix (docs/VOIX_YPERSOA.md §2)
+// ============================================================================
+// 0 Coton (deuil/hommage, zéro clin d'œil) · 1 Crème (naissance/présence,
+// tendre sans vanne) · 2 Zeste (défaut partout) · 3 Citron (communauté/
+// coulisses, plein mordant). Règle d'or : un contenu ne mélange jamais deux
+// crans dans le même souffle — surtout pas de Citron en contexte Coton/Crème.
+
+export type VoiceLevel = 0 | 1 | 2 | 3;
+
+export const VOICE_LEVEL_LABELS: Record<VoiceLevel, string> = {
+  0: "Coton",
+  1: "Crème",
+  2: "Zeste",
+  3: "Citron",
+};
+
+/**
+ * Cran par défaut selon l'occasion (valeurs alignées sur
+ * StudioMoodEpisode.occasion / OCCASIONS_PRESETS). Clé normalisée en
+ * minuscules. Toute occasion non listée retombe sur Zeste (2), le défaut.
+ */
+export const OCCASION_VOICE_LEVELS: Record<string, VoiceLevel> = {
+  "deuil": 0,
+  "hommage": 0,
+  "mémoire": 0,
+  "naissance": 1,
+  "mariage": 1,
+  "fête des mères": 2,
+  "fête des pères": 2,
+  "fête des grands-mères": 2,
+  "fête des grands-pères": 2,
+  "noël": 2,
+  "saint-valentin": 2,
+  "anniversaire": 2,
+  "rentrée": 2,
+  "été / vacances": 2,
+  "evergreen": 2,
+};
+
+export function voiceLevelForOccasion(
+  occasion: string | null | undefined
+): VoiceLevel {
+  if (!occasion) return 2;
+  return OCCASION_VOICE_LEVELS[occasion.trim().toLowerCase()] ?? 2;
+}
+
+// Marqueurs de connivence/mordant ("Citron") — jamais acceptables dans un
+// texte calé en Coton (0) ou Crème (1). Liste non exhaustive, à enrichir à
+// l'usage plutôt qu'à vouloir être parfaite dès le départ.
+export const CITRON_MARKERS = [
+  "on juge pas",
+  "on ne juge pas",
+  "on va pas se mentir",
+  "avouons-le",
+  "avoue",
+  "true story",
+  "on sait toustes",
+  "on sait tous",
+  "haha",
+  "mdr",
+  "lol",
+] as const;
+
+/**
+ * Détecte du Citron dans un texte calé sur un cran bas (Coton/Crème).
+ * Zeste et Citron (2-3) tolèrent naturellement le mordant, donc ne sont
+ * jamais vérifiés ici.
+ */
+export function checkVoiceLevel(
+  text: string,
+  contentVoiceLevel: VoiceLevel
+): BrandViolation[] {
+  if (contentVoiceLevel >= 2) return [];
+  const lowerText = text.toLowerCase();
+  const violations: BrandViolation[] = [];
+  for (const marker of CITRON_MARKERS) {
+    let position = lowerText.indexOf(marker);
+    while (position !== -1) {
+      violations.push({ term: marker, position, severity: "warning" });
+      position = lowerText.indexOf(marker, position + 1);
+    }
+  }
+  return violations;
+}
 
 // ============================================================================
 // VOUVOIEMENT - INTERDIT
@@ -162,9 +250,16 @@ export interface BrandViolation {
 
 /**
  * Vérifie qu'un texte généré respecte les règles brand absolues.
+ * `contentVoiceLevel`, si fourni, active en plus le contrôle thermostat
+ * (docs/VOIX_YPERSOA.md §2) : du Citron détecté en contexte Coton/Crème
+ * remonte en violation "warning". Omis = pas de contrôle de cran (défaut,
+ * compatible avec les appels existants).
  * Retourne la liste des violations détectées.
  */
-export function checkBrandSafety(text: string): {
+export function checkBrandSafety(
+  text: string,
+  contentVoiceLevel?: VoiceLevel
+): {
   safe: boolean;
   violations: BrandViolation[];
 } {
@@ -197,6 +292,11 @@ export function checkBrandSafety(text: string): {
         });
       }
     }
+  }
+
+  // Check thermostat citron (warning only — jugement éditorial, pas un interdit dur)
+  if (contentVoiceLevel !== undefined) {
+    violations.push(...checkVoiceLevel(text, contentVoiceLevel));
   }
 
   return {

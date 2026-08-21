@@ -14,6 +14,7 @@
 
 | Document | Quand le lire |
 |---|---|
+| [docs/VOIX_YPERSOA.md](docs/VOIX_YPERSOA.md) | **Source active** identité visuelle + ton de voix + piliers + playbook (21/08/2026) — prévaut sur ce fichier §2/§5 et sur `charte_editoriale.json` en cas de divergence |
 | [README.md](README.md) | Première visite du repo, démarrage local |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Comprendre les 7 apps + le mapping 14 métiers |
 | [docs/HANDOFF_KEYVAN.md](docs/HANDOFF_KEYVAN.md) | Hébergement, auth, accès admin Sarah / opérationnel atelier |

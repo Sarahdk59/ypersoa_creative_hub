@@ -105,6 +105,7 @@ export const OCCASIONS_PRESETS = [
   "Fête des Mères",
   "Fête des Pères",
   "Fête des Grands-mères",
+  "Fête des Grands-pères",
   "Noël",
   "Saint-Valentin",
   "Naissance",
