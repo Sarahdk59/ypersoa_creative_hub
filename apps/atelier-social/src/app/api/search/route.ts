@@ -127,6 +127,14 @@ interface PaletteHitData {
   description?: string;
 }
 
+interface MediathequeHitData {
+  id: string;
+  filename: string;
+  public_url: string;
+  statut: string;
+  tags: string[];
+}
+
 interface CommandeHitData {
   id: string;
   numero_shopify: string;
@@ -148,7 +156,7 @@ export async function GET(req: NextRequest) {
     if (!q) {
       return NextResponse.json({
         ok: true,
-        data: { motifs: [], shoots: [], lookbooks: [], regles: [], packs: [], projets: [], commandes: [] },
+        data: { motifs: [], shoots: [], lookbooks: [], regles: [], packs: [], projets: [], commandes: [], mediatheque: [] },
       });
     }
     const tokens = tokenize(q);
@@ -304,6 +312,7 @@ export async function GET(req: NextRequest) {
     let lookbooksHits: SearchHit<LookbookHitData>[] = [];
     let packsHits: SearchHit<PackHitData>[] = [];
     let projetsHits: SearchHit<ProjetHitData>[] = [];
+    let mediathequeHits: SearchHit<MediathequeHitData>[] = [];
 
     if (supabaseUrl && supabaseAnon) {
       const supabase = createClient(supabaseUrl, supabaseAnon);
@@ -454,6 +463,48 @@ export async function GET(req: NextRequest) {
           });
         }
       }
+
+      // Bibliothèque (médiathèque) — motif/incarnation/occasion/mannequin/canal
+      // vivent en tags liés, pas en colonnes : on résout les labels via
+      // mediatheque_tags avant de matcher (même logique que la recherche
+      // interne de la galerie, cf. lib/mediatheque/store.ts::listMedia).
+      const { data: tagsData } = await supabase
+        .from("mediatheque_tags")
+        .select("id, label");
+      const tagLabelById = new Map(
+        ((tagsData ?? []) as Array<{ id: string; label: string }>).map((t) => [t.id, t.label]),
+      );
+      const { data: mediaData } = await supabase
+        .from("mediatheque_media")
+        .select("id, filename, public_url, statut, mediatheque_media_tags(tag_id)")
+        .order("uploaded_at", { ascending: false })
+        .limit(400);
+      for (const m of (mediaData ?? []) as Array<{
+        id: string;
+        filename: string;
+        public_url: string;
+        statut: string;
+        mediatheque_media_tags?: { tag_id: string }[];
+      }>) {
+        const tagLabels = (m.mediatheque_media_tags ?? [])
+          .map((l) => tagLabelById.get(l.tag_id))
+          .filter((l): l is string => Boolean(l));
+        const hay = [m.filename, m.statut, ...tagLabels].join(" ").toLowerCase();
+        const score = matchScore(hay, tokens);
+        if (score > 0) {
+          mediathequeHits.push({
+            item: {
+              id: m.id,
+              filename: m.filename,
+              public_url: m.public_url,
+              statut: m.statut,
+              tags: tagLabels,
+            },
+            score,
+            preview: tagLabels.slice(0, 4).join(" · ") || m.filename,
+          });
+        }
+      }
     }
 
     // 9. COMMANDES Shopify (archivées comprises) -------------------------------
@@ -536,6 +587,7 @@ export async function GET(req: NextRequest) {
         packs: trim(packsHits),
         projets: trim(projetsHits),
         commandes: trim(commandesHits),
+        mediatheque: trim(mediathequeHits),
       },
     });
   } catch (err) {

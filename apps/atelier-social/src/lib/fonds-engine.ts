@@ -112,6 +112,10 @@ export const CATEGORIES: CategoryDef[] = [
       assetTemplate("marguerite", "Marguerite", "flower - 2.svg"),
       assetTemplate("marguerite-ronde", "Marguerite ronde", "flower - 3.svg"),
       assetTemplate("tulipes", "Tulipes", "tulip.svg"),
+      assetTemplate("fleur-1", "Fleur 1", "fleur.svg"),
+      assetTemplate("fleur-2", "Fleur 2", "fleur2.svg"),
+      assetTemplate("fleur-3", "Fleur 3", "fleur3.svg"),
+      assetTemplate("fleur-4", "Fleur 4", "fleur4.svg"),
     ],
   },
   {
@@ -142,6 +146,10 @@ export const CATEGORIES: CategoryDef[] = [
       assetTemplate("grille-perso", "Grille personnalisée", "perso.svg"),
       assetTemplate("post-base", "Post base", "Post insta - base 1.svg"),
       assetTemplate("post-avis", "Post avis", "Post insta avis.svg"),
+      assetTemplate("post-template-1", "Post template 1", "template post - 001.svg"),
+      assetTemplate("post-template-2", "Post template 2", "template post - 002.svg"),
+      assetTemplate("post-template-3", "Post template 3", "template post - 003.svg"),
+      assetTemplate("post-template-4", "Post template 4", "template post - 004.svg"),
     ],
   },
   {

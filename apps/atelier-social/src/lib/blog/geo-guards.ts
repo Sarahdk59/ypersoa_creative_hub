@@ -1,4 +1,5 @@
 import type { ConversionGoal } from "./geo-prompt";
+import type { EditorialDetail } from "./editorial-bank";
 
 export interface GateInput {
   targetQuery: string;
@@ -65,6 +66,8 @@ export interface LintReport {
   errors: string[];
   warnings: string[];
   wordCount: number;
+  editorialFingerprintHits: string[];
+  editorialDetailIds: string[];
 }
 
 export const DEFAULT_VOCAB_RULES: VocabRule[] = [
@@ -76,10 +79,21 @@ export const DEFAULT_VOCAB_RULES: VocabRule[] = [
   { kind: "forbidden", pattern: "handmade", label: "Hors charte" },
   { kind: "forbidden", pattern: "cousu\\s+main", label: "Hors charte" },
   { kind: "required", pattern: "brod[ée]\\s+[àa]\\s+la\\s+commande", label: "A la commande" },
-  { kind: "required", pattern: "brod[ée]\\s+en\\s+France", label: "Fabrication francaise" },
+  { kind: "required", pattern: "Wattrelos|Hauts[\\s-]de[\\s-]France", label: "Ancrage regional" },
   { kind: "required", pattern: "cousu\\w*\\s+pour\\s+durer", label: "Durabilite" },
   { kind: "required", pattern: "personnalis", label: "Personnalisation" },
   { kind: "required", pattern: "Hauts[\\s-]de[\\s-]France", label: "Ancrage regional" },
+];
+
+const CLICHES_BANNED = [
+  "fait la difference", "marque les esprits", "un veritable compagnon",
+  "va bien au-dela de l'ordinaire", "afficher un style qui lui ressemble",
+  "une promesse de durabilite", "l'energie debordante de nos petits",
+  "d'innombrables aventures", "lui donner une ame", "une qualite percue incomparable",
+  "le secret d'un vetement qui plait et qui dure", "repartir du bon pied",
+  "des nouveautes qui donnent le sourire", "un cadeau pense et prepare avec soin",
+  "consommer mieux", "des objets qui ont du sens", "a portee de clic",
+  "la qualite est au rendez-vous",
 ];
 
 function flatten(a: ArticlePayload): string {
@@ -112,6 +126,7 @@ export function lintArticle(
     rules?: VocabRule[];
     brandFacts: string[];
     minRequiredHits?: number;
+    editorialDetails?: EditorialDetail[];
   }
 ): LintReport {
   const errors: string[] = [];
@@ -127,11 +142,26 @@ export function lintArticle(
     }
   }
 
+  const normalizedText = normalize(text);
+  const editorialFingerprintHits = [...new Set(
+    (opts.editorialDetails ?? []).flatMap((detail) => detail.fingerprints)
+      .filter((fingerprint) => normalizedText.includes(normalize(fingerprint)))
+  )];
+  const editorialDetailIds = (opts.editorialDetails ?? [])
+    .filter((detail) => detail.fingerprints.some((fingerprint) => normalizedText.includes(normalize(fingerprint))))
+    .map((detail) => detail.id);
+  for (const cliche of CLICHES_BANNED) {
+    if (normalizedText.includes(cliche)) errors.push(`Cliche interdit : « ${cliche} ».`);
+  }
+
   const required = rules.filter((r) => r.kind === "required");
   const hits = required.filter((r) => new RegExp(r.pattern, "i").test(text));
   const minHits = opts.minRequiredHits ?? 2;
   if (hits.length < minHits) {
     errors.push(`Argumentaire de marque trop faible : ${hits.length}/${minHits}.`);
+  }
+  if (opts.editorialDetails?.length && editorialFingerprintHits.length < 3) {
+    errors.push(`Trop generique : ${editorialFingerprintHits.length} details vrais detectes sur 3 requis. Ajoute une empreinte de la banque.`);
   }
 
   if (normalize(article.h1) !== normalize(opts.targetQuery)) {
@@ -152,8 +182,8 @@ export function lintArticle(
   if (article.meta_description.length > 155) {
     warnings.push(`meta_description trop longue (${article.meta_description.length}).`);
   }
-  if (wordCount < 600) {
-    warnings.push(`${wordCount} mots seulement. Viser 700 a 1100.`);
+  if (wordCount < 650) {
+    warnings.push(`${wordCount} mots seulement. Viser 650 a 1100.`);
   }
   if (wordCount > 1300) {
     warnings.push(`${wordCount} mots. Trop long pour un article GEO specialise.`);
@@ -181,7 +211,7 @@ export function lintArticle(
     warnings.push(`Chiffres a verifier : ${unbacked.join(", ")}`);
   }
 
-  return { passed: errors.length === 0, errors, warnings, wordCount };
+  return { passed: errors.length === 0, errors, warnings, wordCount, editorialFingerprintHits, editorialDetailIds };
 }
 
 export function buildRepairPrompt(report: LintReport): string {

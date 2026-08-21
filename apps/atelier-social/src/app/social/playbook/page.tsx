@@ -273,31 +273,14 @@ export default function PlaybookPage() {
   const titleStyle = { fontFamily: TITLE_STACKS[titleFont], fontWeight: TITLE_WEIGHTS[titleFont] };
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text font-sans">
-      <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 sticky top-0 z-20">
-        <div className="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/social"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-text transition-colors"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Atelier Social
-            </Link>
-            <div className="w-px h-4 bg-brand-muted/20" />
-            <h1
-              style={{
-                fontFamily: "var(--font-editorial)",
-                fontSize: 20,
-                fontWeight: 500,
-                letterSpacing: "-0.01em",
-                color: "var(--hub-foreground)",
-                margin: 0,
-              }}
-            >
-              Playbook Instagram
-            </h1>
-          </div>
+    <div className="min-h-screen bg-hub-bg text-brand-text font-sans">
+      <header className="mx-auto max-w-[1100px] border-b border-hub-border px-6 pt-8 pb-0">
+          <Link href="/social" className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-hub-accent transition-colors"><ArrowLeft className="w-3.5 h-3.5" /> Atelier Social</Link>
+          <div className="mt-5 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 className="font-serif text-[34px] leading-none text-hub-foreground">Le playbook</h1>
+              <p className="mt-3 text-sm text-hub-foreground/60">Les recettes à ressortir quand tu veux publier sans repartir de zéro.</p>
+            </div>
 
           {/* Toggle typo titres — Arial Rounded / Cafeteria, décision Sarah 10/08/2026 */}
           <div className="flex items-center gap-2">
@@ -320,11 +303,11 @@ export default function PlaybookPage() {
               ))}
             </div>
           </div>
-        </div>
+          </div>
       </header>
 
       <TitleFontCtx.Provider value={titleFont}>
-      <main style={{ maxWidth: 1100, margin: "0 auto", color: MARINE, fontFamily: SANS, padding: "40px 24px 80px" }}>
+      <main style={{ maxWidth: 1100, margin: "0 auto", color: MARINE, fontFamily: SANS, padding: "32px 24px 80px" }}>
         {/* ── En-tête ── */}
         <header style={{ marginBottom: 48 }}>
           <p style={{ fontSize: 11, letterSpacing: 2.5, textTransform: "uppercase", color: TEAL, fontWeight: 700, margin: "0 0 10px" }}>

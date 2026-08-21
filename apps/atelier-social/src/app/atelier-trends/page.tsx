@@ -1,7 +1,9 @@
 /**
- * Atelier Trends — dashboard (Lot 1, read-only).
+ * Atelier Trends — dashboard (Lot 1, read-only). Nichée dans Atelier DA
+ * (Radar) depuis le 21/08/2026.
  *
- * Affiche le dernier run Google Trends FR. Bouton "Rafraîchir" = POST /api/trends.
+ * Affiche le dernier run Pinterest. Bouton "Rafraîchir" = POST /api/trends.
+ * Google Trends retiré le 21/08/2026 (peu actionnable pour la broderie).
  * Lot 3 ajoutera l'enrichissement IA (motif/occasion/créneau + bouton "Générer ce post").
  */
 "use client";
@@ -177,7 +179,7 @@ export default function AtelierTrendsPage() {
               lineHeight: 1.6,
             }}
           >
-            Veille des recherches qui montent (Google Trends FR + Pinterest). « Rafraîchir » récupère
+            Veille des recherches qui montent sur Pinterest. « Rafraîchir » récupère
             les tendances brutes ; « Analyser » les passe au crible Ypersoa (score de pertinence broderie,
             motif YPM suggéré, occasion, créneau Planable J-45, angle de caption).
           </p>
@@ -265,7 +267,6 @@ export default function AtelierTrendsPage() {
             onChange={setFilter}
             options={[
               { key: "all", label: "Toutes", count: countSource("all") },
-              { key: "google", label: SOURCE_LABELS.google, count: countSource("google") },
               { key: "pinterest", label: SOURCE_LABELS.pinterest, count: countSource("pinterest") },
             ]}
           />
@@ -486,7 +487,7 @@ export default function AtelierTrendsPage() {
           <SectionTitle>Actionnable ({actionnable.length})</SectionTitle>
           {actionnable.length === 0 ? (
             <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, opacity: 0.6, marginTop: 0 }}>
-              Aucune tendance actionnable dans ce run (score ≥ 5 et brand-safe). C&apos;est fréquent : les tendances Google
+              Aucune tendance actionnable dans ce run (score ≥ 5 et brand-safe). C&apos;est fréquent : les tendances
               généralistes ne sont pas brodables. Ajoute des mots-clés Pinterest ciblés pour nourrir le moteur.
             </p>
           ) : (

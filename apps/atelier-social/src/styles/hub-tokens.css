@@ -1,17 +1,29 @@
 /**
- * Hub Ypersoa — design tokens (cf. _passations/DESIGN_SYSTEM_hub.md)
+ * Hub Ypersoa — design tokens (cf. _passations/DESIGN_SYSTEM_hub.md v2)
  *
- * Brand v1.0 · 2026 — épine dorsale marine/teal/crème.
- * Propagé depuis referentiels/brand voice design system/ (30/06/2026).
- * Couleurs d'app vivent dans leur contenu, jamais dans la chrome.
+ * Chrome v2 · recadrage du 20/08/2026 — réchauffe la palette Brand v1.0
+ * (marine/teal/crème) avec les accents coquelicot/blush validés par Sarah sur
+ * les maquettes hub-accueil-relook / atelier-blog-relook.
+ *
+ * IMPORTANT — ces --hub-* sont LE système visuel du Hub (utilisés dans ~76
+ * fichiers : chrome ET contenu de toutes les pages internes). Ils sont
+ * DISTINCTS de --brand-* ci-dessous, qui reste la palette produit/marketing
+ * (CLAUDE.md §2, overlay Instagram/Pinterest, contenu généré) — non touchée
+ * par ce recadrage. Le Hub change de robe, pas les visuels publiés.
  */
 :root {
-  /* Chrome hub — 3 couleurs */
-  --hub-bg: #F4EEE2;        /* crème brand */
-  --hub-foreground: #16324C; /* marine dominante */
-  --hub-border: #e8e1d6;
+  /* Chrome hub */
+  --hub-bg: #F7F2E8;         /* crème réchauffée */
+  --hub-bg-alt: #EFE7D6;     /* crème secondaire — panneaux, cartes sur cartes */
+  --hub-foreground: #1C3A36; /* marine-teal profond, dominante texte/ink */
+  --hub-border: #E2D8C6;
+  --hub-accent: #C23A2D;     /* coquelicot — CTA, pouls, points d'attention */
+  --hub-accent-hover: #A22F24;
+  --hub-accent-soft: #EAB4C4;   /* blush — highlights doux, séries */
+  --hub-accent-wash: #F7E3E9;   /* blush très clair — fonds de nudge/alerte */
+  --hub-teal: #2E7D74;       /* teinte secondaire chrome — succès, "publié" */
 
-  /* Palette épine dorsale */
+  /* Palette épine dorsale — produit/marketing, inchangée */
   --brand-bg: #F4EEE2;
   --brand-ink: #16324C;
   --brand-marine: #16324C;
@@ -25,7 +37,7 @@
   --brand-line: rgba(22, 50, 76, 0.12);
 
   /* Chrome layout */
-  --sidebar-width:    64px;
+  --sidebar-width:    236px;
   --sidebar-icon:     20px;
   --topbar-height:    56px;
   --content-padding:  32px;

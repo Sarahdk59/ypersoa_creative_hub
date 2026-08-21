@@ -1,6 +1,13 @@
 # Cahier des charges — Atelier Trends (V1)
 
 **Statut** : cadrage validé 29/06/2026. Pas encore implémenté.
+
+**Addendum 21/08/2026** : Google Trends retiré (Sarah — jugé peu actionnable
+pour la broderie personnalisée, "ça me sert à rien"). Pinterest devient
+l'unique source active en V1. TikTok/Instagram restent hors V1 (déjà cadrés
+comme tels §0 ci-dessous — pas de connecteur gratuit fiable à ce jour).
+Radar (l'outil, ex `/atelier-trends`) a par ailleurs rejoint Atelier DA
+comme sous-module, il n'est plus un atelier de premier niveau du Hub.
 **Objectif produit** : transformer le bruit des réseaux sociaux en **3-5 tendances actionnables par semaine**, déjà traduites en idée de broderie + occasion + créneau Planable.
 **Principe directeur** : *« Cette tendance, est-ce que je peux la broder et la poster ? »* — une trend qui ne devient pas un post Ypersoa n'a pas sa place dans l'outil.
 
@@ -50,7 +57,6 @@ referentiels/trends/
 
 apps/atelier-social/src/
   lib/trends/
-    google-trends.ts         ← connecteur Google Trends (+ retry + cache)
     pinterest-trends.ts       ← connecteur Pinterest API v5 (+ fallback saisie manuelle)
     trends-synthesis.ts       ← couche gpt-4o : brut → actionnable (§3)
     trends-loader.ts          ← lecture/écriture snapshots fs (pattern commandes-loader)

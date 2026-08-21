@@ -4,25 +4,38 @@
 "use client";
 
 import Link from "next/link";
-import { Film } from "lucide-react";
+import { useState } from "react";
+import { Download, Film, Plus, Trash2 } from "lucide-react";
 
 import type { MotionJobListResponse } from "@/types/motion";
 import { ENGINE_LABELS, MODE_LABELS, STATUT_COLORS, STATUT_LABELS } from "@/types/motion";
 
 interface MotionJobCardProps {
   job: MotionJobListResponse["data"][number];
+  onDeleted?: () => void;
 }
 
-export function MotionJobCard({ job }: MotionJobCardProps) {
+export function MotionJobCard({ job, onDeleted }: MotionJobCardProps) {
   const okClips = job.clips.filter((c) => c.statut === "genere");
   const statutCol = STATUT_COLORS[job.statut];
+  const [deleting, setDeleting] = useState(false);
+  const downloadable = okClips.find((clip) => !clip.clip_url?.startsWith("data:"));
+
+  const remove = async () => {
+    if (!confirm(`Supprimer ${job.code} ? Cette action retire la vidéo de la liste.`)) return;
+    setDeleting(true);
+    try {
+      const response = await fetch(`/api/da/motion/jobs/${job.id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Suppression impossible");
+      onDeleted?.();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Suppression impossible");
+      setDeleting(false);
+    }
+  };
 
   return (
-    <Link
-      href={`/atelier-da/motion/${job.id}`}
-      style={{ textDecoration: "none", color: "inherit", display: "block" }}
-    >
-      <article
+    <article
         style={{
           background: "white",
           border: "0.5px solid var(--hub-border)",
@@ -31,10 +44,10 @@ export function MotionJobCard({ job }: MotionJobCardProps) {
           display: "flex",
           flexDirection: "column",
           transition: "transform 200ms ease, border-color 150ms ease",
-          cursor: "pointer",
         }}
       >
-        <div
+        <Link href={`/atelier-da/motion/${job.id}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+          <div
           style={{
             aspectRatio: "9/16",
             background: "var(--hub-bg)",
@@ -93,8 +106,8 @@ export function MotionJobCard({ job }: MotionJobCardProps) {
           >
             {STATUT_LABELS[job.statut]}
           </span>
-        </div>
-        <div
+          </div>
+          <div
           style={{
             padding: 12,
             display: "flex",
@@ -143,8 +156,36 @@ export function MotionJobCard({ job }: MotionJobCardProps) {
             {ENGINE_LABELS[job.engine]}
             {job.duree_totale_sec > 0 && ` · ${job.duree_totale_sec}s total`}
           </p>
+          </div>
+        </Link>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "0.5px solid var(--hub-border)" }}>
+          <Link href="/atelier-da/motion/new" aria-label="Nouvelle vidéo" title="Nouvelle vidéo" style={actionStyle}>
+            <Plus size={15} strokeWidth={1.7} />
+          </Link>
+          {downloadable ? (
+            <a href={`/api/da/motion/jobs/${job.id}/clips/${downloadable.ordre}/download`} aria-label="Télécharger la vidéo" title="Télécharger la vidéo" style={actionStyle}>
+              <Download size={14} strokeWidth={1.7} />
+            </a>
+          ) : (
+            <span aria-label="Téléchargement indisponible" title="Téléchargement disponible après génération" style={{ ...actionStyle, opacity: 0.32, cursor: "not-allowed" }}>
+              <Download size={14} strokeWidth={1.7} />
+            </span>
+          )}
+          <button type="button" onClick={remove} disabled={deleting} aria-label="Supprimer la vidéo" title="Supprimer la vidéo" style={{ ...actionStyle, border: "none", borderLeft: "0.5px solid var(--hub-border)", color: "#9B3C35", cursor: deleting ? "not-allowed" : "pointer" }}>
+            <Trash2 size={14} strokeWidth={1.7} />
+          </button>
         </div>
       </article>
-    </Link>
   );
 }
+
+const actionStyle: React.CSSProperties = {
+  minHeight: 38,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "var(--hub-foreground)",
+  background: "white",
+  textDecoration: "none",
+  borderRight: "0.5px solid var(--hub-border)",
+};

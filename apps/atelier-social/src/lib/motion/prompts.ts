@@ -134,6 +134,30 @@ export function promptPackshot(
   ]);
 }
 
+/** Une macro fournie est déjà cadrée : on anime la matière, jamais le produit entier. */
+export function promptMacro(brief?: string | null): string {
+  return assemble([
+    "Vidéo macro ultra fidèle à l'image de référence du produit fournie.",
+    "Très lent push-in de caméra sur le détail produit ou la broderie. Le fil et le tissu prennent un relief discret ; seule une respiration textile et une variation douce de lumière animent le plan.",
+    "Ne pas recadrer vers un produit différent, ne pas inventer de lettres, de couleurs, de motif ou de placement de broderie.",
+    "Plan continu de 8 secondes, ralenti contemplatif 24fps, format 9:16 vertical portrait.",
+    brief ? `Note éditoriale : ${brief}` : null,
+    BRAND_RULES,
+  ]);
+}
+
+/** Une photo portée doit rester la scène de départ, avec un mouvement humain très discret. */
+export function promptProduitPorte(brief?: string | null): string {
+  return assemble([
+    "Vidéo mode à partir de la photo portée fournie comme référence sujet.",
+    "Conserver exactement la personne, le vêtement, la broderie, les couleurs, la silhouette et le décor de l'image. Le produit reste le héros.",
+    "Mouvement naturel et minime : respiration, léger déplacement du poids du corps, tissu qui bouge doucement, très léger travelling latéral ou push-in. Aucun changement de tenue, de visage ou de pose majeur.",
+    "Plan continu de 8 secondes, slow motion 24fps, format 9:16 vertical portrait.",
+    brief ? `Note éditoriale : ${brief}` : null,
+    BRAND_RULES,
+  ]);
+}
+
 function assemble(parts: Array<string | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
 }

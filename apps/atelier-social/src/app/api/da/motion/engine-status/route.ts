@@ -33,10 +33,10 @@ export async function GET() {
       },
       {
         id: "omni-flash" as MotionEngine,
-        available: hasApiKey,
-        reason: hasApiKey
-          ? "Preview — annoncée à Google I/O 2026 (19-20/05). API dev landing in the coming weeks, payload best-guess basé sur le pattern Veo."
-          : "GEMINI_API_KEY absente",
+        // Le client existe comme placeholder, mais l'API publique n'est pas
+        // encore ouverte : ne jamais le proposer comme un moteur utilisable.
+        available: false,
+        reason: "Preview non disponible dans l'API développeur : utilise Veo 3.1.",
       },
     ],
   });

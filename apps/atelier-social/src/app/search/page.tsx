@@ -85,6 +85,14 @@ interface PaletteHit {
   description?: string;
 }
 
+interface MediathequeHit {
+  id: string;
+  filename: string;
+  public_url: string;
+  statut: string;
+  tags: string[];
+}
+
 interface CommandeHit {
   id: string;
   numero_shopify: string;
@@ -116,6 +124,7 @@ interface SearchData {
   packs: SearchResult<PackHit>[];
   projets: SearchResult<ProjetHit>[];
   commandes: SearchResult<CommandeHit>[];
+  mediatheque: SearchResult<MediathequeHit>[];
 }
 
 const STATUT_META: Record<CommandeHit["statut"], { label: string; bg: string; fg: string }> = {
@@ -170,7 +179,7 @@ function SearchContent() {
 
   const totalHits = useMemo(() => {
     if (!data) return 0;
-    return data.motifs.length + data.fils.length + data.palettes.length + data.shoots.length + data.lookbooks.length + data.regles.length + data.packs.length + data.projets.length + (data.commandes?.length ?? 0);
+    return data.motifs.length + data.fils.length + data.palettes.length + data.shoots.length + data.lookbooks.length + data.regles.length + data.packs.length + data.projets.length + (data.commandes?.length ?? 0) + (data.mediatheque?.length ?? 0);
   }, [data]);
 
   return (
@@ -230,6 +239,7 @@ function SearchContent() {
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.5, marginBottom: 18 }}>
           {totalHits} résultat{totalHits > 1 ? "s" : ""} dans {[
             (data.commandes?.length ?? 0) > 0 && "commandes",
+            (data.mediatheque?.length ?? 0) > 0 && "bibliothèque",
             data.motifs.length > 0 && "motifs",
             data.shoots.length > 0 && "shoots",
             data.lookbooks.length > 0 && "lookbooks",
@@ -291,6 +301,37 @@ function SearchContent() {
                     </Link>
                   );
                 })}
+              </div>
+            </Section>
+          )}
+
+          {(data.mediatheque?.length ?? 0) > 0 && (
+            <Section title="Bibliothèque" icon={<ImageIcon size={14} />} count={data.mediatheque.length}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 10 }}>
+                {data.mediatheque.map((h) => (
+                  <Link
+                    key={h.item.id}
+                    href={`/bibliotheque/visuels/${h.item.id}`}
+                    style={{ ...cardStyle, padding: 0 }}
+                  >
+                    <div style={{ position: "relative", aspectRatio: "4 / 5", background: "var(--hub-bg)" }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={h.item.public_url}
+                        alt={h.item.filename}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
+                      />
+                    </div>
+                    <div style={{ padding: 8 }}>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                        {h.item.tags.slice(0, 3).map((t, i) => (
+                          <span key={`${t}-${i}`} style={pillStyle}>{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </Section>
           )}
@@ -364,7 +405,7 @@ function SearchContent() {
                 {data.motifs.map((h) => (
                   <Link
                     key={h.item.id}
-                    href={`/atelier-da/motifs?open=${h.item.id}`}
+                    href={`/bibliotheque/motifs?open=${h.item.id}`}
                     style={cardStyle}
                   >
                     <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--hub-bg)", padding: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -402,7 +443,7 @@ function SearchContent() {
                 {data.shoots.map((h) => (
                   <Link
                     key={h.item.id}
-                    href={`/atelier-da/motifs`}
+                    href={`/bibliotheque/motifs`}
                     style={{ ...cardStyle, padding: 0 }}
                   >
                     <div style={{ position: "relative", aspectRatio: "1 / 1", background: "var(--hub-bg)" }}>
@@ -532,7 +573,7 @@ function SearchContent() {
             <Section title="Projets sociaux" icon={<Trello size={14} />} count={data.projets.length}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
                 {data.projets.map((h) => (
-                  <Link key={h.item.id} href="/social/kanban" style={{ ...cardStyle, padding: 14 }}>
+                  <Link key={h.item.id} href="/planning/semaine" style={{ ...cardStyle, padding: 14 }}>
                     <p style={{ fontFamily: "var(--font-sans)", fontSize: 12.5, fontWeight: 500, margin: 0 }}>
                       {h.item.title}
                     </p>

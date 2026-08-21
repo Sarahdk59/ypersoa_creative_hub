@@ -18,6 +18,20 @@
   --color-brand-text: var(--brand-ink);
   --color-brand-muted: rgba(22, 50, 76, 0.45);
   --color-brand-border: var(--brand-line);
+
+  /* Chrome hub — mêmes tokens que hub-tokens.css, exposés comme couleurs
+     Tailwind (avec support des modificateurs d'opacité /10, /20…) pour les
+     écrans d'outil du Hub (par opposition à --color-brand-* ci-dessus,
+     réservé au contenu produit/marketing). Cf. DESIGN_SYSTEM_hub.md v2. */
+  --color-hub-bg: var(--hub-bg);
+  --color-hub-bg-alt: var(--hub-bg-alt);
+  --color-hub-foreground: var(--hub-foreground);
+  --color-hub-border: var(--hub-border);
+  --color-hub-accent: var(--hub-accent);
+  --color-hub-accent-hover: var(--hub-accent-hover);
+  --color-hub-accent-soft: var(--hub-accent-soft);
+  --color-hub-accent-wash: var(--hub-accent-wash);
+  --color-hub-teal: var(--hub-teal);
 }
 
 html {
@@ -43,8 +57,25 @@ h1, h2, h3, h4, h5, h6, .font-serif {
   letter-spacing: 0.08em;
 }
 
+.hub-atelier-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -18px rgba(28, 58, 54, 0.35);
+}
+
+/* Fil de broderie — signature visuelle Ypersoa, réutilisée sidebar/accueil/cartes. */
+.hub-stitch {
+  height: 2px;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0 9px,
+    transparent 9px 17px
+  );
+  opacity: 0.55;
+}
+
 .primary-button {
-  background-color: var(--color-brand-rose);
+  background-color: var(--hub-accent);
   color: white;
   border-radius: 9999px;
   padding: 12px 24px;
@@ -53,7 +84,7 @@ h1, h2, h3, h4, h5, h6, .font-serif {
 }
 
 .primary-button:hover:not(:disabled) {
-  background-color: var(--color-brand-rose-light);
+  background-color: var(--hub-accent-hover);
   transform: translateY(-1px);
 }
 
@@ -64,6 +95,53 @@ h1, h2, h3, h4, h5, h6, .font-serif {
 
 .prod-card:hover .prod-card-actions {
   opacity: 1;
+}
+
+/* Carte catalogue (grilles de sous-modules) — hover chaleur + CTA qui s'anime. */
+.atelier-da-card-active:hover {
+  transform: translateY(-3px);
+  border-color: var(--hub-accent-soft) !important;
+  box-shadow: 0 14px 28px -18px rgba(28, 58, 54, 0.35);
+}
+
+.atelier-da-card-active:hover .atelier-da-card-cta {
+  color: var(--hub-accent);
+}
+
+.atelier-da-card-stub {
+  filter: grayscale(0.35);
+}
+
+.hub-search-input {
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.hub-search-input:focus {
+  border-color: var(--hub-accent) !important;
+  box-shadow: 0 0 0 3px var(--hub-accent-wash);
+}
+
+/* Bibliothèque — carte média : hover blush + lift (DESIGN_SYSTEM_hub.md v2 §7 peps). */
+.mediatheque-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--hub-accent-soft) !important;
+  box-shadow: 0 14px 28px -18px rgba(28, 58, 54, 0.35);
+}
+
+:focus-visible {
+  outline: 2px solid var(--hub-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 ::-webkit-scrollbar {

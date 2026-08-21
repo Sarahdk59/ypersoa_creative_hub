@@ -33,7 +33,7 @@ const App: React.FC = () => {
     },
     threadColor: '',                // 'Comme sur l'image' par défaut
     garmentColor: 'beige',          // ID Hub officiel
-    decorStyle: 'parisien',
+    decorStyle: 'minimalist',
     // Défaut Sarah 19/05/2026 : casting canonique Hub (MAN-P01 Clémence) au lieu de diversity random.
     castingMode: 'canonique',
     canoniqueIds: ['MAN-P01']

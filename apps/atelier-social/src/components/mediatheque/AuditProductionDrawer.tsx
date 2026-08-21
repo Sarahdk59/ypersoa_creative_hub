@@ -9,14 +9,16 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Loader2, Plus, X } from "lucide-react";
+import { Check, Loader2, Plus, Trash2, X } from "lucide-react";
 
 import {
   fetchAuditMatrix,
   createMedia,
+  deleteMedia,
   type AuditMatrixResponse,
 } from "@/lib/mediatheque/api-client";
 import type { MediaSource } from "@/types/mediatheque";
+import { uploadMediaFile } from "@/lib/mediatheque/storage";
 
 const DEFAULT_MOTIFS = Array.from(
   { length: 18 },
@@ -125,10 +127,8 @@ export function AuditProductionDrawer({
     requestAnimationFrame(() => fileInputRef.current?.click());
   }, []);
 
-  const handleFileChosen = useCallback(
-    async (file: File) => {
-      const cell = pendingCell;
-      if (!cell) return;
+  const uploadIntoCell = useCallback(
+    async (file: File, cell: UploadingCell) => {
       const cellKey = `${cell.motif}__${cell.produit}__${cell.plan}`;
       setUploading((prev) => new Set(prev).add(cellKey));
       try {
@@ -138,9 +138,11 @@ export function AuditProductionDrawer({
           `seed-gabarit-${cell.produit}`,
           `seed-plan-${cell.plan}`,
         ];
+        const stored = await uploadMediaFile(file, PLAN_SOURCE[cell.plan] ?? "shooting_studio");
         await createMedia({
           filename: file.name,
-          public_url: dataUrl,
+          public_url: stored.public_url,
+          storage_path: stored.storage_path,
           width: width || undefined,
           height: height || undefined,
           size_bytes: file.size,
@@ -162,8 +164,22 @@ export function AuditProductionDrawer({
         setPendingCell(null);
       }
     },
-    [pendingCell, load, onChanged],
+    [load, onChanged],
   );
+
+  const handleFileChosen = useCallback(async (file: File) => {
+    if (pendingCell) await uploadIntoCell(file, pendingCell);
+  }, [pendingCell, uploadIntoCell]);
+
+  const handleDelete = useCallback(async (mediaId: string) => {
+    try {
+      await deleteMedia(mediaId);
+      await load();
+      onChanged?.();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Suppression impossible");
+    }
+  }, [load, onChanged]);
 
   const totals = data?.totals;
   const couverturePct = useMemo(() => {
@@ -254,8 +270,9 @@ export function AuditProductionDrawer({
                 margin: "4px 0 0 0",
               }}
             >
-              Click sur une case vide pour uploader (2 clics) — Lookbook (LB) =
-              packshot porté, Lifestyle (LS) = en situation.
+              Dépose une image sur une case ou clique sur + pour ajouter une variante ;
+              la corbeille retire l&apos;image affichée. Lookbook (LB) = packshot porté,
+              Lifestyle (LS) = en situation.
             </p>
           </div>
           <button
@@ -323,6 +340,8 @@ export function AuditProductionDrawer({
               uploading={uploading}
               justFilled={justFilled}
               onAddClick={handleAddClick}
+              onDropFile={(file, motif, produit, plan) => uploadIntoCell(file, { motif, produit, plan })}
+              onDelete={handleDelete}
             />
           )}
         </div>
@@ -373,9 +392,11 @@ interface AuditTableProps {
   uploading: Set<string>;
   justFilled: Set<string>;
   onAddClick: (motif: string, produit: string, plan: string) => void;
+  onDropFile: (file: File, motif: string, produit: string, plan: string) => void;
+  onDelete: (mediaId: string) => void;
 }
 
-function AuditTable({ data, uploading, justFilled, onAddClick }: AuditTableProps) {
+function AuditTable({ data, uploading, justFilled, onAddClick, onDropFile, onDelete }: AuditTableProps) {
   return (
     <div style={{ overflowX: "auto" }}>
       <table
@@ -513,10 +534,10 @@ function AuditTable({ data, uploading, justFilled, onAddClick }: AuditTableProps
                             isJustFilled={isJustFilled}
                             onClick={() => {
                               if (isUploading) return;
-                              if (!cell || cell.count === 0) {
-                                onAddClick(motif.slug, produit.slug, plan.slug);
-                              }
+                              onAddClick(motif.slug, produit.slug, plan.slug);
                             }}
+                            onDropFile={(file) => onDropFile(file, motif.slug, produit.slug, plan.slug)}
+                            onDelete={() => cell?.sample && onDelete(cell.sample.id)}
                           />
                         );
                       })}
@@ -541,6 +562,8 @@ interface CellSlotProps {
   isUploading: boolean;
   isJustFilled: boolean;
   onClick: () => void;
+  onDropFile: (file: File) => void;
+  onDelete: () => void;
 }
 
 function CellSlot({
@@ -550,6 +573,8 @@ function CellSlot({
   isUploading,
   isJustFilled,
   onClick,
+  onDropFile,
+  onDelete,
 }: CellSlotProps) {
   const filled = cell.count > 0;
   const title = filled
@@ -557,11 +582,14 @@ function CellSlot({
     : `${planLabel} — cliquer pour uploader`;
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <div
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={(event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files?.[0];
+        if (file?.type.startsWith("image/")) onDropFile(file);
+      }}
       title={title}
-      aria-label={title}
       style={{
         position: "relative",
         width: 52,
@@ -572,7 +600,7 @@ function CellSlot({
           : "1px dashed var(--hub-border)",
         borderRadius: 8,
         background: filled ? "white" : "rgba(255,255,255,0.4)",
-        cursor: filled ? "default" : "pointer",
+        cursor: "pointer",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
@@ -593,11 +621,9 @@ function CellSlot({
         />
       )}
       {!filled && !isUploading && (
-        <Plus
-          size={16}
-          strokeWidth={1.6}
-          style={{ color: "var(--hub-foreground)", opacity: 0.45 }}
-        />
+        <button type="button" onClick={onClick} aria-label={title} style={slotActionStyle}>
+          <Plus size={16} strokeWidth={1.6} style={{ color: "var(--hub-foreground)", opacity: 0.55 }} />
+        </button>
       )}
       {isUploading && (
         <Loader2
@@ -605,6 +631,17 @@ function CellSlot({
           className="animate-spin"
           style={{ color: "var(--color-brand-rose, #A76059)" }}
         />
+      )}
+
+      {filled && !isUploading && (
+        <div style={{ position: "absolute", top: 3, left: 3, right: 3, display: "flex", justifyContent: "space-between", gap: 2 }}>
+          <button type="button" onClick={onClick} aria-label={`Ajouter une variante ${planLabel}`} title="Ajouter une variante" style={miniActionStyle}>
+            <Plus size={11} />
+          </button>
+          <button type="button" onClick={onDelete} aria-label={`Supprimer ${planLabel}`} title="Supprimer cette image" style={{ ...miniActionStyle, color: "#A13A16" }}>
+            <Trash2 size={10} />
+          </button>
+        </div>
       )}
 
       {/* Badge plan en bas */}
@@ -667,6 +704,14 @@ function CellSlot({
           <Check size={9} strokeWidth={3} />
         </span>
       )}
-    </button>
+    </div>
   );
 }
+
+const slotActionStyle: React.CSSProperties = {
+  width: "100%", height: "100%", border: "none", background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+};
+
+const miniActionStyle: React.CSSProperties = {
+  width: 18, height: 18, borderRadius: 999, border: "none", background: "rgba(255,255,255,0.92)", color: "var(--hub-foreground)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
+};

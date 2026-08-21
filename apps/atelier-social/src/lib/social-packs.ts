@@ -43,6 +43,13 @@ export interface SocialPack {
   is_favorite: boolean;
 }
 
+/** Tag à attacher au média mirroré, résolu par l'appelant (labels déjà connus côté UI). */
+export interface MediaTagHint {
+  category: string;
+  slug: string;
+  label: string;
+}
+
 export interface SaveSocialPackInput {
   collectionId: string | null;
   title: string;
@@ -61,6 +68,8 @@ export interface SaveSocialPackInput {
   withOverlay?: boolean;
   sourceShotId?: string | null;
   notes?: string | null;
+  /** Motif/incarnation/ambiance/occasion/mannequin déjà connus côté UI, à auto-tagger sur le mirror médiathèque. */
+  mediaTagHints?: MediaTagHint[];
 }
 
 // ───────── Collections ─────────
@@ -128,6 +137,84 @@ async function uploadImages(
   return { urls, paths };
 }
 
+/**
+ * Résout un tag médiathèque (catégorie+slug) vers son id, en le créant si
+ * besoin (upsert idempotent, même format d'id que `store.ts::createTag`
+ * côté serveur : `tag-${category}-${slug}`). Ce module tourne côté
+ * navigateur (bucket/insert directs) et ne peut pas importer `lib/mediatheque/store.ts`
+ * (qui dépend de `fs` via le loader de référentiels) — d'où ce petit
+ * doublon volontaire plutôt qu'un import cross-couche.
+ */
+async function resolveMediaTagId(category: string, slug: string, label: string): Promise<string | null> {
+  if (!supabase) return null;
+  const id = `tag-${category}-${slug}`;
+  const { error } = await supabase
+    .from('mediatheque_tags')
+    .upsert({ id, category, slug, label }, { onConflict: 'id', ignoreDuplicates: true });
+  if (error) return null;
+  return id;
+}
+
+/**
+ * Les images ne rejoignent la médiathèque qu'une fois le pack réellement
+ * sauvegardé. Elles restent dans leur bucket `social-packs` d'origine : la
+ * médiathèque ne conserve ici qu'une référence publique vers ce fichier.
+ */
+async function mirrorPackImagesToMediaLibrary(
+  packId: string,
+  title: string,
+  urls: string[],
+  paths: string[],
+  imageDataUrls: string[],
+  platform: 'instagram' | 'pinterest',
+  mediaTagHints: MediaTagHint[] = [],
+): Promise<void> {
+  if (!supabase || urls.length === 0) return;
+
+  const { data: existing, error: existingError } = await supabase
+    .from('mediatheque_media')
+    .select('public_url')
+    .in('public_url', urls);
+  if (existingError) throw new Error(`Lecture médiathèque échouée : ${existingError.message}`);
+
+  const existingUrls = new Set((existing ?? []).map((row) => row.public_url as string));
+  const rows = urls.flatMap((publicUrl, index) => {
+    if (existingUrls.has(publicUrl)) return [];
+    const mimeType = imageDataUrls[index]?.match(/^data:(image\/[a-zA-Z+]+);base64,/)?.[1] ?? null;
+    const ext = mimeType?.split('/')[1].replace('jpeg', 'jpg') ?? 'jpg';
+    return [{
+      filename: `${title} — slide ${index + 1}.${ext}`,
+      storage_path: paths[index],
+      public_url: publicUrl,
+      mime_type: mimeType,
+      source: 'ia_generation',
+      statut: 'a_valider',
+      notes: `Pack social ${packId}`,
+    }];
+  });
+
+  if (rows.length === 0) return;
+  const { data: inserted, error } = await supabase.from('mediatheque_media').insert(rows).select('id');
+  if (error) throw new Error(`Ajout médiathèque échoué : ${error.message}`);
+
+  const hints: MediaTagHint[] = [
+    { category: 'canal', slug: platform, label: platform === 'instagram' ? 'Instagram' : 'Pinterest' },
+    ...mediaTagHints,
+  ];
+  const tagIds = (
+    await Promise.all(hints.map((h) => resolveMediaTagId(h.category, h.slug, h.label)))
+  ).filter((id): id is string => Boolean(id));
+  if (tagIds.length === 0) return;
+
+  const links = (inserted ?? []).flatMap((row) =>
+    tagIds.map((tag_id) => ({ media_id: (row as { id: string }).id, tag_id })),
+  );
+  if (links.length > 0) {
+    const { error: linkErr } = await supabase.from('mediatheque_media_tags').insert(links);
+    if (linkErr) throw new Error(`Association tags médiathèque échouée : ${linkErr.message}`);
+  }
+}
+
 // ───────── Social packs CRUD ─────────
 
 export async function saveSocialPack(input: SaveSocialPackInput): Promise<SocialPack> {
@@ -163,6 +250,23 @@ export async function saveSocialPack(input: SaveSocialPackInput): Promise<Social
   if (error) {
     await supabase.storage.from(BUCKET).remove(paths);
     throw new Error(`Insert social_pack échoué : ${error.message}`);
+  }
+  try {
+    await mirrorPackImagesToMediaLibrary(
+      packId,
+      input.title,
+      urls,
+      paths,
+      input.imageDataUrls,
+      input.platform,
+      input.mediaTagHints,
+    );
+  } catch (mediaError) {
+    // Une sauvegarde n'est considérée comme réussie que si le miroir
+    // médiathèque existe aussi. Le rollback évite les doublons lors d'un retry.
+    await supabase.from('social_packs').delete().eq('id', packId);
+    await supabase.storage.from(BUCKET).remove(paths);
+    throw mediaError;
   }
   return data as SocialPack;
 }

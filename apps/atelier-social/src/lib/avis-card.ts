@@ -15,7 +15,12 @@
 
 import { drawSvgIntoCanvas } from "@/lib/fonds-engine";
 
-export const AVIS_CARD_FONT_STACK = `"Arial Rounded MT Bold", "Nunito", ui-rounded, sans-serif`;
+export type AvisCardFontChoice = "arial" | "cafeteria";
+
+export const AVIS_CARD_FONT_STACKS: Record<AvisCardFontChoice, string> = {
+  arial: `"Arial Rounded MT Bold", "Nunito", ui-rounded, sans-serif`,
+  cafeteria: `"cafeteria", "Playfair Display", Georgia, serif`,
+};
 
 /** Les 5 tracés du logo Ypersoa (viewBox natif 1080×1440), une seule couleur. */
 const LOGO_PATHS = [
@@ -65,6 +70,7 @@ export interface AvisCardOptions {
   highlighted: Set<number>;
   prenom: string;
   colors: AvisCardColors;
+  fontChoice: AvisCardFontChoice;
 }
 
 function wrapTokens(ctx: CanvasRenderingContext2D, tokens: QuoteToken[], maxWidth: number): QuoteToken[][] {
@@ -124,7 +130,7 @@ function drawLogo(ctx: CanvasRenderingContext2D, x: number, y: number, boxW: num
  * (aperçu live ou canvas offscreen dédié à l'export).
  */
 export async function renderAvisCard(canvas: HTMLCanvasElement, opts: AvisCardOptions): Promise<void> {
-  const { width: W, height: H, backgroundSvg, tokens, highlighted, prenom, colors } = opts;
+  const { width: W, height: H, backgroundSvg, tokens, highlighted, prenom, colors, fontChoice } = opts;
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d");
@@ -133,7 +139,7 @@ export async function renderAvisCard(canvas: HTMLCanvasElement, opts: AvisCardOp
   // Police prête avant toute mesure/dessin (cf. overlay-templates.ts).
   if (typeof document !== "undefined" && document.fonts) {
     try {
-      await document.fonts.load(`900 16px "Nunito"`);
+      await document.fonts.load(fontChoice === "cafeteria" ? `800 16px "cafeteria"` : `900 16px "Nunito"`);
     } catch {
       // Nunito indisponible (offline) — repli navigateur silencieux.
     }
@@ -172,8 +178,10 @@ export async function renderAvisCard(canvas: HTMLCanvasElement, opts: AvisCardOp
   const starR = W * 0.017;
   const starsH = starR * 2;
 
+  const fontStack = AVIS_CARD_FONT_STACKS[fontChoice];
+  const fontWeight = fontChoice === "cafeteria" ? 800 : 900;
   const quoteFontSize = W * 0.062;
-  ctx.font = `900 ${quoteFontSize}px ${AVIS_CARD_FONT_STACK}`;
+  ctx.font = `${fontWeight} ${quoteFontSize}px ${fontStack}`;
   ctx.textBaseline = "alphabetic";
   const lines = wrapTokens(ctx, tokens, maxTextWidth);
   const quoteLineHeight = quoteFontSize * 1.22;
@@ -201,7 +209,7 @@ export async function renderAvisCard(canvas: HTMLCanvasElement, opts: AvisCardOp
 
   // 6. Citation (mots surlignables).
   cursorY = blockStartY + starsH + gapStarsQuote;
-  ctx.font = `900 ${quoteFontSize}px ${AVIS_CARD_FONT_STACK}`;
+  ctx.font = `${fontWeight} ${quoteFontSize}px ${fontStack}`;
   ctx.textAlign = "left";
   const spaceWidth = ctx.measureText(" ").width;
   lines.forEach((line, li) => {
@@ -216,7 +224,7 @@ export async function renderAvisCard(canvas: HTMLCanvasElement, opts: AvisCardOp
 
   // 7. Prénom, aligné à droite.
   cursorY += quoteH + gapQuoteName;
-  ctx.font = `900 ${nameFontSize}px ${AVIS_CARD_FONT_STACK}`;
+  ctx.font = `${fontWeight} ${nameFontSize}px ${fontStack}`;
   ctx.fillStyle = colors.text;
   ctx.textAlign = "right";
   ctx.fillText(prenom.trim(), contentX1, cursorY + nameFontSize * 0.85);

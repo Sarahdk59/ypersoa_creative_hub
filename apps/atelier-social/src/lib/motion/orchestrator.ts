@@ -19,7 +19,9 @@ import {
 import {
   promptAmbiance,
   promptCanonique,
+  promptMacro,
   promptPackshot,
+  promptProduitPorte,
   promptReelClip,
   selectShotsForReel,
 } from "./prompts";
@@ -109,6 +111,20 @@ async function buildPlans(
     ];
   }
 
+  if (job.mode === "macro" || job.mode === "porte") {
+    const url = sourceImageUrl(source);
+    if (!url) throw new Error(`Source ${job.mode} sans image : ${source.type}`);
+    return [{
+      ordre: 1,
+      shot_type: job.mode === "macro" ? "MACRO BRODERIE" : "LIFESTYLE MODE",
+      asset_sujet_url: url,
+      prompt_mouvement: job.mode === "macro" ? promptMacro(job.brief) : promptProduitPorte(job.brief),
+      duree_sec: 8,
+      clip_url: null,
+      statut: "en_attente",
+    }];
+  }
+
   throw new Error(`Incohérence mode/source : ${job.mode} / ${source.type}`);
 }
 
@@ -138,6 +154,7 @@ export async function startMotionJob(
 
   const engine: EngineConfig["engine"] =
     options.engine ??
+    input.engine ??
     (process.env.ATELIER_MOTION_ENGINE as EngineConfig["engine"]) ??
     "stub";
 
@@ -262,11 +279,13 @@ function buildAFaireManuel(job: MotionJob, clips: ClipPlan[]): string[] {
       "Possible boucle infinie pour intégration site (header lookbook).",
       "Export en plusieurs ratios si réutilisation hors 9:16 (16:9 pour hero web, 1:1 pour grid).",
     );
-  } else if (job.mode === "packshot") {
+  } else if (job.mode === "packshot" || job.mode === "macro" || job.mode === "porte") {
     lines.push(
-      "Intégrer dans la fiche produit Shopify comme vidéo galerie (Shopify accepte MP4 ≤ 4 Go).",
+      job.mode === "porte"
+        ? "Vérifier que le visage, le vêtement et la broderie restent fidèles à la photo de départ."
+        : "Vérifier que les couleurs, les lettres et le relief de la broderie restent fidèles à l'image de départ.",
       "Possible auto-loop sans son sur la PDP.",
-      "Si plusieurs variations souhaitées (rotation + zoom + swing), relancer le job 2-3 fois avec une variation différente.",
+      "Relancer une prise si tu veux une autre intensité de mouvement.",
     );
   }
   return lines;

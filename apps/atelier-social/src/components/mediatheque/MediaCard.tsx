@@ -32,6 +32,7 @@ export function MediaCard({ media, selectMode, selected, onToggleSelect }: Media
   const incarnation = media.tags.find((t) => t.category === "incarnation");
   const motif = media.tags.find((t) => t.category === "motif");
   const gabarit = media.tags.find((t) => t.category === "gabarit");
+  const canaux = media.tags.filter((t) => t.category === "canal");
 
   // Statut optimiste local (validation 1 clic depuis la galerie)
   const [statut, setStatut] = useState<MediaStatut>(media.statut);
@@ -222,6 +223,23 @@ export function MediaCard({ media, selectMode, selected, onToggleSelect }: Media
               {motif.label}
             </span>
           )}
+          {canaux.map((canal) => (
+            <span
+              key={canal.id}
+              style={{
+                padding: "2px 8px",
+                borderRadius: 999,
+                background: "var(--hub-bg-alt)",
+                color: "var(--hub-teal)",
+                fontFamily: "var(--font-sans)",
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.04em",
+              }}
+            >
+              {canal.label}
+            </span>
+          ))}
         </div>
 
         <p
@@ -269,7 +287,7 @@ export function MediaCard({ media, selectMode, selected, onToggleSelect }: Media
 
   return (
     <Link
-      href={`/atelier-da/mediatheque/${media.id}`}
+      href={`/bibliotheque/visuels/${media.id}`}
       style={{ textDecoration: "none", color: "inherit", display: "block" }}
     >
       {inner}

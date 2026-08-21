@@ -16,6 +16,7 @@ import type { MediaSource, Tag, TagCategory } from "@/types/mediatheque";
 import { SOURCE_LABELS, TAG_CATEGORY_LABELS, TAG_CATEGORY_ORDER } from "@/types/mediatheque";
 import { createMedia } from "@/lib/mediatheque/api-client";
 import { uploadMediaFile } from "@/lib/mediatheque/storage";
+import { deduceCanalFromRatio, imageDimensions, suggestTags } from "@/lib/mediatheque/quick-upload";
 
 interface PendingFile {
   id: string;
@@ -31,55 +32,6 @@ interface PendingFile {
 interface UploadDropzoneProps {
   tagsByCategory: Record<string, Tag[]>;
   onUploaded?: (count: number) => void;
-}
-
-const SUGGESTION_PATTERNS: Array<{ category: TagCategory; pattern: RegExp; slug: string }> = [
-  { category: "incarnation", pattern: /mama[-_ ]?club/i, slug: "mama-club" },
-  { category: "incarnation", pattern: /papa[-_ ]?club/i, slug: "papa-club" },
-  { category: "incarnation", pattern: /sista[-_ ]?club/i, slug: "sista-club" },
-  { category: "incarnation", pattern: /famille[-_ ]?club/i, slug: "famille-club" },
-  { category: "incarnation", pattern: /amour[-_ ]?club/i, slug: "amour-club" },
-  { category: "incarnation", pattern: /bride/i, slug: "bride-team" },
-  { category: "incarnation", pattern: /dog[-_ ]?dad/i, slug: "dog-dad-gang" },
-  { category: "incarnation", pattern: /papi/i, slug: "papi-club" },
-  { category: "incarnation", pattern: /mamie/i, slug: "mamie-club" },
-  { category: "gabarit", pattern: /hoodie/i, slug: "yp001" },
-  { category: "gabarit", pattern: /sweat/i, slug: "yp005" },
-  { category: "gabarit", pattern: /t[-_ ]?shirt|tshirt/i, slug: "yp019" },
-  { category: "gabarit", pattern: /zoodie/i, slug: "yp021" },
-  { category: "couleur_produit", pattern: /creme|crème/i, slug: "creme" },
-  { category: "couleur_produit", pattern: /blanc/i, slug: "blanc" },
-  { category: "couleur_produit", pattern: /noir/i, slug: "noir" },
-  { category: "couleur_produit", pattern: /marine/i, slug: "marine" },
-  { category: "couleur_produit", pattern: /sauge/i, slug: "vert-sauge" },
-  { category: "couleur_produit", pattern: /rose/i, slug: "rose-pale" },
-  { category: "couleur_produit", pattern: /kaki/i, slug: "kaki" },
-  { category: "couleur_produit", pattern: /lilas/i, slug: "lilas" },
-  { category: "plan", pattern: /hero/i, slug: "hero" },
-  { category: "plan", pattern: /buste/i, slug: "buste" },
-  { category: "plan", pattern: /lifestyle/i, slug: "lifestyle" },
-  { category: "plan", pattern: /detail|macro/i, slug: "detail-broderie" },
-  { category: "plan", pattern: /plat|flat/i, slug: "plat" },
-];
-
-function suggestTags(filename: string, tagsByCategory: Record<string, Tag[]>): string[] {
-  const ids: string[] = [];
-  for (const s of SUGGESTION_PATTERNS) {
-    if (s.pattern.test(filename)) {
-      const t = tagsByCategory[s.category]?.find((x) => x.slug === s.slug);
-      if (t) ids.push(t.id);
-    }
-  }
-  return ids;
-}
-
-function imageDimensions(src: string): Promise<{ width: number; height: number }> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
-    img.onerror = () => resolve({ width: 0, height: 0 });
-    img.src = src;
-  });
 }
 
 export function UploadDropzone({ tagsByCategory, onUploaded }: UploadDropzoneProps) {
@@ -111,6 +63,20 @@ export function UploadDropzone({ tagsByCategory, onUploaded }: UploadDropzonePro
         const suggested = suggestTags(file.name, tagsByCategory);
         next.push({ id, file, preview, status: "pending" });
         setPerFileTags((prev) => ({ ...prev, [id]: new Set(suggested) }));
+
+        // Canal déduit du ratio de l'image (best-effort, non bloquant).
+        imageDimensions(preview).then(({ width, height }) => {
+          const canalSlug = deduceCanalFromRatio(width, height);
+          const canalTag = canalSlug
+            ? tagsByCategory["canal"]?.find((t) => t.slug === canalSlug)
+            : undefined;
+          if (!canalTag) return;
+          setPerFileTags((prev) => {
+            const cur = new Set(prev[id] ?? []);
+            cur.add(canalTag.id);
+            return { ...prev, [id]: cur };
+          });
+        });
       }
       setFiles((prev) => [...prev, ...next]);
     },

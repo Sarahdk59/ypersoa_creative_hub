@@ -309,38 +309,19 @@ export default function FondsPage() {
   const exportBaseName = (loadedFilename ?? "motif-recolore").replace(/\.svg$/i, "");
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text font-sans">
-      <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 sticky top-0 z-20">
-        <div className="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/social"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-text transition-colors"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Atelier Social
-            </Link>
-            <div className="w-px h-4 bg-brand-muted/20" />
-            <h1
-              style={{
-                fontFamily: "var(--font-editorial)",
-                fontSize: 20,
-                fontWeight: 500,
-                letterSpacing: "-0.01em",
-                color: "var(--hub-foreground)",
-                margin: 0,
-              }}
-            >
-              Fonds
-            </h1>
-          </div>
-          <div className="flex items-center bg-brand-muted/10 rounded-full p-0.5 border border-brand-muted/15">
+    <div className="min-h-screen bg-hub-bg text-hub-foreground font-sans">
+      <header className="mx-auto max-w-[1180px] px-6 pt-8">
+        <Link href="/social" className="inline-flex items-center gap-1.5 text-xs font-semibold text-hub-foreground/55 hover:text-hub-accent transition-colors"><ArrowLeft className="w-3.5 h-3.5" /> Atelier Social</Link>
+        <h1 className="mt-5 font-serif text-[34px] leading-none">Les fonds</h1>
+        <p className="mt-3 text-sm text-hub-foreground/60">Des motifs Ypersoa qui donnent du rythme à tes posts, sans jamais les déguiser.</p>
+        <div className="mt-6 flex items-end gap-5 border-b border-hub-border">
+          <div className="flex items-center gap-1 rounded-t-xl bg-[#f0e8db] p-1">
             <button
               type="button"
               onClick={() => setTab("generate")}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all",
-                tab === "generate" ? "bg-white text-brand-rose shadow-sm" : "text-brand-muted hover:text-brand-text"
+                "flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all",
+                tab === "generate" ? "bg-white text-hub-accent shadow-sm" : "text-hub-foreground/55 hover:text-hub-foreground"
               )}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -350,8 +331,8 @@ export default function FondsPage() {
               type="button"
               onClick={() => setTab("recolor")}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all",
-                tab === "recolor" ? "bg-white text-brand-rose shadow-sm" : "text-brand-muted hover:text-brand-text"
+                "flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all",
+                tab === "recolor" ? "bg-white text-hub-accent shadow-sm" : "text-hub-foreground/55 hover:text-hub-foreground"
               )}
             >
               <Wand2 className="w-3.5 h-3.5" />
@@ -361,7 +342,7 @@ export default function FondsPage() {
         </div>
       </header>
 
-      <main className="max-w-[1400px] mx-auto px-6 py-6">
+      <main className="max-w-[1180px] mx-auto px-6 py-7">
         <div className="grid grid-cols-12 gap-5">
           {/* COLONNE CONFIG */}
           <div className="col-span-12 lg:col-span-4 space-y-4">

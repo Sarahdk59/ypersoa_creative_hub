@@ -3,8 +3,15 @@
  *
  * Copie typée du seed SQL `docs/PLAN_MEDIATHEQUE/seed_tags_taxonomie.sql`.
  * Sert de fallback côté UI tant que la table `tags` n'est pas branchée.
+ *
+ * Motif et Incarnation ne sont PAS listés à la main ici : ils sont dérivés
+ * de la bible `referentiels/motifs/motifs_ypm.json` (via `getMotifs()`) pour
+ * ne jamais dupliquer le référentiel — chaque variante devient un tag
+ * `incarnation` avec `parent_id` pointant vers le tag `motif` de sa famille
+ * (cf. TagFilterSidebar, hiérarchie Motif → Incarnation).
  */
 
+import { getMotifs } from "@/lib/atelier-da/referentiels-loader";
 import type { Tag, TagCategory } from "@/types/mediatheque";
 
 interface SeedTag {
@@ -12,40 +19,110 @@ interface SeedTag {
   slug: string;
   label: string;
   color_hex?: string;
+  parent_id?: string;
+}
+
+/** Couleurs conservées à la main pour les incarnations qui en avaient une avant la dérivation auto. */
+const INCARNATION_COLOR_OVERRIDES: Record<string, string> = {
+  "mama-club": "#1A2E4F",
+  "papa-club": "#1A2E4F",
+  "sista-club": "#A76059",
+  "famille-club": "#8A9E8C",
+  "amour-club": "#B4665F",
+};
+
+const ACCENT_MAP: Record<string, string> = {
+  à: "a", â: "a", ä: "a",
+  é: "e", è: "e", ê: "e", ë: "e",
+  î: "i", ï: "i",
+  ô: "o", ö: "o",
+  ù: "u", û: "u", ü: "u",
+  ç: "c",
+  œ: "oe",
+};
+
+function slugify(label: string): string {
+  return label
+    .toLowerCase()
+    .split("")
+    .map((ch) => ACCENT_MAP[ch] ?? ch)
+    .join("")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/** Labels avec accent/graphie propre pour les tags thématiques du référentiel (leurs slugs bruts n'en portent pas). */
+const THEME_LABEL_OVERRIDES: Record<string, string> = {
+  amitie: "Amitié",
+  feminin: "Féminin",
+  caractere: "Caractère",
+  "anniversaire-date": "Anniversaire (date)",
+  "grand-parents": "Grands-parents",
+  "garde-enfant": "Garde d'enfant",
+};
+
+/** Entrées bruit du référentiel (fautes de frappe / restes de dev), jamais des vrais thèmes. */
+const THEME_TAG_EXCLUDE = new Set(["brigitte", "alphabet", "default", "template", "ypm-001", "ypm-003"]);
+
+function buildThemeTags(
+  motifs: { tags?: string[]; variantes: { tags?: string[] }[] }[],
+): SeedTag[] {
+  const seen = new Set<string>();
+  const out: SeedTag[] = [];
+  const addAll = (tags?: string[]) => {
+    for (const raw of tags ?? []) {
+      const slug = slugify(raw);
+      if (!slug || THEME_TAG_EXCLUDE.has(slug) || seen.has(slug)) continue;
+      seen.add(slug);
+      out.push({
+        category: "theme",
+        slug,
+        label: THEME_LABEL_OVERRIDES[slug] ?? slug.charAt(0).toUpperCase() + slug.slice(1),
+      });
+    }
+  };
+  for (const motif of motifs) {
+    addAll(motif.tags);
+    for (const v of motif.variantes) addAll(v.tags);
+  }
+  return out;
+}
+
+function buildMotifDerivedTags(): SeedTag[] {
+  const out: SeedTag[] = [];
+  let motifs: {
+    id: string;
+    nom_commercial: string;
+    tags?: string[];
+    variantes: { label: string; tags?: string[] }[];
+  }[] = [];
+  try {
+    motifs = getMotifs().motifs;
+  } catch {
+    // Référentiel indisponible (ex. contexte hors process.cwd() attendu) : pas de motif/incarnation/thème dérivés.
+    return out;
+  }
+  for (const motif of motifs) {
+    const motifSlug = motif.id.toLowerCase();
+    out.push({ category: "motif", slug: motifSlug, label: motif.nom_commercial });
+    for (const variante of motif.variantes) {
+      const slug = slugify(variante.label);
+      if (!slug) continue;
+      out.push({
+        category: "incarnation",
+        slug,
+        label: variante.label,
+        color_hex: INCARNATION_COLOR_OVERRIDES[slug],
+        parent_id: `seed-motif-${motifSlug}`,
+      });
+    }
+  }
+  out.push(...buildThemeTags(motifs));
+  return out;
 }
 
 const RAW: SeedTag[] = [
-  // INCARNATIONS
-  { category: "incarnation", slug: "mama-club", label: "MAMA CLUB", color_hex: "#1A2E4F" },
-  { category: "incarnation", slug: "papa-club", label: "PAPA CLUB", color_hex: "#1A2E4F" },
-  { category: "incarnation", slug: "sista-club", label: "SISTA CLUB", color_hex: "#A76059" },
-  { category: "incarnation", slug: "famille-club", label: "FAMILLE CLUB", color_hex: "#8A9E8C" },
-  { category: "incarnation", slug: "amour-club", label: "AMOUR CLUB", color_hex: "#B4665F" },
-  { category: "incarnation", slug: "bride-team", label: "BRIDE TEAM" },
-  { category: "incarnation", slug: "dog-dad-gang", label: "DOG DAD GANG" },
-  { category: "incarnation", slug: "crew-summer", label: "CREW SUMMER" },
-  { category: "incarnation", slug: "team-dog", label: "TEAM DOG" },
-  { category: "incarnation", slug: "papi-club", label: "PAPI CLUB" },
-  { category: "incarnation", slug: "mamie-club", label: "MAMIE CLUB" },
-
-  // MOTIFS (référentiel YPM)
-  { category: "motif", slug: "ypm-001", label: "La Brigitte" },
-  { category: "motif", slug: "ypm-002", label: "L'Ambre" },
-  { category: "motif", slug: "ypm-003", label: "Le Club" },
-  { category: "motif", slug: "ypm-004", label: "Notre Héritage" },
-  { category: "motif", slug: "ypm-005", label: "L'Annonce" },
-  { category: "motif", slug: "ypm-006", label: "Le Câlin" },
-  { category: "motif", slug: "ypm-007", label: "Le Chouchou" },
-  { category: "motif", slug: "ypm-008", label: "La Féline" },
-  { category: "motif", slug: "ypm-009", label: "La Palette" },
-  { category: "motif", slug: "ypm-010", label: "La Ronde" },
-  { category: "motif", slug: "ypm-011", label: "La Confidence" },
-  { category: "motif", slug: "ypm-012", label: "La Meute" },
-  { category: "motif", slug: "ypm-013", label: "Le Depuis" },
-  { category: "motif", slug: "ypm-014", label: "La Tigresse" },
-  { category: "motif", slug: "ypm-015", label: "La Déclaration" },
-  { category: "motif", slug: "ypm-016", label: "La Signature" },
-  { category: "motif", slug: "ypm-017", label: "La Florale" },
+  ...buildMotifDerivedTags(),
 
   // GABARITS (référentiel YP)
   { category: "gabarit", slug: "yp001", label: "Hoodie Adulte" },
@@ -114,6 +191,11 @@ const RAW: SeedTag[] = [
   { category: "ton", slug: "complice", label: "Complice & fun" },
   { category: "ton", slug: "humour", label: "Humour & second degré" },
   { category: "ton", slug: "affirme", label: "Affirmé & statement" },
+
+  // CANAL (déduit du format de sortie à la génération, cf. deduceCanalFromRatio)
+  { category: "canal", slug: "instagram", label: "Instagram" },
+  { category: "canal", slug: "shopify", label: "Shopify" },
+  { category: "canal", slug: "pinterest", label: "Pinterest" },
 ];
 
 export const SEED_TAGS: Tag[] = RAW.map((t) => ({
@@ -122,7 +204,7 @@ export const SEED_TAGS: Tag[] = RAW.map((t) => ({
   slug: t.slug,
   label: t.label,
   color_hex: t.color_hex ?? "#1E2D4A",
-  parent_id: null,
+  parent_id: t.parent_id ?? null,
 }));
 
 export function findSeedTag(category: TagCategory, slug: string): Tag | undefined {
@@ -131,4 +213,21 @@ export function findSeedTag(category: TagCategory, slug: string): Tag | undefine
 
 export function findSeedTagById(id: string): Tag | undefined {
   return SEED_TAGS.find((t) => t.id === id);
+}
+
+/**
+ * Déduit le canal (slug de la catégorie `canal`) depuis le ratio d'une image,
+ * quand il n'est pas déjà connu explicitement (ex. `platform` posé à la
+ * génération dans social-packs). Règle Sarah : 4:5 → Instagram, 2:3/9:16 →
+ * Pinterest, 1:1 → Shopify (packshot) par défaut si rien d'autre n'est connu.
+ */
+export function deduceCanalFromRatio(width: number, height: number): string | null {
+  if (!width || !height) return null;
+  const ratio = width / height;
+  const isClose = (target: number, tolerance = 0.04) => Math.abs(ratio - target) <= tolerance;
+
+  if (isClose(4 / 5)) return "instagram";
+  if (isClose(2 / 3) || isClose(9 / 16)) return "pinterest";
+  if (isClose(1)) return "shopify";
+  return null;
 }

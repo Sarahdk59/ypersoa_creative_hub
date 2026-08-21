@@ -78,8 +78,8 @@ export default function MotifsPage() {
           </h1>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 720 }}>
             {data.motifs._meta.nb_motifs} motifs commerciaux · {data.motifs._meta.nb_variantes_total} variantes (mots brodés alternatifs sur le même design). Vue technique : bibles, fichiers prod (PXF / DST / FT) et attribution couleur. Pour le catalogue créatif et le shooting, voir{" "}
-            <Link href="/atelier-da/motifs" style={{ color: "inherit", textDecoration: "underline" }}>
-              Atelier DA · Motifs
+            <Link href="/bibliotheque/motifs" style={{ color: "inherit", textDecoration: "underline" }}>
+              Bibliothèque · Motifs
             </Link>
             .
           </p>
@@ -886,7 +886,7 @@ function ProdFileCard({
 
         {/* Boutons « Utiliser dans Shooting/Shooting Book » retirés de la vue
             Production — Adriana n'accède qu'à la fiche technique et aux fichiers
-            prod. Pour shooter un PNG, passer par /atelier-da/motifs. */}
+            prod. Pour shooter un PNG, passer par /bibliotheque/motifs. */}
       </div>
 
       {renaming ? (

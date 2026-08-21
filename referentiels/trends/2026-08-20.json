@@ -1,0 +1,210 @@
+{
+  "id": "2026-08-20",
+  "date": "2026-08-20",
+  "generated_at": "2026-08-20T12:49:02.615Z",
+  "sources": [
+    "google",
+    "pinterest"
+  ],
+  "status": "raw",
+  "trends": [
+    {
+      "terme": "cadeau fête des mères personnalisé",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "saisonnier",
+      "trafic_estime": null,
+      "contexte": [
+        "Pic avant fête des mères — angle prénom/initiale."
+      ],
+      "url": "https://trends.pinterest.com/?country=FR&query=cadeau%20f%C3%AAte%20des%20m%C3%A8res%20personnalis%C3%A9",
+      "enrichissement": null
+    },
+    {
+      "terme": "sweat brodé prénom",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "stable",
+      "trafic_estime": null,
+      "contexte": [
+        "Requête evergreen forte sur Pinterest."
+      ],
+      "url": "https://trends.pinterest.com/?country=FR&query=sweat%20brod%C3%A9%20pr%C3%A9nom",
+      "enrichissement": null
+    },
+    {
+      "terme": "t-shirt brodé personnalisé femme",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "stable",
+      "trafic_estime": null,
+      "contexte": [],
+      "url": "https://trends.pinterest.com/?country=FR&query=t-shirt%20brod%C3%A9%20personnalis%C3%A9%20femme",
+      "enrichissement": null
+    },
+    {
+      "terme": "cadeau naissance personnalisé",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "saisonnier",
+      "trafic_estime": null,
+      "contexte": [
+        "Body/bavoir prénom brodé."
+      ],
+      "url": "https://trends.pinterest.com/?country=FR&query=cadeau%20naissance%20personnalis%C3%A9",
+      "enrichissement": null
+    },
+    {
+      "terme": "cadeau couple personnalisé",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "saisonnier",
+      "trafic_estime": null,
+      "contexte": [
+        "Saint-Valentin + anniversaires."
+      ],
+      "url": "https://trends.pinterest.com/?country=FR&query=cadeau%20couple%20personnalis%C3%A9",
+      "enrichissement": null
+    },
+    {
+      "terme": "idée cadeau fête des pères",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "saisonnier",
+      "trafic_estime": null,
+      "contexte": [],
+      "url": "https://trends.pinterest.com/?country=FR&query=id%C3%A9e%20cadeau%20f%C3%AAte%20des%20p%C3%A8res",
+      "enrichissement": null
+    },
+    {
+      "terme": "sweat famille assorti",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "stable",
+      "trafic_estime": null,
+      "contexte": [
+        "Looks coordonnés famille — Le Club / La Team."
+      ],
+      "url": "https://trends.pinterest.com/?country=FR&query=sweat%20famille%20assorti",
+      "enrichissement": null
+    },
+    {
+      "terme": "tote bag brodé personnalisé",
+      "source": "pinterest",
+      "type": "mot",
+      "signal": "stable",
+      "trafic_estime": null,
+      "contexte": [],
+      "url": "https://trends.pinterest.com/?country=FR&query=tote%20bag%20brod%C3%A9%20personnalis%C3%A9",
+      "enrichissement": null
+    },
+    {
+      "terme": "code fortnite",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "200+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=code%20fortnite&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "embrunman",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "500+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=embrunman&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "grégory lenoci",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "100+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=gr%C3%A9gory%20lenoci&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "meteo ajaccio",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "100+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=meteo%20ajaccio&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "cabaret vert 2026",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "500+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=cabaret%20vert%202026&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "meteo frejus",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "200+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=meteo%20frejus&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "livret a",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "2000+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=livret%20a&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "bar des lacs ajaccio",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "100+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=bar%20des%20lacs%20ajaccio&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "gauche",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "1000+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=gauche&geo=FR",
+      "enrichissement": null
+    },
+    {
+      "terme": "tadej pogacar",
+      "source": "google",
+      "type": "mot",
+      "signal": "montant",
+      "trafic_estime": "5000+",
+      "contexte": [],
+      "url": "https://trends.google.com/trends/explore?q=tadej%20pogacar&geo=FR",
+      "enrichissement": null
+    }
+  ],
+  "meta": {
+    "trends_count": 18,
+    "source_url": "https://trends.google.com/trending/rss?geo=FR",
+    "note": "Lot 2 — Google Trends FR + Pinterest (saisie manuelle), sans enrichissement IA."
+  },
+  "errors": [
+    "Pinterest API non configurée (PINTEREST_ACCESS_TOKEN manquant). Saisie manuelle des mots-clés en attendant la validation de l'app business."
+  ]
+}

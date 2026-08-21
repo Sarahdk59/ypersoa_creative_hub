@@ -9,7 +9,7 @@
  * Cf. apps/atelier-motion/ARCHITECTURE.md pour le contexte historique.
  */
 
-export type MotionMode = "reel" | "ambiance" | "packshot";
+export type MotionMode = "macro" | "porte" | "reel" | "ambiance" | "packshot";
 
 export type MotionEngine = "omni-flash" | "veo-3.1" | "stub";
 
@@ -169,12 +169,16 @@ export const SOURCE_ORIGIN_LABELS: Record<SourceOrigin, string> = {
 };
 
 export const MODE_LABELS: Record<MotionMode, string> = {
+  macro: "Macro produit — 8 secondes",
+  porte: "Produit porté — 8 secondes",
   reel: "Reel Insta animé",
   ambiance: "Ambiance vidéo lookbook",
   packshot: "Motion packshot",
 };
 
 export const MODE_DESCRIPTIONS: Record<MotionMode, string> = {
+  macro: "Dépose un détail ou un packshot : le produit prend vie en un plan macro continu de 8 secondes.",
+  porte: "Dépose une photo portée : la personne et le produit s'animent naturellement en un plan continu de 8 secondes.",
   reel: "Reel narratif 9:16 depuis une collection Atelier Shooting. Sélection automatique : MACRO BRODERIE en hook + LIFESTYLE + PORTRAIT + clôture. 4 clips × 8s = 32s.",
   ambiance: "1 clip 9:16 d'ambiance à partir d'une image lookbook (vent, lumière qui tourne, respiration textile). Pas de mannequin. 8-12s.",
   packshot: "1 clip 9:16 depuis un packshot statique : rotation lente, swing du tissu, ou zoom sur la broderie. 6-8s. Idéal e-commerce.",

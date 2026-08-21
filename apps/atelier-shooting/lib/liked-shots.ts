@@ -1,5 +1,8 @@
 import { supabase } from './supabase';
 import { GenerationSettings } from '../types';
+import { resolveMediaTagId, linkMediaTags } from './mediatheque-bridge';
+
+const MEDIA_TABLE = 'mediatheque_media';
 
 export interface LikedShot {
   id: string;
@@ -25,6 +28,51 @@ function dataUrlToBlob(dataUrl: string): { blob: Blob; ext: string } {
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
   return { blob: new Blob([bytes], { type: mimeType }), ext };
+}
+
+/**
+ * Miroir médiathèque : un like = une décision positive de Sarah, la photo
+ * doit vivre dans la Bibliothèque sans re-saisie (règle d'or Bibliothèque,
+ * même pattern que `catalog-shots.ts::mirrorCatalogShotToMediaLibrary`).
+ * Pas de motif taggé ici : `embroideryImage` est une image brute, pas un id
+ * YPM catalogué — seuls gabarit/mannequin/ambiance sont déductibles.
+ */
+async function mirrorLikedShotToMediaLibrary(
+  shot: LikedShot,
+  mimeType: string,
+  settings: GenerationSettings,
+): Promise<void> {
+  if (!supabase) return;
+
+  const { data: inserted, error } = await supabase
+    .from(MEDIA_TABLE)
+    .insert({
+      filename: `${shot.shot_label ?? 'Shot liké'}-${shot.id}.${mimeType.split('/')[1] ?? 'jpg'}`,
+      storage_path: shot.image_storage_path ?? `${shot.id}.jpg`,
+      public_url: shot.image_url,
+      mime_type: mimeType,
+      source: 'shooting_studio',
+      statut: 'a_valider',
+      notes: `Photo likée — shot ${shot.id}`,
+    })
+    .select('id')
+    .single();
+  if (error) throw new Error(`Ajout médiathèque échoué : ${error.message}`);
+
+  const hints: { category: string; slug: string; label: string }[] = [
+    { category: 'gabarit', slug: settings.product.toLowerCase(), label: settings.product },
+  ];
+  for (const canoniqueId of settings.canoniqueIds ?? []) {
+    hints.push({ category: 'mannequin', slug: canoniqueId.toLowerCase(), label: canoniqueId });
+  }
+  if (settings.decorStyle) {
+    hints.push({ category: 'ambiance', slug: settings.decorStyle, label: settings.decorStyle });
+  }
+
+  const tagIds = (
+    await Promise.all(hints.map((h) => resolveMediaTagId(h.category, h.slug, h.label)))
+  ).filter((id): id is string => Boolean(id));
+  await linkMediaTags((inserted as { id: string }).id, tagIds);
 }
 
 /**
@@ -70,7 +118,18 @@ export async function likeShot(
     await supabase.storage.from(BUCKET).remove([path]);
     throw new Error(`Insert row échoué : ${error.message}`);
   }
-  return data as LikedShot;
+  const shot = data as LikedShot;
+
+  try {
+    await mirrorLikedShotToMediaLibrary(shot, blob.type, settings);
+  } catch (mediaError) {
+    // Un like n'est considéré réussi que si le miroir médiathèque existe aussi.
+    await supabase.from('liked_shots').delete().eq('id', shot.id);
+    await supabase.storage.from(BUCKET).remove([path]);
+    throw mediaError;
+  }
+
+  return shot;
 }
 
 /** Liste tous les shots likés, plus récents en premier. */

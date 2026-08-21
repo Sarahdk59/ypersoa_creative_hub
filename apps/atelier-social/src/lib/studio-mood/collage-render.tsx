@@ -1,6 +1,6 @@
 /**
  * Moteur de rendu collage-sticker, partagé entre l'outil manuel
- * (/atelier-da/studio-mood/collage) et l'auto-génération du mode
+ * (/studio/studio-mood/collage) et l'auto-génération du mode
  * "Sticker (détouré)" dans la fiche épisode ([id]/page.tsx).
  *
  * Refonte 13/08/2026 ("corrige le mood") :
@@ -114,6 +114,10 @@ export const COLLAGE_FONDS: FondPatternDef[] = [
   { id: "coeur-bordure", label: "Cœurs bordure", kind: "asset", assetFilename: "heart.svg" },
   { id: "coeur-disperse", label: "Cœurs dispersés", kind: "asset", assetFilename: "heart - 1.svg" },
   { id: "fleurs-pleine-page", label: "Fleurs pleine page", kind: "asset", assetFilename: "fleurs pleine page.svg" },
+  { id: "fleur-1", label: "Fleur 1", kind: "asset", assetFilename: "fleur.svg" },
+  { id: "fleur-2", label: "Fleur 2", kind: "asset", assetFilename: "fleur2.svg" },
+  { id: "fleur-3", label: "Fleur 3", kind: "asset", assetFilename: "fleur3.svg" },
+  { id: "fleur-4", label: "Fleur 4", kind: "asset", assetFilename: "fleur4.svg" },
   { id: "vichy-signature", label: "Vichy signature", kind: "asset", assetFilename: "vichy.svg" },
 ];
 

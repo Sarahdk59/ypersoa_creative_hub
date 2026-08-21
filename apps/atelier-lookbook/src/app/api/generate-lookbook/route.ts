@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
-import { createClient } from "@supabase/supabase-js";
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { buildCanoniquesContextForLLM, CANONIQUES_LITE } from "@/lib/canoniques";
@@ -10,7 +9,6 @@ import { DecompositionLLM, ImageFamille } from "@/lib/types";
 const OPENAI_MODEL_PRIMARY = "gpt-5";
 const OPENAI_MODEL_FALLBACK = "gpt-4o";
 const GEMINI_MODEL = "gemini-3.1-flash-image-preview";
-const BUCKET = "lookbook-images";
 
 const SYSTEM_PROMPT_DECOMPOSITION = `You are the creative director of Ypersoa, a French embroidery brand (Sézane × A.P.C. × Maison Labiche × Émoï-Émoï × Octobre Éditions aesthetic). Your role: take a short poetic French brief and decompose it into 12-20 image prompts in English for a seasonal lookbook.
 
@@ -236,15 +234,11 @@ export async function POST(req: NextRequest) {
 
     const openaiKey = process.env.OPENAI_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!openaiKey) return jsonError(500, "OPENAI_API_KEY manquant.");
     if (!geminiKey) return jsonError(500, "GEMINI_API_KEY manquant.");
-    if (!supabaseUrl || !supabaseAnon) return jsonError(500, "Supabase non configuré.");
 
     const openai = new OpenAI({ apiKey: openaiKey });
     const gemini = new GoogleGenAI({ apiKey: geminiKey });
-    const supabase = createClient(supabaseUrl, supabaseAnon);
 
     // 1. Décomposition LLM (avec palette imposée si fournie)
     const palette = loadPaletteHexCodes(body.palette_id);
@@ -261,24 +255,13 @@ export async function POST(req: NextRequest) {
       parsed.ambiance_extraite.palette = palette.hexCodes;
     }
 
-    // 2. Insert lookbook (statut = brouillon, slug unique check)
-    const lookbookId = crypto.randomUUID();
-    const slugWithSuffix = `${parsed.slug}-${lookbookId.slice(0, 4)}`;
+    // 2. Le lookbook généré reste un brouillon côté navigateur. Aucune image
+    // n'est écrite dans Supabase avant un like ou une sauvegarde explicite.
+    const draftId = crypto.randomUUID();
+    const slugWithSuffix = `${parsed.slug}-${draftId.slice(0, 4)}`;
     const canoniquesInclus = Array.from(
       new Set(prompts.map((p) => p.canonique_injecte).filter((x): x is string => Boolean(x)))
     );
-
-    const { error: insertErr } = await supabase.from("lookbooks").insert({
-      id: lookbookId,
-      brief_original: body.brief.trim(),
-      titre: parsed.titre,
-      slug: slugWithSuffix,
-      tags: parsed.tags,
-      canoniques_inclus: canoniquesInclus,
-      ambiance_extraite: parsed.ambiance_extraite,
-      llm_model_used: model,
-    });
-    if (insertErr) return jsonError(500, `Insert lookbook échoué: ${insertErr.message}`);
 
     // 3. Gemini × N en parallèle, avec injection canonique en parts[] si applicable
     const results = await Promise.all(
@@ -286,41 +269,13 @@ export async function POST(req: NextRequest) {
         const img = await generateImageWithGemini(gemini, p.prompt_en, p.canonique_injecte);
         if (!img) return { ok: false as const, idx, prompt: p };
 
-        const path = `${lookbookId}/img-${String(idx + 1).padStart(2, "0")}.jpg`;
-        const blob = Buffer.from(img.data, "base64");
-        const up = await supabase.storage.from(BUCKET).upload(path, blob, {
-          contentType: img.mimeType,
-          cacheControl: "31536000",
-          upsert: false,
-        });
-        if (up.error) {
-          console.error("[lookbook] upload failed:", up.error.message);
-          return { ok: false as const, idx, prompt: p };
-        }
-        const publicUrl = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-
-        const { data: imgRow } = await supabase
-          .from("lookbook_images")
-          .insert({
-            lookbook_id: lookbookId,
-            position: idx + 1,
-            famille: p.famille as ImageFamille,
-            canonique_injecte: p.canonique_injecte,
-            prompt_en: p.prompt_en,
-            image_url: publicUrl,
-            image_storage_path: path,
-          })
-          .select("id")
-          .single();
-
         return {
           ok: true as const,
           idx,
-          url: publicUrl,
+          id: crypto.randomUUID(),
+          url: `data:${img.mimeType};base64,${img.data}`,
           famille: p.famille,
           prompt: p,
-          image_id: imgRow?.id as string | undefined,
-          storage_path: path,
         };
       })
     );
@@ -328,19 +283,9 @@ export async function POST(req: NextRequest) {
     const succeeded = results.filter((r) => r.ok).length;
     const errors = results.filter((r) => !r.ok).map((r) => r.idx);
 
-    // 4. Update generation_meta
-    await supabase.from("lookbooks").update({
-      generation_meta: {
-        duration_ms: Date.now() - started,
-        n_prompts_requested: prompts.length,
-        n_images_succeeded: succeeded,
-        errors,
-      },
-    }).eq("id", lookbookId);
-
     return NextResponse.json({
       ok: true,
-      lookbook_id: lookbookId,
+      draft_id: draftId,
       titre: parsed.titre,
       slug: slugWithSuffix,
       tags: parsed.tags,
@@ -349,8 +294,7 @@ export async function POST(req: NextRequest) {
       images: results
         .filter((r): r is Extract<typeof r, { ok: true }> => r.ok)
         .map((r) => ({
-          image_id: r.image_id,
-          storage_path: r.storage_path,
+          id: r.id,
           position: r.idx + 1,
           famille: r.famille,
           url: r.url,

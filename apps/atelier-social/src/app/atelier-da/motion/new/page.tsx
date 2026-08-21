@@ -6,7 +6,7 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Sparkles } from "lucide-react";
@@ -25,12 +25,14 @@ import {
 } from "@/lib/motion/api-client";
 import { MotionModeSelector } from "@/components/motion/MotionModeSelector";
 import { MotionSourceSelector } from "@/components/motion/MotionSourceSelector";
+import { MotionImageUpload } from "@/components/motion/MotionImageUpload";
 
 export default function NewMotionJobPage() {
   const router = useRouter();
   const [mode, setMode] = useState<MotionMode | null>(null);
   const [sourceId, setSourceId] = useState<string | null>(null);
   const [, setSource] = useState<MotionSource | null>(null);
+  const [sourceVersion, setSourceVersion] = useState(0);
   const [lookbookId, setLookbookId] = useState<string | null>(null);
   const [format, setFormat] = useState<"court" | "complet">("court");
   const [brief, setBrief] = useState("");
@@ -39,6 +41,8 @@ export default function NewMotionJobPage() {
   const [lookbookSources, setLookbookSources] = useState<MotionSource[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Évite deux générations facturables en cas de double-clic sur une source.
+  const launchingRef = useRef(false);
 
   useEffect(() => {
     fetchMotionEngineStatus()
@@ -62,28 +66,33 @@ export default function NewMotionJobPage() {
       .catch(() => undefined);
   }, [mode]);
 
-  const handleSubmit = async () => {
-    if (!mode || !sourceId) return;
+  const handleSubmit = async (
+    selectedMode: MotionMode | null = mode,
+    selectedSourceId: string | null = sourceId,
+  ) => {
+    if (!selectedMode || !selectedSourceId || launchingRef.current) return;
+    launchingRef.current = true;
     setSubmitting(true);
     setError(null);
     try {
       const payload: CreateMotionJobInput = {
-        mode,
-        source_id: sourceId,
+        mode: selectedMode,
+        source_id: selectedSourceId,
         engine: engine || undefined,
-        format: mode === "reel" ? format : undefined,
+        format: selectedMode === "reel" ? format : undefined,
         brief: brief.trim() || undefined,
       };
       // lookbook_id n'est pas dans CreateMotionJobInput du type (Sprint 1 simplifié) :
       // on l'envoie via le body directement, l'API le lit en mode reel.
       const job = await createMotionJob({
         ...payload,
-        ...(mode === "reel" && lookbookId ? { lookbook_id: lookbookId } as Record<string, unknown> : {}),
+        ...(selectedMode === "reel" && lookbookId ? { lookbook_id: lookbookId } as Record<string, unknown> : {}),
       } as CreateMotionJobInput);
       router.push(`/atelier-da/motion/${job.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur création");
       setSubmitting(false);
+      launchingRef.current = false;
     }
   };
 
@@ -125,17 +134,46 @@ export default function NewMotionJobPage() {
 
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         <Section title="1 · Choisir le mode">
-          <MotionModeSelector value={mode} onChange={setMode} />
+          <MotionModeSelector
+            value={mode}
+            onChange={(nextMode) => {
+              setMode(nextMode);
+              setSourceId(null);
+              setSource(null);
+            }}
+          />
         </Section>
 
         {mode && (
           <Section title={`2 · Source ${MODE_LABELS[mode].toLowerCase()}`}>
+            {(mode === "macro" || mode === "porte") && (
+              <div style={{ marginBottom: 14 }}>
+                <MotionImageUpload
+                  mode={mode}
+                  onUploaded={(src) => {
+                    setSourceId(src.id);
+                    setSource(src);
+                    setSourceVersion((v) => v + 1);
+                    void handleSubmit(mode, src.id);
+                  }}
+                />
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.6, margin: "10px 0 0" }}>
+                  Ou choisis un visuel déjà présent dans le Hub.
+                </p>
+              </div>
+            )}
             <MotionSourceSelector
+              key={`${mode}-${sourceVersion}`}
               mode={mode}
               value={sourceId}
               onChange={(id, src) => {
                 setSourceId(id);
                 setSource(src);
+                // Les deux gestes directs sont volontairement sans étape
+                // supplémentaire : choisir l'image = lancer le clip 9:16.
+                if (mode === "macro" || mode === "porte") {
+                  void handleSubmit(mode, id);
+                }
               }}
             />
           </Section>
@@ -346,7 +384,7 @@ export default function NewMotionJobPage() {
         </button>
         <button
           type="button"
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
           disabled={!canSubmit}
           style={{
             background: "var(--color-brand-rose, #A76059)",
@@ -366,7 +404,7 @@ export default function NewMotionJobPage() {
           }}
         >
           {submitting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={14} />}
-          {submitting ? "Lancement…" : "Générer la vidéo"}
+          {submitting ? "Lancement…" : mode === "macro" || mode === "porte" ? "La sélection lance la vidéo" : "Générer la vidéo"}
         </button>
       </div>
     </div>

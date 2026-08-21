@@ -34,6 +34,7 @@ import { BackgroundPicker } from "@/components/social/BackgroundPicker";
 import { SwatchButton } from "@/components/social/ColorRemapRows";
 import {
   type AvisCardColors,
+  type AvisCardFontChoice,
   buildQuoteTokens,
   renderAvisCard,
   canvasToPngDownload,
@@ -434,6 +435,7 @@ function VisuelTab({
     accent: "#C23A2D",
     cardFill: "#FBF8F2",
   });
+  const [fontChoice, setFontChoice] = useState<AvisCardFontChoice>("arial");
 
   const tokens = useMemo(() => buildQuoteTokens(avis), [avis]);
   const [highlighted, setHighlighted] = useState<Set<number>>(new Set());
@@ -462,13 +464,14 @@ function VisuelTab({
       highlighted,
       prenom,
       colors,
+      fontChoice,
     }).catch(() => {
       if (!cancelled) return;
     });
     return () => {
       cancelled = true;
     };
-  }, [canRender, backgroundSvg, tokens, highlighted, prenom, colors, fmt.w, fmt.h]);
+  }, [canRender, backgroundSvg, tokens, highlighted, prenom, colors, fontChoice, fmt.w, fmt.h]);
 
   const handleDownload = () => {
     if (!canvasRef.current) return;
@@ -573,6 +576,17 @@ function VisuelTab({
           </div>
 
           <div className="bg-white border border-brand-muted/15 rounded-2xl p-4">
+            <div className="text-[11px] uppercase tracking-wider text-brand-muted font-semibold mb-2.5">Typographie de la carte</div>
+            <div className="flex gap-1.5">
+              {(["arial", "cafeteria"] as const).map((choice) => (
+                <button key={choice} type="button" onClick={() => setFontChoice(choice)} className={cn("px-3 py-2 rounded-lg text-xs font-semibold border transition-all", fontChoice === choice ? "border-brand-text bg-brand-bg text-brand-text" : "border-brand-muted/15 text-brand-muted hover:border-brand-muted/30")}>
+                  {choice === "arial" ? "Arial Rounded" : "Cafeteria"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white border border-brand-muted/15 rounded-2xl p-4">
             <div className="text-[11px] uppercase tracking-wider text-brand-muted font-semibold mb-2.5">
               Format
             </div>
@@ -624,7 +638,7 @@ function VisuelTab({
             </button>
           </div>
           <p className="text-center text-[11px] text-brand-muted mt-3 max-w-[52ch] mx-auto">
-            Fond recolorable (moteur Fonds) · texte Arial Rounded / Nunito · logo Ypersoa ·
+            Fond recolorable (moteur Fonds) · texte {fontChoice === "arial" ? "Arial Rounded" : "Cafeteria"} · logo Ypersoa ·
             clique un mot dans la citation pour le surligner.
           </p>
         </div>

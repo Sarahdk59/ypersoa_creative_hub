@@ -3,13 +3,17 @@
  *
  * La donnée canonique vit dans `referentiels/trends/{date}.json` (éditable,
  * git-traçable). Le loader fs est dans `trends-loader.ts`, le connecteur source
- * dans `google-trends.ts` (serveur only). Ce module ne contient QUE des types
+ * dans `pinterest-trends.ts` (serveur only). Ce module ne contient QUE des types
  * et des fonctions pures (importable côté client / dashboard).
  *
- * CDC : docs/CDC_ATELIER_TRENDS.md — Lot 1 = socle Google Trends (status "raw").
+ * Google Trends a été retiré le 21/08/2026 (jugé peu actionnable pour la
+ * broderie personnalisée) — Pinterest est l'unique source active en V1.
+ * TikTok/Instagram restent hors V1 (pas de connecteur gratuit fiable).
+ *
+ * CDC : docs/CDC_ATELIER_TRENDS.md.
  */
 
-export type TrendSource = "google" | "pinterest";
+export type TrendSource = "pinterest";
 export type TrendType = "mot" | "look" | "motif";
 export type TrendSignal = "montant" | "saisonnier" | "stable";
 export type SnapshotStatus = "raw" | "enriched";
@@ -78,7 +82,8 @@ export function manualKeywordToTrend(kw: PinterestManualKeyword): Trend {
 }
 
 /** Fusionne plusieurs listes de tendances en dédupliquant par terme (casse/espaces
- *  ignorés). Priorité au 1er rencontré → passer Pinterest avant Google. */
+ *  ignorés). Priorité au 1er rencontré → passer l'API Pinterest avant les
+ *  mots-clés saisis à la main. */
 export function mergeTrends(...lists: Trend[][]): Trend[] {
   const seen = new Set<string>();
   const out: Trend[] = [];
@@ -130,7 +135,6 @@ export const TYPE_LABELS: Record<TrendType, string> = {
 };
 
 export const SOURCE_LABELS: Record<TrendSource, string> = {
-  google: "Google Trends",
   pinterest: "Pinterest Trends",
 };
 

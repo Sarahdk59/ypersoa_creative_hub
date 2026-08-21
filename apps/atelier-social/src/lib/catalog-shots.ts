@@ -3,7 +3,7 @@
  * l'atelier-shooting. Cf. apps/atelier-shooting/lib/catalog-shots.ts pour le
  * pendant upload.
  *
- * Utilisé par la galerie de la modal variante (/atelier-da/motifs) pour afficher
+ * Utilisé par la galerie de la modal variante (/bibliotheque/motifs) pour afficher
  * tous les shots taggés sur une variante, regroupés par produit.
  */
 import { supabase } from "./supabase";
@@ -70,7 +70,7 @@ export interface UpdateCatalogShotPatch {
 
 /**
  * Update partiel d'un shot existant — utilisé par la modal d'édition côté
- * Catalogue (vue top-level /atelier-da/motifs). Pour effacer un tag, passe
+ * Catalogue (vue top-level /bibliotheque/motifs). Pour effacer un tag, passe
  * un array vide [] (qui sera converti en null en DB).
  */
 export async function updateCatalogShot(id: string, patch: UpdateCatalogShotPatch): Promise<CatalogShot> {

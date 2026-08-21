@@ -72,7 +72,10 @@ class Veo31Engine implements MotionEngineClient {
           aspectRatio: "9:16",
           durationSeconds: plan.duree_sec,
           numberOfVideos: 1,
-          personGeneration: "allow_all",
+          // Image → vidéo : Veo 3.1 n'accepte que `allow_adult` (et, en
+          // Europe, c'est également la seule valeur autorisée). `allow_all`
+          // est réservé au texte → vidéo et faisait échouer tous nos clips.
+          personGeneration: "allow_adult",
         },
       });
 

@@ -977,9 +977,9 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     id: "tendances",
     num: 7,
     title: "Surveiller les tendances",
-    atelier: "Atelier Trends",
+    atelier: "Atelier DA",
     pitch:
-      "Avant de créer, sache ce qui monte : l'Atelier Trends rassemble Google Trends FR et Pinterest sur un seul tableau de bord. Une IA note chaque tendance et la relie à un motif et une occasion Ypersoa, pour transformer un signal en idée de broderie. Tu vois tout de suite ce qui est actionnable et ce qui est à écarter.",
+      "Avant de créer, sache ce qui monte : Radar (dans Atelier DA) rassemble les tendances Pinterest sur un seul tableau de bord. Une IA note chaque tendance et la relie à un motif et une occasion Ypersoa, pour transformer un signal en idée de broderie. Tu vois tout de suite ce qui est actionnable et ce qui est à écarter.",
     features: [
       {
         id: "atelier-trends",
@@ -988,8 +988,8 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         quandUtiliser:
           "En amont d'une campagne ou pour nourrir ton planning éditorial. Inutile si tu sais déjà exactement quoi produire : passe directement à l'Atelier Social.",
         commentFaire: [
-          "Ouvre l'Atelier Trends dans la barre latérale.",
-          "Clique « Rafraîchir » pour récupérer les dernières données Google Trends FR et Pinterest.",
+          "Ouvre Atelier DA puis Radar dans la barre latérale.",
+          "Clique « Rafraîchir » pour récupérer les dernières tendances Pinterest.",
           "Clique « Analyser (IA) » pour que chaque tendance soit notée et reliée à un motif et une occasion.",
           "Affine avec les filtres Source, Signal (Montant / Saisonnier / Stable) et Type, et lis les cartes des sections « Actionnable » puis « Écartées ».",
         ],

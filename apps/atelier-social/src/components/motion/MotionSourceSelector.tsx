@@ -25,6 +25,8 @@ interface MotionSourceSelectorProps {
 }
 
 const DEFAULT_TAB_BY_MODE: Record<MotionMode, SourceOrigin> = {
+  macro: "media",
+  porte: "media",
   reel: "collection",
   ambiance: "lookbook",
   packshot: "packshot",
@@ -82,6 +84,7 @@ export function MotionSourceSelector({ mode, value, onChange }: MotionSourceSele
   // qui ont des entrées (compteur à 0 = explicite "rien à montrer").
   const availableTabs: SourceOrigin[] = useMemo(() => {
     if (mode === "reel") return ["collection"];
+    if (mode === "macro" || mode === "porte") return ["packshot", "liked-shot", "media"];
     return ["lookbook", "packshot", "liked-shot", "canonique", "media"];
   }, [mode]);
 

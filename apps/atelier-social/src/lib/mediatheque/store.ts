@@ -24,7 +24,7 @@ import type {
   TagCategory,
 } from "@/types/mediatheque";
 import { parseTagRef } from "@/types/mediatheque";
-import { SEED_TAGS } from "./taxonomie";
+import { SEED_TAGS, findSeedTag } from "./taxonomie";
 
 const BUCKET = "mediatheque";
 const TBL_MEDIA = "mediatheque_media";
@@ -199,6 +199,7 @@ export async function createTag(input: {
   slug: string;
   label: string;
   color_hex?: string;
+  parent_id?: string | null;
 }): Promise<Tag> {
   const existing = await findTag(input.category, input.slug);
   if (existing) return existing;
@@ -209,7 +210,7 @@ export async function createTag(input: {
     slug: input.slug,
     label: input.label,
     color_hex: input.color_hex ?? "#1E2D4A",
-    parent_id: null,
+    parent_id: input.parent_id ?? null,
   };
 
   if (!supabase) {
@@ -223,6 +224,30 @@ export async function createTag(input: {
     .single();
   if (error) throw new Error(`Création tag échouée : ${error.message}`);
   return data as Tag;
+}
+
+/**
+ * Résout un tag (catégorie+slug) vers son id, en le créant si besoin.
+ * Le label/color/parent_id sont repris de la taxonomie seed quand connus
+ * (motif/incarnation/mannequin/ambiance/occasion/canal/…) ; sinon `label`
+ * doit être fourni par l'appelant (valeur dynamique non seedée).
+ * C'est le point d'entrée que les mirrors auto-tag (packs, shots, épisodes)
+ * doivent utiliser plutôt que `createTag` directement.
+ */
+export async function resolveTagId(
+  category: TagCategory,
+  slug: string,
+  label?: string,
+): Promise<string> {
+  const seed = findSeedTag(category, slug);
+  const tag = await createTag({
+    category,
+    slug,
+    label: label ?? seed?.label ?? slug,
+    color_hex: seed?.color_hex ?? undefined,
+    parent_id: seed?.parent_id ?? undefined,
+  });
+  return tag.id;
 }
 
 // ─── MEDIA ─────────────────────────────────────────────────────────────────
@@ -263,12 +288,19 @@ export async function listMedia(
     rows = rows.filter((m) => m.statut === filters.statut);
   }
   if (filters.q) {
-    const q = filters.q.toLowerCase().trim();
-    rows = rows.filter(
-      (m) =>
-        m.filename.toLowerCase().includes(q) ||
-        (m.notes?.toLowerCase().includes(q) ?? false) ||
-        m.tags.some((t) => t.label.toLowerCase().includes(q)),
+    // Multi-dimensions : "sweat rentrée" doit matcher un média taggé
+    // gabarit:sweat ET occasion:rentrée, pas seulement un nom de fichier
+    // littéral — chaque mot de la requête doit trouver SA correspondance
+    // quelque part (nom de fichier, note, ou label de tag), potentiellement
+    // dans des champs différents.
+    const words = filters.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    rows = rows.filter((m) =>
+      words.every(
+        (w) =>
+          m.filename.toLowerCase().includes(w) ||
+          (m.notes?.toLowerCase().includes(w) ?? false) ||
+          m.tags.some((t) => t.label.toLowerCase().includes(w)),
+      ),
     );
   }
 
@@ -327,6 +359,14 @@ export interface CreateMediaInput {
   tag_ids?: string[];
 }
 
+/**
+ * Fenêtre de déduplication : un même fichier déposé deux fois de suite (ex.
+ * QuickAddPanel + UploadDropzone actifs simultanément sur la même page
+ * d'upload) ne doit créer qu'une ligne. Passé ce délai, un nom de fichier
+ * identique est considéré comme un nouvel envoi volontaire.
+ */
+const DEDUP_WINDOW_MS = 10 * 60 * 1000;
+
 export async function createMedia(input: CreateMediaInput): Promise<MediaWithTags> {
   const now = new Date().toISOString();
   const storage_path =
@@ -335,6 +375,18 @@ export async function createMedia(input: CreateMediaInput): Promise<MediaWithTag
 
   if (!supabase) {
     const store = memStore();
+    const cutoff = Date.now() - DEDUP_WINDOW_MS;
+    const dup = Array.from(store.media.values()).find(
+      (r) =>
+        r.filename === input.filename &&
+        r.statut !== "archivee" &&
+        new Date(r.uploaded_at).getTime() >= cutoff,
+    );
+    if (dup) {
+      for (const t of tagIds) dup.tag_ids.add(t);
+      dup.updated_at = now;
+      return memRowToMedia(dup);
+    }
     const id = randomUUID();
     const row: MediaRow = {
       id,
@@ -360,6 +412,38 @@ export async function createMedia(input: CreateMediaInput): Promise<MediaWithTag
   }
 
   await ensureTagsSeeded();
+
+  const cutoffIso = new Date(Date.now() - DEDUP_WINDOW_MS).toISOString();
+  const { data: dupRow, error: dupError } = await supabase
+    .from(TBL_MEDIA)
+    .select("id")
+    .eq("filename", input.filename)
+    .neq("statut", "archivee")
+    .gte("uploaded_at", cutoffIso)
+    .order("uploaded_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (dupError) throw new Error(`Vérification doublon échouée : ${dupError.message}`);
+  if (dupRow) {
+    const dupId = (dupRow as { id: string }).id;
+    if (tagIds.length > 0) {
+      const { data: existingLinks } = await supabase
+        .from(TBL_LINK)
+        .select("tag_id")
+        .eq("media_id", dupId);
+      const already = new Set((existingLinks ?? []).map((l) => (l as { tag_id: string }).tag_id));
+      const newLinks = tagIds
+        .filter((t) => !already.has(t))
+        .map((tag_id) => ({ media_id: dupId, tag_id }));
+      if (newLinks.length > 0) {
+        const { error: linkErr } = await supabase.from(TBL_LINK).insert(newLinks);
+        if (linkErr) throw new Error(`Association tags échouée : ${linkErr.message}`);
+      }
+    }
+    const existing = await getMedia(dupId);
+    if (!existing) throw new Error("Doublon détecté mais introuvable");
+    return existing;
+  }
 
   const { data, error } = await supabase
     .from(TBL_MEDIA)
@@ -426,17 +510,46 @@ export async function deleteMedia(id: string): Promise<boolean> {
   if (!supabase) {
     return memStore().media.delete(id);
   }
-  // Récupère le storage_path pour supprimer aussi le fichier du bucket
+  // Récupère la référence pour supprimer aussi la source éditoriale. Les
+  // médias auto-alimentés pointent vers leur bucket d'origine, pas forcément
+  // vers le bucket `mediatheque`.
   const { data: row } = await supabase
     .from(TBL_MEDIA)
-    .select("storage_path")
+    .select("storage_path,public_url")
     .eq("id", id)
     .maybeSingle();
   if (!row) return false;
 
-  const storagePath = (row as { storage_path: string }).storage_path;
-  if (storagePath) {
-    await supabase.storage.from(BUCKET).remove([storagePath]);
+  const sourceRow = row as { storage_path: string; public_url: string };
+  const bucketMatch = sourceRow.public_url.match(/\/storage\/v1\/object\/public\/([^/]+)\//);
+  const sourceBucket = bucketMatch?.[1] ? decodeURIComponent(bucketMatch[1]) : null;
+
+  if (sourceBucket === "lookbook-images") {
+    const { error } = await supabase.from("lookbook_images").delete().eq("image_url", sourceRow.public_url);
+    if (error) throw new Error(`Suppression source Lookbook échouée : ${error.message}`);
+    if (sourceRow.storage_path) await supabase.storage.from(sourceBucket).remove([sourceRow.storage_path]);
+  } else if (sourceBucket === "catalog-shots") {
+    const { error } = await supabase.from("catalog_shots").delete().eq("image_url", sourceRow.public_url);
+    if (error) throw new Error(`Suppression source Shooting échouée : ${error.message}`);
+    if (sourceRow.storage_path) await supabase.storage.from(sourceBucket).remove([sourceRow.storage_path]);
+  } else if (sourceBucket === "social-packs") {
+    const { data: packs, error: packsError } = await supabase
+      .from("social_packs")
+      .select("id,image_urls,image_storage_paths")
+      .contains("image_urls", [sourceRow.public_url]);
+    if (packsError) throw new Error(`Lecture pack social échouée : ${packsError.message}`);
+    for (const pack of packs ?? []) {
+      const urls = (pack.image_urls as string[]).filter((url) => url !== sourceRow.public_url);
+      const paths = (pack.image_storage_paths as string[]).filter((path) => path !== sourceRow.storage_path);
+      const { error } = await supabase
+        .from("social_packs")
+        .update({ image_urls: urls, image_storage_paths: paths })
+        .eq("id", pack.id);
+      if (error) throw new Error(`Mise à jour pack social échouée : ${error.message}`);
+    }
+    if (sourceRow.storage_path) await supabase.storage.from(sourceBucket).remove([sourceRow.storage_path]);
+  } else if (sourceRow.storage_path) {
+    await supabase.storage.from(BUCKET).remove([sourceRow.storage_path]);
   }
   const { error } = await supabase.from(TBL_MEDIA).delete().eq("id", id);
   if (error) throw new Error(`Suppression média échouée : ${error.message}`);

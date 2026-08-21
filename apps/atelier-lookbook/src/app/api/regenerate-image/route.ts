@@ -11,13 +11,11 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
-import { createClient } from "@supabase/supabase-js";
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { CANONIQUES_LITE } from "@/lib/canoniques";
 
 const GEMINI_MODEL = "gemini-3.1-flash-image-preview";
-const BUCKET = "lookbook-images";
 
 function jsonError(status: number, error: string) {
   return NextResponse.json({ ok: false, error }, { status });
@@ -81,63 +79,21 @@ async function generateImageWithGemini(
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as { image_id?: string };
-    if (!body.image_id) return jsonError(400, "image_id manquant");
+    const body = (await req.json()) as { prompt_en?: string; canonique_injecte?: string | null };
+    if (!body.prompt_en) return jsonError(400, "prompt_en manquant");
 
     const geminiKey = process.env.GEMINI_API_KEY;
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!geminiKey) return jsonError(500, "GEMINI_API_KEY manquant.");
-    if (!supabaseUrl || !supabaseAnon) return jsonError(500, "Supabase non configuré.");
 
-    const supabase = createClient(supabaseUrl, supabaseAnon);
-
-    // 1. Lire l'image existante (pour récupérer prompt_en + canonique_injecte + storage_path)
-    const { data: existing, error: readErr } = await supabase
-      .from("lookbook_images")
-      .select("id, lookbook_id, prompt_en, canonique_injecte, image_storage_path")
-      .eq("id", body.image_id)
-      .maybeSingle();
-    if (readErr) return jsonError(500, `Lecture image échouée : ${readErr.message}`);
-    if (!existing) return jsonError(404, "Image introuvable.");
-    if (!existing.prompt_en) {
-      return jsonError(
-        400,
-        "Cette image n'a pas de prompt_en associé (probablement une image custom). Impossible de régénérer."
-      );
-    }
-
-    // 2. Génère via Gemini
+    // Le brouillon est conservé côté navigateur : la régénération reçoit donc
+    // directement le prompt, et ne crée aucune ligne ni fichier Supabase.
     const gemini = new GoogleGenAI({ apiKey: geminiKey });
-    const img = await generateImageWithGemini(gemini, existing.prompt_en, existing.canonique_injecte);
+    const img = await generateImageWithGemini(gemini, body.prompt_en, body.canonique_injecte ?? null);
     if (!img) return jsonError(502, "Gemini n'a pas renvoyé d'image. Réessaie.");
-
-    // 3. Upload nouveau fichier (nouveau path pour éviter le cache CDN)
-    const newPath = `${existing.lookbook_id}/${existing.id}-r${Date.now()}.${img.mimeType.includes("png") ? "png" : "jpg"}`;
-    const buf = Buffer.from(img.data, "base64");
-    const { error: upErr } = await supabase.storage
-      .from(BUCKET)
-      .upload(newPath, buf, { contentType: img.mimeType, cacheControl: "31536000", upsert: false });
-    if (upErr) return jsonError(500, `Upload échoué : ${upErr.message}`);
-
-    const { data: pubUrl } = supabase.storage.from(BUCKET).getPublicUrl(newPath);
-
-    // 4. Update row + suppression ancien fichier
-    const { error: updErr } = await supabase
-      .from("lookbook_images")
-      .update({ image_url: pubUrl.publicUrl, image_storage_path: newPath })
-      .eq("id", body.image_id);
-    if (updErr) {
-      await supabase.storage.from(BUCKET).remove([newPath]);
-      return jsonError(500, `Update row échoué : ${updErr.message}`);
-    }
-    if (existing.image_storage_path && existing.image_storage_path !== newPath) {
-      await supabase.storage.from(BUCKET).remove([existing.image_storage_path]);
-    }
 
     return NextResponse.json({
       ok: true,
-      data: { image_id: body.image_id, image_url: pubUrl.publicUrl, image_storage_path: newPath },
+      data: { image_url: `data:${img.mimeType};base64,${img.data}` },
     });
   } catch (err) {
     return jsonError(500, err instanceof Error ? err.message : String(err));

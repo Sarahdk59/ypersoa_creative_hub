@@ -12,6 +12,7 @@ export type Section =
   | "dashboard"
   | "atelier-da"
   | "atelier-production"
+  | "planning"
   | "referentiels-prod"
   | "planable"
   | "admin";
@@ -21,14 +22,15 @@ export const ROLE_SECTIONS: Record<AppRole, Section[]> = {
     "dashboard",
     "atelier-da",
     "atelier-production",
+    "planning",
     "referentiels-prod",
     "planable",
     "admin",
   ],
   // La comm (crea) consulte motifs + palettes d'associations sans avoir le
   // reste de la prod (kanban, commandes, fils, règles…).
-  crea: ["dashboard", "atelier-da", "referentiels-prod", "planable"],
-  prod: ["dashboard", "atelier-production", "referentiels-prod"],
+  crea: ["dashboard", "atelier-da", "referentiels-prod", "planable", "planning"],
+  prod: ["dashboard", "atelier-production", "referentiels-prod", "planning"],
   viewer: ["dashboard"],
 };
 
@@ -47,6 +49,15 @@ export function sectionForPath(pathname: string): Section {
   if (pathname.startsWith("/atelier-da")) return "atelier-da";
   if (pathname.startsWith("/lookbook") || pathname.startsWith("/shooting"))
     return "atelier-da";
+  // Refonte nav du 20/08/2026 — Planning (fusion kanban + rétroplanning),
+  // Bibliothèque (fusion médiathèque + packs + articles) et Studio (fusion
+  // shooting/lookbook/shooting-book/studio-mood) et Blog rejoignent le
+  // périmètre Atelier DA (admin + crea) — cf. DESIGN_SYSTEM_hub.md v2.
+  if (pathname.startsWith("/planning")) return "planning";
+  if (pathname.startsWith("/bibliotheque")) return "atelier-da";
+  if (pathname.startsWith("/studio")) return "atelier-da";
+  if (pathname.startsWith("/blog")) return "atelier-da";
+  if (pathname.startsWith("/referentiel")) return "atelier-da";
   if (pathname.startsWith("/admin")) return "admin";
   return "dashboard"; // /, /social, /search…
 }

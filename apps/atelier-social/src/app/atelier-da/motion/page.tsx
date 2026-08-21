@@ -186,7 +186,7 @@ export default function MotionListPage() {
           }}
         >
           {jobs.map((j) => (
-            <MotionJobCard key={j.id} job={j} />
+            <MotionJobCard key={j.id} job={j} onDeleted={load} />
           ))}
         </div>
       )}

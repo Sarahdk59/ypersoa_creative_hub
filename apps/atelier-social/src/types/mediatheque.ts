@@ -28,6 +28,8 @@ export type TagCategory =
   | "saison"
   | "occasion"
   | "ton"
+  | "canal"
+  | "theme"
   | "custom";
 
 export interface Tag {
@@ -101,16 +103,20 @@ export const TAG_CATEGORY_LABELS: Record<TagCategory, string> = {
   saison: "Saison",
   occasion: "Occasion",
   ton: "Ton",
+  canal: "Canal",
+  theme: "Thème",
   custom: "Custom",
 };
 
 export const TAG_CATEGORY_ORDER: TagCategory[] = [
   "incarnation",
   "motif",
+  "theme",
   "gabarit",
   "couleur_produit",
   "ambiance",
   "plan",
+  "canal",
   "occasion",
   "saison",
   "ton",

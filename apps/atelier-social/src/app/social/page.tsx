@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ImageUploader } from "@/components/ImageUploader";
 import { ImportedShotsPanel } from "@/components/ImportedShotsPanel";
 import { MotifPickerPanel } from "@/components/MotifPickerPanel";
 import { ProductColorPicker } from "@/components/ProductColorPicker";
 import { SavePackDialog } from "@/components/SavePackDialog";
-import { LibraryDrawer } from "@/components/LibraryDrawer";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { Heart, FolderOpen, X, Calendar, Layers, Trello, Newspaper, ChevronDown, MessageSquareQuote } from "lucide-react";
+import { Heart, X, Newspaper, MessageSquareQuote } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { VibeSelector, VIBES } from "@/components/VibeSelector";
@@ -23,6 +23,7 @@ import { CanoniqueSelector } from "@/components/CanoniqueSelector";
 import { OverlayPanel } from "@/components/OverlayPanel";
 import { generateImageVariation } from "@/lib/api-client";
 import { CANONIQUES } from "@/lib/canoniques";
+import { type MediaTagHint } from "@/lib/social-packs";
 import {
   type PinterestStrategy,
   type PinterestFiche,
@@ -101,6 +102,9 @@ const CONTENT_TYPES = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+  const [flow, setFlow] = useState<string | null>(null);
+  const showCreator = !flow;
   // Mode de la page : "full" = générer visuels + texte (historique),
   // "copyOnly" = visuel déjà fait, on génère seulement description + tags.
   const [mode, setMode] = useState<"full" | "copyOnly">("full");
@@ -173,12 +177,9 @@ export default function Home() {
   // Hub : Sauvegarde des packs RS dans Supabase + bibliothèque collections.
   const supabaseOn = isSupabaseConfigured();
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  const [libraryOpen, setLibraryOpen] = useState(false);
-  const [librarySaveBump, setLibrarySaveBump] = useState(0);
   const [savedPackId, setSavedPackId] = useState<string | null>(null);
   // Best slides marquées dans le carrousel courant — persisté en notes au save.
   const [bestSlideIndices, setBestSlideIndices] = useState<Set<number>>(new Set());
-  const [contextDropdownOpen, setContextDropdownOpen] = useState(false);
 
   const handleToggleBestSlide = (idx: number) => {
     setBestSlideIndices((prev) => {
@@ -218,6 +219,30 @@ export default function Home() {
     }, {});
     const dateLabel = new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
     const platformLabel = selectedPlatform === "instagram" ? "Insta" : "Pinterest";
+
+    // Auto-tag médiathèque (§ "aucun tag critique ne dépend d'une saisie manuelle") :
+    // ambiance/occasion/mannequin déjà choisis pour la génération, résolus ici en
+    // labels connus côté UI (le motif n'est pas encore tracké après import — TODO).
+    const mediaTagHints: MediaTagHint[] = [];
+    const vibe = VIBES.find((v) => v.id === selectedVibe);
+    if (vibe) {
+      mediaTagHints.push({ category: "ambiance", slug: vibe.id.replace(/_/g, "-"), label: vibe.label });
+    }
+    const occasion = OCCASIONS.find((o) => o.id === selectedOccasion);
+    if (occasion) {
+      mediaTagHints.push({ category: "occasion", slug: occasion.id.replace(/_/g, "-"), label: occasion.label });
+    }
+    for (const canoniqueId of selectedCanoniqueIds) {
+      const canonique = CANONIQUES.find((c) => c.id === canoniqueId);
+      if (canonique) {
+        mediaTagHints.push({
+          category: "mannequin",
+          slug: canonique.id.toLowerCase(),
+          label: canonique.prenom,
+        });
+      }
+    }
+
     return {
       platform: selectedPlatform,
       imageDataUrls: generatedImages,
@@ -234,6 +259,7 @@ export default function Home() {
       withOverlay,
       sourceShotId: null,
       suggestedTitle: `${platformLabel} — ${dateLabel}`,
+      mediaTagHints,
     };
   };
 
@@ -559,19 +585,6 @@ export default function Home() {
 
   const expectedImages = mode === "copyOnly" ? 1 : selectedPlatform === "pinterest" ? 4 : 5;
 
-  // Labels affichés dans le dropdown Contexte du header
-  const currentVibeLabel = (() => {
-    if (selectedVibe.startsWith(LOOKBOOK_VIBE_PREFIX)) {
-      const lbId = selectedVibe.slice(LOOKBOOK_VIBE_PREFIX.length);
-      const lb = activeAmbiances.find((a) => a.id === lbId);
-      return lb ? lb.titre : "Lookbook";
-    }
-    return VIBES.find((v) => v.id === selectedVibe)?.label || selectedVibe;
-  })();
-  const currentOccasionLabel = selectedOccasion
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase());
-
   // Dérivés Pinterest : fiche sélectionnée, mots-clés, texte de surimpression
   const selectedFiche: PinterestFiche | undefined =
     pinterestStrategy && selectedFicheId ? getFiche(pinterestStrategy, selectedFicheId) : undefined;
@@ -593,12 +606,41 @@ export default function Home() {
     ? pinterestStrategy.fiches.filter((f) => !suggestedFiches.some((s) => s.id === f.id))
     : [];
 
+  useEffect(() => {
+    setFlow(new URLSearchParams(window.location.search).get("flow"));
+  }, []);
+
+  useEffect(() => {
+    if (flow === "reel") setContentType("story-reel");
+  }, [flow]);
+
+  if (showCreator) {
+    return (
+      <SocialCreationStart
+        onCreateVisual={() => {
+          setFlow("visual");
+          router.push("/social?flow=visual");
+        }}
+        onCreateReel={() => {
+          setFlow("reel");
+          router.push("/social?flow=reel");
+        }}
+      />
+    );
+  }
+
   return (
-    <div className="h-screen flex flex-col bg-brand-bg text-brand-text font-sans selection:bg-brand-rose/20 selection:text-brand-rose overflow-hidden">
-      <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 shrink-0">
+    <div className="h-screen flex flex-col bg-hub-bg text-hub-foreground font-sans overflow-hidden">
+      <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-hub-border shrink-0">
         <div className="max-w-[1920px] mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-5">
-            <h1
+            <button
+              type="button"
+              onClick={() => {
+                setFlow(null);
+                router.push("/social");
+              }}
+              title="Voir tous les parcours de création"
               style={{
                 fontFamily: "var(--font-editorial)",
                 fontSize: 24,
@@ -608,20 +650,21 @@ export default function Home() {
                 lineHeight: 1,
                 margin: 0,
               }}
+              className="hover:text-hub-accent transition-colors"
             >
-              Atelier Social
-            </h1>
+              Créer un post
+            </button>
 
             {/* Toggle de mode : générer un visuel vs. visuel déjà créé */}
-            <div className="flex items-center bg-brand-muted/10 rounded-full p-0.5 border border-brand-muted/15">
+            <div className="flex items-center bg-hub-bg-alt rounded-full p-0.5 border border-hub-border">
               <button
                 type="button"
                 onClick={() => switchMode("full")}
                 className={cn(
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all",
                   mode === "full"
-                    ? "bg-white text-brand-rose shadow-sm"
-                    : "text-brand-muted hover:text-brand-text"
+                    ? "bg-[var(--hub-accent)] text-white shadow-sm"
+                    : "text-hub-foreground/55 hover:text-hub-foreground"
                 )}
                 title="Générer les visuels + la description + les tags"
               >
@@ -634,8 +677,8 @@ export default function Home() {
                 className={cn(
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all",
                   mode === "copyOnly"
-                    ? "bg-white text-brand-rose shadow-sm"
-                    : "text-brand-muted hover:text-brand-text"
+                    ? "bg-[var(--hub-accent-wash)] text-hub-foreground shadow-sm"
+                    : "text-hub-foreground/55 hover:text-hub-foreground"
                 )}
                 title="J'ai déjà mon visuel — génère juste la description + les tags"
               >
@@ -646,85 +689,9 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Dropdown Contexte — accès rapide Ambiance + Occasion */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setContextDropdownOpen((o) => !o)}
-                className="flex items-center gap-1.5 text-xs font-medium text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
-                title="Changer l'ambiance et l'occasion"
-              >
-                <span className="text-brand-muted text-[11px] shrink-0">Contexte</span>
-                <span className="font-semibold truncate max-w-[180px]">
-                  {currentVibeLabel} · {currentOccasionLabel}
-                </span>
-                <ChevronDown
-                  className={cn(
-                    "w-3 h-3 text-brand-muted transition-transform shrink-0",
-                    contextDropdownOpen && "rotate-180"
-                  )}
-                />
-              </button>
-              {contextDropdownOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setContextDropdownOpen(false)}
-                  />
-                  <div className="absolute right-0 top-full mt-2 z-50 bg-white rounded-2xl shadow-xl border border-brand-muted/10 p-4 w-72 space-y-3">
-                    <div>
-                      <label className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted block mb-1.5">
-                        Ambiance
-                      </label>
-                      <select
-                        value={selectedVibe}
-                        onChange={(e) => setSelectedVibe(e.target.value)}
-                        className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
-                      >
-                        {VIBES.map((v) => (
-                          <option key={v.id} value={v.id}>
-                            {v.label}
-                          </option>
-                        ))}
-                        {activeAmbiances.length > 0 && (
-                          <>
-                            <option disabled>──────</option>
-                            {activeAmbiances.map((a) => (
-                              <option
-                                key={a.id}
-                                value={`${LOOKBOOK_VIBE_PREFIX}${a.id}`}
-                              >
-                                ❤️ {a.titre}
-                              </option>
-                            ))}
-                          </>
-                        )}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted block mb-1.5">
-                        Occasion
-                      </label>
-                      <select
-                        value={selectedOccasion}
-                        onChange={(e) => setSelectedOccasion(e.target.value)}
-                        className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
-                      >
-                        {OCCASIONS.map((o) => (
-                          <option key={o.id} value={o.id}>
-                            {o.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
             {(isGeneratingImage || isGeneratingText) && (
-              <div className="flex items-center gap-2 text-xs text-brand-muted">
-                <div className="w-3 h-3 border-2 border-brand-rose/30 border-t-brand-rose rounded-full animate-spin" />
+              <div className="flex items-center gap-2 text-xs text-hub-foreground/55">
+                <div className="w-3 h-3 border-2 border-hub-foreground/20 border-t-hub-foreground rounded-full animate-spin" />
                 <span>
                   {isGeneratingImage && generatedImages.length > 0
                     ? `${generatedImages.length}/${expectedImages} images...`
@@ -733,32 +700,24 @@ export default function Home() {
               </div>
             )}
             <Link
-              href="/social/kanban"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
-              title="Kanban projets sociaux — Concept / Shooting / À filmer / Production / Publié"
-            >
-              <Trello className="w-3.5 h-3.5" />
-              Projets
-            </Link>
-            <Link
-              href="/atelier-da/motifs"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
-              title="Catalogue motifs YPM filtrable par destinataire / occasion / produit"
-            >
-              <Layers className="w-3.5 h-3.5" />
-              Catalogue motifs
-            </Link>
-            <Link
               href="/social/fonds"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              className="flex items-center gap-1.5 text-xs font-semibold text-hub-foreground hover:bg-hub-bg-alt px-3 py-1.5 rounded-full border border-hub-border transition-all"
               title="Générateur de fonds de posts + recoloration de motifs SVG sur ta palette"
             >
               <Palette className="w-3.5 h-3.5" />
               Fonds
             </Link>
             <Link
+              href="/studio"
+              className="flex items-center gap-1.5 text-xs font-semibold text-white bg-hub-accent hover:bg-hub-accent-hover px-3 py-1.5 rounded-full transition-all"
+              title="Créer ou importer le visuel qui accompagnera le post"
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              Shooting social
+            </Link>
+            <Link
               href="/social/avis"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              className="flex items-center gap-1.5 text-xs font-semibold text-hub-foreground hover:bg-hub-bg-alt px-3 py-1.5 rounded-full border border-hub-border transition-all"
               title="Générateur de légende Instagram à partir d'un avis client"
             >
               <MessageSquareQuote className="w-3.5 h-3.5" />
@@ -766,7 +725,7 @@ export default function Home() {
             </Link>
             <Link
               href="/social/connexion"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              className="flex items-center gap-1.5 text-xs font-semibold text-hub-foreground hover:bg-hub-bg-alt px-3 py-1.5 rounded-full border border-hub-border transition-all"
               title="Générateur de posts « Pourquoi Ypersoa » — pilier connexion"
             >
               <Heart className="w-3.5 h-3.5" />
@@ -774,32 +733,12 @@ export default function Home() {
             </Link>
             <Link
               href="/social/playbook"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
+              className="flex items-center gap-1.5 text-xs font-semibold text-hub-foreground hover:bg-hub-bg-alt px-3 py-1.5 rounded-full border border-hub-border transition-all"
               title="Playbook Instagram — fiches-recettes Preuve & Communauté"
             >
               <BookOpen className="w-3.5 h-3.5" />
               Playbook
             </Link>
-            <a
-              href={process.env.NEXT_PUBLIC_PLANABLE_URL ?? "http://localhost:3002"}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-text hover:bg-brand-muted/10 px-3 py-1.5 rounded-full border border-brand-muted/20 transition-all"
-              title="Planable — calendrier éditorial Insta/Pinterest"
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              Planable
-            </a>
-            {supabaseOn && (
-              <button
-                onClick={() => setLibraryOpen(true)}
-                className="flex items-center gap-1.5 text-xs font-semibold text-brand-rose hover:bg-brand-rose/10 px-3 py-1.5 rounded-full border border-brand-rose/20 transition-all"
-                title="Bibliothèque des publications sauvegardées"
-              >
-                <FolderOpen className="w-3.5 h-3.5" />
-                Bibliothèque
-              </button>
-            )}
           </div>
         </div>
       </header>
@@ -814,7 +753,7 @@ export default function Home() {
                 <>
                   <section>
                     <h2 className="font-serif text-sm font-medium mb-1">1. Ton visuel</h2>
-                    <p className="text-[11px] text-brand-muted mb-1.5">
+                    <p className="text-[11px] text-hub-foreground/55 mb-1.5">
                       Dépose le post que tu as déjà créé. L&apos;IA l&apos;analyse pour écrire la
                       description et les tags.
                     </p>
@@ -831,7 +770,7 @@ export default function Home() {
                     <select
                       value={contentType}
                       onChange={(e) => setContentType(e.target.value)}
-                      className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                      className="w-full p-2 rounded-lg border border-hub-border bg-white text-xs focus:outline-none focus:ring-1 focus:ring-hub-accent/50"
                     >
                       {CONTENT_TYPES.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -844,15 +783,15 @@ export default function Home() {
                   <section>
                     <h2 className="font-serif text-sm font-medium mb-1 flex items-center gap-1.5">
                       3. Période de publication
-                      <span className="text-[10px] font-normal text-brand-muted italic">— optionnel</span>
+                      <span className="text-[10px] font-normal text-hub-foreground/55 italic">— optionnel</span>
                     </h2>
                     <input
                       type="date"
                       value={postDate}
                       onChange={(e) => setPostDate(e.target.value)}
-                      className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs text-brand-text focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                      className="w-full p-2 rounded-lg border border-hub-border bg-white text-xs text-hub-foreground focus:outline-none focus:ring-1 focus:ring-hub-accent/50"
                     />
-                    <p className="text-[10px] text-brand-muted mt-1 italic">
+                    <p className="text-[10px] text-hub-foreground/55 mt-1 italic">
                       Aide l&apos;IA à coller à la saison / au marronnier.
                     </p>
                   </section>
@@ -860,28 +799,28 @@ export default function Home() {
                   <section>
                     <h2 className="font-serif text-sm font-medium mb-1 flex items-center gap-1.5">
                       4. Contexte
-                      <span className="text-[10px] font-normal text-brand-muted italic">— optionnel</span>
+                      <span className="text-[10px] font-normal text-hub-foreground/55 italic">— optionnel</span>
                     </h2>
                     <textarea
                       value={customPrompt}
                       onChange={(e) => setCustomPrompt(e.target.value)}
                       placeholder="Précise le message, l'angle, le destinataire… (facultatif)"
-                      className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white focus:outline-none focus:ring-1 focus:ring-brand-rose/50 resize-none h-14 text-xs text-brand-text placeholder:text-brand-muted/50"
+                      className="w-full p-2 rounded-lg border border-hub-border bg-white focus:outline-none focus:ring-1 focus:ring-hub-accent/50 resize-none h-14 text-xs text-hub-foreground placeholder:text-hub-foreground/40"
                     />
                   </section>
                 </>
               )}
 
               <section className={cn(mode !== "full" && "hidden")}>
-                <h2 className="font-serif text-sm font-medium mb-1 text-brand-text flex items-center gap-1.5">
+                <h2 className="font-serif text-sm font-medium mb-1 text-hub-foreground flex items-center gap-1.5">
                   1. Ta vision
-                  <span className="text-[10px] font-normal text-brand-muted italic">— optionnel</span>
+                  <span className="text-[10px] font-normal text-hub-foreground/55 italic">— optionnel</span>
                 </h2>
                 <textarea
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
                   placeholder="Décris le contenu que tu imagines… (laisser vide pour génération libre)"
-                  className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white focus:outline-none focus:ring-1 focus:ring-brand-rose/50 resize-none h-14 text-xs text-brand-text placeholder:text-brand-muted/50"
+                  className="w-full p-2 rounded-lg border border-hub-border bg-white focus:outline-none focus:ring-1 focus:ring-hub-accent/50 resize-none h-14 text-xs text-hub-foreground placeholder:text-hub-foreground/40"
                 />
               </section>
 
@@ -934,14 +873,14 @@ export default function Home() {
                   <h2 className="font-serif text-sm font-medium mb-1 flex items-center gap-1.5">
                     <Pin className="w-3.5 h-3.5 text-red-600" />
                     Fiche Pinterest
-                    <span className="text-[10px] font-normal text-brand-muted italic">
+                    <span className="text-[10px] font-normal text-hub-foreground/55 italic">
                       — motif &amp; mots-clés
                     </span>
                   </h2>
                   <select
                     value={selectedFicheId}
                     onChange={(e) => setSelectedFicheId(e.target.value)}
-                    className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-red-300"
+                    className="w-full p-2 rounded-lg border border-hub-border bg-white text-xs focus:outline-none focus:ring-1 focus:ring-red-300"
                   >
                     {suggestedFiches.length > 0 && (
                       <optgroup label="Recommandées pour cette occasion">
@@ -964,16 +903,16 @@ export default function Home() {
                   </select>
                   {selectedFiche && (
                     <div className="mt-2 rounded-lg bg-red-50/60 border border-red-100 p-2 space-y-1">
-                      <p className="text-[11px] text-brand-text">
+                      <p className="text-[11px] text-hub-foreground">
                         <span className="font-semibold">Surimpression :</span> «&nbsp;{surimpressionText}&nbsp;»
                       </p>
                       {pinterestKeywords && (
-                        <p className="text-[11px] text-brand-text">
+                        <p className="text-[11px] text-hub-foreground">
                           <span className="font-semibold">Mot-clé principal :</span>{" "}
                           {pinterestKeywords.principal}
                         </p>
                       )}
-                      <p className="text-[10px] text-brand-muted leading-snug">
+                      <p className="text-[10px] text-hub-foreground/55 leading-snug">
                         4 visuels : Hero (flatlay détail) · Désir (porté serré) · Association
                         (déclinaisons couleurs) · Lifestyle (scène). Broderie plate naturelle.
                       </p>
@@ -991,8 +930,8 @@ export default function Home() {
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium text-xs transition-all",
                       !withOverlay
-                        ? "border-brand-rose bg-brand-rose/10 text-brand-rose ring-1 ring-brand-rose"
-                        : "border-brand-muted/20 bg-white hover:border-brand-rose/40 text-brand-text"
+                        ? "border-hub-teal bg-hub-teal/10 text-hub-teal ring-1 ring-hub-teal"
+                        : "border-hub-border bg-white hover:border-hub-teal/40 text-hub-foreground"
                     )}
                   >
                     <ImageIcon className="w-3.5 h-3.5" />
@@ -1004,8 +943,8 @@ export default function Home() {
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium text-xs transition-all",
                       withOverlay
-                        ? "border-brand-rose bg-brand-rose/10 text-brand-rose ring-1 ring-brand-rose"
-                        : "border-brand-muted/20 bg-white hover:border-brand-rose/40 text-brand-text"
+                        ? "border-hub-teal bg-hub-teal/10 text-hub-teal ring-1 ring-hub-teal"
+                        : "border-hub-border bg-white hover:border-hub-teal/40 text-hub-foreground"
                     )}
                   >
                     <Type className="w-3.5 h-3.5" />
@@ -1013,12 +952,12 @@ export default function Home() {
                   </button>
                 </div>
                 {selectedPlatform === "pinterest" ? (
-                  <p className="text-[10px] text-brand-muted mt-1.5 italic">
+                  <p className="text-[10px] text-hub-foreground/55 mt-1.5 italic">
                     Format 2:3 vertical (1000×1500). « Avec texte » = surimpression de l&apos;occasion
                     dans l&apos;onglet Overlay (recommandé Pinterest).
                   </p>
                 ) : (
-                  <p className="text-[10px] text-brand-muted mt-1.5 italic">
+                  <p className="text-[10px] text-hub-foreground/55 mt-1.5 italic">
                     Format 4:5 (1080×1350){withOverlay ? ", template sélectionnable après génération" : ""}
                   </p>
                 )}
@@ -1026,7 +965,7 @@ export default function Home() {
             </div>
 
             {/* FOOTER FIXE */}
-            <div className="shrink-0 border-t border-brand-muted/20 bg-white/50 p-3 rounded-b-2xl">
+            <div className="shrink-0 border-t border-hub-border bg-white/50 p-3 rounded-b-2xl">
               <div className="flex gap-2 mb-2">
                 <button
                   type="button"
@@ -1038,7 +977,7 @@ export default function Home() {
                     "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium text-xs transition-all",
                     selectedPlatform === "instagram"
                       ? "border-pink-500 bg-pink-50 text-pink-700 ring-1 ring-pink-500"
-                      : "border-brand-muted/20 bg-white hover:border-pink-200 text-brand-text"
+                      : "border-hub-border bg-white hover:border-pink-200 text-hub-foreground"
                   )}
                 >
                   <Instagram className="w-3.5 h-3.5" />
@@ -1055,7 +994,7 @@ export default function Home() {
                     "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium text-xs transition-all",
                     selectedPlatform === "pinterest"
                       ? "border-red-500 bg-red-50 text-red-700 ring-1 ring-red-500"
-                      : "border-brand-muted/20 bg-white hover:border-red-200 text-brand-text"
+                      : "border-hub-border bg-white hover:border-red-200 text-hub-foreground"
                   )}
                 >
                   <Pin className="w-3.5 h-3.5" />
@@ -1081,7 +1020,7 @@ export default function Home() {
                 type="button"
                 onClick={mode === "copyOnly" ? handleGenerateCopyOnly : handleGenerate}
                 disabled={!selectedImage || isGeneratingImage || isGeneratingText}
-                className="w-full primary-button flex items-center justify-center gap-2 text-sm py-3 rounded-xl shadow-md shadow-brand-rose/20"
+                className="w-full primary-button flex items-center justify-center gap-2 text-sm py-3 rounded-xl shadow-md shadow-hub-accent/20"
               >
                 {isGeneratingImage || isGeneratingText ? (
                   <>
@@ -1110,7 +1049,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setSaveDialogOpen(true)}
-                    className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-hub-accent-wash hover:bg-hub-accent-soft/40 text-hub-accent border border-hub-accent-soft font-semibold transition-all"
                   >
                     <Heart className="w-3.5 h-3.5" />
                     {savedPackId ? "Sauvegarder à nouveau" : "Sauvegarder"}
@@ -1119,7 +1058,7 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setFicheOpen(true)}
-                      className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 font-semibold transition-all"
+                      className="flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-xl bg-hub-teal/10 hover:bg-hub-teal/20 text-hub-teal border border-hub-teal/30 font-semibold transition-all"
                       title="Voir la fiche éditoriale + programmer dans Planable"
                     >
                       <Newspaper className="w-3.5 h-3.5" />
@@ -1158,8 +1097,8 @@ export default function Home() {
                   className={cn(
                     "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all",
                     rightPanelTab === "text"
-                      ? "bg-brand-rose text-white"
-                      : "bg-white/60 text-brand-muted hover:bg-white"
+                      ? "bg-hub-foreground text-white"
+                      : "bg-white/60 text-hub-foreground/55 hover:bg-white"
                   )}
                 >
                   {selectedPlatform === "pinterest" ? (
@@ -1181,14 +1120,14 @@ export default function Home() {
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all relative",
                       rightPanelTab === "overlay"
-                        ? "bg-brand-rose text-white"
-                        : "bg-white/60 text-brand-muted hover:bg-white"
+                        ? "bg-hub-foreground text-white"
+                        : "bg-white/60 text-hub-foreground/55 hover:bg-white"
                     )}
                   >
                     <Type className="w-3.5 h-3.5" />
                     {selectedPlatform === "pinterest" ? "Surimpression" : "Overlay"}
                     {generatedImages.length > 0 && rightPanelTab !== "overlay" && (
-                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-rose rounded-full animate-pulse" />
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-hub-accent rounded-full animate-pulse" />
                     )}
                   </button>
                 )}
@@ -1257,16 +1196,7 @@ export default function Home() {
           payload={buildSavePayload()}
           onSaved={(packId) => {
             setSavedPackId(packId);
-            setLibrarySaveBump((v) => v + 1);
           }}
-        />
-      )}
-
-      {supabaseOn && (
-        <LibraryDrawer
-          open={libraryOpen}
-          onClose={() => setLibraryOpen(false)}
-          refreshKey={librarySaveBump}
         />
       )}
 
@@ -1290,6 +1220,59 @@ export default function Home() {
         }
       `}</style>
     </div>
+  );
+}
+
+function SocialCreationStart({ onCreateVisual, onCreateReel }: { onCreateVisual: () => void; onCreateReel: () => void }) {
+  const cards = [
+    { label: "Visuel produit", detail: "Photo lifestyle, Instagram, Pinterest ou Shopify.", action: onCreateVisual, icon: <ImageIcon className="h-5 w-5" />, accent: "bg-hub-accent" },
+    { label: "Avis client", detail: "Un avis, un fond, une carte et sa légende.", href: "/social/avis", icon: <MessageSquareQuote className="h-5 w-5" />, accent: "bg-[#c8963c]" },
+    { label: "Histoire de marque", detail: "Une histoire réelle, cinq voix, un hook à garder.", href: "/social/connexion", icon: <Heart className="h-5 w-5" />, accent: "bg-[#2e7d74]" },
+    { label: "Réel", detail: "Préparer le visuel, le hook et le texte de l’animation.", action: onCreateReel, icon: <Instagram className="h-5 w-5" />, accent: "bg-[#6e1f2e]" },
+  ];
+
+  return (
+    <main className="min-h-screen bg-hub-bg px-5 py-8 text-hub-foreground sm:px-8">
+      <div className="mx-auto max-w-[1180px]">
+        <header className="border-b border-hub-border pb-5">
+          <h1 className="font-serif text-[34px] leading-none">Atelier Social</h1>
+          <p className="mt-3 text-sm text-hub-foreground/60">Un fil pour créer, raconter et faire vivre Ypersoa.</p>
+          <div className="mt-6 flex items-center gap-6 text-sm">
+            <span className="border-b-2 border-hub-accent pb-3 font-semibold text-hub-foreground">Créer</span>
+            <Link href="/social/fonds" className="pb-3 text-hub-foreground/55 hover:text-hub-foreground">Les fonds</Link>
+            <Link href="/social/playbook" className="pb-3 text-hub-foreground/55 hover:text-hub-foreground">Le playbook</Link>
+          </div>
+        </header>
+
+        <section className="relative mt-7 overflow-hidden rounded-[18px] border border-[#eadbc8] bg-[#fffdfa] px-6 pb-7 pt-8 shadow-[0_10px_28px_rgba(22,50,76,.06)] sm:px-8">
+          <div className="absolute inset-x-0 top-0 border-t-[5px] border-dashed border-hub-accent" />
+          <div className="flex flex-wrap items-start justify-between gap-5">
+            <div>
+              <p className="text-[10px] font-bold tracking-[.16em] text-hub-accent">QU&apos;EST-CE QU&apos;ON RACONTE AUJOURD&apos;HUI ?</p>
+              <h2 className="mt-1 font-serif text-[36px] leading-none">Créer un <em className="text-hub-accent">post</em></h2>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-hub-foreground/65">Pars d’une image, d’un avis ou d’une histoire. Le Hub relie ensuite visuel, fond, texte, tags et export.</p>
+            </div>
+            <Link href="/studio" className="inline-flex items-center gap-2 rounded-full border border-[#e4d7c7] bg-hub-bg px-4 py-2.5 text-sm font-semibold hover:border-hub-accent hover:text-hub-accent"><ImageIcon size={16} /> Shooting social</Link>
+          </div>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            {cards.map((card) => {
+              const content = <><span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white ${card.accent}`}>{card.icon}</span><span className="min-w-0 flex-1"><span className="block text-[10px] font-bold tracking-[.13em] text-hub-foreground/45">PARCOURS</span><span className="mt-1 block font-serif text-[21px] leading-none">{card.label}</span><span className="mt-2 block text-[13px] leading-5 text-hub-foreground/60">{card.detail}</span></span><span className="text-xl text-hub-foreground/30 transition group-hover:translate-x-1 group-hover:text-hub-accent">→</span></>;
+              const className = "group flex min-h-36 items-center gap-4 rounded-[14px] border border-[#ecd5ce] bg-[#fffdfb] p-5 text-left transition hover:border-hub-accent hover:bg-[#fff9f7]";
+              return card.href ? <Link key={card.label} href={card.href} className={className}>{content}</Link> : <button key={card.label} type="button" onClick={card.action} className={className}>{content}</button>;
+            })}
+          </div>
+        </section>
+
+        <section className="mt-7 border-t border-hub-border pt-5">
+          <p className="text-[10px] font-bold tracking-[.16em] text-hub-foreground/50">RESSOURCES</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Link href="/social/fonds" className="inline-flex items-center gap-2 rounded-full border border-hub-border bg-white px-4 py-2.5 text-sm font-semibold hover:border-hub-accent"><Palette size={16} /> Fonds</Link>
+            <Link href="/social/playbook" className="inline-flex items-center gap-2 rounded-full border border-hub-border bg-white px-4 py-2.5 text-sm font-semibold hover:border-hub-accent"><BookOpen size={16} /> Playbook</Link>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
 
@@ -1358,11 +1341,11 @@ function ResultPanelImagesOnly({
 
   if (imageUrls.length === 0 && !isGeneratingImage) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-brand-muted/20 rounded-2xl">
+      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-hub-accent-soft bg-hub-accent-wash/50 rounded-2xl">
         <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mb-3 shadow-sm">
-          <Sparkles className="w-5 h-5 text-brand-muted" />
+          <Sparkles className="w-5 h-5 text-hub-accent" />
         </div>
-        <h3 className="font-serif text-base font-medium mb-1 text-brand-muted">
+        <h3 className="font-serif text-base font-medium mb-1 text-hub-foreground">
           {expectedCount < 5 ? "Épingles à venir" : "Carrousel à venir"}
         </h3>
       </div>
@@ -1371,11 +1354,11 @@ function ResultPanelImagesOnly({
 
   return (
     <div className="flex flex-col gap-2 flex-1 min-h-0">
-      <div className="relative w-full flex-1 min-h-0 rounded-2xl overflow-hidden bg-white shadow-sm border border-brand-muted/10 group">
+      <div className="relative w-full flex-1 min-h-0 rounded-2xl overflow-hidden bg-white shadow-sm border border-hub-border group">
         {isGeneratingImage && imageUrls.length === 0 ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-brand-bg/50 backdrop-blur-sm">
-            <div className="w-8 h-8 border-4 border-brand-rose/20 border-t-brand-rose rounded-full animate-spin mb-3" />
-            <p className="font-serif text-sm animate-pulse text-center px-4 text-brand-muted">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-hub-bg/50 backdrop-blur-sm">
+            <div className="w-8 h-8 border-4 border-hub-foreground/15 border-t-hub-foreground rounded-full animate-spin mb-3" />
+            <p className="font-serif text-sm animate-pulse text-center px-4 text-hub-foreground/55">
               Création des images...
             </p>
           </div>
@@ -1396,7 +1379,7 @@ function ResultPanelImagesOnly({
                   type="button"
                   onClick={handlePrev}
                   disabled={currentSlide === 0}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur text-brand-text p-1.5 rounded-full shadow-md disabled:opacity-0 opacity-0 group-hover:opacity-100 transition-opacity hover:scale-105"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur text-hub-foreground p-1.5 rounded-full shadow-md disabled:opacity-0 opacity-0 group-hover:opacity-100 transition-opacity hover:scale-105"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -1404,7 +1387,7 @@ function ResultPanelImagesOnly({
                   type="button"
                   onClick={handleNext}
                   disabled={currentSlide === imageUrls.length - 1}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur text-brand-text p-1.5 rounded-full shadow-md disabled:opacity-0 opacity-0 group-hover:opacity-100 transition-opacity hover:scale-105"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur text-hub-foreground p-1.5 rounded-full shadow-md disabled:opacity-0 opacity-0 group-hover:opacity-100 transition-opacity hover:scale-105"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -1427,7 +1410,7 @@ function ResultPanelImagesOnly({
               <button
                 type="button"
                 onClick={() => handleDownload(imageUrls[currentSlide], currentSlide)}
-                className="bg-white/90 backdrop-blur text-brand-text p-2 rounded-full shadow-lg hover:scale-105 transition-transform"
+                className="bg-white/90 backdrop-blur text-hub-foreground p-2 rounded-full shadow-lg hover:scale-105 transition-transform"
                 title="Télécharger cette image"
               >
                 <Download className="w-4 h-4" />
@@ -1438,8 +1421,8 @@ function ResultPanelImagesOnly({
                   onClick={() => onToggleBest(currentSlide)}
                   className={`p-2 rounded-full shadow-lg hover:scale-105 transition-transform ${
                     bestIndices?.has(currentSlide)
-                      ? "bg-rose-500 text-white"
-                      : "bg-white/90 backdrop-blur text-rose-500"
+                      ? "bg-hub-accent text-white"
+                      : "bg-white/90 backdrop-blur text-hub-accent"
                   }`}
                   title={bestIndices?.has(currentSlide) ? "Retirer des best" : "Marquer comme best"}
                 >
@@ -1460,7 +1443,7 @@ function ResultPanelImagesOnly({
               )}
             </div>
             {bestIndices?.has(currentSlide) && (
-              <div className="absolute top-3 left-3 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+              <div className="absolute top-3 left-3 bg-hub-accent text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
                 <Heart className="w-3 h-3 fill-white" /> Best
               </div>
             )}
@@ -1479,7 +1462,7 @@ function ResultPanelImagesOnly({
                 className={cn(
                   "shrink-0 w-12 h-12 rounded-lg overflow-hidden border-2 transition-all",
                   currentSlide === i
-                    ? "border-brand-rose scale-105"
+                    ? "border-hub-accent scale-105"
                     : "border-transparent opacity-60 hover:opacity-100"
                 )}
               >
@@ -1491,7 +1474,7 @@ function ResultPanelImagesOnly({
           <button
             type="button"
             onClick={handleDownloadAll}
-            className="shrink-0 flex items-center gap-1 bg-brand-rose/10 hover:bg-brand-rose/20 text-brand-rose font-medium text-xs px-3 py-2 rounded-lg transition-colors"
+            className="shrink-0 flex items-center gap-1 bg-hub-bg-alt hover:bg-hub-border/60 text-hub-foreground font-medium text-xs px-3 py-2 rounded-lg transition-colors"
             title="Télécharger toutes les images"
           >
             <Download className="w-3.5 h-3.5" />
@@ -1627,11 +1610,11 @@ function ResultPanelTextOnly({
 
   if (!text && !isGeneratingText && hooks.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-brand-muted/20 rounded-2xl">
+      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-hub-accent-soft bg-hub-accent-wash/50 rounded-2xl">
         <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mb-3 shadow-sm">
-          <Quote className="w-5 h-5 text-brand-muted" />
+          <Quote className="w-5 h-5 text-hub-accent" />
         </div>
-        <h3 className="font-serif text-base font-medium mb-1 text-brand-muted">
+        <h3 className="font-serif text-base font-medium mb-1 text-hub-foreground">
           Caption + hooks à venir
         </h3>
       </div>
@@ -1792,7 +1775,7 @@ function ResultPanelTextOnly({
                     <button
                       type="button"
                       onClick={() => handleCopyVariant(variantA, "a")}
-                      className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+                      className="flex items-center gap-1 text-[11px] font-medium text-hub-foreground/55 hover:text-hub-foreground transition-colors"
                     >
                       {copiedVariant === "a" ? (
                         <Check className="w-3 h-3 text-green-600" />
@@ -1817,7 +1800,7 @@ function ResultPanelTextOnly({
                     <button
                       type="button"
                       onClick={() => handleCopyVariant(variantB, "b")}
-                      className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+                      className="flex items-center gap-1 text-[11px] font-medium text-hub-foreground/55 hover:text-hub-foreground transition-colors"
                     >
                       {copiedVariant === "b" ? (
                         <Check className="w-3 h-3 text-green-600" />
@@ -1843,7 +1826,7 @@ function ResultPanelTextOnly({
                   <button
                     type="button"
                     onClick={handleCopyHashtags}
-                    className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+                    className="flex items-center gap-1 text-[11px] font-medium text-hub-foreground/55 hover:text-hub-foreground transition-colors"
                   >
                     {copiedHashtags ? (
                       <Check className="w-3 h-3 text-green-600" />
@@ -1905,8 +1888,8 @@ function ResultPanelTextOnly({
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
-        <div className="flex items-center justify-between mb-2 pb-2 border-b border-brand-muted/10">
+      <div className="bg-white rounded-2xl p-4 shadow-sm border border-hub-border">
+        <div className="flex items-center justify-between mb-2 pb-2 border-b border-hub-border">
           <div className="flex items-center gap-2">
             <Instagram className="w-4 h-4 text-pink-600" />
             <h4 className="font-medium text-sm">Légende complète</h4>
@@ -1915,7 +1898,7 @@ function ResultPanelTextOnly({
             <button
               type="button"
               onClick={handleCopyCaption}
-              className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+              className="flex items-center gap-1 text-[11px] font-medium text-hub-foreground/55 hover:text-hub-foreground transition-colors"
             >
               {copiedCaption ? (
                 <Check className="w-3 h-3 text-green-600" />
@@ -1931,14 +1914,14 @@ function ResultPanelTextOnly({
           {isGeneratingText ? (
             <div className="flex flex-col items-center justify-center py-4">
               <div className="flex gap-1 mb-2">
-                <div className="w-1.5 h-1.5 bg-brand-rose rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <div className="w-1.5 h-1.5 bg-brand-rose rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <div className="w-1.5 h-1.5 bg-brand-rose rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <div className="w-1.5 h-1.5 bg-hub-foreground/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                <div className="w-1.5 h-1.5 bg-hub-foreground/40 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                <div className="w-1.5 h-1.5 bg-hub-foreground/40 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
               </div>
-              <p className="text-xs text-brand-muted animate-pulse">Rédaction...</p>
+              <p className="text-xs text-hub-foreground/55 animate-pulse">Rédaction...</p>
             </div>
           ) : text ? (
-            <div className="prose prose-xs max-w-none prose-p:leading-relaxed text-sm text-brand-text whitespace-pre-wrap">
+            <div className="prose prose-xs max-w-none prose-p:leading-relaxed text-sm text-hub-foreground whitespace-pre-wrap">
               <Markdown>{text}</Markdown>
             </div>
           ) : null}
@@ -1946,9 +1929,9 @@ function ResultPanelTextOnly({
       </div>
 
       {hooks && hooks.length > 0 && (
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
-          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-brand-muted/10">
-            <Quote className="w-4 h-4 text-brand-rose" />
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-hub-border">
+          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-hub-border">
+            <Quote className="w-4 h-4 text-hub-teal" />
             <h4 className="font-medium text-sm">5 hooks éditoriaux</h4>
           </div>
 
@@ -1956,16 +1939,16 @@ function ResultPanelTextOnly({
             {hooks.map((hook, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-2 p-2 rounded-lg bg-brand-bg/60 hover:bg-brand-rose/5 transition-colors group"
+                className="flex items-start gap-2 p-2 rounded-lg bg-hub-bg-alt hover:bg-hub-teal/5 transition-colors group"
               >
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-rose mt-0.5 shrink-0 w-16">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-hub-teal mt-0.5 shrink-0 w-16">
                   {HOOK_LABELS[idx] || `#${idx + 1}`}
                 </span>
                 <p className="text-xs flex-1">{hook}</p>
                 <button
                   type="button"
                   onClick={() => handleCopyHook(hook, idx)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity text-brand-muted hover:text-brand-text shrink-0"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity text-hub-foreground/55 hover:text-hub-foreground shrink-0"
                   title="Copier"
                 >
                   {copiedHookIdx === idx ? (
@@ -2016,11 +1999,11 @@ function ResultPanelPinterest({
 
   if (!title && !isGeneratingText) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-brand-muted/20 rounded-2xl">
+      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-hub-accent-soft bg-hub-accent-wash/50 rounded-2xl">
         <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mb-3 shadow-sm">
-          <Pin className="w-5 h-5 text-brand-muted" />
+          <Pin className="w-5 h-5 text-hub-accent" />
         </div>
-        <h3 className="font-serif text-base font-medium mb-1 text-brand-muted">
+        <h3 className="font-serif text-base font-medium mb-1 text-hub-foreground">
           Épingle Pinterest à venir
         </h3>
       </div>
@@ -2050,8 +2033,8 @@ function ResultPanelPinterest({
       )}
 
       {/* TITRE PINTEREST */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
-        <div className="flex items-center justify-between mb-2 pb-2 border-b border-brand-muted/10">
+      <div className="bg-white rounded-2xl p-4 shadow-sm border border-hub-border">
+        <div className="flex items-center justify-between mb-2 pb-2 border-b border-hub-border">
           <div className="flex items-center gap-2">
             <Pin className="w-4 h-4 text-red-600" />
             <h4 className="font-medium text-sm">Titre Pinterest</h4>
@@ -2072,7 +2055,7 @@ function ResultPanelPinterest({
             <button
               type="button"
               onClick={() => handleCopy(title, "title")}
-              className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+              className="flex items-center gap-1 text-[11px] font-medium text-hub-foreground/55 hover:text-hub-foreground transition-colors"
             >
               {copied === "title" ? (
                 <Check className="w-3 h-3 text-green-600" />
@@ -2085,18 +2068,18 @@ function ResultPanelPinterest({
         </div>
 
         {isGeneratingText ? (
-          <div className="flex items-center gap-2 py-2 text-xs text-brand-muted animate-pulse">
-            <div className="w-2 h-2 bg-brand-rose rounded-full animate-bounce" />
+          <div className="flex items-center gap-2 py-2 text-xs text-hub-foreground/55 animate-pulse">
+            <div className="w-2 h-2 bg-hub-foreground/40 rounded-full animate-bounce" />
             Rédaction du titre...
           </div>
         ) : (
-          <p className="text-sm font-medium text-brand-text">{title}</p>
+          <p className="text-sm font-medium text-hub-foreground">{title}</p>
         )}
       </div>
 
       {/* DESCRIPTION SEO */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
-        <div className="flex items-center justify-between mb-2 pb-2 border-b border-brand-muted/10">
+      <div className="bg-white rounded-2xl p-4 shadow-sm border border-hub-border">
+        <div className="flex items-center justify-between mb-2 pb-2 border-b border-hub-border">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-red-600" />
             <h4 className="font-medium text-sm">Description SEO</h4>
@@ -2117,7 +2100,7 @@ function ResultPanelPinterest({
             <button
               type="button"
               onClick={() => handleCopy(description, "desc")}
-              className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+              className="flex items-center gap-1 text-[11px] font-medium text-hub-foreground/55 hover:text-hub-foreground transition-colors"
             >
               {copied === "desc" ? (
                 <Check className="w-3 h-3 text-green-600" />
@@ -2130,19 +2113,19 @@ function ResultPanelPinterest({
         </div>
 
         {isGeneratingText ? (
-          <div className="flex items-center gap-2 py-2 text-xs text-brand-muted animate-pulse">
-            <div className="w-2 h-2 bg-brand-rose rounded-full animate-bounce" />
+          <div className="flex items-center gap-2 py-2 text-xs text-hub-foreground/55 animate-pulse">
+            <div className="w-2 h-2 bg-hub-foreground/40 rounded-full animate-bounce" />
             Rédaction de la description...
           </div>
         ) : (
-          <p className="text-xs text-brand-text leading-relaxed">{description}</p>
+          <p className="text-xs text-hub-foreground leading-relaxed">{description}</p>
         )}
       </div>
 
       {/* TAGS */}
       {tags.length > 0 && !isGeneratingText && (
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
-          <div className="flex items-center justify-between mb-2 pb-2 border-b border-brand-muted/10">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-hub-border">
+          <div className="flex items-center justify-between mb-2 pb-2 border-b border-hub-border">
             <div className="flex items-center gap-2">
               <Hash className="w-4 h-4 text-red-600" />
               <h4 className="font-medium text-sm">Tags</h4>
@@ -2153,7 +2136,7 @@ function ResultPanelPinterest({
             <button
               type="button"
               onClick={() => handleCopy(tags.join(", "), "tags")}
-              className="flex items-center gap-1 text-[11px] font-medium text-brand-muted hover:text-brand-text transition-colors"
+              className="flex items-center gap-1 text-[11px] font-medium text-hub-foreground/55 hover:text-hub-foreground transition-colors"
             >
               {copied === "tags" ? (
                 <Check className="w-3 h-3 text-green-600" />
@@ -2178,7 +2161,7 @@ function ResultPanelPinterest({
                   <div key={cat.key}>
                     <div className="flex items-center gap-1.5 mb-1">
                       <span className={`w-1.5 h-1.5 rounded-full ${cat.dot}`} />
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-muted">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-hub-foreground/55">
                         {cat.label}
                       </span>
                     </div>
@@ -2201,7 +2184,7 @@ function ResultPanelPinterest({
               {tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="text-[11px] px-2 py-1 bg-brand-bg rounded-md text-brand-text"
+                  className="text-[11px] px-2 py-1 bg-hub-bg-alt rounded-md text-hub-foreground"
                 >
                   {tag}
                 </span>
@@ -2213,11 +2196,11 @@ function ResultPanelPinterest({
 
       {/* HOOKS éditoriaux (mêmes que Insta) */}
       {hooks && hooks.length > 0 && (
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10">
-          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-brand-muted/10">
-            <Quote className="w-4 h-4 text-brand-rose" />
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-hub-border">
+          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-hub-border">
+            <Quote className="w-4 h-4 text-hub-teal" />
             <h4 className="font-medium text-sm">5 hooks éditoriaux</h4>
-            <span className="text-[10px] text-brand-muted italic">(pour épingles supplémentaires)</span>
+            <span className="text-[10px] text-hub-foreground/55 italic">(pour épingles supplémentaires)</span>
           </div>
 
           <div className="space-y-1.5">
@@ -2226,16 +2209,16 @@ function ResultPanelPinterest({
               return (
                 <div
                   key={idx}
-                  className="flex items-start gap-2 p-2 rounded-lg bg-brand-bg/60 hover:bg-brand-rose/5 transition-colors group"
+                  className="flex items-start gap-2 p-2 rounded-lg bg-hub-bg-alt hover:bg-hub-teal/5 transition-colors group"
                 >
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-rose mt-0.5 shrink-0 w-16">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-hub-teal mt-0.5 shrink-0 w-16">
                     {HOOK_LABELS[idx] || `#${idx + 1}`}
                   </span>
                   <p className="text-xs flex-1">{hook}</p>
                   <button
                     type="button"
                     onClick={() => handleCopy(hook, `hook-${idx}`)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity text-brand-muted hover:text-brand-text shrink-0"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-hub-foreground/55 hover:text-hub-foreground shrink-0"
                   >
                     {isCopied ? (
                       <Check className="w-3 h-3 text-green-600" />

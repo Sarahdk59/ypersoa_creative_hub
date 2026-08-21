@@ -2,9 +2,9 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-05-29",
+    "last_updated": "2026-08-20",
     "nb_motifs": 18,
-    "nb_variantes_total": 104,
+    "nb_variantes_total": 106,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
     "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
@@ -202,7 +202,7 @@
       "id": "YPM-003",
       "nom_commercial": "Le Club",
       "asset_principal": "YPM-003-papa-club.png",
-      "nb_variantes": 10,
+      "nb_variantes": 11,
       "variantes": [
         {
           "file": "YPM-003-club-flower.png",
@@ -330,6 +330,16 @@
           "destinataires": [],
           "occasions": [],
           "produits": []
+        },
+        {
+          "file": "YPM-003-beach-club-casquette.png",
+          "label": "Beach Club - Casquette",
+          "url": "https://frvhjjijoccqreidyucp.supabase.co/storage/v1/object/public/motifs-png/YPM-003-beach-club-casquette.png",
+          "tags": [
+            "beach",
+            "club",
+            "ypm-003"
+          ]
         }
       ],
       "tags": [
@@ -522,7 +532,7 @@
       "id": "YPM-005",
       "nom_commercial": "L'Annonce",
       "asset_principal": "YPM-005-ANNONCE papa cheri.JPG",
-      "nb_variantes": 8,
+      "nb_variantes": 9,
       "variantes": [
         {
           "file": "YPM-005-ANNONCE.PNG",
@@ -634,6 +644,22 @@
             "typo"
           ],
           "destinataires": [],
+          "occasions": [],
+          "produits": []
+        },
+        {
+          "file": "YPM-005-ANNONCE Maman.PNG",
+          "label": "Annonce Maman",
+          "tags": [
+            "annonce",
+            "famille",
+            "naissance",
+            "maman",
+            "typo"
+          ],
+          "destinataires": [
+            "maman"
+          ],
           "occasions": [],
           "produits": []
         }

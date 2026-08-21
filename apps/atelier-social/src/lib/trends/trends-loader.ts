@@ -15,7 +15,6 @@ import {
   type TrendsSnapshot,
   type TrendSource,
 } from "./trends";
-import { fetchGoogleTrends } from "./google-trends";
 import { fetchPinterestTrends } from "./pinterest-trends";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
@@ -105,25 +104,23 @@ export function writeSnapshot(snapshot: TrendsSnapshot): void {
 }
 
 /**
- * Lance un run de veille (Lot 2 : Google + Pinterest API + mots-clés Pinterest
- * manuels, status "raw"). Écrit le snapshot du jour (écrase si déjà lancé) et
- * le renvoie. Si TOUTES les sources sont vides et qu'un run antérieur existe,
- * on conserve l'ancien snapshot et on remonte l'erreur (garde-fou CDC §6).
+ * Lance un run de veille (Pinterest API + mots-clés Pinterest manuels, status
+ * "raw" — Google Trends retiré le 21/08/2026, jugé peu actionnable pour la
+ * broderie). Écrit le snapshot du jour (écrase si déjà lancé) et le renvoie.
+ * Si TOUTES les sources sont vides et qu'un run antérieur existe, on conserve
+ * l'ancien snapshot et on remonte l'erreur (garde-fou CDC §6).
  */
 export async function runTrends(): Promise<TrendsSnapshot> {
   const now = new Date();
   const date = now.toISOString().slice(0, 10);
 
-  const [google, pinterest] = await Promise.all([
-    fetchGoogleTrends(),
-    fetchPinterestTrends(),
-  ]);
+  const pinterest = await fetchPinterestTrends();
   const manual = getPinterestManuel().map(manualKeywordToTrend);
 
-  // Pinterest avant Google : si un terme apparaît des 2 côtés, on garde la
-  // version Pinterest (plateforme prioritaire pour Ypersoa).
-  const trends = mergeTrends(pinterest.trends, manual, google.trends);
-  const errors = [...google.errors, ...pinterest.errors];
+  // API Pinterest avant saisie manuelle : si un terme apparaît des 2 côtés,
+  // on garde la version API.
+  const trends = mergeTrends(pinterest.trends, manual);
+  const errors = [...pinterest.errors];
 
   if (trends.length === 0) {
     const previous = getLatestSnapshot();
@@ -139,7 +136,6 @@ export async function runTrends(): Promise<TrendsSnapshot> {
   }
 
   const sources: TrendSource[] = [];
-  if (trends.some((t) => t.source === "google")) sources.push("google");
   if (trends.some((t) => t.source === "pinterest")) sources.push("pinterest");
 
   const snapshot: TrendsSnapshot = {
@@ -151,9 +147,9 @@ export async function runTrends(): Promise<TrendsSnapshot> {
     trends,
     meta: {
       trends_count: trends.length,
-      source_url: google.source_url,
+      source_url: pinterest.source_url,
       note:
-        "Lot 2 — Google Trends FR + Pinterest" +
+        "Pinterest" +
         (pinterest.configured ? " (API)" : " (saisie manuelle)") +
         ", sans enrichissement IA.",
     },

@@ -1,9 +1,9 @@
 /**
- * MotionModeSelector — 3 cartes : Reel / Ambiance / Packshot.
+ * MotionModeSelector — les deux gestes directs + les modes avancés.
  */
 "use client";
 
-import { Film, Image as ImageIcon, Sparkles } from "lucide-react";
+import { Aperture, Film, Image as ImageIcon, PersonStanding, Sparkles } from "lucide-react";
 
 import type { MotionMode } from "@/types/motion";
 import { MODE_DESCRIPTIONS, MODE_LABELS } from "@/types/motion";
@@ -14,12 +14,14 @@ interface MotionModeSelectorProps {
 }
 
 const ICONS: Record<MotionMode, React.ReactNode> = {
+  macro: <Aperture size={22} strokeWidth={1.4} />,
+  porte: <PersonStanding size={22} strokeWidth={1.4} />,
   reel: <Film size={22} strokeWidth={1.4} />,
   ambiance: <Sparkles size={22} strokeWidth={1.4} />,
   packshot: <ImageIcon size={22} strokeWidth={1.4} />,
 };
 
-const MODES: MotionMode[] = ["reel", "ambiance", "packshot"];
+const MODES: MotionMode[] = ["macro", "porte", "reel", "ambiance", "packshot"];
 
 export function MotionModeSelector({ value, onChange }: MotionModeSelectorProps) {
   return (

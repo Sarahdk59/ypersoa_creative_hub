@@ -103,7 +103,7 @@ export interface MotifVariante {
    * c'est la variante qui porte l'occasion/destinataire réelle.
    *
    * Les tags du motif racine restent valables comme défaut (vue "Motifs"),
-   * mais la vue "Variantes" et /atelier-da/motifs/[destinataire] utilisent
+   * mais la vue "Variantes" et /bibliotheque/motifs/[destinataire] utilisent
    * EN PRIORITÉ ces tags fine-grained.
    */
   destinataires?: string[];

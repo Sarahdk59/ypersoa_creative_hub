@@ -3,7 +3,7 @@
 /**
  * Modal "Fusionner en fiche produit"
  *
- * Déclenchée depuis la vue Catalogue (/atelier-da/motifs onglet Catalogue) quand
+ * Déclenchée depuis la vue Catalogue (/bibliotheque/motifs onglet Catalogue) quand
  * 2+ shots sont sélectionnés via checkbox. Pré-remplit titre/motif/variante/produit
  * depuis le 1er shot sélectionné (ou la valeur commune si tous identiques).
  */

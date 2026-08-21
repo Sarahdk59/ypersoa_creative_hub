@@ -635,7 +635,7 @@ function CanoniqueModal({
             {dispositifsLies.length > 0 && (
               <div style={{ marginTop: 24 }}>
                 <h4 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hub-foreground)", opacity: 0.6, margin: "0 0 8px 0" }}>
-                  <Heart size={11} fill="#E2627C" stroke="#E2627C" style={{ display: "inline", marginRight: 4 }} />
+                  <Heart size={11} fill="var(--hub-accent)" stroke="var(--hub-accent)" style={{ display: "inline", marginRight: 4 }} />
                   Dispositifs ({dispositifsLies.length})
                 </h4>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

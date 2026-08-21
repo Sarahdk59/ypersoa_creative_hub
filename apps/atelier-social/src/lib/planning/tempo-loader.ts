@@ -1,0 +1,40 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { join } from "path";
+
+const REFS_DIR = join(process.cwd(), "..", "..", "referentiels", "planning");
+const TEMPO_PATH = join(REFS_DIR, "tempo.json");
+
+export type TempoTeam = "crea" | "prod" | "comm";
+export type TempoStatus = "a_faire" | "en_cours" | "fait";
+export type TempoPriority = { id: string; team: TempoTeam; title: string; note: string; status: TempoStatus; dependsOn?: string };
+export type TempoWeek = { dates: string; theme: string; heat: "calm" | "hot" | "peak"; event?: string; posts: number; article: string; note?: string; formats?: string };
+export type TempoFile = { priorities: TempoPriority[]; briefs: Record<string, string>; weeks?: TempoWeek[] };
+
+export const TEMPO_DEFAULT: TempoFile = {
+  priorities: [
+    { id: "crea-1", team: "crea", title: "Finaliser les visuels Anniversaire", note: "La Braderie démarre le 24. Pas de panique, on a aussi rendez-vous avec les moules.", status: "en_cours" },
+    { id: "crea-2", team: "crea", title: "Envoyer les tests Noël à la Prod", note: "Les broderies n'attendent pas décembre pour faire leur diva.", status: "a_faire" },
+    { id: "prod-1", team: "prod", title: "Tester les broderies Noël", note: "Prévoir deux heures, au calme, avec le café qui tient debout.", status: "a_faire", dependsOn: "crea-2" },
+    { id: "prod-2", team: "prod", title: "Préparer la Braderie de Lille", note: "Pas de deadline, pas de cutoff : on est cool, on mange des moules.", status: "en_cours" },
+    { id: "comm-1", team: "comm", title: "Préparer les 3 publications Summer", note: "Maï les garde ici : un seul fil, pas un deuxième outil qui prend la poussière.", status: "a_faire" },
+    { id: "comm-2", team: "comm", title: "Préparer le tournage des tests Noël", note: "Dès que la Prod a fini, Maï peut filmer sans jouer à Madame Irma.", status: "a_faire", dependsOn: "prod-1" },
+  ],
+  briefs: { "Mariage / Summer": "Cette semaine, on raconte les petits détails qui rendent un cadeau de mariage vraiment à quelqu'un." },
+  weeks: [
+    { dates: "17 → 23 août", theme: "Mariage / Summer", heat: "calm", posts: 3, article: "jeu. 21", formats: "Réel · le prénom brodé qui fait la différence" },
+    { dates: "24 → 30 août", theme: "Anniversaire", heat: "hot", event: "Braderie de Lille", posts: 7, article: "jeu. 28", formats: "Carrousel · cadeaux qui sauvent la mise" },
+    { dates: "31 août → 6 sept.", theme: "Bonne Rentrée", heat: "peak", event: "Lancement Club", posts: 14, article: "jeu. 4", formats: "POV · premier lundi de rentrée" },
+    { dates: "7 → 13 sept.", theme: "Reprise sport", heat: "calm", posts: 3, article: "jeu. 11", note: "Motivation, sport et nouvelles résolutions — sans prétendre devenir une personne qui court à 6 h.", formats: "Réel · motivation du lundi · Carrousel · nouvelles résolutions" },
+  ],
+};
+
+export function loadTempo(): TempoFile {
+  if (!existsSync(TEMPO_PATH)) return TEMPO_DEFAULT;
+  return JSON.parse(readFileSync(TEMPO_PATH, "utf8")) as TempoFile;
+}
+
+export function saveTempo(data: TempoFile): TempoFile {
+  mkdirSync(REFS_DIR, { recursive: true });
+  writeFileSync(TEMPO_PATH, JSON.stringify(data, null, 2) + "\n", "utf8");
+  return data;
+}

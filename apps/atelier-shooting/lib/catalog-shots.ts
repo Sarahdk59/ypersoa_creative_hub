@@ -38,6 +38,7 @@
  */
 import { supabase } from './supabase';
 import { GenerationSettings } from '../types';
+import { resolveMediaTagId, linkMediaTags } from './mediatheque-bridge';
 
 export interface CatalogShot {
   id: string;
@@ -58,6 +59,7 @@ export interface CatalogShot {
 }
 
 const BUCKET = 'catalog-shots';
+const MEDIA_TABLE = 'mediatheque_media';
 
 function dataUrlToBlob(dataUrl: string): { blob: Blob; ext: string } {
   const match = dataUrl.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
@@ -80,6 +82,58 @@ export interface AddToCatalogPayload {
   productId?: string | null;
   shotLabel?: string | null;
   settings?: GenerationSettings | null;
+}
+
+function capitalize(s: string): string {
+  return s.length > 0 ? s[0].toUpperCase() + s.slice(1) : s;
+}
+
+async function mirrorCatalogShotToMediaLibrary(
+  shot: CatalogShot,
+  mimeType: string,
+  source: 'shooting_studio' | 'packshot',
+): Promise<void> {
+  if (!supabase) throw new Error('Supabase non configuré');
+
+  const { data: existing, error: existingError } = await supabase
+    .from(MEDIA_TABLE)
+    .select('id')
+    .eq('public_url', shot.image_url)
+    .maybeSingle();
+  if (existingError) throw new Error(`Lecture médiathèque échouée : ${existingError.message}`);
+  if (existing) return;
+
+  const ext = mimeType.split('/')[1].replace('jpeg', 'jpg');
+  const { data: inserted, error } = await supabase
+    .from(MEDIA_TABLE)
+    .insert({
+      filename: `${shot.shot_label ?? 'Shot atelier'}-${shot.id}.${ext}`,
+      storage_path: shot.image_storage_path ?? undefined,
+      public_url: shot.image_url,
+      mime_type: mimeType,
+      source,
+      statut: 'a_valider',
+      notes: `Catalog shot ${shot.id}`,
+    })
+    .select('id')
+    .single();
+  if (error) throw new Error(`Ajout médiathèque échoué : ${error.message}`);
+
+  // Auto-tag à la source : motif/gabarit/occasion déjà connus sur le shot,
+  // pas de saisie manuelle nécessaire (règle d'or Bibliothèque).
+  const hints: { category: string; slug: string; label: string }[] = [];
+  if (shot.motif_id) hints.push({ category: 'motif', slug: shot.motif_id.toLowerCase(), label: shot.motif_id });
+  if (shot.product_id) hints.push({ category: 'gabarit', slug: shot.product_id.toLowerCase(), label: shot.product_id });
+  for (const occasion of shot.occasion ?? []) {
+    hints.push({ category: 'occasion', slug: occasion, label: capitalize(occasion) });
+  }
+
+  const tagIds = (
+    await Promise.all(hints.map((h) => resolveMediaTagId(h.category, h.slug, h.label)))
+  ).filter((id): id is string => Boolean(id));
+  if (tagIds.length === 0) return;
+
+  await linkMediaTags((inserted as { id: string }).id, tagIds);
 }
 
 /** Upload + insert row catalog_shots. */
@@ -127,7 +181,19 @@ export async function addShotToCatalog(
     await supabase.storage.from(BUCKET).remove([path]);
     throw new Error(`Insert row échoué : ${error.message}`);
   }
-  return data as CatalogShot;
+  const shot = data as CatalogShot;
+  try {
+    await mirrorCatalogShotToMediaLibrary(
+      shot,
+      blob.type,
+      payload.settings?.mode === 'packshot' ? 'packshot' : 'shooting_studio',
+    );
+  } catch (mediaError) {
+    await supabase.from('catalog_shots').delete().eq('id', shot.id);
+    await supabase.storage.from(BUCKET).remove([path]);
+    throw mediaError;
+  }
+  return shot;
 }
 
 /** Liste paginée des shots catalogués, plus récents en premier. */

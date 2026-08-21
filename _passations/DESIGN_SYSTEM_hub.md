@@ -1,154 +1,124 @@
-# Design System — Hub Ypersoa
+# Design System — Hub Ypersoa (v2)
 
-> Source de vérité visuelle du shell Hub.
-> Décisions verrouillées en session du 30 avril 2026.
-> NE PAS DÉVIER de ces décisions sans recadrage explicite avec Sarah.
+> Source de vérité visuelle du chrome ET du contenu des pages internes du Hub.
+> v1 verrouillée en session du 30 avril 2026. **v2 — recadrage du 20 août 2026**,
+> suite à l'audit du 18/08 et aux maquettes `hub-accueil-relook.html` /
+> `atelier-blog-relook.html` validées par Sarah.
+> NE PAS DÉVIER de ces décisions sans nouveau recadrage explicite avec Sarah.
 
-## Philosophie : la hiérarchie à deux niveaux
+## Ce qui a changé en v2, et pourquoi
 
-Le Hub fonctionne comme un studio textile physique : les murs
-(le shell) sont neutres et permanents. Les mood boards (les apps)
-sont colorés et changent. Le shell est le cadre, les apps sont
-les toiles.
+L'audit du 18/08 a identifié 3 palettes de marque contradictoires dans le repo
+(CLAUDE.md §2, `charte_editoriale.json`, Brand Voice & Design System v1) sans
+trancher laquelle fait foi pour le Hub. En pratique, les tokens `--hub-*`
+définis ici pilotent déjà ~76 fichiers (chrome ET contenu de toutes les pages
+internes), pas seulement la "coquille" décrite en v1 — la séparation stricte
+"shell neutre / apps colorées" de la v1 n'a jamais vraiment tenu dans le code.
 
-**Le shell ne porte JAMAIS de couleur d'app.**
-**Le contenu d'une app porte SES couleurs, jamais celles d'une autre.**
+**Décision v2** : `--hub-*` devient officiellement LE système visuel du Hub
+(navigation + contenu de ses propres pages), réchauffé avec les accents
+coquelicot/blush des maquettes. `--brand-*` reste une palette séparée,
+réservée au **produit/marketing** (CLAUDE.md §2 — visuels Instagram/Pinterest,
+overlay, contenu généré pour publication externe). Un changement du Hub ne
+doit jamais faire dériver un visuel publié, et inversement.
 
-## Les 4 principes verrouillés
-
-### Principe 1 — Rôle émotionnel
-Choix : atelier artisanal premium contemporain.
-Référence mentale : studio textile haut de gamme,
-lumière naturelle, lin, bois clair.
-
-### Principe 2 — Contraste avec les apps
-Choix : shell très silencieux, presque monochrome.
-Les apps colorées doivent éclater contre le shell.
-
-### Principe 3 — Typographie
-Choix : 3 typos Josefin Sans + DM Sans + Cormorant Garamond
-avec grammaire d'usage stricte (voir section Typographie ci-dessous).
-
-### Principe 4 — Ornements
-Choix : minimaux. Lignes 0.5px, ombres très douces uniquement
-fonctionnelles (focus, hover). Pas de textures, pas de gradients,
-pas de fioritures.
-
-## Tokens couleur du shell — 3 valeurs SEULEMENT
+## Tokens couleur du chrome — v2
 
 ```css
 :root {
-  --hub-bg:         #FAF7F2;  /* cream très pâle, papier de lin */
-  --hub-foreground: #1E2D4A;  /* ink profond bleu-noir doux */
-  --hub-border:     #E8E1D6;  /* gris cream subtil pour séparateurs */
+  --hub-bg:            #F7F2E8;  /* crème réchauffée */
+  --hub-bg-alt:         #EFE7D6;  /* crème secondaire (cartes sur cartes) */
+  --hub-foreground:    #1C3A36;  /* marine-teal profond — ink dominant */
+  --hub-border:        #E2D8C6;
+  --hub-accent:        #C23A2D;  /* coquelicot — CTA, pouls, attention */
+  --hub-accent-hover:  #A22F24;
+  --hub-accent-soft:   #EAB4C4;  /* blush — highlights doux, séries */
+  --hub-accent-wash:   #F7E3E9;  /* blush très clair — fonds de nudge */
+  --hub-teal:          #2E7D74;  /* teinte secondaire — succès, "publié" */
 }
 ```
 
-INTERDICTION ABSOLUE d'introduire une 4ème couleur dans la chrome.
-Le terracotta, le vert olive, le rouge passion vivent UNIQUEMENT
-dans le contenu des apps.
+Le coquelicot est la seule couleur d'alerte/attention du chrome (pastille qui
+pulse pour "ce qui demande ton attention" sur l'accueil). Ne pas la dupliquer
+avec une autre teinte "urgence" ailleurs dans le chrome.
 
-Test pratique : si tu plisses les yeux devant la chrome, les bordures
-doivent presque disparaître. Si elles sautent aux yeux, le contraste
-border/bg est trop fort.
+## Typographie — inchangée depuis Brand Voice & Design System v1
 
-## Tokens typographie
+Le Hub réutilise la typographie déjà en place dans `globals.css`
+(`referentiels/brand voice design system/`), pour rester "dans la même langue"
+que le reste de la marque — pas de 4e/5e typo ajoutée pour la refonte :
 
-### Josefin Sans — IDENTITÉ DE MARQUE
-- Usage : logo Hub, titres de campagnes iconiques
-- letter-spacing : 0.06em à 0.08em
-- Poids : 400 et 500
-- Tailles types : 16px (logo Hub topbar), 14px (mots-poésie petits)
+- **Newsreader** (`--font-serif`) — titres de page, accueil, gros chiffres du
+  pouls de la semaine, voix éditoriale.
+- **Hanken Grotesk** (`--font-sans`) — nav, labels, boutons, formulaires, corps
+  de texte.
+- **Josefin Sans** (`--font-logo`) — logo Hub uniquement (wordmark topbar).
 
-### DM Sans — VOIX UTILITAIRE
-- Usage : nav, labels, boutons, formulaires, tooltips, badges
-- letter-spacing : 0
-- Poids : 400 et 500
-- Tailles types : 14px (nav), 13px (labels), 12px (badges)
-
-### Cormorant Garamond — VOIX ÉDITORIALE
-- Usage : titres de page dans les apps, intertitres évocateurs
-- letter-spacing : -0.01em (légèrement serré)
-- Poids : 400, 500, 600
-- Tailles types : 32px (h1 app), 24px (h2), 18px (h3)
-- Italic occasionnel pour intertitres évocateurs
-
-INTERDICTION : Cormorant pour de la nav, Cormorant pour des boutons.
-Cormorant est réservée à la prose éditoriale.
-
-## Tokens layout du shell
+## Tokens layout du chrome — v2
 
 ```css
 :root {
-  --sidebar-width:    64px;
+  --sidebar-width:    236px;  /* v1 : 64px icônes seules → v2 : sidebar libellée */
   --sidebar-icon:     20px;
   --topbar-height:    56px;
   --content-padding:  32px;
-
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-12: 48px;
 }
 ```
 
-## Composants du shell
+## Composants du chrome
 
 ### Topbar
-- Hauteur : 56px
-- Background : var(--hub-bg)
-- Bordure bottom : 0.5px solid var(--hub-border)
-- Contenu gauche : logo Y rond ink + texte "YPERSOA HUB"
-  en Josefin Sans 13px, letter-spacing 0.08em, weight 500
-- Contenu droit : search (placeholder visuel), profile
+- Hauteur : 56px, fond `var(--hub-bg)`, bordure bottom 0.5px `var(--hub-border)`.
+- Logo Y rond + wordmark Josefin Sans, search Cmd+K, chip utilisateur + logout.
+- Inchangé fonctionnellement en v2, restylé aux nouveaux tokens.
 
-### Sidebar
-- Largeur : 64px
-- Background : var(--hub-bg)
-- Bordure right : 0.5px solid var(--hub-border)
-- Icônes alignées verticalement, gap 6px, padding-top 12px
-- Icône active : background var(--hub-foreground), icon stroke
-  var(--hub-bg), border-radius 8px
-- Icône inactive : opacity 0.45, icon stroke var(--hub-foreground),
-  no background
-- Hover icône inactive : opacity 0.8, transition 150ms
-- Tooltip au hover : DM Sans 12px, fond var(--hub-foreground),
-  texte var(--hub-bg)
+### Sidebar (v2 — étendue, libellée)
+- Largeur : 236px, fond `var(--hub-bg)`, bordure right 0.5px `var(--hub-border)`.
+- Groupe "Les ateliers" : Social, Blog, Planning, Studio, Bibliothèque —
+  avec badge de compteur si pertinent (ex. "2" posts à valider).
+- Groupe suivant, même niveau visuel : Atelier DA (casting/ambiances/
+  incarnations/Radar), Atelier Production. Radar a rejoint Atelier DA le
+  21/08/2026 (n'était plus un atelier de premier niveau), débarrassé de
+  Google Trends à cette occasion (Pinterest seul en V1).
+- Icône/libellé actif : fond `var(--hub-bg-alt)` ou `var(--hub-bg)`, texte
+  `var(--hub-foreground)`, trait vertical `var(--hub-accent)` à gauche.
+- Icône/libellé inactif : opacité ~0.7, hover → opacité 1.
+- Bas de sidebar : Brand Book, Guide, puis chip utilisateur (avatar initiale +
+  prénom + rôle).
 
-### Zone de contenu
-- Background : var(--hub-bg)
-- Padding : 32px
-- Contient l'app active
+### Accueil
+- Bloc hello personnalisé (prénom depuis `profiles.full_name`), Newsreader.
+- 4 cartes "pouls de la semaine" — un point coquelicot qui pulse = ce qui
+  demande l'attention de l'utilisateur.
+- Grille "Les ateliers" : cartes éditoriales teintées (pas des tuiles
+  identiques), une teinte + une phrase d'état réelle par atelier.
 
-## Règles de cohabitation chrome ↔ contenu
+### Fil de broderie
+- Classe utilitaire `.hub-stitch` (`app/globals.css`) : ligne pointillée en
+  `currentColor`, réutilisée dans la sidebar, l'accueil, l'en-tête des cartes.
+  C'est l'élément qui signe "Ypersoa" plutôt qu'un template SaaS générique.
 
-1. La chrome (topbar + sidebar) est invariable selon l'app active.
-   Seule l'icône sidebar active change de highlight.
+## Règles de cohabitation chrome ↔ contenu métier
 
-2. Le contenu de l'app peut introduire SES couleurs accent
-   (terracotta, vert olive, etc.) UNIQUEMENT dans ses boutons,
-   chips, cards, badges. JAMAIS en background de section qui
-   toucherait la chrome.
-
-3. Les titres de page DANS une app utilisent Cormorant
-   (var(--font-serif) ou import direct).
-
-4. Les éléments fonctionnels DANS une app (boutons d'action,
-   labels de form) utilisent DM Sans.
-
-5. Si une app a besoin d'un branding fort (nom de campagne,
-   nom de motif iconique), c'est Josefin Sans.
+1. `--hub-*` pilote le chrome ET les pages internes du Hub (accueil, ateliers,
+   listes, formulaires). C'est la norme désormais, pas une exception.
+2. `--brand-*` (CLAUDE.md §2) reste réservé au contenu **produit/marketing** —
+   overlay Instagram/Pinterest, hashtags, visuels générés pour publication.
+   Ne jamais faire fuiter `--hub-accent` (coquelicot chrome) dans un template
+   d'overlay ou une palette de packshot : ce sont deux systèmes différents qui
+   peuvent partager des teintes proches par coïncidence, jamais par référence.
+3. Les titres de page utilisent Newsreader (`var(--font-serif)`).
+4. Les éléments fonctionnels (boutons, labels de form) utilisent Hanken
+   Grotesk (`var(--font-sans)`).
+5. Le logo/wordmark Hub reste seul à utiliser Josefin Sans.
 
 ## Évolutions interdites sans recadrage
 
-- Ajouter une 4ème typo
-- Modifier les 3 hex codes du shell
-- Introduire des gradients, textures, ornements lourds
-- Brancher une couleur d'app dans la chrome
-- Changer la largeur sidebar ou hauteur topbar
+- Ajouter une 4e couleur d'accent au chrome (au-delà crème/marine/coquelicot/
+  blush/teal ci-dessus).
+- Ajouter une typo supplémentaire au chrome.
+- Faire dériver `--brand-*` (palette produit) depuis ce document — l'inverse
+  n'est pas non plus permis.
+- Changer la largeur sidebar ou la hauteur topbar hors session de recadrage.
 
-Toute évolution structurante demande un nouveau passage en cadrage
-avec Sarah.
+Toute évolution structurante demande un nouveau passage en cadrage avec Sarah.

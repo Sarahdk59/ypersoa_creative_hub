@@ -2,7 +2,7 @@
  * API Atelier Trends — Lot 1.
  *   GET  /api/trends        → dernier snapshot (+ liste des dates dispo)
  *   GET  /api/trends?id=... → un snapshot précis
- *   POST /api/trends        → déclenche un run (Google Trends FR) et le renvoie
+ *   POST /api/trends        → déclenche un run (Pinterest) et le renvoie
  */
 import { NextResponse } from "next/server";
 import {

@@ -2,7 +2,7 @@
   "_meta": {
     "schema_version": "1.0",
     "referentiel": "regles_broderie",
-    "last_updated": "2026-05-21",
+    "last_updated": "2026-08-21",
     "description": "Règles et contraintes officielles broderie Ypersoa par type de placement. Source de vérité pour la prod Adriana et pour les générations IA (atelier-shooting, atelier-DA shooting-book)."
   },
   "placements": [
@@ -30,7 +30,7 @@
         "Largeur par défaut : 8 cm",
         "Passer à 10 cm pour les tailles 2XL ou 3XL si besoin"
       ],
-      "note": ""
+      "note": "placement cadre à la couture du col et au 3/4 du haut de la manche"
     },
     {
       "id": "centre",

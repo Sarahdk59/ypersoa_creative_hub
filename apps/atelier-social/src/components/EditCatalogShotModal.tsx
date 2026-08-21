@@ -7,7 +7,7 @@
  * motif, variante). Save → updateCatalogShot. Bouton "Supprimer le shot" pour
  * delete complet (avec confirm).
  *
- * Utilisée depuis la vue Catalogue (/atelier-da/motifs → onglet Catalogue) au
+ * Utilisée depuis la vue Catalogue (/bibliotheque/motifs → onglet Catalogue) au
  * survol d'une thumbnail.
  */
 

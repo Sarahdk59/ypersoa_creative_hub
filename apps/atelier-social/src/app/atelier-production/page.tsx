@@ -187,8 +187,8 @@ export default function AtelierProductionHome() {
                   textTransform: "uppercase",
                   padding: "3px 8px",
                   borderRadius: 999,
-                  background: m.status === "v0" ? "var(--hub-foreground)" : "transparent",
-                  color: m.status === "v0" ? "var(--hub-bg)" : "var(--hub-foreground)",
+                  background: m.status === "v0" ? "color-mix(in srgb, var(--hub-teal) 15%, white)" : "transparent",
+                  color: m.status === "v0" ? "var(--hub-teal)" : "var(--hub-foreground)",
                   border: m.status !== "v0" ? "0.5px solid var(--hub-border)" : "none",
                   opacity: m.status === "v0" ? 1 : 0.6,
                 }}
@@ -203,9 +203,9 @@ export default function AtelierProductionHome() {
                   width: 44,
                   height: 44,
                   borderRadius: 10,
-                  background: m.status === "v0" ? "var(--hub-foreground)" : "var(--hub-bg)",
+                  background: m.status === "v0" ? "var(--hub-accent-wash)" : "var(--hub-bg)",
                   border: m.status !== "v0" ? "0.5px solid var(--hub-border)" : "none",
-                  color: m.status === "v0" ? "var(--hub-bg)" : "var(--hub-foreground)",
+                  color: m.status === "v0" ? "var(--hub-teal)" : "var(--hub-foreground)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -245,6 +245,7 @@ export default function AtelierProductionHome() {
 
               {m.href && (
                 <div
+                  className="atelier-da-card-cta"
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -255,6 +256,7 @@ export default function AtelierProductionHome() {
                     color: "var(--hub-foreground)",
                     textTransform: "uppercase",
                     letterSpacing: "0.08em",
+                    transition: "color 200ms ease",
                   }}
                 >
                   Ouvrir {m.external ? <ExternalLink size={14} strokeWidth={1.6} /> : <ArrowRight size={14} strokeWidth={1.6} />}

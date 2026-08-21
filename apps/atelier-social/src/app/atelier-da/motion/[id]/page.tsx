@@ -237,7 +237,11 @@ export default function MotionJobDetailPage() {
             }}
           >
             {job.clips.map((c) => (
-              <ClipPreview key={c.ordre} clip={c} />
+              <ClipPreview
+                key={c.ordre}
+                clip={c}
+                downloadHref={`/api/da/motion/jobs/${job.id}/clips/${c.ordre}/download`}
+              />
             ))}
           </div>
         </section>

@@ -3,15 +3,16 @@
  */
 "use client";
 
-import { AlertTriangle, Film, Loader2 } from "lucide-react";
+import { AlertTriangle, Download, Film, Loader2 } from "lucide-react";
 
 import type { ClipPlan } from "@/types/motion";
 
 interface ClipPreviewProps {
   clip: ClipPlan;
+  downloadHref?: string;
 }
 
-export function ClipPreview({ clip }: ClipPreviewProps) {
+export function ClipPreview({ clip, downloadHref }: ClipPreviewProps) {
   const isStub = clip.clip_url?.startsWith("data:video/mp4;base64,STUB");
 
   return (
@@ -97,6 +98,11 @@ export function ClipPreview({ clip }: ClipPreviewProps) {
             <AlertTriangle size={11} style={{ marginTop: 2, flexShrink: 0 }} />
             {clip.erreur}
           </p>
+        )}
+        {downloadHref && clip.statut === "genere" && !isStub && (
+          <a href={downloadHref} style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 8, fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--hub-foreground)" }}>
+            <Download size={13} strokeWidth={1.7} /> Télécharger
+          </a>
         )}
       </div>
     </article>

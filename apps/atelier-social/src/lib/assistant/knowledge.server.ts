@@ -54,49 +54,53 @@ export const HUB_MAP: HubRoute[] = [
       "Générer la légende Instagram d'un avis client (squelette verrouillé : étoiles + merci, citation, mini-histoire, phrase-pont personnalisation, CTA, hashtags) à partir de l'avis, du prénom, du produit et de l'occasion. La carte visuelle (étoiles + citation) reste composée à la main dans Illustrator.",
   },
   {
-    href: "/shooting",
-    atelier: "Atelier Shooting",
+    href: "/studio/shooting",
+    atelier: "Atelier Studio · Shooting",
     pitch:
       "Préparer un shooting : choisir un produit + un motif + une canonique (mannequin), verrouiller le packshot et la broderie, et envoyer le résultat vers le planning (Planable).",
   },
   {
-    href: "/lookbook",
-    atelier: "Atelier Lookbook",
+    href: "/studio/lookbook",
+    atelier: "Atelier Studio · Lookbook",
+    pitch: "Générer un moodboard d'ambiance (12-20 visuels) à partir d'un brief poétique court.",
+  },
+  {
+    href: "/bibliotheque",
+    atelier: "Bibliothèque",
     pitch:
-      "La médiathèque du Hub : retrouver, taguer et organiser les visuels (lookbook / lifestyle) par motif et par produit.",
+      "Tout ce que l'atelier a déjà produit, réuni en 3 onglets : Visuels (médiathèque photos, tags par motif/produit/ambiance), Packs sociaux (packs Instagram/Pinterest sauvegardés) et Articles (brouillons et articles de blog).",
   },
   {
     href: "/atelier-da",
     atelier: "Atelier DA",
-    pitch:
-      "La direction artistique : casting des canoniques, motifs YPM, palettes, et le planning commun créa / prod / comm.",
+    pitch: "Le référentiel créatif : casting des canoniques, ambiances officielles, motifs YPM, incarnations éditoriales.",
   },
   {
-    href: "/atelier-da/motifs",
-    atelier: "Atelier DA · Motifs",
-    pitch: "Le catalogue créatif des motifs YPM (noms commerciaux, déclinaisons, templates de poignets).",
+    href: "/bibliotheque/motifs",
+    atelier: "Bibliothèque · Motifs",
+    pitch: "Le catalogue créatif des motifs YPM et leurs variantes (noms commerciaux, déclinaisons, templates de poignets).",
   },
   {
-    href: "/atelier-da/studio-mood",
+    href: "/studio/studio-mood",
     atelier: "Atelier DA · Studio Mood brodé",
     pitch:
       "Préparer et piloter des épisodes vidéo (Reels, Stories) autour des motifs brodés : brief, storyboard scène par scène, copy brand-safe, visuel de test. Statuts : Brouillon → Prêt à tourner → Tourné → Monté → Publié.",
   },
   {
-    href: "/atelier-da/blog",
+    href: "/blog",
     atelier: "Atelier DA · Blog",
     pitch:
       "Le générateur d'articles GEO pour Shopify : brief longue traîne, angle éditorial, lint qualité, export HTML Shopify, bloc Liquid et FAQ JSON-LD.",
   },
   {
-    href: "/atelier-da/planning",
+    href: "/planning/retroplanning",
     atelier: "Atelier DA · Planning",
     pitch: "Le rétroplanning commun de l'année : drops de collection, marronniers, beats de comm (J-45 Pinterest…).",
   },
   {
     href: "/atelier-trends",
-    atelier: "Atelier Trends",
-    pitch: "La veille tendances (Pinterest + Google Trends) pour transformer une tendance en action broderie.",
+    atelier: "Atelier DA · Radar",
+    pitch: "La veille tendances Pinterest pour transformer une tendance en action broderie.",
   },
   {
     href: "/atelier-production",

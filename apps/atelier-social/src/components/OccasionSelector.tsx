@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  Baby,
-  Heart,
-  Gift,
-  Flower2,
-  CalendarHeart,
-  Sparkles,
-  Users,
-  Backpack,
-  Sun,
-  Snowflake,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Baby, Heart, Gift, Flower2, CalendarHeart, Sparkles, Users, Backpack, Sun, Snowflake } from "lucide-react";
 
 /**
  * 6 occasions reformulées BRAND-SAFE :
@@ -110,34 +98,18 @@ export function OccasionSelector({
   selectedOccasion,
   onSelectOccasion,
 }: OccasionSelectorProps) {
+  const selected = OCCASIONS.find((occasion) => occasion.id === selectedOccasion);
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {OCCASIONS.map((occasion) => {
-        const Icon = occasion.icon;
-        const isSelected = selectedOccasion === occasion.id;
-
-        return (
-          <button
-            key={occasion.id}
-            type="button"
-            onClick={() => onSelectOccasion(occasion.id)}
-            className={cn(
-              "flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all",
-              isSelected
-                ? "border-brand-rose bg-brand-rose/5 ring-1 ring-brand-rose text-brand-rose"
-                : "border-brand-muted/20 bg-white hover:border-brand-rose/40 hover:bg-brand-rose/5 text-brand-text"
-            )}
-          >
-            <Icon
-              className={cn(
-                "w-6 h-6 mb-2",
-                isSelected ? "text-brand-rose" : "text-brand-muted"
-              )}
-            />
-            <span className="font-medium text-sm leading-tight">{occasion.label}</span>
-          </button>
-        );
-      })}
+    <div className="rounded-xl border border-brand-muted/15 bg-white p-3 shadow-sm">
+      <label className="block text-[10px] font-bold uppercase tracking-[0.14em] text-brand-muted mb-2">Occasion / histoire</label>
+      <select
+        value={selectedOccasion}
+        onChange={(event) => onSelectOccasion(event.target.value)}
+        className="w-full rounded-lg border border-brand-muted/20 bg-brand-bg/40 px-3 py-2.5 text-sm text-brand-text outline-none transition focus:border-brand-rose focus:ring-2 focus:ring-brand-rose/10"
+      >
+        {OCCASIONS.map((occasion) => <option key={occasion.id} value={occasion.id}>{occasion.label}</option>)}
+      </select>
+      {selected && <p className="mt-2 text-xs leading-relaxed text-brand-muted">{selected.context}</p>}
     </div>
   );
 }

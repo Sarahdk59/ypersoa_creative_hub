@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   ActiveLookbookAmbiance,
   listActiveLookbookAmbiances,
@@ -32,96 +31,28 @@ export function VibeSelector({ selectedVibe, onSelectVibe }: VibeSelectorProps) 
   }, []);
 
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {VIBES.map((vibe) => {
-          const Icon = vibe.icon;
-          const isSelected = selectedVibe === vibe.id;
-
-          return (
-            <button
-              key={vibe.id}
-              type="button"
-              onClick={() => onSelectVibe(vibe.id)}
-              className={cn(
-                "flex flex-col items-start p-4 rounded-2xl border text-left transition-all",
-                isSelected
-                  ? "border-brand-rose bg-brand-rose/5 ring-1 ring-brand-rose"
-                  : "border-brand-muted/20 bg-white hover:border-brand-rose/40 hover:bg-brand-rose/5"
-              )}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Icon
-                  className={cn(
-                    "w-4 h-4",
-                    isSelected ? "text-brand-rose" : "text-brand-muted"
-                  )}
-                />
-                <span className="font-medium text-sm">{vibe.label}</span>
-              </div>
-              <span className="text-xs text-brand-muted leading-relaxed">
-                {vibe.description}
-              </span>
-            </button>
-          );
-        })}
+    <div className="rounded-xl border border-brand-muted/15 bg-white p-3 shadow-sm">
+      <div className="flex items-center justify-between gap-3 mb-2">
+        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-muted">Ambiance visuelle</span>
+        {activeAmbiances.length > 0 && <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />}
       </div>
-
-      {activeAmbiances.length > 0 && (
-        <div className="pt-3 border-t border-brand-muted/15">
-          <div className="flex items-center gap-2 mb-2">
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-            <span className="text-[10px] font-bold text-brand-text uppercase tracking-wider">
-              Mes ambiances de référence
-            </span>
-            <span className="text-[10px] text-brand-muted italic">7j</span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {activeAmbiances.map((lb) => {
-              const id = `${LOOKBOOK_VIBE_PREFIX}${lb.id}`;
-              const isSelected = selectedVibe === id;
-              const expires = lb.date_archivage
-                ? new Date(lb.date_archivage).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
-                : null;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => onSelectVibe(id)}
-                  className={cn(
-                    "flex items-center gap-3 p-2 rounded-2xl border text-left transition-all",
-                    isSelected
-                      ? "border-brand-rose bg-brand-rose/5 ring-1 ring-brand-rose"
-                      : "border-brand-muted/20 bg-white hover:border-brand-rose/40 hover:bg-brand-rose/5"
-                  )}
-                  title={`Active jusqu'au ${expires || "—"}`}
-                >
-                  {lb.cover_image_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={lb.cover_image_url}
-                      alt={lb.titre}
-                      className="w-12 h-14 rounded-md object-cover flex-shrink-0"
-                    />
-                  ) : (
-                    <div className="w-12 h-14 rounded-md bg-brand-bg flex items-center justify-center flex-shrink-0">
-                      <Heart className="w-4 h-4 text-brand-muted" />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className={cn("font-medium text-xs truncate", isSelected ? "text-brand-rose" : "text-brand-text")}>
-                      {lb.titre}
-                    </div>
-                    <div className="text-[10px] text-brand-muted truncate">
-                      {expires ? `jusqu'au ${expires}` : "actif"}
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <select
+        value={selectedVibe}
+        onChange={(event) => onSelectVibe(event.target.value)}
+        className="w-full rounded-lg border border-brand-muted/20 bg-brand-bg/40 px-3 py-2.5 text-sm text-brand-text outline-none transition focus:border-brand-rose focus:ring-2 focus:ring-brand-rose/10"
+      >
+        <optgroup label="Ambiances Ypersoa">
+          {VIBES.map((vibe) => <option key={vibe.id} value={vibe.id}>{vibe.label}</option>)}
+        </optgroup>
+        {activeAmbiances.length > 0 && (
+          <optgroup label="Mes lookbooks actifs">
+            {activeAmbiances.map((lookbook) => <option key={lookbook.id} value={`${LOOKBOOK_VIBE_PREFIX}${lookbook.id}`}>♥ {lookbook.titre}</option>)}
+          </optgroup>
+        )}
+      </select>
+      <p className="mt-2 text-xs leading-relaxed text-brand-muted">
+        {VIBES.find((vibe) => vibe.id === selectedVibe)?.description ?? "Ambiance de référence issue d’un lookbook actif."}
+      </p>
     </div>
   );
 }

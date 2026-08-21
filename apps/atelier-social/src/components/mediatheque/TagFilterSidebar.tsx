@@ -9,7 +9,7 @@
  */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, X } from "lucide-react";
 
 import type { Tag, TagCategory } from "@/types/mediatheque";
@@ -22,6 +22,8 @@ interface TagFilterSidebarProps {
   usage: Map<string, number>;
   selected: string[];
   onChange: (next: string[]) => void;
+  /** Catégorie à déplier (déclenchée par une vue rapide "Par motif" / "Par occasion"). */
+  focusCategory?: TagCategory | null;
 }
 
 export function TagFilterSidebar({
@@ -29,16 +31,49 @@ export function TagFilterSidebar({
   usage,
   selected,
   onChange,
+  focusCategory,
 }: TagFilterSidebarProps) {
   const [open, setOpen] = useState<Set<TagCategory>>(new Set(DEFAULT_OPEN));
+  const [openMotifs, setOpenMotifs] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!focusCategory) return;
+    setOpen((prev) => (prev.has(focusCategory) ? prev : new Set(prev).add(focusCategory)));
+  }, [focusCategory]);
 
   const selectedSet = useMemo(() => new Set(selected), [selected]);
+
+  /**
+   * Incarnation ne se rend plus comme catégorie plate à part : chaque tag
+   * incarnation porte un `parent_id` (motif dérivé de la bible YPM, cf.
+   * taxonomie.ts) — on les regroupe ici pour les nicher sous leur motif
+   * (parcours Adriana : motif → toutes ses variantes).
+   */
+  const incarnationsByMotif = useMemo(() => {
+    const map = new Map<string, Tag[]>();
+    for (const t of tagsByCategory["incarnation"] ?? []) {
+      if (!t.parent_id) continue;
+      const list = map.get(t.parent_id) ?? [];
+      list.push(t);
+      map.set(t.parent_id, list);
+    }
+    return map;
+  }, [tagsByCategory]);
 
   const toggleCat = (cat: TagCategory) => {
     setOpen((prev) => {
       const next = new Set(prev);
       if (next.has(cat)) next.delete(cat);
       else next.add(cat);
+      return next;
+    });
+  };
+
+  const toggleMotif = (motifId: string) => {
+    setOpenMotifs((prev) => {
+      const next = new Set(prev);
+      if (next.has(motifId)) next.delete(motifId);
+      else next.add(motifId);
       return next;
     });
   };
@@ -115,7 +150,7 @@ export function TagFilterSidebar({
         )}
       </div>
 
-      {TAG_CATEGORY_ORDER.map((cat) => {
+      {TAG_CATEGORY_ORDER.filter((cat) => cat !== "incarnation").map((cat) => {
         const tags = tagsByCategory[cat] ?? [];
         if (tags.length === 0) return null;
         const isOpen = open.has(cat);
@@ -227,6 +262,105 @@ export function TagFilterSidebar({
                           {count}
                         </span>
                       </button>
+
+                      {cat === "motif" &&
+                        (() => {
+                          const children = incarnationsByMotif.get(t.id) ?? [];
+                          if (children.length === 0) return null;
+                          const hasSelectedChild = children.some((c) =>
+                            selectedSet.has(`incarnation:${c.slug}`),
+                          );
+                          const motifOpen =
+                            openMotifs.has(t.id) || isSelected || hasSelectedChild;
+                          return (
+                            <div style={{ margin: "2px 0 4px 10px" }}>
+                              <button
+                                type="button"
+                                onClick={() => toggleMotif(t.id)}
+                                style={{
+                                  background: "transparent",
+                                  border: "none",
+                                  padding: "2px 4px",
+                                  cursor: "pointer",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 3,
+                                  fontFamily: "var(--font-sans)",
+                                  fontSize: 10,
+                                  color: "var(--hub-foreground)",
+                                  opacity: 0.6,
+                                }}
+                              >
+                                {motifOpen ? (
+                                  <ChevronDown size={11} strokeWidth={1.6} />
+                                ) : (
+                                  <ChevronRight size={11} strokeWidth={1.6} />
+                                )}
+                                {children.length} incarnation
+                                {children.length > 1 ? "s" : ""}
+                              </button>
+                              {motifOpen && (
+                                <ul
+                                  style={{
+                                    listStyle: "none",
+                                    padding: 0,
+                                    margin: "2px 0 0 14px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 2,
+                                  }}
+                                >
+                                  {children.map((c) => {
+                                    const cRef = `incarnation:${c.slug}`;
+                                    const cSelected = selectedSet.has(cRef);
+                                    const cCount = usage.get(c.id) ?? 0;
+                                    return (
+                                      <li key={c.id}>
+                                        <button
+                                          type="button"
+                                          onClick={() => toggleTag("incarnation", c.slug)}
+                                          style={{
+                                            width: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            padding: "3px 8px",
+                                            borderRadius: 6,
+                                            border: "none",
+                                            background: cSelected
+                                              ? "var(--hub-foreground)"
+                                              : "transparent",
+                                            color: cSelected
+                                              ? "var(--hub-bg)"
+                                              : "var(--hub-foreground)",
+                                            fontFamily: "var(--font-sans)",
+                                            fontSize: 11,
+                                            textAlign: "left",
+                                            cursor: "pointer",
+                                            opacity: cCount === 0 && !cSelected ? 0.4 : 1,
+                                          }}
+                                        >
+                                          <span
+                                            style={{
+                                              whiteSpace: "nowrap",
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                            }}
+                                          >
+                                            {c.label}
+                                          </span>
+                                          <span style={{ fontSize: 9, opacity: 0.7, marginLeft: 6 }}>
+                                            {cCount}
+                                          </span>
+                                        </button>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              )}
+                            </div>
+                          );
+                        })()}
                     </li>
                   );
                 })}

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { startMotionJob } from "@/lib/motion/orchestrator";
 import type { CreateMotionJobInput, MotionEngine, MotionMode } from "@/types/motion";
 
-const VALID_MODES = new Set<MotionMode>(["reel", "ambiance", "packshot"]);
+const VALID_MODES = new Set<MotionMode>(["macro", "porte", "reel", "ambiance", "packshot"]);
 const VALID_ENGINES = new Set<MotionEngine>(["omni-flash", "veo-3.1", "stub"]);
 
 export async function POST(req: NextRequest) {

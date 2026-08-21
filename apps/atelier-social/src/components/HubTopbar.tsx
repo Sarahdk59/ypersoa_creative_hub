@@ -15,6 +15,7 @@ import { Search as SearchIcon, LogOut } from "lucide-react";
 import { useAuth } from "./auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import { ROLE_LABELS } from "@/lib/access";
+import { AnimatedLogo } from "./AnimatedLogo";
 
 export function HubTopbar() {
   const router = useRouter();
@@ -57,21 +58,7 @@ export function HubTopbar() {
         className="flex items-center gap-3 shrink-0"
         style={{ textDecoration: "none", color: "inherit" }}
       >
-        <div
-          className="flex items-center justify-center rounded-full"
-          style={{
-            width: 28,
-            height: 28,
-            background: "var(--hub-foreground)",
-            color: "var(--hub-bg)",
-            fontFamily: "var(--font-logo)",
-            fontSize: 13,
-            fontWeight: 500,
-            letterSpacing: "0.06em",
-          }}
-        >
-          Y
-        </div>
+        <AnimatedLogo size={26} />
         <span
           style={{
             fontFamily: "var(--font-logo)",
@@ -112,6 +99,7 @@ export function HubTopbar() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Cherche dans le Hub (club, mariage, YPM-007…)"
+          className="hub-search-input"
           style={{
             width: "100%",
             padding: "6px 12px 6px 32px",
@@ -121,7 +109,6 @@ export function HubTopbar() {
             fontFamily: "var(--font-sans)",
             fontSize: 12,
             color: "var(--hub-foreground)",
-            outline: "none",
           }}
         />
         <span

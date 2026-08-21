@@ -21,6 +21,7 @@ import {
   toShopifyLiquidBundle,
 } from "@/lib/blog/geo-export";
 import { saveBlogArticle } from "@/lib/blog/article-store";
+import { selectEditorialDetails } from "@/lib/blog/editorial-bank";
 
 export const runtime = "nodejs";
 export const maxDuration = 90;
@@ -46,12 +47,12 @@ function shuffleArray<T>(items: T[]): T[] {
 }
 
 const DEFAULT_BRAND_FACTS: BrandFact[] = [
-  { topic: "atelier", fact: "La broderie est realisee dans notre atelier a Wattrelos, dans les Hauts-de-France." },
-  { topic: "production", fact: "Chaque piece est brodee a la commande, apres validation, ce qui evite le surstock." },
-  { topic: "technique", fact: "Ypersoa travaille la broderie personnalisee, pensee pour durer dans le temps." },
-  { topic: "delais", fact: "Les delais de fabrication annonces sont de 5 a 11 jours ouvres selon le modele." },
-  { topic: "fil", fact: "La personnalisation couvre la couleur du vetement et la couleur du fil, avec 9 coloris de fil au choix." },
-  { topic: "perso", fact: "Le client choisit son texte, sa typographie et la couleur de fil." },
+  { topic: "atelier", fact: "Je brode a Wattrelos, dans les Hauts-de-France." },
+  { topic: "production", fact: "Chaque piece est brodee a la commande : elle a deja un prenom avant d'exister, sans stock qui dort." },
+  { topic: "technique", fact: "Le fil est pris dans la maille : l'imprime peut craqueler ou se decoller, la broderie tient tant que le sweat tient." },
+  { topic: "delais", fact: "Les delais standards sont de 5 a 11 jours ouvres selon le modele. Le click and collect peut accelerer les choses quand c'est possible." },
+  { topic: "fil", fact: "Tu choisis parmi les coloris de fil disponibles, et tu peux demander une couleur particuliere par mail." },
+  { topic: "perso", fact: "Tu choisis ton texte, ta typographie et ta couleur de fil." },
 ];
 
 function parseJson(raw: string): ArticlePayload {
@@ -146,6 +147,7 @@ export async function POST(req: NextRequest) {
     conversionGoal: body.conversionGoal,
     brandFacts: body.brandFacts?.length ? body.brandFacts : DEFAULT_BRAND_FACTS,
     internalLinks: body.internalLinks,
+    editorialDetails: selectEditorialDetails(body.targetQuery, body.angle),
   };
 
   const system = buildSystemPrompt();
@@ -160,6 +162,7 @@ export async function POST(req: NextRequest) {
     lint = lintArticle(article, {
       targetQuery: body.targetQuery,
       brandFacts: brief.brandFacts.map((f) => f.fact),
+      editorialDetails: brief.editorialDetails,
     });
 
     if (!lint.passed) {
@@ -168,6 +171,7 @@ export async function POST(req: NextRequest) {
       lint = lintArticle(article, {
         targetQuery: body.targetQuery,
         brandFacts: brief.brandFacts.map((f) => f.fact),
+        editorialDetails: brief.editorialDetails,
       });
     }
   } catch (error) {
@@ -226,6 +230,7 @@ export async function POST(req: NextRequest) {
     articleBodyHtml,
     jsonld,
     shopify,
+    editorialDetailIds: lint.editorialDetailIds,
     warning: persistenceWarning,
   });
 }

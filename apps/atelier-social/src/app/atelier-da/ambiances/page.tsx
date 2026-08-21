@@ -66,7 +66,7 @@ export default function AmbiancesPage() {
       {/* Section 2 — Lookbooks ❤️ actifs */}
       <section>
         <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 22, fontWeight: 500, margin: 0, marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-          <Heart size={18} fill="#E2627C" stroke="#E2627C" /> Mes lookbooks de référence (7j)
+          <Heart size={18} fill="var(--hub-accent)" stroke="var(--hub-accent)" /> Mes lookbooks de référence (7j)
         </h2>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)", opacity: 0.6, margin: "0 0 16px 0" }}>
           Lookbooks ❤️ activés depuis Atelier Lookbook, exposés comme ambiances de référence pendant 7 jours.
@@ -90,7 +90,7 @@ export default function AmbiancesPage() {
               opacity: 0.55,
             }}
           >
-            Aucun lookbook actif. Active un lookbook depuis <Link href="/lookbook" style={{ color: "var(--hub-foreground)" }}>Atelier Lookbook</Link>.
+            Aucun lookbook actif. Active un lookbook depuis <Link href="/studio/lookbook" style={{ color: "var(--hub-foreground)" }}>Atelier Lookbook</Link>.
           </div>
         ) : (
           <div

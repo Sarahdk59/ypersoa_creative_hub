@@ -1,0 +1,24 @@
+# Caches et dépendances locales : Railway les régénère pendant le build.
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+**/dist/
+*.tsbuildinfo
+
+# Sources non déployées par les ateliers web.
+.git/
+archives/
+outputs/
+prod_hub/
+apps/clemence-gif/
+apps/atelier-incarnation/
+apps/atelier-blog/
+apps/atelier-motion/
+apps/atelier-mediateque/
+
+# Secrets et fichiers locaux.
+.env.local
+**/.env.local
+.DS_Store

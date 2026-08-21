@@ -61,7 +61,7 @@ export async function enrichSnapshot(snapshot: TrendsSnapshot): Promise<TrendsSn
     .map((f) => `- id="${f.id}" → ${f.ypm_id} ${f.nom} (${f.intention}) | occasions: ${f.occasions_cles.join(", ")}`)
     .join("\n");
 
-  const systemPrompt = `Tu es l'analyste tendances d'Ypersoa, marque française de vêtements et accessoires BRODÉS PERSONNALISÉS à la commande (Hauts-de-France). Tu reçois des tendances brutes (Google Trends / Pinterest). Pour CHAQUE tendance, tu juges si Ypersoa peut en faire un contenu ou un produit brodé personnalisé, et tu proposes l'angle.
+  const systemPrompt = `Tu es l'analyste tendances d'Ypersoa, marque française de vêtements et accessoires BRODÉS PERSONNALISÉS à la commande (Hauts-de-France). Tu reçois des tendances brutes (Pinterest). Pour CHAQUE tendance, tu juges si Ypersoa peut en faire un contenu ou un produit brodé personnalisé, et tu proposes l'angle.
 
 RÈGLES DE MARQUE (absolues) :
 - Tutoiement TOUJOURS ("tu", "ton", "ta"). JAMAIS "vous".

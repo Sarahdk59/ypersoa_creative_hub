@@ -278,6 +278,14 @@ export async function listSources(mode: MotionMode): Promise<MotionSource[]> {
     ]);
     return [...packshots, ...likes, ...canoniques, ...media];
   }
+  if (mode === "macro" || mode === "porte") {
+    const [packshots, likes, media] = await Promise.all([
+      listPackshotSources(),
+      listLikedShotSources(),
+      listMediaSources(),
+    ]);
+    return [...packshots, ...likes, ...media];
+  }
   return [];
 }
 

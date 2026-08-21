@@ -8,9 +8,10 @@ import { setImageValide, deleteLookbookImage } from "@/lib/images-client";
 import { downloadSingleImage, downloadLookbookAsZip, buildImageFilename } from "@/lib/download";
 import { CastingPicker, CastingMode } from "@/components/CastingPicker";
 import { AddCustomImageModal } from "@/components/AddCustomImageModal";
+import { supabase } from "@/lib/supabase";
 
 interface ResponseImage {
-  image_id?: string;
+  id: string;
   storage_path?: string;
   position: number;
   famille: string;
@@ -22,7 +23,7 @@ interface ResponseImage {
 
 interface GenerateResponse {
   ok: true;
-  lookbook_id: string;
+  draft_id: string;
   titre: string;
   slug: string;
   tags: string[];
@@ -44,7 +45,7 @@ const FAMILLE_LABELS: Record<string, string> = {
 
 export default function Home() {
   const [brief, setBrief] = useState("");
-  const [count, setCount] = useState(20);
+  const [count, setCount] = useState(8);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<GenerateResponse | null>(null);
@@ -61,6 +62,7 @@ export default function Home() {
   const [selectedImageIds, setSelectedImageIds] = useState<Set<string>>(new Set());
   const [reopeningId, setReopeningId] = useState<string | null>(null);
   const [zippingId, setZippingId] = useState<string | null>(null);
+  const [savingLookbook, setSavingLookbook] = useState<"all" | "liked" | null>(null);
 
   useEffect(() => {
     listRecentLookbooks(12).then(setRecentLookbooks).catch(() => undefined);
@@ -122,8 +124,7 @@ export default function Home() {
     }
   };
 
-  const toggleImageSelected = (imageId: string | undefined) => {
-    if (!imageId) return;
+  const toggleImageSelected = (imageId: string) => {
     setSelectedImageIds((prev) => {
       const next = new Set(prev);
       if (next.has(imageId)) next.delete(imageId);
@@ -139,14 +140,14 @@ export default function Home() {
       const { lookbook, images } = await getLookbookFull(id);
       const reconstructed: GenerateResponse = {
         ok: true,
-        lookbook_id: lookbook.id,
+        draft_id: lookbook.id,
         titre: lookbook.titre,
         slug: lookbook.slug,
         tags: lookbook.tags,
         ambiance_extraite: lookbook.ambiance_extraite as AmbianceExtraite,
         canoniques_inclus: lookbook.canoniques_inclus,
         images: images.map((img) => ({
-          image_id: img.id,
+          id: img.id,
           storage_path: img.image_storage_path || undefined,
           position: img.position,
           famille: img.famille,
@@ -209,8 +210,12 @@ export default function Home() {
 
   const handleToggleFav = async () => {
     if (!result) return;
+    if (result.images.some((image) => image.url?.startsWith("data:"))) {
+      setError("Sauvegarde d'abord le lookbook avant de l'activer comme ambiance de référence.");
+      return;
+    }
     try {
-      const next = await setLookbookActiveAmbiance(result.lookbook_id, !isFavorite);
+      const next = await setLookbookActiveAmbiance(result.draft_id, !isFavorite);
       setIsFavorite(next.isActive);
       setAmbianceArchivageDate(next.dateArchivage);
     } catch (err) {
@@ -226,7 +231,7 @@ export default function Home() {
   const handleExtendAmbiance = async () => {
     if (!result || !isFavorite) return;
     try {
-      const next = await extendLookbookAmbiance(result.lookbook_id);
+      const next = await extendLookbookAmbiance(result.draft_id);
       setAmbianceArchivageDate(next.dateArchivage);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -234,14 +239,23 @@ export default function Home() {
   };
 
   const handleToggleImageValide = async (img: ResponseImage) => {
-    if (!result || !img.image_id) return;
+    if (!result) return;
     const newVal = !img.valide;
+    // En brouillon, le cœur est une sélection locale : seule la sauvegarde
+    // explicite enverra les fichiers retenus vers Supabase.
+    if (img.url?.startsWith("data:")) {
+      setResult({
+        ...result,
+        images: result.images.map((i) => i.id === img.id ? { ...i, valide: newVal } : i),
+      });
+      return;
+    }
     try {
-      await setImageValide(img.image_id, newVal);
+      await setImageValide(img.id, newVal);
       setResult({
         ...result,
         images: result.images.map((i) =>
-          i.image_id === img.image_id ? { ...i, valide: newVal } : i
+          i.id === img.id ? { ...i, valide: newVal } : i
         ),
       });
     } catch (err) {
@@ -250,13 +264,17 @@ export default function Home() {
   };
 
   const handleDeleteImage = async (img: ResponseImage) => {
-    if (!result || !img.image_id) return;
+    if (!result) return;
+    if (img.url?.startsWith("data:")) {
+      setResult({ ...result, images: result.images.filter((i) => i.id !== img.id) });
+      return;
+    }
     if (!confirm(`Supprimer la slide #${img.position} ? Cette action est irréversible.`)) return;
     try {
-      await deleteLookbookImage(img.image_id, img.storage_path || null);
+      await deleteLookbookImage(img.id, img.storage_path || null, img.url);
       setResult({
         ...result,
-        images: result.images.filter((i) => i.image_id !== img.image_id),
+        images: result.images.filter((i) => i.id !== img.id),
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -276,22 +294,22 @@ export default function Home() {
   // État de régénération par image (pour spinner local + désactivation bouton)
   const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
   const handleRegenerateImage = async (img: ResponseImage) => {
-    if (!result || !img.image_id) return;
-    setRegeneratingId(img.image_id);
+    if (!result) return;
+    setRegeneratingId(img.id);
     setError(null);
     try {
       const res = await fetch("/api/regenerate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_id: img.image_id }),
+        body: JSON.stringify({ prompt_en: img.prompt_en, canonique_injecte: img.canonique_injecte }),
       }).then((r) => r.json());
       if (!res.ok) throw new Error(res.error);
       // Met à jour l'image dans le state — bust cache CDN avec un timestamp
       setResult({
         ...result,
         images: result.images.map((i) =>
-          i.image_id === img.image_id
-            ? { ...i, url: `${res.data.image_url}?t=${Date.now()}`, storage_path: res.data.image_storage_path }
+          i.id === img.id
+            ? { ...i, url: res.data.image_url, storage_path: undefined }
             : i
         ),
       });
@@ -299,6 +317,73 @@ export default function Home() {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setRegeneratingId(null);
+    }
+  };
+
+  const handleSaveLookbook = async (mode: "all" | "liked") => {
+    if (!result || savingLookbook) return;
+    const images = (mode === "all" ? result.images : result.images.filter((image) => image.valide))
+      .filter((image) => image.url?.startsWith("data:"));
+    if (images.length === 0) {
+      setError(mode === "liked" ? "Like au moins une image avant de sauvegarder la sélection." : "Aucune image à sauvegarder.");
+      return;
+    }
+    setSavingLookbook(mode);
+    setError(null);
+    const uploadedPaths: string[] = [];
+    try {
+      const storageClient = supabase;
+      if (!storageClient) throw new Error("Supabase non configuré");
+      const uploadedImages = await Promise.all(images.map(async (image) => {
+        const response = await fetch(image.url!);
+        const file = await response.blob();
+        const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+        const path = `saved-${result.draft_id}/${image.id}.${ext}`;
+        const { error: uploadError } = await storageClient.storage.from("lookbook-images").upload(path, file, {
+          contentType: file.type || "image/jpeg",
+          cacheControl: "31536000",
+          upsert: false,
+        });
+        if (uploadError) throw new Error(`Upload image échoué : ${uploadError.message}`);
+        uploadedPaths.push(path);
+        return {
+          id: image.id,
+          position: image.position,
+          famille: image.famille,
+          canonique_injecte: image.canonique_injecte,
+          prompt_en: image.prompt_en,
+          image_storage_path: path,
+          image_url: storageClient.storage.from("lookbook-images").getPublicUrl(path).data.publicUrl,
+        };
+      }));
+      const res = await fetch("/api/save-lookbook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brief,
+          titre: result.titre,
+          slug: result.slug,
+          tags: result.tags,
+          ambiance_extraite: result.ambiance_extraite,
+          canoniques_inclus: result.canoniques_inclus,
+          llm_model_used: result.llm_model_used,
+          images: uploadedImages,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        await storageClient.storage.from("lookbook-images").remove(uploadedPaths);
+        throw new Error(data.message || "Sauvegarde échouée");
+      }
+      await handleReopenLookbook(data.data.lookbook_id);
+      setRecentLookbooks(await listRecentLookbooks(12));
+    } catch (err) {
+      if (supabase && uploadedPaths.length > 0) {
+        await supabase.storage.from("lookbook-images").remove(uploadedPaths);
+      }
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSavingLookbook(null);
     }
   };
 
@@ -330,7 +415,7 @@ export default function Home() {
     if (!result || selectedImageIds.size === 0) return;
     setDownloading(true);
     try {
-      const subset = result.images.filter((i) => i.image_id && selectedImageIds.has(i.image_id));
+      const subset = result.images.filter((i) => selectedImageIds.has(i.id));
       await downloadLookbookAsZip({
         titre: `${result.titre} (sélection)`,
         slug: `${result.slug}-selection-${subset.length}`,
@@ -349,8 +434,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="h-14 w-full bg-white/80 backdrop-blur-md border-b border-brand-muted/10 sticky top-0 z-10">
+    <div className="lookbook-page min-h-screen flex flex-col">
+      <header className="lookbook-header h-16 w-full backdrop-blur-md border-b sticky top-0 z-10">
         <div className="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
           <h1
             style={{
@@ -358,7 +443,7 @@ export default function Home() {
               fontSize: 24,
               fontWeight: 500,
               letterSpacing: "-0.01em",
-              color: "#1E2D4A",
+              color: "var(--color-brand-text)",
               lineHeight: 1,
               margin: 0,
             }}
@@ -367,7 +452,7 @@ export default function Home() {
           </h1>
           <button
             onClick={() => setShowLibrary((v) => !v)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-brand-rose hover:bg-brand-rose/10 px-3 py-1.5 rounded-full border border-brand-rose/20"
+            className="flex items-center gap-1.5 text-xs font-semibold text-brand-rose hover:bg-brand-rose/10 px-3.5 py-2 rounded-xl border border-brand-rose/25 bg-white/70 transition-colors"
           >
             <FolderOpen className="w-3.5 h-3.5" />
             Bibliothèque ({recentLookbooks.length})
@@ -377,13 +462,22 @@ export default function Home() {
 
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 py-8">
         {!result && !generating && (
-          <section className="max-w-2xl mx-auto mt-12">
-            <h2 className="font-serif text-3xl font-medium text-brand-text mb-2">
-              Quel est ton brief ?
-            </h2>
-            <p className="text-brand-muted text-sm mb-6">
-              Tape un brief poétique court — l&apos;IA décompose ton intention en 12-20 visuels d&apos;ambiance saisonnière Ypersoa.
-            </p>
+          <section className="max-w-2xl mx-auto mt-8 sm:mt-14">
+            <div className="mb-5">
+              <p className="lookbook-eyebrow mb-2">Atelier d&apos;ambiance</p>
+              <h2 className="font-serif text-4xl sm:text-5xl font-medium text-brand-text leading-[0.92] mb-3">
+                Compose ton lookbook.
+              </h2>
+              <p className="text-brand-muted text-sm leading-6 max-w-xl">
+                Un brief, une intention, une saison : l&apos;IA imagine une série de visuels prêts à nourrir l&apos;univers Ypersoa.
+              </p>
+            </div>
+
+            <div className="lookbook-brief-card rounded-[20px] p-4 sm:p-6">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <label htmlFor="lookbook-brief" className="text-sm font-semibold text-brand-text">Ton intention créative</label>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-rose bg-brand-rose/10 px-2 py-1 rounded-full">Étape 1</span>
+              </div>
 
             <textarea
               value={brief}
@@ -391,7 +485,8 @@ export default function Home() {
               placeholder="ex: Vacances à Porto Vecchio • Rouge amour passion • Nuit à Londres • Saint-Valentin Dimanche matin"
               maxLength={200}
               rows={3}
-              className="w-full px-4 py-3 rounded-2xl border border-brand-muted/20 bg-white focus:outline-none focus:ring-2 focus:ring-brand-rose/30 resize-none text-base"
+              id="lookbook-brief"
+              className="lookbook-input w-full px-4 py-3 rounded-xl border focus:outline-none resize-none text-base transition-shadow"
             />
             <div className="flex items-center justify-between mt-2">
               <span className="text-xs text-brand-muted">{brief.length}/200</span>
@@ -400,7 +495,7 @@ export default function Home() {
                 <select
                   value={count}
                   onChange={(e) => setCount(Number(e.target.value))}
-                  className="px-2 py-1 border border-brand-muted/20 rounded-md bg-white text-xs"
+                  className="px-2 py-1 border border-brand-border rounded-lg bg-white text-xs"
                 >
                   <option value={4}>4 (preview rapide)</option>
                   <option value={8}>8</option>
@@ -427,7 +522,7 @@ export default function Home() {
                 <select
                   value={paletteId}
                   onChange={(e) => setPaletteId(e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg border border-brand-muted/20 bg-white text-sm text-brand-text focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+                  className="flex-1 px-3 py-2 rounded-lg border border-brand-border bg-white text-sm text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-rose/20"
                 >
                   <option value="">— Aucune (palette libre par le LLM) —</option>
                   {palettes.some((p) => p.favori) && (
@@ -501,7 +596,7 @@ export default function Home() {
             <button
               onClick={handleGenerate}
               disabled={!brief.trim() || generating}
-              className="primary-button w-full mt-6 flex items-center justify-center gap-2 text-sm py-3"
+              className="primary-button w-full mt-6 flex items-center justify-center gap-2 text-sm font-semibold"
             >
               <Sparkles className="w-4 h-4" />
               Générer le lookbook ({count} images)
@@ -509,6 +604,7 @@ export default function Home() {
             <p className="text-[11px] text-brand-muted text-center mt-2">
               ~{Math.round(count * 0.3)}-{Math.round(count * 0.6)} min selon la charge Gemini.
             </p>
+            </div>
           </section>
         )}
 
@@ -550,6 +646,28 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col gap-2 items-end">
+                {result.images.some((image) => image.url?.startsWith("data:")) && (
+                  <>
+                    <button
+                      onClick={() => handleSaveLookbook("liked")}
+                      disabled={savingLookbook !== null || !result.images.some((image) => image.valide)}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-rose-200 bg-white text-rose-500 hover:bg-rose-50 disabled:opacity-50"
+                      title="Sauvegarde seulement les images marquées d'un cœur"
+                    >
+                      <Heart className="w-4 h-4" />
+                      {savingLookbook === "liked" ? "Sauvegarde…" : `Sauvegarder les ♥ (${result.images.filter((image) => image.valide).length})`}
+                    </button>
+                    <button
+                      onClick={() => handleSaveLookbook("all")}
+                      disabled={savingLookbook !== null || result.images.length === 0}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-rose-500 text-white hover:bg-rose-600 disabled:opacity-50"
+                      title="Sauvegarde toutes les images restantes dans le Lookbook et la médiathèque"
+                    >
+                      <FolderOutput className="w-4 h-4" />
+                      {savingLookbook === "all" ? "Sauvegarde…" : "Sauvegarder le lookbook"}
+                    </button>
+                  </>
+                )}
                 <button
                   onClick={handleToggleFav}
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
@@ -628,6 +746,7 @@ export default function Home() {
               </div>
             )}
 
+            {!result.images.some((image) => image.url?.startsWith("data:")) && (
             <div className="flex justify-end mb-3">
               <button
                 onClick={() => setAddCustomOpen(true)}
@@ -637,13 +756,14 @@ export default function Home() {
                 <Plus className="w-3.5 h-3.5" /> Ajouter une image
               </button>
             </div>
+            )}
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {result.images.map((img) => {
-                const isSelected = img.image_id ? selectedImageIds.has(img.image_id) : false;
+                const isSelected = selectedImageIds.has(img.id);
                 return (
                 <div
-                  key={img.image_id || img.position}
+                  key={img.id}
                   className={`group relative aspect-[4/5] bg-white rounded-xl overflow-hidden border-2 shadow-sm ${
                     isSelected
                       ? "border-brand-rose ring-2 ring-brand-rose/30"
@@ -657,7 +777,7 @@ export default function Home() {
                     <img src={img.url} alt={`Slide ${img.position}`} className="w-full h-full object-cover" />
                   )}
                   {/* Checkbox sélection (toujours visible) */}
-                  {img.image_id && (
+                  {img.id && (
                     <label
                       className="absolute top-2 left-2 z-10 flex items-center justify-center w-6 h-6 bg-white/95 rounded-full shadow cursor-pointer hover:scale-110 transition-transform"
                       title={isSelected ? "Désélectionner" : "Sélectionner pour télécharger"}
@@ -666,7 +786,7 @@ export default function Home() {
                       <input
                         type="checkbox"
                         checked={isSelected}
-                        onChange={() => toggleImageSelected(img.image_id)}
+                        onChange={() => toggleImageSelected(img.id)}
                         className="sr-only"
                       />
                       <span
@@ -712,7 +832,7 @@ export default function Home() {
                           ? "bg-rose-500 text-white"
                           : "bg-white/95 text-rose-500"
                       }`}
-                      title={img.valide ? "Retirer la validation" : "Valider cette image"}
+                      title={img.valide ? "Retirer le cœur" : "Garder cette image"}
                     >
                       <Heart className={`w-4 h-4 ${img.valide ? "fill-white" : ""}`} />
                     </button>
@@ -725,11 +845,11 @@ export default function Home() {
                     </button>
                     <button
                       onClick={() => handleRegenerateImage(img)}
-                      disabled={regeneratingId === img.image_id}
+                      disabled={regeneratingId === img.id}
                       className="p-2 rounded-full shadow-lg bg-white/95 text-brand-text hover:bg-brand-text hover:text-white hover:scale-110 transition-all disabled:opacity-50"
                       title="Régénérer avec le même prompt"
                     >
-                      <RotateCcw className={`w-4 h-4 ${regeneratingId === img.image_id ? "animate-spin" : ""}`} />
+                      <RotateCcw className={`w-4 h-4 ${regeneratingId === img.id ? "animate-spin" : ""}`} />
                     </button>
                     <button
                       onClick={() => handleDeleteImage(img)}
@@ -842,17 +962,17 @@ export default function Home() {
 
       {addCustomOpen && result && (
         <AddCustomImageModal
-          lookbookId={result.lookbook_id}
+          lookbookId={result.draft_id}
           lookbookPalette={result.ambiance_extraite?.palette}
           onClose={() => setAddCustomOpen(false)}
           onAdded={async () => {
             // Refresh le lookbook complet pour récupérer la nouvelle image
             try {
-              const { lookbook, images } = await getLookbookFull(result.lookbook_id);
+              const { lookbook, images } = await getLookbookFull(result.draft_id);
               setResult({
                 ...result,
                 images: images.map((img) => ({
-                  image_id: img.id,
+                  id: img.id,
                   storage_path: img.image_storage_path || undefined,
                   position: img.position,
                   famille: img.famille,

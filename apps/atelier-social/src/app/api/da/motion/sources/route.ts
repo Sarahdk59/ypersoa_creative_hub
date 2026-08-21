@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { listSources } from "@/lib/motion/hub-gateway";
 import type { MotionMode } from "@/types/motion";
 
-const VALID_MODES = new Set<MotionMode>(["reel", "ambiance", "packshot"]);
+const VALID_MODES = new Set<MotionMode>(["macro", "porte", "reel", "ambiance", "packshot"]);
 
 export async function GET(req: NextRequest) {
   const mode = req.nextUrl.searchParams.get("mode");

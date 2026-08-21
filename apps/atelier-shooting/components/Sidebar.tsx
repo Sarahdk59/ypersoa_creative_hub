@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { GenerationSettings, ProductType, ActiveLookbookAmbiance } from '../types';
 import { PRODUCTS_HUB, SIZES, ASPECT_RATIOS, ETHNICITIES, AGES, BODY_TYPES, DISABILITIES, THREAD_COLORS, DECOR_STYLES } from '../constants';
-import { getCanoniquesSorted, getCanoniqueById } from '../lib/canoniques';
+import { getCanoniquesSorted } from '../lib/canoniques';
 import { getColorsForProduct, isFilGarmentIncompatible, HUB_FILS, HUB_PALETTES } from '../lib/hub-data';
 import { listActiveLookbookAmbiances } from '../lib/active-ambiances';
 import MotifPickerPanel from './MotifPickerPanel';
@@ -76,10 +76,11 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
   };
 
   return (
-    <aside className="w-full lg:w-96 bg-white border-r border-yp-sable h-full p-8 flex flex-col overflow-y-auto">
-      <div className="mb-10">
-        <h2 className="text-2xl font-bold text-yp-olive mb-2">Configuration</h2>
-        <p className="text-sm text-slate-500">Créez votre shooting Ypersoa sur-mesure.</p>
+    <aside className="w-full lg:w-[380px] bg-[#faf8f3] border-r border-[#dfd5c3] h-full p-6 flex flex-col overflow-y-auto">
+      <div className="mb-7 pb-5 border-b border-[#dfd5c3]">
+        <p className="text-[10px] font-bold tracking-[0.16em] uppercase text-[#c9473d] mb-2">Studio · Configuration</p>
+        <h2 className="font-serif text-[30px] font-medium text-yp-olive mb-1">Créer un visuel</h2>
+        <p className="text-[13px] leading-relaxed text-slate-500">Choisis le produit, l&apos;ambiance et le casting. Le reste reste à portée de main.</p>
       </div>
 
       <div className="space-y-8 flex-grow">
@@ -190,29 +191,15 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
             2. Produit
           </label>
-          <div className="grid grid-cols-1 gap-2">
-            {PRODUCTS_HUB.map(p => (
-              <button
-                key={p.id}
-                onClick={() => handleProductChange(p.id as ProductType)}
-                className={`text-left px-4 py-3 rounded-lg text-sm transition-all border ${
-                  settings.product === p.id
-                    ? 'bg-yp-olive text-white border-yp-olive shadow-md'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-yp-sable'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium">{p.nom_commercial}</span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                    settings.product === p.id ? 'bg-white/20' : 'bg-yp-linen text-yp-olive'
-                  }`}>{p.id}</span>
-                </div>
-                <div className={`text-[10px] mt-0.5 ${
-                  settings.product === p.id ? 'text-white/70' : 'text-slate-400'
-                }`}>{p.nb_couleurs_disponibles} couleurs · {p.fournisseur}</div>
-              </button>
+          <select
+            value={settings.product}
+            onChange={(e) => handleProductChange(e.target.value as ProductType)}
+            className="w-full rounded-xl border border-[#d8cdb9] bg-white px-3 py-3 text-sm text-yp-olive shadow-sm outline-none transition focus:border-[#c9473d] focus:bg-[#fff7f5] focus:ring-2 focus:ring-[#c9473d]/15"
+          >
+            {PRODUCTS_HUB.map((p) => (
+              <option key={p.id} value={p.id}>{p.id} · {p.nom_commercial} — {p.nb_couleurs_disponibles} couleurs</option>
             ))}
-          </div>
+          </select>
         </section>
 
         {/* Step 3: Size */}
@@ -220,21 +207,13 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
             3. Taille de la broderie
           </label>
-          <div className="flex flex-wrap gap-2">
-            {SIZES.map(s => (
-              <button
-                key={s}
-                onClick={() => setSettings(prev => ({ ...prev, size: s }))}
-                className={`w-12 h-12 flex items-center justify-center rounded-full text-xs font-bold transition-all border ${
-                  settings.size === s 
-                    ? 'bg-yp-sable text-yp-olive border-yp-sable shadow-inner' 
-                    : 'bg-white text-slate-400 border-slate-200 hover:border-yp-sable'
-                }`}
-              >
-                {s}<span className="text-[8px] ml-0.5">cm</span>
-              </button>
-            ))}
-          </div>
+          <select
+            value={settings.size}
+            onChange={(e) => setSettings(prev => ({ ...prev, size: Number(e.target.value) as GenerationSettings['size'] }))}
+            className="w-full rounded-xl border border-[#d8cdb9] bg-white px-3 py-3 text-sm text-yp-olive shadow-sm outline-none transition focus:border-[#c9473d] focus:bg-[#fff7f5] focus:ring-2 focus:ring-[#c9473d]/15"
+          >
+            {SIZES.map((size) => <option key={size} value={size}>{size} cm</option>)}
+          </select>
         </section>
 
         {/* Step 4: Colors */}
@@ -429,24 +408,13 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
               <label className="block text-[10px] font-bold text-yp-olive uppercase mb-3">
                 Couleur du vêtement <span className="text-slate-400 font-normal normal-case">— {availableGarmentColors.length} dispos pour {settings.product}</span>
               </label>
-              <div className="flex flex-wrap gap-3">
-                {availableGarmentColors.map(color => (
-                  <button
-                    key={color.id}
-                    onClick={() => setSettings(prev => ({ ...prev, garmentColor: color.id }))}
-                    title={color.nom}
-                    className={`w-8 h-8 rounded-full border-2 transition-all ${
-                      settings.garmentColor === color.id
-                        ? 'border-yp-olive scale-110 shadow-md'
-                        : 'border-transparent hover:scale-105 shadow-sm'
-                    } ${(color.hex.toLowerCase() === '#ffffff' || color.hex.toLowerCase() === '#fff') ? 'border-slate-200' : ''}`}
-                    style={{ backgroundColor: color.hex }}
-                  />
-                ))}
-              </div>
-              <div className="mt-2 text-xs text-slate-500 italic">
-                {availableGarmentColors.find(c => c.id === settings.garmentColor)?.nom || settings.garmentColor}
-              </div>
+              <select
+                value={settings.garmentColor}
+                onChange={(e) => setSettings(prev => ({ ...prev, garmentColor: e.target.value }))}
+                className="w-full rounded-xl border border-[#d8cdb9] bg-white px-3 py-2.5 text-xs text-yp-olive shadow-sm outline-none transition focus:border-[#c9473d] focus:bg-[#fff7f5]"
+              >
+                {availableGarmentColors.map((color) => <option key={color.id} value={color.id}>{color.nom}</option>)}
+              </select>
             </div>
           </div>
         </section>
@@ -456,22 +424,13 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
             5. Format d'image
           </label>
-          <div className="grid grid-cols-2 gap-2">
-            {ASPECT_RATIOS.map(ar => (
-              <button
-                key={ar.value}
-                onClick={() => setSettings(prev => ({ ...prev, aspectRatio: ar.value }))}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs border transition-all ${
-                  settings.aspectRatio === ar.value 
-                    ? 'bg-yp-olive text-white border-yp-olive shadow-md' 
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-yp-sable'
-                }`}
-              >
-                <i className={`fa-solid ${ar.icon} w-4`}></i>
-                <span className="truncate">{ar.label}</span>
-              </button>
-            ))}
-          </div>
+          <select
+            value={settings.aspectRatio}
+            onChange={(e) => setSettings(prev => ({ ...prev, aspectRatio: e.target.value as GenerationSettings['aspectRatio'] }))}
+            className="w-full rounded-xl border border-[#d8cdb9] bg-white px-3 py-3 text-sm text-yp-olive shadow-sm outline-none transition focus:border-[#c9473d] focus:bg-[#fff7f5]"
+          >
+            {ASPECT_RATIOS.map((format) => <option key={format.value} value={format.value}>{format.value} · {format.label}</option>)}
+          </select>
         </section>
 
         {/* Step 6: Mode */}
@@ -479,58 +438,17 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           <label className="block text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wider">
             6. Type de prise de vue
           </label>
-          <div className="grid grid-cols-2 gap-2 mb-4">
-            <button
-              onClick={() => setSettings(prev => ({ ...prev, mode: 'mannequin' }))}
-              className={`py-3 rounded-lg text-[10px] flex flex-col items-center justify-center gap-1 border transition-all ${
-                settings.mode === 'mannequin'
-                  ? 'bg-yp-linen border-yp-sable text-yp-olive font-semibold' 
-                  : 'bg-white border-slate-200 text-slate-500'
-              }`}
-            >
-              <i className="fa-solid fa-user text-base"></i> Mannequin
-            </button>
-            <button
-              onClick={() => setSettings(prev => ({ ...prev, mode: 'family' }))}
-              className={`py-3 rounded-lg text-[10px] flex flex-col items-center justify-center gap-1 border transition-all ${
-                settings.mode === 'family'
-                  ? 'bg-yp-linen border-yp-sable text-yp-olive font-semibold' 
-                  : 'bg-white border-slate-200 text-slate-500'
-              }`}
-            >
-              <i className="fa-solid fa-people-group text-base"></i> Famille
-            </button>
-            <button
-              onClick={() => setSettings(prev => ({ ...prev, mode: 'packshot' }))}
-              className={`py-3 rounded-lg text-[10px] flex flex-col items-center justify-center gap-1 border transition-all ${
-                settings.mode === 'packshot'
-                  ? 'bg-yp-linen border-yp-sable text-yp-olive font-semibold' 
-                  : 'bg-white border-slate-200 text-slate-500'
-              }`}
-            >
-              <i className="fa-solid fa-shirt text-base"></i> Packshot
-            </button>
-            <button
-              onClick={() => setSettings(prev => ({ ...prev, mode: 'full' }))}
-              className={`py-3 rounded-lg text-[10px] flex flex-col items-center justify-center gap-1 border transition-all ${
-                settings.mode === 'full'
-                  ? 'bg-yp-linen border-yp-sable text-yp-olive font-semibold' 
-                  : 'bg-white border-slate-200 text-slate-500'
-              }`}
-            >
-              <i className="fa-solid fa-layer-group text-base"></i> Pack Complet (6)
-            </button>
-            <button
-              onClick={() => setSettings(prev => ({ ...prev, mode: 'flatlay' }))}
-              className={`col-span-2 py-3 rounded-lg text-[10px] flex flex-col items-center justify-center gap-1 border transition-all ${
-                settings.mode === 'flatlay'
-                  ? 'bg-yp-linen border-yp-sable text-yp-olive font-semibold'
-                  : 'bg-white border-slate-200 text-slate-500'
-              }`}
-            >
-              <i className="fa-solid fa-table-cells-large text-base"></i> Flatlay (4) · pinterest
-            </button>
-          </div>
+          <select
+            value={settings.mode}
+            onChange={(e) => setSettings(prev => ({ ...prev, mode: e.target.value as GenerationSettings['mode'] }))}
+            className="w-full rounded-xl border border-[#d8cdb9] bg-white px-3 py-3 text-sm text-yp-olive shadow-sm outline-none transition focus:border-[#a75f59]"
+          >
+            <option value="mannequin">Mannequin · un visuel porté</option>
+            <option value="family">Famille · scène collective</option>
+            <option value="packshot">Packshot · produit seul</option>
+            <option value="full">Pack complet · 6 visuels</option>
+            <option value="flatlay">Flatlay · 4 visuels Pinterest</option>
+          </select>
           {settings.mode === 'flatlay' && (
             <p className="text-[10px] text-slate-400 leading-snug mb-2">
               Mise à plat sans personne, composée autour de l'ambiance choisie (props + palette assortis). Le casting est ignoré.
@@ -546,30 +464,14 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
               {/* Toggle casting mode */}
               <div>
                 <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Casting</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setSettings(prev => ({ ...prev, castingMode: 'diversity' }))}
-                    className={`py-2 rounded-md text-[10px] border transition-all flex items-center justify-center gap-1.5 ${
-                      settings.castingMode === 'diversity'
-                        ? 'bg-yp-olive text-white border-yp-olive'
-                        : 'bg-white text-slate-500 border-slate-200 hover:border-yp-sable'
-                    }`}
-                  >
-                    <span>🎲</span> Diversity (random)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSettings(prev => ({ ...prev, castingMode: 'canonique' }))}
-                    className={`py-2 rounded-md text-[10px] border transition-all flex items-center justify-center gap-1.5 ${
-                      settings.castingMode === 'canonique'
-                        ? 'bg-yp-olive text-white border-yp-olive'
-                        : 'bg-white text-slate-500 border-slate-200 hover:border-yp-sable'
-                    }`}
-                  >
-                    <span>👤</span> Canonique (Hub)
-                  </button>
-                </div>
+                <select
+                  value={settings.castingMode}
+                  onChange={(e) => setSettings(prev => ({ ...prev, castingMode: e.target.value as GenerationSettings['castingMode'] }))}
+                  className="w-full rounded-lg border border-[#d8cdb9] bg-white px-2.5 py-2 text-xs text-yp-olive outline-none"
+                >
+                  <option value="canonique">Canonique Hub · visage cohérent</option>
+                  <option value="diversity">Diversity · casting libre</option>
+                </select>
               </div>
 
               {/* Mode Diversity (random visages) — uniquement quand le mode utilise ce bloc */}
@@ -620,116 +522,39 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                 </>
               )}
 
-              {/* Mode Canonique (mannequins Hub persistants) — sélection MULTIPLE (29/05).
-                  canoniqueIds[] peut contenir 1..N mannequins : un clic toggle l'appartenance.
-                  En mannequin/full, plusieurs canoniques = plusieurs personnes dans la scène.
-                  En famille, chaque canonique sélectionné ancre un membre de la composition. */}
+              {/* Casting canonique : une surface repliée, choisie seulement par miniatures.
+                  On conserve la sélection multiple pour les scènes famille/pack. */}
               {settings.castingMode === 'canonique' && (
-                <>
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="block text-[10px] font-bold text-yp-olive uppercase">
-                        Mannequin(s) canonique(s)
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] text-slate-400">
-                          {settings.canoniqueIds.length} sélectionné{settings.canoniqueIds.length > 1 ? 's' : ''}
-                        </span>
-                        {settings.canoniqueIds.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => setSettings(prev => ({ ...prev, canoniqueIds: [] }))}
-                            className="text-[9px] text-rose-500 hover:underline"
-                          >
-                            Tout effacer
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                    <div className="max-h-56 overflow-y-auto pr-1 space-y-1 border border-slate-200 rounded-lg p-1.5 bg-white">
-                      {getCanoniquesSorted().map(c => {
-                        const selected = settings.canoniqueIds.includes(c.id);
-                        return (
-                          <button
-                            key={c.id}
-                            type="button"
-                            onClick={() => setSettings(prev => ({
-                              ...prev,
-                              canoniqueIds: selected
-                                ? prev.canoniqueIds.filter(id => id !== c.id)
-                                : [...prev.canoniqueIds, c.id]
-                            }))}
-                            className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left border transition-all ${
-                              selected
-                                ? 'bg-yp-olive text-white border-yp-olive'
-                                : 'bg-white text-slate-600 border-slate-100 hover:border-yp-sable'
-                            }`}
-                          >
-                            <img
-                              src={`/canoniques/${c.filename}`}
-                              alt={c.prenom}
-                              className="w-7 h-9 rounded object-cover flex-shrink-0 bg-yp-linen"
-                              onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <div className="text-[10px] font-semibold truncate">
-                                {c.favorite ? '⭐ ' : ''}{c.prenom}, {c.age}
-                              </div>
-                              <div className={`text-[9px] truncate ${selected ? 'text-white/70' : 'text-slate-400'}`}>
-                                {c.id} · {c.genre}{c.duo ? ` · ${c.duo}` : ''}
-                              </div>
-                            </div>
-                            <i className={`fa-solid ${selected ? 'fa-circle-check' : 'fa-circle-plus'} text-xs flex-shrink-0`}></i>
-                          </button>
-                        );
+                <details className="group rounded-lg border border-[#d8cdb9] bg-white">
+                  <summary className="flex cursor-pointer list-none items-center gap-2 px-2.5 py-2 text-xs text-yp-olive [&::-webkit-details-marker]:hidden">
+                    <span className="flex -space-x-1.5">
+                      {settings.canoniqueIds.slice(0, 3).map((id) => {
+                        const canonique = getCanoniquesSorted().find((item) => item.id === id);
+                        return canonique ? <img key={id} src={`/canoniques/${canonique.filename}`} alt="" className="h-7 w-6 rounded object-cover ring-1 ring-white" /> : null;
                       })}
-                    </div>
+                    </span>
+                    <span className="flex-1">{settings.canoniqueIds.length > 0 ? `${settings.canoniqueIds.length} mannequin${settings.canoniqueIds.length > 1 ? 's' : ''} sélectionné${settings.canoniqueIds.length > 1 ? 's' : ''}` : 'Choisir un mannequin'}</span>
+                    <i className="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="grid grid-cols-5 gap-1.5 border-t border-[#eee7da] p-2">
+                    {getCanoniquesSorted().map((canonique) => {
+                      const selected = settings.canoniqueIds.includes(canonique.id);
+                      return (
+                        <button
+                          key={canonique.id}
+                          type="button"
+                          title={`${canonique.prenom}, ${canonique.age} ans`}
+                          aria-label={`Sélectionner ${canonique.prenom}`}
+                          onClick={() => setSettings(prev => ({ ...prev, canoniqueIds: selected ? prev.canoniqueIds.filter((id) => id !== canonique.id) : [...prev.canoniqueIds, canonique.id] }))}
+                          className={`relative aspect-[3/4] overflow-hidden rounded-md border-2 transition ${selected ? 'border-[#c9473d] ring-2 ring-[#c9473d]/15' : 'border-transparent hover:border-[#d8cdb9]'}`}
+                        >
+                          <img src={`/canoniques/${canonique.filename}`} alt="" className="h-full w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }} />
+                          {selected && <i className="fa-solid fa-circle-check absolute right-0.5 top-0.5 text-[10px] text-[#c9473d] drop-shadow-[0_1px_1px_white]" />}
+                        </button>
+                      );
+                    })}
                   </div>
-
-                  {settings.canoniqueIds.length > 0 && (
-                    <div className="space-y-1.5">
-                      {settings.canoniqueIds.map(id => {
-                        const c = getCanoniqueById(id);
-                        if (!c) return null;
-                        return (
-                          <div key={id} className="flex gap-3 items-start p-2 bg-white rounded-lg border border-yp-sable/30">
-                            <img
-                              src={`/canoniques/${c.filename}`}
-                              alt={c.prenom}
-                              className="w-16 h-20 rounded-md object-cover flex-shrink-0"
-                              onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <div className="text-[11px] font-bold text-yp-olive">
-                                {c.prenom} {c.favorite && '⭐'}
-                              </div>
-                              <div className="text-[9px] text-slate-400 mb-1">{c.id} · {c.age} ans · {c.genre}{c.duo ? ` · ${c.duo}` : ''}</div>
-                              <div className="text-[9px] text-slate-500 italic leading-snug">{c.description}</div>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => setSettings(prev => ({ ...prev, canoniqueIds: prev.canoniqueIds.filter(cid => cid !== id) }))}
-                              className="text-slate-300 hover:text-rose-500 flex-shrink-0"
-                              title="Retirer"
-                            >
-                              <i className="fa-solid fa-xmark text-xs"></i>
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <div className="text-[9px] text-slate-500 italic leading-relaxed border-t border-yp-sable/30 pt-3">
-                    {settings.mode === 'packshot'
-                      ? "Sélection conservée mais NON appliquée en Packshot (vêtement seul, pas de personne dans le rendu). Le choix est mémorisé : repassé en Mannequin / Famille / Pack Complet, les canoniques reprennent leur rôle."
-                      : settings.mode === 'family'
-                        ? "En mode Famille, chaque canonique sélectionné ancre un membre de la composition sur son visage exact (~95% fidélité). Les membres restants (enfants, adultes non couverts) suivent la diversité naturelle."
-                        : settings.canoniqueIds.length > 1
-                          ? `Les ${settings.canoniqueIds.length} canoniques seront uploadés en référence Gemini et apparaîtront ENSEMBLE dans la scène, chacun fidèle à son portrait (~95%).`
-                          : "Le canonique sera uploadé en référence Gemini pour préserver le visage du mannequin sur toutes les régénérations (~95% fidélité)."}
-                  </div>
-                </>
+                </details>
               )}
             </div>
 
@@ -738,57 +563,34 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
             <div className="space-y-4 p-4 bg-yp-linen/50 rounded-xl border border-yp-sable/30 animate-in fade-in slide-in-from-top-2">
               <div>
                 <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Composition</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { id: 'random', label: 'Aléatoire' },
-                    { id: 'maman-papa', label: 'Maman / Papa' },
-                    { id: 'papa-papa', label: 'Papa / Papa' },
-                    { id: 'maman-maman', label: 'Maman / Maman' },
-                    { id: 'maman-mamie', label: 'Maman / Mamie' },
-                    { id: 'papi-papa', label: 'Papi / Papa' },
-                    { id: 'papa-mamie', label: 'Papa / Mamie' },
-                    // Duos parent-enfant / grand-parent-enfant (forment un duo si childrenCount=1)
-                    { id: 'enfant-maman', label: 'Enfant / Maman' },
-                    { id: 'enfant-papa', label: 'Enfant / Papa' },
-                    { id: 'enfant-mamie', label: 'Enfant / Mamie' }
-                  ].map(c => (
-                    <button
-                      key={c.id}
-                      onClick={() => setSettings(prev => ({ 
-                        ...prev, 
-                        familyConfig: { ...prev.familyConfig, coupleType: c.id as any } 
-                      }))}
-                      className={`py-1.5 rounded-md text-[10px] border transition-all ${
-                        settings.familyConfig.coupleType === c.id 
-                          ? 'bg-yp-olive text-white border-yp-olive' 
-                          : 'bg-white text-slate-500 border-slate-200'
-                      }`}
-                    >
-                      {c.label}
-                    </button>
-                  ))}
-                </div>
+                <select
+                  value={settings.familyConfig.coupleType}
+                  onChange={(e) => setSettings(prev => ({ ...prev, familyConfig: { ...prev.familyConfig, coupleType: e.target.value as GenerationSettings['familyConfig']['coupleType'] } }))}
+                  className="w-full rounded-lg border border-[#d8cdb9] bg-white px-2.5 py-2 text-xs text-yp-olive outline-none"
+                >
+                  <option value="random">Aléatoire</option>
+                  <option value="maman-papa">Maman / Papa</option>
+                  <option value="papa-papa">Papa / Papa</option>
+                  <option value="maman-maman">Maman / Maman</option>
+                  <option value="maman-mamie">Maman / Mamie</option>
+                  <option value="papi-papa">Papi / Papa</option>
+                  <option value="papa-mamie">Papa / Mamie</option>
+                  <option value="enfant-maman">Enfant / Maman</option>
+                  <option value="enfant-papa">Enfant / Papa</option>
+                  <option value="enfant-mamie">Enfant / Mamie</option>
+                </select>
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-yp-olive uppercase mb-2">Nombre d'enfants</label>
-                <div className="flex gap-2">
-                  {[1, 2, 3].map(n => (
-                    <button
-                      key={n}
-                      onClick={() => setSettings(prev => ({ 
-                        ...prev, 
-                        familyConfig: { ...prev.familyConfig, childrenCount: n } 
-                      }))}
-                      className={`flex-1 py-1.5 rounded-md text-[10px] border transition-all ${
-                        settings.familyConfig.childrenCount === n 
-                          ? 'bg-yp-olive text-white border-yp-olive' 
-                          : 'bg-white text-slate-500 border-slate-200'
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
+                <select
+                  value={settings.familyConfig.childrenCount}
+                  onChange={(e) => setSettings(prev => ({ ...prev, familyConfig: { ...prev.familyConfig, childrenCount: Number(e.target.value) } }))}
+                  className="w-full rounded-lg border border-[#d8cdb9] bg-white px-2.5 py-2 text-xs text-yp-olive outline-none"
+                >
+                  <option value="1">1 enfant</option>
+                  <option value="2">2 enfants</option>
+                  <option value="3">3 enfants</option>
+                </select>
               </div>
             </div>
           )}
@@ -806,80 +608,27 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
                 Packshot mannequin invisible : « Studio Brut Minimaliste » garde le fond blanc e-commerce classique. Tout autre décor place le vêtement dans l'ambiance choisie.
               </p>
             )}
-            <div className="grid grid-cols-1 gap-2">
-              {DECOR_STYLES.map(d => (
-                <button
-                  key={d.value}
-                  onClick={() => setSettings(prev => ({ ...prev, decorStyle: d.value, customLookbookAmbiance: undefined }))}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs border transition-all text-left ${
-                    settings.decorStyle === d.value
-                      ? 'bg-yp-olive text-white border-yp-olive shadow-md'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-yp-sable'
-                  }`}
-                >
-                  <i className={`fa-solid ${d.icon} w-4 text-base`}></i>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold truncate">{d.label}</div>
-                    <div className={`text-[10px] truncate ${
-                      settings.decorStyle === d.value ? 'text-white/70' : 'text-slate-400'
-                    }`}>{d.sublabel}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            {/* Lookbooks ❤️ actifs comme ambiance de référence (apps/atelier-lookbook) */}
-            {activeAmbiances.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-yp-sable/40">
-                <div className="flex items-center gap-2 mb-2">
-                  <i className="fa-solid fa-heart text-rose-500 text-xs"></i>
-                  <span className="text-[10px] font-bold text-yp-olive uppercase tracking-wider">
-                    Mes ambiances de référence
-                  </span>
-                  <span className="text-[9px] text-slate-400 italic">7j</span>
-                </div>
-                <div className="grid grid-cols-1 gap-2">
-                  {activeAmbiances.map(lb => {
-                    const isSelected = settings.decorStyle === 'lookbook' && settings.customLookbookAmbiance?.id === lb.id;
-                    const expires = lb.date_archivage
-                      ? new Date(lb.date_archivage).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
-                      : null;
-                    return (
-                      <button
-                        key={lb.id}
-                        onClick={() => setSettings(prev => ({ ...prev, decorStyle: 'lookbook', customLookbookAmbiance: lb }))}
-                        className={`flex items-center gap-3 px-2 py-2 rounded-lg text-xs border transition-all text-left ${
-                          isSelected
-                            ? 'bg-yp-olive text-white border-yp-olive shadow-md'
-                            : 'bg-white text-slate-600 border-slate-200 hover:border-yp-sable'
-                        }`}
-                        title={`Active jusqu'au ${expires || '—'}`}
-                      >
-                        {lb.cover_image_url ? (
-                          <img
-                            src={lb.cover_image_url}
-                            alt={lb.titre}
-                            className="w-10 h-12 rounded object-cover flex-shrink-0"
-                          />
-                        ) : (
-                          <div className="w-10 h-12 rounded bg-yp-sable/30 flex items-center justify-center flex-shrink-0">
-                            <i className="fa-solid fa-image text-slate-400"></i>
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <div className="font-semibold truncate">{lb.titre}</div>
-                          <div className={`text-[10px] truncate ${
-                            isSelected ? 'text-white/70' : 'text-slate-400'
-                          }`}>
-                            Actif{expires ? ` jusqu'au ${expires}` : ''}
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            <select
+              value={settings.decorStyle === 'lookbook' ? `lookbook:${settings.customLookbookAmbiance?.id ?? ''}` : settings.decorStyle}
+              onChange={(e) => {
+                const value = e.target.value;
+                const lookbookId = value.startsWith('lookbook:') ? value.slice('lookbook:'.length) : null;
+                const lookbook = activeAmbiances.find((item) => item.id === lookbookId);
+                setSettings(prev => lookbook
+                  ? { ...prev, decorStyle: 'lookbook', customLookbookAmbiance: lookbook }
+                  : { ...prev, decorStyle: value as GenerationSettings['decorStyle'], customLookbookAmbiance: undefined });
+              }}
+              className="w-full rounded-xl border border-[#d8cdb9] bg-white px-3 py-3 text-sm text-yp-olive shadow-sm outline-none transition focus:border-[#c9473d] focus:bg-[#fff7f5]"
+            >
+              <optgroup label="Ambiances Studio">
+                {DECOR_STYLES.map((decor) => <option key={decor.value} value={decor.value}>{decor.label} · {decor.sublabel}</option>)}
+              </optgroup>
+              {activeAmbiances.length > 0 && (
+                <optgroup label="Mes ambiances de référence">
+                  {activeAmbiances.map((lookbook) => <option key={lookbook.id} value={`lookbook:${lookbook.id}`}>♥ {lookbook.titre}</option>)}
+                </optgroup>
+              )}
+            </select>
         </section>
       </div>
 
@@ -896,7 +645,7 @@ const Sidebar: React.FC<SidebarProps> = ({ settings, setSettings, onGenerate, is
           className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all flex items-center justify-center gap-3 ${
             !settings.embroideryImage || isLoading
               ? 'bg-slate-300 cursor-not-allowed'
-              : 'bg-yp-olive hover:bg-[#4a503d] active:scale-95'
+              : 'bg-[#c9473d] hover:bg-[#ad382f] active:scale-95'
           }`}
         >
           {isLoading ? (
