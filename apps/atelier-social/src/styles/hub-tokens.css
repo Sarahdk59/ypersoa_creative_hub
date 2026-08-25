@@ -22,6 +22,8 @@
   --hub-accent-soft: #EAB4C4;   /* blush — highlights doux, séries */
   --hub-accent-wash: #F7E3E9;   /* blush très clair — fonds de nudge/alerte */
   --hub-teal: #2E7D74;       /* teinte secondaire chrome — succès, "publié" */
+  --hub-ocre: #C8963C;       /* accent mode Avis — Atelier Social */
+  --hub-bordeaux: #6E1F2E;   /* accent mode Réel — Atelier Social */
 
   /* Palette épine dorsale — produit/marketing, inchangée */
   --brand-bg: #F4EEE2;

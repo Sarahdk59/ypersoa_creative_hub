@@ -83,9 +83,9 @@ const PILIERS = [
   { pilier: "Connexion", angle: "manifeste, lien, souvenir", formats: "POV, citation, note d'atelier", cran: "1–2", outil: "/social/connexion" },
   { pilier: "Réassurance", angle: "avis, soin, délais validés", formats: "avis, déballage, FAQ Story", cran: "2", outil: "/social/avis" },
   { pilier: "Qualification", angle: "motif, support, couleur", formats: "produit, pick-one, macro", cran: "2", outil: "/social" },
-  { pilier: "Preuve", angle: "atelier, commande, geste", formats: "coulisses, process, reveal", cran: "2→3", outil: "à faire" },
+  { pilier: "Preuve", angle: "atelier, commande, geste", formats: "coulisses, process, reveal", cran: "2→3", outil: "/social/connexion (Preuve)" },
   { pilier: "Occasions", angle: "moment précis, cadeau", formats: "carrousel occasion, scène", cran: "1–2", outil: "pinterest_strategy.json" },
-  { pilier: "Communauté", angle: "Club, prénoms, UGC", formats: "prénom du mois, repost, question", cran: "3", outil: "à faire" },
+  { pilier: "Communauté", angle: "Club, prénoms, UGC", formats: "prénom du mois, repost, question", cran: "3", outil: "/social/connexion (Communauté)" },
 ];
 
 const CRAN_HUMEUR = [

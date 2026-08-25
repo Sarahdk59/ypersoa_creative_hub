@@ -2,20 +2,27 @@
  * Carte visuelle "Brand Book" — Atelier Social.
  *
  * Porte en Canvas 2D le composant SocialCard de app/brand/page.tsx (§5 du
- * Brand Book v1.0 : fond marine fixe, chip rubrique, headline 2 lignes
- * (2e ligne italique en couleur d'accent), CTA rouge coquelicot).
- * Contrairement à la carte avis (lib/avis-card.ts), le fond n'est PAS
- * recolorable — le Brand Book fixe le marine comme fond de l'épine dorsale
- * pour ce format ("Fond marine fixe · chip varie selon la rubrique · CTA
- * toujours en rouge coquelicot").
+ * Brand Book v1.0 : chip rubrique, headline, CTA rouge coquelicot) et le
+ * composant Slide (§6 : Hook → Développement → CTA, structure carrousel).
+ *
+ * Fond : dessiné via un SVG fourni par le moteur Fonds (BackgroundPicker +
+ * drawSvgIntoCanvas de lib/fonds-engine.ts, même mécanisme que la carte avis
+ * lib/avis-card.ts) — pattern recolorable, plus seulement les 3 aplats fixes
+ * du Brand Book. Un flat-fill sert de repli tant que le picker n'a pas encore
+ * remonté de SVG (1er rendu).
+ *
+ * Texte : découpé en tokens (mots) façon lib/avis-card.ts (buildQuoteTokens /
+ * wrapTokens) — chaque mot peut être individuellement mis en couleur
+ * (Set<number> highlighted), plus de "ligne 2 toujours en italique/accent"
+ * figée.
  *
  * Police : un seul choix pour toute la carte (headline + chip/tag/CTA) —
- * "Arial Rounded MT Bold" (présent sur le poste de Sarah, plus rond/amical,
- * repli Hanken Grotesk chargée globalement) ou "cafeteria" (Typekit, déjà
- * chargée dans app/layout.tsx, même police que les overlays Insta de
- * lib/overlay-templates.ts). Newsreader n'est plus utilisé ici (cf. décision
- * Sarah 10/08/2026 : "toute la carte" doit suivre un seul style typo).
+ * "Arial Rounded MT Bold" (présent sur le poste de Sarah, repli Hanken
+ * Grotesk chargée globalement) ou "cafeteria" (Typekit, déjà chargée dans
+ * app/layout.tsx). Taille du bloc de texte principal réglable via fontScale.
  */
+
+import { drawSvgIntoCanvas } from "@/lib/fonds-engine";
 
 const MARINE = "#16324C";
 const CREME = "#F4EEE2";
@@ -40,7 +47,6 @@ async function ensureFontLoaded(fontChoice: FontChoice) {
   try {
     await Promise.all([
       document.fonts.load(`${weight} 16px ${stack}`),
-      document.fonts.load(`italic ${weight} 16px ${stack}`),
       document.fonts.load(`700 16px ${stack}`),
     ]);
   } catch {
@@ -48,34 +54,78 @@ async function ensureFontLoaded(fontChoice: FontChoice) {
   }
 }
 
-export interface BrandCardOptions {
-  width: number;
-  height: number;
-  fontChoice: FontChoice;
-  chipLabel: string;
-  chipBg: string;
-  chipInk: string;
-  headline: string;
-  headlineAccent: string;
-  accentColor: string;
-  cta: string;
+export interface TextToken {
+  text: string;
+  idx: number;
 }
 
-function wrapLine(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
-  const words = text.split(" ");
-  const lines: string[] = [];
-  let current = "";
-  for (const w of words) {
-    const test = current ? `${current} ${w}` : w;
-    if (ctx.measureText(test).width > maxWidth && current) {
+/** Découpe un texte en tokens indexés (mots), pour surlignage individuel. */
+export function buildTextTokens(text: string): TextToken[] {
+  return text
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((t, idx) => ({ text: t, idx }));
+}
+
+function wrapTextTokens(ctx: CanvasRenderingContext2D, tokens: TextToken[], maxWidth: number): TextToken[][] {
+  const spaceWidth = ctx.measureText(" ").width;
+  const lines: TextToken[][] = [];
+  let current: TextToken[] = [];
+  let currentWidth = 0;
+  for (const t of tokens) {
+    const w = ctx.measureText(t.text).width;
+    const addWidth = current.length === 0 ? w : currentWidth + spaceWidth + w;
+    if (addWidth > maxWidth && current.length > 0) {
       lines.push(current);
-      current = w;
+      current = [t];
+      currentWidth = w;
     } else {
-      current = test;
+      current.push(t);
+      currentWidth = addWidth;
     }
   }
-  if (current) lines.push(current);
+  if (current.length) lines.push(current);
   return lines;
+}
+
+/** Dessine un bloc de tokens (mots surlignés en `accent`, le reste en `ink`), déjà wrappé. */
+function drawTokenLines(
+  ctx: CanvasRenderingContext2D,
+  lines: TextToken[][],
+  highlighted: Set<number>,
+  ink: string,
+  accent: string,
+  x: number,
+  startY: number,
+  lineHeight: number
+) {
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  const spaceWidth = ctx.measureText(" ").width;
+  lines.forEach((line, li) => {
+    let cx = x;
+    const y = startY + li * lineHeight;
+    for (const tok of line) {
+      ctx.fillStyle = highlighted.has(tok.idx) ? accent : ink;
+      ctx.fillText(tok.text, cx, y);
+      cx += ctx.measureText(tok.text).width + spaceWidth;
+    }
+  });
+}
+
+async function drawBackground(
+  ctx: CanvasRenderingContext2D,
+  W: number,
+  H: number,
+  backgroundSvg: string | undefined,
+  fallback: string
+) {
+  ctx.fillStyle = fallback;
+  ctx.fillRect(0, 0, W, H);
+  if (backgroundSvg) {
+    await drawSvgIntoCanvas(ctx, backgroundSvg, 0, 0, W, H);
+  }
 }
 
 function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
@@ -88,10 +138,41 @@ function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: n
   ctx.closePath();
 }
 
+export interface BrandCardOptions {
+  width: number;
+  height: number;
+  fontChoice: FontChoice;
+  /** Multiplicateur de la taille du bloc de texte principal (1 = défaut). */
+  fontScale?: number;
+  /** SVG du moteur Fonds (BackgroundPicker) — repli sur un flat marine si absent. */
+  backgroundSvg?: string;
+  chipLabel: string;
+  chipBg: string;
+  chipInk: string;
+  tokens: TextToken[];
+  highlighted: Set<number>;
+  ink: string;
+  accent: string;
+  cta: string;
+}
+
 /** Rend la carte Brand Book complète dans un <canvas> déjà présent dans le DOM. */
 export async function renderBrandCard(canvas: HTMLCanvasElement, opts: BrandCardOptions): Promise<void> {
-  const { width: W, height: H, fontChoice, chipLabel, chipBg, chipInk, headline, headlineAccent, accentColor, cta } =
-    opts;
+  const {
+    width: W,
+    height: H,
+    fontChoice,
+    fontScale = 1,
+    backgroundSvg,
+    chipLabel,
+    chipBg,
+    chipInk,
+    tokens,
+    highlighted,
+    ink,
+    accent,
+    cta,
+  } = opts;
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d");
@@ -101,13 +182,11 @@ export async function renderBrandCard(canvas: HTMLCanvasElement, opts: BrandCard
   const FONT_STACK = FONT_STACKS[fontChoice];
   const W_BOLD = FONT_WEIGHTS[fontChoice];
 
-  // 1. Fond marine fixe (pas de recoloration — cf. doc en tête de fichier).
-  ctx.fillStyle = MARINE;
-  ctx.fillRect(0, 0, W, H);
+  await drawBackground(ctx, W, H, backgroundSvg, MARINE);
 
   const pad = W * 0.06;
 
-  // 2. Chip rubrique, ancré en haut à gauche.
+  // Chip rubrique, ancré en haut à gauche.
   const chipFontSize = W * 0.026;
   ctx.font = `600 ${chipFontSize}px ${FONT_STACK}`;
   const chipTextW = ctx.measureText(chipLabel).width;
@@ -123,7 +202,7 @@ export async function renderBrandCard(canvas: HTMLCanvasElement, opts: BrandCard
   ctx.textBaseline = "middle";
   ctx.fillText(chipLabel, pad + chipPadX, chipY + chipH / 2 + chipFontSize * 0.04);
 
-  // 3. CTA, ancré en bas à gauche.
+  // CTA, ancré en bas à gauche — toujours rouge coquelicot (Brand Book §10).
   const ctaFontSize = W * 0.026;
   ctx.font = `700 ${ctaFontSize}px ${FONT_STACK}`;
   const ctaTextW = ctx.measureText(cta).width;
@@ -139,45 +218,27 @@ export async function renderBrandCard(canvas: HTMLCanvasElement, opts: BrandCard
   ctx.textBaseline = "middle";
   ctx.fillText(cta, pad + ctaPadX, ctaY + ctaH / 2 + ctaFontSize * 0.04);
 
-  // 4. Headline (2 lignes, 2e en italique/accent), centrée verticalement entre chip et CTA.
-  const headlineFontSize = W * 0.078;
+  // Texte principal (tokens surlignables), centré verticalement entre chip et CTA.
+  const fontSize = W * 0.078 * fontScale;
   const maxTextWidth = W - pad * 2;
-  const lineHeight = headlineFontSize * 1.18;
+  const lineHeight = fontSize * 1.18;
 
-  ctx.font = `${W_BOLD} ${headlineFontSize}px ${FONT_STACK}`;
-  const line1Wrapped = wrapLine(ctx, headline, maxTextWidth);
-  ctx.font = `italic ${W_BOLD} ${headlineFontSize}px ${FONT_STACK}`;
-  const line2Wrapped = wrapLine(ctx, headlineAccent, maxTextWidth);
-
-  const totalLines = line1Wrapped.length + line2Wrapped.length;
-  const blockH = totalLines * lineHeight;
+  ctx.font = `${W_BOLD} ${fontSize}px ${FONT_STACK}`;
+  const lines = wrapTextTokens(ctx, tokens, maxTextWidth);
+  const blockH = lines.length * lineHeight;
   const zoneTop = chipY + chipH;
   const zoneBottom = ctaY;
   const startY = zoneTop + (zoneBottom - zoneTop - blockH) / 2;
 
-  ctx.textAlign = "left";
-  ctx.textBaseline = "top";
-  let cursorY = startY;
-  ctx.font = `${W_BOLD} ${headlineFontSize}px ${FONT_STACK}`;
-  ctx.fillStyle = CREME;
-  for (const line of line1Wrapped) {
-    ctx.fillText(line, pad, cursorY);
-    cursorY += lineHeight;
-  }
-  ctx.font = `italic ${W_BOLD} ${headlineFontSize}px ${FONT_STACK}`;
-  ctx.fillStyle = accentColor;
-  for (const line of line2Wrapped) {
-    ctx.fillText(line, pad, cursorY);
-    cursorY += lineHeight;
-  }
+  drawTokenLines(ctx, lines, highlighted, ink, accent, pad, startY, lineHeight);
 }
 
 /**
  * Slide de carrousel — porte le composant Slide de app/brand/page.tsx (§6 :
- * Hook → Le choix → Le geste → CTA, format 4:5, fond de l'épine dorsale).
- * Version "texte only" pour le pilier connexion (pas de produit/photo à
- * injecter ici) : 3 variantes — hook (2 lignes façon carte unique), statement
- * (1 bloc de texte, slide de développement), cta (headline + lien souligné).
+ * Hook → Le choix → Le geste → CTA, format 4:5). Version "texte only" pour le
+ * pilier connexion (pas de produit/photo) : 3 variantes — hook (texte
+ * principal, façon carte unique), statement (paragraphe, slide de
+ * développement), cta (texte + lien souligné).
  */
 export type CarouselSlideVariant = "hook" | "statement" | "cta";
 
@@ -185,24 +246,39 @@ export interface CarouselSlideOptions {
   width: number;
   height: number;
   fontChoice: FontChoice;
+  fontScale?: number;
+  /** SVG du moteur Fonds, partagé entre les 3 slides du carrousel — cohérence visuelle. */
+  backgroundSvg?: string;
+  /** Flat-fill de repli tant que backgroundSvg n'a pas encore chargé. */
   bg: string;
   ink: string;
+  accent: string;
   index: string;
   tag: string;
   variant: CarouselSlideVariant;
-  /** hook | cta */
-  headline?: string;
-  /** hook (2e ligne, italique, en accentColor) */
-  headlineAccent?: string;
-  accentColor?: string;
-  /** statement */
-  statement?: string;
-  /** cta (texte du lien souligné) */
+  tokens: TextToken[];
+  highlighted: Set<number>;
+  /** cta only */
   ctaText?: string;
 }
 
 export async function renderCarouselSlide(canvas: HTMLCanvasElement, opts: CarouselSlideOptions): Promise<void> {
-  const { width: W, height: H, fontChoice, bg, ink, index, tag, variant } = opts;
+  const {
+    width: W,
+    height: H,
+    fontChoice,
+    fontScale = 1,
+    backgroundSvg,
+    bg,
+    ink,
+    accent,
+    index,
+    tag,
+    variant,
+    tokens,
+    highlighted,
+    ctaText = "",
+  } = opts;
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d");
@@ -212,8 +288,7 @@ export async function renderCarouselSlide(canvas: HTMLCanvasElement, opts: Carou
   const FONT_STACK = FONT_STACKS[fontChoice];
   const W_BOLD = FONT_WEIGHTS[fontChoice];
 
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, W, H);
+  await drawBackground(ctx, W, H, backgroundSvg, bg);
 
   const pad = W * 0.08;
 
@@ -231,70 +306,45 @@ export async function renderCarouselSlide(canvas: HTMLCanvasElement, opts: Carou
   ctx.fillText(tag.toUpperCase(), W - pad, pad + badgeFontSize);
   ctx.globalAlpha = 1;
 
-  // Contenu, centré verticalement, aligné à gauche.
   const contentTop = pad + badgeFontSize * 2.4;
   const contentBottom = H - pad;
   const maxTextWidth = W - pad * 2;
-  ctx.textAlign = "left";
 
   if (variant === "hook") {
-    const { headline = "", headlineAccent = "", accentColor = ink } = opts;
-    const fontSize = W * 0.075;
+    const fontSize = W * 0.075 * fontScale;
     const lineHeight = fontSize * 1.18;
     ctx.font = `${W_BOLD} ${fontSize}px ${FONT_STACK}`;
-    const l1 = wrapLine(ctx, headline, maxTextWidth);
-    ctx.font = `italic ${W_BOLD} ${fontSize}px ${FONT_STACK}`;
-    const l2 = wrapLine(ctx, headlineAccent, maxTextWidth);
-    const blockH = (l1.length + l2.length) * lineHeight;
-    let y = contentTop + (contentBottom - contentTop - blockH) / 2;
-    ctx.textBaseline = "top";
-    ctx.font = `${W_BOLD} ${fontSize}px ${FONT_STACK}`;
-    ctx.fillStyle = ink;
-    for (const line of l1) {
-      ctx.fillText(line, pad, y);
-      y += lineHeight;
-    }
-    ctx.font = `italic ${W_BOLD} ${fontSize}px ${FONT_STACK}`;
-    ctx.fillStyle = accentColor;
-    for (const line of l2) {
-      ctx.fillText(line, pad, y);
-      y += lineHeight;
-    }
+    const lines = wrapTextTokens(ctx, tokens, maxTextWidth);
+    const blockH = lines.length * lineHeight;
+    const startY = contentTop + (contentBottom - contentTop - blockH) / 2;
+    drawTokenLines(ctx, lines, highlighted, ink, accent, pad, startY, lineHeight);
   } else if (variant === "statement") {
-    const { statement = "" } = opts;
-    const fontSize = W * 0.062;
+    const fontSize = W * 0.062 * fontScale;
     const lineHeight = fontSize * 1.22;
     ctx.font = `${W_BOLD} ${fontSize}px ${FONT_STACK}`;
-    const lines = wrapLine(ctx, statement, maxTextWidth);
+    const lines = wrapTextTokens(ctx, tokens, maxTextWidth);
     const blockH = lines.length * lineHeight;
-    let y = contentTop + (contentBottom - contentTop - blockH) / 2;
-    ctx.textBaseline = "top";
-    ctx.fillStyle = ink;
-    for (const line of lines) {
-      ctx.fillText(line, pad, y);
-      y += lineHeight;
-    }
+    const startY = contentTop + (contentBottom - contentTop - blockH) / 2;
+    drawTokenLines(ctx, lines, highlighted, ink, accent, pad, startY, lineHeight);
   } else {
-    const { headline = "", ctaText = "" } = opts;
-    const fontSize = W * 0.068;
+    const fontSize = W * 0.068 * fontScale;
     const lineHeight = fontSize * 1.18;
     ctx.font = `${W_BOLD} ${fontSize}px ${FONT_STACK}`;
-    const lines = wrapLine(ctx, headline, maxTextWidth);
+    const lines = wrapTextTokens(ctx, tokens, maxTextWidth);
     const ctaFontSize = W * 0.032;
     const gap = fontSize * 0.55;
     const blockH = lines.length * lineHeight + gap + ctaFontSize * 1.3;
-    let y = contentTop + (contentBottom - contentTop - blockH) / 2;
+    const startY = contentTop + (contentBottom - contentTop - blockH) / 2;
+    drawTokenLines(ctx, lines, highlighted, ink, accent, pad, startY, lineHeight);
+
+    const ctaY = startY + lines.length * lineHeight + gap;
+    ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.fillStyle = ink;
-    for (const line of lines) {
-      ctx.fillText(line, pad, y);
-      y += lineHeight;
-    }
-    y += gap;
     ctx.font = `700 ${ctaFontSize}px ${FONT_STACK}`;
+    ctx.fillStyle = ink;
     const ctaW = ctx.measureText(ctaText).width;
-    ctx.fillText(ctaText, pad, y);
-    const underlineY = y + ctaFontSize * 1.08;
+    ctx.fillText(ctaText, pad, ctaY);
+    const underlineY = ctaY + ctaFontSize * 1.08;
     ctx.strokeStyle = ink;
     ctx.lineWidth = Math.max(2, ctaFontSize * 0.06);
     ctx.beginPath();

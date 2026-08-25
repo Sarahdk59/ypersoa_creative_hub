@@ -2,7 +2,7 @@
   "_meta": {
     "schema_version": "1.0",
     "referentiel": "zone_test",
-    "last_updated": "2026-05-26",
+    "last_updated": "2026-08-25",
     "description": "Zone de test broderie : dépôt des fichiers DST/PXF + aperçu JPG des tests à faire, attribution (Adriana, Rebecca, Cyrielle) et suivi par phase (réception → machine → modif à prévoir → modif faite le → validé)."
   },
   "tests": [
@@ -45,7 +45,7 @@
         }
       ],
       "created_at": "2026-05-26",
-      "updated_at": "2026-05-26",
+      "updated_at": "2026-08-25",
       "assignee": "Rebecca"
     }
   ]

@@ -21,11 +21,17 @@
  * citron du Livre (§2, Citron/Zeste/Crème/Coton). Les deux coexistent pour
  * l'instant sans être réconciliés — décision éditoriale à trancher par Sarah,
  * pas silencieusement par un refactor : lequel des deux reste la référence ?
+ *
+ * Fiches Preuve/Communauté (22/08/2026) : extraites dans
+ * lib/social/fiches-editoriales.ts, réutilisées telles quelles par le
+ * générateur /social/connexion (pilier Preuve/Communauté) — ce fichier
+ * n'en garde que l'affichage doc, plus la source de vérité du texte.
  */
 
 import { createContext, useContext, useState } from "react";
 import { GlassWater, Ban, Link2, Sparkles, MessageCircle } from "lucide-react";
 import type { FontChoice } from "@/lib/brand-card";
+import { FICHES_PREUVE, FICHES_COMMUNAUTE, type Fiche } from "@/lib/social/fiches-editoriales";
 
 const SERIF = 'var(--font-serif, "Newsreader", Georgia, serif)';
 const SANS = 'var(--font-sans, "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif)';
@@ -85,143 +91,6 @@ const REPOUSSOIRS = [
   { label: "Le flex-Dubaï", desc: "LV + business class + « GRATEFUL » : le flex qui appelle le retour de bâton. Vu le commentaire à 313 likes." },
   { label: "L'emprunt-cancer/mort", desc: "Le selfie souriant + « 50 millions se battent contre le cancer » — emprunter la maladie pour extorquer de l'engagement. L'exact inverse de ta franchise. Poubelle immédiate." },
 ] as const;
-
-interface Fiche {
-  id: string;
-  nom: string;
-  star?: boolean;
-  tagline: string;
-  frequence: string;
-  hookVisual: string;
-  hookEcrit: string;
-  overlayStyle: "overlay" | "editorial";
-  question: string;
-  mojito: (keyof typeof MOJITO_META)[];
-  mojitoCheck: string;
-  traduction: string;
-  reproductible: string;
-  extra?: string;
-}
-
-const FICHES_PREUVE: Fiche[] = [
-  {
-    id: "P1",
-    nom: "Le déballage",
-    tagline: "Le colis qui s'ouvre. Le vrai, filmé.",
-    frequence: "Dès qu'une vraie commande part · vise 1×/semaine",
-    hookVisual: "Colis fermé, papier de soie, ta main dessus. Macro. On ne voit pas encore la pièce.",
-    hookEcrit: "Ce qu'il y a dans le colis de [Prénom].",
-    overlayStyle: "overlay",
-    question: "Tu veux voir le tien ? → configurateur en bio. (variante : « Commente TIEN »)",
-    mojito: ["rhum", "menthe"],
-    mojitoCheck: "On voit tes vraies mains et un vrai colis — pas un flatlay studio. Si c'est trop propre, c'est faux.",
-    traduction: "Fond crème pour l'overlay texte. Filmé en atelier réel, lumière naturelle. Papier de soie en rouge coquelicot possible. Jamais l'équipement — la matière, le fil, tes mains. Vocabulaire : « brodé à la commande », « cousu pour durer ».",
-    reproductible: "Chaque commande est un épisode. Numérotable (« Colis #47 »).",
-  },
-  {
-    id: "P2",
-    nom: "Photo produit ⟷ vrai",
-    tagline: "Le split : la version catalogue, et ce qu'il s'est vraiment passé.",
-    frequence: "2×/mois",
-    hookVisual: "Split screen. Gauche : photo produit léchée. Droite : le chaos réel (atelier, chutes de fil, 4e tentative).",
-    hookEcrit: "Ce que tu vois sur la photo ⟷ ce qu'il s'est vraiment passé.",
-    overlayStyle: "editorial",
-    question: "Team photo parfaite ou team coulisses ? Dis-moi en commentaire.",
-    mojito: ["rhum"],
-    mojitoCheck: "Tu te mets TOI en cible — pas le client, pas « les autres marques ».",
-    traduction: "Marine en fond de la partie « vrai », crème sur la partie « photo ». Titre en Newsreader. La franchise du split fait le travail — pas besoin de fioritures.",
-    reproductible: "Un « vrai » derrière chaque pièce. Format infini.",
-  },
-  {
-    id: "P3",
-    nom: "Étape X sur 47",
-    tagline: "Le work-in-progress, avec le compteur autodérision.",
-    frequence: "1×/semaine, Reels ou Story",
-    hookVisual: "Macro sur le motif à moitié brodé, le fil en cours.",
-    hookEcrit: "Étape 12 sur 47 avant que ce soit parfait (ou que je craque).",
-    overlayStyle: "overlay",
-    question: "À ton avis, ça part sur quelle nuance ? (pick-one, léger et vrai)",
-    mojito: ["rhum", "citron"],
-    mojitoCheck: "Le compteur est drôle ET vrai — l'obsession du détail assumée, pas la plainte.",
-    traduction: "Overlay crème sur la matière réelle. Le compteur en Cafeteria bold (ou Arial Rounded). Une nuance de fil qui varie à chaque épisode = série.",
-    reproductible: "Chaque commande a 47 étapes (ou 12, ou 3). Compteur infini.",
-  },
-  {
-    id: "P4",
-    nom: "À ton image : [Prénom]",
-    tagline: "Une commande custom racontée. La preuve incarnée.",
-    frequence: "Dès qu'un client envoie une photo",
-    hookVisual: "La pièce portée, par le vrai client, dans sa vraie vie. Regram.",
-    hookEcrit: "[Prénom] voulait [l'idée derrière le motif]. Voilà ce qu'on a brodé.",
-    overlayStyle: "editorial",
-    question: "Et toi, ce serait quoi TON motif ? (pick-one + amorce configurateur)",
-    mojito: ["menthe", "citron"],
-    mojitoCheck: "C'est l'histoire du client, pas ton argumentaire. Tu racontes pourquoi ce motif existe pour cette personne.",
-    traduction: "Cadre discret teal autour de la photo client, prénom en Newsreader. RGPD/consentement : repost uniquement si le client a dit oui.",
-    reproductible: "Chaque commande est un « À ton image ». Format signature, numérotable.",
-    extra: "Comment collecter les photos (à brancher sur le hub) : un mot dans le colis (carte insert) + un DM automatisable à J+10 : « Si tu la portes, envoie-moi une photo — j'adorerais la montrer (avec ton accord). » Referme la boucle avis→visuel avec de vraies photos.",
-  },
-];
-
-const FICHES_COMMUNAUTE: Fiche[] = [
-  {
-    id: "C1",
-    nom: "Le pick-one",
-    star: true,
-    tagline: "Le mécanisme roi. Si tu ne gardes qu'une fiche, c'est celle-là.",
-    frequence: "1×/semaine minimum — ton moteur d'engagement",
-    hookVisual: "Carrousel. Une idée / permission / mini-histoire par slide, sur une belle photo de matière ou d'atelier.",
-    hookEcrit: "5 trucs que je me répète quand je doute sur une commande.",
-    overlayStyle: "editorial",
-    question: "Laquelle te parle le plus ? Dis-moi en commentaire. — c'est LA ligne.",
-    mojito: ["menthe", "bulles"],
-    mojitoCheck: "Chaque slide se lit d'une gorgée. Aucune ne sonne coach.",
-    traduction: "Newsreader crème sur photo de matière réelle (fil, tissu, atelier) — pas de serif doré sur plage léchée. Une nuance de fil différente par slide = ta signature. Rouge coquelicot en accent sur la slide-question.",
-    reproductible: "Infini. « 5 [n'importe quoi] » + « laquelle ? ». Gabarit à vie.",
-  },
-  {
-    id: "C2",
-    nom: "La note d'atelier",
-    tagline: "La note à moi-même — mais vraie.",
-    frequence: "1×/semaine, quand tu as un truc vrai en tête",
-    hookVisual: "Ta note, écrite à la main, dans ton vrai carnet d'atelier ou épinglée sur une chute de tissu. Pas un Clairefontaine rose.",
-    hookEcrit: "Note à moi-même : [la vraie pensée qui parle en fait à ta cliente].",
-    overlayStyle: "editorial",
-    question: "Ça te parle ? / Dis-moi si t'es pareille.",
-    mojito: ["menthe"],
-    mojitoCheck: "Intime et vrai. Écrit comme tu écris, pas comme une citation motivante.",
-    traduction: "Ta vraie écriture sur ta vraie matière = déjà anti-beige par nature. Photo brute. Si overlay : marine sur crème.",
-    reproductible: "Une note par jour dans ta tête. Format infini.",
-  },
-  {
-    id: "C3",
-    nom: "J'ai un avis",
-    tagline: "L'opinion du mois. Le citron vert pur.",
-    frequence: "1×/mois — rare = fort",
-    hookVisual: "Toi, cash, face cam. Ou fond marine plein, texte gros.",
-    hookEcrit: "Mon avis qui va pas plaire : [l'opinion qui pique].",
-    overlayStyle: "editorial",
-    question: "T'es d'accord ou pas ? Je lis tout.",
-    mojito: ["citron"],
-    mojitoCheck: "Une vraie opinion qui dérange un peu — pas un consensus déguisé.",
-    traduction: "Fond marine, texte crème gros en Newsreader. Sobre, tranchant. Aucun emoji cœur.",
-    reproductible: "Un avis par mois, facile. Format « J'ai un avis — édition [mois] ».",
-  },
-  {
-    id: "C4",
-    nom: "Commente [MOT]",
-    tagline: "La capture Club, en douceur.",
-    frequence: "2×/mois, jamais plus (sinon ça devient promo)",
-    hookVisual: "Aperçu du lead magnet (guide d'entretien) ou une pièce en teaser.",
-    hookEcrit: "Le guide pour que ta pièce brodée dure des années. Gratuit.",
-    overlayStyle: "overlay",
-    question: "Commente ENTRETIEN et je te l'envoie.",
-    mojito: ["menthe", "bulles"],
-    mojitoCheck: "Un cadeau utile, jamais une promo/réduction. Le Club, c'est l'accès — jamais le discount.",
-    traduction: "Teal en dominante, Cafeteria (ou Arial Rounded). Le mot à commenter en majuscules, rouge coquelicot. Vit sur le feed/Stories, pas dans les Messages Etsy — la carte insert reste le canal compliant pour l'offre Club.",
-    reproductible: "Un lead magnet = une campagne. Réutilisable à chaque drop.",
-  },
-];
 
 const PLAN_CATEGORIES = [
   { label: "Toi", items: ["Selfie face cam", "Toi qui écris dans le carnet d'atelier", "Toi qui choisis une nuance", "Toi qui réponds aux DM à 23h", "Toi qui bois ton café devant une pièce en cours"] },
@@ -351,7 +220,7 @@ export function PlaybookSection() {
         </Section>
 
         {/* ── §2 : Le pick-one ── */}
-        <Section title="2 · Le mécanisme roi : le pick-one" sub="Prouvé 6 fois sur 6 comptes différents. Toujours le même geste : une question → un choix → un commentaire. C'est ta brique Communauté, celle que ta charte marquait « à faire »." icon={<MessageCircle size={18} color={TEAL} />}>
+        <Section title="2 · Le mécanisme roi : le pick-one" sub="Prouvé 6 fois sur 6 comptes différents. Toujours le même geste : une question → un choix → un commentaire. C'est ta brique Communauté, désormais générable directement dans /social/connexion (pilier Communauté)." icon={<MessageCircle size={18} color={TEAL} />}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 12 }}>
             {PICK_ONE_VARIANTS.map((v) => (
               <div key={v.label} style={{ border: "1px solid rgba(22,50,76,.1)", borderRadius: 14, padding: 16, background: "#fff" }}>

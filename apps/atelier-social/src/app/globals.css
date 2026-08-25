@@ -32,6 +32,8 @@
   --color-hub-accent-soft: var(--hub-accent-soft);
   --color-hub-accent-wash: var(--hub-accent-wash);
   --color-hub-teal: var(--hub-teal);
+  --color-hub-ocre: var(--hub-ocre);
+  --color-hub-bordeaux: var(--hub-bordeaux);
 }
 
 html {
