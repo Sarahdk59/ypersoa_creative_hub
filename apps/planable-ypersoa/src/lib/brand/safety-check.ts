@@ -16,11 +16,14 @@ export interface BrandSafetyResult {
   issues: BrandSafetyIssue[];
 }
 
-// CRITICAL = red lines absolues : machine/équipement, « fait main », marketplaces.
+// CRITICAL = red lines absolues : machine/équipement/fil (réservé au pro), « fait main », marketplaces.
 const FORBIDDEN_CRITICAL = [
   "métier tajima",
   "tajima",
   "machine à broder",
+  "gunold",
+  "madeira",
+  "isacord",
   "brodé à la main",
   "brodée à la main",
   "brodés à la main",

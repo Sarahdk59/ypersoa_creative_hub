@@ -59,7 +59,7 @@ const FORBIDDEN_TERMS_CRITICAL = [
 ];
 
 // Consumer-facing : aucune référence machine (mémoire feedback_vocab_fabrication).
-const FORBIDDEN_TERMS_MACHINE = ["métier Tajima", "Tajima", "machine à broder"];
+const FORBIDDEN_TERMS_MACHINE = ["métier Tajima", "Tajima", "machine à broder", "Gunold", "Madeira", "Isacord"];
 
 function checkBrandSafety(text: string): BrandSafety {
   const lower = text.toLowerCase();

@@ -134,15 +134,14 @@ Lu par les générateurs (`apps/atelier-social/src/lib/brand-rules.ts` → `chec
 
 **« Personnalisé »** — mot-clé SEO utile, mais pas un mot de marque : il vit dans les titres et métas de recherche, **pas** dans le copy client (on préfère « brodé à ton prénom »).
 
-**Tajima — la preuve technique se dose**, elle ne remplace jamais l'identité :
+**Tajima / Gunold — l'axe est l'audience, pas le format.** Décision du 24/08/2026, qui remplace la règle précédente (« autorisé en contenu long ») : les marques machine (Tajima) et de fil (Gunold, Madeira, Isacord) sont réservées au **pro** (B2B, partenaire atelier, fiche backend Hub interne) — jamais pour la cliente finale, quel que soit le format ou la longueur.
 
 | Support | Formulation |
 | --- | --- |
-| Produit, caption, Mood, réseaux sociaux (défaut partout) | « brodé à la commande » |
-| Contenu atelier court | « brodé dans notre atelier de Wattrelos » |
-| Article savoir-faire long, vidéo process, fiche backend Hub | « brodé sur métier Tajima » une fois, puis retour au langage humain |
+| Produit, caption, Mood, réseaux sociaux, blog grand public — même un article savoir-faire long ou une vidéo process destinés à la cliente finale (défaut partout côté consumer) | « brodé à la commande » / « brodé dans notre atelier de Wattrelos » |
+| Contenu explicitement adressé à un pro (fiche backend Hub, contenu B2B/partenariat atelier) | « brodé sur métier Tajima », noms de fil autorisés |
 
-Ces trois contextes (`blog_atelier`, `video_process`, `fiche_backend_hub`) sont exactement les `TAJIMA_ALLOWED_CONTEXTS` codés dans `brand-rules.ts` — hors de là, « Tajima » ne s'écrit pas.
+Codé dans `checkBrandSafety()` (`brand-rules.ts` et ses copies dans `/api/connexion/generate`, `/api/avis/generate`, `/api/generate-copy`, `planable-ypersoa/lib/brand/safety-check.ts`) : Tajima/Gunold/Madeira/Isacord sont en liste interdite critique par défaut sur tous les générateurs de contenu — aucun d'eux ne s'adresse à un public pro aujourd'hui. Un futur générateur pro-facing devra explicitement ne pas router par ces vérifications, plutôt que de rouvrir une exception par contexte.
 
 **Références de ton** (jamais dans le copy client — usage interne prompts/briefs) : marques héros Émoï-Émoï, Make My Lemonade, Gamin Gamine · premium parisien Sézane, A.P.C., Maison Labiche, Sœur · à ne pas imiter : Sézane pure (trop lisse), Aerie #AerieREAL, Etsy.
 

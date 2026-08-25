@@ -49,21 +49,16 @@ export const BRAND_FORBIDDEN_TERMS = [
   "#artisanat",
   "#artisanatfrancais",
 
-  // Jargon technique banni
+  // Jargon technique banni — marques machine/fil, réservées au pro (jamais
+  // grand public, quel que soit le format : blog, vidéo, réseaux). Décision
+  // 2026-08-24, cf. mémoire feedback_vocab_fabrication : l'axe est l'audience
+  // (pro vs grand public), pas la longueur ou le type de contenu.
   "Tajima TMEZ",
   "TMEZ",
-] as const;
-
-// ============================================================================
-// CONTEXTES POUR "BRODÉ SUR MÉTIER TAJIMA"
-// ============================================================================
-// Autorisé UNIQUEMENT en contexte ultra-niche (article blog atelier, vidéo process)
-// Pour PDP / RS / captions : "brodé à la commande" ou "brodé à la demande"
-
-export const TAJIMA_ALLOWED_CONTEXTS = [
-  "blog_atelier",
-  "video_process",
-  "fiche_backend_hub",
+  "Tajima",
+  "Gunold",
+  "Madeira",
+  "Isacord",
 ] as const;
 
 // ============================================================================

@@ -72,20 +72,23 @@ const FORBIDDEN_TERMS_WARNING = [
   "Bonsoir",
 ];
 
-// Pinterest = consumer-facing : aucune référence machine/équipement (cf. mémoire
-// feedback_vocab_fabrication → préférer « brodé à la commande »).
+// Consumer-facing (Instagram + Pinterest) : aucune référence machine/fil, réservée
+// au pro (cf. mémoire feedback_vocab_fabrication — axe = audience, pas format).
 const FORBIDDEN_TERMS_MACHINE = [
   "métier Tajima",
   "Tajima",
   "machine à broder",
+  "Gunold",
+  "Madeira",
+  "Isacord",
 ];
 
-function checkBrandSafety(text: string, extraCritical: string[] = []): BrandSafety {
+function checkBrandSafety(text: string): BrandSafety {
   const lower = text.toLowerCase();
   const criticalViolations: BrandViolation[] = [];
   const warnings: BrandViolation[] = [];
 
-  for (const term of [...FORBIDDEN_TERMS_CRITICAL, ...extraCritical]) {
+  for (const term of [...FORBIDDEN_TERMS_CRITICAL, ...FORBIDDEN_TERMS_MACHINE]) {
     const idx = lower.indexOf(term.toLowerCase());
     if (idx !== -1) {
       criticalViolations.push({ term, position: idx, severity: "critical" });
@@ -463,9 +466,9 @@ Analyse l'image attentivement (motif brodé, couleurs, support textile) et produ
     const tags: string[] = pinterestKeywords ? pinterestKeywords.tous : gptTags;
     const tagCategories = pinterestKeywords ? pinterestKeywords.categories : null;
 
-    // Brand safety check sur titre + description (+ interdiction machine sur Pinterest)
+    // Brand safety check sur titre + description
     const fullText = `${title} ${description}`;
-    const brandSafety = checkBrandSafety(fullText, FORBIDDEN_TERMS_MACHINE);
+    const brandSafety = checkBrandSafety(fullText);
 
     console.log(
       `[OK:${source}] Pinterest output - title: ${title.length} chars, desc: ${description.length} chars, tags: ${tags.length}`
