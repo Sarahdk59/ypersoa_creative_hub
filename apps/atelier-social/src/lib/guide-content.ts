@@ -69,12 +69,13 @@ export const GUIDE_INTRO: {
   demarrageRapide: [
     { href: "social-generer-pack", label: "Générer un carrousel Instagram ou un shooting Pinterest" },
     { href: "social-overlay-texte", label: "Ajouter du texte sur un visuel (overlay)" },
-    { href: "social-bibliotheque", label: "Retrouver un pack que j'ai déjà sauvegardé" },
+    { href: "bibliotheque-packs", label: "Retrouver un pack que j'ai déjà sauvegardé" },
     { href: "prod-commandes-shopify", label: "Importer et suivre une commande Shopify" },
     { href: "recherche-globale", label: "Chercher un motif, une commande ou une couleur" },
+    { href: "le-livre", label: "Vérifier la voix, la couleur ou le vocabulaire avant de publier" },
   ],
   piedDePage:
-    "Guide d'utilisation du Hub Créatif Ypersoa — couvre les 6 ateliers et la recherche globale. Pour mettre à jour cette page, édite lib/guide-content.ts.",
+    "Guide d'utilisation du Hub Créatif Ypersoa — couvre les 5 ateliers (Social, Blog, Planning, Studio, Bibliothèque), les 2 référentiels (Atelier DA, Atelier Production), Le Livre et la recherche globale. Pour mettre à jour cette page, édite lib/guide-content.ts.",
 };
 
 export const GUIDE_SECTIONS: GuideSection[] = [
@@ -195,6 +196,26 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Le rôle Lecture est volontairement très restreint (tableau de bord + recherche uniquement).",
         ],
       },
+      {
+        id: "le-livre",
+        name: "Le Livre",
+        aQuoiCaSert:
+          "Vérifier en un clic la voix, la palette, le vocabulaire brand-safe et la signature « Bisous » de la marque avant de publier quoi que ce soit.",
+        quandUtiliser:
+          "Avant de publier un post, un article ou une carte, ou en cas de doute sur le ton à employer (quel cran de voix ?) ou sur une couleur à utiliser.",
+        commentFaire: [
+          "Clique « Le Livre » en bas de la barre latérale.",
+          "Navigue entre les onglets : Identité, Visuel, Playbook, Mood.",
+          "Repère le territoire (mot / geste / présence), le cran de voix (Citron / Zeste / Crème / Coton) adapté à ton contenu, et la checklist avant publication en fin de page.",
+        ],
+        exemple:
+          "Avant de publier une carte pour un deuil, tu ouvres Le Livre, tu relis la règle du cran Coton : aucune vanne, aucune question de fin, signature silencieuse.",
+        resultat: "Une référence de lecture complète sur la voix, les couleurs officielles, les 6 piliers stratégiques et le rituel Studio Mood.",
+        limites: [
+          "C'est une page de lecture : elle ne modifie rien dans le Hub.",
+          "En cas de divergence, le document source `docs/VOIX_YPERSOA.md` fait foi sur le contenu affiché ici.",
+        ],
+      },
     ],
   },
   {
@@ -203,7 +224,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     title: "Créer des visuels et du texte pour les réseaux",
     atelier: "Atelier Social",
     pitch:
-      "C'est ton studio pour transformer un vêtement brodé en pack complet pour Instagram ou Pinterest. Tu charges ta broderie, tu règles l'ambiance, l'occasion et tes mannequins, et l'IA te sort les visuels + le texte prêts à publier. Tout se passe dans une seule page : config à gauche, résultats à droite.",
+      "C'est ton studio pour transformer un vêtement brodé en pack complet pour Instagram ou Pinterest. En haut de la page, 4 boutons de mode (Visuel produit / Avis client / Histoire de marque / Réel) donnent chacun accès à un générateur différent — les fiches ci-dessous couvrent d'abord le mode par défaut, Visuel produit : tu charges ta broderie, tu règles l'ambiance, l'occasion et tes mannequins, et l'IA te sort les visuels + le texte prêts à publier, config à gauche et résultats à droite.",
     features: [
       {
         id: "social-photo-produit",
@@ -502,26 +523,6 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         ],
       },
       {
-        id: "social-bibliotheque",
-        name: "Bibliothèque des packs sauvegardés",
-        aQuoiCaSert: "Retrouver, consulter et rééditer tous les packs que tu as déjà sauvegardés.",
-        quandUtiliser:
-          "Quand tu veux reprendre un ancien pack, le télécharger à nouveau, ou récupérer une caption. C'est le seul endroit où ton travail sauvegardé est conservé.",
-        commentFaire: [
-          "En haut d'Atelier Social, clique sur « Bibliothèque » : un tiroir s'ouvre à droite.",
-          "Filtre par collection, plateforme ou favori, ou tape ta recherche (plusieurs mots possibles).",
-          "Clique une carte pour ouvrir le détail.",
-          "Là, tu peux : supprimer, marquer favori ❤️, éditer la caption en ligne, ajouter un slide au catalogue, télécharger en ZIP ou télécharger un slide.",
-        ],
-        exemple:
-          "Trois semaines après, tu retapes « MAMA CLUB » dans la recherche de la Bibliothèque, tu retrouves ton pack Fête des Mères, tu corriges un mot dans la caption et tu le retélécharges en ZIP pour le calendrier éditorial.",
-        resultat: "Tu as accès à toute ton archive de packs, filtrable et rééditable, avec téléchargement à la carte.",
-        limites: [
-          "Le bouton « Bibliothèque » est dans l'en-tête : facile à rater alors que c'est le seul accès à ton travail sauvegardé.",
-          "Seuls les packs sauvegardés y apparaissent : un pack non enregistré est perdu en fermant la page.",
-        ],
-      },
-      {
         id: "social-exporter-telecharger",
         name: "Exporter / télécharger",
         aQuoiCaSert: "Récupérer tes visuels sur ton ordinateur, à l'unité ou en pack complet.",
@@ -590,7 +591,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         quandUtiliser:
           "Chaque fois que tu veux publier un avis client en post « Merci » : tu as l'avis, le prénom, le produit acheté et l'occasion, et tu veux la légende prête à coller sans réécrire le squelette à chaque fois.",
         commentFaire: [
-          "Depuis Atelier Social, clique « Avis » dans l'en-tête.",
+          "Depuis Atelier Social, clique le bouton de mode « Avis client » en haut de la page.",
           "Colle le prénom de la cliente et l'avis tel quel (obligatoires).",
           "Précise le produit acheté et l'occasion / pourquoi si tu les as — la légende et les hashtags sont plus justes.",
           "Clique « Générer la légende », puis « Copier » pour coller la légende sous ton visuel Illustrator.",
@@ -603,6 +604,51 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Le squelette (étoiles, citation, structure) est verrouillé côté serveur — seule la mini-histoire est écrite par l'IA (OpenAI puis Gemini en repli, sinon un texte déterministe minimal).",
           "Produit et occasion sont détectés par mots-clés simples sur le texte libre pour choisir les hashtags — un texte inhabituel peut retomber sur des hashtags génériques.",
           "Ne génère pas le visuel (carte étoiles + citation) : ça reste composé à la main dans Illustrator.",
+        ],
+      },
+      {
+        id: "social-histoire",
+        name: "Générer une histoire de marque (Connexion / Preuve / Communauté)",
+        aQuoiCaSert:
+          "Écrire un post de marque qui ne part ni d'un produit ni d'un avis : un manifeste, une coulisse d'atelier ou un contenu qui fait parler la communauté.",
+        quandUtiliser:
+          "Pour 3 des 6 piliers du Playbook — Connexion, Preuve, Communauté (les 3 autres, Réassurance / Qualification / Occasions, ont déjà leur outil : respectivement le mode Avis client, le mode Visuel produit, et la fiche Pinterest du mode Visuel produit).",
+        commentFaire: [
+          "Depuis Atelier Social, clique le bouton de mode « Histoire de marque » en haut de la page.",
+          "Choisis ton pilier : Connexion (post de marque, sans produit ni avis précis), Preuve (matière, mains, atelier, une commande vraie) ou Communauté (avis, question — jamais de vente).",
+          "En Connexion, choisis un « Angle » : Qui sommes-nous (présentation atelier, équipe, promesse), Lien (couple, famille, amis proches), Souvenir / Occasion (naissance, diplôme, départ, anniversaire, fêtes) ou Présence (distance, expatrié, deuil). En Preuve ou Communauté, choisis une « Fiche » dans la banque proposée.",
+          "Si tu as une vraie histoire cliente, écris-la dans « Raconte-moi ton histoire » (optionnel, mais ancre le post — sinon il reste générique à l'angle).",
+          "Coche « Teaser DTF » si tu veux glisser une mention du lancement DTF d'octobre (séries uniques, sur-mesure) en plus de la broderie.",
+          "Passe entre les 3 onglets de résultat : Légende, Visuel, Carrousel.",
+          "Clique « Générer le post », relis, copie.",
+        ],
+        exemple:
+          "Pilier Connexion, angle « Souvenir / Occasion », tu racontes en 2 lignes une commande naissance récente : tu obtiens une légende « Pourquoi Ypersoa », prête à coller dans Planable, avec 5 hooks alternatifs et les hashtags.",
+        resultat: "Une légende prête à coller dans Planable (avec 5 hooks alternatifs et les hashtags), plus un visuel/carrousel associé selon l'onglet choisi.",
+        limites: [
+          "Ce mode ne couvre que 3 des 6 piliers stratégiques du Livre — les 3 autres passent par d'autres modes/outils (cf. « quand l'utiliser »).",
+          "Les banques de fiches Preuve et Communauté sont prédéfinies : si aucune ne convient, repars sur un angle Connexion en texte plus libre.",
+          "Sans histoire cliente réelle dans le champ optionnel, le post reste générique à l'angle choisi.",
+        ],
+      },
+      {
+        id: "social-reel",
+        name: "Préparer un script de Réel",
+        aQuoiCaSert: "Cadrer un Réel plan par plan — le hook des 3 premières secondes, le texte de chaque plan, la légende — et générer un visuel par plan si besoin.",
+        quandUtiliser: "Quand tu pars filmer et que tu veux un script prêt, plutôt que d'improviser devant la caméra.",
+        commentFaire: [
+          "Depuis Atelier Social, clique le bouton de mode « Réel » en haut de la page.",
+          "Choisis ton pilier : Connexion, Preuve ou Communauté (même logique que le mode Histoire de marque).",
+          "Onglet « Script » : remplis le champ proposé, clique « Générer le script ».",
+          "Onglet « Focus motif » : choisis un ou plusieurs motifs, clique « Générer le réel », puis « Générer un visuel » sur les plans qui en ont besoin.",
+          "Dans « Aperçu », télécharge ce dont tu as besoin.",
+        ],
+        exemple:
+          "Pilier Preuve, onglet Script : tu obtiens un plan par plan (hook, coulisse atelier, révélation broderie, CTA), puis tu génères un visuel pour le plan « révélation » avant de partir filmer.",
+        resultat: "Un script de Réel scène par scène, avec éventuellement un visuel généré par plan.",
+        limites: [
+          "Le Réel produit un script et des visuels fixes plan par plan — jamais un clip vidéo monté automatiquement.",
+          "« Focus motif » nécessite de sélectionner un ou plusieurs motifs avant de générer.",
         ],
       },
     ],
@@ -661,13 +707,93 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     ],
   },
   {
-    id: "shooting-videos",
+    id: "blog",
     num: 4,
-    title: "Concevoir un shooting et des vidéos",
-    atelier: "Atelier DA + Atelier Shooting + Atelier Lookbook",
+    title: "Tenir le rendez-vous du blog",
+    atelier: "Blog",
     pitch:
-      "Tu pars d'un brief ou d'une envie, et tu ressors avec un plan de shooting complet, des visuels prêts à filer, et même des vidéos. Quatre outils qui se complètent : un pour penser le shooting, deux ateliers embarqués pour les images, un pour le motion.",
+      "Depuis la refonte du 20-21/08/2026, le Blog est un atelier de premier niveau, organisé autour d'un rituel hebdomadaire : le brouillon s'écrit, tu le relis et l'étoffes, puis tu le pousses sur Shopify le jeudi. C'est le même générateur d'articles qu'avant, dans une interface pensée pour la cadence plutôt que pour le réglage fin.",
     features: [
+      {
+        id: "blog-article-semaine",
+        name: "Écrire l'article de la semaine",
+        aQuoiCaSert: "Générer, relire et pousser l'article de blog hebdomadaire sans repartir de zéro.",
+        quandUtiliser: "Le mercredi soir pour lancer le brouillon, le jeudi matin pour le relire et le publier.",
+        commentFaire: [
+          "Clique « Blog » dans la barre latérale.",
+          "Renseigne le sujet et, si tu veux, l'angle en texte libre (laisse vide pour que le Blog en propose un dans la voix Ypersoa).",
+          "Clique « Lancer le brouillon ».",
+          "Relis le brouillon : le mot-compteur t'indique si tu es dans la cible (700-1100 mots).",
+          "Si c'est trop court, clique « Étoffer le brouillon » ; si le résultat ne convient pas, clique « Régénérer ».",
+          "Une fois satisfaite, clique « Copier pour Shopify » et colle le HTML dans ta fiche article Shopify.",
+        ],
+        exemple:
+          "Mercredi soir tu tapes le sujet « idée cadeau broderie maman », tu laisses l'angle vide. Jeudi matin le brouillon affiche 850 mots, dans la cible : tu relis, cliques « Copier pour Shopify », et tu colles direct dans l'admin Shopify.",
+        resultat: "Un brouillon d'article (titre, réponse directe, contenu) avec compteur de mots, et un bouton qui copie le HTML prêt à coller dans Shopify.",
+        limites: [
+          "Le bouton « Copier pour Shopify » copie le HTML de l'article — il n'y a pas, dans cette interface, de bouton séparé pour un bloc Liquid ou un export FAQ JSON-LD distinct : tout est dans ce même HTML.",
+          "Le brouillon est un point de départ : c'est à toi de le relire avant de le publier.",
+          "« Étoffer » et « Régénérer » relancent une génération : ça prend quelques secondes, ne ferme pas la page.",
+        ],
+      },
+    ],
+  },
+  {
+    id: "planning-tempo",
+    num: 5,
+    title: "Caler le tempo de la semaine",
+    atelier: "Planning",
+    pitch:
+      "Depuis la refonte du 20-21/08/2026, Planning est un atelier de premier niveau centré sur le rythme hebdomadaire : où on en est cette semaine, ce que chaque équipe doit sortir (3 priorités maximum), et le brief de la personne qui écrit les publications. Ce n'est PAS le rétroplanning 2027 — celui-là reste dans Atelier DA (cf. section Diriger l'image de marque).",
+    features: [
+      {
+        id: "planning-tempo-hebdo",
+        name: "Suivre le tempo de la semaine",
+        aQuoiCaSert: "Voir en un coup d'œil le thème de la semaine, ce qui est prévu (publications, article du jeudi) et les 3 priorités max de chaque équipe.",
+        quandUtiliser: "En début de semaine pour se caler, ou à tout moment pour mettre à jour une priorité ou le brief de la semaine.",
+        commentFaire: [
+          "Clique « Planning » dans la barre latérale.",
+          "Lis « Le tempo » : thème de la semaine, nombre de publications prévues, date de l'article du jeudi.",
+          "Dans « Le fil de Maï », écris ou ajuste le brief de la semaine (angle, humeur, ce qu'on veut montrer) — la sauvegarde se fait automatiquement.",
+          "Dans « Les 3 ateliers », ajoute jusqu'à 3 priorités par équipe (Créa / Prod / Comm) avec « + Ajouter », et fais-les avancer (à faire / en cours / fait).",
+        ],
+        exemple:
+          "En ouvrant Planning le lundi, tu vois la semaine « Bonne Rentrée » (14 publications prévues, article jeudi 4), tu ajoutes la priorité Créa « Finaliser les visuels rentrée » et tu notes le brief de Maï pour le ton de la semaine.",
+        resultat: "Une vue hebdomadaire à jour : thème de la semaine, brief éditorial, et jusqu'à 9 priorités (3 par équipe) avec leur statut.",
+        limites: [
+          "Volontairement limité à 3 priorités par équipe : le reste attend la semaine suivante plutôt que de tout entasser.",
+          "Une priorité peut dépendre d'une autre (par ex. la Prod attend un envoi de la Créa) : elle reste bloquée tant que la dépendance n'est pas faite.",
+          "Ne remplace pas le rétroplanning 2027 (Atelier DA) pour les campagnes long terme, ni le planning machines de chaque commande (Atelier Production).",
+        ],
+      },
+    ],
+  },
+  {
+    id: "studio",
+    num: 6,
+    title: "Studio — shooting, ambiances et vidéos",
+    atelier: "Studio",
+    pitch:
+      "Studio est le point d'entrée unique pour tout ce qui est visuel de prise de vue : la pièce (Shooting), l'ambiance (Lookbook), le plan de tournage (Shooting Book) et l'humeur/Reel (Studio Mood). Les 4 outils qu'il regroupe n'ont pas changé, seul le chemin pour y arriver a bougé depuis la refonte du 20-21/08/2026 (avant, ils étaient dispersés entre la barre latérale directe et des cartes Atelier DA).",
+    features: [
+      {
+        id: "studio-hub",
+        name: "Choisir son terrain de jeu (accueil Studio)",
+        aQuoiCaSert: "Aiguiller vers le bon outil visuel sans avoir à se souvenir où il vit.",
+        quandUtiliser: "Dès que tu veux lancer un shooting, un moodboard ou une préparation vidéo et que tu ne sais pas par quel outil commencer.",
+        commentFaire: [
+          "Clique « Studio » dans la barre latérale.",
+          "Choisis le parcours qui correspond à ton besoin : Shooting, Lookbook, Shooting Book ou Studio Mood.",
+          "Tu es redirigée directement vers l'outil correspondant.",
+        ],
+        exemple:
+          "Tu veux caler l'ambiance d'une nouvelle collection avant de shooter : tu ouvres Studio, tu cliques le parcours « Lookbook ».",
+        resultat: "Un accueil avec 4 cartes cliquables, plus un raccourci vers la Bibliothèque visuelle.",
+        limites: [
+          "C'est un aiguillage, pas un outil en soi : les fiches suivantes décrivent ce que fait chaque parcours une fois dedans.",
+          "Atelier Motion (génération vidéo) n'est pas un parcours Studio : il reste dans Atelier DA (cf. section Direction artistique).",
+        ],
+      },
       {
         id: "shooting-book",
         name: "Shooting Book (plan de shooting depuis un brief)",
@@ -676,7 +802,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         quandUtiliser:
           "Quand tu lances une campagne et que tu veux cadrer le shooting avant de produire. Pas le bon outil si tu veux juste une seule image vite faite pour un post : passe par Atelier Social.",
         commentFaire: [
-          "Ouvre Atelier DA, puis la carte « Shooting Book ».",
+          "Ouvre Studio (barre latérale), puis le parcours « Shooting Book ».",
           "Écris ton brief poétique (400 caractères max), choisis le produit Ypersoa et, si tu veux, le motif YPM.",
           "Charge le PNG du motif, règle la taille brodée (Petit / Moyen / Grand) et la couleur du support.",
           "Sélectionne tes ambiances préférées (les lookbooks ❤️ actifs apparaissent aussi).",
@@ -700,7 +826,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         quandUtiliser:
           "Quand tu veux travailler le shooting IA en profondeur, prise par prise. Les shots que tu marques « favoris » reviennent ensuite comme photo de base dans Atelier Social.",
         commentFaire: [
-          "Clique sur « Atelier Shooting » dans la barre latérale gauche.",
+          "Ouvre Studio (barre latérale), puis le parcours « Shooting ».",
           "Travaille tes prises directement dans l'outil embarqué.",
           "Marque tes meilleures images en « favori » pour les retrouver ailleurs.",
           "Dans Atelier Social, section « Ton produit », choisis « Shot favori depuis Atelier Shooting » pour réutiliser une prise.",
@@ -720,7 +846,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         quandUtiliser:
           "Quand tu veux définir une ambiance visuelle sur mesure pour une saison ou une campagne. Un lookbook que tu mets en ❤️ reste actif 7 jours et nourrit les ambiances ailleurs.",
         commentFaire: [
-          "Clique sur « Atelier Lookbook » dans la barre latérale gauche.",
+          "Ouvre Studio (barre latérale), puis le parcours « Lookbook ».",
           "Compose ton moodboard dans l'outil embarqué.",
           "Mets en ❤️ le lookbook que tu veux rendre actif.",
           "Retrouve-le ensuite comme ambiance dans Atelier Social, le Shooting Book et le référentiel Ambiances.",
@@ -733,6 +859,42 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Un lookbook ❤️ n'est actif que 7 jours : sa date d'expiration s'affiche, repasse-le en ❤️ si tu veux le garder.",
         ],
       },
+      {
+        id: "studio-mood",
+        name: "Studio Mood brodé (épisodes vidéo)",
+        aQuoiCaSert:
+          "Préparer et piloter des épisodes vidéo (Reels, Stories) autour des motifs brodés : brief, storyboard scène par scène, copy brand-safe et visuel de test, du brouillon à la publication.",
+        quandUtiliser:
+          "Quand tu veux créer du contenu vidéo ou Reel pour un motif ou une occasion. Pour les images fixes (carrousel, Pinterest), reste sur l'Atelier Social.",
+        commentFaire: [
+          "Ouvre Studio (barre latérale), puis le parcours « Studio Mood ».",
+          "Clique « + Nouvel épisode » ou injecte la banque pré-remplie (12 épisodes) via « Injecter la banque ».",
+          "Dans la fiche épisode, renseigne le titre, l'humeur (Tendresse, Fierté, Complicité…), le mot brodé, le motif YPM, le support et l'occasion.",
+          "Clique « Générer le storyboard » pour obtenir un plan scène par scène (frames avec durée, description, note de montage).",
+          "Clique « Générer le copy » pour obtenir le hook + la légende-question + les hashtags, vérifiés brand-safe.",
+          "Génère un visuel de test en choisissant composition (flatlay ou porté), ratio (9:16 / 1:1 / 4:5) et canonique.",
+          "Fais avancer le statut : Brouillon → Prêt à tourner → Tourné → Monté → Publié.",
+        ],
+        exemple:
+          "Pour la Fête des Mères tu crées l'épisode « Tendresse matinale » sur le motif MAMA CLUB, sweat beige, humeur Tendresse. Tu génères le storyboard (5 frames) et le copy. L'épisode passe en « Prêt à tourner » : tu peux filer le plan à l'équipe.",
+        resultat:
+          "Un épisode complet avec storyboard scène par scène, hook + légende + hashtags brand-safe, et un visuel de test téléchargeable. Statut qui évolue jusqu'à « Publié ».",
+        limites: [
+          "Le storyboard est un guide de tournage, pas un script final : adapte les frames à ton matériel.",
+          "La banque pré-remplie (12 épisodes) : ne clique « Injecter la banque » qu'une seule fois, sinon tu doubles les épisodes.",
+          "La génération du visuel de test utilise Gemini : si IMAGE_OTHER s'affiche, change la composition ou le ratio et régénère.",
+        ],
+      },
+    ],
+  },
+  {
+    id: "direction-artistique",
+    num: 7,
+    title: "Diriger l'image de marque et gérer mes référentiels créa",
+    atelier: "Atelier DA",
+    pitch:
+      "C'est ta direction artistique au quotidien : les visages de la marque, les ambiances, les vidéos, les déclinaisons éditoriales. Depuis la refonte du 20-21/08/2026, Atelier DA s'est resserré : Motifs créatif et Médiathèque ont rejoint la Bibliothèque, Shooting Book et Studio Mood ont rejoint Studio, Planning commun a rejoint Planning, l'ancien Atelier Blog est devenu l'atelier Blog de premier niveau, et Radar (ex-Atelier Trends) y a emménagé.",
+    features: [
       {
         id: "atelier-motion",
         name: "Atelier Motion (vidéo IA)",
@@ -756,16 +918,6 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Certaines finitions ne sont pas automatiques : la liste « À faire manuel » te dit ce qu'il reste à faire toi-même.",
         ],
       },
-    ],
-  },
-  {
-    id: "direction-artistique",
-    num: 5,
-    title: "Diriger l'image de marque et gérer mes référentiels créa",
-    atelier: "Atelier DA",
-    pitch:
-      "C'est ta direction artistique au quotidien : les visages de la marque, les ambiances, les motifs côté créa, toutes tes photos et les déclinaisons éditoriales. Tu y consultes, tu y tagues, tu y ranges. C'est la mémoire visuelle d'Ypersoa.",
-    features: [
       {
         id: "da-casting",
         name: "Casting / Mur des canoniques",
@@ -807,47 +959,6 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         ],
       },
       {
-        id: "da-motifs-catalogue",
-        name: "Motifs — catalogue créatif",
-        aQuoiCaSert: "Voir tes motifs YPM comme sur un site web et les taguer pour qu'on les retrouve facilement.",
-        quandUtiliser:
-          "Quand tu veux ranger, taguer ou explorer les motifs côté créa. Pour les fiches techniques (DST, dimensions, palettes), c'est l'Atelier Production.",
-        commentFaire: [
-          "Ouvre Atelier DA, puis la carte « Motifs ».",
-          "Navigue entre les 3 onglets : « Motifs / Variantes / Catalogue ».",
-          "Filtre par « Pour qui ? » (papa, maman, mamie…), « Occasion » et « Autres tags ».",
-          "Ouvre la modale d'édition pour taguer le motif hero et chaque variante (destinataires, occasions, produits, tags libres), puis clique « Enregistrer tous les tags ».",
-          "Utilise les liens « Utiliser dans Shooting » ou « Fiche technique » pour rebondir.",
-        ],
-        exemple:
-          "Tu ouvres le motif YPM-003 Le Club, tu tagues sa variante « La Team » avec destinataire « équipe », occasion « Rentrée » et produit « sweat », puis tu cliques « Enregistrer tous les tags » pour qu'elle remonte dans la recherche.",
-        resultat: "Une vue catalogue filtrable des motifs et variantes, des tags sauvegardés, et une galerie de shots catalogués par produit.",
-        limites: [
-          "Il existe une autre page « Motifs » côté Atelier Production, purement technique : ne confonds pas les deux. Ici c'est créa et taggage, là-bas c'est DST / dimensions.",
-          "Cette page sert à organiser, pas à générer des visuels.",
-        ],
-      },
-      {
-        id: "da-mediatheque",
-        name: "Médiathèque",
-        aQuoiCaSert: "Centraliser toutes tes photos (shooting, lifestyle, IA, packshot) au même endroit, taguées et statutées.",
-        quandUtiliser:
-          "Quand tu veux retrouver une photo, suivre son statut de validation ou récupérer son URL publique. C'est le seul endroit où toutes les images vivent ensemble.",
-        commentFaire: [
-          "Ouvre Atelier DA, puis la carte « Médiathèque ».",
-          "Cherche, trie (date / nom) et filtre par tags catégorisés.",
-          "Pour ajouter des photos : « Ajout rapide » (auto-tag depuis le nom de fichier) ou déplie « Ajout détaillé » pour renseigner source / date / photographe / tags par lot.",
-          "Ouvre une fiche photo pour changer son statut en 1 clic (À valider / Validée / Publiée Shopify / Archivée), écrire des notes, ou « Copier l'URL publique ».",
-        ],
-        exemple:
-          "Tu déposes un lot de shooting nommés YPM-001_MAMA_CLUB_beige.jpg : l'Ajout rapide les tague tout seul. Tu passes ensuite les meilleures en « Validée » et tu copies l'URL publique de l'une d'elles pour Shopify.",
-        resultat: "Une galerie centrale recherchable, des fiches photo avec statut, source, photographe, tags et notes auto-sauvegardées.",
-        limites: [
-          "Le « Mode sélection » affiche « Actions batch en Sprint 2 » : il s'affiche mais ne fait encore rien.",
-          "L'« Ajout détaillé » est replié par défaut — pense à le déplier si tu veux renseigner source, date et photographe par lot.",
-        ],
-      },
-      {
         id: "da-incarnations",
         name: "Incarnations",
         aQuoiCaSert: "Gérer les déclinaisons éditoriales (MAMA CLUB, PAPA CLUB, DOG DAD GANG…) qui pilotent les options du configurateur Shopify.",
@@ -868,82 +979,132 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "Il existe deux « audits » dans le Hub (Incarnations et Médiathèque) présentés différemment : ne les confonds pas.",
         ],
       },
+    ],
+  },
+  {
+    id: "bibliotheque",
+    num: 8,
+    title: "Retrouver tout ce qui a été produit ou référencé",
+    atelier: "Bibliothèque",
+    pitch:
+      "Depuis la fusion du 21/08/2026 (« tout au même endroit »), Bibliothèque est l'atelier de premier niveau où vivent les visuels, les motifs côté créatif, les produits, les packs sociaux sauvegardés et les articles de blog générés. Elle remplace les anciens points d'entrée dispersés (tiroir « Bibliothèque » de l'Atelier Social, carte « Médiathèque » et carte « Motifs » d'Atelier DA, page « Référentiel »).",
+    features: [
       {
-        id: "da-studio-mood",
-        name: "Studio Mood brodé (épisodes vidéo)",
-        aQuoiCaSert:
-          "Préparer et piloter des épisodes vidéo (Reels, Stories) autour des motifs brodés : brief, storyboard scène par scène, copy brand-safe et visuel de test, du brouillon à la publication.",
-        quandUtiliser:
-          "Quand tu veux créer du contenu vidéo ou Reel pour un motif ou une occasion. Pour les images fixes (carrousel, Pinterest), reste sur l'Atelier Social.",
+        id: "bibliotheque-hub",
+        name: "Choisir son onglet (accueil Bibliothèque)",
+        aQuoiCaSert: "Retrouver un visuel, un motif, un produit, un pack ou un article sans se souvenir de son ancien emplacement.",
+        quandUtiliser: "Dès que tu cherches quelque chose de déjà produit ou déjà référencé et que tu ne sais pas dans quel onglet il vit.",
         commentFaire: [
-          "Ouvre Atelier DA, puis la carte « Studio Mood brodé ».",
-          "Clique « + Nouvel épisode » ou injecte la banque pré-remplie (12 épisodes) via « Injecter la banque ».",
-          "Dans la fiche épisode, renseigne le titre, l'humeur (Tendresse, Fierté, Complicité…), le mot brodé, le motif YPM, le support et l'occasion.",
-          "Clique « Générer le storyboard » pour obtenir un plan scène par scène (frames avec durée, description, note de montage).",
-          "Clique « Générer le copy » pour obtenir le hook + la légende-question + les hashtags, vérifiés brand-safe.",
-          "Génère un visuel de test en choisissant composition (flatlay ou porté), ratio (9:16 / 1:1 / 4:5) et canonique.",
-          "Fais avancer le statut : Brouillon → Prêt à tourner → Tourné → Monté → Publié.",
+          "Clique « Bibliothèque » dans la barre latérale.",
+          "Choisis l'onglet : Visuels / Motifs / Produits / Packs / Articles.",
         ],
         exemple:
-          "Pour la Fête des Mères tu crées l'épisode « Tendresse matinale » sur le motif MAMA CLUB, sweat beige, humeur Tendresse. Tu génères le storyboard (5 frames) et le copy. L'épisode passe en « Prêt à tourner » : tu peux filer le plan à l'équipe.",
-        resultat:
-          "Un épisode complet avec storyboard scène par scène, hook + légende + hashtags brand-safe, et un visuel de test téléchargeable. Statut qui évolue jusqu'à « Publié ».",
+          "Tu cherches une ancienne photo de shooting MAMA CLUB : tu ouvres Bibliothèque, onglet Visuels, et tu la retrouves par ses tags.",
+        resultat: "Un accueil à 5 onglets, chacun détaillé dans les fiches suivantes.",
         limites: [
-          "Le storyboard est un guide de tournage, pas un script final : adapte les frames à ton matériel.",
-          "La banque pré-remplie (12 épisodes) : ne clique « Injecter la banque » qu'une seule fois, sinon tu doubles les épisodes.",
-          "La génération du visuel de test utilise Gemini : si IMAGE_OTHER s'affiche, change la composition ou le ratio et régénère.",
+          "Motifs et Produits gardent aussi des vues plus complètes et orientées métier ailleurs : Atelier DA pour le taggage créatif fin des motifs, Atelier Production pour les fiches techniques (DST, dimensions, fils) et pour le statut de vente détaillé des produits. La Bibliothèque en est la vue de recherche transverse.",
         ],
       },
       {
-        id: "da-blog",
-        name: "Blog — générateur d'articles GEO",
-        aQuoiCaSert:
-          "Générer des articles de blog optimisés SEO/GEO pour Shopify, à partir d'une requête longue traîne : H1, sections H2, FAQ, CTA, export HTML, bloc Liquid Shopify et FAQ JSON-LD.",
+        id: "bibliotheque-visuels",
+        name: "Onglet Visuels (médiathèque)",
+        aQuoiCaSert: "Centraliser toutes tes photos (shooting, lifestyle, IA, packshot) au même endroit, taguées et statutées.",
         quandUtiliser:
-          "Quand tu veux publier un article sur le blog Ypersoa (ex. « sweat brodé personnalisé fête des mères »). Pas pour les posts réseaux sociaux — ça c'est l'Atelier Social.",
+          "Quand tu veux retrouver une photo, suivre son statut de validation ou récupérer son URL publique. C'est le seul endroit où toutes les images vivent ensemble.",
         commentFaire: [
-          "Ouvre Atelier DA, puis la carte « Blog ».",
-          "Renseigne la « Requête cible » (longue traîne) et le « Softness score » de la SERP.",
-          "Choisis l'angle éditorial (Conversion Club / Défensif marque / Occasion).",
-          "Ajoute les sous-requêtes couvertes, les liens internes et les faits brand à injecter.",
-          "Clique « Générer l'article ».",
-          "Lis le rapport de lint (✓ ou ✗) : si la qualité échoue, l'article est réparé automatiquement une fois.",
-          "Copie l'export voulu : HTML brut, bloc Liquid Shopify ou FAQ JSON-LD.",
+          "Ouvre Bibliothèque (barre latérale), onglet « Visuels ».",
+          "Cherche, trie (date / nom) et filtre par tags catégorisés.",
+          "Pour ajouter des photos : « Ajout rapide » (auto-tag depuis le nom de fichier) ou déplie « Ajout détaillé » pour renseigner source / date / photographe / tags par lot.",
+          "Ouvre une fiche photo pour changer son statut en 1 clic (À valider / Validée / Publiée Shopify / Archivée), écrire des notes, ou « Copier l'URL publique ».",
         ],
         exemple:
-          "Tu veux positionner Ypersoa sur « idée cadeau broderie maman ». Tu saisis la requête, choisis l'angle Occasion, cliques « Générer ». L'article sort avec H1, 4 sections H2, une FAQ 3 questions et un CTA. Le lint affiche ✓. Tu copies le bloc Liquid dans le thème Shopify.",
-        resultat:
-          "Un article complet (H1, slug, meta title/description, sections, FAQ, CTA) + rapport de qualité lint + exports HTML / Liquid Shopify / JSON-LD, sauvegardés dans l'onglet « Articles existants ».",
+          "Tu déposes un lot de shooting nommés YPM-001_MAMA_CLUB_beige.jpg : l'Ajout rapide les tague tout seul. Tu passes ensuite les meilleures en « Validée » et tu copies l'URL publique de l'une d'elles pour Shopify.",
+        resultat: "Une galerie centrale recherchable, des fiches photo avec statut, source, photographe, tags et notes auto-sauvegardées.",
         limites: [
-          "La génération prend 20-30 secondes : ne ferme pas la page pendant le chargement.",
-          "Si le lint échoue deux fois de suite, ajuste la requête cible ou enrichis les faits brand.",
-          "Les articles générés sont en brouillon : c'est à toi de les relire, corriger et coller dans Shopify.",
+          "Le « Mode sélection » affiche « Actions batch en Sprint 2 » : il s'affiche mais ne fait encore rien.",
+          "L'« Ajout détaillé » est replié par défaut — pense à le déplier si tu veux renseigner source, date et photographe par lot.",
         ],
       },
       {
-        id: "da-autres-entrees",
-        name: "Autres entrées du hub DA",
-        aQuoiCaSert: "Comprendre les cartes de l'accueil DA qui renvoient ailleurs ou ne sont pas encore actives.",
+        id: "bibliotheque-motifs",
+        name: "Onglet Motifs (catalogue créatif)",
+        aQuoiCaSert: "Voir tes motifs YPM comme sur un site web et les taguer pour qu'on les retrouve facilement.",
         quandUtiliser:
-          "Quand tu cliques sur une carte DA et que tu te retrouves côté Production, ou qu'une carte ne réagit pas. C'est pour t'éviter de chercher.",
+          "Quand tu veux ranger, taguer ou explorer les motifs côté créa. Pour les fiches techniques (DST, dimensions, palettes), c'est l'Atelier Production.",
         commentFaire: [
-          "Sur l'accueil Atelier DA, repère les cartes « Motifs — fiches techniques » et « Palettes d'associations ».",
-          "Sache qu'elles t'emmènent vers les pages de l'Atelier Production (mêmes écrans, vue technique).",
-          "Les cartes « Brand Book » et « Décisions DA archivées » sont des V2 : elles sont affichées mais désactivées.",
+          "Ouvre Bibliothèque (barre latérale), onglet « Motifs ».",
+          "Navigue entre les 3 sous-onglets : « Motifs / Variantes / Catalogue ».",
+          "Filtre par « Pour qui ? » (papa, maman, mamie…), « Occasion » et « Autres tags ».",
+          "Ouvre la modale d'édition pour taguer le motif hero et chaque variante (destinataires, occasions, produits, tags libres), puis clique « Enregistrer tous les tags ».",
+          "Utilise les liens « Utiliser dans Shooting » ou « Fiche technique » pour rebondir.",
         ],
         exemple:
-          "Tu cliques « Palettes d'associations » depuis l'accueil DA en pensant rester en créa : tu arrives en fait sur la page Palettes de l'Atelier Production. C'est normal, c'est un raccourci.",
-        resultat: "Une compréhension claire : certaines cartes DA sont des raccourcis vers la Production, d'autres sont « à venir ».",
+          "Tu ouvres le motif YPM-003 Le Club, tu tagues sa variante « La Team » avec destinataire « équipe », occasion « Rentrée » et produit « sweat », puis tu cliques « Enregistrer tous les tags » pour qu'elle remonte dans la recherche.",
+        resultat: "Une vue catalogue filtrable des motifs et variantes, des tags sauvegardés, et une galerie de shots catalogués par produit.",
         limites: [
-          "Les cartes V2 (« Brand Book », « Décisions DA archivées ») occupent de l'espace mais ne sont pas cliquables : c'est attendu, pas un bug.",
-          "Les motifs et palettes « techniques » sont gérés côté Production, pas ici.",
+          "Il existe une autre page « Motifs » côté Atelier Production, purement technique : ne confonds pas les deux. Ici c'est créa et taggage, là-bas c'est DST / dimensions.",
+          "Cette page sert à organiser, pas à générer des visuels.",
+        ],
+      },
+      {
+        id: "bibliotheque-produits",
+        name: "Onglet Produits",
+        aQuoiCaSert: "Voir tous les produits disponibles sur le site avec leurs gammes de couleurs, depuis un seul endroit.",
+        quandUtiliser: "Quand tu veux vérifier qu'un produit existe, combien de couleurs il propose, ou retrouver sa référence fournisseur.",
+        commentFaire: [
+          "Ouvre Bibliothèque (barre latérale), onglet « Produits ».",
+          "Parcours les cartes produits (Hoodie Adulte YP001, Sweat Adulte YP005, T-Shirt Épais Adulte YP019, Casquette Vintage YP013…) : catégorie, fournisseur + référence (ex. Awdis JH001), nombre et pastilles des couleurs disponibles.",
+          "Clique « Voir les fiches techniques (Atelier Production) » ou « Voir les palettes de fils (Atelier Production) » pour rebondir côté production.",
+        ],
+        exemple:
+          "Une commande mentionne le t-shirt YP019 : tu ouvres Bibliothèque, onglet Produits, tu retrouves ses 10 couleurs disponibles et sa référence B&C (BC09T).",
+        resultat: "Le catalogue des produits vendus sur le site avec leurs gammes de couleurs, plus deux raccourcis vers l'Atelier Production (fiches techniques, palettes de fils).",
+        limites: [
+          "C'est une vue en lecture : elle ne se modifie pas depuis cet onglet.",
+          "Certains produits récents n'ont pas encore de fournisseur renseigné (référence affichée « — (—) », image grisée) : normal, pas une erreur d'affichage.",
+        ],
+      },
+      {
+        id: "bibliotheque-packs",
+        name: "Onglet Packs (packs sociaux sauvegardés)",
+        aQuoiCaSert: "Retrouver, consulter et rééditer tous les packs que tu as déjà sauvegardés depuis l'Atelier Social.",
+        quandUtiliser:
+          "Quand tu veux reprendre un ancien pack, le télécharger à nouveau, ou récupérer une caption. C'est le seul endroit où ton travail sauvegardé est conservé.",
+        commentFaire: [
+          "Ouvre Bibliothèque (barre latérale), onglet « Packs ».",
+          "Filtre par collection, plateforme ou favori, ou tape ta recherche (plusieurs mots possibles).",
+          "Clique une carte pour ouvrir le détail.",
+          "Là, tu peux : supprimer, marquer favori ❤️, éditer la caption en ligne, ajouter un slide au catalogue, télécharger en ZIP ou télécharger un slide.",
+        ],
+        exemple:
+          "Trois semaines après, tu retapes « MAMA CLUB » dans la recherche de l'onglet Packs, tu retrouves ton pack Fête des Mères, tu corriges un mot dans la caption et tu le retélécharges en ZIP pour le calendrier éditorial.",
+        resultat: "Tu as accès à toute ton archive de packs, filtrable et rééditable, avec téléchargement à la carte.",
+        limites: [
+          "Depuis la refonte du 20-21/08/2026, ce n'est plus un tiroir dans l'en-tête de l'Atelier Social : c'est cet onglet de la Bibliothèque.",
+          "Seuls les packs sauvegardés y apparaissent : un pack non enregistré est perdu en fermant la page.",
+        ],
+      },
+      {
+        id: "bibliotheque-articles",
+        name: "Onglet Articles",
+        aQuoiCaSert: "Consulter la liste des articles de blog déjà générés.",
+        quandUtiliser: "Pour retrouver un article publié ou en brouillon sans rouvrir tout l'atelier Blog.",
+        commentFaire: [
+          "Ouvre Bibliothèque (barre latérale), onglet « Articles ».",
+          "Parcours la liste des articles générés.",
+        ],
+        exemple:
+          "Tu veux vérifier le titre exact de l'article publié deux semaines plus tôt : tu ouvres Bibliothèque, onglet Articles, tu le retrouves dans la liste.",
+        resultat: "La liste des articles de blog générés (requête, date, statut).",
+        limites: [
+          "Onglet en lecture seule : pour relire, étoffer ou régénérer un article, retourne dans l'atelier Blog (cf. section Tenir le rendez-vous du blog).",
         ],
       },
     ],
   },
   {
     id: "planifier-equipes",
-    num: 6,
+    num: 9,
     title: "Planifier le travail des équipes",
     atelier: "Atelier DA",
     pitch:
@@ -967,7 +1128,8 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         resultat:
           "Une vue Gantt ou Liste du rétroplanning 2027 : couloirs par campagne, ligne « Charge prép. » (bandes ×2 / ×3 = double / triple run), ligne « Réunions » (★), ligne rouge du jour.",
         limites: [
-          "Ne pas confondre avec le planning machines de la production : ce sont deux outils distincts qui portent le même mot « planning ».",
+          "Ne pas confondre avec le planning machines de la production (dans chaque commande, cf. section Production) : deux outils distincts qui portent le même mot « planning ».",
+          "Ne pas confondre non plus avec l'atelier « Planning » de premier niveau (barre latérale) : celui-ci est le rétroplanning long terme 2027, l'autre est le tempo hebdomadaire des 3 équipes (cf. section Planning).",
           "Le volet comm ici est une vue de pilotage : ce n'est pas synchronisé en direct avec Planable.",
         ],
       },
@@ -975,7 +1137,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
   },
   {
     id: "tendances",
-    num: 7,
+    num: 10,
     title: "Surveiller les tendances",
     atelier: "Atelier DA",
     pitch:
@@ -1007,7 +1169,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
   },
   {
     id: "production-broderie",
-    num: 8,
+    num: 11,
     title: "Gérer la production broderie",
     atelier: "Atelier Production",
     pitch:

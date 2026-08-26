@@ -17,7 +17,7 @@
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Image as ImageIcon, BookOpen, Archive, ArrowRight, Shapes, Film, TrendingUp } from "lucide-react";
+import { Users, Image as ImageIcon, BookOpen, ArrowRight, Shapes, Film, TrendingUp } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -76,14 +76,6 @@ const SUBMODULES: SubmoduleCard[] = [
     href: "/le-livre",
     icon: <BookOpen size={22} strokeWidth={1.4} />,
     status: "v0",
-  },
-  {
-    id: 11,
-    title: "Décisions DA archivées",
-    description: "Trace des grandes décisions DA (29/04 Camille→Clémence, 01/05 refonte 3 lignées). Histoire éditoriale Ypersoa.",
-    href: null,
-    icon: <Archive size={22} strokeWidth={1.4} />,
-    status: "v2",
   },
 ];
 
