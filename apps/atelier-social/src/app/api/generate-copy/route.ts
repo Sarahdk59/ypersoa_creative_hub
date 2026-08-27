@@ -19,6 +19,7 @@ import {
   buildInstagramHashtags,
   type InstagramHashtags,
 } from "@/lib/instagram-hashtags";
+import { checkBrandSafety as checkBrandSafetyCore } from "@/lib/brand-rules";
 
 export const runtime = "nodejs";
 export const maxDuration = 90;
@@ -49,63 +50,15 @@ interface BrandSafety {
   warnings: BrandViolation[];
 }
 
-// Termes interdits (red lines CLAUDE.md)
-const FORBIDDEN_TERMS_CRITICAL = [
-  "brodé à la main",
-  "brodés à la main",
-  "brodée à la main",
-  "brodées à la main",
-  "broderie à la main",
-  "fait main",
-  "faite main",
-  "marketplace",
-  "Etsy",
-  "Amazon",
-  "Vinted",
-];
-
-const FORBIDDEN_TERMS_WARNING = [
-  "vous",
-  "votre",
-  "vos",
-  "Bonjour",
-  "Bonsoir",
-];
-
-// Consumer-facing (Instagram + Pinterest) : aucune référence machine/fil, réservée
-// au pro (cf. mémoire feedback_vocab_fabrication — axe = audience, pas format).
-const FORBIDDEN_TERMS_MACHINE = [
-  "métier Tajima",
-  "Tajima",
-  "machine à broder",
-  "Gunold",
-  "Madeira",
-  "Isacord",
-];
-
+// Détection déléguée à lib/brand-rules.ts (source canonique, cf. Le Livre §4/§9) —
+// cette fonction ne fait plus que reformer la forme { criticalViolations, warnings }
+// attendue par les composants front (BrandSafetyBadge, VisuelWorkspace, PostCard, ResultPanel...).
 function checkBrandSafety(text: string): BrandSafety {
-  const lower = text.toLowerCase();
-  const criticalViolations: BrandViolation[] = [];
-  const warnings: BrandViolation[] = [];
-
-  for (const term of [...FORBIDDEN_TERMS_CRITICAL, ...FORBIDDEN_TERMS_MACHINE]) {
-    const idx = lower.indexOf(term.toLowerCase());
-    if (idx !== -1) {
-      criticalViolations.push({ term, position: idx, severity: "critical" });
-    }
-  }
-
-  // Warnings : vouvoiement détecté par regex pour limiter les faux positifs
-  const vouvoiementRegex = /\b(vous|votre|vos)\b/gi;
-  let match;
-  while ((match = vouvoiementRegex.exec(text)) !== null) {
-    warnings.push({ term: match[0], position: match.index, severity: "warning" });
-  }
-
+  const { safe, violations } = checkBrandSafetyCore(text);
   return {
-    safe: criticalViolations.length === 0,
-    criticalViolations,
-    warnings,
+    safe,
+    criticalViolations: violations.filter((v) => v.severity === "critical"),
+    warnings: violations.filter((v) => v.severity === "warning"),
   };
 }
 

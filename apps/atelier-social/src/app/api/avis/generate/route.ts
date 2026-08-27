@@ -13,6 +13,7 @@ import { GoogleGenAI } from "@google/genai";
 import { loadInstagramHashtags } from "@/lib/instagram-hashtags.server";
 import { buildInstagramHashtags } from "@/lib/instagram-hashtags";
 import type { InstagramHashtagBank } from "@/lib/instagram-hashtags";
+import { checkBrandSafety as checkBrandSafetyCore } from "@/lib/brand-rules";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -36,43 +37,16 @@ interface BrandSafety {
   warnings: BrandViolation[];
 }
 
-// Red lines CLAUDE.md §2.
-const FORBIDDEN_TERMS_CRITICAL = [
-  "brodé à la main",
-  "brodés à la main",
-  "brodée à la main",
-  "brodées à la main",
-  "broderie à la main",
-  "fait main",
-  "faite main",
-  "marketplace",
-  "Etsy",
-  "Amazon",
-  "Vinted",
-];
-
-// Consumer-facing : aucune référence machine/fil, réservée au pro (mémoire feedback_vocab_fabrication).
-const FORBIDDEN_TERMS_MACHINE = ["métier Tajima", "Tajima", "machine à broder", "Gunold", "Madeira", "Isacord"];
-
+// Détection déléguée à lib/brand-rules.ts (source canonique, cf. Le Livre §4/§9) —
+// cette fonction ne fait plus que reformer la forme { criticalViolations, warnings }
+// attendue par les composants front (BrandSafetyBadge, AvisWorkspace...).
 function checkBrandSafety(text: string): BrandSafety {
-  const lower = text.toLowerCase();
-  const criticalViolations: BrandViolation[] = [];
-  const warnings: BrandViolation[] = [];
-
-  for (const term of [...FORBIDDEN_TERMS_CRITICAL, ...FORBIDDEN_TERMS_MACHINE]) {
-    const idx = lower.indexOf(term.toLowerCase());
-    if (idx !== -1) {
-      criticalViolations.push({ term, position: idx, severity: "critical" });
-    }
-  }
-
-  const vouvoiementRegex = /\b(vous|votre|vos)\b/gi;
-  let match;
-  while ((match = vouvoiementRegex.exec(text)) !== null) {
-    warnings.push({ term: match[0], position: match.index, severity: "warning" });
-  }
-
-  return { safe: criticalViolations.length === 0, criticalViolations, warnings };
+  const { safe, violations } = checkBrandSafetyCore(text);
+  return {
+    safe,
+    criticalViolations: violations.filter((v) => v.severity === "critical"),
+    warnings: violations.filter((v) => v.severity === "warning"),
+  };
 }
 
 const SYSTEM_PROMPT = `Tu es la voix Ypersoa — vêtements et accessoires brodés personnalisés, brodés à la commande dans notre atelier des Hauts-de-France.

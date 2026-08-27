@@ -22,8 +22,7 @@
   "conversionGoal": "club",
 
   "internalLinks": [
-    { "label": "Guide des tailles", "url": "/pages/guide-des-tailles" },
-    { "label": "Le Club Ypersoa", "url": "/pages/cercle" }
+    { "label": "Guide des tailles", "url": "/pages/guide-des-tailles" }
   ],
 
   "model": "claude-opus-5",

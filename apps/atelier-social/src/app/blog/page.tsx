@@ -87,7 +87,7 @@ export default function AtelierBlogPage() {
     const effectiveAngle = angle.trim() || `Parler de ${query} avec la voix Ypersoa, sans argumentaire commercial appuyé.`;
     const effectiveQuestions = questions.map((q) => q.trim()).filter(Boolean);
     try {
-      const res = await fetch("/api/blog/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetQuery: query, angle: expand ? `${effectiveAngle} Développe davantage les réponses pratiques et la partie entretien.` : effectiveAngle, subQueries: effectiveQuestions, outOfScope: OUT, serpSoftness: 4, conversionGoal: goal, internalLinks: [{ label: "Le Club", url: "/pages/cercle" }] }) });
+      const res = await fetch("/api/blog/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetQuery: query, angle: expand ? `${effectiveAngle} Développe davantage les réponses pratiques et la partie entretien.` : effectiveAngle, subQueries: effectiveQuestions, outOfScope: OUT, serpSoftness: 4, conversionGoal: goal }) });
       const json = await res.json() as { ok: boolean; id?: string; article?: Article; lint?: { wordCount: number }; html?: string; error?: string; reasons?: string[] };
       if (!res.ok || !json.ok || !json.article) throw new Error(json.error ?? json.reasons?.join(" ") ?? "Génération impossible");
       didInitRef.current = true;

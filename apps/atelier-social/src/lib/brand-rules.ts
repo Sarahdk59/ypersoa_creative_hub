@@ -1,8 +1,9 @@
 /**
  * Brand Rules Ypersoa - Source de vérité TypeScript
  *
- * Synchronisé avec CLAUDE.md v1.1 (27/04/2026)
- * Ne JAMAIS modifier ici sans mettre à jour CLAUDE.md en parallèle.
+ * Synchronisé avec docs/VOIX_YPERSOA.md (Le Livre, §4 vocabulaire brand-safe /
+ * §2 thermostat citron). Ne JAMAIS modifier ici sans mettre à jour Le Livre
+ * en parallèle — cf. §9 Gouvernance de ce document pour la hiérarchie des sources.
  */
 
 // ============================================================================
@@ -24,6 +25,11 @@ export const BRAND_FORBIDDEN_TERMS = [
   "fil et aiguille",
   "broderie artisanale",
   "broderies artisanales",
+  "brodé à la main",
+  "brodés à la main",
+  "brodée à la main",
+  "brodées à la main",
+  "broderie à la main",
 
   // Canaux passés interdits
   "Etsy",
@@ -59,6 +65,7 @@ export const BRAND_FORBIDDEN_TERMS = [
   "Gunold",
   "Madeira",
   "Isacord",
+  "machine à broder",
 ] as const;
 
 // ============================================================================
@@ -171,6 +178,7 @@ export const BRAND_PHRASES = {
   embroidery_default: [
     "brodé à la commande",
     "brodé à la demande",
+    "brodé à la demande en France",
     "brodé dans notre atelier de Wattrelos",
     "brodé chez nous, dans le Nord",
   ],
