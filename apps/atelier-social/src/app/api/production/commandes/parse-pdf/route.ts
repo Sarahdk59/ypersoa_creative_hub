@@ -3,9 +3,10 @@
  *
  * Réservé aux administrateurs. Reçoit un FormData avec un fichier PDF (bon
  * de préparation Shopify), l'upload dans le bucket Supabase `commandes-pdf`,
- * puis appelle le pipeline pdf-parse + OpenAI gpt-4o pour renvoyer une
- * commande draft (déjà hydratée + durées calculées) prête à valider par
- * l'admin avant écriture finale via POST /api/production/commandes.
+ * puis appelle le pipeline pdf-parse + Gemini (base, repli OpenAI gpt-4o si
+ * échec) pour renvoyer une commande draft (déjà hydratée + durées calculées)
+ * prête à valider par l'admin avant écriture finale via
+ * POST /api/production/commandes.
  *
  * La réponse contient aussi `bon_preparation_pdf` (URL publique + storage_path)
  * que l'UI doit inclure dans le payload de création pour conserver le lien
@@ -130,6 +131,7 @@ export async function POST(req: Request) {
       commande: { ...parsed.commande, bon_preparation_pdf: bon },
       warnings: parsed.warnings,
       pdf_text_preview: parsed.pdf_text_preview,
+      source: parsed.source,
     },
   });
 }

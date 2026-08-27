@@ -3,9 +3,13 @@
  *
  * Pipeline :
  *  1. pdf-parse pour extraire le texte brut du PDF (côté Node, server-only)
- *  2. OpenAI gpt-4o (JSON mode strict) pour transformer le texte non structuré
- *     en payload typé : numéro, dates, expé/facturation, articles avec SKU,
- *     broderies (placement + champs + couleur de fil libre)
+ *  2. Gemini (gemini-2.5-flash, JSON mode) en solution de base pour transformer
+ *     le texte non structuré en payload typé : numéro, dates, expé/facturation,
+ *     articles avec SKU, broderies (placement + champs + couleur de fil libre) —
+ *     repli sur OpenAI gpt-4o si Gemini échoue ou si la clé est absente (même
+ *     schéma de sortie, même prompt). Choix du 27/08/2026 : Gemini passe en
+ *     premier car déjà utilisé partout ailleurs dans le Hub, OpenAI reste un
+ *     filet de sécurité.
  *  3. Hydratation locale via les référentiels :
  *      - SKU `YP005-CAL-BEIGE-XS` → produit_id, ypm_id, ypm_nom, couleur, taille
  *      - Couleur libre du fil → fil_id puis fil_hex / fil_code_gunold via la
@@ -17,6 +21,7 @@
 import "server-only";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { GoogleGenAI } from "@google/genai";
 
 import {
   getSkuMapping,
@@ -55,7 +60,7 @@ export async function extractPdfText(buffer: Buffer): Promise<string> {
 }
 
 // ──────────────────────────────────────────────────────────
-// Étape 2 — Structuration via OpenAI gpt-4o (JSON mode)
+// Étape 2 — Structuration via Gemini (base) puis OpenAI gpt-4o (repli)
 // ──────────────────────────────────────────────────────────
 
 interface DraftArticle {
@@ -188,6 +193,46 @@ export async function callOpenAIStructurePdf(
     throw new Error("Réponse OpenAI non parseable en JSON");
   }
   return parsed;
+}
+
+/** Solution de base (27/08/2026) : mêmes schéma et prompt que callOpenAIStructurePdf. */
+export async function callGeminiStructurePdf(
+  pdfText: string,
+  motifsKnown: string[],
+): Promise<DraftCommande> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY manquante");
+
+  const ai = new GoogleGenAI({ apiKey });
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: {
+      parts: [
+        {
+          text: [
+            "Voici le texte brut extrait du bon de préparation Shopify. Transforme-le en JSON selon le schéma fourni.",
+            "",
+            "=== TEXTE BON DE PRÉPARATION ===",
+            pdfText,
+            "=== FIN TEXTE ===",
+          ].join("\n"),
+        },
+      ],
+    },
+    config: {
+      systemInstruction: buildSystemPrompt(motifsKnown),
+      responseMimeType: "application/json",
+      temperature: 0,
+    },
+  });
+
+  const raw = response.text;
+  if (!raw) throw new Error("Pas de contenu Gemini");
+  try {
+    return JSON.parse(raw) as DraftCommande;
+  } catch {
+    throw new Error("Réponse Gemini non parseable en JSON");
+  }
 }
 
 // ──────────────────────────────────────────────────────────
@@ -378,6 +423,8 @@ export interface ParsedPdfResult {
   commande: Commande;
   warnings: ParsedPdfWarning[];
   pdf_text_preview: string;
+  /** Moteur qui a structuré le PDF — Gemini en base, OpenAI en repli. */
+  source: "gemini" | "openai";
 }
 
 /** Pipeline complet : Buffer PDF → Commande hydratée + warnings de qualité. */
@@ -390,7 +437,20 @@ export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResul
   const skuMapping = getSkuMapping();
   const motifsKnown = Object.keys(skuMapping.motifs_sku_to_ypm);
 
-  const draft = await callOpenAIStructurePdf(text, motifsKnown);
+  let draft: DraftCommande;
+  let source: "gemini" | "openai" = "gemini";
+  try {
+    draft = await callGeminiStructurePdf(text, motifsKnown);
+  } catch (geminiErr) {
+    try {
+      draft = await callOpenAIStructurePdf(text, motifsKnown);
+      source = "openai";
+    } catch (openaiErr) {
+      const g = geminiErr instanceof Error ? geminiErr.message : String(geminiErr);
+      const o = openaiErr instanceof Error ? openaiErr.message : String(openaiErr);
+      throw new Error(`Parsing PDF échoué sur les deux moteurs — Gemini: ${g} / OpenAI: ${o}`);
+    }
+  }
   const commande = hydrateDraftToCommande(draft);
 
   const warnings: ParsedPdfWarning[] = [];
@@ -424,5 +484,6 @@ export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResul
     commande,
     warnings,
     pdf_text_preview: text.slice(0, 1200),
+    source,
   };
 }
