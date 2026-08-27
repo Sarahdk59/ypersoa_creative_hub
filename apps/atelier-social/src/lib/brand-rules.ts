@@ -203,14 +203,19 @@ export const BRAND_REFERENCES = {
 } as const;
 
 // ============================================================================
-// 4 PILIERS ÉDITORIAUX
+// 6 PILIERS STRATÉGIQUES (Le Livre §6 — remplace l'ancienne hiérarchie P1-P4
+// le 27/08/2026 sur arbitrage Sarah, cf. B4 du chantier correctifs code).
+// Piège de nom signalé par Le Livre : l'ancien P4 "Preuve" = témoignages/avis
+// (= Réassurance ici) ; le nouveau pilier "Preuve" = atelier/process, ne pas confondre.
 // ============================================================================
 
 export const EDITORIAL_PILLARS = {
-  P1: "Process / Savoir-Faire",
-  P2: "Émotion (lien, souvenir, présence)",
-  P3: "Produit / Usage",
-  P4: "Preuve (témoignages, communauté)",
+  connexion: "Connexion — manifeste, lien, souvenir",
+  reassurance: "Réassurance — avis, soin, délais validés",
+  qualification: "Qualification — motif, support, couleur",
+  preuve: "Preuve — atelier, commande, geste",
+  occasions: "Occasions — moment précis, cadeau",
+  communaute: "Communauté — Club, prénoms, UGC",
 } as const;
 
 // ============================================================================

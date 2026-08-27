@@ -182,7 +182,7 @@ function renderBrandRules(): string {
     `- Pour parler de la fabrication côté client, utiliser : ${BRAND_PHRASES.embroidery_default.join(" / ")}.`,
     `- Tournures cadeau validées : ${BRAND_PHRASES.gift_phrases.join(" / ")}.`,
     `- Références de TON (jamais citées dans le copy client) : ${BRAND_REFERENCES.hero_brands.join(", ")} ; premium parisien : ${BRAND_REFERENCES.premium_parisien.join(", ")}.`,
-    `- 4 piliers éditoriaux : ${Object.values(EDITORIAL_PILLARS).join(" · ")}.`,
+    `- 6 piliers stratégiques (Le Livre §6) : ${Object.values(EDITORIAL_PILLARS).join(" · ")}.`,
   ].join("\n");
 }
 
