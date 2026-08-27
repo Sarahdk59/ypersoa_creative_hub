@@ -23,7 +23,7 @@ const INITIAL_PRIORITIES: Priority[] = [
   { id: "comm-2", team: "comm", title: "Préparer le tournage des tests Noël", note: "Dès que la Prod a fini, Maï peut filmer sans jouer à Madame Irma.", status: "a_faire", dependsOn: "prod-1" },
 ];
 const TEAM: Record<Team, { label: string; who: string; color: string }> = {
-  crea: { label: "Créa", who: "Sarah", color: "#22403A" }, prod: { label: "Prod", who: "Adriana", color: "#2E5B50" }, comm: { label: "Comm", who: "Maï", color: "#C23A2D" },
+  crea: { label: "Créa", who: "Sarah", color: "#22403A" }, prod: { label: "Prod", who: "Adriana, Cyrielle, Rebecca, Felismina", color: "#2E5B50" }, comm: { label: "Comm", who: "Maï", color: "#C23A2D" },
 };
 
 export default function TempoPage() {
