@@ -69,8 +69,8 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 7,
-    title: "Commandes Shopify",
-    description: "Import des bons de préparation Shopify. Chaque article est croisé avec le motif YPM, les fils Gunold (hex + code fournisseur) et les durées de broderie. Génération auto d'un planning 3 jours réparti sur les 2 machines TMEZ (LPT, 6h/jour).",
+    title: "Commandes",
+    description: "Import des bons de commande Shopify ou Etsy. Chaque article est croisé avec le motif YPM, les fils Gunold (hex + code fournisseur) et les durées de broderie. Génération auto d'un planning 3 jours réparti sur les 2 machines TMEZ (OTIF par défaut, 6h/jour).",
     href: "/atelier-production/commandes",
     icon: <ShoppingBag size={22} strokeWidth={1.4} />,
     status: "v0",
@@ -290,7 +290,7 @@ export default function AtelierProductionHome() {
           textAlign: "center",
         }}
       >
-        Atelier Production • V1 — 9 modules opérationnels (Moteur d&apos;attribution, Motifs, Fils, Palettes, Règles broderie, Kanban prod, Commandes Shopify, Base produit, Zone de test) • 1 module à venir V2. Moteur d&apos;attribution lance Streamlit sur localhost:8501 (port React en V2).
+        Atelier Production • V1 — 9 modules opérationnels (Moteur d&apos;attribution, Motifs, Fils, Palettes, Règles broderie, Kanban prod, Commandes, Base produit, Zone de test) • 1 module à venir V2. Moteur d&apos;attribution lance Streamlit sur localhost:8501 (port React en V2).
       </p>
     </div>
   );

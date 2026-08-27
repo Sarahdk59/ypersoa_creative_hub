@@ -33,11 +33,17 @@ export interface JournalEntree {
   note?: string;
 }
 
+export interface ReassortFournisseur {
+  commande_le: string; // YYYY-MM-DD — date de la commande fournisseur
+  note?: string;
+}
+
 export interface JournalCommande {
   dst?: JournalEntree;
   broderie?: JournalEntree;
   cq?: JournalEntree;
   expedition?: JournalEntree;
+  reassort_fournisseur?: ReassortFournisseur;
   archivee_le?: string;
 }
 
@@ -78,9 +84,22 @@ export interface ChampBroderie {
   nb_points?: number;
 }
 
+export type BroderieFileKind = "visuel" | "pxf" | "dst" | "pdf";
+
+export interface BroderieFile {
+  id: string;
+  kind: BroderieFileKind;
+  storage_path: string;
+  public_url: string;
+  filename: string;
+  uploaded_at: string; // ISO datetime
+}
+
 export interface Broderie {
   placement: Placement;
   champs: ChampBroderie[];
+  /** Visuel attendu, fichier machine (PXF/DST) et/ou capture de la demande client — bucket Supabase `commandes-broderies`. */
+  fichiers?: BroderieFile[];
   fil_id: string;
   fil_nom: string;
   fil_hex: string;

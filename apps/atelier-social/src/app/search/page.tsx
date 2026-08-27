@@ -253,7 +253,7 @@ function SearchContent() {
       {data && (
         <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
           {(data.commandes?.length ?? 0) > 0 && (
-            <Section title="Commandes Shopify" icon={<ShoppingBag size={14} />} count={data.commandes.length}>
+            <Section title="Commandes" icon={<ShoppingBag size={14} />} count={data.commandes.length}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 10 }}>
                 {data.commandes.map((h) => {
                   const s = STATUT_META[h.item.statut];

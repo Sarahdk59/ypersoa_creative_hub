@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useCallback, use } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, Calendar, Clock, Truck, FileText, Cpu, Play, RotateCcw, Trash2, Package, Settings, Hash, FileCode, Archive, CheckCircle2, User, ShieldCheck, AlertTriangle, RefreshCw, Zap, Layers } from "lucide-react";
+import { ArrowLeft, Loader2, Calendar, Clock, Truck, FileText, Cpu, Play, RotateCcw, Trash2, Package, Settings, Hash, FileCode, Archive, CheckCircle2, User, ShieldCheck, AlertTriangle, RefreshCw, Zap, Layers, Upload, Paperclip } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { Commande, Article, Broderie, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
+import type { Commande, Article, Broderie, BroderieFileKind, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
   a_planifier: { label: "À planifier", bg: "#FEF6E0", fg: "#7A5800" },
@@ -100,6 +100,43 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
       alert("Erreur rebroder : " + (e instanceof Error ? e.message : String(e)));
     } finally {
       setPlanLoading(false);
+    }
+  }
+
+  const DUREE_FIELD_TO_OPERATION = {
+    duree_preparation_dst_min: "preparation_dst",
+    duree_setup_min: "setup_produit_initial",
+    duree_cq_min: "controle_qualite_final",
+  } as const;
+
+  async function updateDureeArticle(
+    articleId: string,
+    field: keyof typeof DUREE_FIELD_TO_OPERATION,
+    value: number,
+  ) {
+    if (!commande) return;
+    try {
+      // 1. Le référentiel devient la nouvelle référence pour les prochaines commandes.
+      const opRes = await fetch("/api/production/durees-broderie", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ operation: DUREE_FIELD_TO_OPERATION[field], duree_min: value }),
+      }).then((r) => r.json());
+      if (!opRes.ok) throw new Error(opRes.error);
+
+      // 2. La commande en cours applique le changement immédiatement (recalculerDureesCommande
+      //    ne réécrit que duree_preparation_dst_min depuis le référentiel — setup/CQ sont conservés
+      //    tels quels, donc l'envoyer dans le payload suffit à les faire persister).
+      const nextArticles = commande.articles.map((a) => (a.id === articleId ? { ...a, [field]: value } : a));
+      const res = await fetch(`/api/production/commandes/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articles: nextArticles }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      setCommande(res.data);
+    } catch (e) {
+      alert("Erreur mise à jour durée : " + (e instanceof Error ? e.message : String(e)));
     }
   }
 
@@ -211,7 +248,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
         }}>
           <FileText size={18} strokeWidth={1.6} style={{ color: "var(--hub-foreground)", opacity: 0.7 }} />
           <div style={{ flex: 1, fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.4 }}>
-            <div style={{ fontWeight: 500 }}>Bon de préparation Shopify</div>
+            <div style={{ fontWeight: 500 }}>Bon de commande</div>
             <div style={{ fontSize: 11, opacity: 0.6 }}>
               {commande.bon_preparation_pdf.filename}
               {commande.bon_preparation_pdf.uploaded_by ? ` · déposé par ${commande.bon_preparation_pdf.uploaded_by}` : ""}
@@ -265,8 +302,16 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
           {commande.articles.map((art) => (
             <ArticleCard
               key={art.id}
+              commandeId={commande.id}
               article={art}
+              disabled={commande.statut === "archivee"}
               onRebroder={commande.statut !== "archivee" ? () => setRebroderModal({ article: art }) : undefined}
+              onDureeChange={
+                commande.statut !== "archivee"
+                  ? (field, value) => updateDureeArticle(art.id, field, value)
+                  : undefined
+              }
+              onCommandeUpdated={setCommande}
             />
           ))}
         </div>
@@ -381,7 +426,90 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
 // ArticleCard
 // ──────────────────────────────────────────────────────────
 
-function ArticleCard({ article, onRebroder }: { article: Article; onRebroder?: () => void }) {
+type DureeField = "duree_preparation_dst_min" | "duree_setup_min" | "duree_cq_min";
+
+/** Badge de durée éditable inline (clic → input number, Entrée/blur pour valider). */
+function DureeBadge({
+  icon,
+  label,
+  value,
+  onSave,
+}: {
+  icon?: React.ReactNode;
+  label: string;
+  value: number;
+  onSave?: (value: number) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(String(value));
+
+  if (!onSave) {
+    return (
+      <span>
+        {icon} {label} {value} min
+      </span>
+    );
+  }
+
+  if (!editing) {
+    return (
+      <button
+        onClick={() => { setDraft(String(value)); setEditing(true); }}
+        title="Modifier cette durée pour toutes les prochaines commandes"
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 2,
+          background: "none", border: "none", padding: 0, margin: 0,
+          font: "inherit", color: "inherit", cursor: "pointer", textDecoration: "underline dotted",
+        }}
+      >
+        {icon} {label} {value} min
+      </button>
+    );
+  }
+
+  function commit() {
+    const n = Number(draft);
+    setEditing(false);
+    if (Number.isFinite(n) && n >= 0 && n !== value) onSave!(n);
+  }
+
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+      {icon} {label}
+      <input
+        type="number"
+        min={0}
+        step={0.5}
+        autoFocus
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => { if (e.key === "Enter") commit(); if (e.key === "Escape") setEditing(false); }}
+        style={{
+          width: 48, padding: "1px 4px", border: "0.5px solid var(--hub-border)", borderRadius: 4,
+          fontFamily: "var(--font-sans)", fontSize: 11, background: "white", color: "var(--hub-foreground)",
+        }}
+      />
+      min
+    </span>
+  );
+}
+
+function ArticleCard({
+  commandeId,
+  article,
+  disabled,
+  onRebroder,
+  onDureeChange,
+  onCommandeUpdated,
+}: {
+  commandeId: string;
+  article: Article;
+  disabled?: boolean;
+  onRebroder?: () => void;
+  onDureeChange?: (field: DureeField, value: number) => void;
+  onCommandeUpdated: (c: Commande) => void;
+}) {
   return (
     <article style={{
       border: "0.5px solid var(--hub-border)", borderRadius: 12, padding: 20,
@@ -415,7 +543,15 @@ function ArticleCard({ article, onRebroder }: { article: Article; onRebroder?: (
 
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {article.broderies.map((b, i) => (
-          <BroderieRow key={i} broderie={b} />
+          <BroderieRow
+            key={i}
+            broderie={b}
+            commandeId={commandeId}
+            articleId={article.id}
+            index={i}
+            disabled={disabled}
+            onCommandeUpdated={onCommandeUpdated}
+          />
         ))}
       </div>
 
@@ -425,12 +561,26 @@ function ArticleCard({ article, onRebroder }: { article: Article; onRebroder?: (
         color: "var(--hub-foreground)", opacity: 0.55, flexWrap: "wrap",
       }}>
         {article.duree_preparation_dst_min > 0 ? (
-          <span><FileCode size={11} style={{ display: "inline", verticalAlign: "-1px", marginRight: 2 }} /> Prep DST {article.duree_preparation_dst_min} min</span>
+          <DureeBadge
+            icon={<FileCode size={11} style={{ display: "inline", verticalAlign: "-1px", marginRight: 2 }} />}
+            label="Prep DST"
+            value={article.duree_preparation_dst_min}
+            onSave={onDureeChange ? (v) => onDureeChange("duree_preparation_dst_min", v) : undefined}
+          />
         ) : (
           <span style={{ fontStyle: "italic" }}><FileCode size={11} style={{ display: "inline", verticalAlign: "-1px", marginRight: 2 }} /> Prep DST mutualisée (même motif)</span>
         )}
-        <span><Settings size={11} style={{ display: "inline", verticalAlign: "-1px", marginRight: 2 }} /> Setup {article.duree_setup_min} min</span>
-        <span>CQ + pliage {article.duree_cq_min} min</span>
+        <DureeBadge
+          icon={<Settings size={11} style={{ display: "inline", verticalAlign: "-1px", marginRight: 2 }} />}
+          label="Setup"
+          value={article.duree_setup_min}
+          onSave={onDureeChange ? (v) => onDureeChange("duree_setup_min", v) : undefined}
+        />
+        <DureeBadge
+          label="CQ + pliage"
+          value={article.duree_cq_min}
+          onSave={onDureeChange ? (v) => onDureeChange("duree_cq_min", v) : undefined}
+        />
       </div>
       {article.notes && (
         <div style={{ marginTop: 8, fontFamily: "var(--font-sans)", fontSize: 11, fontStyle: "italic", color: "var(--hub-foreground)", opacity: 0.55 }}>
@@ -484,7 +634,7 @@ function JournalProd({
   const allDone = !!(j.dst && j.broderie && j.cq && j.expedition);
   const today = new Date().toISOString().slice(0, 10);
 
-  function updateEtape(key: EtapeJournal, field: "par" | "le", value: string) {
+  function updateEtape(key: EtapeJournal, field: "par" | "le" | "note", value: string) {
     const next: JournalCommande = { ...j };
     const entree = { ...(next[key] ?? { par: "", le: "" }) };
     entree[field] = value;
@@ -497,6 +647,20 @@ function JournalProd({
   function clearEtape(key: EtapeJournal) {
     const next: JournalCommande = { ...j };
     delete next[key];
+    onChange(next);
+  }
+
+  function updateReassort(field: "commande_le" | "note", value: string) {
+    const next: JournalCommande = { ...j };
+    const entree = { ...(next.reassort_fournisseur ?? { commande_le: "" }) };
+    entree[field] = value;
+    next.reassort_fournisseur = entree;
+    onChange(next);
+  }
+
+  function clearReassort() {
+    const next: JournalCommande = { ...j };
+    delete next.reassort_fournisseur;
     onChange(next);
   }
 
@@ -584,10 +748,77 @@ function JournalProd({
                     </button>
                   )}
                 </div>
+                <textarea
+                  placeholder="Commentaire (broderie en cours, incident technique, casse fil…)"
+                  value={entree?.note ?? ""}
+                  onChange={(e) => updateEtape(key, "note", e.target.value)}
+                  disabled={isArchivee}
+                  rows={2}
+                  style={{
+                    padding: "4px 8px", border: "0.5px solid var(--hub-border)", borderRadius: 4,
+                    fontFamily: "var(--font-sans)", fontSize: 12, background: "white", color: "var(--hub-foreground)",
+                    resize: "vertical",
+                  }}
+                />
               </div>
             </div>
           );
         })}
+
+        {/* Réassort fournisseur — pas une étape de broderie, un aléa d'approvisionnement */}
+        <div style={{
+          padding: 14, borderRadius: 8,
+          background: j.reassort_fournisseur ? "#FBEFE0" : "#FAF7F2",
+          border: `0.5px solid ${j.reassort_fournisseur ? "#B5792A" : "var(--hub-border)"}`,
+          opacity: isArchivee ? 0.8 : 1,
+        }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 6, marginBottom: 10,
+            fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
+            textTransform: "uppercase", letterSpacing: "0.08em",
+            color: j.reassort_fournisseur ? "#B5792A" : "var(--hub-foreground)",
+          }}>
+            <Truck size={14} strokeWidth={1.6} />
+            Réassort fournisseur
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <Calendar size={12} strokeWidth={1.6} style={{ opacity: 0.5 }} />
+              <input
+                type="date"
+                placeholder="Commande fournisseur du"
+                value={j.reassort_fournisseur?.commande_le ?? ""}
+                onChange={(e) => updateReassort("commande_le", e.target.value)}
+                disabled={isArchivee}
+                style={{
+                  flex: 1, padding: "4px 8px", border: "0.5px solid var(--hub-border)", borderRadius: 4,
+                  fontFamily: "var(--font-sans)", fontSize: 12, background: "white", color: "var(--hub-foreground)",
+                }}
+              />
+              {j.reassort_fournisseur && !isArchivee && (
+                <button
+                  onClick={clearReassort}
+                  title="Effacer le réassort"
+                  style={{ background: "none", border: "none", color: "var(--hub-foreground)", opacity: 0.5, cursor: "pointer", padding: 2 }}
+                >
+                  <Trash2 size={12} />
+                </button>
+              )}
+            </div>
+            <textarea
+              placeholder="Note (ex. commande fournisseur du 15/09, pull abîmé à remplacer…)"
+              value={j.reassort_fournisseur?.note ?? ""}
+              onChange={(e) => updateReassort("note", e.target.value)}
+              disabled={isArchivee}
+              rows={2}
+              style={{
+                padding: "4px 8px", border: "0.5px solid var(--hub-border)", borderRadius: 4,
+                fontFamily: "var(--font-sans)", fontSize: 12, background: "white", color: "var(--hub-foreground)",
+                resize: "vertical",
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Footer : archivage */}
@@ -645,7 +876,57 @@ function JournalProd({
 // BroderieRow
 // ──────────────────────────────────────────────────────────
 
-function BroderieRow({ broderie }: { broderie: Broderie }) {
+const BRODERIE_FILE_KIND_META: Record<BroderieFileKind, { label: string; accept: string }> = {
+  visuel: { label: "Visuel", accept: ".png,.jpg,.jpeg" },
+  pxf: { label: "PXF", accept: ".pxf" },
+  dst: { label: "DST", accept: ".dst" },
+  pdf: { label: "PDF", accept: ".pdf" },
+};
+
+function BroderieRow({
+  broderie,
+  commandeId,
+  articleId,
+  index,
+  disabled,
+  onCommandeUpdated,
+}: {
+  broderie: Broderie;
+  commandeId: string;
+  articleId: string;
+  index: number;
+  disabled?: boolean;
+  onCommandeUpdated: (c: Commande) => void;
+}) {
+  const [uploading, setUploading] = useState<BroderieFileKind | null>(null);
+  const baseUrl = `/api/production/commandes/${commandeId}/articles/${articleId}/broderies/${index}/file`;
+
+  async function uploadFile(kind: BroderieFileKind, file: File) {
+    setUploading(kind);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("kind", kind);
+      const res = await fetch(baseUrl, { method: "POST", body: form }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      onCommandeUpdated(res.data);
+    } catch (e) {
+      alert("Erreur upload : " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setUploading(null);
+    }
+  }
+
+  async function deleteFile(fileId: string) {
+    try {
+      const res = await fetch(`${baseUrl}/${fileId}`, { method: "DELETE" }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      onCommandeUpdated(res.data);
+    } catch (e) {
+      alert("Erreur suppression : " + (e instanceof Error ? e.message : String(e)));
+    }
+  }
+
   return (
     <div style={{
       display: "grid", gridTemplateColumns: "100px 1fr auto",
@@ -680,6 +961,56 @@ function BroderieRow({ broderie }: { broderie: Broderie }) {
               {broderie.note_atelier}
             </span>
           )}
+        </div>
+        <div style={{ display: "flex", gap: 6, marginTop: 6, alignItems: "center", flexWrap: "wrap" }}>
+          {(broderie.fichiers ?? []).map((f) => (
+            <a
+              key={f.id}
+              href={f.public_url}
+              target="_blank"
+              rel="noreferrer"
+              title={f.filename}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "2px 6px", borderRadius: 999,
+                border: "0.5px solid var(--hub-border)", background: "white",
+                fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-foreground)", textDecoration: "none",
+              }}
+            >
+              <Paperclip size={10} /> {BRODERIE_FILE_KIND_META[f.kind].label}
+              {!disabled && (
+                <button
+                  onClick={(e) => { e.preventDefault(); deleteFile(f.id); }}
+                  title="Retirer ce fichier"
+                  style={{ background: "none", border: "none", padding: 0, marginLeft: 2, opacity: 0.5, cursor: "pointer", color: "inherit" }}
+                >
+                  <Trash2 size={10} />
+                </button>
+              )}
+            </a>
+          ))}
+          {!disabled && (Object.keys(BRODERIE_FILE_KIND_META) as BroderieFileKind[]).map((kind) => (
+            <label
+              key={kind}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                padding: "2px 6px", borderRadius: 999,
+                border: "0.5px dashed var(--hub-border)", background: "transparent",
+                fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-foreground)", opacity: 0.6,
+                cursor: uploading ? "wait" : "pointer",
+              }}
+            >
+              {uploading === kind ? <Loader2 size={10} className="animate-spin" /> : <Upload size={10} />}
+              {BRODERIE_FILE_KIND_META[kind].label}
+              <input
+                type="file"
+                accept={BRODERIE_FILE_KIND_META[kind].accept}
+                disabled={!!uploading}
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(kind, f); e.target.value = ""; }}
+                style={{ display: "none" }}
+              />
+            </label>
+          ))}
         </div>
       </div>
       <div style={{ textAlign: "right", fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)", opacity: 0.8 }}>

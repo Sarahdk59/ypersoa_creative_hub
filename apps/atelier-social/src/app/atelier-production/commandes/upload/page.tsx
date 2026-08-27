@@ -1,7 +1,7 @@
 /**
  * /atelier-production/commandes/upload
  *
- * Dépôt admin d'un bon de préparation Shopify (PDF) → parsing IA →
+ * Dépôt admin d'un bon de commande Shopify ou Etsy (PDF) → parsing IA →
  * revue/édition du draft → création de la commande.
  *
  * Le rôle est vérifié serveur-side par /api/production/commandes/parse-pdf
@@ -141,7 +141,7 @@ export default function UploadCommandePage() {
           Réservé aux administrateurs
         </h1>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--hub-foreground)", opacity: 0.7 }}>
-          Seuls les comptes admin peuvent déposer un bon de préparation Shopify.
+          Seuls les comptes admin peuvent déposer un bon de commande.
         </p>
         <Link
           href="/atelier-production/commandes"
@@ -164,7 +164,7 @@ export default function UploadCommandePage() {
           textDecoration: "none", marginBottom: 24,
         }}
       >
-        <ArrowLeft size={14} strokeWidth={1.6} /> Commandes Shopify
+        <ArrowLeft size={14} strokeWidth={1.6} /> Commandes
       </Link>
 
       <header style={{ marginBottom: 24 }}>
@@ -172,10 +172,11 @@ export default function UploadCommandePage() {
           Déposer un bon de préparation
         </h1>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 760, lineHeight: 1.5 }}>
-          Charge le PDF Shopify : il est parsé par OpenAI gpt-4o, les SKU sont
-          croisés avec les référentiels (produits, motifs YPM, fils Gunold), les
-          durées sont calculées (800 pts/min, 5 min DST mutualisé par motif). Tu
-          relis et corriges avant création — le PDF reste joint à la commande.
+          Charge le PDF (bon Shopify ou Etsy) : il est parsé par Gemini (repli
+          OpenAI si besoin), les SKU sont croisés avec les référentiels
+          (produits, motifs YPM, fils Gunold), les durées sont calculées
+          (800 pts/min, 5 min DST mutualisé par motif). Tu relis et corriges
+          avant création — le PDF reste joint à la commande.
         </p>
       </header>
 
@@ -376,7 +377,7 @@ function Dropzone({ onFile }: { onFile: (f: File) => void }) {
       />
       <UploadCloud size={36} strokeWidth={1.4} style={{ color: "var(--hub-foreground)", opacity: 0.6, marginBottom: 12 }} />
       <p style={{ fontFamily: "var(--font-editorial)", fontSize: 20, margin: 0, color: "var(--hub-foreground)" }}>
-        Dépose le bon de préparation Shopify
+        Dépose le bon de commande (Shopify ou Etsy)
       </p>
       <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.6, margin: "6px 0 0 0" }}>
         Fichier PDF, 20 Mo max. Parsing IA + croisement référentiels automatiques.

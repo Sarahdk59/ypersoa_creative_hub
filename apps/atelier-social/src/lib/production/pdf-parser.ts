@@ -1,5 +1,5 @@
 /**
- * Parsing d'un bon de préparation Shopify (PDF) → draft Commande.
+ * Parsing d'un bon de commande Shopify OU Etsy (PDF) → draft Commande.
  *
  * Pipeline :
  *  1. pdf-parse pour extraire le texte brut du PDF (côté Node, server-only)
@@ -92,7 +92,15 @@ const VALID_PLACEMENTS: Placement[] = ["buste", "poignet", "dos", "nuque"];
 
 function buildSystemPrompt(motifsKnown: string[]): string {
   return [
-    "Tu es un assistant qui transforme un bon de préparation Shopify Ypersoa (vêtements brodés à la commande) en JSON structuré.",
+    "Tu es un assistant qui transforme un bon de commande Ypersoa (vêtements brodés à la commande) en JSON structuré.",
+    "Le PDF peut venir de DEUX sources différentes, à reconnaître automatiquement :",
+    "  (A) Shopify — bon de préparation interne, souvent avec un SKU explicite ou un libellé produit structuré.",
+    "  (B) Etsy — confirmation de commande / reçu client. Le numéro de commande y apparaît en général comme",
+    "      \"Order #XXXXXXXX\" ou un simple numéro (reprends-le tel quel dans `numero_shopify`, avec ou sans #).",
+    "      Le texte à broder et les choix du client (couleur de fil, initiale, prénom, dédicace…) se trouvent",
+    "      dans un champ de personnalisation (\"Personalization\", \"Note from buyer\", \"From [acheteur]:\" ou",
+    "      équivalent) — c'est CE contenu qui remplit `champs[].valeur`, jamais le titre générique de l'annonce.",
+    "      Les variantes (taille, couleur du support) apparaissent en clair après \"Variation:\" ou similaire.",
     "",
     "Schéma de sortie EXACT (renvoie UNIQUEMENT un JSON valide qui respecte cette forme) :",
     "{",
@@ -132,7 +140,10 @@ function buildSystemPrompt(motifsKnown: string[]): string {
     "}",
     "",
     "Règles importantes :",
-    "- Le format SKU est OBLIGATOIREMENT YPxxx-MMM-COULEUR-TAILLE. Si tu vois un libellé produit type \"Sweat brodé Le Câlin Beige XS\", reconstruis le SKU à partir des codes connus.",
+    "- Le format SKU est OBLIGATOIREMENT YPxxx-MMM-COULEUR-TAILLE. Que le bon donne un SKU Shopify explicite,",
+    "  un libellé produit structuré (\"Sweat brodé Le Câlin Beige XS\"), ou un titre d'annonce Etsy en langage",
+    "  naturel (\"Personalized Embroidered Sweatshirt - Le Câlin\" + variation \"Beige / XS\"), reconstruis le SKU",
+    "  à partir des indices produit + motif + couleur + taille disponibles, dans les deux cas.",
     `- Codes motifs valides (MMM dans le SKU) : ${motifsKnown.join(", ")}.`,
     "- Si un texte brodé est demandé, label = \"Texte buste\" (ou poignet/dos/nuque selon placement) et valeur = le texte saisi (respecte la casse).",
     "- Si plusieurs broderies sur le même article (ex. texte buste + initiale poignet), crée plusieurs entrées dans `broderies`.",
@@ -160,7 +171,7 @@ export async function callOpenAIStructurePdf(
       {
         role: "user",
         content: [
-          "Voici le texte brut extrait du bon de préparation Shopify. Transforme-le en JSON selon le schéma fourni.",
+          "Voici le texte brut extrait du bon de commande (Shopify ou Etsy). Transforme-le en JSON selon le schéma fourni.",
           "",
           "=== TEXTE BON DE PRÉPARATION ===",
           pdfText,
@@ -210,7 +221,7 @@ export async function callGeminiStructurePdf(
       parts: [
         {
           text: [
-            "Voici le texte brut extrait du bon de préparation Shopify. Transforme-le en JSON selon le schéma fourni.",
+            "Voici le texte brut extrait du bon de commande (Shopify ou Etsy). Transforme-le en JSON selon le schéma fourni.",
             "",
             "=== TEXTE BON DE PRÉPARATION ===",
             pdfText,

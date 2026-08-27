@@ -166,7 +166,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         exemple:
           "Tu cherches la commande livrée à Mouvaux : tu tapes « 1002 », Entrée, et la commande #1002 ressort en tête avec son statut. Un clic ouvre sa fiche de production.",
         resultat:
-          "Des résultats groupés par famille (Commandes Shopify, Couleurs de fil, Palettes, Motifs YPM, Shoots du catalogue, Lookbooks, Règles broderie, Packs sociaux, Projets sociaux), chaque carte cliquable vers sa fiche.",
+          "Des résultats groupés par famille (Commandes, Couleurs de fil, Palettes, Motifs YPM, Shoots du catalogue, Lookbooks, Règles broderie, Packs sociaux, Projets sociaux), chaque carte cliquable vers sa fiche.",
         limites: [
           "La recherche exige que TOUS les mots correspondent : « sweat rouge » ne sort rien si aucune fiche ne contient les deux mots.",
           "Limité à 30 résultats par famille : si tu cherches large, affine ton terme.",
@@ -1183,7 +1183,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         quandUtiliser:
           "Dès qu'une commande payée arrive et doit passer en atelier. Le dépôt du PDF est réservé à l'admin. N'utilise pas l'import PDF pour une commande de test : crée plutôt une commande à la main.",
         commentFaire: [
-          "Ouvre Atelier Production (barre de gauche), puis la carte « Commandes Shopify ».",
+          "Ouvre Atelier Production (barre de gauche), puis la carte « Commandes ».",
           "Pour une nouvelle commande, clique « Déposer un bon de préparation » et glisse le PDF Shopify : l'outil le lit et croise SKU, motif YPM, fils Gunold et durées.",
           "Vérifie l'aperçu, corrige le JSON éditable si besoin, puis clique « Créer la commande ».",
           "Ouvre la fiche : remplis le journal 4 étapes (DST → Broderie → CQ → Expédition) avec « Qui ? » et « Le ? » au fil de l'avancement.",

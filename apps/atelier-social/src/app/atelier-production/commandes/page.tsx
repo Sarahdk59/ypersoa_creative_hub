@@ -82,10 +82,10 @@ export default function CommandesListPage() {
       <header style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 24, flexWrap: "wrap" }}>
         <div>
           <h1 style={{ fontFamily: "var(--font-editorial)", fontSize: 36, fontWeight: 500, margin: 0, marginBottom: 8 }}>
-            Commandes Shopify
+            Commandes
           </h1>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 720 }}>
-            {active.length} active{active.length > 1 ? "s" : ""} · {archived.length} archivée{archived.length > 1 ? "s" : ""}. Chaque commande croise SKU Shopify ↔ motif YPM ↔ fils Gunold et génère un planning auto sur 2 machines TMEZ (6h/jour, 650 pts/min, +5 min DST par motif).
+            {active.length} active{active.length > 1 ? "s" : ""} · {archived.length} archivée{archived.length > 1 ? "s" : ""}. Chaque commande (Shopify ou Etsy) croise SKU ↔ motif YPM ↔ fils Gunold et génère un planning auto sur 2 machines TMEZ (6h/jour, 800 pts/min, +5 min DST par motif).
           </p>
         </div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>

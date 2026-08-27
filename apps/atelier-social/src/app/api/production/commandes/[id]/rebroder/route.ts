@@ -9,7 +9,12 @@
  *   zones_a_rebroder?: ("buste"|"poignet"|"dos"|"nuque")[]  // si null = toutes les zones de l'article
  * }
  *
- * Retourne la nouvelle commande créée (id = `{origine}-R{n}`).
+ * Retourne la nouvelle commande créée. `id` technique = `{origine}-R{n}` (doit
+ * rester sans `/` : sert de segment de route Next.js et de nom de fichier JSON
+ * sur disque). `numero_shopify` affiché = `{numero_shopify_origine}/{n}` (ex.
+ * "#1002/2") — la reprise sert aussi bien un défaut client détecté après
+ * livraison qu'un incident atelier avant expédition (pull abîmé, non qualité…),
+ * le champ `motif` couvrant les deux cas en texte libre.
  */
 import { NextResponse } from "next/server";
 import {
@@ -63,7 +68,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const now = new Date().toISOString().slice(0, 10);
     const commandeRework: Commande = {
       id: newId,
-      numero_shopify: `${origine.numero_shopify} (R${n})`,
+      numero_shopify: `${origine.numero_shopify}/${n}`,
       date_commande: now,
       date_impression_bon: now,
       statut: "a_planifier",
