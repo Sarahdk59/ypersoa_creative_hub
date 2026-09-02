@@ -1,0 +1,80 @@
+{
+  "id": "1016",
+  "numero_shopify": "#1016",
+  "date_commande": "2026-09-02",
+  "date_impression_bon": "2026-09-02",
+  "statut": "a_planifier",
+  "priorite": "normale",
+  "expedition": {
+    "nom": "A. Hanssen — Locker Mondial Relay (Lidl L'Isle-sur-la-Sorgue)",
+    "adresse_ligne1": "594 Route du Thor",
+    "adresse_ligne2": "Locker 24/7 Lidl",
+    "code_postal": "84800",
+    "ville": "L'Isle-sur-la-Sorgue",
+    "pays": "France"
+  },
+  "facturation": {
+    "nom": "A. Hanssen",
+    "adresse_ligne1": "Rue Carnot",
+    "code_postal": "84800",
+    "ville": "L'Isle-sur-la-Sorgue",
+    "pays": "France"
+  },
+  "articles": [
+    {
+      "id": "art_1016_01",
+      "sku": "YP013-MSG-ROSEPALE-UNIQUE",
+      "produit_id": "YP013",
+      "produit_nom": "Casquette Vintage Brodée",
+      "motif_sku": "MSG",
+      "ypm_id": "",
+      "ypm_nom": "Le Message",
+      "couleur_support": "Vintage Rose Pâle",
+      "taille": "Unique",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Ligne 1",
+              "valeur": "J'peux pas",
+              "type": "mot_moyen",
+              "duree_min": 5,
+              "fil_id": "fil_bordeaux",
+              "source_duree": "classification"
+            },
+            {
+              "label": "Ligne 2",
+              "valeur": "Pas le temps",
+              "type": "texte_long",
+              "duree_min": 7,
+              "fil_id": "fil_bordeaux",
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_bordeaux",
+          "fil_nom": "Bordeaux",
+          "fil_hex": "#5C2C35",
+          "fil_code_gunold": "61402",
+          "duree_broderie_min": 12,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 15,
+          "note_atelier": "Broderie sur le DEVANT de la calotte (panneau frontal casquette YP013) — PAS côté cœur. Placement technique \"buste\" réutilisé faute de valeur dédiée casquette dans le module Commandes ; adapter le cerceau/gabarit à l'atelier."
+        }
+      ],
+      "duree_preparation_dst_min": 5,
+      "duree_setup_min": 6,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 29,
+      "notes": "Motif \"Le Message\" (2 lignes personnalisées, mise en page \"Les deux\") absent du catalogue référentiels/motifs/motifs_ypm.json — pas de YPM-id ni d'asset PNG/PXF dans le repo, à cataloguer. Couleur casquette \"Vintage Rose Pâle\" ne correspond pas exactement à un id existant de palette_supports_par_produit.YP013 (qui liste \"rose_vif\" / Rose vif délavé #D483AB) — à confirmer si même coloris ou nouvelle teinte à ajouter."
+    }
+  ],
+  "planning": null,
+  "duree_total_min": 29,
+  "nb_changements_fil_total": 0,
+  "notes": "Saisie manuelle depuis le bon de préparation Shopify #1016 — le parsing PDF automatique n'a pas pu résoudre le SKU (motif \"Le Message\" et référence couleur casquette absents des référentiels, cf. notes article). Corrigé côté pipeline : le prompt de structuration (pdf-parser.ts) ne transmettait pas la liste des codes produits YPxxx au LLM, donc YP013 ne pouvait jamais être déduit pour aucune casquette — fixé pour les prochaines commandes.",
+  "created_at": "2026-09-02",
+  "updated_at": "2026-09-02"
+}

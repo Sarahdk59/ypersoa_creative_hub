@@ -90,7 +90,7 @@ interface DraftCommande {
 
 const VALID_PLACEMENTS: Placement[] = ["buste", "poignet", "dos", "nuque"];
 
-function buildSystemPrompt(motifsKnown: string[]): string {
+function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): string {
   return [
     "Tu es un assistant qui transforme un bon de commande Ypersoa (vêtements brodés à la commande) en JSON structuré.",
     "Le PDF peut venir de DEUX sources différentes, à reconnaître automatiquement :",
@@ -145,6 +145,9 @@ function buildSystemPrompt(motifsKnown: string[]): string {
     "  naturel (\"Personalized Embroidered Sweatshirt - Le Câlin\" + variation \"Beige / XS\"), reconstruis le SKU",
     "  à partir des indices produit + motif + couleur + taille disponibles, dans les deux cas.",
     `- Codes motifs valides (MMM dans le SKU) : ${motifsKnown.join(", ")}.`,
+    `- Codes produits valides (YPxxx dans le SKU, avec leur nom commercial pour t'aider à identifier le bon code depuis un libellé produit) : ${produitsKnown.join(" ; ")}.`,
+    "- Si le nom du produit sur le bon ne correspond exactement à AUCUN nom commercial listé ci-dessus (ex. nouveau produit jamais catalogué), NE DEVINE PAS un code YPxxx au hasard : mets `\"sku\": \"UNKNOWN\"` et reporte le libellé produit exact tel quel dans `notes` de l'article.",
+    "- Même règle pour le motif : si le nom du motif sur le bon ne correspond à AUCUN code motif listé ci-dessus, ne force pas un code existant qui ne correspond pas — utilise `\"sku\": \"UNKNOWN\"` et indique le nom exact du motif dans `notes`.",
     "- Si un texte brodé est demandé, label = \"Texte buste\" (ou poignet/dos/nuque selon placement) et valeur = le texte saisi (respecte la casse).",
     "- Si plusieurs broderies sur le même article (ex. texte buste + initiale poignet), crée plusieurs entrées dans `broderies`.",
     "- Couleur du fil : extrais le nom libre français exact (ex. \"rose pâle\", \"vert sauge\", \"bordeaux\"). Si non précisé, omets `fil_nom`.",
@@ -158,6 +161,7 @@ function buildSystemPrompt(motifsKnown: string[]): string {
 export async function callOpenAIStructurePdf(
   pdfText: string,
   motifsKnown: string[],
+  produitsKnown: string[],
 ): Promise<DraftCommande> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY manquante");
@@ -167,7 +171,7 @@ export async function callOpenAIStructurePdf(
     response_format: { type: "json_object" },
     temperature: 0,
     messages: [
-      { role: "system", content: buildSystemPrompt(motifsKnown) },
+      { role: "system", content: buildSystemPrompt(motifsKnown, produitsKnown) },
       {
         role: "user",
         content: [
@@ -210,6 +214,7 @@ export async function callOpenAIStructurePdf(
 export async function callGeminiStructurePdf(
   pdfText: string,
   motifsKnown: string[],
+  produitsKnown: string[],
 ): Promise<DraftCommande> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY manquante");
@@ -231,7 +236,7 @@ export async function callGeminiStructurePdf(
       ],
     },
     config: {
-      systemInstruction: buildSystemPrompt(motifsKnown),
+      systemInstruction: buildSystemPrompt(motifsKnown, produitsKnown),
       responseMimeType: "application/json",
       temperature: 0,
     },
@@ -447,14 +452,17 @@ export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResul
 
   const skuMapping = getSkuMapping();
   const motifsKnown = Object.keys(skuMapping.motifs_sku_to_ypm);
+  const produitsKnown = Object.entries(skuMapping.produits).map(
+    ([id, p]) => `${id} = ${p.nom_commercial}`,
+  );
 
   let draft: DraftCommande;
   let source: "gemini" | "openai" = "gemini";
   try {
-    draft = await callGeminiStructurePdf(text, motifsKnown);
+    draft = await callGeminiStructurePdf(text, motifsKnown, produitsKnown);
   } catch (geminiErr) {
     try {
-      draft = await callOpenAIStructurePdf(text, motifsKnown);
+      draft = await callOpenAIStructurePdf(text, motifsKnown, produitsKnown);
       source = "openai";
     } catch (openaiErr) {
       const g = geminiErr instanceof Error ? geminiErr.message : String(geminiErr);
