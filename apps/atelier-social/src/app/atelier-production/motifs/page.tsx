@@ -688,7 +688,8 @@ function ProdFileCard({
   const [renameValue, setRenameValue] = useState(file.key);
   const [savingRename, setSavingRename] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [uploadingType, setUploadingType] = useState<"pxf" | "dst" | "ft" | null>(null);
+  const [uploadingType, setUploadingType] = useState<"pxf" | "dst" | "png" | "ft" | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const isComplete = !!(file.pxf && file.dst);
   const downloadUrl = (type: "pxf" | "dst" | "ft") =>
     `/api/da/motifs/${encodeURIComponent(motifId)}/prod-file?type=${type}&key=${encodeURIComponent(file.key)}`;
@@ -714,17 +715,37 @@ function ProdFileCard({
     }
   };
 
-  const quickUpload = async (type: "pxf" | "dst" | "ft", selected: File) => {
+  const quickUpload = async (type: "pxf" | "dst" | "png" | "ft", selected: File) => {
     setUploadingType(type);
     try {
       const fd = new FormData();
       fd.append("file", selected);
       fd.append("key", file.key);
       fd.append("type", type);
-      const res = await fetch(`/api/da/motifs/${encodeURIComponent(motifId)}/prod-file-upload`, {
-        method: "POST",
-        body: fd,
-      }).then((r) => r.json());
+      let response: Response;
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        try {
+          response = await fetch(`/api/da/motifs/${encodeURIComponent(motifId)}/prod-file-upload`, {
+            method: "POST",
+            body: fd,
+            signal: controller.signal,
+          });
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      } catch (networkErr) {
+        if (networkErr instanceof DOMException && networkErr.name === "AbortError") {
+          throw new Error(
+            "La requête a expiré après 30s sans réponse — souvent une connexion bloquée dans cet onglet (ex. websocket de rechargement à chaud). Recharge la page (Cmd+Maj+R) et réessaie."
+          );
+        }
+        throw new Error(
+          "La requête n'a pas pu partir (souci réseau ou aperçu web embarqué). Ouvre la page dans Chrome/Safari classique, ou clique sur le badge PXF/DST/FT pour choisir le fichier."
+        );
+      }
+      const res = await response.json();
       if (!res.ok) throw new Error(typeof res.error === "string" ? res.error : "Échec");
       await onUpdated();
     } catch (e) {
@@ -732,6 +753,44 @@ function ProdFileCard({
     } finally {
       setUploadingType(null);
     }
+  };
+
+  /** Déduit le type prod (pxf/dst/png/ft) depuis l'extension d'un fichier déposé. */
+  const typeFromExt = (filename: string): "pxf" | "dst" | "png" | "ft" | null => {
+    const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+    if (ext === "pxf") return "pxf";
+    if (ext === "dst") return "dst";
+    if (ext === "png" || ext === "jpg" || ext === "jpeg") return "png";
+    if (ext === "pdf") return "ft";
+    return null;
+  };
+
+  const handleCardDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+  const handleCardDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!dragOver) setDragOver(true);
+  };
+  const handleCardDragLeave = (e: React.DragEvent) => {
+    // Les enfants (image, boutons) déclenchent dragleave sur le parent quand on
+    // les survole en plein drag — on n'annule le state que si on quitte VRAIMENT
+    // la card (relatedTarget hors du sous-arbre), sinon l'overlay clignote.
+    if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+    setDragOver(false);
+  };
+  const handleCardDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const dropped = e.dataTransfer.files?.[0];
+    if (!dropped) return;
+    const type = typeFromExt(dropped.name);
+    if (!type) {
+      alert(`Extension .${dropped.name.split(".").pop() ?? "?"} non reconnue (attendu : .pxf, .dst, .png, .jpg ou .pdf).`);
+      return;
+    }
+    quickUpload(type, dropped);
   };
 
   const startRename = () => {
@@ -783,17 +842,55 @@ function ProdFileCard({
   return (
     <div
       className="prod-card"
+      onDragEnter={handleCardDragEnter}
+      onDragOver={handleCardDragOver}
+      onDragLeave={handleCardDragLeave}
+      onDrop={handleCardDrop}
+      title={dragOver ? "Dépose le fichier ici (.pxf, .dst, .png, .jpg ou .pdf)" : undefined}
       style={{
-        background: "var(--hub-bg)",
-        border: "0.5px solid var(--hub-border)",
+        background: dragOver ? "rgba(167,96,89,0.08)" : "var(--hub-bg)",
+        border: dragOver ? "1.5px dashed var(--color-brand-rose, #A76059)" : "0.5px solid var(--hub-border)",
         borderRadius: 10,
         padding: 6,
         display: "flex",
         flexDirection: "column",
         gap: 6,
         position: "relative",
+        transition: "background 120ms, border-color 120ms",
       }}
     >
+      {(dragOver || uploadingType) && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            borderRadius: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            background: "rgba(250,247,242,0.9)",
+            fontFamily: "var(--font-sans)",
+            fontSize: 10.5,
+            fontWeight: 600,
+            color: "var(--color-brand-rose, #A76059)",
+            textAlign: "center",
+            padding: 8,
+            pointerEvents: "none",
+          }}
+        >
+          {uploadingType ? (
+            <>
+              <Loader2 size={14} className="animate-spin" />
+              Envoi {uploadingType.toUpperCase()}…
+            </>
+          ) : (
+            "Dépose ici — PXF / DST / PNG / JPG / PDF"
+          )}
+        </div>
+      )}
       <div
         style={{
           position: "relative",
@@ -812,15 +909,18 @@ function ProdFileCard({
             onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")}
           />
         ) : (
-          <div
+          <label
+            title="Clique ou glisse une image (.png / .jpg) pour l'aperçu"
             style={{
               width: "100%",
               height: "100%",
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              gap: 5,
               fontFamily: "var(--font-editorial)",
-              fontSize: isShortKey ? 28 : 13,
+              fontSize: isShortKey ? 26 : 13,
               fontWeight: 500,
               color: "var(--hub-foreground)",
               opacity: 0.55,
@@ -828,10 +928,39 @@ function ProdFileCard({
               padding: 6,
               lineHeight: 1.2,
               boxSizing: "border-box",
+              cursor: uploadingType === "png" ? "default" : "pointer",
             }}
           >
             {file.key}
-          </div>
+            {uploadingType !== "png" && (
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 2,
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 8.5,
+                  fontWeight: 600,
+                  letterSpacing: "0.03em",
+                  opacity: 0.8,
+                }}
+              >
+                <Plus size={9} /> aperçu (clic ou glisser)
+              </span>
+            )}
+            <input
+              type="file"
+              accept="image/png,image/jpeg"
+              disabled={uploadingType === "png"}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                e.target.value = "";
+                if (f) quickUpload("png", f);
+              }}
+              style={{ display: "none" }}
+            />
+          </label>
         )}
 
         {file.png && (
