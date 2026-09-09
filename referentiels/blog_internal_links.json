@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "referentiel": "blog_internal_links",
+    "last_updated": "2026-09-09",
+    "description": "Maillage interne pour l'outil brouillon de blog (atelier-social /blog). Handles réels vérifiés uniquement — importé depuis la carte de maillage du skill ypersoa-blog-article (autre repo). Ne jamais faire choisir au modèle un lien hors de cette liste : les pages /motifs/{handle} et /inspirations/{handle} sont encore en V3 (404 en prod, cf. skill), donc absentes ici tant qu'elles ne sont pas confirmées en ligne.",
+    "regle": "1 à 3 liens par brouillon, choisis dans cette liste, jamais inventés. Ancre descriptive, jamais « cliquez ici »."
+  },
+  "links": [
+    { "id": "coll-sweat", "label": "les sweats brodés", "url": "/collections/sweat-brode", "tags": ["produit", "sweat"] },
+    { "id": "coll-hoodie", "label": "les hoodies brodés", "url": "/collections/hoodie-brode", "tags": ["produit", "hoodie"] },
+    { "id": "coll-tshirt", "label": "les t-shirts brodés", "url": "/collections/t-shirt-brode", "tags": ["produit", "tshirt"] },
+    { "id": "coll-hoodie-enfant", "label": "les hoodies enfant", "url": "/collections/les-hoodies-enfant", "tags": ["enfant", "rentree", "hoodie"] },
+    { "id": "coll-personnaliser", "label": "faire le tien", "url": "/collections/a-personnaliser", "tags": ["personnalisation", "cta"] },
+    { "id": "page-maman", "label": "les idées pour la fête des mères", "url": "/pages/maman", "tags": ["maman", "cadeau"] },
+    { "id": "page-papa", "label": "les idées pour la fête des pères", "url": "/pages/papa", "tags": ["papa", "cadeau"] },
+    { "id": "page-famille", "label": "les inspirations famille", "url": "/pages/famille", "tags": ["famille"] },
+    { "id": "page-couple", "label": "les idées pour un couple", "url": "/pages/couple", "tags": ["couple", "mariage"] },
+    { "id": "page-mini", "label": "les broderies pour les tout-petits", "url": "/pages/mini", "tags": ["naissance", "bebe"] },
+    { "id": "page-animaux", "label": "les motifs animaux", "url": "/pages/animaux", "tags": ["animaux"] },
+    { "id": "page-anniversaire", "label": "les idées d'anniversaire", "url": "/pages/anniversaire", "tags": ["anniversaire", "cadeau"] },
+    { "id": "page-mariage-evjf", "label": "les idées mariage et EVJF", "url": "/pages/mariage-evjf", "tags": ["mariage", "evjf"] },
+    { "id": "page-saison", "label": "les inspirations de saison", "url": "/pages/saison", "tags": ["saison", "rentree", "noel"] },
+    { "id": "page-humour", "label": "les broderies qui font sourire", "url": "/pages/humour", "tags": ["humour", "secret-santa"] },
+    { "id": "page-offrir", "label": "des idées pour offrir", "url": "/pages/offrir", "tags": ["cadeau", "offrir"] },
+    { "id": "page-les-motifs", "label": "le catalogue des motifs", "url": "/pages/les-motifs", "tags": ["motifs", "personnalisation"] },
+    { "id": "page-broderie-sur-mesure", "label": "ce qu'est la broderie sur mesure", "url": "/pages/la-broderie-sur-mesure", "tags": ["broderie", "technique", "entretien", "atelier"] }
+  ]
+}

@@ -107,11 +107,22 @@ ${BLOG_DIRECTION}
 1. Le H1 est la requete cible, mot pour mot.
 2. Un seul angle. Tu ne fais jamais un guide fourre-tout.
 3. direct_answer contient 2 a 3 phrases qui repondent immediatement a la requete, sans introduction.
-4. Les H2 sont des sous-questions reelles ou des formulations tres proches d'une intention de recherche.
+4. Les H2 traitent chaque sous-question fournie, mais ne la recopient JAMAIS mot pour mot.
+   Transforme la sous-question en titre thematique naturel : "Je veux broder avec une couleur
+   que je ne vois pas sur votre site ?" devient "Une couleur de fil hors catalogue", pas une
+   citation a la premiere personne. Le ton "question posee par une cliente" est reserve a la FAQ.
 5. 3 a 5 sections maximum. 650 a 1100 mots cibles.
 6. Paragraphes courts. Zero remplissage.
-7. FAQ de 3 a 5 questions. Reponses breves et autonomes.
+7. FAQ de 3 a 5 questions, COURTES et DISTINCTES de ce que traitent deja les sections. La FAQ
+   n'est pas un second passage sur les memes sujets : chaque question y couvre un angle que les
+   sections n'ont pas developpe (pratique rapide, delai, entretien, etc.). Deux blocs qui posent
+   la meme question sous deux formes = erreur de structure.
 8. La conclusion reste utile. Pas de formule vide.
+9. Verifie la coherence interne : si un fait vrai de la BANQUE DE VRAI mentionne un contexte
+   precis (un mariage, une ville, un evenement), ne le fais jamais halluciner un second contexte
+   different pour la meme anecdote plus loin dans le texte (ex: ne raconte pas "une soiree a
+   Dunkerque" puis, une phrase plus tard, "si je peux le faire pour un mariage" comme si
+   c'etaient deux commandes distinctes — l'anecdote de Dunkerque EST deja un mariage/EVJF).
 
 ## LISTE NOIRE — a bannir strictement
 
@@ -145,6 +156,19 @@ Tu peux comparer la broderie au flocage, a l'impression, a la serigraphie ou au 
 Tu ne peux affirmer un fait produit, un chiffre ou un delai que s'il figure dans les FAITS VERIFIES fournis.
 N'invente aucun chiffre.
 
+Quand tu reprends un fait dans la BANQUE DE VRAI, garde TOUS ses mots-cles listes en "Empreintes a
+conserver", pas seulement un ou deux : une empreinte a moitie gardee (ex: le chiffre exact remplace
+par une fourchette approximative) est traitee comme une erreur au controle qualite, pas comme une
+variante stylistique acceptable.
+
+## LIENS INTERNES
+
+Choisis 1 a 3 liens UNIQUEMENT dans la liste "LIENS INTERNES DISPONIBLES" fournie plus bas. Copie
+l'url exactement telle quelle. Le label est une ancre descriptive et naturelle dans ta voix
+("les idées pour la fête des mères", pas "cliquez ici" ni "en savoir plus"). N'invente jamais une
+url qui ne figure pas dans la liste : si aucun lien ne convient au sujet, prends le plus proche
+plutot que d'improviser un handle.
+
 ## SORTIE
 
 Tu reponds uniquement avec un objet JSON valide :
@@ -158,7 +182,7 @@ Tu reponds uniquement avec un objet JSON valide :
   "sections": [{ "h2": string, "body": string }],
   "faq": [{ "question": string, "answer": string }],
   "cta": { "label": string, "body": string },
-  "internal_links": string[],
+  "internal_links": [{ "label": string, "url": string }],
   "coverage_note": string
 }
 
@@ -167,6 +191,7 @@ Contraintes :
 - slug = kebab-case sans accent
 - meta_title <= 60 caracteres
 - meta_description <= 155 caracteres
+- internal_links = 1 a 3 entrees prises dans la liste fournie, url copiee exactement
 - coverage_note = ce qui n'a volontairement pas ete traite et pourquoi`;
 }
 

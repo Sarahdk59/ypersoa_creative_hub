@@ -22,9 +22,11 @@ import {
 } from "@/lib/blog/geo-export";
 import { saveBlogArticle } from "@/lib/blog/article-store";
 import { selectEditorialDetails } from "@/lib/blog/editorial-bank";
+import { loadBlogInternalLinks } from "@/lib/blog/internal-links.server";
+import { selectInternalLinks } from "@/lib/blog/internal-links";
 
 export const runtime = "nodejs";
-export const maxDuration = 90;
+export const maxDuration = 120;
 
 interface RequestBody {
   targetQuery: string;
@@ -68,48 +70,57 @@ function parseJson(raw: string): ArticlePayload {
   return JSON.parse(cleaned.slice(start, end + 1)) as ArticlePayload;
 }
 
-async function runOpenAI(system: string, prompt: string) {
+interface ChatTurn {
+  role: "user" | "assistant";
+  content: string;
+}
+
+async function runOpenAI(system: string, turns: ChatTurn[], temperature: number) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY manquante.");
   const openai = new OpenAI({ apiKey });
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
     response_format: { type: "json_object" },
-    temperature: 0.7,
+    temperature,
     max_tokens: 4000,
-    messages: [
-      { role: "system", content: system },
-      { role: "user", content: prompt },
-    ],
+    messages: [{ role: "system", content: system }, ...turns],
   });
   const text = completion.choices[0]?.message?.content;
   if (!text) throw new Error("Pas de contenu OpenAI.");
   return text;
 }
 
-async function runGemini(system: string, prompt: string) {
+async function runGemini(system: string, turns: ChatTurn[], temperature: number) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY manquante.");
   const ai = new GoogleGenAI({ apiKey });
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    contents: turns.map((t) => ({ role: t.role === "assistant" ? "model" : "user", parts: [{ text: t.content }] })),
     config: {
       systemInstruction: system,
       responseMimeType: "application/json",
-      temperature: 0.7,
+      temperature,
     },
   });
   if (!response.text) throw new Error("Pas de contenu Gemini.");
   return response.text;
 }
 
-async function generateArticle(system: string, prompt: string) {
+/**
+ * `turns` porte l'historique complet (prompt initial, puis tour par tour les
+ * reponses precedentes + les demandes de reparation) : la reparation doit
+ * revoir sa propre tentative, pas regenerer a l'aveugle a partir d'une seule
+ * liste de reproches. La temperature baisse sur reparation (correction
+ * ciblee, pas nouvelle creation).
+ */
+async function generateArticle(system: string, turns: ChatTurn[], temperature: number) {
   try {
-    return await runOpenAI(system, prompt);
+    return await runOpenAI(system, turns, temperature);
   } catch (openAiError) {
     try {
-      return await runGemini(system, prompt);
+      return await runGemini(system, turns, temperature);
     } catch (geminiError) {
       const detail = [
         openAiError instanceof Error ? `OpenAI: ${openAiError.message}` : "OpenAI indisponible",
@@ -139,6 +150,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, stage: "gate", reasons: gate.reasons }, { status: 422 });
   }
 
+  const linksReferentiel = await loadBlogInternalLinks();
+  const internalLinks = body.internalLinks?.length
+    ? body.internalLinks
+    : selectInternalLinks(linksReferentiel, body.targetQuery, body.angle, body.subQueries);
+
   const brief: ArticleBrief = {
     targetQuery: body.targetQuery,
     angle: body.angle,
@@ -146,33 +162,38 @@ export async function POST(req: NextRequest) {
     outOfScope: body.outOfScope,
     conversionGoal: body.conversionGoal,
     brandFacts: body.brandFacts?.length ? body.brandFacts : DEFAULT_BRAND_FACTS,
-    internalLinks: body.internalLinks,
+    internalLinks,
     editorialDetails: selectEditorialDetails(body.targetQuery, body.angle),
   };
 
   const system = buildSystemPrompt();
   const userPrompt = buildUserPrompt(brief);
+  const lintOpts = {
+    targetQuery: body.targetQuery,
+    brandFacts: brief.brandFacts.map((f) => f.fact),
+    editorialDetails: brief.editorialDetails,
+    subQueries: body.subQueries,
+    linkPool: internalLinks,
+  };
+  const MAX_REPAIR_ATTEMPTS = 2;
 
   let article: ArticlePayload;
   let lint: LintReport;
   let repaired = false;
 
   try {
-    article = parseJson(await generateArticle(system, userPrompt));
-    lint = lintArticle(article, {
-      targetQuery: body.targetQuery,
-      brandFacts: brief.brandFacts.map((f) => f.fact),
-      editorialDetails: brief.editorialDetails,
-    });
+    const turns: ChatTurn[] = [{ role: "user", content: userPrompt }];
+    article = parseJson(await generateArticle(system, turns, 0.7));
+    lint = lintArticle(article, lintOpts);
 
-    if (!lint.passed) {
+    let attempts = 0;
+    while (!lint.passed && attempts < MAX_REPAIR_ATTEMPTS) {
+      attempts += 1;
       repaired = true;
-      article = parseJson(await generateArticle(system, `${userPrompt}\n\n${buildRepairPrompt(lint)}`));
-      lint = lintArticle(article, {
-        targetQuery: body.targetQuery,
-        brandFacts: brief.brandFacts.map((f) => f.fact),
-        editorialDetails: brief.editorialDetails,
-      });
+      turns.push({ role: "assistant", content: JSON.stringify(article) });
+      turns.push({ role: "user", content: buildRepairPrompt(lint) });
+      article = parseJson(await generateArticle(system, turns, 0.4));
+      lint = lintArticle(article, lintOpts);
     }
   } catch (error) {
     return NextResponse.json(
@@ -200,7 +221,7 @@ export async function POST(req: NextRequest) {
       conversion_goal: body.conversionGoal,
       sub_queries: brief.subQueries,
       out_of_scope: body.outOfScope,
-      internal_links: body.internalLinks ?? [],
+      internal_links: internalLinks,
       brand_facts: brief.brandFacts,
       status: lint.passed ? "ready_for_review" : "lint_failed",
       repaired,

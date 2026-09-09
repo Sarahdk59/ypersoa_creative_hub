@@ -57,7 +57,7 @@ export interface ArticlePayload {
   sections: { h2: string; body: string }[];
   faq: { question: string; answer: string }[];
   cta: { label: string; body: string };
-  internal_links: string[];
+  internal_links: { label: string; url: string }[];
   coverage_note: string;
 }
 
@@ -111,6 +111,7 @@ function flatten(a: ArticlePayload): string {
     ...a.faq.flatMap((f) => [f.question, f.answer]),
     a.cta.label,
     a.cta.body,
+    ...a.internal_links.map((l) => l.label),
     a.coverage_note,
   ].join("\n");
 }
@@ -124,6 +125,39 @@ function normalize(s: string): string {
     .trim();
 }
 
+/** Un fingerprint purement numerique doit matcher un nombre entier (evite "24" dans "124"). */
+function matchesFingerprint(normalizedText: string, fingerprint: string): boolean {
+  const norm = normalize(fingerprint);
+  if (/^\d+$/.test(norm)) {
+    return new RegExp(`(?<!\\d)${norm}(?!\\d)`).test(normalizedText);
+  }
+  return normalizedText.includes(norm);
+}
+
+const STOPWORDS = new Set([
+  "dans", "avec", "pour", "sans", "cette", "vous", "nous", "leur", "leurs",
+  "elle", "elles", "sont", "\u00eatre", "etre", "faire", "fait", "peut", "peux",
+  "veux", "veut", "sur", "une", "des", "les", "que", "qui", "est", "vos",
+  "ton", "tes", "notre", "votre", "comment", "quel", "quels", "quelle",
+  "quelles", "sera", "j'ai", "je", "tu", "on",
+]);
+
+function significantWords(s: string): Set<string> {
+  return new Set(
+    normalize(s)
+      .split(/[^a-z0-9']+/)
+      .filter((w) => w.length >= 4 && !STOPWORDS.has(w))
+  );
+}
+
+function jaccard(a: Set<string>, b: Set<string>): number {
+  if (a.size === 0 || b.size === 0) return 0;
+  let inter = 0;
+  for (const w of a) if (b.has(w)) inter += 1;
+  const union = a.size + b.size - inter;
+  return union === 0 ? 0 : inter / union;
+}
+
 export function lintArticle(
   article: ArticlePayload,
   opts: {
@@ -132,6 +166,8 @@ export function lintArticle(
     brandFacts: string[];
     minRequiredHits?: number;
     editorialDetails?: EditorialDetail[];
+    subQueries?: string[];
+    linkPool?: { url: string }[];
   }
 ): LintReport {
   const errors: string[] = [];
@@ -148,13 +184,24 @@ export function lintArticle(
   }
 
   const normalizedText = normalize(text);
-  const editorialFingerprintHits = [...new Set(
-    (opts.editorialDetails ?? []).flatMap((detail) => detail.fingerprints)
-      .filter((fingerprint) => normalizedText.includes(normalize(fingerprint)))
-  )];
-  const editorialDetailIds = (opts.editorialDetails ?? [])
-    .filter((detail) => detail.fingerprints.some((fingerprint) => normalizedText.includes(normalize(fingerprint))))
-    .map((detail) => detail.id);
+
+  // Une empreinte de la banque de vrai ne compte que si TOUS ses mots-cles
+  // survivent : une empreinte partielle est le signe d'un fait paraphrase
+  // jusqu'a perdre sa chute (ex: "9, 10, 12, 24" degrade en "entre 9 et 24").
+  const detailStatuses = (opts.editorialDetails ?? []).map((detail) => {
+    const hits = detail.fingerprints.filter((fp) => matchesFingerprint(normalizedText, fp));
+    return { detail, hits, complete: hits.length > 0 && hits.length === detail.fingerprints.length };
+  });
+  const partialDetails = detailStatuses.filter((s) => s.hits.length > 0 && !s.complete);
+  for (const p of partialDetails) {
+    errors.push(
+      `Empreinte partielle sur la banque de vrai "${p.detail.id}" : ${p.hits.length}/${p.detail.fingerprints.length} mots-cles gardes (${p.hits.join(", ")}). La chute du fait est paraphrasee ou incomplete. Reprends le fait avec tous ses mots-cles, ou ne l'utilise pas.`
+    );
+  }
+  const completeDetails = detailStatuses.filter((s) => s.complete);
+  const editorialDetailIds = completeDetails.map((s) => s.detail.id);
+  const editorialFingerprintHits = [...new Set(completeDetails.flatMap((s) => s.hits))];
+
   for (const cliche of CLICHES_BANNED) {
     if (normalizedText.includes(cliche)) errors.push(`Cliche interdit : « ${cliche} ».`);
   }
@@ -165,8 +212,8 @@ export function lintArticle(
   if (hits.length < minHits) {
     errors.push(`Argumentaire de marque trop faible : ${hits.length}/${minHits}.`);
   }
-  if (opts.editorialDetails?.length && editorialFingerprintHits.length < 3) {
-    errors.push(`Trop generique : ${editorialFingerprintHits.length} details vrais detectes sur 3 requis. Ajoute une empreinte de la banque.`);
+  if (opts.editorialDetails?.length && completeDetails.length < 2) {
+    errors.push(`Pas assez d'empreintes completes de la banque de vrai : ${completeDetails.length}/2 requises (chaque fait garde TOUS ses mots-cles, pas une partie).`);
   }
 
   if (normalize(article.h1) !== normalize(opts.targetQuery)) {
@@ -177,6 +224,46 @@ export function lintArticle(
   }
   if (article.faq.length < 3 || article.faq.length > 5) {
     errors.push(`Nombre d'entrees FAQ invalide : ${article.faq.length}.`);
+  }
+
+  // Une section H2 ne doit pas recopier mot pour mot la question cliente
+  // fournie en brief : elle doit devenir un titre thematique, pas une citation.
+  for (const sub of opts.subQueries ?? []) {
+    const subNorm = normalize(sub);
+    const echoedH2 = article.sections.find((s) => normalize(s.h2) === subNorm);
+    if (echoedH2) {
+      errors.push(`Le H2 "${echoedH2.h2}" recopie mot pour mot une question cliente du brief ; reformule en titre thematique.`);
+    }
+  }
+
+  // La FAQ finale doit couvrir des questions distinctes des sections, pas les
+  // reformuler : sinon l'article a deux blocs FAQ qui se marchent dessus.
+  for (const f of article.faq) {
+    const faqWords = significantWords(f.question);
+    for (const s of article.sections) {
+      const overlap = jaccard(faqWords, significantWords(s.h2));
+      if (overlap > 0.5) {
+        errors.push(`La question FAQ "${f.question}" redite la section "${s.h2}" ; couvre une question distincte, pas deja traitee.`);
+        break;
+      }
+    }
+  }
+
+  // Les liens internes doivent venir du pool fourni (jamais un handle invente)
+  // et etre en nombre raisonnable pour un article court.
+  if (article.internal_links.length < 1) {
+    errors.push("Aucun lien interne : ajoute 1 a 3 liens choisis dans la liste fournie.");
+  } else if (article.internal_links.length > 4) {
+    warnings.push(`${article.internal_links.length} liens internes : reste plutot sur 1 a 3 pour un article court.`);
+  }
+  const GENERIC_ANCHORS = ["cliquez ici", "ici", "en savoir plus", "lien"];
+  for (const l of article.internal_links) {
+    if (GENERIC_ANCHORS.includes(normalize(l.label))) {
+      errors.push(`Ancre de lien trop generique : "${l.label}". Ecris une ancre descriptive.`);
+    }
+    if (opts.linkPool?.length && !opts.linkPool.some((p) => p.url === l.url)) {
+      errors.push(`Lien interne hors liste : "${l.url}" n'existe pas dans le pool fourni. N'invente jamais un handle.`);
+    }
   }
   if (!article.coverage_note || article.coverage_note.trim().length < 20) {
     errors.push("coverage_note trop faible.");

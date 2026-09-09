@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, Download, Loader2, RefreshCw, Sparkles, Trash2, Wand2 } from "lucide-react";
+import { Check, Copy, Download, Loader2, RefreshCw, Sparkles, Trash2, Wand2 } from "lucide-react";
 
 type Goal = "club" | "defensif_marque" | "occasion";
 interface Article { h1: string; direct_answer: string; sections: { h2: string; body: string }[]; }
@@ -28,6 +28,7 @@ export default function AtelierBlogPage() {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedSeo, setCopiedSeo] = useState(false);
   const didInitRef = useRef(false);
   const selectArticle = (a: RecordArticle) => {
     setCurrent(a);
@@ -88,10 +89,10 @@ export default function AtelierBlogPage() {
     const effectiveQuestions = questions.map((q) => q.trim()).filter(Boolean);
     try {
       const res = await fetch("/api/blog/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetQuery: query, angle: expand ? `${effectiveAngle} Développe davantage les réponses pratiques et la partie entretien.` : effectiveAngle, subQueries: effectiveQuestions, outOfScope: OUT, serpSoftness: 4, conversionGoal: goal }) });
-      const json = await res.json() as { ok: boolean; id?: string; article?: Article; lint?: { wordCount: number }; html?: string; error?: string; reasons?: string[] };
+      const json = await res.json() as { ok: boolean; id?: string; article?: Article; lint?: { wordCount: number }; html?: string; shopify?: ShopifyBundle; error?: string; reasons?: string[] };
       if (!res.ok || !json.ok || !json.article) throw new Error(json.error ?? json.reasons?.join(" ") ?? "Génération impossible");
       didInitRef.current = true;
-      setCurrent({ id: json.id ?? `draft-${Date.now()}`, created_at: new Date().toISOString(), target_query: query, angle: effectiveAngle, conversion_goal: goal, sub_queries: effectiveQuestions, out_of_scope: OUT, article: json.article, lint: json.lint ?? { wordCount: countWords(json.article) }, html: json.html ?? "" });
+      setCurrent({ id: json.id ?? `draft-${Date.now()}`, created_at: new Date().toISOString(), target_query: query, angle: effectiveAngle, conversion_goal: goal, sub_queries: effectiveQuestions, out_of_scope: OUT, article: json.article, lint: json.lint ?? { wordCount: countWords(json.article) }, html: json.html ?? "", shopify: json.shopify });
       await load();
     } catch (e) { setError(e instanceof Error ? e.message : "Génération impossible"); } finally { setGenerating(false); }
   };
@@ -99,11 +100,19 @@ export default function AtelierBlogPage() {
   const ready = wordCount >= 700 && wordCount <= 1100;
   const published = useMemo(() => history.filter((a) => a.id !== current?.id).slice(0, 5), [history, current]);
   const push = async () => { if (!current?.html) return; await navigator.clipboard.writeText(current.html); setCopied(true); window.setTimeout(() => setCopied(false), 1800); };
+  const copySeo = async () => {
+    if (!current?.shopify?.seo) return;
+    const { seo } = current.shopify;
+    const text = `Titre : ${seo.title}\nMeta title : ${seo.meta_title}\nMeta description : ${seo.meta_description}\nURL (handle) : ${seo.handle}`;
+    await navigator.clipboard.writeText(text);
+    setCopiedSeo(true);
+    window.setTimeout(() => setCopiedSeo(false), 1800);
+  };
   return <main style={page}>
     <section style={hero}><div style={dash} /><div style={{ position: "relative" }}><p style={eyebrow}>Bonjour Sarah</p><h1 style={heroTitle}>On raconte quoi cette <em style={{ color: "#FFB8C8", fontWeight: 400 }}>semaine</em> ?</h1><p style={heroText}>☀️ {current ? "Ton brouillon est prêt à être relu mercredi soir, oklm." : "Donne-moi le thème : je prépare le brouillon, tu gardes le dernier mot."}</p><div style={meta}><span><i style={{ background: ready ? "#95D6B6" : "#FFB8C8" }} /> État <b>{ready ? "Prêt à pousser" : current ? "À enrichir" : "À écrire"}</b></span><span>Semaine du <b>{dateLabel(new Date().toISOString())}</b></span><span>Série <b>{history.length} jeudi{history.length > 1 ? "s" : ""}</b></span></div></div><div style={pill}>Mercredi soir <b>Jeudi matin</b></div></section>
     {error && <div style={errorStyle}>{error}</div>}
     <section style={columns}>
-      <article style={panel}><header style={articleHeader}><div><h2 style={heading}>Le brouillon de la semaine</h2><p style={subtle}>Relis, ajuste si besoin, puis pousse-le sur Shopify.</p></div><span style={{ ...eyebrow, color: "#1E7A76", marginTop: 7 }}>{current ? "GÉNÉRÉ" : "À GÉNÉRER"}</span></header><div style={{ padding: 26 }}>{loading ? <Loader2 size={22} className="animate-spin" /> : current ? <><p style={{ ...eyebrow, color: "#D64739" }}>Broderie · Hauts-de-France</p><h3 style={articleTitle}>{current.article.h1}</h3><p style={readMeta}>2 min de lecture &nbsp;·&nbsp; Atelier en France &nbsp;·&nbsp; {wordCount} mots</p><p style={answer}>{current.article.direct_answer}</p></> : <div style={empty}>Le premier sujet attend son brouillon.</div>}</div><footer style={articleFooter}><div style={{ ...wordNotice, ...(ready ? wordReady : {}) }}>{current ? ready ? `✓ ${wordCount} mots : dans la cible 700–1100.` : <>Un peu court : <b>{wordCount} mots</b> pour l&apos;instant. On vise 700 à 1100.</> : "Génère le premier article à partir du cadrage."}</div><div style={actions}><button onClick={push} disabled={!current?.html} style={primary}>{copied ? <Check size={15} /> : <Sparkles size={15} />}{copied ? "HTML copié ✓" : "Copier pour Shopify"}</button><button onClick={() => void generate(true)} disabled={generating} style={secondary}>{generating ? <Loader2 size={15} className="animate-spin" /> : <Wand2 size={15} />}Étoffer le brouillon</button><button onClick={() => void generate()} disabled={generating} style={secondary}><RefreshCw size={15} />Régénérer</button></div></footer></article>
+      <article style={panel}><header style={articleHeader}><div><h2 style={heading}>Le brouillon de la semaine</h2><p style={subtle}>Relis, ajuste si besoin, puis pousse-le sur Shopify.</p></div><span style={{ ...eyebrow, color: "#1E7A76", marginTop: 7 }}>{current ? "GÉNÉRÉ" : "À GÉNÉRER"}</span></header><div style={{ padding: 26 }}>{loading ? <Loader2 size={22} className="animate-spin" /> : current ? <><p style={{ ...eyebrow, color: "#D64739" }}>Broderie · Hauts-de-France</p><h3 style={articleTitle}>{current.article.h1}</h3><p style={readMeta}>2 min de lecture &nbsp;·&nbsp; Atelier en France &nbsp;·&nbsp; {wordCount} mots</p><p style={answer}>{current.article.direct_answer}</p></> : <div style={empty}>Le premier sujet attend son brouillon.</div>}</div><footer style={articleFooter}><div style={{ ...wordNotice, ...(ready ? wordReady : {}) }}>{current ? ready ? `✓ ${wordCount} mots : dans la cible 700–1100.` : <>Un peu court : <b>{wordCount} mots</b> pour l&apos;instant. On vise 700 à 1100.</> : "Génère le premier article à partir du cadrage."}</div><div style={actions}><button onClick={push} disabled={!current?.html} style={primary}>{copied ? <Check size={15} /> : <Sparkles size={15} />}{copied ? "HTML copié ✓" : "Copier pour Shopify"}</button><button onClick={() => void copySeo()} disabled={!current?.shopify?.seo} style={secondary} title="Titre, meta title, meta description et URL — à coller dans les champs Shopify.">{copiedSeo ? <Check size={15} /> : <Copy size={15} />}{copiedSeo ? "Titre + SEO copiés ✓" : "Copier le titre + SEO"}</button><button onClick={() => void generate(true)} disabled={generating} style={secondary}>{generating ? <Loader2 size={15} className="animate-spin" /> : <Wand2 size={15} />}Étoffer le brouillon</button><button onClick={() => void generate()} disabled={generating} style={secondary}><RefreshCw size={15} />Régénérer</button></div></footer></article>
       <aside style={{ ...panel, padding: 22 }}>
         <h2 style={heading}>Cette semaine</h2><p style={subtle}>Le cadrage qui sert au brouillon.</p>
         <label style={label}>Le sujet</label>

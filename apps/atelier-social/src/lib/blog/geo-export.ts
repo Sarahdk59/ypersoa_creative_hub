@@ -36,7 +36,12 @@ export function toShopifyHtml(a: ArticlePayload): string {
     .join("\n");
 
   const links = a.internal_links.length
-    ? `<ul>\n${a.internal_links.map((l) => `  <li>${esc(l)}</li>`).join("\n")}\n</ul>`
+    ? `<div class="ypersoa-links">
+  <p><strong>Pour aller plus loin</strong></p>
+  <ul>
+${a.internal_links.map((l) => `    <li><a href="${esc(l.url)}">${esc(l.label)}</a></li>`).join("\n")}
+  </ul>
+</div>`
     : "";
 
   return `<!-- article GEO -->
@@ -83,9 +88,9 @@ ${paragraphs(s.body)}
 
   const links = a.internal_links.length
     ? `<ul>
-${a.internal_links.map((l) => `  <li>${esc(l)}</li>`).join("\n")}
+${a.internal_links.map((l) => `  <li><a href="${esc(l.url)}">${esc(l.label)}</a></li>`).join("\n")}
 </ul>`
-    : "<p>Aucun lien interne suggere pour cet article.</p>";
+    : "";
 
   return `<!-- Corps d'article Shopify / Liquid -->
 <div class="ypersoa-article">
@@ -107,10 +112,10 @@ ${faq}
     <p><strong>${esc(a.cta.label)}</strong></p>
   </section>
 
-  <section>
-    <h2>Liens internes a ajouter</h2>
+  ${links ? `<section class="ypersoa-links">
+    <h2>Pour aller plus loin</h2>
 ${links}
-  </section>
+  </section>` : ""}
 </div>`.trim();
 }
 
