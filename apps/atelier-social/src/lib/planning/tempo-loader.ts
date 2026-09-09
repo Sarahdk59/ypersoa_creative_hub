@@ -7,24 +7,25 @@ const TEMPO_PATH = join(REFS_DIR, "tempo.json");
 export type TempoTeam = "crea" | "prod" | "comm";
 export type TempoStatus = "a_faire" | "en_cours" | "fait";
 export type TempoPriority = { id: string; team: TempoTeam; title: string; note: string; status: TempoStatus; dependsOn?: string };
-export type TempoWeek = { dates: string; theme: string; heat: "calm" | "hot" | "peak"; event?: string; posts: number; article: string; note?: string; formats?: string };
+export type TempoWeek = { start: string; dates: string; theme: string; heat: "calm" | "hot" | "peak"; event?: string; posts: number; article: string; note?: string; formats?: string };
 export type TempoFile = { priorities: TempoPriority[]; briefs: Record<string, string>; weeks?: TempoWeek[] };
 
 export const TEMPO_DEFAULT: TempoFile = {
   priorities: [
-    { id: "crea-1", team: "crea", title: "Finaliser les visuels Anniversaire", note: "La Braderie démarre le 24. Pas de panique, on a aussi rendez-vous avec les moules.", status: "en_cours" },
     { id: "crea-2", team: "crea", title: "Envoyer les tests Noël à la Prod", note: "Les broderies n'attendent pas décembre pour faire leur diva.", status: "a_faire" },
     { id: "prod-1", team: "prod", title: "Tester les broderies Noël", note: "Prévoir deux heures, au calme, avec le café qui tient debout.", status: "a_faire", dependsOn: "crea-2" },
-    { id: "prod-2", team: "prod", title: "Préparer la Braderie de Lille", note: "Pas de deadline, pas de cutoff : on est cool, on mange des moules.", status: "en_cours" },
-    { id: "comm-1", team: "comm", title: "Préparer les 3 publications Summer", note: "Maï les garde ici : un seul fil, pas un deuxième outil qui prend la poussière.", status: "a_faire" },
+    { id: "comm-1", team: "comm", title: "Préparer les publications de la semaine", note: "Maï les garde ici : un seul fil, pas un deuxième outil qui prend la poussière.", status: "a_faire" },
     { id: "comm-2", team: "comm", title: "Préparer le tournage des tests Noël", note: "Dès que la Prod a fini, Maï peut filmer sans jouer à Madame Irma.", status: "a_faire", dependsOn: "prod-1" },
   ],
-  briefs: { "Mariage / Summer": "Cette semaine, on raconte les petits détails qui rendent un cadeau de mariage vraiment à quelqu'un." },
+  briefs: { "Reprise sport": "Cette semaine, on raconte les petites victoires plus que les nouvelles résolutions." },
   weeks: [
-    { dates: "17 → 23 août", theme: "Mariage / Summer", heat: "calm", posts: 3, article: "jeu. 21", formats: "Réel · le prénom brodé qui fait la différence" },
-    { dates: "24 → 30 août", theme: "Anniversaire", heat: "hot", event: "Braderie de Lille", posts: 7, article: "jeu. 28", formats: "Carrousel · cadeaux qui sauvent la mise" },
-    { dates: "31 août → 6 sept.", theme: "Bonne Rentrée", heat: "peak", event: "Lancement Club", posts: 14, article: "jeu. 4", formats: "POV · premier lundi de rentrée" },
-    { dates: "7 → 13 sept.", theme: "Reprise sport", heat: "calm", posts: 3, article: "jeu. 11", note: "Motivation, sport et nouvelles résolutions — sans prétendre devenir une personne qui court à 6 h.", formats: "Réel · motivation du lundi · Carrousel · nouvelles résolutions" },
+    { start: "2026-09-07", dates: "7 → 13 sept.", theme: "Reprise sport", heat: "calm", posts: 3, article: "jeu. 10", note: "Motivation, sport et nouvelles résolutions — sans prétendre devenir une personne qui court à 6 h.", formats: "Réel · motivation du lundi · Carrousel · nouvelles résolutions" },
+    { start: "2026-09-14", dates: "14 → 20 sept.", theme: "Automne", heat: "calm", posts: 3, article: "jeu. 17", note: "Loft Organique, lumière sépia. Retour du sweat, palette chaude, premiers feux. Cocooning assumé.", formats: "Réel · retour du sweat, palette chaude" },
+    { start: "2026-09-21", dates: "21 → 27 sept.", theme: "Team Brunch (jamais avant midi)", heat: "calm", posts: 3, article: "jeu. 24", note: "Œufs, pain perdu, ragots. Le Club brodé des dimanches qui commencent à 13 h.", formats: "Carrousel · brunch du dimanche, jamais avant midi" },
+    { start: "2026-09-28", dates: "28 sept. → 4 oct.", theme: "Dimanche au Jardin", heat: "calm", posts: 3, article: "jeu. 1", note: "Le sweat du dimanche, le café qui traîne, le sécateur jamais loin. Slow living assumé.", formats: "Réel · slow living, café qui traîne" },
+    { start: "2026-10-05", dates: "5 → 11 oct.", theme: "Le Retour du Pull", heat: "calm", posts: 3, article: "jeu. 8", note: "Première laine de la saison, premier feu, premières mains rentrées dans les manches.", formats: "Réel · première laine de la saison" },
+    { start: "2026-10-12", dates: "12 → 18 oct.", theme: "La Crémaillère", heat: "calm", posts: 3, article: "jeu. 15", note: "Nouveau chez-soi : nouveau canapé, nouveau plaid à ton nom.", formats: "Carrousel · nouveau chez-soi, plaid à ton nom" },
+    { start: "2026-10-19", dates: "19 → 25 oct.", theme: "Il a Déjà Tout", heat: "calm", posts: 3, article: "jeu. 22", note: "La personne impossible à gâter : il a tout ? Pas ton prénom brodé.", formats: "POV · impossible à gâter, sauf broderie" },
   ],
 };
 

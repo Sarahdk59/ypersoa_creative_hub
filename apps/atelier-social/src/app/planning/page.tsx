@@ -1,25 +1,81 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowRight, ChevronDown, Flame } from "lucide-react";
 
 type Team = "crea" | "prod" | "comm";
 type Status = "a_faire" | "en_cours" | "fait";
-type Week = { dates: string; theme: string; heat: "calm" | "hot" | "peak"; event?: string; posts: number; article: string; note?: string; formats?: string };
+type Week = { start: string; dates: string; theme: string; heat: "calm" | "hot" | "peak"; event?: string; posts: number; article: string; note?: string; formats?: string };
 type Priority = { id: string; team: Team; title: string; note: string; status: Status; dependsOn?: string };
 
+const MONTHS_ABBR = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+
+function parseISODate(iso: string): Date {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+function formatShortDate(iso: string): string {
+  const date = parseISODate(iso);
+  return `${date.getDate()} ${MONTHS_ABBR[date.getMonth()]}`;
+}
+function formatWeekEndShort(iso: string): string {
+  const start = parseISODate(iso);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  return `${end.getDate()} ${MONTHS_ABBR[end.getMonth()]}`;
+}
+function getWeekIndexForDate(weeks: Week[], date: Date): number {
+  const t = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  let fallback = 0;
+  for (let i = 0; i < weeks.length; i++) {
+    const start = parseISODate(weeks[i].start);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    if (t >= start.getTime() && t <= end.getTime()) return i;
+    if (start.getTime() <= t) fallback = i;
+  }
+  return fallback;
+}
+function daysBetween(fromIso: string, to: Date): number {
+  const from = parseISODate(fromIso);
+  const toMidnight = new Date(to.getFullYear(), to.getMonth(), to.getDate());
+  return Math.round((from.getTime() - toMidnight.getTime()) / 86400000);
+}
+function formatTodayFr(date: Date): string {
+  return new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long" }).format(date);
+}
+function addDaysISO(iso: string, days: number): string {
+  const d = parseISODate(iso);
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function formatWeekDates(iso: string): string {
+  const start = parseISODate(iso);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  const sm = start.getMonth();
+  const em = end.getMonth();
+  return sm === em ? `${start.getDate()} → ${end.getDate()} ${MONTHS_ABBR[em]}` : `${start.getDate()} ${MONTHS_ABBR[sm]} → ${end.getDate()} ${MONTHS_ABBR[em]}`;
+}
+function makeWeek(startIso: string): Week {
+  const thursday = parseISODate(startIso);
+  thursday.setDate(thursday.getDate() + 3);
+  return { start: startIso, dates: formatWeekDates(startIso), theme: "À définir", heat: "calm", posts: 3, article: `jeu. ${thursday.getDate()}`, note: "Semaine ajoutée automatiquement — définis l'angle et les formats." };
+}
+
 const DEFAULT_WEEKS: Week[] = [
-  { dates: "17 → 23 août", theme: "Mariage / Summer", heat: "calm", posts: 3, article: "jeu. 21", formats: "Réel · le prénom brodé qui fait la différence" },
-  { dates: "24 → 30 août", theme: "Anniversaire", heat: "hot", event: "Braderie de Lille", posts: 7, article: "jeu. 28", formats: "Carrousel · cadeaux qui sauvent la mise" },
-  { dates: "31 août → 6 sept.", theme: "Bonne Rentrée", heat: "peak", event: "Lancement Club", posts: 14, article: "jeu. 4", formats: "POV · premier lundi de rentrée" },
-  { dates: "7 → 13 sept.", theme: "Reprise sport", heat: "calm", posts: 3, article: "jeu. 11", note: "Motivation, sport et nouvelles résolutions — sans prétendre devenir une personne qui court à 6 h.", formats: "Réel · motivation du lundi · Carrousel · nouvelles résolutions" },
+  { start: "2026-09-07", dates: "7 → 13 sept.", theme: "Reprise sport", heat: "calm", posts: 3, article: "jeu. 10", note: "Motivation, sport et nouvelles résolutions — sans prétendre devenir une personne qui court à 6 h.", formats: "Réel · motivation du lundi · Carrousel · nouvelles résolutions" },
+  { start: "2026-09-14", dates: "14 → 20 sept.", theme: "Automne", heat: "calm", posts: 3, article: "jeu. 17", note: "Loft Organique, lumière sépia. Retour du sweat, palette chaude, premiers feux. Cocooning assumé.", formats: "Réel · retour du sweat, palette chaude" },
+  { start: "2026-09-21", dates: "21 → 27 sept.", theme: "Team Brunch (jamais avant midi)", heat: "calm", posts: 3, article: "jeu. 24", note: "Œufs, pain perdu, ragots. Le Club brodé des dimanches qui commencent à 13 h.", formats: "Carrousel · brunch du dimanche, jamais avant midi" },
+  { start: "2026-09-28", dates: "28 sept. → 4 oct.", theme: "Dimanche au Jardin", heat: "calm", posts: 3, article: "jeu. 1", note: "Le sweat du dimanche, le café qui traîne, le sécateur jamais loin. Slow living assumé.", formats: "Réel · slow living, café qui traîne" },
+  { start: "2026-10-05", dates: "5 → 11 oct.", theme: "Le Retour du Pull", heat: "calm", posts: 3, article: "jeu. 8", note: "Première laine de la saison, premier feu, premières mains rentrées dans les manches.", formats: "Réel · première laine de la saison" },
+  { start: "2026-10-12", dates: "12 → 18 oct.", theme: "La Crémaillère", heat: "calm", posts: 3, article: "jeu. 15", note: "Nouveau chez-soi : nouveau canapé, nouveau plaid à ton nom.", formats: "Carrousel · nouveau chez-soi, plaid à ton nom" },
+  { start: "2026-10-19", dates: "19 → 25 oct.", theme: "Il a Déjà Tout", heat: "calm", posts: 3, article: "jeu. 22", note: "La personne impossible à gâter : il a tout ? Pas ton prénom brodé.", formats: "POV · impossible à gâter, sauf broderie" },
 ];
 const INITIAL_PRIORITIES: Priority[] = [
-  { id: "crea-1", team: "crea", title: "Finaliser les visuels Anniversaire", note: "La Braderie démarre le 24. Pas de panique, on a aussi rendez-vous avec les moules.", status: "en_cours" },
   { id: "crea-2", team: "crea", title: "Envoyer les tests Noël à la Prod", note: "Les broderies n'attendent pas décembre pour faire leur diva.", status: "a_faire" },
   { id: "prod-1", team: "prod", title: "Tester les broderies Noël", note: "Prévoir deux heures, au calme, avec le café qui tient debout.", status: "a_faire", dependsOn: "crea-2" },
-  { id: "prod-2", team: "prod", title: "Préparer la Braderie de Lille", note: "Pas de deadline, pas de cutoff : on est cool, on mange des moules.", status: "en_cours" },
-  { id: "comm-1", team: "comm", title: "Préparer les 3 publications Summer", note: "Maï les garde ici : un seul fil, pas un deuxième outil qui prend la poussière.", status: "a_faire" },
+  { id: "comm-1", team: "comm", title: "Préparer les publications de la semaine", note: "Maï les garde ici : un seul fil, pas un deuxième outil qui prend la poussière.", status: "a_faire" },
   { id: "comm-2", team: "comm", title: "Préparer le tournage des tests Noël", note: "Dès que la Prod a fini, Maï peut filmer sans jouer à Madame Irma.", status: "a_faire", dependsOn: "prod-1" },
 ];
 const TEAM: Record<Team, { label: string; who: string; color: string }> = {
@@ -30,11 +86,25 @@ export default function TempoPage() {
   const [selectedWeek, setSelectedWeek] = useState(0);
   const [weeks, setWeeks] = useState<Week[]>(DEFAULT_WEEKS);
   const [priorities, setPriorities] = useState(INITIAL_PRIORITIES);
-  const [briefs, setBriefs] = useState<Record<string, string>>({ "Mariage / Summer": "Cette semaine, on raconte les petits détails qui rendent un cadeau de mariage vraiment à quelqu'un." });
+  const [briefs, setBriefs] = useState<Record<string, string>>({ "Reprise sport": "Cette semaine, on raconte les petites victoires plus que les nouvelles résolutions." });
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [showAll, setShowAll] = useState(false);
   const [evergreenIndex, setEvergreenIndex] = useState(0);
-  useEffect(() => { void fetch("/api/planning/tempo").then((r) => r.json()).then((json) => { if (json.ok) { setPriorities(json.data.priorities); setBriefs(json.data.briefs); if (json.data.weeks?.length) setWeeks(json.data.weeks); } }).catch(() => undefined); }, []);
+  const [today, setToday] = useState<Date | null>(null);
+  const [loaded, setLoaded] = useState(false);
+  const autoSelectedRef = useRef(false);
+  const extendedRef = useRef(false);
+  useEffect(() => { setToday(new Date()); void fetch("/api/planning/tempo").then((r) => r.json()).then((json) => { if (json.ok) { setPriorities(json.data.priorities); setBriefs(json.data.briefs); if (json.data.weeks?.length) setWeeks(json.data.weeks); } }).catch(() => undefined).finally(() => setLoaded(true)); }, []);
+  useEffect(() => { if (autoSelectedRef.current || !today || weeks.length === 0) return; autoSelectedRef.current = true; setSelectedWeek(getWeekIndexForDate(weeks, today)); }, [weeks, today]);
+  const currentIndex = today ? getWeekIndexForDate(weeks, today) : 0;
+  let hotIndex = -1;
+  for (let i = currentIndex; i < weeks.length; i++) { if (weeks[i].heat !== "calm") { hotIndex = i; break; } }
+  const alertCopy = !today ? null : hotIndex === -1
+    ? { title: "Semaine calme.", body: "C'est le moment de préparer les visuels, les tests et les petits coups de génie — le prochain pic n'est pas encore calé." }
+    : hotIndex === currentIndex
+      ? { title: `C'est le pic de la semaine${weeks[hotIndex].event ? " : " + weeks[hotIndex].event : ""}.`, body: `${weeks[hotIndex].posts} publications à sortir. On garde le rythme, pas la panique.` }
+      : { title: `Ton pic arrive dans ${daysBetween(weeks[hotIndex].start, today)} jour${daysBetween(weeks[hotIndex].start, today) > 1 ? "s" : ""}.`, body: `${weeks[hotIndex].theme}${weeks[hotIndex].event ? " · " + weeks[hotIndex].event : ""} : jusqu'à ${weeks[hotIndex].posts} publications. Cette semaine est calme : c'est le moment de préparer les visuels, les tests et les petits coups de génie.` };
+  const upcomingEvents = weeks.filter((w, i) => i >= currentIndex && w.event);
   const done = priorities.filter((p) => p.status === "fait").length;
   const held = done >= 3;
   const save = async (nextPriorities: Priority[], nextBriefs: Record<string, string>, nextWeeks = weeks) => { setSaveState("saving"); try { const response = await fetch("/api/planning/tempo", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ priorities: nextPriorities, briefs: nextBriefs, weeks: nextWeeks }) }); if (!response.ok) throw new Error(); setSaveState("saved"); window.setTimeout(() => setSaveState("idle"), 1400); } catch { setSaveState("error"); } };
@@ -42,18 +112,35 @@ export default function TempoPage() {
   const remove = (id: string) => { const next = priorities.filter((p) => p.id !== id); setPriorities(next); void save(next, briefs); };
   const add = (team: Team) => { if (priorities.filter((p) => p.team === team).length >= 3) return; const next = [...priorities, { id: `manuel-${Date.now()}`, team, title: "Nouvelle priorité", note: "Écris ce qui compte vraiment cette semaine.", status: "a_faire" as Status }]; setPriorities(next); void save(next, briefs); };
   const updateWeek = (patch: Partial<Week>) => { const next = weeks.map((week, index) => index === selectedWeek ? { ...week, ...patch } : week); setWeeks(next); void save(priorities, briefs, next); };
+  const addWeek = () => { const last = weeks[weeks.length - 1]; const nextStart = last ? addDaysISO(last.start, 7) : addDaysISO(`${(today ?? new Date()).getFullYear()}-01-01`, 0); const next = [...weeks, makeWeek(nextStart)]; setWeeks(next); setSelectedWeek(next.length - 1); setShowAll(true); void save(priorities, briefs, next); };
+  useEffect(() => {
+    if (!loaded || !today || extendedRef.current || weeks.length === 0) return;
+    extendedRef.current = true;
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const next = [...weeks];
+    let changed = false;
+    while (true) {
+      const end = parseISODate(next[next.length - 1].start);
+      end.setDate(end.getDate() + 6);
+      if (todayMidnight.getTime() <= end.getTime()) break;
+      next.push(makeWeek(addDaysISO(next[next.length - 1].start, 7)));
+      changed = true;
+    }
+    if (changed) { setWeeks(next); void save(priorities, briefs, next); }
+  }, [loaded, today, weeks, priorities, briefs]);
   const isBlocked = (p: Priority) => !!p.dependsOn && priorities.find((x) => x.id === p.dependsOn)?.status !== "fait";
-  const visibleWeeks = showAll ? [...weeks, { dates: "14 → 20 sept.", theme: "Automne & naissance", heat: "calm" as const, posts: 3, article: "jeu. 18" }] : weeks;
+  const hiddenCount = Math.max(0, weeks.length - 4);
+  const visibleWeeks = showAll ? weeks : weeks.slice(0, 4);
   const selected = weeks[selectedWeek] ?? DEFAULT_WEEKS[0];
   return <main style={page}>
-    <section style={hero}><div style={stitch} /><div style={heroGrid}><div><p style={eyebrow}>Où on en est, cette semaine</p><h2 style={heroTitle}>Le <em style={{ color: "#C23A2D" }}>tempo</em></h2><p style={whisper}>🌙 On est jeudi 20 août — {selected.theme}, {selected.posts} publis. La rentrée arrive avec ses gros sabots : on prépare maintenant, on panique jamais.</p></div><div style={metrics}><Metric title="Semaines tenues" value={held ? "1" : "—"} sub={held ? "3 priorités bouclées" : `${done}/3 priorités cette semaine`} dots /><Metric title="Abonnés Insta" value="—" sub="le premier relevé arrive bientôt" /></div></div></section>
+    <section style={hero}><div style={stitch} /><div style={heroGrid}><div><p style={eyebrow}>Où on en est, cette semaine</p><h2 style={heroTitle}>Le <em style={{ color: "#C23A2D" }}>tempo</em></h2><p style={whisper}>🌙 On est {today ? formatTodayFr(today) : "…"} — {selected.theme}, {selected.posts} publis. {selected.event ? `${selected.event} approche : ` : ""}on prépare maintenant, on panique jamais.</p></div><div style={metrics}><Metric title="Semaines tenues" value={held ? "1" : "—"} sub={held ? "3 priorités bouclées" : `${done}/3 priorités cette semaine`} dots /><Metric title="Abonnés Insta" value="—" sub="le premier relevé arrive bientôt" /></div></div></section>
     <SectionTitle title="Le fil des semaines" hint="Coquelicot : ça chauffe. Blush : on respire. Clique une semaine pour voir ce qui compte." />
-    <section style={ribbon}><div style={thread} /><div style={weekGrid}>{visibleWeeks.map((week, index) => <button key={week.dates} onClick={() => setSelectedWeek(Math.min(index, weeks.length - 1))} style={{ ...weekCard, ...(week.heat === "calm" ? calm : hot), ...(index === selectedWeek ? active : {}) }}>{index === 0 && <span style={nowTag}>Cette semaine</span>}{week.heat === "peak" && <span style={peakTag}>⚡ pic de la saison</span>}<span style={dates}>{week.dates}</span><strong style={weekTheme}>{week.theme}</strong>{(week.event || week.heat === "calm") && <span style={{ ...heatPill, ...(week.heat === "calm" ? calmPill : hotPill) }}>{week.heat === "calm" ? "◐ On respire" : week.event}</span>}<span style={weekMeta}>✏️ Article · {week.article}</span><span style={weekMeta}>◎ {week.posts} publication{week.posts > 1 ? "s" : ""}</span>{week.formats && <span style={formatMeta}>{week.formats}</span>}</button>)}</div><button onClick={() => setShowAll((v) => !v)} style={allWeeks}>{showAll ? "Refermer" : "+ 7 semaines calées jusqu'au 25 oct — tout voir"} <ChevronDown size={14} /></button></section>
+    <section style={ribbon}><div style={thread} /><div style={weekGrid}>{visibleWeeks.map((week, index) => <button key={week.start} onClick={() => setSelectedWeek(Math.min(index, weeks.length - 1))} style={{ ...weekCard, ...(week.heat === "calm" ? calm : hot), ...(index === selectedWeek ? active : {}) }}>{index === currentIndex && <span style={nowTag}>Cette semaine</span>}{week.heat === "peak" && <span style={peakTag}>⚡ pic de la saison</span>}<span style={dates}>{week.dates}</span><strong style={weekTheme}>{week.theme}</strong>{(week.event || week.heat === "calm") && <span style={{ ...heatPill, ...(week.heat === "calm" ? calmPill : hotPill) }}>{week.heat === "calm" ? "◐ On respire" : week.event}</span>}<span style={weekMeta}>✏️ Article · {week.article}</span><span style={weekMeta}>◎ {week.posts} publication{week.posts > 1 ? "s" : ""}</span>{week.formats && <span style={formatMeta}>{week.formats}</span>}</button>)}</div>{hiddenCount > 0 && <button onClick={() => setShowAll((v) => !v)} style={allWeeks}>{showAll ? "Refermer" : `+ ${hiddenCount} semaine${hiddenCount > 1 ? "s" : ""} calées jusqu'au ${formatWeekEndShort(weeks[weeks.length - 1].start)} — tout voir`} <ChevronDown size={14} /></button>}<button onClick={addWeek} style={addWeekLink}>+ Ajouter une semaine ({weeks.length ? formatShortDate(addDaysISO(weeks[weeks.length - 1].start, 7)) : "…"} →)</button></section>
     <section style={weekEditor}><div><p style={eyebrow}>Ajuster la semaine</p><h3 style={{ margin: "5px 0 0", fontFamily: "var(--font-editorial)", fontSize: 21, fontWeight: 500, color: "#22403A" }}>{selected.dates}</h3></div><label style={editorField}>Thème<input value={selected.theme} onChange={(e) => updateWeek({ theme: e.target.value })} style={editorInput} /></label><label style={editorField}>Temps fort <small>Vide = on le supprime.</small><input value={selected.event ?? ""} onChange={(e) => updateWeek({ event: e.target.value || undefined })} placeholder="ex. Braderie de Lille" style={editorInput} /></label><label style={editorField}>Article<input value={selected.article} onChange={(e) => updateWeek({ article: e.target.value })} style={editorInput} /></label><label style={editorField}>Publications<input type="number" min="0" value={selected.posts} onChange={(e) => updateWeek({ posts: Number(e.target.value) || 0 })} style={editorInput} /></label><label style={{ ...editorField, gridColumn: "span 2" }}>Angle de semaine<textarea value={selected.note ?? ""} onChange={(e) => updateWeek({ note: e.target.value })} placeholder="ex. Motivation, sport et nouvelles résolutions…" style={editorTextarea} /></label><label style={{ ...editorField, gridColumn: "span 2" }}>Formats / détail à garder en tête<textarea value={selected.formats ?? ""} onChange={(e) => updateWeek({ formats: e.target.value })} placeholder="Réel · …  /  Carrousel · …  /  POV · …" style={editorTextarea} /></label></section>
-    <section style={alert}><Flame size={21} color="#C23A2D" /><p><b>Ton pic arrive dans 10 jours.</b><br />Braderie puis Bonne Rentrée : jusqu'à 14 publications. Cette semaine est calme : c'est le moment de préparer les visuels, les tests et les petits coups de génie.</p></section>
+    {alertCopy && <section style={alert}><Flame size={21} color="#C23A2D" /><p><b>{alertCopy.title}</b><br />{alertCopy.body}</p></section>}
     <SectionTitle title="Cette semaine en détail" hint={`${selected.theme} · un seul fil, trois métiers.`} />
     <section style={detailGrid}><article style={panel}><h3 style={panelTitle}>Le fil de Maï</h3><p style={sub}>Ce qu'on raconte. L'Insta réchauffe, il ne vend pas à coups de mégaphone.</p><div style={thursday}><div style={day}><b>21</b><span>jeudi</span></div><div><b style={{ color: "#22403A" }}>L'article du jeudi — Top 10 des cadeaux à broder</b><p style={small}>Brief prêt mercredi 19h. Tu relis, tu pousses jeudi matin. Bisous Coeur.</p></div></div><Publication label="Connexion" title="Pourquoi un prénom brodé sur une tenue de mariage" date="mar. 19" /><Publication label="Preuve" title="L'atelier finit une commande mariage" date="ven. 22" /><label style={briefLabel}>Le brief de Maï · {selected.theme}</label><textarea value={briefs[selected.theme] ?? ""} onChange={(e) => setBriefs((all) => ({ ...all, [selected.theme]: e.target.value }))} onBlur={() => void save(priorities, briefs)} placeholder="Maï pose ici l'angle, l'humeur, ce qu'on veut montrer…" style={briefInput} /><p style={sourceNote}>Les idées, les dates et les choix vivent ici. {saveState === "saving" ? "Sauvegarde…" : saveState === "saved" ? "Sauvegardé ✓" : saveState === "error" ? "Erreur de sauvegarde." : ""}</p></article><article style={panel}><h3 style={panelTitle}>Les 3 ateliers</h3><p style={sub}>Trois priorités max. Le reste attend poliment.</p><div style={teamGrid}>{(["crea", "prod", "comm"] as Team[]).map((team) => <div key={team} style={{ ...teamColumn, borderTopColor: TEAM[team].color }}><div style={teamHead}><span style={{ ...teamChip, background: TEAM[team].color }}>{TEAM[team].label}</span><span>{TEAM[team].who}</span></div>{priorities.filter((p) => p.team === team).map((p) => <PriorityCard key={p.id} priority={p} blocked={isBlocked(p)} onUpdate={update} onRemove={remove} />)}<button type="button" onClick={() => add(team)} disabled={priorities.filter((p) => p.team === team).length >= 3} style={addPriority}>+ Ajouter</button></div>)}</div></article></section>
-    <section style={calendarBoard}><div style={calendarIntro}><p style={eyebrow}>Après la semaine</p><h2 style={{ margin: "7px 0 4px", fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, color: "#22403A" }}>Les temps forts, et ce qui vit entre deux</h2><p style={{ margin: 0, fontSize: 12.5, color: "#847A6C" }}>Les temps forts donnent le cap. L'evergreen garde la boutique vivante — avec des angles déjà prêts, pas une boîte à citations Pinterest.</p></div><div style={seasonGrid}><div><div style={trackHead}><b>Temps forts à préparer</b><a href="/planning/annee" style={yearLink}>Voir l'année <ArrowRight size={14} /></a></div><div style={milestoneList}><Milestone date="24 août" title="Braderie de Lille" detail="7 publications · visuels prêts avant dimanche" /><Milestone date="31 août" title="Bonne Rentrée & Club" detail="14 publications · le pic, pas un sprint surprise" hot /><Milestone date="sept. → nov." title="Noël arrive en coulisses" detail="Tests → variantes → shooting → lancement" /></div></div><div style={evergreenBox}><div style={trackHead}><b>💡 Evergreen — une idée ? <span style={{ color: "#847A6C", fontWeight: 400 }}>· {EVERGREEN_IDEAS.length} angles dispo</span></b><button onClick={() => setEvergreenIndex((i) => (i + 1) % EVERGREEN_IDEAS.length)} style={ideaButton}>Voir l'angle suivant ↻</button></div><p style={evergreenLabel}>Moment éditorial · engagement / reach · pas de deadline commande</p><h3 style={evergreenTitle}>{EVERGREEN_IDEAS[evergreenIndex].title}</h3><p style={evergreenText}>{EVERGREEN_IDEAS[evergreenIndex].text}</p><p style={readOnlyNote}>Inspiration seulement : aucun pack, mannequin ou contenu n'est ajouté quand tu fais défiler les angles.</p></div></div></section>
+    <section style={calendarBoard}><div style={calendarIntro}><p style={eyebrow}>Après la semaine</p><h2 style={{ margin: "7px 0 4px", fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, color: "#22403A" }}>Les temps forts, et ce qui vit entre deux</h2><p style={{ margin: 0, fontSize: 12.5, color: "#847A6C" }}>Les temps forts donnent le cap. L'evergreen garde la boutique vivante — avec des angles déjà prêts, pas une boîte à citations Pinterest.</p></div><div style={seasonGrid}><div><div style={trackHead}><b>Temps forts à préparer</b><a href="/planning/annee" style={yearLink}>Voir l'année <ArrowRight size={14} /></a></div><div style={milestoneList}>{upcomingEvents.length > 0 ? upcomingEvents.map((w) => <Milestone key={w.start} date={formatShortDate(w.start)} title={w.event ?? w.theme} detail={`${w.posts} publications · ${w.theme}`} hot={w.heat !== "calm"} />) : <p style={{ margin: 0, fontSize: 12, color: "#847A6C" }}>Rien de calé pour l'instant — on avance sur l'evergreen.</p>}<Milestone date="sept. → nov." title="Noël arrive en coulisses" detail="Tests → variantes → shooting → lancement" /></div></div><div style={evergreenBox}><div style={trackHead}><b>💡 Evergreen — une idée ? <span style={{ color: "#847A6C", fontWeight: 400 }}>· {EVERGREEN_IDEAS.length} angles dispo</span></b><button onClick={() => setEvergreenIndex((i) => (i + 1) % EVERGREEN_IDEAS.length)} style={ideaButton}>Voir l'angle suivant ↻</button></div><p style={evergreenLabel}>Moment éditorial · engagement / reach · pas de deadline commande</p><h3 style={evergreenTitle}>{EVERGREEN_IDEAS[evergreenIndex].title}</h3><p style={evergreenText}>{EVERGREEN_IDEAS[evergreenIndex].text}</p><p style={readOnlyNote}>Inspiration seulement : aucun pack, mannequin ou contenu n'est ajouté quand tu fais défiler les angles.</p></div></div></section>
   </main>;
 }
 
@@ -107,6 +194,7 @@ const hotPill: CSSProperties = { background: "#C23A2D", color: "white" };
 const weekMeta: CSSProperties = { display: "block", marginTop: 9, paddingTop: 8, borderTop: "1px dashed #E7DECB", fontSize: 11.5, color: "#5C554B" };
 const formatMeta: CSSProperties = { display: "block", marginTop: 7, color: "#847A6C", fontSize: 10.5, lineHeight: 1.3 };
 const allWeeks: CSSProperties = { display: "flex", alignItems: "center", gap: 5, margin: "15px auto 0", border: 0, background: "transparent", color: "#C23A2D", cursor: "pointer", font: "inherit", fontSize: 12, fontWeight: 700 };
+const addWeekLink: CSSProperties = { display: "block", margin: "8px auto 0", padding: "5px 10px", border: "1px dashed #CBBFAA", borderRadius: 99, background: "transparent", color: "#5C554B", cursor: "pointer", font: "inherit", fontSize: 11, fontWeight: 700 };
 const weekEditor: CSSProperties = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, alignItems: "end", marginTop: 18, padding: 18, border: "1px solid #E7DECB", borderRadius: 15, background: "#FFFDF9" };
 const editorField: CSSProperties = { display: "grid", gap: 5, color: "#5C554B", fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".07em" };
 const editorInput: CSSProperties = { boxSizing: "border-box", width: "100%", padding: "8px 9px", border: "1px solid #E0D4C1", borderRadius: 8, background: "#FBF6EC", color: "#22403A", font: "inherit", fontSize: 12.5, fontWeight: 500, textTransform: "none", letterSpacing: 0 };

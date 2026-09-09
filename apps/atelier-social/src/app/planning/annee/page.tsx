@@ -5,14 +5,14 @@ import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
 
 type Season = { period: string; title: string; tone: "now" | "next" | "soft"; line: string; challenge: string; steps: string[] };
 const SEASONS: Season[] = [
-  { period: "Août → septembre 2026", title: "Rentrée, Braderie & Club", tone: "now", line: "On prépare le pic sans se faire manger par lui.", challenge: "Les visuels et les tests sont-ils prêts avant que les 14 publications déboulent ?", steps: ["Braderie de Lille", "Bonne Rentrée", "Lancement du Club"] },
-  { period: "Septembre → novembre 2026", title: "Noël se prépare en coulisses", tone: "next", line: "Tests, variantes, shooting. Pas besoin de mettre le sapin le 3 septembre.", challenge: "A-t-on laissé assez de place aux vrais tests, ceux qui évitent les surprises à paillettes ?", steps: ["Motifs & tests", "Shooting", "Mise en lumière"] },
-  { period: "Décembre 2026 → février 2027", title: "Cadeaux, puis Saint-Valentin", tone: "soft", line: "On garde ce qui marche, on ne réinvente pas le fil à broder.", challenge: "Quel angle evergreen peut respirer entre les deux temps forts ?", steps: ["Noël", "Le cadeau dernière minute", "Saint-Valentin"] },
+  { period: "Août → septembre 2026", title: "Rentrée, Braderie & Club", tone: "soft", line: "Le pic est passé : Braderie, Bonne Rentrée et lancement du Club sont bouclés.", challenge: "Qu'est-ce qui, dans ce qu'on vient de faire, mérite d'être capitalisé pour l'année prochaine ?", steps: ["Braderie de Lille", "Bonne Rentrée", "Lancement du Club"] },
+  { period: "Septembre → novembre 2026", title: "Noël se prépare en coulisses", tone: "now", line: "Tests, variantes, shooting. Pas besoin de mettre le sapin trop tôt.", challenge: "A-t-on laissé assez de place aux vrais tests, ceux qui évitent les surprises à paillettes ?", steps: ["Motifs & tests", "Shooting", "Mise en lumière"] },
+  { period: "Décembre 2026 → février 2027", title: "Cadeaux, puis Saint-Valentin", tone: "next", line: "On garde ce qui marche, on ne réinvente pas le fil à broder.", challenge: "Quel angle evergreen peut respirer entre les deux temps forts ?", steps: ["Noël", "Le cadeau dernière minute", "Saint-Valentin"] },
   { period: "Mars → juin 2027", title: "Les gens qu'on aime fort", tone: "soft", line: "Grands-mères, Mères, Pères, maîtresses : beaucoup de cœur, une seule équipe.", challenge: "Est-ce que la charge laisse encore du temps pour produire correctement ?", steps: ["Grands-Mères", "Fête des Mères", "Fête des Pères"] },
 ];
 
 export default function PlanningYearPage() {
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState(Math.max(0, SEASONS.findIndex((s) => s.tone === "now")));
   return <main style={page}>
     <section style={hero}><div style={stitch} /><p style={eyebrow}>Regarder loin, sans s'y noyer</p><h2 style={title}>Le fil de <em style={{ color: "#C23A2D" }}>l'année</em></h2><p style={intro}>Les temps forts donnent le cap. Le reste reste léger : on regarde ce qui arrive, on se pose une bonne question, puis on retourne faire.</p></section>
     <section style={question}><Sparkles size={19} color="#C23A2D" /><div><b>La question qui compte maintenant</b><p style={{ margin: "3px 0 0" }}>{SEASONS[open].challenge}</p></div></section>
