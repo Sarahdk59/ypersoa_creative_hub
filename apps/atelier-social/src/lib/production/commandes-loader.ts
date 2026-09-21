@@ -194,6 +194,11 @@ export interface SkuMapping {
   motifs_sku_to_ypm: Record<string, { ypm_id: string; nom_commercial: string; note: string }>;
   fils_couleur_libre_to_id: Record<string, string>;
   placements: Record<Placement, { label: string; cerceau: string; cote: string; note: string }>;
+  /** Nuancier interne (code_interne 4 chiffres → couleur fournisseur/libellé/id_palette), ex. "0049" = Off-White. */
+  couleurs_support_code_interne?: {
+    _meta: Record<string, unknown>;
+    couleurs: Record<string, { code_interne: number; couleur_fournisseur: string; libelle_interne: string; id_palette?: string }>;
+  };
 }
 
 export function getSkuMapping(): SkuMapping {

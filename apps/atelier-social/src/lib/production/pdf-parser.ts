@@ -146,13 +146,14 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "  à partir des indices produit + motif + couleur + taille disponibles, dans les deux cas.",
     `- Codes motifs valides (MMM dans le SKU) : ${motifsKnown.join(", ")}.`,
     `- Codes produits valides (YPxxx dans le SKU, avec leur nom commercial pour t'aider à identifier le bon code depuis un libellé produit) : ${produitsKnown.join(" ; ")}.`,
-    "- IMPORTANT — le produit et le motif se résolvent INDÉPENDAMMENT l'un de l'autre. Beaucoup d'articles (casquette « à personnaliser », « Le Message », initiale seule, texte libre au choix du client…) n'ont PAS de motif décoratif nommé : c'est normal, ce n'est PAS une raison de mettre `\"sku\": \"UNKNOWN\"`. Dans ce cas, utilise le code motif LIB (texte libre / typo seule, motif racine YPM-000) et garde le vrai code produit identifié. Ne mets `\"sku\": \"UNKNOWN\"` QUE si le PRODUIT lui-même (pas le motif) ne correspond à AUCUN nom commercial listé ci-dessus.",
+    "- IMPORTANT — le produit et le motif se résolvent INDÉPENDAMMENT l'un de l'autre. D'ABORD cherche si le nom du motif est explicitement écrit sur le bon (dans le titre produit, ex. \"T-Shirt L'Annonce\" → motif ANN) ou clairement suggéré (ex. \"Le Club\", \"Le Câlin\") : si OUI, utilise TOUJOURS ce code motif précis, jamais LIB. Le code LIB est réservé au cas SPÉCIFIQUE où AUCUN nom de motif n'apparaît nulle part sur le bon — uniquement de la personnalisation libre (casquette « à personnaliser », « Le Message », initiale seule, texte au choix du client). Beaucoup d'articles n'ont PAS de motif décoratif nommé : c'est normal, ce n'est PAS une raison de mettre `\"sku\": \"UNKNOWN\"` — utilise LIB et garde le vrai code produit identifié. Ne mets `\"sku\": \"UNKNOWN\"` QUE si le PRODUIT lui-même (pas le motif) ne correspond à AUCUN nom commercial listé ci-dessus.",
     "- Si le nom du produit sur le bon ne correspond exactement à AUCUN nom commercial listé ci-dessus (ex. nouveau produit jamais catalogué), NE DEVINE PAS un code YPxxx au hasard : mets `\"sku\": \"UNKNOWN\"` et reporte le libellé produit exact tel quel dans `notes` de l'article.",
     "- Même règle pour le motif SEUL quand un vrai dessin décoratif est mentionné mais ne correspond à AUCUN code motif listé (hors cas « texte libre » ci-dessus, qui utilise LIB) : ne force pas un code existant qui ne correspond pas — utilise le code produit correctement identifié avec motif LIB, et indique le nom exact du motif dans `notes`.",
     "- Si un texte brodé est demandé, label = \"Texte buste\" (ou poignet/dos/nuque selon placement) et valeur = le texte saisi (respecte la casse).",
     "- Si plusieurs broderies sur le même article (ex. texte buste + initiale poignet), crée plusieurs entrées dans `broderies`.",
     "- Couleur du fil : extrais le nom libre français exact (ex. \"rose pâle\", \"vert sauge\", \"bordeaux\"). Si non précisé, omets `fil_nom`.",
     "- Placement par défaut si non précisé : \"buste\".",
+    "- Couleur du SKU : si le bon donne un nom de couleur en clair (ex. \"Off-White\", \"Vintage sable\"), utilise-le tel quel comme segment COULEUR. Si le SKU réel du bon contient un code numérique à la place (ex. \"YP019-0049-...\"), garde ce code numérique tel quel comme segment COULEUR (ex. \"0049\") plutôt que d'inventer un nom — l'hydratation locale le décodera via le nuancier interne.",
     "- Adresse : sépare bien adresse_ligne1 (rue + n°) et adresse_ligne2 (complément type Apt/Bât). Pays par défaut = \"France\".",
     "- Si une info est absente du PDF, OMETS le champ (ne mets pas null ni \"\" ni \"N/A\").",
     "- Ne devine PAS le SKU si le PDF ne donne aucune référence produit/motif identifiable — préfère lever une erreur en mettant `\"sku\": \"UNKNOWN\"`.",
@@ -351,6 +352,12 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
 
     const produit = skuMapping.produits[produitId];
     const motif = skuMapping.motifs_sku_to_ypm[motifCode];
+    // Le vrai SKU Shopify encode parfois la couleur du support en code numérique interne
+    // (ex. YP019-0049-... = 0049 = Off-White) plutôt qu'en nom en clair — on décode via le
+    // nuancier si le segment couleur du SKU est purement numérique.
+    const couleurCodeInterne = /^\d{1,4}$/.test(couleurFromSku)
+      ? skuMapping.couleurs_support_code_interne?.couleurs[couleurFromSku.padStart(4, "0")]
+      : undefined;
 
     const broderies: Broderie[] = (a.broderies ?? []).map((b) => {
       const placement: Placement = VALID_PLACEMENTS.includes(b.placement as Placement)
@@ -390,7 +397,7 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
       motif_sku: motifCode,
       ypm_id: motif?.ypm_id ?? "",
       ypm_nom: motif?.nom_commercial ?? (motifCode || "(motif à identifier)"),
-      couleur_support: a.couleur_support || couleurFromSku || "",
+      couleur_support: a.couleur_support || couleurCodeInterne?.libelle_interne || couleurFromSku || "",
       taille: a.taille || tailleFromSku || "",
       quantite: a.quantite && a.quantite > 0 ? a.quantite : 1,
       broderies,

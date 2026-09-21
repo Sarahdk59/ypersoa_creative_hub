@@ -7,7 +7,6 @@
     "format_sku": "YP{produit3}-{motif3}-{couleur_libre}-{taille}",
     "exemple_sku": "YP005-CAL-BEIGE-XS → produit YP005 (sweat) / motif YPM-006 (Le Câlin) / couleur beige / taille XS"
   },
-
   "produits": {
     "YP005": {
       "type": "sweat",
@@ -50,7 +49,6 @@
       "note": "Casquette vintage coton délavé (PRODUIT COIFFE). Aucun fournisseur référencé. 5 couleurs washed (beige/sable, vert_olive, bleu_pastel, rose_vif, bordeaux). Cadrage broderie : DEVANT de la calotte (panneau frontal), pas côté cœur. Bridage cadre broderie casquette ~5-7 cm de large."
     }
   },
-
   "motifs_sku_to_ypm": {
     "CAL": {
       "ypm_id": "YPM-006",
@@ -143,7 +141,6 @@
       "note": "À confirmer."
     }
   },
-
   "fils_couleur_libre_to_id": {
     "_principe": "Mapping nom français saisi côté Shopify (configurateur client) → ID fil dans palette_fils_broderie_v2. Insensible à la casse, accents tolérés.",
     "blanc": "fil_blanc",
@@ -190,7 +187,6 @@
     "marron": "fil_camel",
     "chocolat": "fil_syrah"
   },
-
   "placements": {
     "_principe": "Décrit les zones de broderie reconnues sur les bons de préparation Shopify. Chaque placement détermine le cadrage atelier (type de cerceau Tajima TMEZ).",
     "buste": {
@@ -216,6 +212,366 @@
       "cerceau": "cerceau_nuque_petit",
       "cote": "centre_haut",
       "note": "Petite broderie haute, généralement initiale ou symbole."
+    }
+  },
+  "couleurs_support_code_interne": {
+    "_meta": {
+      "description": "Nuancier interne Ypersoa (fournisseurs Awdis + B&C) : code_interne numérique -> couleur_fournisseur (nom du fabricant) -> libelle_interne (nom français côté atelier). Transcrit du nuancier Sarah le 2026-09-21.",
+      "usage": "Ce code_interne (zero-pad 4 chiffres, ex. 0049) correspond au 2e segment observé sur les vrais SKU Shopify (ex. YP019-0049-0005-YPM005 = Off-White). Permet de décoder la couleur d'un article même quand le nom n'apparaît pas en clair sur le bon.",
+      "id_palette": "Correspondance vers l'id de referentiels/palette_supports_vetements.json (25 couleurs officielles), UNIQUEMENT quand confirmée (nom fournisseur déjà documenté ailleurs dans le Hub, ou libellé identique sans ambiguïté). Absent = pas encore recoupé, ne pas deviner.",
+      "a_verifier": "Codes 15 et 20 absents du nuancier source (gap, pas une erreur de transcription). Plusieurs libellés 'Vintage X' (56 à 67, hors 60/61/62) n'ont pas encore d'id_palette officiel — YP013 (casquette) n'a que 5 couleurs cataloguées à ce jour dans palette_supports_par_produit.json, or la commande #1017 a été passée en 'Vintage Noire' (code 56), qui n'existe pas encore dans ce catalogue produit. À signaler à Sarah avant shooting (packshot manquant)."
+    },
+    "couleurs": {
+      "0001": {
+        "code_interne": 1,
+        "couleur_fournisseur": "ARCTIC WHITE",
+        "libelle_interne": "Blanc",
+        "id_palette": "blanc"
+      },
+      "0002": {
+        "code_interne": 2,
+        "couleur_fournisseur": "ASH",
+        "libelle_interne": "Gris clair"
+      },
+      "0003": {
+        "code_interne": 3,
+        "couleur_fournisseur": "ATLANTIC BLUE",
+        "libelle_interne": "Bleu atlantique"
+      },
+      "0004": {
+        "code_interne": 4,
+        "couleur_fournisseur": "BABY PINK",
+        "libelle_interne": "Rose pâle",
+        "id_palette": "rose_pale"
+      },
+      "0005": {
+        "code_interne": 5,
+        "couleur_fournisseur": "BRICK RED",
+        "libelle_interne": "Rouge brique"
+      },
+      "0006": {
+        "code_interne": 6,
+        "couleur_fournisseur": "BUBBLEGUM",
+        "libelle_interne": "Chewing gum"
+      },
+      "0007": {
+        "code_interne": 7,
+        "couleur_fournisseur": "BURGUNDY",
+        "libelle_interne": "Bordeaux"
+      },
+      "0008": {
+        "code_interne": 8,
+        "couleur_fournisseur": "CANDYFLOSS PINK",
+        "libelle_interne": "Rose vif"
+      },
+      "0009": {
+        "code_interne": 9,
+        "couleur_fournisseur": "CARAMEL LATTE",
+        "libelle_interne": "Caramel"
+      },
+      "0010": {
+        "code_interne": 10,
+        "couleur_fournisseur": "CHARCOAL",
+        "libelle_interne": "Gris anthracite"
+      },
+      "0011": {
+        "code_interne": 11,
+        "couleur_fournisseur": "CORNFLOWER BLUE",
+        "libelle_interne": "Bleu pastel",
+        "id_palette": "bleu_pastel"
+      },
+      "0012": {
+        "code_interne": 12,
+        "couleur_fournisseur": "DEEP BLACK",
+        "libelle_interne": "Noir",
+        "id_palette": "noir"
+      },
+      "0013": {
+        "code_interne": 13,
+        "couleur_fournisseur": "DEEP SEA BLUE",
+        "libelle_interne": "Bleu pétrole"
+      },
+      "0014": {
+        "code_interne": 14,
+        "couleur_fournisseur": "DESERT SAND",
+        "libelle_interne": "Sable"
+      },
+      "0016": {
+        "code_interne": 16,
+        "couleur_fournisseur": "DUSTY BLUE",
+        "libelle_interne": "Bleu grisé"
+      },
+      "0017": {
+        "code_interne": 17,
+        "couleur_fournisseur": "DUSTY GREEN",
+        "libelle_interne": "Vert sauge",
+        "id_palette": "vert_sauge"
+      },
+      "0018": {
+        "code_interne": 18,
+        "couleur_fournisseur": "DUSTY LILAC",
+        "libelle_interne": "Vieux Lilas"
+      },
+      "0019": {
+        "code_interne": 19,
+        "couleur_fournisseur": "DUSTY PINK",
+        "libelle_interne": "Vieux rose"
+      },
+      "0021": {
+        "code_interne": 21,
+        "couleur_fournisseur": "EARTHY GREEN",
+        "libelle_interne": "Vert Terre",
+        "id_palette": "vert_terre"
+      },
+      "0022": {
+        "code_interne": 22,
+        "couleur_fournisseur": "FIRE RED",
+        "libelle_interne": "Rouge"
+      },
+      "0023": {
+        "code_interne": 23,
+        "couleur_fournisseur": "GINGER BISCUIT",
+        "libelle_interne": "Gingembre"
+      },
+      "0024": {
+        "code_interne": 24,
+        "couleur_fournisseur": "HEATHER GREY",
+        "libelle_interne": "Gris chiné",
+        "id_palette": "gris_chine"
+      },
+      "0025": {
+        "code_interne": 25,
+        "couleur_fournisseur": "HOT PINK",
+        "libelle_interne": "Fushia"
+      },
+      "0026": {
+        "code_interne": 26,
+        "couleur_fournisseur": "ICE BLUE",
+        "libelle_interne": "Bleu clair",
+        "id_palette": "bleu_clair"
+      },
+      "0027": {
+        "code_interne": 27,
+        "couleur_fournisseur": "INK BLUE",
+        "libelle_interne": "Bleu profond",
+        "id_palette": "bleu_petrole"
+      },
+      "0028": {
+        "code_interne": 28,
+        "couleur_fournisseur": "JADE",
+        "libelle_interne": "Jade"
+      },
+      "0029": {
+        "code_interne": 29,
+        "couleur_fournisseur": "KELLY GREEN",
+        "libelle_interne": "Vert Vif"
+      },
+      "0030": {
+        "code_interne": 30,
+        "couleur_fournisseur": "LILAC",
+        "libelle_interne": "Lilas",
+        "id_palette": "lilas"
+      },
+      "0031": {
+        "code_interne": 31,
+        "couleur_fournisseur": "MOSS GREEN",
+        "libelle_interne": "Vert Mousse"
+      },
+      "0032": {
+        "code_interne": 32,
+        "couleur_fournisseur": "NATURAL CLAY",
+        "libelle_interne": "Argile"
+      },
+      "0033": {
+        "code_interne": 33,
+        "couleur_fournisseur": "NATURAL STONE",
+        "libelle_interne": "Pierre naturelle",
+        "id_palette": "pierre_naturelle"
+      },
+      "0034": {
+        "code_interne": 34,
+        "couleur_fournisseur": "NEW FRENCH NAVY",
+        "libelle_interne": "Bleu marine",
+        "id_palette": "marine"
+      },
+      "0035": {
+        "code_interne": 35,
+        "couleur_fournisseur": "OLIVE GREEN",
+        "libelle_interne": "Vert Olive",
+        "id_palette": "vert_olive"
+      },
+      "0036": {
+        "code_interne": 36,
+        "couleur_fournisseur": "ORANGE CRUSH",
+        "libelle_interne": "Orange"
+      },
+      "0037": {
+        "code_interne": 37,
+        "couleur_fournisseur": "PEPPERMINT",
+        "libelle_interne": "Vert d'eau"
+      },
+      "0038": {
+        "code_interne": 38,
+        "couleur_fournisseur": "RED HOT CHILLI",
+        "libelle_interne": "Red hot chili"
+      },
+      "0039": {
+        "code_interne": 39,
+        "couleur_fournisseur": "ROYAL BLUE",
+        "libelle_interne": "Bleu roi"
+      },
+      "0040": {
+        "code_interne": 40,
+        "couleur_fournisseur": "SHARK GREY",
+        "libelle_interne": "Gris anthracite"
+      },
+      "0041": {
+        "code_interne": 41,
+        "couleur_fournisseur": "SHERBET LEMON",
+        "libelle_interne": "Citron",
+        "id_palette": "citron"
+      },
+      "0042": {
+        "code_interne": 42,
+        "couleur_fournisseur": "SKY BLUE",
+        "libelle_interne": "Bleu ciel",
+        "id_palette": "bleu_ciel"
+      },
+      "0043": {
+        "code_interne": 43,
+        "couleur_fournisseur": "SPRING GREEN",
+        "libelle_interne": "Vert menthe"
+      },
+      "0044": {
+        "code_interne": 44,
+        "couleur_fournisseur": "SUN YELLOW",
+        "libelle_interne": "Jaune"
+      },
+      "0045": {
+        "code_interne": 45,
+        "couleur_fournisseur": "TURQUOISE SURF",
+        "libelle_interne": "Turquoise"
+      },
+      "0046": {
+        "code_interne": 46,
+        "couleur_fournisseur": "VANILLA MILKSHAKE",
+        "libelle_interne": "Beige",
+        "id_palette": "beige"
+      },
+      "0047": {
+        "code_interne": 47,
+        "couleur_fournisseur": "DIGITAL LAVENDER",
+        "libelle_interne": "Lavande"
+      },
+      "0048": {
+        "code_interne": 48,
+        "couleur_fournisseur": "KHAKI",
+        "libelle_interne": "Kaki",
+        "id_palette": "kaki"
+      },
+      "0049": {
+        "code_interne": 49,
+        "couleur_fournisseur": "OFF White",
+        "libelle_interne": "Blanc cassé",
+        "id_palette": "offwhite"
+      },
+      "0050": {
+        "code_interne": 50,
+        "couleur_fournisseur": "Mastic",
+        "libelle_interne": "Beige foncé",
+        "id_palette": "mastic"
+      },
+      "0051": {
+        "code_interne": 51,
+        "couleur_fournisseur": "Lake blue",
+        "libelle_interne": "Bleu électrique"
+      },
+      "0052": {
+        "code_interne": 52,
+        "couleur_fournisseur": "Orchid pink",
+        "libelle_interne": "Rose orchidée",
+        "id_palette": "rose_orchidee"
+      },
+      "0053": {
+        "code_interne": 53,
+        "couleur_fournisseur": "Light Pink",
+        "libelle_interne": "Rose dragée"
+      },
+      "0054": {
+        "code_interne": 54,
+        "couleur_fournisseur": "Heliconia",
+        "libelle_interne": "Rose bonbon"
+      },
+      "0055": {
+        "code_interne": 55,
+        "couleur_fournisseur": "TEAL",
+        "libelle_interne": "Canard",
+        "id_palette": "canard"
+      },
+      "0056": {
+        "code_interne": 56,
+        "couleur_fournisseur": "Vintage black",
+        "libelle_interne": "Vintage Noire"
+      },
+      "0057": {
+        "code_interne": 57,
+        "couleur_fournisseur": "Vintage dusty pink",
+        "libelle_interne": "Vintage Rose Pâle"
+      },
+      "0058": {
+        "code_interne": 58,
+        "couleur_fournisseur": "Vintage denim",
+        "libelle_interne": "Vintage Denim"
+      },
+      "0059": {
+        "code_interne": 59,
+        "couleur_fournisseur": "Vintage light denim",
+        "libelle_interne": "Vintage Bleu Denim Clair"
+      },
+      "0060": {
+        "code_interne": 60,
+        "couleur_fournisseur": "Vintage Sand",
+        "libelle_interne": "Vintage sable",
+        "id_palette": "beige"
+      },
+      "0061": {
+        "code_interne": 61,
+        "couleur_fournisseur": "Vintage true pink",
+        "libelle_interne": "Vintage Rose Vif",
+        "id_palette": "rose_vif"
+      },
+      "0062": {
+        "code_interne": 62,
+        "couleur_fournisseur": "Vintage red",
+        "libelle_interne": "Vintage Rouge Bordeaux",
+        "id_palette": "bordeaux"
+      },
+      "0063": {
+        "code_interne": 63,
+        "couleur_fournisseur": "Vintage bottle green",
+        "libelle_interne": "Vintage Vert Bouteille"
+      },
+      "0064": {
+        "code_interne": 64,
+        "couleur_fournisseur": "Vintage cornflower",
+        "libelle_interne": "Vintage Bleu"
+      },
+      "0065": {
+        "code_interne": 65,
+        "couleur_fournisseur": "Vintage stone",
+        "libelle_interne": "Vintage Pierre Naturelle"
+      },
+      "0066": {
+        "code_interne": 66,
+        "couleur_fournisseur": "Vintage Peach",
+        "libelle_interne": "Vintage pêche"
+      },
+      "0067": {
+        "code_interne": 67,
+        "couleur_fournisseur": "Vintage Olive",
+        "libelle_interne": "Vintage Olive",
+        "id_palette": "vert_olive"
+      }
     }
   }
 }
