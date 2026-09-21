@@ -146,8 +146,9 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "  à partir des indices produit + motif + couleur + taille disponibles, dans les deux cas.",
     `- Codes motifs valides (MMM dans le SKU) : ${motifsKnown.join(", ")}.`,
     `- Codes produits valides (YPxxx dans le SKU, avec leur nom commercial pour t'aider à identifier le bon code depuis un libellé produit) : ${produitsKnown.join(" ; ")}.`,
+    "- IMPORTANT — le produit et le motif se résolvent INDÉPENDAMMENT l'un de l'autre. Beaucoup d'articles (casquette « à personnaliser », « Le Message », initiale seule, texte libre au choix du client…) n'ont PAS de motif décoratif nommé : c'est normal, ce n'est PAS une raison de mettre `\"sku\": \"UNKNOWN\"`. Dans ce cas, utilise le code motif LIB (texte libre / typo seule, motif racine YPM-000) et garde le vrai code produit identifié. Ne mets `\"sku\": \"UNKNOWN\"` QUE si le PRODUIT lui-même (pas le motif) ne correspond à AUCUN nom commercial listé ci-dessus.",
     "- Si le nom du produit sur le bon ne correspond exactement à AUCUN nom commercial listé ci-dessus (ex. nouveau produit jamais catalogué), NE DEVINE PAS un code YPxxx au hasard : mets `\"sku\": \"UNKNOWN\"` et reporte le libellé produit exact tel quel dans `notes` de l'article.",
-    "- Même règle pour le motif : si le nom du motif sur le bon ne correspond à AUCUN code motif listé ci-dessus, ne force pas un code existant qui ne correspond pas — utilise `\"sku\": \"UNKNOWN\"` et indique le nom exact du motif dans `notes`.",
+    "- Même règle pour le motif SEUL quand un vrai dessin décoratif est mentionné mais ne correspond à AUCUN code motif listé (hors cas « texte libre » ci-dessus, qui utilise LIB) : ne force pas un code existant qui ne correspond pas — utilise le code produit correctement identifié avec motif LIB, et indique le nom exact du motif dans `notes`.",
     "- Si un texte brodé est demandé, label = \"Texte buste\" (ou poignet/dos/nuque selon placement) et valeur = le texte saisi (respecte la casse).",
     "- Si plusieurs broderies sur le même article (ex. texte buste + initiale poignet), crée plusieurs entrées dans `broderies`.",
     "- Couleur du fil : extrais le nom libre français exact (ex. \"rose pâle\", \"vert sauge\", \"bordeaux\"). Si non précisé, omets `fil_nom`.",
@@ -338,7 +339,11 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
 
   const articles: Article[] = (draft.articles ?? []).map((a, idx) => {
     // 1) Découpe du SKU YPxxx-MMM-COULEUR-TAILLE
-    const parts = (a.sku ?? "").split("-");
+    // "UNKNOWN" est un sentinelle du LLM (ni produit ni motif identifiables) : on ne le
+    // découpe pas comme un vrai SKU, sinon "UNKNOWN" fuit tel quel comme produit_id/nom.
+    const skuValue = (a.sku ?? "").trim();
+    const isUnknownSku = skuValue === "" || skuValue.toUpperCase() === "UNKNOWN";
+    const parts = isUnknownSku ? [] : skuValue.split("-");
     const produitId = parts[0] ?? "";
     const motifCode = parts[1] ?? "";
     const couleurFromSku = parts[2] ?? "";
@@ -381,10 +386,10 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
       id: `${numeroNet}-A${String(idx + 1).padStart(2, "0")}-${shortRandom()}`,
       sku: a.sku || "",
       produit_id: produitId,
-      produit_nom: produit?.nom_commercial ?? produitId ?? "(produit inconnu)",
+      produit_nom: produit?.nom_commercial ?? (produitId || "(produit à identifier)"),
       motif_sku: motifCode,
       ypm_id: motif?.ypm_id ?? "",
-      ypm_nom: motif?.nom_commercial ?? motifCode ?? "(motif inconnu)",
+      ypm_nom: motif?.nom_commercial ?? (motifCode || "(motif à identifier)"),
       couleur_support: a.couleur_support || couleurFromSku || "",
       taille: a.taille || tailleFromSku || "",
       quantite: a.quantite && a.quantite > 0 ? a.quantite : 1,

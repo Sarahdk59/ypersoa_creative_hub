@@ -2,7 +2,7 @@
   "_meta": {
     "schema_version": "1.0",
     "referentiel": "shopify_sku_mapping",
-    "last_updated": "2026-08-25",
+    "last_updated": "2026-09-21",
     "description": "Pivot entre les SKU Shopify (format YPpppp-MMM-COULEUR-TAILLE) et les référentiels internes Hub : produits-supports (palette_supports_par_produit), motifs (motifs_ypm), fils (palette_fils_broderie_v2). Source de vérité pour le module Atelier Production → Commandes.",
     "format_sku": "YP{produit3}-{motif3}-{couleur_libre}-{taille}",
     "exemple_sku": "YP005-CAL-BEIGE-XS → produit YP005 (sweat) / motif YPM-006 (Le Câlin) / couleur beige / taille XS"
@@ -120,6 +120,26 @@
     "DEC": {
       "ypm_id": "YPM-015",
       "nom_commercial": "La Déclaration",
+      "note": "À confirmer."
+    },
+    "LIB": {
+      "ypm_id": "YPM-000",
+      "nom_commercial": "À personnaliser",
+      "note": "Motif racine (texte libre / typo seule, pas de dessin décoratif). Code à utiliser pour tout article sans motif catalogué : casquette « à personnaliser », « Le Message », initiale seule, texte libre au choix du client. Ajouté le 21/09/2026 suite à un article casquette perdu (SKU forcé en UNKNOWN faute de code motif)."
+    },
+    "DEP": {
+      "ypm_id": "YPM-013",
+      "nom_commercial": "Le Depuis",
+      "note": "À confirmer."
+    },
+    "SIG": {
+      "ypm_id": "YPM-016",
+      "nom_commercial": "La Signature",
+      "note": "À confirmer."
+    },
+    "FLO": {
+      "ypm_id": "YPM-017",
+      "nom_commercial": "La Florale",
       "note": "À confirmer."
     }
   },
