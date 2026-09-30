@@ -76,5 +76,15 @@
   "nb_changements_fil_total": 0,
   "notes": "Saisie manuelle depuis le bon de préparation Shopify #1016 — le parsing PDF automatique n'a pas pu résoudre le SKU (motif \"Le Message\" et référence couleur casquette absents des référentiels, cf. notes article). Corrigé côté pipeline : le prompt de structuration (pdf-parser.ts) ne transmettait pas la liste des codes produits YPxxx au LLM, donc YP013 ne pouvait jamais être déduit pour aucune casquette — fixé pour les prochaines commandes.",
   "created_at": "2026-09-02",
-  "updated_at": "2026-09-02"
+  "updated_at": "2026-09-29",
+  "journal": {
+    "dst": {
+      "par": "Rebecca",
+      "le": ""
+    },
+    "broderie": {
+      "par": "Rebecca",
+      "le": ""
+    }
+  }
 }

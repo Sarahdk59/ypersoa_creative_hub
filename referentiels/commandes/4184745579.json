@@ -1,0 +1,75 @@
+{
+  "id": "4184745579",
+  "numero_shopify": "#4184745579",
+  "date_commande": "2026-09-27",
+  "statut": "a_planifier",
+  "priorite": "normale",
+  "expedition": {
+    "nom": "Anne Jordheim",
+    "adresse_ligne1": "23 rue Jean Jacques Rousseau",
+    "code_postal": "69800",
+    "ville": "SAINT PRIEST",
+    "pays": "France"
+  },
+  "facturation": {
+    "nom": "Anne Jordheim",
+    "adresse_ligne1": "23 rue Jean Jacques Rousseau",
+    "code_postal": "69800",
+    "ville": "SAINT PRIEST",
+    "pays": "France"
+  },
+  "articles": [
+    {
+      "id": "4184745579-A01-b7nt7g",
+      "sku": "YP013-LIB-Bleu gris vintage-TU",
+      "produit_id": "YP013",
+      "produit_nom": "Casquette Vintage Brodée",
+      "motif_sku": "LIB",
+      "ypm_id": "YPM-000",
+      "ypm_nom": "À personnaliser",
+      "couleur_support": "Bleu gris vintage",
+      "taille": "TU",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Texte buste",
+              "valeur": "Myrtille",
+              "type": "mot_moyen",
+              "duree_min": 5,
+              "fil_id": "fil_rose_poudre",
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_rose_poudre",
+          "fil_nom": "Rose poudré",
+          "fil_hex": "#CC8A92",
+          "fil_code_gunold": "61403",
+          "duree_broderie_min": 5,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 8
+        }
+      ],
+      "duree_preparation_dst_min": 5,
+      "duree_setup_min": 6,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 22
+    }
+  ],
+  "planning": null,
+  "bon_preparation_pdf": {
+    "storage_path": "2026-09/4184745579-download-2026-09-28-2.pdf",
+    "public_url": "https://frvhjjijoccqreidyucp.supabase.co/storage/v1/object/public/commandes-pdf/2026-09/4184745579-download-2026-09-28-2.pdf",
+    "filename": "download-2026-09-28-2.pdf",
+    "uploaded_by": "sarah.kedziora@phenixlog.fr",
+    "uploaded_at": "2026-09-28T08:08:21.031Z",
+    "size_bytes": 284568
+  },
+  "duree_total_min": 22,
+  "nb_changements_fil_total": 0,
+  "created_at": "2026-09-28",
+  "updated_at": "2026-09-28"
+}

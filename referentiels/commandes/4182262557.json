@@ -1,0 +1,94 @@
+{
+  "id": "4182262557",
+  "numero_shopify": "#4182262557",
+  "date_commande": "2026-09-24",
+  "statut": "archivee",
+  "priorite": "normale",
+  "expedition": {
+    "nom": "Manon Boully",
+    "adresse_ligne1": "4 lot le clos de la parnelle",
+    "code_postal": "01270",
+    "ville": "DOMSURE",
+    "pays": "France"
+  },
+  "facturation": {
+    "nom": "Manon Boully",
+    "adresse_ligne1": "4 lot le clos de la parnelle",
+    "code_postal": "01270",
+    "ville": "DOMSURE",
+    "pays": "France"
+  },
+  "articles": [
+    {
+      "id": "4182262557-A01-7o74s4",
+      "sku": "YP019-AMB-Mastic-L",
+      "produit_id": "YP019",
+      "produit_nom": "T-Shirt Brodé",
+      "motif_sku": "AMB",
+      "ypm_id": "YPM-002",
+      "ypm_nom": "L'Ambre",
+      "couleur_support": "Mastic",
+      "taille": "L",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Texte buste",
+              "valeur": "Tata Lu",
+              "type": "mot_moyen",
+              "duree_min": 5,
+              "fil_id": "fil_blanc",
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_blanc",
+          "fil_nom": "Blanc",
+          "fil_hex": "#F5EEF2",
+          "fil_code_gunold": "61002",
+          "duree_broderie_min": 5,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 8
+        }
+      ],
+      "duree_preparation_dst_min": 5,
+      "duree_setup_min": 6,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 22
+    }
+  ],
+  "planning": null,
+  "bon_preparation_pdf": {
+    "storage_path": "2026-09/4182262557-download-2026-09-28.pdf",
+    "public_url": "https://frvhjjijoccqreidyucp.supabase.co/storage/v1/object/public/commandes-pdf/2026-09/4182262557-download-2026-09-28.pdf",
+    "filename": "download-2026-09-28.pdf",
+    "uploaded_by": "sarah.kedziora@phenixlog.fr",
+    "uploaded_at": "2026-09-28T08:07:56.743Z",
+    "size_bytes": 282761
+  },
+  "duree_total_min": 22,
+  "nb_changements_fil_total": 0,
+  "created_at": "2026-09-28",
+  "updated_at": "2026-09-28",
+  "journal": {
+    "dst": {
+      "par": "Rebecca",
+      "le": "2026-09-25"
+    },
+    "broderie": {
+      "par": "Rebecca",
+      "le": "2026-09-28"
+    },
+    "cq": {
+      "par": "Rebecca",
+      "le": "2026-09-28"
+    },
+    "expedition": {
+      "par": "Rebecca",
+      "le": "2026-09-29"
+    },
+    "archivee_le": "2026-09-28"
+  }
+}

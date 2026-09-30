@@ -1,0 +1,134 @@
+{
+  "id": "1018",
+  "numero_shopify": "#1018",
+  "date_commande": "2026-09-28",
+  "date_impression_bon": "2026-09-28",
+  "statut": "archivee",
+  "priorite": "normale",
+  "expedition": {
+    "nom": "BEATRICE LAROCHE",
+    "adresse_ligne1": "2 Rue Henri Bossut",
+    "code_postal": "59100",
+    "ville": "Roubaix",
+    "pays": "France"
+  },
+  "facturation": {
+    "nom": "BEATRICE LAROCHE",
+    "adresse_ligne1": "2 Rue Henri Bossut",
+    "code_postal": "59100",
+    "ville": "Roubaix",
+    "pays": "France"
+  },
+  "articles": [
+    {
+      "id": "1018-A01-uvr3tj",
+      "sku": "YP022-DEP-Marine-M",
+      "produit_id": "YP022",
+      "produit_nom": "Hoodie Slim Brodé",
+      "motif_sku": "DEP",
+      "ypm_id": "YPM-013",
+      "ypm_nom": "Le Depuis",
+      "couleur_support": "Marine",
+      "taille": "M",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Texte buste",
+              "valeur": "Papa\nDepuis 2026",
+              "type": "texte_long",
+              "duree_min": 7,
+              "fil_id": "fil_sable",
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_sable",
+          "fil_nom": "Sable",
+          "fil_hex": "#DECEBB",
+          "fil_code_gunold": "61472",
+          "duree_broderie_min": 7,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 10
+        }
+      ],
+      "duree_preparation_dst_min": 5,
+      "duree_setup_min": 8,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 26
+    },
+    {
+      "id": "1018-A02-np1kqo",
+      "sku": "YP022-DEP-Pierre Naturelle-M",
+      "produit_id": "YP022",
+      "produit_nom": "Hoodie Slim Brodé",
+      "motif_sku": "DEP",
+      "ypm_id": "YPM-013",
+      "ypm_nom": "Le Depuis",
+      "couleur_support": "Pierre Naturenelle",
+      "taille": "M",
+      "quantite": 1,
+      "broderies": [
+        {
+          "placement": "buste",
+          "champs": [
+            {
+              "label": "Texte buste",
+              "valeur": "Maman\nDepuis 2026",
+              "type": "texte_long",
+              "duree_min": 7,
+              "fil_id": "fil_marine",
+              "source_duree": "classification"
+            }
+          ],
+          "fil_id": "fil_marine",
+          "fil_nom": "Marine",
+          "fil_hex": "#262934",
+          "fil_code_gunold": "61043",
+          "duree_broderie_min": 7,
+          "duree_cadrage_min": 3,
+          "duree_changement_fil_min": 0,
+          "duree_total_min": 10
+        }
+      ],
+      "duree_preparation_dst_min": 0,
+      "duree_setup_min": 8,
+      "duree_cq_min": 3,
+      "duree_total_article_min": 21
+    }
+  ],
+  "planning": null,
+  "bon_preparation_pdf": {
+    "storage_path": "2026-09/1018-ypersoa-commandes-1018-shopify.pdf",
+    "public_url": "https://frvhjjijoccqreidyucp.supabase.co/storage/v1/object/public/commandes-pdf/2026-09/1018-ypersoa-commandes-1018-shopify.pdf",
+    "filename": "Ypersoa · Commandes · #1018 · Shopify.pdf",
+    "uploaded_by": "sarah.kedziora@phenixlog.fr",
+    "uploaded_at": "2026-09-28T08:07:23.059Z",
+    "size_bytes": 127814
+  },
+  "duree_total_min": 47,
+  "nb_changements_fil_total": 0,
+  "created_at": "2026-09-28",
+  "updated_at": "2026-09-29",
+  "journal": {
+    "dst": {
+      "par": "Rebecca",
+      "le": "2026-09-29"
+    },
+    "broderie": {
+      "par": "Rebecca",
+      "le": "2026-09-29"
+    },
+    "cq": {
+      "par": "Rebecca",
+      "le": "2026-09-29"
+    },
+    "expedition": {
+      "par": "Rebecca",
+      "le": "2026-09-29"
+    },
+    "archivee_le": "2026-09-29"
+  }
+}
