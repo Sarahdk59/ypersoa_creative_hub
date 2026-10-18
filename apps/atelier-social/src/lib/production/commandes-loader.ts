@@ -1,19 +1,20 @@
 /**
  * Loader serveur pour le module Atelier Production → Commandes.
  *
- * Lit/écrit :
- *  - referentiels/commandes/*.json (1 fichier par commande)
+ * Les commandes vivent en base Supabase (table `commandes`) — le disque
+ * Railway est éphémère et repart de zéro à chaque déploiement.
+ *
+ * Lit encore via fs (référentiels statiques, non liés à une commande) :
  *  - referentiels/shopify_sku_mapping.json (pivot SKU ↔ YPM / fils)
  *  - referentiels/durees_broderie.json (paramètres planning)
- *
- * Aucun import statique de gros JSON : tout via fs côté API route.
+ *  - referentiels/fiches_techniques_ypm.json (FT Tajima Pulse)
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { supabase } from "@/lib/supabase";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
 
-export const COMMANDES_DIR = join(REFS_DIR, "commandes");
 export const SKU_MAPPING_PATH = join(REFS_DIR, "shopify_sku_mapping.json");
 export const DUREES_PATH = join(REFS_DIR, "durees_broderie.json");
 export const FICHES_TECHNIQUES_PATH = join(REFS_DIR, "fiches_techniques_ypm.json");
@@ -26,6 +27,7 @@ export type StatutCommande = "a_planifier" | "planifiee" | "en_cours" | "termine
 export type PrioriteCommande = "normale" | "urgente";
 export type EtapeJournal = "dst" | "broderie" | "cq" | "expedition";
 export type AlgoPlanning = "lpt" | "otif";
+export type CommandeSource = "shopify" | "etsy" | "manuel";
 
 export interface JournalEntree {
   par: string;
@@ -166,6 +168,7 @@ export interface BonPreparationPdf {
 export interface Commande {
   id: string;
   numero_shopify: string;
+  source: CommandeSource;
   date_commande: string;
   date_impression_bon?: string;
   statut: StatutCommande;
@@ -177,6 +180,7 @@ export interface Commande {
   journal?: JournalCommande;
   rework_de?: ReworkOrigine;
   bon_preparation_pdf?: BonPreparationPdf;
+  montant_total_ttc?: number | null;
   duree_total_min: number;
   nb_changements_fil_total: number;
   notes?: string;
@@ -279,42 +283,132 @@ export function findFicheTechnique(
 }
 
 // ──────────────────────────────────────────────────────────
-// Commandes (CRUD fichier)
+// Commandes (CRUD Supabase, table `commandes`)
 // ──────────────────────────────────────────────────────────
 
-function ensureCommandesDir() {
-  if (!existsSync(COMMANDES_DIR)) {
-    mkdirSync(COMMANDES_DIR, { recursive: true });
+const TBL_COMMANDES = "commandes";
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __ypersoa_commandes_mem__: Map<string, Commande> | undefined;
+}
+
+/** Fallback en mémoire pour le dev local sans Supabase configuré (pas de persistance réelle). */
+function memStore(): Map<string, Commande> {
+  if (!globalThis.__ypersoa_commandes_mem__) {
+    globalThis.__ypersoa_commandes_mem__ = new Map();
   }
+  return globalThis.__ypersoa_commandes_mem__;
 }
 
-export function listCommandes(): Commande[] {
-  ensureCommandesDir();
-  const files = readdirSync(COMMANDES_DIR).filter((f) => f.endsWith(".json") && !f.startsWith("_"));
-  return files
-    .map((f) => {
-      try {
-        const raw = readFileSync(join(COMMANDES_DIR, f), "utf-8");
-        return JSON.parse(raw) as Commande;
-      } catch {
-        return null;
-      }
-    })
-    .filter((c): c is Commande => c !== null)
-    .sort((a, b) => b.id.localeCompare(a.id));
+interface CommandeRow {
+  id: string;
+  numero_shopify: string;
+  source: CommandeSource;
+  date_commande: string;
+  date_impression_bon: string | null;
+  statut: StatutCommande;
+  priorite: PrioriteCommande;
+  montant_total_ttc: number | null;
+  duree_total_min: number;
+  nb_changements_fil_total: number;
+  expedition: AdressePostale;
+  facturation: AdressePostale;
+  articles: Article[];
+  planning: Planning | null;
+  journal: JournalCommande | null;
+  rework_de: ReworkOrigine | null;
+  bon_preparation_pdf: BonPreparationPdf | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-export function getCommande(id: string): Commande | null {
-  const path = join(COMMANDES_DIR, `${id}.json`);
-  if (!existsSync(path)) return null;
-  return JSON.parse(readFileSync(path, "utf-8")) as Commande;
+function rowToCommande(row: CommandeRow): Commande {
+  return {
+    id: row.id,
+    numero_shopify: row.numero_shopify,
+    source: row.source,
+    date_commande: row.date_commande,
+    date_impression_bon: row.date_impression_bon ?? undefined,
+    statut: row.statut,
+    priorite: row.priorite,
+    expedition: row.expedition,
+    facturation: row.facturation,
+    articles: row.articles,
+    planning: row.planning,
+    journal: row.journal ?? undefined,
+    rework_de: row.rework_de ?? undefined,
+    bon_preparation_pdf: row.bon_preparation_pdf ?? undefined,
+    montant_total_ttc: row.montant_total_ttc,
+    duree_total_min: row.duree_total_min,
+    nb_changements_fil_total: row.nb_changements_fil_total,
+    notes: row.notes ?? undefined,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
 }
 
-export function writeCommande(commande: Commande): void {
-  ensureCommandesDir();
-  commande.updated_at = new Date().toISOString().slice(0, 10);
-  const path = join(COMMANDES_DIR, `${commande.id}.json`);
-  writeFileSync(path, JSON.stringify(commande, null, 2) + "\n", "utf-8");
+function commandeToRow(commande: Commande): CommandeRow {
+  return {
+    id: commande.id,
+    numero_shopify: commande.numero_shopify,
+    source: commande.source ?? "manuel",
+    date_commande: commande.date_commande,
+    date_impression_bon: commande.date_impression_bon ?? null,
+    statut: commande.statut,
+    priorite: commande.priorite,
+    montant_total_ttc: commande.montant_total_ttc ?? null,
+    duree_total_min: commande.duree_total_min,
+    nb_changements_fil_total: commande.nb_changements_fil_total,
+    expedition: commande.expedition,
+    facturation: commande.facturation,
+    articles: commande.articles,
+    planning: commande.planning,
+    journal: commande.journal ?? null,
+    rework_de: commande.rework_de ?? null,
+    bon_preparation_pdf: commande.bon_preparation_pdf ?? null,
+    notes: commande.notes ?? null,
+    created_at: commande.created_at,
+    updated_at: commande.updated_at,
+  };
+}
+
+export async function listCommandes(): Promise<Commande[]> {
+  if (!supabase) {
+    return Array.from(memStore().values()).sort((a, b) => b.id.localeCompare(a.id));
+  }
+  const { data, error } = await supabase.from(TBL_COMMANDES).select("*");
+  if (error) throw new Error(`Lecture commandes échouée : ${error.message}`);
+  return (data as CommandeRow[]).map(rowToCommande).sort((a, b) => b.id.localeCompare(a.id));
+}
+
+export async function getCommande(id: string): Promise<Commande | null> {
+  if (!supabase) return memStore().get(id) ?? null;
+  const { data, error } = await supabase.from(TBL_COMMANDES).select("*").eq("id", id).maybeSingle();
+  if (error) throw new Error(`Lecture commande ${id} échouée : ${error.message}`);
+  return data ? rowToCommande(data as CommandeRow) : null;
+}
+
+export async function writeCommande(commande: Commande): Promise<void> {
+  commande.updated_at = new Date().toISOString();
+  // Colonnes dénormalisées pour recherche/tri — resynchronisées depuis expedition à chaque écriture.
+  const clientNom = commande.expedition?.nom ?? null;
+  const clientVille = commande.expedition?.ville ?? null;
+  const clientCodePostal = commande.expedition?.code_postal ?? null;
+
+  if (!supabase) {
+    memStore().set(commande.id, commande);
+    return;
+  }
+  const row = {
+    ...commandeToRow(commande),
+    client_nom: clientNom,
+    client_ville: clientVille,
+    client_code_postal: clientCodePostal,
+  };
+  const { error } = await supabase.from(TBL_COMMANDES).upsert(row, { onConflict: "id" });
+  if (error) throw new Error(`Écriture commande ${commande.id} échouée : ${error.message}`);
 }
 
 // ──────────────────────────────────────────────────────────

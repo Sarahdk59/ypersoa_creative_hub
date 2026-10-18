@@ -31,7 +31,7 @@ import {
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const origine = getCommande(id);
+    const origine = await getCommande(id);
     if (!origine) return NextResponse.json({ ok: false, error: "Commande origine introuvable" }, { status: 404 });
 
     const body = (await req.json()) as { article_id?: string; motif?: string; zones_a_rebroder?: Placement[] };
@@ -42,7 +42,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (!artOrigine) return NextResponse.json({ ok: false, error: "article introuvable dans la commande origine" }, { status: 404 });
 
     // Calcul du suffixe Rn
-    const all = listCommandes();
+    const all = await listCommandes();
     const prefix = `${id}-R`;
     const existingN = all
       .map((c) => c.id.startsWith(prefix) ? parseInt(c.id.slice(prefix.length)) : NaN)
@@ -69,6 +69,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const commandeRework: Commande = {
       id: newId,
       numero_shopify: `${origine.numero_shopify}/${n}`,
+      source: origine.source ?? "manuel",
       date_commande: now,
       date_impression_bon: now,
       statut: "a_planifier",
@@ -92,7 +93,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     const durees = getDureesRef();
     recalculerDureesCommande(commandeRework, durees);
-    writeCommande(commandeRework);
+    await writeCommande(commandeRework);
 
     return NextResponse.json({ ok: true, data: commandeRework });
   } catch (err) {

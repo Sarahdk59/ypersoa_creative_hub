@@ -150,6 +150,22 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
     setCommande(res.data);
   }
 
+  async function patchMontant(valeur: string) {
+    const parsed = valeur.trim() === "" ? null : Number(valeur.replace(",", "."));
+    if (parsed !== null && Number.isNaN(parsed)) return;
+    try {
+      const res = await fetch(`/api/production/commandes/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ montant_total_ttc: parsed }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      setCommande(res.data);
+    } catch (e) {
+      alert("Erreur mise à jour montant : " + (e instanceof Error ? e.message : String(e)));
+    }
+  }
+
   async function desarchiverEtRestaurer(nouveauStatut: StatutCommande) {
     if (!commande) return;
     if (!confirm(`Désarchiver cette commande et la remettre en "${nouveauStatut}" ?`)) return;
@@ -227,16 +243,44 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
             <span><Calendar size={13} strokeWidth={1.6} style={{ display: "inline", marginRight: 4, verticalAlign: "-2px" }} /> Commandé le {commande.date_commande}</span>
             <span><Truck size={13} strokeWidth={1.6} style={{ display: "inline", marginRight: 4, verticalAlign: "-2px" }} /> {commande.expedition.nom} · {commande.expedition.ville}</span>
             <span><Clock size={13} strokeWidth={1.6} style={{ display: "inline", marginRight: 4, verticalAlign: "-2px" }} /> {formatDuree(commande.duree_total_min)} de production</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              Montant TTC :
+              <input
+                key={commande.updated_at}
+                type="text"
+                inputMode="decimal"
+                defaultValue={commande.montant_total_ttc != null ? String(commande.montant_total_ttc) : ""}
+                placeholder="—"
+                onBlur={(e) => patchMontant(e.target.value)}
+                style={{
+                  width: 70, fontFamily: "var(--font-sans)", fontSize: 13,
+                  border: "0.5px solid var(--hub-border)", borderRadius: 6,
+                  padding: "2px 6px", background: "white",
+                }}
+              />
+              €
+            </span>
           </div>
         </div>
-        <span style={{
-          fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
-          textTransform: "uppercase", letterSpacing: "0.08em",
-          padding: "6px 14px", borderRadius: 999,
-          background: statut.bg, color: statut.fg,
-        }}>
-          {statut.label}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{
+            fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
+            textTransform: "uppercase", letterSpacing: "0.08em",
+            padding: "6px 14px", borderRadius: 999,
+            background: "var(--hub-bg)", color: "var(--hub-foreground)", opacity: 0.7,
+            border: "0.5px solid var(--hub-border)",
+          }}>
+            {commande.source === "etsy" ? "Etsy" : commande.source === "manuel" ? "Manuel" : "Shopify"}
+          </span>
+          <span style={{
+            fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
+            textTransform: "uppercase", letterSpacing: "0.08em",
+            padding: "6px 14px", borderRadius: 999,
+            background: statut.bg, color: statut.fg,
+          }}>
+            {statut.label}
+          </span>
+        </div>
       </header>
 
       {/* SECTION BON DE PRÉPARATION PDF (si déposé via /upload) */}

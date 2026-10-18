@@ -79,6 +79,15 @@ export default function UploadCommandePage() {
     }
   }
 
+  function updateMontant(valeur: string) {
+    if (!draft) return;
+    const parsed = valeur.trim() === "" ? null : Number(valeur.replace(",", "."));
+    if (parsed !== null && Number.isNaN(parsed)) return;
+    const next = { ...draft, montant_total_ttc: parsed };
+    setDraft(next);
+    setJsonText(JSON.stringify(next, null, 2));
+  }
+
   async function handleCreate() {
     setError(null);
     let payload: Commande;
@@ -238,9 +247,30 @@ export default function UploadCommandePage() {
               </h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, fontFamily: "var(--font-sans)", fontSize: 13 }}>
                 <KV label="Date" value={draft.date_commande} />
+                <KV label="Canal" value={draft.source === "etsy" ? "Etsy" : draft.source === "manuel" ? "Manuel" : "Shopify"} />
                 <KV label="Priorité" value={draft.priorite} />
                 <KV label="Articles" value={`${draft.articles.length}`} />
                 <KV label="Durée totale" value={`${draft.duree_total_min} min`} />
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hub-foreground)", opacity: 0.55 }}>
+                    Montant TTC
+                  </div>
+                  <div style={{ marginTop: 2, display: "flex", alignItems: "center", gap: 4 }}>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={draft.montant_total_ttc != null ? String(draft.montant_total_ttc) : ""}
+                      onChange={(e) => updateMontant(e.target.value)}
+                      placeholder="absent du PDF — à saisir"
+                      style={{
+                        width: 100, fontFamily: "var(--font-sans)", fontSize: 13,
+                        border: "0.5px solid var(--hub-border)", borderRadius: 6,
+                        padding: "2px 6px", background: "white",
+                      }}
+                    />
+                    €
+                  </div>
+                </div>
               </div>
               <div style={{ marginTop: 12, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.85, lineHeight: 1.5 }}>
                 <strong>Livraison :</strong> {draft.expedition.nom} — {draft.expedition.adresse_ligne1}

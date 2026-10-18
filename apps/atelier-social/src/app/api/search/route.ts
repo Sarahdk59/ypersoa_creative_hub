@@ -512,7 +512,7 @@ export async function GET(req: NextRequest) {
     // Normalise les tokens pour matcher "1002" et "#1002" indifféremment
     const normalizedTokens = tokens.map((t) => t.replace(/^#/, ""));
     try {
-      const commandes = listCommandes();
+      const commandes = await listCommandes();
       for (const c of commandes) {
         const motifs = Array.from(new Set(c.articles.map((a) => `${a.ypm_id} ${a.ypm_nom}`)));
         const skus = c.articles.map((a) => a.sku).join(" ");

@@ -79,12 +79,14 @@ interface DraftArticle {
 
 interface DraftCommande {
   numero_shopify: string;
+  source?: "shopify" | "etsy";
   date_commande?: string;
   date_impression_bon?: string;
   priorite?: PrioriteCommande;
   expedition: AdressePostale;
   facturation?: AdressePostale;
   articles: DraftArticle[];
+  montant_total_ttc?: number;
   notes?: string;
 }
 
@@ -105,6 +107,7 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "Schéma de sortie EXACT (renvoie UNIQUEMENT un JSON valide qui respecte cette forme) :",
     "{",
     '  "numero_shopify": "#1002",                           // avec le # le cas échéant',
+    '  "source": "shopify" | "etsy",                        // selon le format reconnu en (A)/(B) ci-dessus',
     '  "date_commande": "YYYY-MM-DD",                       // date de commande, format ISO',
     '  "date_impression_bon": "YYYY-MM-DD",                 // date d\'impression du bon si présente, sinon omettre',
     '  "priorite": "normale" | "urgente",                   // "urgente" uniquement si le PDF le précise',
@@ -136,10 +139,13 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     '      "notes": "remarque article"                      // omettre si rien',
     "    }",
     "  ],",
+    '  "montant_total_ttc": 42.90,                           // total payé par le client SI explicitement écrit sur le document — OMETTRE si absent',
     '  "notes": "remarque générale"                          // omettre si rien',
     "}",
     "",
     "Règles importantes :",
+    "- Indique toujours \"source\": \"shopify\" ou \"etsy\" selon le format reconnu en (A)/(B) ci-dessus.",
+    "- N'extrait \"montant_total_ttc\" que s'il est explicitement écrit sur le document (total commande, order total, amount paid…). Ne calcule JAMAIS ce total à partir des lignes d'articles — si le document ne donne pas de total explicite, OMETS ce champ plutôt que d'estimer (les bons de préparation Shopify n'ont généralement pas de prix, les confirmations Etsy en ont souvent).",
     "- Le format SKU est OBLIGATOIREMENT YPxxx-MMM-COULEUR-TAILLE. Que le bon donne un SKU Shopify explicite,",
     "  un libellé produit structuré (\"Sweat brodé Le Câlin Beige XS\"), ou un titre d'annonce Etsy en langage",
     "  naturel (\"Personalized Embroidered Sweatshirt - Le Câlin\" + variation \"Beige / XS\"), reconstruis le SKU",
@@ -420,6 +426,7 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
   const commande: Commande = {
     id: numeroNet,
     numero_shopify: draft.numero_shopify || `#${numeroNet}`,
+    source: draft.source ?? "manuel",
     date_commande: draft.date_commande || today,
     date_impression_bon: draft.date_impression_bon,
     statut: "a_planifier",
@@ -428,6 +435,7 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
     facturation: draft.facturation ?? expedition,
     articles,
     planning: null,
+    montant_total_ttc: draft.montant_total_ttc ?? null,
     duree_total_min: 0,
     nb_changements_fil_total: 0,
     notes: draft.notes,
@@ -452,7 +460,7 @@ export interface ParsedPdfResult {
   warnings: ParsedPdfWarning[];
   pdf_text_preview: string;
   /** Moteur qui a structuré le PDF — Gemini en base, OpenAI en repli. */
-  source: "gemini" | "openai";
+  parse_engine: "gemini" | "openai";
 }
 
 /** Pipeline complet : Buffer PDF → Commande hydratée + warnings de qualité. */
@@ -469,13 +477,13 @@ export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResul
   );
 
   let draft: DraftCommande;
-  let source: "gemini" | "openai" = "gemini";
+  let parseEngine: "gemini" | "openai" = "gemini";
   try {
     draft = await callGeminiStructurePdf(text, motifsKnown, produitsKnown);
   } catch (geminiErr) {
     try {
       draft = await callOpenAIStructurePdf(text, motifsKnown, produitsKnown);
-      source = "openai";
+      parseEngine = "openai";
     } catch (openaiErr) {
       const g = geminiErr instanceof Error ? geminiErr.message : String(geminiErr);
       const o = openaiErr instanceof Error ? openaiErr.message : String(openaiErr);
@@ -515,6 +523,6 @@ export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResul
     commande,
     warnings,
     pdf_text_preview: text.slice(0, 1200),
-    source,
+    parse_engine: parseEngine,
   };
 }

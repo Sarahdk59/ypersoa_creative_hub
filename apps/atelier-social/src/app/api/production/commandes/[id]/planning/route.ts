@@ -11,7 +11,7 @@ import { allouerPlanningAuto } from "@/lib/production/planning-allocator";
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const commande = getCommande(id);
+    const commande = await getCommande(id);
     if (!commande) return NextResponse.json({ ok: false, error: "Commande introuvable" }, { status: 404 });
 
     const body = (await req.json().catch(() => ({}))) as {
@@ -27,7 +27,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     commande.planning = planning;
     // Ne pas downgrader un statut déjà avancé (en_cours, terminée, expédiée, archivée)
     if (commande.statut === "a_planifier") commande.statut = "planifiee";
-    writeCommande(commande);
+    await writeCommande(commande);
 
     return NextResponse.json({ ok: true, data: { planning, commande } });
   } catch (err) {
@@ -41,11 +41,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const commande = getCommande(id);
+    const commande = await getCommande(id);
     if (!commande) return NextResponse.json({ ok: false, error: "Commande introuvable" }, { status: 404 });
     commande.planning = null;
     commande.statut = "a_planifier";
-    writeCommande(commande);
+    await writeCommande(commande);
     return NextResponse.json({ ok: true, data: commande });
   } catch (err) {
     return NextResponse.json(

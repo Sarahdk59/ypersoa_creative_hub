@@ -131,7 +131,7 @@ export async function POST(req: Request) {
       commande: { ...parsed.commande, bon_preparation_pdf: bon },
       warnings: parsed.warnings,
       pdf_text_preview: parsed.pdf_text_preview,
-      source: parsed.source,
+      parse_engine: parsed.parse_engine,
     },
   });
 }

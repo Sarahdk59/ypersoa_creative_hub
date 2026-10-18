@@ -14,7 +14,7 @@ import {
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const commande = getCommande(id);
+  const commande = await getCommande(id);
   if (!commande) return NextResponse.json({ ok: false, error: "Commande introuvable" }, { status: 404 });
   return NextResponse.json({ ok: true, data: commande });
 }
@@ -23,12 +23,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   try {
     const { id } = await params;
     const body = (await req.json()) as Partial<Commande>;
-    const commande = getCommande(id);
+    const commande = await getCommande(id);
     if (!commande) return NextResponse.json({ ok: false, error: "Commande introuvable" }, { status: 404 });
 
     if (body.statut) commande.statut = body.statut;
     if (body.priorite) commande.priorite = body.priorite;
     if (typeof body.notes === "string") commande.notes = body.notes;
+    if (body.montant_total_ttc !== undefined) commande.montant_total_ttc = body.montant_total_ttc;
     if (body.articles) {
       commande.articles = body.articles;
       const durees = getDureesRef();
@@ -41,7 +42,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       if (commande.journal?.archivee_le) commande.statut = "archivee";
     }
 
-    writeCommande(commande);
+    await writeCommande(commande);
     return NextResponse.json({ ok: true, data: commande });
   } catch (err) {
     return NextResponse.json(

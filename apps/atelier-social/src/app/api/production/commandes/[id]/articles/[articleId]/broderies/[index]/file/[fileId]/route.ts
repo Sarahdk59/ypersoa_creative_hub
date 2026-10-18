@@ -16,7 +16,7 @@ export async function DELETE(
   try {
     const { id, articleId, index, fileId } = await params;
     const idx = Number(index);
-    const commande = getCommande(id);
+    const commande = await getCommande(id);
     if (!commande) {
       return NextResponse.json({ ok: false, error: "Commande introuvable" }, { status: 404 });
     }
@@ -40,7 +40,7 @@ export async function DELETE(
     }
 
     broderie.fichiers = (broderie.fichiers ?? []).filter((f) => f.id !== fileId);
-    writeCommande(commande);
+    await writeCommande(commande);
 
     return NextResponse.json({ ok: true, data: commande });
   } catch (err) {

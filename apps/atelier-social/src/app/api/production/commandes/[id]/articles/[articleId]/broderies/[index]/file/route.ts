@@ -46,7 +46,7 @@ export async function POST(
   try {
     const { id, articleId, index } = await params;
     const idx = Number(index);
-    const commande = getCommande(id);
+    const commande = await getCommande(id);
     if (!commande) {
       return NextResponse.json({ ok: false, error: "Commande introuvable" }, { status: 404 });
     }
@@ -112,7 +112,7 @@ export async function POST(
         uploaded_at: new Date().toISOString(),
       },
     ];
-    writeCommande(commande);
+    await writeCommande(commande);
 
     return NextResponse.json({ ok: true, data: commande });
   } catch (err) {

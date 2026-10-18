@@ -15,7 +15,7 @@ import {
 
 export async function GET() {
   try {
-    return NextResponse.json({ ok: true, data: listCommandes() });
+    return NextResponse.json({ ok: true, data: await listCommandes() });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : String(err) },
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
     const commande: Commande = {
       id: body.id,
       numero_shopify: body.numero_shopify ?? `#${body.id}`,
+      source: body.source ?? "manuel",
       date_commande: body.date_commande ?? now,
       date_impression_bon: body.date_impression_bon,
       statut: body.statut ?? "a_planifier",
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
       articles: body.articles,
       planning: body.planning ?? null,
       bon_preparation_pdf: body.bon_preparation_pdf,
+      montant_total_ttc: body.montant_total_ttc ?? null,
       duree_total_min: body.duree_total_min ?? 0,
       nb_changements_fil_total: body.nb_changements_fil_total ?? 0,
       notes: body.notes,
@@ -56,7 +58,7 @@ export async function POST(request: Request) {
       getDureesRef(),
       getFichesTechniques(),
     );
-    writeCommande(recalculee);
+    await writeCommande(recalculee);
     return NextResponse.json({ ok: true, data: recalculee });
   } catch (err) {
     return NextResponse.json(
