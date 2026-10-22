@@ -18,6 +18,7 @@ export default function MotifsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<MotifYpm | null>(null);
   const [view, setView] = useState<"grid" | "bibles">("grid");
+  const [creating, setCreating] = useState(false);
 
   const refresh = useCallback(async () => {
     const res = await fetch("/api/da/referentiels", { cache: "no-store" }).then((r) => r.json());
@@ -38,6 +39,16 @@ export default function MotifsPage() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
+  }, []);
+
+  const handleCreated = useCallback(async (id: string) => {
+    const res = await fetch("/api/da/referentiels", { cache: "no-store" }).then((r) => r.json());
+    if (!res.ok) throw new Error(res.error);
+    const bundle: MotifsBundle = { motifs: res.data.motifs, fils: res.data.fils?.couleurs ?? [], palettes: res.data.palettes?.palettes ?? [] };
+    setData(bundle);
+    setCreating(false);
+    const created = bundle.motifs.motifs.find((m) => m.id === id);
+    if (created) setSelected(created);
   }, []);
 
   if (loading) {
@@ -84,23 +95,45 @@ export default function MotifsPage() {
             .
           </p>
         </div>
-        <div style={{ display: "flex", gap: 4, padding: 4, background: "var(--hub-bg)", borderRadius: 999, border: "0.5px solid var(--hub-border)", flexShrink: 0 }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexShrink: 0 }}>
           <button
             type="button"
-            onClick={() => setView("grid")}
-            style={viewToggleStyle(view === "grid")}
-            title="Galerie visuelle"
+            onClick={() => setCreating(true)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 16px",
+              borderRadius: 999,
+              background: "var(--hub-foreground)",
+              color: "var(--hub-bg)",
+              border: "none",
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
           >
-            <LayoutGrid size={13} /> Galerie
+            <Plus size={13} /> Nouveau motif
           </button>
-          <button
-            type="button"
-            onClick={() => setView("bibles")}
-            style={viewToggleStyle(view === "bibles")}
-            title="Comparaison des bibles techniques"
-          >
-            <Table size={13} /> Bibles
-          </button>
+          <div style={{ display: "flex", gap: 4, padding: 4, background: "var(--hub-bg)", borderRadius: 999, border: "0.5px solid var(--hub-border)" }}>
+            <button
+              type="button"
+              onClick={() => setView("grid")}
+              style={viewToggleStyle(view === "grid")}
+              title="Galerie visuelle"
+            >
+              <LayoutGrid size={13} /> Galerie
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("bibles")}
+              style={viewToggleStyle(view === "bibles")}
+              title="Comparaison des bibles techniques"
+            >
+              <Table size={13} /> Bibles
+            </button>
+          </div>
         </div>
       </header>
 
@@ -182,6 +215,218 @@ export default function MotifsPage() {
       )}
 
       {selected && <MotifModal motif={selected} fils={data.fils} palettes={data.palettes} onClose={() => setSelected(null)} onUploaded={refresh} />}
+      {creating && (
+        <NewMotifModal
+          existingIds={data.motifs.motifs.map((m) => m.id)}
+          onClose={() => setCreating(false)}
+          onCreated={handleCreated}
+        />
+      )}
+    </div>
+  );
+}
+
+function nextMotifId(existingIds: string[]): string {
+  const max = existingIds.reduce((acc, id) => {
+    const match = /^YPM-(\d{3})$/.exec(id);
+    return match ? Math.max(acc, parseInt(match[1], 10)) : acc;
+  }, 0);
+  return `YPM-${String(max + 1).padStart(3, "0")}`;
+}
+
+function NewMotifModal({
+  existingIds,
+  onClose,
+  onCreated,
+}: {
+  existingIds: string[];
+  onClose: () => void;
+  onCreated: (id: string) => Promise<void>;
+}) {
+  const [id, setId] = useState(() => nextMotifId(existingIds));
+  const [nomCommercial, setNomCommercial] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [tags, setTags] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const idTrim = id.trim().toUpperCase();
+  const idValid = /^YPM-\d{3}$/.test(idTrim);
+  const idTaken = idValid && existingIds.includes(idTrim);
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "8px 10px",
+    border: "0.5px solid var(--hub-border)",
+    borderRadius: 8,
+    fontFamily: "var(--font-sans)",
+    fontSize: 13,
+    background: "white",
+  };
+  const labelStyle: React.CSSProperties = {
+    fontFamily: "var(--font-sans)",
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: "0.05em",
+    textTransform: "uppercase",
+    opacity: 0.6,
+    display: "block",
+    marginBottom: 4,
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!idValid) { setErr('ID invalide — format attendu "YPM-NNN" (ex. YPM-018)'); return; }
+    if (idTaken) { setErr(`Le motif ${idTrim} existe déjà`); return; }
+    if (!nomCommercial.trim()) { setErr("Nom commercial requis"); return; }
+    setSubmitting(true);
+    setErr(null);
+    try {
+      const fd = new FormData();
+      fd.append("id", idTrim);
+      fd.append("nom_commercial", nomCommercial.trim());
+      if (file) fd.append("file", file);
+      if (tags.trim()) fd.append("tags", tags.trim());
+      const res = await fetch("/api/da/motifs/nouveau", { method: "POST", body: fd }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error || "Échec création");
+      await onCreated(idTrim);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(30,45,74,0.4)",
+        zIndex: 100,
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 32,
+        overflow: "auto",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "white",
+          borderRadius: 20,
+          maxWidth: 480,
+          width: "100%",
+          padding: 32,
+          position: "relative",
+        }}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Fermer"
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            background: "var(--hub-bg)",
+            border: "none",
+            width: 36,
+            height: 36,
+            borderRadius: 999,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <X size={16} />
+        </button>
+
+        <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 26, fontWeight: 500, margin: 0, marginBottom: 4 }}>
+          Nouveau motif
+        </h2>
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, opacity: 0.55, margin: 0, marginBottom: 20 }}>
+          Une fois créé, ajoute ses variantes et ses fichiers prod (buste/poignet) depuis sa fiche.
+        </p>
+
+        <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div>
+            <label style={labelStyle}>ID motif</label>
+            <input
+              type="text"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              placeholder="YPM-018"
+              style={{ ...inputStyle, fontFamily: "var(--font-mono, monospace)" }}
+            />
+            {idValid && idTaken && (
+              <p style={{ fontSize: 11, color: "#a13a16", margin: "4px 0 0 0" }}>Ce motif existe déjà.</p>
+            )}
+          </div>
+
+          <div>
+            <label style={labelStyle}>Nom commercial</label>
+            <input
+              type="text"
+              value={nomCommercial}
+              onChange={(e) => setNomCommercial(e.target.value)}
+              placeholder="ex. La Comète"
+              style={inputStyle}
+            />
+          </div>
+
+          <div>
+            <label style={labelStyle}>Visuel hero (optionnel — PNG/JPG, peut être ajouté plus tard)</label>
+            <input
+              type="file"
+              accept="image/png,image/jpeg"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              style={{ fontFamily: "var(--font-sans)", fontSize: 12 }}
+            />
+          </div>
+
+          <div>
+            <label style={labelStyle}>Tags (optionnel, séparés par virgules)</label>
+            <input
+              type="text"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="ex. typo, coeur, anniversaire-date"
+              style={inputStyle}
+            />
+          </div>
+
+          {err && <p style={{ fontSize: 12, color: "#a13a16", margin: 0 }}>{err}</p>}
+
+          <button
+            type="submit"
+            disabled={submitting || !idValid || idTaken || !nomCommercial.trim()}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+              padding: "12px 18px",
+              borderRadius: 999,
+              background: "var(--hub-foreground)",
+              color: "var(--hub-bg)",
+              border: "none",
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: submitting || !idValid || idTaken || !nomCommercial.trim() ? "default" : "pointer",
+              opacity: submitting || !idValid || idTaken || !nomCommercial.trim() ? 0.5 : 1,
+              marginTop: 4,
+            }}
+          >
+            {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+            Créer le motif
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
