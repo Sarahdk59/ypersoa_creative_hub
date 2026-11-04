@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, ArrowRight, Package, Clock, AlertCircle, Archive, UploadCloud } from "lucide-react";
+import { ArrowLeft, Loader2, ArrowRight, Package, Clock, AlertCircle, Archive, UploadCloud, DownloadCloud } from "lucide-react";
 import type { Commande, StatutCommande } from "@/lib/production/commandes-loader";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
@@ -103,6 +103,23 @@ export default function CommandesListPage() {
               <UploadCloud size={13} strokeWidth={1.6} />
               Déposer un bon de préparation
             </Link>
+          )}
+          {role === "admin" && (
+            <a
+              href="/api/production/commandes/export"
+              download
+              title="Télécharge un JSON de toutes les commandes (actives + archivées) — à committer périodiquement comme filet de secours"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 14px", borderRadius: 6,
+                border: "0.5px solid var(--hub-border)", background: "var(--hub-bg)",
+                color: "var(--hub-foreground)", fontFamily: "var(--font-sans)", fontSize: 12,
+                cursor: "pointer", textDecoration: "none",
+              }}
+            >
+              <DownloadCloud size={13} strokeWidth={1.6} />
+              Exporter backup
+            </a>
           )}
           {archived.length > 0 && (
             <button
