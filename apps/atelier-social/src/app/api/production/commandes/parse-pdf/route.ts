@@ -1,7 +1,7 @@
 /**
  * POST /api/production/commandes/parse-pdf
  *
- * Réservé aux administrateurs. Reçoit un FormData avec un fichier PDF (bon
+ * Réservé à l'admin et à l'atelier (prod). Reçoit un FormData avec un fichier PDF (bon
  * de préparation Shopify), l'upload dans le bucket Supabase `commandes-pdf`,
  * puis appelle le pipeline pdf-parse + Gemini (base, repli OpenAI gpt-4o si
  * échec) pour renvoyer une commande draft (déjà hydratée + durées calculées)
@@ -37,11 +37,11 @@ function sanitizeFilename(name: string): string {
 }
 
 export async function POST(req: Request) {
-  // 1. Garde admin
-  const auth = await requireRole(["admin"]);
+  // 1. Garde admin + atelier (l'atelier crée ses commandes depuis le 04/11/2026)
+  const auth = await requireRole(["admin", "prod"]);
   if (!auth) {
     return NextResponse.json(
-      { ok: false, error: "Réservé aux administrateurs." },
+      { ok: false, error: "Réservé à l'admin et à l'atelier." },
       { status: 403 },
     );
   }

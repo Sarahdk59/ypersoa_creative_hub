@@ -52,7 +52,7 @@ export default function UploadCommandePage() {
       .catch(() => setRole(null));
   }, []);
 
-  const isAdmin = role === "admin";
+  const isAdmin = role === "admin" || role === "prod"; // admin + atelier peuvent créer une commande
 
   async function handleUpload(f: File) {
     setError(null);
@@ -147,10 +147,10 @@ export default function UploadCommandePage() {
       <div style={{ maxWidth: 720, margin: "60px auto", padding: 32, textAlign: "center" }}>
         <AlertTriangle size={32} strokeWidth={1.4} style={{ color: "#9A1818", marginBottom: 12 }} />
         <h1 style={{ fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, marginBottom: 12 }}>
-          Réservé aux administrateurs
+          Réservé à l'admin et à l'atelier
         </h1>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--hub-foreground)", opacity: 0.7 }}>
-          Seuls les comptes admin peuvent déposer un bon de commande.
+          Seuls les comptes admin et production peuvent déposer un bon de commande.
         </p>
         <Link
           href="/atelier-production/commandes"

@@ -37,7 +37,7 @@ const GARMENT_WORDS: Record<string, string> = {
   YP001: "Awdis JH001 hoodie (pullover hooded sweatshirt)",
   YP004: "Awdis JH001K kids hoodie",
   YP005: "Awdis JH030 crewneck sweatshirt",
-  YP019: "B&C TU05T t-shirt",
+  YP019: "B&C BC09T t-shirt",
   YP021: "Awdis JH050 zip hoodie (zoodie)",
   YP013: "Ypersoa vintage washed cap",
   YP022: "slim-fit t-shirt",

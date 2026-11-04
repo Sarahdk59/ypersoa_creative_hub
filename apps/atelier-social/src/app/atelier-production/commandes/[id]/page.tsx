@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback, use } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Calendar, Clock, Truck, FileText, Cpu, Play, RotateCcw, Trash2, Package, Settings, Hash, FileCode, Archive, CheckCircle2, User, ShieldCheck, AlertTriangle, RefreshCw, Zap, Layers, Upload, Paperclip } from "lucide-react";
 import { useRouter } from "next/navigation";
+import ArticleEditor from "./ArticleEditor";
+import { manquesArticle } from "@/lib/production/completude";
 import type { Commande, Article, Broderie, BroderieFileKind, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
@@ -22,6 +24,7 @@ const PLACEMENT_LABEL: Record<string, string> = {
   poignet: "Poignet",
   dos: "Dos",
   nuque: "Nuque",
+  tete: "Tête",
 };
 
 const MACHINE_COLORS: Record<string, { bg: string; fg: string; border: string }> = {
@@ -554,6 +557,8 @@ function ArticleCard({
   onDureeChange?: (field: DureeField, value: number) => void;
   onCommandeUpdated: (c: Commande) => void;
 }) {
+  const manques = manquesArticle(article);
+  const [editing, setEditing] = useState(false);
   return (
     <article style={{
       border: "0.5px solid var(--hub-border)", borderRadius: 12, padding: 20,
@@ -567,6 +572,12 @@ function ArticleCard({
               {article.produit_nom} — {article.ypm_nom}
             </h3>
           </div>
+          <div style={{ fontFamily: "var(--font-sans)", fontSize: 13, marginBottom: 4 }}>
+            Réf. article{" "}
+            <code style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, fontWeight: 600, background: article.ref_article ? "#E5F0E8" : "#FBE9E7", color: article.ref_article ? "#2F7A3E" : "#9A1818", padding: "2px 8px", borderRadius: 4 }}>
+              {article.ref_article ?? "à compléter"}
+            </code>
+          </div>
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)", opacity: 0.7 }}>
             {article.couleur_support} / {article.taille} · SKU <code style={{ fontFamily: "ui-monospace, monospace", fontSize: 11, background: "#F0EDE8", padding: "1px 6px", borderRadius: 3 }}>{article.sku}</code>
           </div>
@@ -574,6 +585,32 @@ function ArticleCard({
             <Hash size={10} strokeWidth={1.8} style={{ display: "inline", verticalAlign: "-1px", marginRight: 2 }} />
             Produit {article.produit_id} · Motif <Link href={`/atelier-production/motifs`} style={{ color: "inherit", textDecoration: "underline dotted" }}>{article.ypm_id}</Link>
           </div>
+          {manques.length > 0 && (
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}>
+              <AlertTriangle size={12} strokeWidth={1.8} style={{ color: "#9A1818" }} />
+              {manques.map((m) => (
+                <span key={m} style={{
+                  fontFamily: "var(--font-sans)", fontSize: 10, fontWeight: 600,
+                  padding: "2px 8px", borderRadius: 999, background: "#FBE9E7", color: "#9A1818",
+                }}>
+                  {m} à compléter
+                </span>
+              ))}
+            </div>
+          )}
+          {!disabled && !editing && (
+            <button
+              onClick={() => setEditing(true)}
+              style={{
+                marginTop: 8, display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "4px 10px", borderRadius: 6, border: "0.5px solid #1E6E77",
+                background: manques.length ? "#1E6E77" : "white", color: manques.length ? "white" : "#1E6E77",
+                fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500, cursor: "pointer",
+              }}
+            >
+              <Settings size={11} strokeWidth={1.8} /> Corriger produit / motif / couleur / taille
+            </button>
+          )}
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontFamily: "var(--font-editorial)", fontSize: 28, fontWeight: 500, lineHeight: 1 }}>
@@ -584,6 +621,17 @@ function ArticleCard({
           </div>
         </div>
       </div>
+
+      {editing && (
+        <div style={{ marginBottom: 12 }}>
+          <ArticleEditor
+            commandeId={commandeId}
+            article={article}
+            onSaved={onCommandeUpdated}
+            onClose={() => setEditing(false)}
+          />
+        </div>
+      )}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {article.broderies.map((b, i) => (

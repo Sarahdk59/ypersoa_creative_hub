@@ -63,7 +63,8 @@ export type TypeBroderie =
   | "texte_tres_long"
   | "symbole_simple"
   | "symbole_complexe";
-export type Placement = "buste" | "poignet" | "dos" | "nuque";
+/** "tete" = coiffe (casquette : panneau frontal / bonnet : revers) — jamais « buste » sur une coiffe. */
+export type Placement = "buste" | "poignet" | "dos" | "nuque" | "tete";
 export type Machine = "TMEZ-1" | "TMEZ-2";
 
 export interface AdressePostale {
@@ -127,6 +128,12 @@ export interface Article {
   ypm_nom: string;
   couleur_support: string;
   taille: string;
+  /** Code couleur famille Akanea (4 chiffres, ex. "0064" = Vintage Bleu). */
+  code_couleur?: string;
+  /** Code taille Akanea (4 chiffres, ex. "0001" = XS, "0000" = TU). */
+  code_taille?: string;
+  /** Réf. article Akanea YPxxx-CCCC-TTTT (ex. YP013-0064-0000). */
+  ref_article?: string;
   quantite: number;
   broderies: Broderie[];
   duree_preparation_dst_min: number;
@@ -197,7 +204,7 @@ export interface SkuMapping {
   produits: Record<string, { type: string; nom_commercial: string; fournisseur: string; ref_fournisseur: string; duree_setup_machine_min: number; note: string }>;
   motifs_sku_to_ypm: Record<string, { ypm_id: string; nom_commercial: string; note: string }>;
   fils_couleur_libre_to_id: Record<string, string>;
-  placements: Record<Placement, { label: string; cerceau: string; cote: string; note: string }>;
+  placements: Partial<Record<Placement, { label: string; cerceau: string; cote: string; note: string }>>;
   /** Nuancier interne (code_interne 4 chiffres → couleur fournisseur/libellé/id_palette), ex. "0049" = Off-White. */
   couleurs_support_code_interne?: {
     _meta: Record<string, unknown>;

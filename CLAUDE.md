@@ -762,7 +762,7 @@ Exemple : `YP005-CAL-BEIGE-XS` → produit YP005 (Sweat Awdis JH030) / motif YPM
 | Code | Type | Fournisseur | Ref |
 |---|---|---|---|
 | YP005 | Sweat Brodé | Awdis | JH030 |
-| YP019 | T-Shirt Brodé | B&C | TU05T |
+| YP019 | T-Shirt Brodé | B&C | BC09T (corrigé 04/11/2026, ex-TU05T) |
 
 **Codes motifs SKU → YPM** (mapping confirmé) :
 - `CAL` → YPM-006 Le Câlin

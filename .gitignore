@@ -19,3 +19,7 @@ __pycache__/
 
 # Claude Code local config (settings.json est partagé, settings.local.json non)
 .claude/settings.local.json
+
+# Classeurs Excel (prix d'achat, fournisseurs) — jamais versionnés. Seul le JSON généré l'est.
+*.xlsx
+~$*

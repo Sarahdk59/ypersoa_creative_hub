@@ -89,7 +89,7 @@ export default function CommandesListPage() {
           </p>
         </div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-          {role === "admin" && (
+          {(role === "admin" || role === "prod") && (
             <Link
               href="/atelier-production/commandes/upload"
               style={{
@@ -128,7 +128,7 @@ export default function CommandesListPage() {
           borderRadius: 12, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)",
         }}>
           <p style={{ opacity: 0.6, margin: 0 }}>Aucune commande importée pour le moment.</p>
-          {role === "admin" && (
+          {(role === "admin" || role === "prod") && (
             <Link
               href="/atelier-production/commandes/upload"
               style={{

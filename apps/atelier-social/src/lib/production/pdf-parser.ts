@@ -36,6 +36,20 @@ import {
   type AdressePostale,
   type PrioriteCommande,
 } from "./commandes-loader";
+import {
+  buildRefArticle,
+  couleursPourProduit,
+  getCouleursAjouts,
+  isHeadwear,
+  normalizeYpmId,
+  placementParDefaut,
+  produitCatalogue,
+  produitParDefautEtsy,
+  resolveCouleurProduit,
+  resolveTaille,
+  type CouleurAjoutRow,
+} from "./catalogue";
+import { getMotifs } from "@/lib/atelier-da/referentiels-loader";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
 const PALETTE_FILS_PATH = join(REFS_DIR, "palette_fils_broderie_v2.json");
@@ -90,7 +104,7 @@ interface DraftCommande {
   notes?: string;
 }
 
-const VALID_PLACEMENTS: Placement[] = ["buste", "poignet", "dos", "nuque"];
+const VALID_PLACEMENTS: Placement[] = ["buste", "poignet", "dos", "nuque", "tete"];
 
 function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): string {
   return [
@@ -128,7 +142,7 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     '      "quantite": 1,',
     '      "broderies": [',
     "        {",
-    '          "placement": "buste" | "poignet" | "dos" | "nuque",   // emplacement de la broderie',
+    '          "placement": "buste" | "poignet" | "dos" | "nuque" | "tete",   // emplacement ("tete" pour casquette/bonnet)',
     '          "fil_nom": "rose pâle",                       // couleur du fil saisie côté client, en français',
     '          "champs": [',
     '            { "label": "Texte buste", "valeur": "Maman" }',
@@ -158,7 +172,9 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "- Si un texte brodé est demandé, label = \"Texte buste\" (ou poignet/dos/nuque selon placement) et valeur = le texte saisi (respecte la casse).",
     "- Si plusieurs broderies sur le même article (ex. texte buste + initiale poignet), crée plusieurs entrées dans `broderies`.",
     "- Couleur du fil : extrais le nom libre français exact (ex. \"rose pâle\", \"vert sauge\", \"bordeaux\"). Si non précisé, omets `fil_nom`.",
-    "- Placement par défaut si non précisé : \"buste\".",
+    "- Placement par défaut si non précisé : \"buste\" pour un vêtement, \"tete\" pour une casquette ou un bonnet (on ne parle JAMAIS de buste sur une coiffe).",
+    "- SKU réel au format Akanea YPxxx-CCCC-TTTT ou YPxxx-CCCC-TTTT-YPMxxx (ex. \"YP019-0049-0005-YPM005\", \"YP013-0064-0000\") : recopie-le TEL QUEL dans `sku`, sans le reformater.",
+    "- Etsy — si le titre d'annonce ne permet pas d'identifier un produit précis, applique ces défauts : sweat à capuche / hoodie → YP001 ; sweat (sans capuche) → YP005 ; t-shirt → YP019 ; bonnet → YP009 ; casquette → YP013. Reporte toujours le titre d'annonce exact dans `notes` de l'article.",
     "- Couleur du SKU : si le bon donne un nom de couleur en clair (ex. \"Off-White\", \"Vintage sable\"), utilise-le tel quel comme segment COULEUR. Si le SKU réel du bon contient un code numérique à la place (ex. \"YP019-0049-...\"), garde ce code numérique tel quel comme segment COULEUR (ex. \"0049\") plutôt que d'inventer un nom — l'hydratation locale le décodera via le nuancier interne.",
     "- Adresse : sépare bien adresse_ligne1 (rue + n°) et adresse_ligne2 (complément type Apt/Bât). Pays par défaut = \"France\".",
     "- Si une info est absente du PDF, OMETS le champ (ne mets pas null ni \"\" ni \"N/A\").",
@@ -331,8 +347,36 @@ function shortRandom(): string {
  * conservées telles quelles avec un placeholder lisible pour que l'admin
  * puisse corriger côté UI avant validation.
  */
-export function hydrateDraftToCommande(draft: DraftCommande): Commande {
+export interface HydrateContext {
+  /** Couleurs ajoutées depuis le Hub (table catalogue_couleurs_ajouts). */
+  ajouts?: CouleurAjoutRow[];
+  /** Index motifs YPM-XXX → nom (motifs_ypm en base). */
+  motifsNom?: Map<string, string>;
+}
+
+/**
+ * Découpe un SKU. Deux formats coexistent :
+ *  - réel Akanea/Shopify : YP019-0049-0005-YPM005 (produit-couleur-taille-motif)
+ *  - historique Hub      : YP005-CAL-BEIGE-XS     (produit-motif-couleur-taille)
+ */
+function splitSku(sku: string): { produit: string; motifCode: string; ypmFromSku: string | null; couleur: string; taille: string } {
+  const parts = sku.split("-");
+  const produit = parts[0] ?? "";
+  if (/^\d{3,4}$/.test(parts[1] ?? "")) {
+    return {
+      produit,
+      motifCode: "",
+      ypmFromSku: normalizeYpmId((parts[3] ?? "").replace(/^YPM/i, "")) ,
+      couleur: (parts[1] ?? "").padStart(4, "0"),
+      taille: /^\d{1,4}$/.test(parts[2] ?? "") ? (parts[2] ?? "").padStart(4, "0") : (parts[2] ?? ""),
+    };
+  }
+  return { produit, motifCode: parts[1] ?? "", ypmFromSku: null, couleur: parts[2] ?? "", taille: parts.slice(3).join("-") };
+}
+
+export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext = {}): Commande {
   const skuMapping = getSkuMapping();
+  const ajouts = ctx.ajouts ?? [];
   const durees = getDureesRef();
   const fts = getFichesTechniques();
   const filsById = loadFilsById();
@@ -350,14 +394,28 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
     // découpe pas comme un vrai SKU, sinon "UNKNOWN" fuit tel quel comme produit_id/nom.
     const skuValue = (a.sku ?? "").trim();
     const isUnknownSku = skuValue === "" || skuValue.toUpperCase() === "UNKNOWN";
-    const parts = isUnknownSku ? [] : skuValue.split("-");
-    const produitId = parts[0] ?? "";
-    const motifCode = parts[1] ?? "";
-    const couleurFromSku = parts[2] ?? "";
-    const tailleFromSku = parts.slice(3).join("-") ?? "";
+    const split = isUnknownSku
+      ? { produit: "", motifCode: "", ypmFromSku: null, couleur: "", taille: "" }
+      : splitSku(skuValue);
+    // Défauts Etsy : produit non identifié → déduit du libellé d'annonce (notes article).
+    let produitId = split.produit;
+    if ((!produitId || !/^YP\d{3}$/.test(produitId)) && draft.source === "etsy") {
+      produitId = produitParDefautEtsy(`${a.notes ?? ""} ${skuValue}`) ?? produitId;
+    }
+    const motifCode = split.motifCode;
+    const couleurFromSku = split.couleur;
+    const tailleFromSku = split.taille;
 
     const produit = skuMapping.produits[produitId];
-    const motif = skuMapping.motifs_sku_to_ypm[motifCode];
+    const motifMapped = skuMapping.motifs_sku_to_ypm[motifCode];
+    const ypmId = motifMapped?.ypm_id ?? split.ypmFromSku ?? "";
+    const ypmNom = motifMapped?.nom_commercial ?? (ypmId ? ctx.motifsNom?.get(ypmId) : undefined);
+    const couleursProduit = produitId ? couleursPourProduit(produitId, ajouts) : [];
+    const couleurAkanea =
+      resolveCouleurProduit(couleursProduit, couleurFromSku) ??
+      resolveCouleurProduit(couleursProduit, a.couleur_support);
+    const tailleAkanea = resolveTaille(a.taille) ?? resolveTaille(tailleFromSku);
+    const produitCat = produitId ? produitCatalogue(produitId) : null;
     // Le vrai SKU Shopify encode parfois la couleur du support en code numérique interne
     // (ex. YP019-0049-... = 0049 = Off-White) plutôt qu'en nom en clair — on décode via le
     // nuancier si le segment couleur du SKU est purement numérique.
@@ -366,9 +424,11 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
       : undefined;
 
     const broderies: Broderie[] = (a.broderies ?? []).map((b) => {
-      const placement: Placement = VALID_PLACEMENTS.includes(b.placement as Placement)
+      let placement: Placement = VALID_PLACEMENTS.includes(b.placement as Placement)
         ? (b.placement as Placement)
-        : "buste";
+        : placementParDefaut(produitId);
+      // Coiffe : on ne parle jamais de buste (casquette = panneau frontal, bonnet = revers).
+      if (isHeadwear(produitId) && placement === "buste") placement = "tete";
 
       const fil = resolveFil(b.fil_nom, skuMapping, filsById);
 
@@ -399,12 +459,15 @@ export function hydrateDraftToCommande(draft: DraftCommande): Commande {
       id: `${numeroNet}-A${String(idx + 1).padStart(2, "0")}-${shortRandom()}`,
       sku: a.sku || "",
       produit_id: produitId,
-      produit_nom: produit?.nom_commercial ?? (produitId || "(produit à identifier)"),
+      produit_nom: produit?.nom_commercial ?? produitCat?.libelle ?? (produitId || "(produit à identifier)"),
       motif_sku: motifCode,
-      ypm_id: motif?.ypm_id ?? "",
-      ypm_nom: motif?.nom_commercial ?? (motifCode || "(motif à identifier)"),
-      couleur_support: a.couleur_support || couleurCodeInterne?.libelle_interne || couleurFromSku || "",
-      taille: a.taille || tailleFromSku || "",
+      ypm_id: ypmId,
+      ypm_nom: ypmNom ?? (motifCode || "(motif à identifier)"),
+      couleur_support: couleurAkanea?.libelle || a.couleur_support || couleurCodeInterne?.libelle_interne || couleurFromSku || "",
+      taille: tailleAkanea?.taille || a.taille || tailleFromSku || "",
+      code_couleur: couleurAkanea?.code,
+      code_taille: tailleAkanea?.code,
+      ref_article: buildRefArticle(produitCat ? produitId : undefined, couleurAkanea?.code, tailleAkanea?.code),
       quantite: a.quantite && a.quantite > 0 ? a.quantite : 1,
       broderies,
       duree_preparation_dst_min: 5, // sera recalculé (mutualisé par YPM)
@@ -490,14 +553,26 @@ export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResul
       throw new Error(`Parsing PDF échoué sur les deux moteurs — Gemini: ${g} / OpenAI: ${o}`);
     }
   }
-  const commande = hydrateDraftToCommande(draft);
+  const [ajouts, motifsNom] = await Promise.all([
+    getCouleursAjouts(),
+    getMotifs()
+      .then((m) => new Map(m.motifs.map((x) => [x.id, x.nom_commercial] as [string, string])))
+      .catch(() => new Map<string, string>()),
+  ]);
+  const commande = hydrateDraftToCommande(draft, { ajouts, motifsNom });
 
   const warnings: ParsedPdfWarning[] = [];
   if (!commande.articles.length) {
     warnings.push({ level: "warning", message: "Aucun article extrait du PDF." });
   }
   for (const a of commande.articles) {
-    if (!a.produit_id || !skuMapping.produits[a.produit_id]) {
+    if (a.produit_id && produitCatalogue(a.produit_id) && !a.code_couleur) {
+      warnings.push({
+        level: "warning",
+        message: `Couleur « ${a.couleur_support || "vide"} » inconnue pour ${a.produit_id} — à rattacher à un code couleur avant production.`,
+      });
+    }
+    if (!a.produit_id || (!skuMapping.produits[a.produit_id] && !produitCatalogue(a.produit_id))) {
       warnings.push({
         level: "warning",
         message: `Produit non reconnu pour l'article ${a.sku || "(sans SKU)"} — à corriger.`,

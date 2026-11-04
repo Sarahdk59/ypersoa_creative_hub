@@ -118,7 +118,7 @@ const SUPPORT_TO_PRODUCT: Record<SupportType, string | null> = {
 
 const GARMENT_WORDS_VISUAL: Record<string, string> = {
   YP001: "Awdis JH001 hoodie (pullover hooded sweatshirt)",
-  YP019: "B&C TU05T t-shirt",
+  YP019: "B&C BC09T t-shirt",
   YP013: "Ypersoa vintage washed cap",
 };
 

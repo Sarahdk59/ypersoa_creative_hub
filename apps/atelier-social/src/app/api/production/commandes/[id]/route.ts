@@ -4,6 +4,7 @@
  *   PATCH → mise à jour (statut, priorité, notes, articles partiels)
  */
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/auth-guard";
 import {
   getCommande,
   writeCommande,
@@ -20,6 +21,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireRole(["admin", "prod"]);
+  if (!auth) return NextResponse.json({ ok: false, error: "Accès réservé à l'atelier." }, { status: 403 });
   try {
     const { id } = await params;
     const body = (await req.json()) as Partial<Commande>;

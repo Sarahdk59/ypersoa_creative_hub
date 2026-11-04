@@ -2,12 +2,20 @@
   "_meta": {
     "schema_version": "1.0",
     "referentiel": "shopify_sku_mapping",
-    "last_updated": "2026-09-21",
+    "last_updated": "2026-09-28",
     "description": "Pivot entre les SKU Shopify (format YPpppp-MMM-COULEUR-TAILLE) et les référentiels internes Hub : produits-supports (palette_supports_par_produit), motifs (motifs_ypm), fils (palette_fils_broderie_v2). Source de vérité pour le module Atelier Production → Commandes.",
     "format_sku": "YP{produit3}-{motif3}-{couleur_libre}-{taille}",
     "exemple_sku": "YP005-CAL-BEIGE-XS → produit YP005 (sweat) / motif YPM-006 (Le Câlin) / couleur beige / taille XS"
   },
   "produits": {
+    "YP001": {
+      "type": "hoodie",
+      "nom_commercial": "Hoodie Adulte",
+      "fournisseur": "Awdis",
+      "ref_fournisseur": "JH001",
+      "duree_setup_machine_min": 8,
+      "note": "Hoodie iconique Ypersoa, fit relax ample, capuche doublée cordons ton sur ton (JAMAIS d'aglet, cf. red line YP001). Manquait de ce pivot SKU jusqu'ici — commande #1018 (28/09/2026) tombait en UNKNOWN faute de code produit malgré motif déjà catalogué (DEP)."
+    },
     "YP005": {
       "type": "sweat",
       "nom_commercial": "Sweat Brodé",
@@ -20,7 +28,7 @@
       "type": "tshirt",
       "nom_commercial": "T-Shirt Brodé",
       "fournisseur": "B&C",
-      "ref_fournisseur": "TU05T",
+      "ref_fournisseur": "BC09T",
       "duree_setup_machine_min": 6,
       "note": "T-shirt en jersey simple. Premier produit non-Awdis du catalogue. Dialecte de couleurs propre (cf. palette_supports_par_produit.YP019)."
     },
@@ -47,6 +55,14 @@
       "ref_fournisseur": "—",
       "duree_setup_machine_min": 6,
       "note": "Casquette vintage coton délavé (PRODUIT COIFFE). Aucun fournisseur référencé. 5 couleurs washed (beige/sable, vert_olive, bleu_pastel, rose_vif, bordeaux). Cadrage broderie : DEVANT de la calotte (panneau frontal), pas côté cœur. Bridage cadre broderie casquette ~5-7 cm de large."
+    },
+    "YP009": {
+      "type": "bonnet",
+      "nom_commercial": "Bonnet Brodé",
+      "fournisseur": "—",
+      "ref_fournisseur": "—",
+      "duree_setup_machine_min": 6,
+      "note": "Bonnet à revers (PRODUIT COIFFE, ajouté 04/11/2026). Broderie sur le REVERS (zone tête), jamais « buste ». Défaut Etsy pour « bonnet »."
     }
   },
   "motifs_sku_to_ypm": {
@@ -212,6 +228,12 @@
       "cerceau": "cerceau_nuque_petit",
       "cote": "centre_haut",
       "note": "Petite broderie haute, généralement initiale ou symbole."
+    },
+    "tete": {
+      "label": "Broderie tête",
+      "cerceau": "cadre_casquette_ou_revers_bonnet",
+      "cote": "centre",
+      "note": "Coiffe uniquement (casquette : panneau frontal de la calotte ; bonnet : revers). Remplace « buste » dès que le produit est une casquette ou un bonnet (04/11/2026)."
     }
   },
   "couleurs_support_code_interne": {

@@ -5,10 +5,13 @@
  * Body : { date_debut?: "YYYY-MM-DD", horizon_jours?: number, min_par_jour?: number }
  */
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/auth-guard";
 import { getCommande, writeCommande, getDureesRef } from "@/lib/production/commandes-loader";
 import { allouerPlanningAuto } from "@/lib/production/planning-allocator";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireRole(["admin", "prod"]);
+  if (!auth) return NextResponse.json({ ok: false, error: "Accès réservé à l'atelier." }, { status: 403 });
   try {
     const { id } = await params;
     const commande = await getCommande(id);
@@ -39,6 +42,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireRole(["admin", "prod"]);
+  if (!auth) return NextResponse.json({ ok: false, error: "Accès réservé à l'atelier." }, { status: 403 });
   try {
     const { id } = await params;
     const commande = await getCommande(id);

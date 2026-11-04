@@ -17,6 +17,7 @@
  * le champ `motif` couvrant les deux cas en texte libre.
  */
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/auth-guard";
 import {
   getCommande,
   writeCommande,
@@ -29,6 +30,8 @@ import {
 } from "@/lib/production/commandes-loader";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireRole(["admin", "prod"]);
+  if (!auth) return NextResponse.json({ ok: false, error: "Accès réservé à l'atelier." }, { status: 403 });
   try {
     const { id } = await params;
     const origine = await getCommande(id);

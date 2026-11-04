@@ -4,6 +4,7 @@
  *   POST → créer une nouvelle commande (depuis un objet déjà structuré)
  */
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/auth-guard";
 import {
   getDureesRef,
   getFichesTechniques,
@@ -25,6 +26,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireRole(["admin", "prod"]);
+  if (!auth) return NextResponse.json({ ok: false, error: "Accès réservé à l'atelier." }, { status: 403 });
   try {
     const body = (await request.json()) as Partial<Commande>;
     if (!body.id || !body.articles?.length) {
