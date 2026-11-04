@@ -278,6 +278,18 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
           >
             <FileText size={13} strokeWidth={1.8} /> Packing list
           </Link>
+          <Link
+            href={`/atelier-production/commandes/${commande.id}/dossier-technique`}
+            title="Dossier complet pour la prod (bloqué tant qu'une info manque)"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 6,
+              padding: "6px 14px", borderRadius: 999, border: "0.5px solid #1E6E77",
+              background: "white", color: "#1E6E77",
+              fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500, textDecoration: "none",
+            }}
+          >
+            <FileCode size={13} strokeWidth={1.8} /> Dossier technique
+          </Link>
           <span style={{
             fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
             textTransform: "uppercase", letterSpacing: "0.08em",
