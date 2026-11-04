@@ -6,7 +6,7 @@
  * V2 : règles & contraintes broderie, plans techniques DST/PXF.
  */
 import Link from "next/link";
-import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag, Shirt, FlaskConical, TrendingUp } from "lucide-react";
+import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag, Shirt, FlaskConical } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -89,14 +89,6 @@ const SUBMODULES: SubmoduleCard[] = [
     description: "Dépôt des fichiers DST/PXF + aperçu JPG des tests broderie à faire. Attribution à Adriana, Rebecca ou Cyrielle et suivi par phase : réception → machine → modification à prévoir → modification faite le → validé.",
     href: "/atelier-production/zone-test",
     icon: <FlaskConical size={22} strokeWidth={1.4} />,
-    status: "v0",
-  },
-  {
-    id: 11,
-    title: "Bilan de ventes",
-    description: "Vue annuelle des commandes enregistrées — CA connu (Shopify donne rarement le prix, Etsy plus souvent), répartition par produit, motif et canal, tendance mensuelle.",
-    href: "/atelier-production/bilan",
-    icon: <TrendingUp size={22} strokeWidth={1.4} />,
     status: "v0",
   },
   {

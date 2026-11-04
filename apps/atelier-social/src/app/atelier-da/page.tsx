@@ -17,7 +17,7 @@
  * Cf. _passations/IDEES_FUTURES/SPEC_atelier_DA.md.
  */
 import Link from "next/link";
-import { Users, Image as ImageIcon, BookOpen, ArrowRight, Shapes, Film, TrendingUp } from "lucide-react";
+import { Users, Image as ImageIcon, BookOpen, ArrowRight, Shapes, Film, TrendingUp, Receipt } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -75,6 +75,14 @@ const SUBMODULES: SubmoduleCard[] = [
     description: "Source unique v1.1 · 2026 : marque, voix (thermostat citron), vocabulaire brand-safe, Range Bisous, playbook et kit Mood — fusionnés en une seule page.",
     href: "/le-livre",
     icon: <BookOpen size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 11,
+    title: "Bilan de ventes",
+    description: "Vue annuelle des commandes enregistrées, segmentée par canal (Shopify / Etsy / saisie manuelle) — CA connu, répartition par produit, motif et couleur, tendance mensuelle.",
+    href: "/atelier-da/bilan",
+    icon: <Receipt size={22} strokeWidth={1.4} />,
     status: "v0",
   },
 ];

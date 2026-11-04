@@ -16,25 +16,42 @@ interface BilanMotif {
   quantite: number;
 }
 
+interface BilanCouleur {
+  couleur_id: string;
+  nom: string;
+  quantite: number;
+}
+
 interface BilanMois {
   mois: number;
   nb_commandes: number;
   ca: number;
 }
 
+type Canal = "tous" | "shopify" | "etsy" | "manuel";
+
 interface BilanData {
   annee: number;
+  canal: Canal;
   nb_commandes: number;
   nb_commandes_avec_montant: number;
   ca_total_connu: number;
   panier_moyen_connu: number | null;
   par_produit: BilanProduit[];
   par_motif: BilanMotif[];
+  par_couleur: BilanCouleur[];
   par_source: { shopify: number; etsy: number; manuel: number };
   par_mois: BilanMois[];
 }
 
 const MOIS_LABEL = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"];
+
+const CANAUX: Array<{ id: Canal; label: string }> = [
+  { id: "tous", label: "Tous canaux" },
+  { id: "shopify", label: "Shopify" },
+  { id: "etsy", label: "Etsy" },
+  { id: "manuel", label: "Saisie manuelle" },
+];
 
 function formatEur(v: number): string {
   return v.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
@@ -43,6 +60,7 @@ function formatEur(v: number): string {
 export default function BilanVentesPage() {
   const anneeActuelle = new Date().getFullYear();
   const [annee, setAnnee] = useState(anneeActuelle);
+  const [canal, setCanal] = useState<Canal>("tous");
   const [data, setData] = useState<BilanData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +68,7 @@ export default function BilanVentesPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/production/bilan?annee=${annee}`, { cache: "no-store" })
+    fetch(`/api/production/bilan?annee=${annee}&canal=${canal}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((res) => {
         if (!res.ok) throw new Error(res.error);
@@ -59,7 +77,7 @@ export default function BilanVentesPage() {
       })
       .catch((e) => setError(e instanceof Error ? e.message : String(e)))
       .finally(() => setLoading(false));
-  }, [annee]);
+  }, [annee, canal]);
 
   const maxCa = useMemo(() => {
     if (!data) return 0;
@@ -70,16 +88,16 @@ export default function BilanVentesPage() {
 
   return (
     <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-      <Link href="/atelier-production" style={{
+      <Link href="/atelier-da" style={{
         display: "inline-flex", alignItems: "center", gap: 6,
         fontFamily: "var(--font-sans)", fontSize: 12,
         color: "var(--hub-foreground)", opacity: 0.6,
         textDecoration: "none", marginBottom: 24,
       }}>
-        <ArrowLeft size={14} strokeWidth={1.6} /> Atelier Production
+        <ArrowLeft size={14} strokeWidth={1.6} /> Atelier DA
       </Link>
 
-      <header style={{ marginBottom: 28, display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16 }}>
+      <header style={{ marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16 }}>
         <div>
           <h1 style={{ fontFamily: "var(--font-editorial)", fontSize: 36, fontWeight: 500, margin: 0, marginBottom: 6 }}>
             Bilan de ventes
@@ -104,6 +122,34 @@ export default function BilanVentesPage() {
         </select>
       </header>
 
+      {/* ONGLETS CANAL */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 24, flexWrap: "wrap" }}>
+        {CANAUX.map((c) => {
+          const active = canal === c.id;
+          const count = c.id === "tous"
+            ? undefined
+            : data?.par_source[c.id as "shopify" | "etsy" | "manuel"];
+          return (
+            <button
+              key={c.id}
+              onClick={() => setCanal(c.id)}
+              style={{
+                fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 600,
+                padding: "7px 14px", borderRadius: 999,
+                border: active ? "0.5px solid var(--brand-teal, #1E6E77)" : "0.5px solid var(--hub-border)",
+                background: active ? "var(--brand-teal, #1E6E77)" : "white",
+                color: active ? "white" : "var(--hub-foreground)",
+                cursor: "pointer",
+                transition: "background 120ms, color 120ms",
+              }}
+            >
+              {c.label}
+              {count !== undefined && ` · ${count}`}
+            </button>
+          );
+        })}
+      </div>
+
       {error && (
         <div style={{ background: "#FCEDE9", border: "0.5px solid #E8A99B", color: "#7A1F12", padding: "10px 16px", borderRadius: 8, marginBottom: 16, fontFamily: "var(--font-sans)", fontSize: 13 }}>
           {error}
@@ -122,7 +168,7 @@ export default function BilanVentesPage() {
             <StatTile icon={<Package size={16} strokeWidth={1.6} />} label="Couverture montant" value={`${Math.round(couverture * 100)} %`} sub={`${data.nb_commandes_avec_montant} / ${data.nb_commandes} commandes`} />
           </section>
 
-          {couverture < 1 && (
+          {couverture < 1 && data.nb_commandes > 0 && (
             <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)", opacity: 0.6, marginTop: -16, marginBottom: 24 }}>
               Le CA connu ne porte que sur {data.nb_commandes_avec_montant} commande{data.nb_commandes_avec_montant > 1 ? "s" : ""} sur {data.nb_commandes} — les bons de préparation Shopify n&apos;indiquent généralement pas de montant ; complète-le sur la fiche commande si besoin.
             </p>
@@ -131,7 +177,7 @@ export default function BilanVentesPage() {
           {/* GRAPHIQUE MENSUEL */}
           <section style={{ marginBottom: 32 }}>
             <h2 style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--hub-foreground)", opacity: 0.6, marginBottom: 14 }}>
-              CA connu par mois — {data.annee}
+              CA connu par mois — {data.annee}{canal !== "tous" ? ` · ${CANAUX.find((c) => c.id === canal)?.label}` : ""}
             </h2>
             <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 160, padding: "0 2px", borderBottom: "1px solid var(--hub-border)" }}>
               {data.par_mois.map((m) => {
@@ -175,14 +221,17 @@ export default function BilanVentesPage() {
           <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20 }}>
             <BreakdownTable title="Par produit" rows={data.par_produit.map((p) => ({ label: p.nom || p.produit_id, value: p.quantite }))} />
             <BreakdownTable title="Par motif" rows={data.par_motif.map((m) => ({ label: m.nom || m.ypm_id, value: m.quantite }))} />
-            <BreakdownTable
-              title="Par canal"
-              rows={[
-                { label: "Shopify", value: data.par_source.shopify },
-                { label: "Etsy", value: data.par_source.etsy },
-                { label: "Manuel", value: data.par_source.manuel },
-              ]}
-            />
+            <BreakdownTable title="Par couleur" rows={data.par_couleur.map((c) => ({ label: c.nom || c.couleur_id, value: c.quantite }))} />
+            {canal === "tous" && (
+              <BreakdownTable
+                title="Par canal"
+                rows={[
+                  { label: "Shopify", value: data.par_source.shopify },
+                  { label: "Etsy", value: data.par_source.etsy },
+                  { label: "Manuel", value: data.par_source.manuel },
+                ]}
+              />
+            )}
           </section>
         </>
       ) : null}
