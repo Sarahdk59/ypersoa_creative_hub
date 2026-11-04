@@ -49,6 +49,7 @@ export async function POST(request: Request) {
       articles: body.articles,
       planning: body.planning ?? null,
       bon_preparation_pdf: body.bon_preparation_pdf,
+      documents: body.documents,
       montant_total_ttc: body.montant_total_ttc ?? null,
       duree_total_min: body.duree_total_min ?? 0,
       nb_changements_fil_total: body.nb_changements_fil_total ?? 0,

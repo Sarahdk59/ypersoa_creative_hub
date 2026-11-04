@@ -1,11 +1,13 @@
 /**
  * /atelier-production/commandes/upload
  *
- * Dépôt admin d'un bon de commande Shopify ou Etsy (PDF) → parsing IA →
- * revue/édition du draft → création de la commande.
+ * Dossier de création de commande : plusieurs pièces (bon de commande, devis,
+ * BAT, bon de livraison, étiquette d'expédition…) → lecture IA (bon/devis →
+ * articles ; étiquette → transporteur, locker, suivi) → revue du draft →
+ * création de la commande avec toutes les pièces jointes.
  *
- * Le rôle est vérifié serveur-side par /api/production/commandes/parse-pdf
- * (renvoie 403 si non admin). On vérifie côté UI en plus pour afficher un
+ * Le rôle est vérifié serveur-side par /api/production/commandes/parse-dossier
+ * (403 si ni admin ni prod). On vérifie côté UI en plus pour afficher un
  * message clair plutôt qu'une page d'erreur.
  */
 "use client";
@@ -13,9 +15,13 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, FileText, Loader2, UploadCloud, AlertTriangle, Check } from "lucide-react";
+import { ArrowLeft, FileText, Loader2, UploadCloud, AlertTriangle, Check, X, Paperclip } from "lucide-react";
 
 import type { Commande } from "@/lib/production/commandes-loader";
+import { TYPE_DOCUMENT_LABEL, devinerTypeDocument } from "@/lib/production/completude";
+
+const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp";
+interface PieceLocale { file: File; type: string }
 
 interface Warning {
   level: "warning" | "info";
@@ -28,7 +34,6 @@ interface ParseResponse {
   data?: {
     commande: Commande;
     warnings: Warning[];
-    pdf_text_preview: string;
   };
 }
 
@@ -38,7 +43,7 @@ export default function UploadCommandePage() {
   const router = useRouter();
   const [role, setRole] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
-  const [file, setFile] = useState<File | null>(null);
+  const [pieces, setPieces] = useState<PieceLocale[]>([]);
   const [draft, setDraft] = useState<Commande | null>(null);
   const [warnings, setWarnings] = useState<Warning[]>([]);
   const [jsonText, setJsonText] = useState<string>("");
@@ -54,20 +59,31 @@ export default function UploadCommandePage() {
 
   const isAdmin = role === "admin" || role === "prod"; // admin + atelier peuvent créer une commande
 
-  async function handleUpload(f: File) {
+  function ajouterFichiers(files: FileList | File[]) {
+    const ok = Array.from(files).filter((f) => !f.type || ACCEPT.includes(f.type));
+    setPieces((prev) => [...prev, ...ok.map((file) => ({ file, type: devinerTypeDocument(file.name) }))]);
+  }
+
+  async function handleAnalyse() {
     setError(null);
+    if (!pieces.some((p) => p.type === "bon_commande" || p.type === "devis")) {
+      setError("Ajoute au moins un bon de commande ou un devis : c'est lui qui donne les articles.");
+      return;
+    }
     setPhase("uploading");
-    setFile(f);
     try {
       const fd = new FormData();
-      fd.append("file", f);
-      const res = await fetch("/api/production/commandes/parse-pdf", {
+      for (const p of pieces) {
+        fd.append("files", p.file);
+        fd.append("types", p.type);
+      }
+      const res = await fetch("/api/production/commandes/parse-dossier", {
         method: "POST",
         body: fd,
       });
       const json = (await res.json()) as ParseResponse;
       if (!json.ok || !json.data) {
-        throw new Error(json.error || "Parsing échoué");
+        throw new Error(json.error || "Lecture du dossier échouée");
       }
       setDraft(json.data.commande);
       setWarnings(json.data.warnings ?? []);
@@ -178,14 +194,14 @@ export default function UploadCommandePage() {
 
       <header style={{ marginBottom: 24 }}>
         <h1 style={{ fontFamily: "var(--font-editorial)", fontSize: 32, fontWeight: 500, margin: 0, marginBottom: 8 }}>
-          Déposer un bon de préparation
+          Nouveau dossier de commande
         </h1>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 760, lineHeight: 1.5 }}>
-          Charge le PDF (bon Shopify ou Etsy) : il est parsé par Gemini (repli
-          OpenAI si besoin), les SKU sont croisés avec les référentiels
-          (produits, motifs YPM, fils Gunold), les durées sont calculées
-          (800 pts/min, 5 min DST mutualisé par motif). Tu relis et corriges
-          avant création — le PDF reste joint à la commande.
+          Dépose toutes les pièces de la commande : bon de commande (Shopify,
+          Etsy…) ou devis, BAT, bon de livraison, étiquette d&apos;expédition.
+          Le bon (ou le devis) donne les articles, l&apos;étiquette donne le
+          transporteur, le locker et le suivi. Tu relis avant création ; toutes
+          les pièces restent jointes à la commande.
         </p>
       </header>
 
@@ -200,7 +216,44 @@ export default function UploadCommandePage() {
       )}
 
       {phase === "idle" && (
-        <Dropzone onFile={handleUpload} />
+        <>
+          <Dropzone onFiles={ajouterFichiers} />
+          {pieces.length > 0 && (
+            <section style={{ marginTop: 16, border: "0.5px solid var(--hub-border)", borderRadius: 10, background: "white" }}>
+              {pieces.map((p, i) => (
+                <div key={i} style={{
+                  display: "flex", alignItems: "center", gap: 12, padding: "10px 14px",
+                  borderTop: i ? "0.5px solid var(--hub-border)" : "none",
+                  fontFamily: "var(--font-sans)", fontSize: 13,
+                }}>
+                  <Paperclip size={14} strokeWidth={1.6} style={{ opacity: 0.6 }} />
+                  <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {p.file.name} <span style={{ opacity: 0.5, fontSize: 11 }}>({(p.file.size / 1024).toFixed(0)} Ko)</span>
+                  </span>
+                  <select
+                    value={p.type}
+                    onChange={(e) => setPieces((prev) => prev.map((x, j) => (j === i ? { ...x, type: e.target.value } : x)))}
+                    style={{ padding: "5px 8px", borderRadius: 6, border: "0.5px solid var(--hub-border)", fontFamily: "var(--font-sans)", fontSize: 12 }}
+                  >
+                    {Object.entries(TYPE_DOCUMENT_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                  </select>
+                  <button
+                    onClick={() => setPieces((prev) => prev.filter((_, j) => j !== i))}
+                    title="Retirer du dossier"
+                    style={{ background: "none", border: "none", cursor: "pointer", opacity: 0.5, padding: 4 }}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+              <div style={{ display: "flex", justifyContent: "flex-end", padding: 12, borderTop: "0.5px solid var(--hub-border)" }}>
+                <button type="button" onClick={handleAnalyse} style={primaryBtn}>
+                  <Check size={14} strokeWidth={1.8} /> Analyser le dossier ({pieces.length} pièce{pieces.length > 1 ? "s" : ""})
+                </button>
+              </div>
+            </section>
+          )}
+        </>
       )}
 
       {phase === "uploading" && (
@@ -211,9 +264,9 @@ export default function UploadCommandePage() {
         }}>
           <Loader2 size={28} className="animate-spin" strokeWidth={1.4} />
           <p style={{ marginTop: 12, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.7 }}>
-            Parsing du PDF en cours via OpenAI…
+            Lecture du dossier en cours ({pieces.length} pièce{pieces.length > 1 ? "s" : ""})…
             <br />
-            <span style={{ fontSize: 11 }}>({file?.name})</span>
+            <span style={{ fontSize: 11 }}>Bon / devis, puis étiquette, puis rangement des pièces.</span>
           </p>
         </div>
       )}
@@ -273,7 +326,14 @@ export default function UploadCommandePage() {
                 </div>
               </div>
               <div style={{ marginTop: 12, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.85, lineHeight: 1.5 }}>
-                <strong>Livraison :</strong> {draft.expedition.nom} — {draft.expedition.adresse_ligne1}
+                <strong>Expédition :</strong>{" "}
+                {draft.livraison?.transporteur ?? "transporteur ?"} · {draft.livraison?.mode ?? "mode ?"}
+                {draft.livraison?.point_relais ? ` · ${draft.livraison.point_relais}` : ""}
+                {draft.livraison?.numero_suivi ? ` · suivi ${draft.livraison.numero_suivi}` : ""}
+                {" — "}<strong>Contact :</strong> {draft.contact?.email ?? "—"} / {draft.contact?.telephone ?? "—"}
+              </div>
+              <div style={{ marginTop: 4, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.85, lineHeight: 1.5 }}>
+                <strong>Adresse :</strong> {draft.expedition.nom} — {draft.expedition.adresse_ligne1}
                 {draft.expedition.adresse_ligne2 ? `, ${draft.expedition.adresse_ligne2}` : ""}, {draft.expedition.code_postal} {draft.expedition.ville}, {draft.expedition.pays}
               </div>
               <ul style={{ marginTop: 14, paddingLeft: 18, fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.6 }}>
@@ -291,20 +351,18 @@ export default function UploadCommandePage() {
                 ))}
               </ul>
 
-              {draft.bon_preparation_pdf && (
-                <a
-                  href={draft.bon_preparation_pdf.public_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 6,
-                    marginTop: 6,
-                    fontFamily: "var(--font-sans)", fontSize: 12,
-                    color: "var(--hub-foreground)",
-                  }}
-                >
-                  <FileText size={14} strokeWidth={1.6} /> Voir le bon PDF déposé
-                </a>
+              {(draft.documents ?? []).length > 0 && (
+                <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+                  {draft.documents!.map((d) => (
+                    <a key={d.id} href={d.public_url} target="_blank" rel="noreferrer" style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)",
+                    }}>
+                      <FileText size={14} strokeWidth={1.6} /> <strong>{TYPE_DOCUMENT_LABEL[d.type]}</strong> · {d.filename}
+                      {d.extraction && <span style={{ opacity: 0.6 }}> — lu : {d.extraction}</span>}
+                    </a>
+                  ))}
+                </div>
               )}
             </section>
           )}
@@ -341,13 +399,13 @@ export default function UploadCommandePage() {
                 setDraft(null);
                 setWarnings([]);
                 setJsonText("");
-                setFile(null);
+                setPieces([]);
                 setPhase("idle");
               }}
               disabled={phase === "saving"}
               style={ghostBtn}
             >
-              Annuler / changer de PDF
+              Annuler / changer les pièces
             </button>
             <button
               type="button"
@@ -377,7 +435,7 @@ function KV({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Dropzone({ onFile }: { onFile: (f: File) => void }) {
+function Dropzone({ onFiles }: { onFiles: (f: FileList | File[]) => void }) {
   const [hover, setHover] = useState(false);
   return (
     <label
@@ -386,11 +444,10 @@ function Dropzone({ onFile }: { onFile: (f: File) => void }) {
       onDrop={(e) => {
         e.preventDefault();
         setHover(false);
-        const f = e.dataTransfer.files?.[0];
-        if (f && f.type === "application/pdf") onFile(f);
+        if (e.dataTransfer.files?.length) onFiles(e.dataTransfer.files);
       }}
       style={{
-        display: "block", padding: 60, textAlign: "center", cursor: "pointer",
+        display: "block", padding: 48, textAlign: "center", cursor: "pointer",
         border: `2px dashed ${hover ? "var(--color-brand-rose, #A76059)" : "var(--hub-border)"}`,
         background: hover ? "rgba(167,96,89,0.06)" : "white",
         borderRadius: 16, transition: "background 150ms, border-color 150ms",
@@ -398,19 +455,21 @@ function Dropzone({ onFile }: { onFile: (f: File) => void }) {
     >
       <input
         type="file"
-        accept="application/pdf"
+        multiple
+        accept={ACCEPT}
         onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) onFile(f);
+          if (e.target.files?.length) onFiles(e.target.files);
+          e.target.value = "";
         }}
         style={{ display: "none" }}
       />
       <UploadCloud size={36} strokeWidth={1.4} style={{ color: "var(--hub-foreground)", opacity: 0.6, marginBottom: 12 }} />
       <p style={{ fontFamily: "var(--font-editorial)", fontSize: 20, margin: 0, color: "var(--hub-foreground)" }}>
-        Dépose le bon de commande (Shopify ou Etsy)
+        Dépose les pièces de la commande
       </p>
       <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.6, margin: "6px 0 0 0" }}>
-        Fichier PDF, 20 Mo max. Parsing IA + croisement référentiels automatiques.
+        Bon de commande ou devis (obligatoire), BAT, bon de livraison, étiquette d&apos;expédition…
+        PDF, PNG, JPG ou WebP, 20 Mo max par pièce. Type deviné d&apos;après le nom, modifiable.
       </p>
     </label>
   );

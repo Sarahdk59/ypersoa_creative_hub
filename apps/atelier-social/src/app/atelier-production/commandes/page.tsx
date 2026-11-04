@@ -101,7 +101,7 @@ export default function CommandesListPage() {
               }}
             >
               <UploadCloud size={13} strokeWidth={1.6} />
-              Déposer un bon de préparation
+              Nouveau dossier de commande
             </Link>
           )}
           {role === "admin" && (
@@ -155,7 +155,7 @@ export default function CommandesListPage() {
                 fontSize: 13, fontWeight: 500, textDecoration: "none",
               }}
             >
-              <UploadCloud size={14} strokeWidth={1.6} /> Déposer un bon de préparation
+              <UploadCloud size={14} strokeWidth={1.6} /> Nouveau dossier de commande
             </Link>
           )}
         </div>
@@ -231,6 +231,11 @@ function CommandeCard({ c }: { c: Commande }) {
           {c.priorite === "urgente" && (
             <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "var(--font-sans)", fontSize: 11, color: "#9A1818" }}>
               <AlertCircle size={12} strokeWidth={1.8} /> Urgente
+            </span>
+          )}
+          {c.notes?.trim() && (
+            <span title={c.notes} style={{ fontFamily: "var(--font-sans)", fontSize: 11, padding: "1px 8px", borderRadius: 999, background: "#FEF6E0", color: "#7A5800" }}>
+              Note atelier
             </span>
           )}
         </div>

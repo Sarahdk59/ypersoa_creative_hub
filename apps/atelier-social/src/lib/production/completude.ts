@@ -49,3 +49,22 @@ export const MODE_LIVRAISON_LABEL: Record<string, string> = {
 };
 
 export const TRANSPORTEURS = ["Mondial Relay", "Colissimo", "Chronopost", "La Poste", "UPS", "DHL", "GLS"];
+
+export const TYPE_DOCUMENT_LABEL: Record<string, string> = {
+  bon_commande: "Bon de commande",
+  devis: "Devis",
+  bat: "BAT",
+  bon_livraison: "Bon de livraison",
+  etiquette: "Étiquette d'expédition",
+  autre: "Autre",
+};
+
+/** Devine le type d'une pièce d'après son nom de fichier (modifiable ensuite). */
+export function devinerTypeDocument(filename: string): string {
+  const n = filename.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  if (/etiquette|label|mondial|colissimo|chronopost|relay|shipping|expedition/.test(n)) return "etiquette";
+  if (/(^|[^a-z])bat([^a-z]|$)|bon.a.tirer|maquette|proof|mockup/.test(n)) return "bat";
+  if (/devis|quote|estimate/.test(n)) return "devis";
+  if (/livraison|delivery|(^|[^a-z])bl([^a-z]|$)/.test(n)) return "bon_livraison";
+  return "bon_commande";
+}

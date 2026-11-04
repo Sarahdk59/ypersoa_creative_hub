@@ -181,6 +181,23 @@ export interface Planning {
   genere_le?: string;
 }
 
+export type TypeDocument = "bon_commande" | "devis" | "bat" | "bon_livraison" | "etiquette" | "autre";
+
+/** Pièce du dossier de commande (bucket `commandes-pdf`). */
+export interface DocumentCommande {
+  id: string;
+  type: TypeDocument;
+  storage_path: string;
+  public_url: string;
+  filename: string;
+  mime: string;
+  size_bytes?: number;
+  uploaded_by?: string;
+  uploaded_at: string; // ISO datetime
+  /** Ce que l'IA a lu dans la pièce (résumé court), pour traçabilité. */
+  extraction?: string;
+}
+
 export interface BonPreparationPdf {
   storage_path: string;
   public_url: string;
@@ -207,6 +224,8 @@ export interface Commande {
   journal?: JournalCommande;
   rework_de?: ReworkOrigine;
   bon_preparation_pdf?: BonPreparationPdf;
+  /** Dossier de commande : toutes les pièces jointes, typées. */
+  documents?: DocumentCommande[];
   montant_total_ttc?: number | null;
   duree_total_min: number;
   nb_changements_fil_total: number;
@@ -348,6 +367,7 @@ interface CommandeRow {
   journal: JournalCommande | null;
   rework_de: ReworkOrigine | null;
   bon_preparation_pdf: BonPreparationPdf | null;
+  documents: DocumentCommande[] | null;
   notes: string | null;
   created_at: string;
   updated_at: string;
@@ -371,6 +391,7 @@ function rowToCommande(row: CommandeRow): Commande {
     journal: row.journal ?? undefined,
     rework_de: row.rework_de ?? undefined,
     bon_preparation_pdf: row.bon_preparation_pdf ?? undefined,
+    documents: row.documents ?? undefined,
     montant_total_ttc: row.montant_total_ttc,
     duree_total_min: row.duree_total_min,
     nb_changements_fil_total: row.nb_changements_fil_total,
@@ -401,6 +422,7 @@ function commandeToRow(commande: Commande): CommandeRow {
     journal: commande.journal ?? null,
     rework_de: commande.rework_de ?? null,
     bon_preparation_pdf: commande.bon_preparation_pdf ?? null,
+    documents: commande.documents ?? null,
     notes: commande.notes ?? null,
     created_at: commande.created_at,
     updated_at: commande.updated_at,

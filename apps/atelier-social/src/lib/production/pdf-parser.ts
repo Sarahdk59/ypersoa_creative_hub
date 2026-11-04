@@ -556,29 +556,75 @@ export interface ParsedPdfResult {
 
 /** Pipeline complet : Buffer PDF → Commande hydratée + warnings de qualité. */
 export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResult> {
-  const text = await extractPdfText(buffer);
-  if (!text || text.length < 30) {
-    throw new Error("PDF illisible ou vide (pdf-parse n'a rien extrait).");
-  }
+  return parseDocumentToCommande(buffer, "application/pdf");
+}
 
+/**
+ * Lecture directe du fichier par Gemini (multimodal) : image (PNG/JPG/WebP)
+ * ou PDF scanné sans couche texte. Même schéma et même prompt que le texte.
+ */
+export async function callGeminiStructureFile(
+  buffer: Buffer,
+  mime: string,
+  motifsKnown: string[],
+  produitsKnown: string[],
+): Promise<DraftCommande> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY manquante");
+  const ai = new GoogleGenAI({ apiKey });
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: {
+      parts: [
+        { inlineData: { mimeType: mime, data: buffer.toString("base64") } },
+        { text: "Voici le bon de commande (Shopify, Etsy ou devis). Transforme-le en JSON selon le schéma fourni." },
+      ],
+    },
+    config: {
+      systemInstruction: buildSystemPrompt(motifsKnown, produitsKnown),
+      responseMimeType: "application/json",
+      temperature: 0,
+    },
+  });
+  const raw = response.text;
+  if (!raw) throw new Error("Pas de contenu Gemini");
+  try {
+    return JSON.parse(raw) as DraftCommande;
+  } catch {
+    throw new Error("Réponse Gemini non parseable en JSON");
+  }
+}
+
+/**
+ * Pipeline générique : PDF texte → texte + Gemini (repli OpenAI) ;
+ * image ou PDF scanné → lecture directe Gemini.
+ */
+export async function parseDocumentToCommande(buffer: Buffer, mime: string): Promise<ParsedPdfResult> {
   const skuMapping = getSkuMapping();
   const motifsKnown = Object.keys(skuMapping.motifs_sku_to_ypm);
   const produitsKnown = Object.entries(skuMapping.produits).map(
     ([id, p]) => `${id} = ${p.nom_commercial}`,
   );
 
+  const text = mime === "application/pdf" ? await extractPdfText(buffer).catch(() => "") : "";
+
   let draft: DraftCommande;
   let parseEngine: "gemini" | "openai" = "gemini";
-  try {
-    draft = await callGeminiStructurePdf(text, motifsKnown, produitsKnown);
-  } catch (geminiErr) {
+  if (!text || text.length < 30) {
+    // Image ou PDF sans couche texte (scan) : lecture visuelle.
+    draft = await callGeminiStructureFile(buffer, mime, motifsKnown, produitsKnown);
+  } else {
     try {
-      draft = await callOpenAIStructurePdf(text, motifsKnown, produitsKnown);
-      parseEngine = "openai";
-    } catch (openaiErr) {
-      const g = geminiErr instanceof Error ? geminiErr.message : String(geminiErr);
-      const o = openaiErr instanceof Error ? openaiErr.message : String(openaiErr);
-      throw new Error(`Parsing PDF échoué sur les deux moteurs — Gemini: ${g} / OpenAI: ${o}`);
+      draft = await callGeminiStructurePdf(text, motifsKnown, produitsKnown);
+    } catch (geminiErr) {
+      try {
+        draft = await callOpenAIStructurePdf(text, motifsKnown, produitsKnown);
+        parseEngine = "openai";
+      } catch (openaiErr) {
+        const g = geminiErr instanceof Error ? geminiErr.message : String(geminiErr);
+        const o = openaiErr instanceof Error ? openaiErr.message : String(openaiErr);
+        throw new Error(`Parsing échoué sur les deux moteurs — Gemini: ${g} / OpenAI: ${o}`);
+      }
     }
   }
   const [ajouts, motifs] = await Promise.all([

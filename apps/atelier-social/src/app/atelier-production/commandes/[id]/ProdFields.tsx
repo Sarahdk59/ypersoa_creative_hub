@@ -166,3 +166,67 @@ export function BroderieProdFields({
     </div>
   );
 }
+
+/**
+ * Note pour l'atelier (champ `notes` de la commande) : info client transmise
+ * avant la prod (« broder plus petit », « livrer avant samedi »…). Préremplie
+ * par les remarques du bon, éditable, imprimée en tête de la packing list.
+ */
+export function NoteAtelierEditor({
+  commande,
+  disabled,
+  onSaved,
+}: {
+  commande: Commande;
+  disabled?: boolean;
+  onSaved: (c: Commande) => void;
+}) {
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  async function save(value: string) {
+    if (value.trim() === (commande.notes ?? "").trim()) return;
+    setSaving(true);
+    setSaved(false);
+    try {
+      const res = await fetch(`/api/production/commandes/${commande.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: value.trim() }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      onSaved(res.data);
+      setSaved(true);
+    } catch (e) {
+      alert("Erreur enregistrement de la note : " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div style={{
+      padding: 16, borderRadius: 10, marginBottom: 24,
+      border: `0.5px solid ${commande.notes ? "#E2C679" : "var(--hub-border)"}`,
+      background: commande.notes ? "#FEF6E0" : "transparent",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+        <div style={{ ...lbl, marginBottom: 0 }}>Note pour l&apos;atelier</div>
+        <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.55 }}>
+          — imprimée en tête de la packing list
+        </span>
+        {saving && <Loader2 size={12} className="animate-spin" />}
+        {saved && !saving && <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "#2F7A3E" }}>enregistrée</span>}
+      </div>
+      <textarea
+        key={commande.updated_at}
+        defaultValue={commande.notes ?? ""}
+        disabled={disabled}
+        onBlur={(e) => save(e.target.value)}
+        placeholder="Ex. La cliente veut le prénom un peu plus petit · Cadeau : pas de facture dans le colis · À expédier avant samedi"
+        rows={3}
+        style={{ ...input, resize: "vertical", fontSize: 13, lineHeight: 1.5 }}
+      />
+    </div>
+  );
+}

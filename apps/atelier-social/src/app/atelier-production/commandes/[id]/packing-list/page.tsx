@@ -11,7 +11,7 @@
 import { notFound } from "next/navigation";
 import { getCommande, type AdressePostale, type Article, type Broderie } from "@/lib/production/commandes-loader";
 import { couleursPourProduit, getCouleursAjouts, zoneTete } from "@/lib/production/catalogue";
-import { manquesArticle, manquesCommande, MODE_LIVRAISON_LABEL } from "@/lib/production/completude";
+import { manquesArticle, manquesCommande, MODE_LIVRAISON_LABEL, TYPE_DOCUMENT_LABEL } from "@/lib/production/completude";
 import PrintBar from "./PrintBar";
 
 export const dynamic = "force-dynamic";
@@ -112,6 +112,13 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
               <li key={a.id}>Article {commande.articles.indexOf(a) + 1}{a.ref_article ? ` (${a.ref_article})` : ""} : {m.join(", ")}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {commande.notes?.trim() && (
+        <div style={{ border: "2px solid #1A1614", background: "#FEF6E0", borderRadius: 6, padding: "10px 14px", marginBottom: 14, breakInside: "avoid" }}>
+          <div className="lbl" style={{ opacity: 0.8 }}>⚠ Note pour l&apos;atelier — à lire avant de broder</div>
+          <div style={{ fontSize: 14, fontWeight: 600, whiteSpace: "pre-wrap" }}>{commande.notes}</div>
         </div>
       )}
 
@@ -221,10 +228,24 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
         );
       })}
 
-      {commande.notes && (
-        <div className="box" style={{ marginBottom: 14 }}>
-          <div className="lbl">Notes commande</div>
-          {commande.notes}
+      {(commande.documents ?? []).length > 0 && (
+        <div className="box" style={{ marginBottom: 14, breakInside: "avoid" }}>
+          <div className="lbl">Dossier joint</div>
+          <div>{commande.documents!.map((d) => `${TYPE_DOCUMENT_LABEL[d.type] ?? d.type} (${d.filename})`).join(" · ")}</div>
+          {commande.documents!.some((d) => d.type === "bat" && d.mime.startsWith("image/")) && (
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
+              {commande.documents!.filter((d) => d.type === "bat" && d.mime.startsWith("image/")).map((d) => (
+                <figure key={d.id} style={{ margin: 0, textAlign: "center" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={d.public_url} alt={`BAT ${d.filename}`} style={{ maxHeight: 180, maxWidth: 260, border: "1px solid #D8D2C8", borderRadius: 4 }} />
+                  <figcaption style={{ fontSize: 9, opacity: 0.6 }}>BAT · {d.filename}</figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
+          {commande.documents!.some((d) => d.type === "bat" && !d.mime.startsWith("image/")) && (
+            <div style={{ marginTop: 6, fontStyle: "italic", opacity: 0.7 }}>BAT en PDF : à imprimer depuis la fiche commande.</div>
+          )}
         </div>
       )}
 
