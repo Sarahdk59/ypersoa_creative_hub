@@ -13,12 +13,7 @@
  * Pour PXF/DST upload : voir /api/da/motifs/[id]/bible/upload (V2).
  */
 import { NextResponse } from "next/server";
-import { readFileSync, writeFileSync } from "fs";
-import {
-  clearMotifsCache,
-  MOTIFS_REF_PATH,
-  type MotifsYpmRef,
-} from "@/lib/atelier-da/referentiels-loader";
+import { getMotifRow, writeMotifRow } from "@/lib/atelier-da/referentiels-loader";
 
 export async function PATCH(
   request: Request,
@@ -28,9 +23,7 @@ export async function PATCH(
     const { id } = await params;
     const body = (await request.json()) as Record<string, unknown>;
 
-    const raw = readFileSync(MOTIFS_REF_PATH, "utf-8");
-    const data = JSON.parse(raw) as MotifsYpmRef;
-    const target = data.motifs.find((m) => m.id === id);
+    const target = await getMotifRow(id);
     if (!target) {
       return NextResponse.json({ ok: false, error: `Motif ${id} introuvable` }, { status: 404 });
     }
@@ -85,10 +78,7 @@ export async function PATCH(
     }
 
     target.bible = bible;
-    data._meta.last_updated = new Date().toISOString().slice(0, 10);
-
-    writeFileSync(MOTIFS_REF_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
-    clearMotifsCache();
+    await writeMotifRow(id, target);
 
     return NextResponse.json({ ok: true, data: { id, bible } });
   } catch (err) {

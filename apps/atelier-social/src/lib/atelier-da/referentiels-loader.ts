@@ -4,8 +4,9 @@
  * On lit avec fs depuis l'API route Next.js, pas d'import statique pour éviter
  * d'embarquer ~1500 lignes de JSON dans le bundle client.
  */
-import { readFileSync, readdirSync, existsSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { supabase } from "@/lib/supabase";
 
 // process.cwd() depuis Next.js dev server = apps/atelier-social/
 // Les référentiels sont à ../../referentiels/
@@ -330,11 +331,35 @@ export function getMetiers(): MetiersHub {
   return _cache.metiers;
 }
 
-export function getMotifs(): MotifsYpmRef {
+/**
+ * Les motifs vivent en base Supabase (table `motifs_ypm`) — le disque Railway
+ * est éphémère et repart de zéro à chaque déploiement (même panne que les
+ * commandes, cf. commandes-loader.ts). `data` jsonb porte tout sauf
+ * `prod_files`, calculé à la volée depuis le bucket Storage
+ * `motifs-prod-files`.
+ */
+export async function getMotifs(): Promise<MotifsYpmRef> {
   if (!_cache.motifs) {
-    _cache.motifs = readJson<MotifsYpmRef>("motifs/motifs_ypm.json");
+    if (!supabase) throw new Error("Supabase non configuré — impossible de lire les motifs.");
+    const { data, error } = await supabase
+      .from(MOTIFS_TABLE)
+      .select("id,data")
+      .order("id");
+    if (error) throw new Error(`Lecture motifs_ypm échouée : ${error.message}`);
+    const motifs: MotifYpm[] = (data ?? []).map(
+      (r) => ({ id: r.id, ...(r.data as Omit<MotifYpm, "id" | "prod_files">) }) as MotifYpm,
+    );
+    _cache.motifs = {
+      _meta: {
+        schema_version: "2.0",
+        referentiel: "motifs_ypm",
+        nb_motifs: motifs.length,
+        nb_variantes_total: motifs.reduce((s, m) => s + (m.nb_variantes || 0), 0),
+      },
+      motifs,
+    };
   }
-  const prodIndex = scanProdFilesByMotif();
+  const prodIndex = await scanProdFilesByMotif();
   return {
     ..._cache.motifs,
     motifs: _cache.motifs.motifs.map((m) => ({
@@ -346,6 +371,31 @@ export function getMotifs(): MotifsYpmRef {
 
 export function clearMotifsCache(): void {
   _cache.motifs = undefined;
+}
+
+export type MotifYpmData = Omit<MotifYpm, "id" | "prod_files">;
+
+export async function getMotifRow(id: string): Promise<MotifYpmData | null> {
+  if (!supabase) throw new Error("Supabase non configuré — impossible de lire les motifs.");
+  const { data, error } = await supabase.from(MOTIFS_TABLE).select("data").eq("id", id).maybeSingle();
+  if (error) throw new Error(`Lecture motif ${id} échouée : ${error.message}`);
+  return data ? (data.data as MotifYpmData) : null;
+}
+
+/** Met à jour un motif existant. */
+export async function writeMotifRow(id: string, data: MotifYpmData): Promise<void> {
+  if (!supabase) throw new Error("Supabase non configuré — impossible d'écrire les motifs.");
+  const { error } = await supabase.from(MOTIFS_TABLE).update({ data }).eq("id", id);
+  if (error) throw new Error(`Écriture motif ${id} échouée : ${error.message}`);
+  clearMotifsCache();
+}
+
+/** Crée un nouveau motif (échoue si l'id existe déjà — la PK fait l'unicité). */
+export async function createMotifRow(id: string, data: MotifYpmData): Promise<void> {
+  if (!supabase) throw new Error("Supabase non configuré — impossible de créer le motif.");
+  const { error } = await supabase.from(MOTIFS_TABLE).insert({ id, data });
+  if (error) throw new Error(`Création motif ${id} échouée : ${error.message}`);
+  clearMotifsCache();
 }
 
 export function getFils(): FilsRef {
@@ -470,16 +520,23 @@ export interface AttributionsLibraryRef {
 }
 export const ATTRIBUTIONS_LIB_PATH = join(REFS_DIR, "attributions_library.json");
 
-export const MOTIFS_REF_PATH = join(REFS_DIR, "motifs", "motifs_ypm.json");
+/** Dossier historique des PNG hero/variante commités en git (servis via le symlink public/motifs). */
 export const ASSETS_MOTIFS_DIR = join(process.cwd(), "..", "..", "assets", "motifs");
-export const ASSETS_MOTIFS_PXF_DIR = join(process.cwd(), "..", "..", "assets", "motifs pxf");
-export const ASSETS_MOTIFS_DST_DIR = join(process.cwd(), "..", "..", "assets", "motifs dst");
-export const ASSETS_MOTIFS_PNG_DIR = join(process.cwd(), "..", "..", "assets", "motifs png");
-export const ASSETS_MOTIFS_FT_DIR = join(process.cwd(), "..", "..", "assets", "motifs ft");
+
+export const MOTIFS_TABLE = "motifs_ypm";
+/**
+ * Fichiers prod machine (PXF/DST/FT + preview PNG), bucket Storage —
+ * remplace assets/motifs pxf|dst|png|ft/ (disque éphémère). Organisation en
+ * 4 préfixes `pxf/`, `dst/`, `png/`, `ft/`, convention de nom inchangée
+ * (`{motif_id}-{key}.{ext}` ou `{motif_id} {key}.{ext}`).
+ */
+export const MOTIFS_PROD_BUCKET = "motifs-prod-files";
+export type ProdFileType = "pxf" | "dst" | "png" | "ft";
 
 // Accepte les fichiers avec tiret OU espace comme séparateur après l'id motif.
 // Ex. "YPM-001-A.pxf" et "YPM-000 Russ Times.pxf" sont tous deux capturés.
 const buildProdRe = (ext: string) => new RegExp(`^(YPM-\\d{3})[- ](.+)\\.(${ext})$`, "i");
+const PROD_FILE_EXT: Record<ProdFileType, string> = { pxf: "pxf", dst: "dst", png: "png|jpe?g", ft: "pdf" };
 
 /** image/png pour un .png, image/jpeg pour un .jpg/.jpeg — utilisé pour servir les previews. */
 export function mimeTypeForImageFile(filename: string): string {
@@ -487,24 +544,27 @@ export function mimeTypeForImageFile(filename: string): string {
   return ext === "jpg" || ext === "jpeg" ? "image/jpeg" : "image/png";
 }
 
-/**
- * Scanne les dossiers `assets/motifs pxf/` et `assets/motifs dst/`,
- * regroupe par motif id puis par key. Source de vérité = le disque.
- */
-export function scanProdFilesByMotif(): Map<string, MotifProdFile[]> {
-  const byMotif = new Map<string, Map<string, MotifProdFile>>();
+function requireSupabase() {
+  if (!supabase) throw new Error("Supabase non configuré — impossible d'accéder aux fichiers prod motifs.");
+  return supabase;
+}
 
-  const ingest = (dir: string, slot: "pxf" | "dst" | "png" | "ft", ext: string) => {
-    if (!existsSync(dir)) return;
-    let entries: string[];
-    try {
-      entries = readdirSync(dir);
-    } catch {
-      return;
-    }
-    const re = buildProdRe(ext);
-    for (const filename of entries) {
-      const match = re.exec(filename);
+/**
+ * Liste le bucket `motifs-prod-files`, regroupe par motif id puis par key.
+ * Source de vérité = Storage (plus le disque, éphémère sur Railway).
+ */
+export async function scanProdFilesByMotif(): Promise<Map<string, MotifProdFile[]>> {
+  const byMotif = new Map<string, Map<string, MotifProdFile>>();
+  if (!supabase) return new Map();
+
+  const ingest = async (slot: ProdFileType) => {
+    const { data, error } = await supabase!.storage
+      .from(MOTIFS_PROD_BUCKET)
+      .list(slot, { limit: 1000 });
+    if (error || !data) return;
+    const re = buildProdRe(PROD_FILE_EXT[slot]);
+    for (const obj of data) {
+      const match = re.exec(obj.name);
       if (!match) continue;
       const motifId = match[1];
       const key = match[2].trim();
@@ -514,22 +574,54 @@ export function scanProdFilesByMotif(): Map<string, MotifProdFile[]> {
         byMotif.set(motifId, motifMap);
       }
       const existing = motifMap.get(key) ?? { key, pxf: null, dst: null, png: null, ft: null };
-      existing[slot] = filename;
+      existing[slot] = obj.name;
       motifMap.set(key, existing);
     }
   };
 
-  ingest(ASSETS_MOTIFS_PXF_DIR, "pxf", "pxf");
-  ingest(ASSETS_MOTIFS_DST_DIR, "dst", "dst");
-  ingest(ASSETS_MOTIFS_PNG_DIR, "png", "png|jpe?g");
-  ingest(ASSETS_MOTIFS_FT_DIR, "ft", "pdf");
+  await Promise.all([ingest("pxf"), ingest("dst"), ingest("png"), ingest("ft")]);
 
   const out = new Map<string, MotifProdFile[]>();
   for (const [motifId, keyMap] of byMotif) {
-    const list = Array.from(keyMap.values()).sort(compareProdKeys);
-    out.set(motifId, list);
+    out.set(motifId, Array.from(keyMap.values()).sort(compareProdKeys));
   }
   return out;
+}
+
+export async function uploadMotifProdFile(
+  type: ProdFileType,
+  filename: string,
+  buffer: Buffer,
+  contentType: string,
+): Promise<void> {
+  const { error } = await requireSupabase()
+    .storage.from(MOTIFS_PROD_BUCKET)
+    .upload(`${type}/${filename}`, buffer, { contentType, upsert: true });
+  if (error) throw new Error(`Upload ${type}/${filename} échoué : ${error.message}`);
+}
+
+export async function downloadMotifProdFile(type: ProdFileType, filename: string): Promise<Buffer> {
+  const { data, error } = await requireSupabase().storage.from(MOTIFS_PROD_BUCKET).download(`${type}/${filename}`);
+  if (error || !data) throw new Error(`Téléchargement ${type}/${filename} échoué : ${error?.message ?? "introuvable"}`);
+  return Buffer.from(await data.arrayBuffer());
+}
+
+/** Supprime un fichier prod ; renvoie false silencieusement s'il est déjà absent. */
+export async function deleteMotifProdFile(type: ProdFileType, filename: string): Promise<boolean> {
+  const { error } = await requireSupabase().storage.from(MOTIFS_PROD_BUCKET).remove([`${type}/${filename}`]);
+  return !error;
+}
+
+export async function moveMotifProdFile(type: ProdFileType, fromFilename: string, toFilename: string): Promise<void> {
+  const { error } = await requireSupabase()
+    .storage.from(MOTIFS_PROD_BUCKET)
+    .move(`${type}/${fromFilename}`, `${type}/${toFilename}`);
+  if (error) throw new Error(`Renommage ${type}/${fromFilename} → ${toFilename} échoué : ${error.message}`);
+}
+
+export function getMotifProdFilePublicUrl(type: ProdFileType, filename: string): string {
+  if (!supabase) return "";
+  return supabase.storage.from(MOTIFS_PROD_BUCKET).getPublicUrl(`${type}/${filename}`).data.publicUrl;
 }
 
 /**
@@ -550,13 +642,13 @@ function keyType(k: string): number {
   return 2;
 }
 
-export function getAllReferentiels() {
+export async function getAllReferentiels() {
   return {
     mannequins: getMannequins(),
     affinites: getAffinites(),
     calendrier: getCalendrier(),
     metiers: getMetiers(),
-    motifs: getMotifs(),
+    motifs: await getMotifs(),
     fils: getFils(),
     palettes: getPalettes(),
   };

@@ -5,14 +5,32 @@
  * Sert de fallback côté UI tant que la table `tags` n'est pas branchée.
  *
  * Motif et Incarnation ne sont PAS listés à la main ici : ils sont dérivés
- * de la bible `referentiels/motifs/motifs_ypm.json` (via `getMotifs()`) pour
- * ne jamais dupliquer le référentiel — chaque variante devient un tag
- * `incarnation` avec `parent_id` pointant vers le tag `motif` de sa famille
- * (cf. TagFilterSidebar, hiérarchie Motif → Incarnation).
+ * de la bible `referentiels/motifs/motifs_ypm.json` pour ne jamais dupliquer
+ * le référentiel — chaque variante devient un tag `incarnation` avec
+ * `parent_id` pointant vers le tag `motif` de sa famille (cf.
+ * TagFilterSidebar, hiérarchie Motif → Incarnation).
+ *
+ * SEED_TAGS est une constante calculée au chargement du module (synchrone),
+ * alors que les motifs vivent maintenant en base Supabase (lecture async,
+ * cf. referentiels-loader.ts) — depuis la migration motifs du 04/11/2026.
+ * On lit donc ici directement le snapshot git `motifs_ypm.json` plutôt que
+ * `getMotifs()` : une limite acceptée, puisque ce n'est qu'une liste de
+ * suggestions de tags pour la médiathèque (pas la source de vérité) — un
+ * motif créé via le Hub après le dernier déploiement n'apparaît dans cette
+ * liste qu'au prochain déploiement qui recommit le JSON.
  */
 
-import { getMotifs } from "@/lib/atelier-da/referentiels-loader";
+import { readFileSync } from "fs";
+import { join } from "path";
 import type { Tag, TagCategory } from "@/types/mediatheque";
+
+const MOTIFS_SNAPSHOT_PATH = join(process.cwd(), "..", "..", "referentiels", "motifs", "motifs_ypm.json");
+
+function readMotifsSnapshot(): {
+  motifs: { id: string; nom_commercial: string; tags?: string[]; variantes: { label: string; tags?: string[] }[] }[];
+} {
+  return JSON.parse(readFileSync(MOTIFS_SNAPSHOT_PATH, "utf-8"));
+}
 
 interface SeedTag {
   category: TagCategory;
@@ -97,7 +115,7 @@ function buildMotifDerivedTags(): SeedTag[] {
     variantes: { label: string; tags?: string[] }[];
   }[] = [];
   try {
-    motifs = getMotifs().motifs;
+    motifs = readMotifsSnapshot().motifs;
   } catch {
     // Référentiel indisponible (ex. contexte hors process.cwd() attendu) : pas de motif/incarnation/thème dérivés.
     return out;
@@ -219,7 +237,9 @@ export function findSeedTagById(id: string): Tag | undefined {
  * Déduit le canal (slug de la catégorie `canal`) depuis le ratio d'une image,
  * quand il n'est pas déjà connu explicitement (ex. `platform` posé à la
  * génération dans social-packs). Règle Sarah : 4:5 → Instagram, 2:3/9:16 →
- * Pinterest, 1:1 → Shopify (packshot) par défaut si rien d'autre n'est connu.
+ * Pinterest. Shopify n'a pas de ratio fixe (packshot, lifestyle, carré,
+ * portrait selon la fiche produit) : jamais déduit du ratio, toujours posé
+ * manuellement ou via le contexte de génération (canal explicite).
  */
 export function deduceCanalFromRatio(width: number, height: number): string | null {
   if (!width || !height) return null;
@@ -228,6 +248,5 @@ export function deduceCanalFromRatio(width: number, height: number): string | nu
 
   if (isClose(4 / 5)) return "instagram";
   if (isClose(2 / 3) || isClose(9 / 16)) return "pinterest";
-  if (isClose(1)) return "shopify";
   return null;
 }

@@ -1,9 +1,9 @@
 /**
  * POST /api/da/motifs/[id]/prod-file-upload
- * Upload d'un fichier prod (PXF / DST / PNG ou JPG / FT-pdf) dans le bon
- * dossier `assets/motifs <type>/`. La source de vérité est le disque (scanné
- * par scanProdFilesByMotif). Convention de nom : {motif_id}-{key}.{ext}
- * (l'extension du fichier stocké suit celle du fichier uploadé pour le type "png").
+ * Upload d'un fichier prod (PXF / DST / PNG ou JPG / FT-pdf) dans le bucket
+ * Storage `motifs-prod-files` (préfixe = type). Convention de nom :
+ * {motif_id}-{key}.{ext} (l'extension du fichier stocké suit celle du
+ * fichier uploadé pour le type "png").
  *
  * FormData :
  *  - file : fichier binaire
@@ -11,31 +11,25 @@
  *  - type : "pxf" | "dst" | "png" | "ft"
  */
 import { NextResponse } from "next/server";
-import { writeFileSync, existsSync, mkdirSync } from "fs";
-import { join } from "path";
-import {
-  clearMotifsCache,
-  ASSETS_MOTIFS_PXF_DIR,
-  ASSETS_MOTIFS_DST_DIR,
-  ASSETS_MOTIFS_PNG_DIR,
-  ASSETS_MOTIFS_FT_DIR,
-} from "@/lib/atelier-da/referentiels-loader";
+import { uploadMotifProdFile, type ProdFileType } from "@/lib/atelier-da/referentiels-loader";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-const DIR_BY_TYPE: Record<string, string> = {
-  pxf: ASSETS_MOTIFS_PXF_DIR,
-  dst: ASSETS_MOTIFS_DST_DIR,
-  png: ASSETS_MOTIFS_PNG_DIR,
-  ft: ASSETS_MOTIFS_FT_DIR,
-};
+const VALID_TYPES: ProdFileType[] = ["pxf", "dst", "png", "ft"];
 
 // Extensions acceptées par type — "png" accepte aussi les JPG/JPEG.
-const EXT_BY_TYPE: Record<string, string[]> = {
+const EXT_BY_TYPE: Record<ProdFileType, string[]> = {
   pxf: ["pxf"],
   dst: ["dst"],
   png: ["png", "jpg", "jpeg"],
   ft: ["pdf"],
+};
+
+const CONTENT_TYPE_BY_TYPE: Record<ProdFileType, string> = {
+  pxf: "application/octet-stream",
+  dst: "application/octet-stream",
+  png: "image/png",
+  ft: "application/pdf",
 };
 
 function sanitizeKey(input: string): string {
@@ -67,12 +61,13 @@ export async function POST(
     if (!keyRaw) {
       return NextResponse.json({ ok: false, error: "Key manquante (ex. 'A', 'BRIGITTE')" }, { status: 400 });
     }
-    if (!(type in DIR_BY_TYPE)) {
+    if (!VALID_TYPES.includes(type as ProdFileType)) {
       return NextResponse.json(
         { ok: false, error: `type doit être : pxf, dst, png ou ft (reçu : ${type})` },
         { status: 400 }
       );
     }
+    const typedType = type as ProdFileType;
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
         { ok: false, error: `Fichier trop volumineux (max ${MAX_FILE_SIZE / 1024 / 1024} MB)` },
@@ -80,13 +75,13 @@ export async function POST(
       );
     }
 
-    const allowedExts = EXT_BY_TYPE[type];
+    const allowedExts = EXT_BY_TYPE[typedType];
     const fileExt = file.name.split(".").pop()?.toLowerCase() ?? "";
     if (!allowedExts.includes(fileExt)) {
       return NextResponse.json(
         {
           ok: false,
-          error: `Extension ${fileExt} ne correspond pas au type ${type} (attendu : ${allowedExts
+          error: `Extension ${fileExt} ne correspond pas au type ${typedType} (attendu : ${allowedExts
             .map((e) => `.${e}`)
             .join(" ou ")})`,
         },
@@ -99,19 +94,14 @@ export async function POST(
       return NextResponse.json({ ok: false, error: "Key invalide après sanitization" }, { status: 400 });
     }
 
-    const dir = DIR_BY_TYPE[type];
-    if (!existsSync(dir)) {
-      mkdirSync(dir, { recursive: true });
-    }
-
     const filename = `${id}-${key}.${fileExt}`;
-    const target = join(dir, filename);
     const buffer = Buffer.from(await file.arrayBuffer());
-    writeFileSync(target, buffer);
+    const contentType = typedType === "png" && (fileExt === "jpg" || fileExt === "jpeg")
+      ? "image/jpeg"
+      : CONTENT_TYPE_BY_TYPE[typedType];
+    await uploadMotifProdFile(typedType, filename, buffer, contentType);
 
-    clearMotifsCache();
-
-    return NextResponse.json({ ok: true, data: { filename, key, type, size: file.size } });
+    return NextResponse.json({ ok: true, data: { filename, key, type: typedType, size: file.size } });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : String(err) },

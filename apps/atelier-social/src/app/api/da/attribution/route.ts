@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     const motifIdReq = typeof body.motif_id === "string" ? body.motif_id.trim() : "";
     const modeReq = body.mode === "mono" ? "mono" : "palette";
     if (motifIdReq) {
-      const motifsRef = getMotifs();
+      const motifsRef = await getMotifs();
       const motif = motifsRef.motifs.find((m) => m.id === motifIdReq);
       if (motif?.bible?.distribution_pattern && modeReq === "palette") {
         // Source des fils A/B/C/D pour le pattern :

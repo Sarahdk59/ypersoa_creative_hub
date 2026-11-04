@@ -163,7 +163,7 @@ export async function GET(req: NextRequest) {
 
     // 1. MOTIFS YPM ---------------------------------------------------------
     const motifsHits: SearchHit<MotifHitData>[] = [];
-    const motifsRef = getMotifs();
+    const motifsRef = await getMotifs();
     for (const m of motifsRef.motifs) {
       const motifLevelHay = [
         m.id, m.nom_commercial,

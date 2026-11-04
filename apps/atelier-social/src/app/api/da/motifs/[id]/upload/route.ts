@@ -18,14 +18,12 @@
  *  - tags   : string optionnel, csv (ex. "couple,annee")
  */
 import { NextResponse } from "next/server";
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { writeFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import {
-  getMotifs,
-  clearMotifsCache,
-  MOTIFS_REF_PATH,
+  getMotifRow,
+  writeMotifRow,
   ASSETS_MOTIFS_DIR,
-  type MotifsYpmRef,
 } from "@/lib/atelier-da/referentiels-loader";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase";
@@ -87,8 +85,7 @@ export async function POST(
       return NextResponse.json({ ok: false, error: "PNG ou JPG uniquement" }, { status: 400 });
     }
 
-    const ref = getMotifs();
-    const motif = ref.motifs.find((m) => m.id === id);
+    const motif = await getMotifRow(id);
     if (!motif) {
       return NextResponse.json({ ok: false, error: `Motif ${id} introuvable` }, { status: 404 });
     }
@@ -134,10 +131,8 @@ export async function POST(
       ? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
       : undefined;
 
-    // Re-read the JSON from disk so concurrent updates don't clobber each other.
-    const raw = readFileSync(MOTIFS_REF_PATH, "utf-8");
-    const data = JSON.parse(raw) as MotifsYpmRef;
-    const target = data.motifs.find((m) => m.id === id);
+    // Re-lit la ligne Supabase pour ne pas écraser une mise à jour concurrente.
+    const target = await getMotifRow(id);
     if (!target) {
       return NextResponse.json({ ok: false, error: `Motif ${id} disparu` }, { status: 500 });
     }
@@ -152,15 +147,12 @@ export async function POST(
       target.variantes = target.variantes || [];
       target.variantes.push(entry);
       target.nb_variantes = target.variantes.length;
-      data._meta.nb_variantes_total = data.motifs.reduce((s, m) => s + (m.nb_variantes || 0), 0);
     } else {
       target.shooting_pngs = target.shooting_pngs || [];
       target.shooting_pngs.push(entry);
     }
-    data._meta.last_updated = new Date().toISOString().slice(0, 10);
 
-    writeFileSync(MOTIFS_REF_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
-    clearMotifsCache();
+    await writeMotifRow(id, target);
 
     return NextResponse.json({
       ok: true,

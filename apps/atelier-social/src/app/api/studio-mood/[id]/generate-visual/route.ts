@@ -226,15 +226,15 @@ interface ResolvedMotifReference {
   url?: string;
 }
 
-function resolveMotifReference(
+async function resolveMotifReference(
   ep: StudioMoodEpisode,
   override?: { motifId: string; varianteFile?: string }
-): ResolvedMotifReference | null {
+): Promise<ResolvedMotifReference | null> {
   const motifId = override?.motifId ?? ep.motif_ypm_id;
   if (!motifId) return null;
   let ref;
   try {
-    ref = getMotifs();
+    ref = await getMotifs();
   } catch (e) {
     console.error("[studio-mood visual] getMotifs failed:", e);
     return null;
@@ -510,7 +510,7 @@ export async function POST(
   // Verrou motif : structure graphique réelle (badge, disposition du texte, symbole)
   // injectée comme référence — sinon Gemini brode ep.mot_brode en texte plat générique.
   const motifImages: Array<{ data: string; mimeType: string }> = [];
-  const resolvedMotif = resolveMotifReference(ep, body.motifOverride);
+  const resolvedMotif = await resolveMotifReference(ep, body.motifOverride);
   let motifFidelityBlock = "";
   if (resolvedMotif) {
     const img = await loadMotifImage(resolvedMotif);

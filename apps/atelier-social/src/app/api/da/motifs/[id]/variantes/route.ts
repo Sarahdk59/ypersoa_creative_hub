@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const ref = getMotifs();
+  const ref = await getMotifs();
   const motif = ref.motifs.find((m) => m.id === id);
   if (!motif) {
     return NextResponse.json({ error: `Motif ${id} introuvable` }, { status: 404 });

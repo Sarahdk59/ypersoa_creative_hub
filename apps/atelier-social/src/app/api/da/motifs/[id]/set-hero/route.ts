@@ -8,11 +8,9 @@
  * dérivé du nom de fichier (strip de l'ID prefix et de l'extension).
  */
 import { NextResponse } from "next/server";
-import { readFileSync, writeFileSync } from "fs";
 import {
-  clearMotifsCache,
-  MOTIFS_REF_PATH,
-  type MotifsYpmRef,
+  getMotifRow,
+  writeMotifRow,
   type MotifVariante,
 } from "@/lib/atelier-da/referentiels-loader";
 
@@ -40,9 +38,7 @@ export async function POST(
       return NextResponse.json({ ok: false, error: "Fichier manquant" }, { status: 400 });
     }
 
-    const raw = readFileSync(MOTIFS_REF_PATH, "utf-8");
-    const data = JSON.parse(raw) as MotifsYpmRef;
-    const target = data.motifs.find((m) => m.id === id);
+    const target = await getMotifRow(id);
     if (!target) {
       return NextResponse.json({ ok: false, error: `Motif ${id} introuvable` }, { status: 404 });
     }
@@ -91,14 +87,7 @@ export async function POST(
     }
     target.nb_variantes = variantes.length;
 
-    data._meta.nb_variantes_total = data.motifs.reduce(
-      (s, m) => s + (m.nb_variantes || 0),
-      0
-    );
-    data._meta.last_updated = new Date().toISOString().slice(0, 10);
-
-    writeFileSync(MOTIFS_REF_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
-    clearMotifsCache();
+    await writeMotifRow(id, target);
 
     return NextResponse.json({
       ok: true,

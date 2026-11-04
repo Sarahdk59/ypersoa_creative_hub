@@ -2,9 +2,9 @@
   "_meta": {
     "schema_version": "1.1",
     "referentiel": "motifs_ypm",
-    "last_updated": "2026-10-22",
-    "nb_motifs": 18,
-    "nb_variantes_total": 106,
+    "last_updated": "2026-11-02",
+    "nb_motifs": 19,
+    "nb_variantes_total": 107,
     "principe": "Catalogue 17 motifs Ypersoa + variantes (mots brodés alternatifs). Source pour atelier-DA / Référentiel motifs YPM (sous-module 3). Tags par motif et par variante (typo, coeur, anniversaire-date, maman, papa, grand-parents, mariage, naissance, amour, famille, amitie...) pour filtrage UI.",
     "directive_usage": "Le Shooting Book peut référencer un motif principal OU une variante précise.",
     "assets_path": "assets/motifs/ (servi via symlink apps/atelier-social/public/motifs)",
@@ -1727,6 +1727,25 @@
       "tags": [
         "feminin",
         "floral",
+        "typo"
+      ]
+    },
+    {
+      "id": "YPM-018",
+      "nom_commercial": "Energie",
+      "asset_principal": "",
+      "nb_variantes": 1,
+      "variantes": [
+        {
+          "file": "YPM-018-energie.png",
+          "label": "Energie",
+          "url": "https://frvhjjijoccqreidyucp.supabase.co/storage/v1/object/public/motifs-png/YPM-018-energie.png",
+          "tags": [
+            "typo"
+          ]
+        }
+      ],
+      "tags": [
         "typo"
       ]
     }

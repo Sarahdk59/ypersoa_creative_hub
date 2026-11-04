@@ -10,7 +10,7 @@ import { getAllReferentiels } from "@/lib/atelier-da/referentiels-loader";
 
 export async function GET() {
   try {
-    const data = getAllReferentiels();
+    const data = await getAllReferentiels();
     return NextResponse.json({ ok: true, data });
   } catch (err) {
     return NextResponse.json(

@@ -1,14 +1,12 @@
 /**
  * GET /api/da/motifs/[id]/preview?key=<key>
- * Stream le preview (PNG ou JPG) depuis assets/motifs png/.
+ * Stream le preview (PNG ou JPG) depuis le bucket Storage `motifs-prod-files`.
  * Utilisé par les cards "Fichiers prod" pour afficher le rendu de chaque variante.
  */
 import { NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 import {
   scanProdFilesByMotif,
-  ASSETS_MOTIFS_PNG_DIR,
+  downloadMotifProdFile,
   mimeTypeForImageFile,
 } from "@/lib/atelier-da/referentiels-loader";
 
@@ -24,13 +22,13 @@ export async function GET(
       return NextResponse.json({ ok: false, error: "key manquante" }, { status: 400 });
     }
 
-    const list = scanProdFilesByMotif().get(id);
+    const list = (await scanProdFilesByMotif()).get(id);
     const entry = list?.find((f) => f.key === key);
     if (!entry?.png) {
       return NextResponse.json({ ok: false, error: `Preview absent pour ${id}-${key}` }, { status: 404 });
     }
 
-    const buffer = readFileSync(join(ASSETS_MOTIFS_PNG_DIR, entry.png));
+    const buffer = await downloadMotifProdFile("png", entry.png);
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
