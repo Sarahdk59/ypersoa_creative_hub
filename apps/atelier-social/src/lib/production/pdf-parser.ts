@@ -458,7 +458,10 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
       const fil = resolveFil(b.fil_nom, skuMapping, filsById);
 
       const champs: ChampBroderie[] = (b.champs ?? []).map((c) => ({
-        label: c.label || `Texte ${placement}`,
+        // GPT renvoie souvent « Texte buste » même sur une casquette : on suit la zone retenue.
+        label: placement === "tete"
+          ? (c.label || "Texte tête").replace(/buste/i, "tête")
+          : c.label || `Texte ${placement}`,
         valeur: c.valeur ?? "",
         type: "mot_court", // sera reclassifié par recalculerDureesCommande
         duree_min: 0,

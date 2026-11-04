@@ -11,7 +11,7 @@
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { supabase } from "@/lib/supabase";
-import type { Placement } from "./commandes-loader";
+import type { Article, Placement } from "./commandes-loader";
 
 const CATALOGUE_PATH = join(process.cwd(), "..", "..", "referentiels", "catalogue_produits.json");
 const TBL_AJOUTS = "catalogue_couleurs_ajouts";
@@ -196,6 +196,27 @@ export function isHeadwear(ref: string | undefined): boolean {
   if (!ref) return false;
   const f = produitCatalogue(ref)?.famille ?? "";
   return /casquette|bonnet/i.test(f);
+}
+
+/**
+ * Aligne les zones d'un article sur son produit : coiffe → « tête » (zone +
+ * libellés des champs), jamais « buste ». `sensInverse` remet en « buste » un
+ * textile qui serait resté en « tête » (changement de produit coiffe → textile).
+ * Mute l'article ; renvoie true si quelque chose a changé.
+ */
+export function alignerZoneCoiffe(article: Article, sensInverse = false): boolean {
+  const coiffe = isHeadwear(article.produit_id);
+  if (!coiffe && !sensInverse) return false;
+  let change = false;
+  for (const b of article.broderies ?? []) {
+    if (coiffe && b.placement === "buste") { b.placement = "tete"; change = true; }
+    if (!coiffe && b.placement === "tete") { b.placement = "buste"; change = true; }
+    for (const c of b.champs ?? []) {
+      const label = coiffe ? c.label.replace(/buste/i, "tête") : c.label.replace(/t[êe]te/i, "buste");
+      if (label !== c.label) { c.label = label; change = true; }
+    }
+  }
+  return change;
 }
 
 /** Précision du cadre pour une broderie tête. */

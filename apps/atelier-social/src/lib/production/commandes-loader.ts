@@ -12,6 +12,7 @@
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { supabase } from "@/lib/supabase";
+import { alignerZoneCoiffe } from "./catalogue";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
 
@@ -374,6 +375,8 @@ interface CommandeRow {
 }
 
 function rowToCommande(row: CommandeRow): Commande {
+  // Commandes saisies avant la règle « coiffe = tête » : corrigées à la lecture.
+  for (const a of row.articles ?? []) alignerZoneCoiffe(a);
   return {
     id: row.id,
     numero_shopify: row.numero_shopify,

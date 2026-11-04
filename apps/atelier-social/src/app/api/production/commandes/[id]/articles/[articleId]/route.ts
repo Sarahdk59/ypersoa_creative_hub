@@ -26,7 +26,7 @@ import {
   couleursPourProduit,
   getCatalogue,
   getCouleursAjouts,
-  isHeadwear,
+  alignerZoneCoiffe,
   normalizeYpmId,
   produitCatalogue,
 } from "@/lib/production/catalogue";
@@ -70,15 +70,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       article.produit_nom = mapping.produits[ref]?.nom_commercial ?? p.libelle;
       const setup = mapping.produits[ref]?.duree_setup_machine_min;
       if (setup) article.duree_setup_min = setup;
-      const coiffe = isHeadwear(ref);
-      for (const b of article.broderies) {
-        if (coiffe && b.placement === "buste") b.placement = "tete";
-        if (!coiffe && b.placement === "tete") b.placement = "buste";
-        for (const c of b.champs) {
-          if (coiffe) c.label = c.label.replace(/buste/i, "tête");
-          else c.label = c.label.replace(/t[êe]te/i, "buste");
-        }
-      }
+      alignerZoneCoiffe(article, true);
     }
 
     const ajouts = await getCouleursAjouts();
