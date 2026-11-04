@@ -8,6 +8,7 @@
  *  - couleur : code présent pour ce produit (catalogue ou ajout Hub) — sinon
  *              la créer d'abord via POST /api/production/catalogue/couleurs
  *  - taille  : code taille Akanea
+ *  - broderie: police / fil d'une zone (fil → nom, hex, code Gunold)
  * Recalcule la réf. article YPxxx-CCCC-TTTT et les durées.
  */
 import { NextResponse } from "next/server";
@@ -29,9 +30,17 @@ import {
   normalizeYpmId,
   produitCatalogue,
 } from "@/lib/production/catalogue";
-import { getMotifs } from "@/lib/atelier-da/referentiels-loader";
+import { getFils, getMotifs } from "@/lib/atelier-da/referentiels-loader";
 
-type Body = { produit_id?: string; ypm_id?: string; code_couleur?: string; code_taille?: string; quantite?: number };
+type Body = {
+  produit_id?: string;
+  ypm_id?: string;
+  code_couleur?: string;
+  code_taille?: string;
+  quantite?: number;
+  /** Édition d'une broderie de l'article : police et/ou fil (id palette_fils_broderie_v2). */
+  broderie?: { index: number; police?: string; fil_id?: string };
+};
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string; articleId: string }> }) {
   const auth = await requireRole(["admin", "prod"]);
@@ -104,6 +113,24 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       if (!m) return bad(`Motif ${ypm} absent de la base motifs.`);
       article.ypm_id = m.id;
       article.ypm_nom = m.nom_commercial;
+      // Police par défaut = typographie de la bible motif, sans écraser une saisie.
+      const typo = m.bible?.typographie;
+      if (typo) for (const b of article.broderies) if (!b.police) b.police = typo;
+    }
+
+    if (body.broderie) {
+      const b = article.broderies[body.broderie.index];
+      if (!b) return bad(`Broderie ${body.broderie.index} introuvable.`);
+      if (body.broderie.police !== undefined) b.police = body.broderie.police.trim() || undefined;
+      if (body.broderie.fil_id !== undefined) {
+        const fil = getFils().couleurs.find((f) => f.id === body.broderie!.fil_id);
+        if (!fil) return bad(`Fil ${body.broderie.fil_id} inconnu de la palette.`);
+        b.fil_id = fil.id;
+        b.fil_nom = fil.nom;
+        b.fil_hex = fil.hex;
+        b.fil_code_gunold = fil.code_gunold ?? "";
+        for (const c of b.champs) c.fil_id = fil.id;
+      }
     }
 
     if (body.quantite !== undefined) {

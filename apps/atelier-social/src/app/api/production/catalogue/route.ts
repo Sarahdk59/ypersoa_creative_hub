@@ -1,6 +1,7 @@
 /**
  * GET /api/production/catalogue
- *   → produits (YPxxx, sans fournisseur), familles couleur Akanea, motifs YPM
+ *   → produits (YPxxx, sans fournisseur), familles couleur Akanea, motifs YPM,
+ *     fils (palette v2, code Gunold) et polices brodables
  * GET /api/production/catalogue?ref=YP013
  *   → couleurs (catalogue + ajouts Hub) et tailles du produit, zone tête éventuelle
  *
@@ -18,7 +19,10 @@ import {
   zoneTete,
 } from "@/lib/production/catalogue";
 import { getSkuMapping } from "@/lib/production/commandes-loader";
-import { getMotifs } from "@/lib/atelier-da/referentiels-loader";
+import { getFils, getMotifs } from "@/lib/atelier-da/referentiels-loader";
+
+/** Polices brodables connues (bibliothèque YPM-000 + match Tajima → Google Fonts). */
+const POLICES_BASE = ["Russ Times", "Arial Rounded", "Looney", "Museo", "Diana Star", "Script New"];
 
 export async function GET(req: Request) {
   const auth = await requireRole(["admin", "prod"]);
@@ -55,9 +59,16 @@ export async function GET(req: Request) {
       }))
       .sort((a, b) => Number(b.ypersoa) - Number(a.ypersoa) || a.ref.localeCompare(b.ref));
 
-    const motifs = await getMotifs()
-      .then((m) => m.motifs.map((x) => ({ id: x.id, nom: x.nom_commercial })))
-      .catch(() => [] as Array<{ id: string; nom: string }>);
+    const motifsRaw = await getMotifs().then((m) => m.motifs).catch(() => []);
+    const motifs = motifsRaw.map((x) => ({ id: x.id, nom: x.nom_commercial, typographie: x.bible?.typographie ?? null }));
+    const polices = Array.from(
+      new Set([
+        ...POLICES_BASE,
+        ...(motifsRaw.find((m) => m.id === "YPM-000")?.variantes ?? []).map((v) => v.label).filter(Boolean),
+        ...motifsRaw.map((m) => m.bible?.typographie).filter((t): t is string => Boolean(t)),
+      ]),
+    );
+    const fils = getFils().couleurs.map((f) => ({ id: f.id, nom: f.nom, hex: f.hex, code_gunold: f.code_gunold }));
 
     return NextResponse.json({
       ok: true,
@@ -65,6 +76,8 @@ export async function GET(req: Request) {
         produits,
         couleurs_ref: Object.values(cat.couleurs_ref).map((c) => ({ code: c.code, libelle: c.libelle, hex: c.hex })),
         motifs,
+        fils,
+        polices,
       },
     });
   } catch (err) {

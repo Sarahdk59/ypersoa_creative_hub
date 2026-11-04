@@ -11,13 +11,15 @@ import type { Article, Commande } from "@/lib/production/commandes-loader";
 
 interface ProduitOpt { ref: string; libelle: string; famille: string; ypersoa: boolean }
 interface CouleurRefOpt { code: string; libelle: string; hex: string | null }
-interface MotifOpt { id: string; nom: string }
+interface MotifOpt { id: string; nom: string; typographie: string | null }
+export interface FilOpt { id: string; nom: string; hex: string; code_gunold: string }
+export interface CatalogueBase { produits: ProduitOpt[]; couleurs_ref: CouleurRefOpt[]; motifs: MotifOpt[]; fils: FilOpt[]; polices: string[] }
 interface CouleurOpt { code: string; libelle: string; hex: string | null; origine: "catalogue" | "hub"; nouvelle_famille?: boolean }
 interface TailleOpt { code: string; taille: string }
 interface ProduitDetail { couleurs: CouleurOpt[]; tailles: TailleOpt[]; coiffe: boolean; zone_tete: string | null }
 
-let baseCache: Promise<{ produits: ProduitOpt[]; couleurs_ref: CouleurRefOpt[]; motifs: MotifOpt[] }> | null = null;
-function loadBase() {
+let baseCache: Promise<CatalogueBase> | null = null;
+export function loadBase(): Promise<CatalogueBase> {
   if (!baseCache) {
     baseCache = fetch("/api/production/catalogue", { cache: "no-store" })
       .then((r) => r.json())
@@ -54,7 +56,7 @@ export default function ArticleEditor({
   onSaved: (c: Commande) => void;
   onClose: () => void;
 }) {
-  const [base, setBase] = useState<{ produits: ProduitOpt[]; couleurs_ref: CouleurRefOpt[]; motifs: MotifOpt[] } | null>(null);
+  const [base, setBase] = useState<CatalogueBase | null>(null);
   const [detail, setDetail] = useState<ProduitDetail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);

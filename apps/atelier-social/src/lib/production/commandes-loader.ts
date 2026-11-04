@@ -76,6 +76,22 @@ export interface AdressePostale {
   pays: string;
 }
 
+export interface ContactClient {
+  email?: string;
+  telephone?: string;
+}
+
+export type ModeLivraison = "locker" | "point_relais" | "domicile" | "retrait_atelier";
+
+export interface Livraison {
+  /** Ex. "Mondial Relay", "Colissimo", "Chronopost", "La Poste". */
+  transporteur?: string;
+  mode?: ModeLivraison;
+  /** Nom / identifiant du locker ou du point relais. */
+  point_relais?: string;
+  numero_suivi?: string;
+}
+
 export interface ChampBroderie {
   label: string;
   valeur: string;
@@ -111,6 +127,8 @@ export interface Broderie {
   fil_nom_secondaire?: string;
   fil_hex_secondaire?: string;
   fil_code_gunold_secondaire?: string;
+  /** Police / typo du texte brodé (ex. "Russ Times", "Museo"). Défaut = typographie du motif. */
+  police?: string;
   duree_broderie_min: number;
   duree_cadrage_min: number;
   duree_changement_fil_min: number;
@@ -182,6 +200,8 @@ export interface Commande {
   priorite: PrioriteCommande;
   expedition: AdressePostale;
   facturation: AdressePostale;
+  contact?: ContactClient;
+  livraison?: Livraison;
   articles: Article[];
   planning: Planning | null;
   journal?: JournalCommande;
@@ -321,6 +341,8 @@ interface CommandeRow {
   nb_changements_fil_total: number;
   expedition: AdressePostale;
   facturation: AdressePostale;
+  contact: ContactClient | null;
+  livraison: Livraison | null;
   articles: Article[];
   planning: Planning | null;
   journal: JournalCommande | null;
@@ -342,6 +364,8 @@ function rowToCommande(row: CommandeRow): Commande {
     priorite: row.priorite,
     expedition: row.expedition,
     facturation: row.facturation,
+    contact: row.contact ?? undefined,
+    livraison: row.livraison ?? undefined,
     articles: row.articles,
     planning: row.planning,
     journal: row.journal ?? undefined,
@@ -370,6 +394,8 @@ function commandeToRow(commande: Commande): CommandeRow {
     nb_changements_fil_total: commande.nb_changements_fil_total,
     expedition: commande.expedition,
     facturation: commande.facturation,
+    contact: commande.contact ?? null,
+    livraison: commande.livraison ?? null,
     articles: commande.articles,
     planning: commande.planning,
     journal: commande.journal ?? null,

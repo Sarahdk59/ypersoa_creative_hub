@@ -44,6 +44,8 @@ export async function POST(request: Request) {
       priorite: body.priorite ?? "normale",
       expedition: body.expedition!,
       facturation: body.facturation ?? body.expedition!,
+      contact: body.contact,
+      livraison: body.livraison,
       articles: body.articles,
       planning: body.planning ?? null,
       bon_preparation_pdf: body.bon_preparation_pdf,

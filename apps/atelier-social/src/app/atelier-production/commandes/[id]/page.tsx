@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Loader2, Calendar, Clock, Truck, FileText, Cpu, Play, RotateCcw, Trash2, Package, Settings, Hash, FileCode, Archive, CheckCircle2, User, ShieldCheck, AlertTriangle, RefreshCw, Zap, Layers, Upload, Paperclip } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ArticleEditor from "./ArticleEditor";
+import { LivraisonContactEditor, BroderieProdFields } from "./ProdFields";
 import { manquesArticle } from "@/lib/production/completude";
 import type { Commande, Article, Broderie, BroderieFileKind, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
 
@@ -266,6 +267,16 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Link
+            href={`/atelier-production/commandes/${commande.id}/packing-list`}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 6,
+              padding: "6px 14px", borderRadius: 999, background: "#1E6E77", color: "white",
+              fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500, textDecoration: "none",
+            }}
+          >
+            <FileText size={13} strokeWidth={1.8} /> Packing list
+          </Link>
           <span style={{
             fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
             textTransform: "uppercase", letterSpacing: "0.08em",
@@ -339,6 +350,12 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
           </div>
         </div>
       </section>
+
+      <LivraisonContactEditor
+        commande={commande}
+        disabled={commande.statut === "archivee"}
+        onSaved={setCommande}
+      />
 
       {/* SECTION ARTICLES */}
       <section style={{ marginBottom: 40 }}>
@@ -1054,6 +1071,14 @@ function BroderieRow({
             </span>
           )}
         </div>
+        <BroderieProdFields
+          commandeId={commandeId}
+          articleId={articleId}
+          index={index}
+          broderie={broderie}
+          disabled={disabled}
+          onSaved={onCommandeUpdated}
+        />
         <div style={{ display: "flex", gap: 6, marginTop: 6, alignItems: "center", flexWrap: "wrap" }}>
           {(broderie.fichiers ?? []).map((f) => (
             <a

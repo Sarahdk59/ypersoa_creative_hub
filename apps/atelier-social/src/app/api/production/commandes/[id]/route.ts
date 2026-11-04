@@ -33,6 +33,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (body.priorite) commande.priorite = body.priorite;
     if (typeof body.notes === "string") commande.notes = body.notes;
     if (body.montant_total_ttc !== undefined) commande.montant_total_ttc = body.montant_total_ttc;
+    if (body.contact !== undefined) commande.contact = body.contact ?? undefined;
+    if (body.livraison !== undefined) commande.livraison = body.livraison ?? undefined;
     if (body.articles) {
       commande.articles = body.articles;
       const durees = getDureesRef();

@@ -35,6 +35,9 @@ import {
   type Placement,
   type AdressePostale,
   type PrioriteCommande,
+  type ContactClient,
+  type Livraison,
+  type ModeLivraison,
 } from "./commandes-loader";
 import {
   buildRefArticle,
@@ -99,6 +102,8 @@ interface DraftCommande {
   priorite?: PrioriteCommande;
   expedition: AdressePostale;
   facturation?: AdressePostale;
+  contact?: ContactClient;
+  livraison?: { transporteur?: string; mode?: string; point_relais?: string; numero_suivi?: string };
   articles: DraftArticle[];
   montant_total_ttc?: number;
   notes?: string;
@@ -134,6 +139,13 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     '    "pays": "France"',
     "  },",
     '  "facturation": { … même structure },                 // omettre si identique à expedition',
+    '  "contact": { "email": "client@mail.fr", "telephone": "06 12 34 56 78" },   // coordonnées acheteur si présentes, omettre sinon',
+    '  "livraison": {                                         // mode d\'expédition choisi par le client, omettre si absent',
+    '    "transporteur": "Mondial Relay",                     // Mondial Relay, Colissimo, Chronopost, La Poste, UPS…',
+    '    "mode": "locker" | "point_relais" | "domicile" | "retrait_atelier",',
+    '    "point_relais": "Locker Auchan Leers 12345",         // nom/ID du locker ou point relais si indiqué',
+    '    "numero_suivi": "…"                                  // omettre si absent',
+    '  },',
     '  "articles": [',
     "    {",
     '      "sku": "YP005-CAL-BEIGE-XS",                     // format YPxxx-MMM-COULEUR-TAILLE',
@@ -176,6 +188,8 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "- SKU réel au format Akanea YPxxx-CCCC-TTTT ou YPxxx-CCCC-TTTT-YPMxxx (ex. \"YP019-0049-0005-YPM005\", \"YP013-0064-0000\") : recopie-le TEL QUEL dans `sku`, sans le reformater.",
     "- Etsy — si le titre d'annonce ne permet pas d'identifier un produit précis, applique ces défauts : sweat à capuche / hoodie → YP001 ; sweat (sans capuche) → YP005 ; t-shirt → YP019 ; bonnet → YP009 ; casquette → YP013. Reporte toujours le titre d'annonce exact dans `notes` de l'article.",
     "- Couleur du SKU : si le bon donne un nom de couleur en clair (ex. \"Off-White\", \"Vintage sable\"), utilise-le tel quel comme segment COULEUR. Si le SKU réel du bon contient un code numérique à la place (ex. \"YP019-0049-...\"), garde ce code numérique tel quel comme segment COULEUR (ex. \"0049\") plutôt que d'inventer un nom — l'hydratation locale le décodera via le nuancier interne.",
+    "- Livraison : lis la méthode d'expédition (\"Shipping method\", \"Mode de livraison\", \"Expédition\"). « Locker » / « Lockers » → mode \"locker\" ; « Point Relais » / « Relais » → \"point_relais\" ; « Domicile » / « Colissimo à domicile » / « Standard » → \"domicile\" ; « Retrait » → \"retrait_atelier\".",
+    "- Contact : reprends l'e-mail et le téléphone de l'acheteur s'ils sont écrits sur le document, tels quels.",
     "- Adresse : sépare bien adresse_ligne1 (rue + n°) et adresse_ligne2 (complément type Apt/Bât). Pays par défaut = \"France\".",
     "- Si une info est absente du PDF, OMETS le champ (ne mets pas null ni \"\" ni \"N/A\").",
     "- Ne devine PAS le SKU si le PDF ne donne aucune référence produit/motif identifiable — préfère lever une erreur en mettant `\"sku\": \"UNKNOWN\"`.",
@@ -352,6 +366,8 @@ export interface HydrateContext {
   ajouts?: CouleurAjoutRow[];
   /** Index motifs YPM-XXX → nom (motifs_ypm en base). */
   motifsNom?: Map<string, string>;
+  /** Index motifs YPM-XXX → typographie de la bible motif (police par défaut). */
+  motifsTypo?: Map<string, string>;
 }
 
 /**
@@ -372,6 +388,15 @@ function splitSku(sku: string): { produit: string; motifCode: string; ypmFromSku
     };
   }
   return { produit, motifCode: parts[1] ?? "", ypmFromSku: null, couleur: parts[2] ?? "", taille: parts.slice(3).join("-") };
+}
+
+const MODES_LIVRAISON: ModeLivraison[] = ["locker", "point_relais", "domicile", "retrait_atelier"];
+
+function normalizeLivraison(l: DraftCommande["livraison"]): Livraison | undefined {
+  if (!l) return undefined;
+  const mode = MODES_LIVRAISON.includes(l.mode as ModeLivraison) ? (l.mode as ModeLivraison) : undefined;
+  const out: Livraison = { transporteur: l.transporteur || undefined, mode, point_relais: l.point_relais || undefined, numero_suivi: l.numero_suivi || undefined };
+  return Object.values(out).some(Boolean) ? out : undefined;
 }
 
 export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext = {}): Commande {
@@ -452,6 +477,7 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
         duree_changement_fil_min: 0,
         duree_total_min: 0,
         note_atelier: b.note_atelier,
+        police: (ypmId && ctx.motifsTypo?.get(ypmId)) || undefined,
       };
     });
 
@@ -496,6 +522,8 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
     priorite: draft.priorite ?? "normale",
     expedition,
     facturation: draft.facturation ?? expedition,
+    contact: draft.contact && (draft.contact.email || draft.contact.telephone) ? draft.contact : undefined,
+    livraison: normalizeLivraison(draft.livraison),
     articles,
     planning: null,
     montant_total_ttc: draft.montant_total_ttc ?? null,
@@ -553,13 +581,15 @@ export async function parsePdfToCommande(buffer: Buffer): Promise<ParsedPdfResul
       throw new Error(`Parsing PDF échoué sur les deux moteurs — Gemini: ${g} / OpenAI: ${o}`);
     }
   }
-  const [ajouts, motifsNom] = await Promise.all([
+  const [ajouts, motifs] = await Promise.all([
     getCouleursAjouts(),
-    getMotifs()
-      .then((m) => new Map(m.motifs.map((x) => [x.id, x.nom_commercial] as [string, string])))
-      .catch(() => new Map<string, string>()),
+    getMotifs().then((m) => m.motifs).catch(() => []),
   ]);
-  const commande = hydrateDraftToCommande(draft, { ajouts, motifsNom });
+  const motifsNom = new Map(motifs.map((x) => [x.id, x.nom_commercial] as [string, string]));
+  const motifsTypo = new Map(
+    motifs.filter((x) => x.bible?.typographie).map((x) => [x.id, x.bible!.typographie!] as [string, string]),
+  );
+  const commande = hydrateDraftToCommande(draft, { ajouts, motifsNom, motifsTypo });
 
   const warnings: ParsedPdfWarning[] = [];
   if (!commande.articles.length) {
