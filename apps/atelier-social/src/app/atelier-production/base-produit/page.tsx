@@ -71,6 +71,16 @@ export default function BaseProduitPage() {
           {nbCouleursTotal} variantes au total. Source : référentiel{" "}
           <code style={{ fontSize: 12, opacity: 0.8 }}>palette_supports_par_produit</code>.
         </p>
+        <a
+          href="/api/production/catalogue/export"
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 6, marginTop: 8, padding: "8px 14px", borderRadius: 8,
+            border: "0.5px solid var(--hub-border)", background: "white", color: "var(--hub-foreground)",
+            fontFamily: "var(--font-sans)", fontSize: 13, textDecoration: "none",
+          }}
+        >
+          Exporter la base produit (Akanea + créations Hub) en Excel
+        </a>
       </header>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>

@@ -6,7 +6,7 @@
  * V2 : règles & contraintes broderie, plans techniques DST/PXF.
  */
 import Link from "next/link";
-import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag, Shirt, FlaskConical } from "lucide-react";
+import { Palette, Droplet, Droplets, Cpu, Settings, FileBox, ArrowRight, ExternalLink, StickyNote, ShoppingBag, Shirt, FlaskConical, Truck } from "lucide-react";
 
 interface SubmoduleCard {
   id: number;
@@ -93,6 +93,14 @@ const SUBMODULES: SubmoduleCard[] = [
   },
   {
     id: 10,
+    title: "Attendus de livraison",
+    description: "Ce qu'on attend des fournisseurs sous 24/48h. Dépôt de la facture ou du bon de livraison → lignes extraites (réf., coloris, taille, qté, PU) et rattachées aux réf. Ypersoa YP001-0001-0001. Réf. manquante (article R&D) créée en 1 clic. Fiche de réception imprimable + export de la base produit.",
+    href: "/atelier-production/attendus",
+    icon: <Truck size={22} strokeWidth={1.4} />,
+    status: "v0",
+  },
+  {
+    id: 11,
     title: "Plans techniques DST/PXF",
     description: "Générateur de fiches techniques Tajima Pulse + visualisation plan d'aiguille. Export PDF prêt atelier.",
     href: null,
