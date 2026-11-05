@@ -128,6 +128,73 @@ export function normalizeKey(s: string): string {
   return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+// ──────────────────────────────────────────────────────────
+// Nuancier : un code couleur = UN libellé, partout (Akanea + Hub)
+// ──────────────────────────────────────────────────────────
+
+export interface CouleurNuancier {
+  code: string;
+  libelle: string;
+  hex: string | null;
+  /** "akanea" = famille du classeur ; "hub" = nouvelle famille créée depuis le Hub. */
+  origine: "akanea" | "hub";
+}
+
+/** Toutes les familles couleur connues : Akanea + nouvelles familles créées depuis le Hub. */
+export function nuancierCouleurs(ajouts: CouleurAjoutRow[]): Map<string, CouleurNuancier> {
+  const out = new Map<string, CouleurNuancier>();
+  for (const c of Object.values(getCatalogue().couleurs_ref)) {
+    out.set(c.code, { code: c.code, libelle: c.libelle, hex: c.hex, origine: "akanea" });
+  }
+  for (const a of ajouts) {
+    if (!out.has(a.code_couleur)) out.set(a.code_couleur, { code: a.code_couleur, libelle: a.libelle, hex: a.hex, origine: "hub" });
+  }
+  return out;
+}
+
+/** Prochain code couleur libre (hors 9999 « à préciser »). */
+export function prochainCodeCouleurLibre(ajouts: CouleurAjoutRow[]): string {
+  const codes = Array.from(nuancierCouleurs(ajouts).keys()).map(Number).filter((n) => Number.isFinite(n) && n < 9000);
+  return String((codes.length ? Math.max(...codes) : 0) + 1).padStart(4, "0");
+}
+
+/**
+ * Garde-fou avant toute création de couleur produit :
+ *  - code déjà connu → on garde SON libellé ; un libellé différent est refusé
+ *    (ex. 0150 = Almond : impossible d'enregistrer 0150 = « Vintage Marron ») ;
+ *  - code nouveau → libellé obligatoire, et ce libellé ne doit pas déjà exister
+ *    sous un autre code.
+ * Renvoie le libellé / hex à enregistrer et si c'est une nouvelle famille.
+ */
+export function verifierCouleur(
+  codeInput: string,
+  libelleInput: string | undefined,
+  ajouts: CouleurAjoutRow[],
+): { code: string; libelle: string; hex: string | null; nouvelle_famille: boolean } {
+  const code = codeInput.trim().padStart(4, "0");
+  if (!/^\d{4}$/.test(code)) throw new Error("Code couleur invalide (4 chiffres, ex. 0064).");
+  if (code === "9999") throw new Error("9999 est le code générique « à préciser », pas une couleur.");
+  const nuancier = nuancierCouleurs(ajouts);
+  const libelle = (libelleInput ?? "").trim();
+  const existant = nuancier.get(code);
+  const suivant = prochainCodeCouleurLibre(ajouts);
+
+  if (existant) {
+    if (libelle && normalizeKey(libelle) !== normalizeKey(existant.libelle)) {
+      throw new Error(
+        `Attention : ${code} = ${existant.libelle}${existant.origine === "hub" ? " (créée depuis le Hub)" : " (Akanea)"}. ` +
+        `Pour « ${libelle} », choisis la couleur existante dans la liste ou un nouveau code (prochain libre : ${suivant}).`,
+      );
+    }
+    return { code, libelle: existant.libelle, hex: existant.hex, nouvelle_famille: existant.origine === "hub" };
+  }
+
+  if (!libelle) throw new Error(`Code ${code} absent du nuancier : donne un libellé (et crée aussi le code dans Akanea).`);
+  const doublon = Array.from(nuancier.values()).find((c) => normalizeKey(c.libelle) === normalizeKey(libelle));
+  if (doublon) throw new Error(`« ${libelle} » existe déjà sous le code ${doublon.code} : choisis-le dans la liste.`);
+  return { code, libelle, hex: null, nouvelle_famille: true };
+}
+
 /** Couleurs d'un produit = catalogue + ajouts Hub (dédoublonnées par code). */
 export function couleursPourProduit(ref: string, ajouts: CouleurAjoutRow[]): CouleurProduit[] {
   const cat = getCatalogue();

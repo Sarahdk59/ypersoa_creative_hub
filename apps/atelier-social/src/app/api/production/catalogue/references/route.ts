@@ -9,7 +9,7 @@
  */
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth-guard";
-import { getCatalogue } from "@/lib/production/catalogue";
+import { nuancierCouleurs, prochainCodeCouleurLibre } from "@/lib/production/catalogue";
 import {
   chargerReferentiel,
   couleursProduitEtendu,
@@ -35,14 +35,17 @@ export async function GET(req: Request) {
         data: { ref, couleurs: couleursProduitEtendu(ref, r), tailles: taillesProduitEtendu(ref, r) },
       });
     }
-    const cat = getCatalogue();
     return NextResponse.json({
       ok: true,
       data: {
         produits: Array.from(r.produits.values())
           .map((p) => ({ ref: p.ref, libelle: p.libelle, ref_fabricant: p.ref_fabricant, famille: p.famille, statut: p.statut, origine: p.origine }))
           .sort((a, b) => a.ref.localeCompare(b.ref)),
-        couleurs_ref: Object.values(cat.couleurs_ref).map((c) => ({ code: c.code, libelle: c.libelle, hex: c.hex })),
+        // Nuancier complet (Akanea + nouvelles familles Hub) : un code = un libellé.
+        couleurs_ref: Array.from(nuancierCouleurs(r.couleursAjouts).values())
+          .filter((c) => c.code !== "9999")
+          .sort((a, b) => a.code.localeCompare(b.code)),
+        prochain_code_couleur: prochainCodeCouleurLibre(r.couleursAjouts),
         tailles: toutesTailles(),
         familles: Array.from(new Set(Array.from(r.produits.values()).map((p) => p.famille).filter(Boolean))).sort(),
         prochaine_ref: prochaineRefProduit(r),

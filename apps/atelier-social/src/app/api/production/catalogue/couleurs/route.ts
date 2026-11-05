@@ -17,9 +17,9 @@ import { requireRole } from "@/lib/auth-guard";
 import {
   couleursPourProduit,
   createCouleurAjout,
-  getCatalogue,
   getCouleursAjouts,
   produitCatalogue,
+  verifierCouleur,
 } from "@/lib/production/catalogue";
 
 export async function POST(req: Request) {
@@ -46,27 +46,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: `La couleur ${code} existe déjà pour ${ref}.` }, { status: 409 });
     }
 
-    const famille = getCatalogue().couleurs_ref[code];
-    const libelle = (body.libelle ?? "").trim() || famille?.libelle || "";
-    if (!libelle) {
-      return NextResponse.json(
-        { ok: false, error: `Code ${code} absent des familles Akanea : donne un libellé (et crée aussi le code dans Akanea).` },
-        { status: 400 },
-      );
+    // Un code = un libellé (Akanea + Hub) : refuse un libellé qui contredit le code.
+    let v;
+    try {
+      v = verifierCouleur(code, body.libelle, ajouts);
+    } catch (e) {
+      return NextResponse.json({ ok: false, error: e instanceof Error ? e.message : String(e) }, { status: 409 });
     }
-    const hex = /^#[0-9a-f]{6}$/i.test(body.hex ?? "") ? body.hex! : famille?.hex ?? null;
+    const hex = /^#[0-9a-f]{6}$/i.test(body.hex ?? "") && v.nouvelle_famille ? body.hex! : v.hex;
 
     await createCouleurAjout({
       ref_produit: ref,
-      code_couleur: code,
-      libelle,
+      code_couleur: v.code,
+      libelle: v.libelle,
       hex,
-      nouvelle_famille: !famille,
+      nouvelle_famille: v.nouvelle_famille,
       created_by: auth.email,
     });
 
     const after = await getCouleursAjouts();
-    return NextResponse.json({ ok: true, data: { couleurs: couleursPourProduit(ref, after), nouvelle_famille: !famille } });
+    return NextResponse.json({ ok: true, data: { couleurs: couleursPourProduit(ref, after), nouvelle_famille: v.nouvelle_famille } });
   } catch (err) {
     return NextResponse.json({ ok: false, error: err instanceof Error ? err.message : String(err) }, { status: 500 });
   }

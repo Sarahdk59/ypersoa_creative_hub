@@ -366,7 +366,8 @@ function AjoutLigne({ onAdd }: { onAdd: (l: Partial<Ligne>) => void }) {
 
 interface RefData {
   produits: Array<{ ref: string; libelle: string; ref_fabricant: string; famille: string; statut: string; origine: string }>;
-  couleurs_ref: Array<{ code: string; libelle: string; hex: string | null }>;
+  couleurs_ref: Array<{ code: string; libelle: string; hex: string | null; origine?: "akanea" | "hub" }>;
+  prochain_code_couleur?: string;
   tailles: Array<{ code: string; taille: string; libelle: string }>;
   familles: string[];
   prochaine_ref: string;
@@ -391,6 +392,7 @@ function ModalReference({ ligne, origine, onClose, onDone }: {
   const [couleur, setCouleur] = useState<string>(ligne.code_couleur ?? "");
   const [nouvelleCouleur, setNouvelleCouleur] = useState({ code: "", libelle: ligne.coloris, hex: "" });
   const [taille, setTaille] = useState<string>(ligne.code_taille ?? "");
+  const [rechercheCouleur, setRechercheCouleur] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -410,11 +412,29 @@ function ModalReference({ ligne, origine, onClose, onDone }: {
 
   // Couleurs proposées : celles du produit, puis toutes les familles Akanea, puis « nouvelle famille ».
   const couleursOptions = useMemo(() => {
-    const duProduit = prod?.couleurs ?? [];
-    const codes = new Set(duProduit.map((c) => c.code));
-    const autres = (ref?.couleurs_ref ?? []).filter((c) => !codes.has(c.code));
-    return { duProduit, autres };
-  }, [prod, ref]);
+    const q = normCouleur(rechercheCouleur);
+    const match = (c: { code: string; libelle: string; couleur_fabricant?: string }) =>
+      !q || c.code.includes(q) || normCouleur(`${c.libelle} ${c.couleur_fabricant ?? ""}`).includes(q);
+    const tousDuProduit = prod?.couleurs ?? [];
+    const codes = new Set(tousDuProduit.map((c) => c.code));
+    const duProduit = tousDuProduit.filter((c) => match(c) || c.code === couleur);
+    const autres = (ref?.couleurs_ref ?? []).filter((c) => !codes.has(c.code) && (match(c) || c.code === couleur));
+    return { duProduit, autres, nbTotal: tousDuProduit.length + (ref?.couleurs_ref ?? []).filter((c) => !codes.has(c.code)).length };
+  }, [prod, ref, rechercheCouleur, couleur]);
+
+  // Nuancier : un code = un libellé (Akanea + nouvelles familles Hub).
+  const nuancier = useMemo(() => new Map((ref?.couleurs_ref ?? []).map((c) => [c.code, c])), [ref]);
+  /** Couleur d'un produit dont le libellé contredit le nuancier (ex. 0150 « Vintage Marron » alors que 0150 = Almond). */
+  const conflitProduit = (c: { code: string; libelle: string }) => {
+    const n = nuancier.get(c.code);
+    return n && normCouleur(n.libelle) !== normCouleur(c.libelle) ? n.libelle : null;
+  };
+  const codeSaisi = nouvelleCouleur.code ? nouvelleCouleur.code.padStart(4, "0") : "";
+  const conflitCode = couleur === NOUVEAU && codeSaisi ? nuancier.get(codeSaisi) ?? null : null;
+  const conflitLibelle = couleur === NOUVEAU && nouvelleCouleur.libelle.trim()
+    ? (ref?.couleurs_ref ?? []).find((c) => normCouleur(c.libelle) === normCouleur(nouvelleCouleur.libelle)) ?? null
+    : null;
+  const choisirCouleurExistante = (code: string) => { setCouleur(code); setRechercheCouleur(""); };
   const taillesProduit = new Set((prod?.tailles ?? []).map((t) => t.code));
 
   const refArticle = produit && produit !== NOUVEAU && couleur && couleur !== NOUVEAU && taille ? `${produit}-${couleur}-${taille}` : null;
@@ -453,7 +473,10 @@ function ModalReference({ ligne, origine, onClose, onDone }: {
     couleur && (couleur === NOUVEAU || !couleurConnue) && produit && "la couleur pour ce produit",
     taille && !tailleConnue && produit && "la taille pour ce produit",
   ].filter(Boolean) as string[];
-  const pret = produit && taille && couleur && (couleur !== NOUVEAU || /^\d{1,4}$/.test(nouvelleCouleur.code) && nouvelleCouleur.libelle) && (produit !== NOUVEAU || np.libelle);
+  const couleurChoisieConflit = couleur && couleur !== NOUVEAU ? couleursOptions.duProduit.find((c) => c.code === couleur && conflitProduit(c)) : undefined;
+  const pret = produit && taille && couleur && !couleurChoisieConflit
+    && (couleur !== NOUVEAU || (/^\d{1,4}$/.test(nouvelleCouleur.code) && nouvelleCouleur.libelle && codeSaisi !== "9999" && !conflitCode && !conflitLibelle))
+    && (produit !== NOUVEAU || np.libelle);
 
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(26,22,20,.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
@@ -500,27 +523,72 @@ function ModalReference({ ligne, origine, onClose, onDone }: {
             )}
 
             {produit && (
-              <label>
+              <div>
                 <span style={lbl}>Couleur</span>
+                <input
+                  value={rechercheCouleur}
+                  onChange={(e) => setRechercheCouleur(e.target.value)}
+                  placeholder="Rechercher un code ou une couleur (ex. 0150, marron, vintage)…"
+                  style={{ ...inp, marginBottom: 6 }}
+                />
                 <select value={couleur} onChange={(e) => setCouleur(e.target.value)} style={inp}>
-                  <option value="">— Choisir —</option>
+                  <option value="">{rechercheCouleur ? `— ${couleursOptions.duProduit.length + couleursOptions.autres.length} résultat(s) sur ${couleursOptions.nbTotal} —` : "— Choisir —"}</option>
                   {couleursOptions.duProduit.length > 0 && (
                     <optgroup label="Couleurs du produit">
-                      {couleursOptions.duProduit.map((c) => <option key={c.code} value={c.code}>{c.code} · {c.libelle}{c.couleur_fabricant && c.couleur_fabricant !== c.libelle ? ` (${c.couleur_fabricant})` : ""}</option>)}
+                      {couleursOptions.duProduit.map((c) => {
+                        const vrai = conflitProduit(c);
+                        return (
+                          <option key={c.code} value={c.code}>
+                            {c.code} · {c.libelle}{c.couleur_fabricant && c.couleur_fabricant !== c.libelle ? ` (${c.couleur_fabricant})` : ""}{vrai ? `  ⚠ ${c.code} = ${vrai}` : ""}
+                          </option>
+                        );
+                      })}
                     </optgroup>
                   )}
-                  <optgroup label="Ajouter une famille couleur Akanea au produit">
-                    {couleursOptions.autres.map((c) => <option key={c.code} value={c.code}>{c.code} · {c.libelle}</option>)}
-                  </optgroup>
+                  {couleursOptions.autres.length > 0 && (
+                    <optgroup label="Ajouter une famille couleur au produit">
+                      {couleursOptions.autres.map((c) => <option key={c.code} value={c.code}>{c.code} · {c.libelle}{c.origine === "hub" ? " (créée Hub)" : ""}</option>)}
+                    </optgroup>
+                  )}
                   <option value={NOUVEAU}>+ Nouvelle famille couleur (code à créer dans Akanea)</option>
                 </select>
-              </label>
+                {couleurChoisieConflit && (
+                  <Alerte>
+                    Attention : <strong>{couleurChoisieConflit.code} = {conflitProduit(couleurChoisieConflit)}</strong> dans le nuancier, pas « {couleurChoisieConflit.libelle} ».
+                    Cette couleur produit est mal codée : choisis la bonne couleur ou crée « {couleurChoisieConflit.libelle} » sous un nouveau code.
+                  </Alerte>
+                )}
+              </div>
             )}
             {couleur === NOUVEAU && (
-              <div style={{ display: "grid", gridTemplateColumns: ".6fr 1.4fr .8fr", gap: 10 }}>
-                <label><span style={lbl}>Code</span><input style={inp} value={nouvelleCouleur.code} onChange={(e) => setNouvelleCouleur({ ...nouvelleCouleur, code: e.target.value.replace(/\D/g, "").slice(0, 4) })} placeholder="0150" /></label>
-                <label><span style={lbl}>Libellé</span><input style={inp} value={nouvelleCouleur.libelle} onChange={(e) => setNouvelleCouleur({ ...nouvelleCouleur, libelle: e.target.value })} /></label>
-                <label><span style={lbl}>Hex</span><input style={inp} value={nouvelleCouleur.hex} onChange={(e) => setNouvelleCouleur({ ...nouvelleCouleur, hex: e.target.value })} placeholder="#1A2E4F" /></label>
+              <div style={{ display: "grid", gap: 6 }}>
+                <div style={{ display: "grid", gridTemplateColumns: ".6fr 1.4fr .8fr", gap: 10 }}>
+                  <label><span style={lbl}>Code</span><input style={{ ...inp, borderColor: conflitCode ? "#C9837A" : undefined }} value={nouvelleCouleur.code} onChange={(e) => setNouvelleCouleur({ ...nouvelleCouleur, code: e.target.value.replace(/\D/g, "").slice(0, 4) })} placeholder={ref.prochain_code_couleur ?? "0150"} /></label>
+                  <label><span style={lbl}>Libellé</span><input style={{ ...inp, borderColor: conflitLibelle ? "#C9837A" : undefined }} value={nouvelleCouleur.libelle} onChange={(e) => setNouvelleCouleur({ ...nouvelleCouleur, libelle: e.target.value })} /></label>
+                  <label><span style={lbl}>Hex</span><input style={inp} value={nouvelleCouleur.hex} onChange={(e) => setNouvelleCouleur({ ...nouvelleCouleur, hex: e.target.value })} placeholder="#1A2E4F" /></label>
+                </div>
+                {ref.prochain_code_couleur && nouvelleCouleur.code !== ref.prochain_code_couleur && (
+                  <div style={{ fontSize: 12, opacity: 0.75 }}>
+                    Prochain code libre : <strong style={{ fontFamily: "ui-monospace, Menlo, monospace" }}>{ref.prochain_code_couleur}</strong>{" "}
+                    <button type="button" onClick={() => setNouvelleCouleur({ ...nouvelleCouleur, code: ref.prochain_code_couleur! })} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "var(--hub-teal)", fontSize: 12 }}>
+                      utiliser ce code
+                    </button>
+                  </div>
+                )}
+                {codeSaisi === "9999" && <Alerte>9999 est le code générique « à préciser », pas une couleur.</Alerte>}
+                {conflitCode && (
+                  <Alerte>
+                    Attention : <strong>{conflitCode.code} = {conflitCode.libelle}</strong>{conflitCode.origine === "hub" ? " (créée depuis le Hub)" : " (Akanea)"}.{" "}
+                    <button type="button" onClick={() => choisirCouleurExistante(conflitCode.code)} style={lienAlerte}>Utiliser {conflitCode.code} · {conflitCode.libelle}</button>
+                    {ref.prochain_code_couleur && <> ou <button type="button" onClick={() => setNouvelleCouleur({ ...nouvelleCouleur, code: ref.prochain_code_couleur! })} style={lienAlerte}>prendre le code libre {ref.prochain_code_couleur}</button></>}
+                  </Alerte>
+                )}
+                {conflitLibelle && (!conflitCode || conflitCode.code !== conflitLibelle.code) && (
+                  <Alerte>
+                    « {nouvelleCouleur.libelle.trim()} » existe déjà sous le code <strong>{conflitLibelle.code}</strong>.{" "}
+                    <button type="button" onClick={() => choisirCouleurExistante(conflitLibelle.code)} style={lienAlerte}>Utiliser {conflitLibelle.code} · {conflitLibelle.libelle}</button>
+                  </Alerte>
+                )}
               </div>
             )}
 
@@ -561,6 +629,24 @@ function ModalReference({ ligne, origine, onClose, onDone }: {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function normCouleur(s: string): string {
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+const lienAlerte: React.CSSProperties = {
+  background: "none", border: "none", padding: 0, cursor: "pointer",
+  color: "#A5281C", textDecoration: "underline", fontSize: 12, fontWeight: 600,
+};
+
+function Alerte({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ display: "flex", gap: 6, alignItems: "flex-start", background: "#FBE3E0", color: "#A5281C", borderRadius: 8, padding: "7px 10px", fontSize: 12, marginTop: 6 }}>
+      <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+      <span>{children}</span>
     </div>
   );
 }

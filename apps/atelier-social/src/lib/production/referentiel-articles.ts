@@ -18,6 +18,7 @@ import {
   normalizeKey,
   resolveCouleurProduit,
   createCouleurAjout,
+  verifierCouleur,
   taillesPourProduit,
   type CatalogueProduit,
   type CatalogueTaille,
@@ -360,18 +361,17 @@ export async function creerReference(input: CreationReferenceInput): Promise<{ r
   if (!/^\d{4}$/.test(code)) throw new Error("Code couleur invalide (4 chiffres).");
   const couleursProduit = couleursProduitEtendu(ref, r);
   if (!couleursProduit.some((c) => c.code === code)) {
-    const refCouleur = cat.couleurs_ref[code];
-    const libelle = input.libelle_couleur?.trim() || refCouleur?.libelle;
-    if (!libelle) throw new Error(`Couleur ${code} inconnue : libellé obligatoire.`);
+    // Un code = un libellé : refuse « 0150 = Vintage Marron » si 0150 est déjà Almond.
+    const v = verifierCouleur(code, input.libelle_couleur, r.couleursAjouts);
     await createCouleurAjout({
       ref_produit: ref,
-      code_couleur: code,
-      libelle,
-      hex: input.hex ?? refCouleur?.hex ?? null,
-      nouvelle_famille: !refCouleur,
+      code_couleur: v.code,
+      libelle: v.libelle,
+      hex: (v.nouvelle_famille && input.hex) || v.hex || input.hex || null,
+      nouvelle_famille: v.nouvelle_famille,
       created_by: input.created_by ?? null,
     });
-    cree.push(`couleur ${code} ${libelle}`);
+    cree.push(`couleur ${v.code} ${v.libelle}`);
   }
 
   // 3. Taille
