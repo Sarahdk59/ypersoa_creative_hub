@@ -55,8 +55,9 @@ export function suggestTags(filename: string, tagsByCategory: Record<string, Tag
 
 /**
  * Déduit le canal depuis le ratio d'une image (règle Sarah : 4:5 → Insta,
- * 2:3/9:16 → Pinterest, 1:1 → Shopify). Copie client-safe de
- * `taxonomie.ts::deduceCanalFromRatio` (même règle, mêmes tolérances).
+ * 2:3/9:16 → Pinterest). Shopify n'a pas de ratio fixe, jamais déduit du
+ * ratio. Copie client-safe de `taxonomie.ts::deduceCanalFromRatio` (même
+ * règle, mêmes tolérances).
  */
 export function deduceCanalFromRatio(width: number, height: number): string | null {
   if (!width || !height) return null;
@@ -64,7 +65,6 @@ export function deduceCanalFromRatio(width: number, height: number): string | nu
   const isClose = (target: number, tolerance = 0.04) => Math.abs(ratio - target) <= tolerance;
   if (isClose(4 / 5)) return "instagram";
   if (isClose(2 / 3) || isClose(9 / 16)) return "pinterest";
-  if (isClose(1)) return "shopify";
   return null;
 }
 

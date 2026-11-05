@@ -7,11 +7,20 @@
  */
 import { NextResponse } from "next/server";
 import { listCommandes, type CommandeSource } from "@/lib/production/commandes-loader";
+import { requireRole } from "@/lib/auth-guard";
 
 type CanalFiltre = CommandeSource | "tous";
 
 export async function GET(req: Request) {
   try {
+    // Vue business (CA) — réservée admin + créa, jamais au rôle prod
+    // (opérateurs atelier). La page est déjà gardée par le middleware
+    // (section atelier-da), ce garde-fou protège l'API appelée directement.
+    const auth = await requireRole(["admin", "crea"]);
+    if (!auth) {
+      return NextResponse.json({ ok: false, error: "Accès réservé." }, { status: 403 });
+    }
+
     const { searchParams } = new URL(req.url);
     const annee = Number(searchParams.get("annee")) || new Date().getFullYear();
     const canalParam = searchParams.get("canal");
