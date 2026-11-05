@@ -37,6 +37,7 @@ import {
 } from "@/lib/atelier-da/referentiels-loader";
 import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 import PrintBar from "../packing-list/PrintBar";
+import { filDeZone, filsBroderie, lettresParLigne, ordreFilsAttribution, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -389,29 +390,87 @@ export default async function DossierTechniquePage({
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 12, padding: "10px 12px" }}>
                     <div>
-                      <div className="lbl">À broder {b.police ? `· police ${b.police}` : ""}</div>
+                      <div className="lbl">À broder {policesBroderie(b).length ? `· police${policesBroderie(b).length > 1 ? "s" : ""} ${policesBroderie(b).join(" + ")}` : ""}</div>
                       {b.champs.filter((ch) => ch.valeur.trim()).map((ch, k) => (
                         <div key={k} style={{ marginBottom: 6 }}>
-                          <div style={{ opacity: 0.55, fontSize: 10 }}>{ch.label} — exactement : « <span className="ref">{ch.valeur}</span> » ({ch.valeur.length} caractère{ch.valeur.length > 1 ? "s" : ""})</div>
-                          <div style={{ fontFamily: fontFor(b.police), fontSize: 30, lineHeight: 1.2, color: b.fil_hex || "#1A1614", textShadow: "0 0 1px rgba(0,0,0,.35)" }}>
+                          <div style={{ opacity: 0.55, fontSize: 10 }}>
+                            {ch.label} — exactement : « <span className="ref">{ch.valeur}</span> » ({ch.valeur.length} caractère{ch.valeur.length > 1 ? "s" : ""})
+                            {policesBroderie(b).length > 1 && policeChamp(b, ch) && <> · police <strong>{policeChamp(b, ch)}</strong></>}
+                          </div>
+                          <div style={{
+                            fontFamily: fontFor(policeChamp(b, ch)), fontSize: 30, lineHeight: 1.2, textShadow: "0 0 1px rgba(0,0,0,.35)",
+                            ...(filsBroderie(b).length > 1 && b.fils_palette?.length
+                              ? { backgroundImage: `linear-gradient(90deg, ${filsBroderie(b).map((f) => f.fil_hex).join(", ")})`, WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", display: "inline-block" }
+                              : { color: b.fil_hex || "#1A1614" }),
+                          }}>
                             {ch.valeur}
                           </div>
                         </div>
                       ))}
+                      {b.attribution_couleurs && (() => {
+                        const att = b.attribution_couleurs;
+                        const ordre = ordreFilsAttribution(att);
+                        return (
+                          <div style={{ margin: "8px 0", padding: "8px 10px", border: "1px solid #1A1614", borderRadius: 6 }}>
+                            <div className="lbl">Couleur par lettre · n° = ordre de broderie {att.source === "bibliotheque" ? `· ${att.library_name ?? ""}` : ""}</div>
+                            {lettresParLigne(att).map((ls, k) => (
+                              <div key={k} style={{ display: "flex", gap: 6, alignItems: "flex-end", marginBottom: 4 }}>
+                                {ls.map((l) => {
+                                  const f = filDeZone(b, l.fil_id);
+                                  return (
+                                    <div key={l.indice} style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 22 }}>
+                                      <span style={{ fontFamily: fontFor(policesBroderie(b)[0]), fontSize: 30, lineHeight: 1, color: f?.fil_hex ?? "#1A1614", textShadow: "0 0 1px rgba(0,0,0,.35)" }}>{l.caractere}</span>
+                                      <strong className="ref" style={{ fontSize: 11 }}>{ordre.indexOf(l.fil_id) + 1}</strong>
+                                      <span style={{ fontSize: 8, opacity: 0.6 }}>{f?.fil_code_gunold}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ))}
+                            <div style={{ display: "grid", gap: 2, marginTop: 4 }}>
+                              {ordre.map((id, k) => {
+                                const f = filDeZone(b, id);
+                                const ls = att.lettres.filter((l) => l.fil_id === id);
+                                return (
+                                  <div key={id} style={{ fontSize: 11 }}>
+                                    <strong className="ref">{k + 1}.</strong> <span className="sw" style={{ background: f?.fil_hex }} /><strong className="ref">{f?.fil_code_gunold}</strong> · {f?.fil_nom}
+                                    {" "}<span style={{ opacity: 0.65 }}>→ {ls.map((l) => `${l.caractere}(L${l.ligne + 1})`).join(" ")}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })()}
                       <div style={{ fontSize: 9, opacity: 0.5 }}>Rendu de police indicatif — le fichier machine fait foi.</div>
                       {b.note_atelier && <div style={{ marginTop: 6, fontWeight: 600 }}>Note : {b.note_atelier}</div>}
                     </div>
                     <div>
-                      <div className="lbl">Fil</div>
-                      <div style={{ fontSize: 14 }}>
-                        <span className="sw" style={{ background: b.fil_hex }} /><strong className="ref" style={{ fontSize: 16 }}>{b.fil_code_gunold}</strong> · {b.fil_nom}
-                      </div>
-                      {fil?.numero_aiguille_canonique != null && <div>Aiguille n° <strong>{fil.numero_aiguille_canonique}</strong></div>}
-                      {b.fil_code_gunold_secondaire && (
-                        <div style={{ marginTop: 4 }}>
-                          + <span className="sw" style={{ background: b.fil_hex_secondaire }} /><strong className="ref">{b.fil_code_gunold_secondaire}</strong> · {b.fil_nom_secondaire}
-                          {filSec?.numero_aiguille_canonique != null && <> · aiguille n° <strong>{filSec.numero_aiguille_canonique}</strong></>}
-                        </div>
+                      <div className="lbl">{b.fils_palette?.length ? `Palette ${b.palette_nom ?? ""} · ${b.fils_palette.length} fils (${b.palette_type ?? ""})` : "Fil"}</div>
+                      {b.fils_palette?.length ? (
+                        b.fils_palette.map((f, k) => {
+                          const ref = filsById.get(f.fil_id);
+                          return (
+                            <div key={k} style={{ fontSize: 13 }}>
+                              <span style={{ opacity: 0.5 }}>{k + 1}. </span>
+                              <span className="sw" style={{ background: f.fil_hex }} /><strong className="ref">{f.fil_code_gunold}</strong> · {f.fil_nom}
+                              {ref?.numero_aiguille_canonique != null && <> · aiguille n° <strong>{ref.numero_aiguille_canonique}</strong></>}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <>
+                          <div style={{ fontSize: 14 }}>
+                            <span className="sw" style={{ background: b.fil_hex }} /><strong className="ref" style={{ fontSize: 16 }}>{b.fil_code_gunold}</strong> · {b.fil_nom}
+                          </div>
+                          {fil?.numero_aiguille_canonique != null && <div>Aiguille n° <strong>{fil.numero_aiguille_canonique}</strong></div>}
+                          {b.fil_code_gunold_secondaire && (
+                            <div style={{ marginTop: 4 }}>
+                              + <span className="sw" style={{ background: b.fil_hex_secondaire }} /><strong className="ref">{b.fil_code_gunold_secondaire}</strong> · {b.fil_nom_secondaire}
+                              {filSec?.numero_aiguille_canonique != null && <> · aiguille n° <strong>{filSec.numero_aiguille_canonique}</strong></>}
+                            </div>
+                          )}
+                        </>
                       )}
                       <div className="lbl" style={{ marginTop: 10 }}>Fichier machine</div>
                       {fichiers.length ? fichiers.map((f) => (

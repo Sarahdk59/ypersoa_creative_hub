@@ -3,13 +3,14 @@
 /**
  * Champs opérationnels éditables de la fiche commande :
  *  - LivraisonContactEditor : transporteur, mode (locker / relais / domicile), point relais, suivi, mail, téléphone
- *  - BroderieProdFields     : police et fil (code Gunold) d'une zone de broderie
+ *  - BroderieProdFields     : polices (1 à 3) et fil uni / palette (camaïeu, multicolore) d'une zone
  */
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
 import type { Commande, ContactClient, Livraison, ModeLivraison, Broderie } from "@/lib/production/commandes-loader";
 import { MODE_LIVRAISON_LABEL, TRANSPORTEURS } from "@/lib/production/completude";
 import { loadBase, type CatalogueBase } from "./ArticleEditor";
+import { MAX_POLICES_PAR_ZONE, filsBroderie, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
 
 const input: React.CSSProperties = {
   width: "100%", padding: "6px 8px", borderRadius: 6,
@@ -111,11 +112,21 @@ export function BroderieProdFields({
 }) {
   const [base, setBase] = useState<CatalogueBase | null>(null);
   const [saving, setSaving] = useState(false);
+  const polices = policesBroderie(broderie);
+  // Nombre de cases police affichées (1 à 3) — on peut en ajouter avant de les remplir.
+  const [nbCases, setNbCases] = useState(Math.max(1, polices.length));
+  useEffect(() => setNbCases((n) => Math.max(n, polices.length, 1)), [polices.length]);
   useEffect(() => {
     if (!disabled) loadBase().then(setBase).catch(() => setBase(null));
   }, [disabled]);
 
-  async function patch(b: { police?: string; fil_id?: string }) {
+  type BroderiePatch = {
+    polices?: string[];
+    champ_police?: { champ: number; police: string };
+    fil_id?: string;
+    palette_id?: string;
+  };
+  async function patch(b: BroderiePatch) {
     setSaving(true);
     try {
       const res = await fetch(`/api/production/commandes/${commandeId}/articles/${articleId}`, {
@@ -132,37 +143,127 @@ export function BroderieProdFields({
     }
   }
 
+  const champsTexte = broderie.champs
+    .map((c, i) => ({ c, i }))
+    .filter(({ c }) => c.valeur.trim() && !/^symbole/.test(c.type));
+
   if (disabled) {
-    return broderie.police ? (
-      <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.7 }}>Police : {broderie.police}</span>
-    ) : null;
+    return (
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.7 }}>
+        {polices.length > 0 && <span>Police{polices.length > 1 ? "s" : ""} : {polices.join(" + ")}</span>}
+        {broderie.palette_nom && <span>Palette : {broderie.palette_nom}</span>}
+      </div>
+    );
   }
 
+  const small: React.CSSProperties = { ...input, padding: "3px 6px", fontSize: 11 };
+  const tag: React.CSSProperties = { fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.7 };
   const listId = `polices-${articleId}-${index}`;
+
+  function savePolice(slot: number, value: string) {
+    const next = [...polices];
+    next[slot] = value;
+    const clean = next.map((p) => (p ?? "").trim()).filter(Boolean);
+    if (clean.join("|") !== polices.join("|")) patch({ polices: clean });
+  }
+
+  const filValue = broderie.palette_id ? `pal:${broderie.palette_id}` : broderie.fil_id ? `fil:${broderie.fil_id}` : "";
+  const filsPalette = filsBroderie(broderie);
+
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginTop: 4 }}>
-      <label style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.7 }}>Police</label>
-      <input
-        key={`p-${broderie.police ?? ""}`}
-        list={listId}
-        defaultValue={broderie.police ?? ""}
-        placeholder="à compléter"
-        onBlur={(e) => e.target.value.trim() !== (broderie.police ?? "") && patch({ police: e.target.value })}
-        style={{ ...input, width: 170, padding: "3px 6px", fontSize: 11, borderColor: broderie.police ? undefined : "#C9837A" }}
-      />
-      <datalist id={listId}>{base?.polices.map((p) => <option key={p} value={p} />)}</datalist>
-      <label style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.7 }}>Fil</label>
-      <select
-        value={broderie.fil_id || ""}
-        onChange={(e) => e.target.value && patch({ fil_id: e.target.value })}
-        style={{ ...input, width: 220, padding: "3px 6px", fontSize: 11, borderColor: broderie.fil_code_gunold ? undefined : "#C9837A" }}
-      >
-        <option value="">{broderie.fil_nom ? `${broderie.fil_nom} (non reconnu)` : "— à compléter —"}</option>
-        {base?.fils.map((f) => (
-          <option key={f.id} value={f.id}>{f.nom} · Gunold {f.code_gunold}</option>
+    <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 4 }}>
+      {/* Polices : 1 à 3 typos combinées dans la zone */}
+      <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+        <label style={tag}>Police{nbCases > 1 ? "s" : ""}</label>
+        {Array.from({ length: nbCases }).map((_, slot) => (
+          <span key={slot} style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+            {slot > 0 && <span style={{ ...tag, opacity: 0.4 }}>+</span>}
+            <input
+              key={`p-${slot}-${polices[slot] ?? ""}`}
+              list={listId}
+              defaultValue={polices[slot] ?? ""}
+              placeholder={slot === 0 ? "à compléter" : `police ${slot + 1}`}
+              onBlur={(e) => savePolice(slot, e.target.value)}
+              style={{ ...small, width: 150, borderColor: slot === 0 && !polices.length ? "#C9837A" : undefined }}
+            />
+            {slot > 0 && (
+              <button
+                title="Retirer cette police"
+                onClick={() => {
+                  setNbCases((n) => Math.max(1, n - 1));
+                  if (polices[slot]) patch({ polices: polices.filter((_, k) => k !== slot) });
+                }}
+                style={{ background: "none", border: "none", cursor: "pointer", opacity: 0.5, padding: 0, color: "inherit" }}
+              >
+                <X size={11} />
+              </button>
+            )}
+          </span>
         ))}
-      </select>
-      {saving && <Loader2 size={11} className="animate-spin" />}
+        {nbCases < MAX_POLICES_PAR_ZONE && (
+          <button
+            onClick={() => setNbCases((n) => n + 1)}
+            style={{ ...tag, display: "inline-flex", alignItems: "center", gap: 2, background: "none", border: "0.5px dashed var(--hub-border)", borderRadius: 999, padding: "2px 8px", cursor: "pointer" }}
+          >
+            <Plus size={10} /> typo
+          </button>
+        )}
+        <datalist id={listId}>{base?.polices.map((p) => <option key={p} value={p} />)}</datalist>
+      </div>
+
+      {/* Plusieurs polices : quelle police pour quel texte */}
+      {polices.length > 1 && champsTexte.length > 0 && (
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", paddingLeft: 8 }}>
+          {champsTexte.map(({ c, i }) => (
+            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <span style={tag}>« {c.valeur} » →</span>
+              <select
+                value={policeChamp(broderie, c) ?? ""}
+                onChange={(e) => patch({ champ_police: { champ: i, police: e.target.value } })}
+                style={{ ...small, width: 130 }}
+              >
+                {polices.map((p) => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Fil unique ou palette nommée (camaïeu / multicolore) */}
+      <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+        <label style={tag}>Fil</label>
+        <select
+          value={filValue}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v.startsWith("pal:")) patch({ palette_id: v.slice(4) });
+            else if (v.startsWith("fil:")) patch({ fil_id: v.slice(4) });
+          }}
+          style={{ ...small, width: 260, borderColor: filsPalette.every((f) => f.fil_code_gunold) && filsPalette.length ? undefined : "#C9837A" }}
+        >
+          <option value="">{broderie.fil_nom ? `${broderie.fil_nom} (non reconnu)` : "— à compléter —"}</option>
+          {base?.palettes.length ? (
+            <optgroup label="Camaïeux & multicolores">
+              {base.palettes.map((p) => (
+                <option key={p.id} value={`pal:${p.id}`}>
+                  {p.favori ? "★ " : ""}{p.nom} · {p.type} · {p.fils.length} fils
+                </option>
+              ))}
+            </optgroup>
+          ) : null}
+          <optgroup label="Fil uni">
+            {base?.fils.map((f) => (
+              <option key={f.id} value={`fil:${f.id}`}>{f.nom} · Gunold {f.code_gunold}</option>
+            ))}
+          </optgroup>
+        </select>
+        {broderie.palette_id && (
+          <span title={filsPalette.map((f) => `${f.fil_nom} ${f.fil_code_gunold}`).join(" · ")} style={{ display: "inline-flex", height: 10, width: 90, borderRadius: 999, overflow: "hidden", border: "0.5px solid rgba(0,0,0,.15)" }}>
+            {filsPalette.map((f) => <span key={f.fil_id} style={{ flex: 1, background: f.fil_hex }} />)}
+          </span>
+        )}
+        {saving && <Loader2 size={11} className="animate-spin" />}
+      </div>
     </div>
   );
 }

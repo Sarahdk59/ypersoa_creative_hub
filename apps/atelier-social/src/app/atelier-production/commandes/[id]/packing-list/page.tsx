@@ -13,6 +13,7 @@ import { getCommande, type AdressePostale, type Article, type Broderie } from "@
 import { couleursPourProduit, getCouleursAjouts, zoneTete } from "@/lib/production/catalogue";
 import { manquesArticle, manquesCommande, MODE_LIVRAISON_LABEL, TYPE_DOCUMENT_LABEL } from "@/lib/production/completude";
 import PrintBar from "./PrintBar";
+import { attributionManquante, filDeZone, filsBroderie, lettresParLigne, ordreFilsAttribution, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -203,21 +204,41 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
                         <div key={k}>
                           <span style={{ opacity: 0.55 }}>{c.label} : </span>
                           <span className="txt">{c.valeur}</span>
+                          {policesBroderie(b).length > 1 && policeChamp(b, c) && <span style={{ opacity: 0.55 }}> — {policeChamp(b, c)}</span>}
                         </div>
                       ))}
                       {!b.champs.some((c) => c.valeur.trim()) && <Manque>texte ?</Manque>}
+                      {b.attribution_couleurs && (
+                        <div style={{ marginTop: 4 }}>
+                          {lettresParLigne(b.attribution_couleurs).map((ls, k) => (
+                            <div key={k} style={{ fontWeight: 700, fontSize: 14, letterSpacing: "0.04em" }}>
+                              {ls.map((l) => {
+                                const n = ordreFilsAttribution(b.attribution_couleurs!).indexOf(l.fil_id) + 1;
+                                return (
+                                  <span key={l.indice} style={{ color: filDeZone(b, l.fil_id)?.fil_hex }}>
+                                    {l.caractere}<sub style={{ fontSize: 8, color: "#1A1614", opacity: 0.6 }}>{n}</sub>
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {attributionManquante(b) && <Manque>couleur par lettre ?</Manque>}
                       {b.note_atelier && <div style={{ fontStyle: "italic", opacity: 0.7, marginTop: 2 }}>{b.note_atelier}</div>}
                     </td>
-                    <td>{b.police ? <strong>{b.police}</strong> : <Manque>?</Manque>}</td>
                     <td>
-                      {b.fil_code_gunold ? (
-                        <div><span className="sw" style={{ background: b.fil_hex }} /><strong>{b.fil_code_gunold}</strong> · {b.fil_nom}</div>
-                      ) : (
-                        <Manque>? {b.fil_nom}</Manque>
-                      )}
-                      {b.fil_code_gunold_secondaire && (
-                        <div><span className="sw" style={{ background: b.fil_hex_secondaire }} /><strong>{b.fil_code_gunold_secondaire}</strong> · {b.fil_nom_secondaire}</div>
-                      )}
+                      {policesBroderie(b).length ? policesBroderie(b).map((p) => <div key={p}><strong>{p}</strong></div>) : <Manque>?</Manque>}
+                    </td>
+                    <td>
+                      {b.palette_nom && <div style={{ fontWeight: 700, textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>{b.palette_nom} · {filsBroderie(b).length} fils</div>}
+                      {filsBroderie(b).length ? filsBroderie(b).map((f, k) => (
+                        f.fil_code_gunold ? (
+                          <div key={k}>{b.palette_nom && <span style={{ opacity: 0.5 }}>{k + 1}. </span>}<span className="sw" style={{ background: f.fil_hex }} /><strong>{f.fil_code_gunold}</strong> · {f.fil_nom}</div>
+                        ) : (
+                          <div key={k}><Manque>? {f.fil_nom}</Manque></div>
+                        )
+                      )) : <Manque>?</Manque>}
                     </td>
                   </tr>
                 ))}

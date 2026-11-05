@@ -5,6 +5,7 @@
  * la packing list).
  */
 import type { Article, Commande } from "./commandes-loader";
+import { attributionManquante, filsBroderie, policesBroderie } from "./broderie-utils";
 
 const TYPES_SYMBOLE = new Set(["symbole_simple", "symbole_complexe"]);
 
@@ -18,9 +19,11 @@ export function manquesArticle(a: Article): string[] {
   a.broderies.forEach((b, i) => {
     const z = a.broderies.length > 1 ? ` (broderie ${i + 1})` : "";
     if (!b.champs.some((c) => c.valeur.trim())) out.push(`texte${z}`);
-    if (!b.fil_code_gunold) out.push(`fil Gunold${z}`);
+    const fils = filsBroderie(b);
+    if (!fils.length || fils.some((f) => !f.fil_code_gunold)) out.push(`fil Gunold${z}`);
     const aDuTexte = b.champs.some((c) => c.valeur.trim() && !TYPES_SYMBOLE.has(c.type));
-    if (aDuTexte && !b.police) out.push(`police${z}`);
+    if (aDuTexte && !policesBroderie(b).length) out.push(`police${z}`);
+    if (attributionManquante(b)) out.push(`couleur par lettre${z}`);
   });
   return out;
 }

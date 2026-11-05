@@ -86,6 +86,12 @@ function genererSlotId(): string {
 function filPrincipalArticle(article: Article): string | undefined {
   const totParFil = new Map<string, number>();
   for (const b of article.broderies) {
+    // Une palette (Orage, Printemps…) se monte en bloc : on regroupe par palette.
+    if (b.palette_id) {
+      const k = `palette:${b.palette_id}`;
+      totParFil.set(k, (totParFil.get(k) ?? 0) + b.duree_broderie_min);
+      continue;
+    }
     totParFil.set(b.fil_id, (totParFil.get(b.fil_id) ?? 0) + b.duree_broderie_min);
     if (b.fil_id_secondaire && b.duree_changement_fil_min) {
       // Estimation : la moitié restante va au fil secondaire si présent

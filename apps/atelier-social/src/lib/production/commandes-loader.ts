@@ -102,6 +102,29 @@ export interface ChampBroderie {
   variante_filename?: string;
   source_duree?: "fiche_technique" | "classification" | "manuel";
   nb_points?: number;
+  /** Police de ce champ quand la zone combine plusieurs typos (doit faire partie de `Broderie.polices`). */
+  police?: string;
+}
+
+/** Une lettre brodée et son fil (positions = moteur d'attribution, espaces exclus). */
+export interface LettreAttribuee {
+  ligne: number;
+  indice: number;
+  caractere: string;
+  fil_id: string;
+}
+
+export interface AttributionCouleurs {
+  /** "moteur" = calculée depuis la commande ; "bibliotheque" = importée de /atelier-production/attribution. */
+  source: "moteur" | "bibliotheque";
+  library_id?: string;
+  library_name?: string;
+  /** "pattern" = règle figée du motif (ex. YPM-004 : dates bicolores + texte bas monochrome). */
+  mode: "pattern" | "moteur" | "mono";
+  texte_lignes: string[];
+  lettres: LettreAttribuee[];
+  score?: number;
+  genere_le: string;
 }
 
 export type BroderieFileKind = "visuel" | "pxf" | "dst" | "pdf";
@@ -128,8 +151,19 @@ export interface Broderie {
   fil_nom_secondaire?: string;
   fil_hex_secondaire?: string;
   fil_code_gunold_secondaire?: string;
-  /** Police / typo du texte brodé (ex. "Russ Times", "Museo"). Défaut = typographie du motif. */
+  /** Police / typo du texte brodé (ex. "Russ Times", "Museo"). Défaut = typographie du motif.
+   *  Héritage : = polices[0] quand `polices` est renseigné. */
   police?: string;
+  /** 1 à 3 polices combinées dans la zone (ex. ["Russ Times", "Diana Star"]). Fait foi sur `police`. */
+  polices?: string[];
+  /** Palette de fils nommée (palettes_fils_associations.json) : camaïeu / multicolore (Orage, Printemps basque…). */
+  palette_id?: string;
+  palette_nom?: string;
+  palette_type?: string;
+  /** Fils de la palette dans l'ordre de broderie. fil_* = 1er fil de la palette. */
+  fils_palette?: Array<{ fil_id: string; fil_nom: string; fil_hex: string; fil_code_gunold: string }>;
+  /** Texte multicolore : couleur de chaque lettre (moteur d'attribution du Hub ou bibliothèque). */
+  attribution_couleurs?: AttributionCouleurs;
   duree_broderie_min: number;
   duree_cadrage_min: number;
   duree_changement_fil_min: number;
@@ -523,6 +557,7 @@ export function recalculerDureesCommande(
   const fichesTech = fts ?? getFichesTechniques();
   const vitesse = durees._meta.vitesse_machine_pts_par_min ?? 650;
   const prepDstMin = durees.operations.preparation_dst?.duree_min ?? 5;
+  const bobineMin = durees.operations.changement_bobine_fil?.duree_min || 2;
   const mutualiser = durees.capacite_atelier.mutualiser_prep_dst_par_motif ?? true;
   const ypmAvecPrepDejaCompte = new Set<string>();
 
@@ -553,11 +588,15 @@ export function recalculerDureesCommande(
           champ.source_duree = "classification";
         }
       }
+      // Palette multi-fils : 1 bobine à monter par fil au-delà du premier.
+      if (broderie.fils_palette?.length) {
+        broderie.duree_changement_fil_min = (broderie.fils_palette.length - 1) * bobineMin;
+      }
       const dureeBrod = Math.round(broderie.champs.reduce((s, c) => s + c.duree_min, 0));
       broderie.duree_broderie_min = dureeBrod;
       broderie.duree_total_min = dureeBrod + broderie.duree_cadrage_min + broderie.duree_changement_fil_min;
       if (broderie.duree_changement_fil_min > 0) {
-        nbChangementsFil += Math.round(broderie.duree_changement_fil_min / 2);
+        nbChangementsFil += Math.round(broderie.duree_changement_fil_min / bobineMin);
       }
     }
 

@@ -13,7 +13,8 @@ interface ProduitOpt { ref: string; libelle: string; famille: string; ypersoa: b
 interface CouleurRefOpt { code: string; libelle: string; hex: string | null }
 interface MotifOpt { id: string; nom: string; typographie: string | null }
 export interface FilOpt { id: string; nom: string; hex: string; code_gunold: string }
-export interface CatalogueBase { produits: ProduitOpt[]; couleurs_ref: CouleurRefOpt[]; motifs: MotifOpt[]; fils: FilOpt[]; polices: string[] }
+export interface PaletteOpt { id: string; nom: string; type: string; favori: boolean; fils: FilOpt[] }
+export interface CatalogueBase { produits: ProduitOpt[]; couleurs_ref: CouleurRefOpt[]; motifs: MotifOpt[]; fils: FilOpt[]; palettes: PaletteOpt[]; polices: string[] }
 interface CouleurOpt { code: string; libelle: string; hex: string | null; origine: "catalogue" | "hub"; nouvelle_famille?: boolean }
 interface TailleOpt { code: string; taille: string }
 interface ProduitDetail { couleurs: CouleurOpt[]; tailles: TailleOpt[]; coiffe: boolean; zone_tete: string | null }

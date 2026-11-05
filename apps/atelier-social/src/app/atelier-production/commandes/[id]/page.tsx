@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 import ArticleEditor from "./ArticleEditor";
 import { LivraisonContactEditor, BroderieProdFields, NoteAtelierEditor } from "./ProdFields";
 import DossierDocuments from "./DossierDocuments";
+import AttributionZone from "./AttributionZone";
 import { manquesArticle } from "@/lib/production/completude";
+import { filsBroderie, fondFils } from "@/lib/production/broderie-utils";
 import type { Commande, Article, Broderie, BroderieFileKind, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
@@ -1036,6 +1038,8 @@ function BroderieRow({
       display: "grid", gridTemplateColumns: "100px 1fr auto",
       gap: 12, padding: "10px 12px",
       background: "#FAF7F2", borderLeft: `3px solid ${broderie.fil_hex}`,
+      // Palette multi-fils : liseré en dégradé des fils (border-image ignore l'arrondi, assumé).
+      ...(broderie.fils_palette?.length ? { borderImage: `${fondFils(broderie)} 1` } : {}),
       borderRadius: "0 6px 6px 0", alignItems: "center",
     }}>
       <div style={{
@@ -1056,10 +1060,14 @@ function BroderieRow({
           </div>
         ))}
         <div style={{ display: "flex", gap: 8, marginTop: 4, alignItems: "center", flexWrap: "wrap" }}>
-          <ThreadChip name={broderie.fil_nom} hex={broderie.fil_hex} code={broderie.fil_code_gunold} />
-          {broderie.fil_nom_secondaire && broderie.fil_hex_secondaire && (
-            <ThreadChip name={broderie.fil_nom_secondaire} hex={broderie.fil_hex_secondaire} code={broderie.fil_code_gunold_secondaire ?? ""} />
+          {broderie.palette_nom && (
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", opacity: 0.7 }}>
+              {broderie.palette_nom} ·
+            </span>
           )}
+          {filsBroderie(broderie).map((f, k) => (
+            <ThreadChip key={`${f.fil_id}-${k}`} name={f.fil_nom} hex={f.fil_hex} code={f.fil_code_gunold} />
+          ))}
           {broderie.note_atelier && (
             <span style={{ fontFamily: "var(--font-sans)", fontSize: 10, fontStyle: "italic", color: "var(--hub-foreground)", opacity: 0.5 }}>
               {broderie.note_atelier}
@@ -1067,6 +1075,14 @@ function BroderieRow({
           )}
         </div>
         <BroderieProdFields
+          commandeId={commandeId}
+          articleId={articleId}
+          index={index}
+          broderie={broderie}
+          disabled={disabled}
+          onSaved={onCommandeUpdated}
+        />
+        <AttributionZone
           commandeId={commandeId}
           articleId={articleId}
           index={index}

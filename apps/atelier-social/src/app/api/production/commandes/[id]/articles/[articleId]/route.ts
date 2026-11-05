@@ -8,7 +8,8 @@
  *  - couleur : code présent pour ce produit (catalogue ou ajout Hub) — sinon
  *              la créer d'abord via POST /api/production/catalogue/couleurs
  *  - taille  : code taille Akanea
- *  - broderie: police / fil d'une zone (fil → nom, hex, code Gunold)
+ *  - broderie: polices (1 à 3) / fil unique OU palette nommée (Orage, Printemps…)
+ *              d'une zone, police dédiée d'un champ quand la zone en combine plusieurs
  * Recalcule la réf. article YPxxx-CCCC-TTTT et les durées.
  */
 import { NextResponse } from "next/server";
@@ -30,7 +31,8 @@ import {
   normalizeYpmId,
   produitCatalogue,
 } from "@/lib/production/catalogue";
-import { getFils, getMotifs } from "@/lib/atelier-da/referentiels-loader";
+import { getFils, getMotifs, getPalettes } from "@/lib/atelier-da/referentiels-loader";
+import { MAX_POLICES_PAR_ZONE, normaliserPolices, splitTypos } from "@/lib/production/broderie-utils";
 
 type Body = {
   produit_id?: string;
@@ -38,8 +40,20 @@ type Body = {
   code_couleur?: string;
   code_taille?: string;
   quantite?: number;
-  /** Édition d'une broderie de l'article : police et/ou fil (id palette_fils_broderie_v2). */
-  broderie?: { index: number; police?: string; fil_id?: string };
+  /** Édition d'une broderie de l'article. */
+  broderie?: {
+    index: number;
+    /** Héritage : une seule police (remplace la liste). */
+    police?: string;
+    /** 1 à 3 polices combinées dans la zone ([] = à compléter). */
+    polices?: string[];
+    /** Police dédiée d'un champ (index dans champs) — "" = police par défaut de la zone. */
+    champ_police?: { champ: number; police: string };
+    /** Fil unique (id palette_fils_broderie_v2) — retire la palette éventuelle. */
+    fil_id?: string;
+    /** Palette nommée (palettes_fils_associations) — "" = retirer la palette. */
+    palette_id?: string;
+  };
 };
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string; articleId: string }> }) {
@@ -105,23 +119,92 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       if (!m) return bad(`Motif ${ypm} absent de la base motifs.`);
       article.ypm_id = m.id;
       article.ypm_nom = m.nom_commercial;
-      // Police par défaut = typographie de la bible motif, sans écraser une saisie.
-      const typo = m.bible?.typographie;
-      if (typo) for (const b of article.broderies) if (!b.police) b.police = typo;
+      // Polices par défaut = typographie(s) de la bible motif (« Russ Times + Diana Star »), sans écraser une saisie.
+      const typos = splitTypos(m.bible?.typographie);
+      if (typos.length) {
+        for (const b of article.broderies) {
+          if (!b.police && !b.polices?.length) {
+            b.polices = typos;
+            b.police = typos[0];
+          }
+        }
+      }
     }
 
     if (body.broderie) {
       const b = article.broderies[body.broderie.index];
       if (!b) return bad(`Broderie ${body.broderie.index} introuvable.`);
-      if (body.broderie.police !== undefined) b.police = body.broderie.police.trim() || undefined;
-      if (body.broderie.fil_id !== undefined) {
-        const fil = getFils().couleurs.find((f) => f.id === body.broderie!.fil_id);
-        if (!fil) return bad(`Fil ${body.broderie.fil_id} inconnu de la palette.`);
+      const setPolices = (list: string[]) => {
+        const ps = normaliserPolices(list);
+        b.polices = ps.length ? ps : undefined;
+        b.police = ps[0];
+        // Une police de champ qui ne fait plus partie de la zone retombe sur le défaut.
+        for (const c of b.champs) if (c.police && !ps.includes(c.police)) c.police = undefined;
+      };
+      if (body.broderie.police !== undefined) setPolices([body.broderie.police]);
+      if (body.broderie.polices !== undefined) {
+        if (!Array.isArray(body.broderie.polices)) return bad("polices doit être une liste.");
+        const distinctes = new Set(body.broderie.polices.map((p) => String(p).trim()).filter(Boolean));
+        if (distinctes.size > MAX_POLICES_PAR_ZONE) return bad(`${MAX_POLICES_PAR_ZONE} polices maximum par zone.`);
+        setPolices(body.broderie.polices);
+      }
+      if (body.broderie.champ_police !== undefined) {
+        const { champ, police } = body.broderie.champ_police;
+        const c = b.champs[champ];
+        if (!c) return bad(`Champ ${champ} introuvable.`);
+        const p = police.trim();
+        if (p && !(b.polices ?? (b.police ? [b.police] : [])).includes(p)) return bad(`La police « ${p} » n'est pas dans la zone.`);
+        c.police = p || undefined;
+      }
+
+      const fils = getFils().couleurs;
+      const appliquerFilPrincipal = (fil: (typeof fils)[number]) => {
         b.fil_id = fil.id;
         b.fil_nom = fil.nom;
         b.fil_hex = fil.hex;
         b.fil_code_gunold = fil.code_gunold ?? "";
         for (const c of b.champs) c.fil_id = fil.id;
+      };
+      const retirerPalette = () => {
+        b.palette_id = undefined;
+        b.palette_nom = undefined;
+        b.palette_type = undefined;
+        b.fils_palette = undefined;
+        b.duree_changement_fil_min = b.fil_id_secondaire ? b.duree_changement_fil_min : 0;
+      };
+
+      // Changer les fils rend l'attribution lettre → fil caduque.
+      if (body.broderie.fil_id !== undefined || body.broderie.palette_id !== undefined) b.attribution_couleurs = undefined;
+
+      if (body.broderie.fil_id !== undefined) {
+        const fil = fils.find((f) => f.id === body.broderie!.fil_id);
+        if (!fil) return bad(`Fil ${body.broderie.fil_id} inconnu de la palette.`);
+        retirerPalette();
+        appliquerFilPrincipal(fil);
+      }
+
+      if (body.broderie.palette_id !== undefined) {
+        const pid = body.broderie.palette_id.trim();
+        if (!pid) {
+          retirerPalette();
+        } else {
+          const pal = getPalettes().palettes.find((p) => p.id === pid);
+          if (!pal) return bad(`Palette ${pid} inconnue.`);
+          const filsPal = pal.fils.map((id) => fils.find((f) => f.id === id));
+          const manquant = pal.fils.find((_, i) => !filsPal[i]);
+          if (manquant) return bad(`Fil ${manquant} de la palette ${pal.nom} absent du nuancier.`);
+          const ok = filsPal as Array<(typeof fils)[number]>;
+          b.palette_id = pal.id;
+          b.palette_nom = pal.nom;
+          b.palette_type = pal.type;
+          b.fils_palette = ok.map((f) => ({ fil_id: f.id, fil_nom: f.nom, fil_hex: f.hex, fil_code_gunold: f.code_gunold ?? "" }));
+          // Le fil secondaire n'a plus de sens : la palette décrit tous les fils.
+          b.fil_id_secondaire = undefined;
+          b.fil_nom_secondaire = undefined;
+          b.fil_hex_secondaire = undefined;
+          b.fil_code_gunold_secondaire = undefined;
+          appliquerFilPrincipal(ok[0]);
+        }
       }
     }
 

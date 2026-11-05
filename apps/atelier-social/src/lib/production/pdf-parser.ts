@@ -53,6 +53,7 @@ import {
   type CouleurAjoutRow,
 } from "./catalogue";
 import { getMotifs } from "@/lib/atelier-da/referentiels-loader";
+import { splitTypos } from "./broderie-utils";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
 const PALETTE_FILS_PATH = join(REFS_DIR, "palette_fils_broderie_v2.json");
@@ -480,7 +481,10 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
         duree_changement_fil_min: 0,
         duree_total_min: 0,
         note_atelier: b.note_atelier,
-        police: (ypmId && ctx.motifsTypo?.get(ypmId)) || undefined,
+        ...(() => {
+          const ps = splitTypos(ypmId ? ctx.motifsTypo?.get(ypmId) : undefined);
+          return ps.length ? { police: ps[0], polices: ps } : {};
+        })(),
       };
     });
 
