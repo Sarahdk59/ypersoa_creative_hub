@@ -9,7 +9,7 @@
  * réponse), donc même sélecteur de pilier/brief.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Check,
   Copy,
@@ -22,12 +22,16 @@ import {
   Wand2,
   Loader2,
   X,
+  Download,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Pilier, FICHES_PREUVE, FICHES_COMMUNAUTE } from "@/lib/social/fiches-editoriales";
 import { BrandSafetyBadge } from "@/components/social/BrandSafetyBadge";
 import { ReelMediaPickerModal } from "@/components/social/ReelMediaPickerModal";
+import { ReelMotifMediaPickerModal } from "@/components/social/ReelMotifMediaPickerModal";
 import type { MediaWithTags } from "@/types/mediatheque";
+import { renderMotifReel, type MotifReelProgress } from "@/lib/social/reel-video";
 
 type AngleId = "qui_sommes_nous" | "lien" | "souvenir" | "presence";
 
@@ -160,7 +164,15 @@ interface ShotVisual {
   error?: string;
 }
 
+type ReelSubTab = "script" | "motif";
+
+const SUB_TAB_OPTIONS: { id: ReelSubTab; label: string }[] = [
+  { id: "script", label: "Script" },
+  { id: "motif", label: "Focus motif" },
+];
+
 export function ReelWorkspace() {
+  const [subTab, setSubTab] = useState<ReelSubTab>("script");
   const [pilier, setPilier] = useState<Pilier>("connexion");
   const [briefId, setBriefId] = useState<string>("qui_sommes_nous");
   const [data, setData] = useState<GenerateResponse | null>(null);
@@ -175,26 +187,48 @@ export function ReelWorkspace() {
   return (
     <div className="text-brand-text font-sans">
       <div className="inline-flex items-center bg-white border border-brand-muted/15 rounded-full p-1 gap-1 mb-4">
-        {PILIER_OPTIONS.map((p) => {
-          const Icon = p.icon;
-          return (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => handlePilierChange(p.id)}
-              className={cn(
-                "flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all",
-                pilier === p.id ? "bg-brand-text text-white" : "text-brand-muted hover:text-brand-text"
-              )}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              {p.label}
-            </button>
-          );
-        })}
+        {SUB_TAB_OPTIONS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setSubTab(t.id)}
+            className={cn(
+              "px-4 py-1.5 rounded-full text-xs font-semibold transition-all",
+              subTab === t.id ? "bg-brand-text text-white" : "text-brand-muted hover:text-brand-text"
+            )}
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      <ReelsTab pilier={pilier} briefId={briefId} setBriefId={setBriefId} data={data} setData={setData} />
+      {subTab === "script" ? (
+        <>
+          <div className="inline-flex items-center bg-white border border-brand-muted/15 rounded-full p-1 gap-1 mb-4">
+            {PILIER_OPTIONS.map((p) => {
+              const Icon = p.icon;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => handlePilierChange(p.id)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all",
+                    pilier === p.id ? "bg-brand-text text-white" : "text-brand-muted hover:text-brand-text"
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <ReelsTab pilier={pilier} briefId={briefId} setBriefId={setBriefId} data={data} setData={setData} />
+        </>
+      ) : (
+        <FocusMotifTab />
+      )}
     </div>
   );
 }
@@ -499,5 +533,261 @@ function ReelsTab({
         />
       )}
     </main>
+  );
+}
+
+interface FocusMotif {
+  id: string;
+  nom_commercial: string;
+}
+
+/**
+ * Focus motif = un réel par motif : jusqu'à 10 photos de la médiathèque
+ * (déjà taguées motif:xxx), assemblées en diaporama animé silencieux 9:16
+ * via Canvas + MediaRecorder (lib/social/reel-video.ts). Pas de musique en
+ * V1 (Sarah l'ajoute nativement à la publication Instagram/TikTok).
+ */
+function FocusMotifTab() {
+  const [motifs, setMotifs] = useState<FocusMotif[]>([]);
+  const [motifsLoading, setMotifsLoading] = useState(true);
+  const [motifId, setMotifId] = useState("");
+  const [selected, setSelected] = useState<MediaWithTags[]>([]);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [rendering, setRendering] = useState(false);
+  const [progress, setProgress] = useState<MotifReelProgress | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
+
+  useEffect(() => {
+    fetch("/api/da/referentiels", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(res.error);
+        const list = (res.data.motifs.motifs as FocusMotif[]).map((m) => ({
+          id: m.id,
+          nom_commercial: m.nom_commercial,
+        }));
+        setMotifs(list);
+      })
+      .catch((e) => setError(e instanceof Error ? e.message : String(e)))
+      .finally(() => setMotifsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (videoUrl) URL.revokeObjectURL(videoUrl);
+    };
+  }, [videoUrl]);
+
+  function handleMotifChange(id: string) {
+    setMotifId(id);
+    setSelected([]);
+    setVideoUrl(null);
+    setVideoBlob(null);
+    setError(null);
+  }
+
+  const motifTag = motifId ? `motif:${motifId.toLowerCase()}` : undefined;
+
+  async function handleGenerate() {
+    if (selected.length === 0 || rendering) return;
+    setRendering(true);
+    setError(null);
+    setVideoUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setVideoBlob(null);
+    try {
+      const blob = await renderMotifReel(selected.map((m) => m.public_url), setProgress);
+      setVideoBlob(blob);
+      setVideoUrl(URL.createObjectURL(blob));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setRendering(false);
+      setProgress(null);
+    }
+  }
+
+  function handleDownload() {
+    if (!videoBlob) return;
+    const ext = videoBlob.type.includes("mp4") ? "mp4" : "webm";
+    const url = URL.createObjectURL(videoBlob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ypersoa-focus-motif-${motifId || "reel"}-${Date.now()}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <Film className="w-4 h-4" style={{ color: "#6E1F2E" }} />
+          <h2 className="font-serif text-lg">Focus motif</h2>
+        </div>
+        <p className="text-xs text-brand-muted mb-5 leading-relaxed">
+          Un réel = un motif. Choisis-le, pioche jusqu&rsquo;à 10 photos dans la médiathèque, le Hub assemble un
+          diaporama animé silencieux (9:16). Tu ajoutes la musique au moment de poster.
+        </p>
+
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10 space-y-4">
+          <div>
+            <label className="block text-[11px] font-semibold tracking-wide text-brand-muted uppercase mb-1.5">
+              Motif
+            </label>
+            {motifsLoading ? (
+              <div className="flex items-center gap-2 text-xs text-brand-muted">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Chargement…
+              </div>
+            ) : (
+              <select
+                value={motifId}
+                onChange={(e) => handleMotifChange(e.target.value)}
+                className="w-full p-2 rounded-lg border border-brand-muted/20 bg-white text-sm focus:outline-none focus:ring-1 focus:ring-brand-rose/50"
+              >
+                <option value="">Choisir un motif…</option>
+                {motifs.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.nom_commercial} · {m.id}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-[11px] font-semibold tracking-wide text-brand-muted uppercase">
+                Photos ({selected.length}/10)
+              </label>
+              <button
+                type="button"
+                onClick={() => setPickerOpen(true)}
+                disabled={!motifId}
+                className="flex items-center gap-1 text-[11px] font-semibold text-brand-rose hover:text-brand-rose-light transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Images className="w-3.5 h-3.5" />
+                Choisir dans la médiathèque
+              </button>
+            </div>
+            {!motifId && <p className="text-[11px] text-brand-muted/70">Choisis d&rsquo;abord un motif.</p>}
+            {selected.length > 0 && (
+              <div className="grid grid-cols-5 gap-1.5">
+                {selected.map((m, i) => (
+                  <div
+                    key={m.id}
+                    className="relative rounded-md overflow-hidden border border-brand-muted/15"
+                    style={{ aspectRatio: "9/16" }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={m.public_url} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setSelected((prev) => prev.filter((x) => x.id !== m.id))}
+                      className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-black/60 text-white flex items-center justify-center"
+                      title="Retirer"
+                    >
+                      <X className="w-2.5 h-2.5" />
+                    </button>
+                    <span className="absolute bottom-0.5 left-0.5 text-[9px] font-bold text-white bg-black/50 rounded px-1">
+                      {i + 1}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={selected.length === 0 || rendering}
+            className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-white rounded-full py-2.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: "#6E1F2E" }}
+          >
+            {rendering ? <Loader2 className="w-4 h-4 animate-spin" /> : <Film className="w-4 h-4" />}
+            {rendering
+              ? progress?.phase === "loading"
+                ? `Chargement des photos… (${(progress.index ?? 0) + 1}/${progress.total ?? selected.length})`
+                : "Assemblage du réel…"
+              : "Générer le réel"}
+          </button>
+        </div>
+
+        {error && (
+          <div className="mt-4 rounded-xl p-3 flex items-start gap-2 text-xs bg-red-50 text-red-800 border border-red-200">
+            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+            <p>{error}</p>
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        <h2 className="font-serif text-lg mb-1">Aperçu</h2>
+        <p className="text-xs text-brand-muted mb-2 leading-relaxed">
+          Diaporama silencieux, format 9:16. Musique à ajouter au moment de poster (bibliothèque Instagram/TikTok).
+        </p>
+
+        {!videoUrl && !rendering && (
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-brand-muted/10 text-center text-xs text-brand-muted">
+            Le réel généré apparaîtra ici.
+          </div>
+        )}
+
+        {rendering && (
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-brand-muted/10 text-center text-xs text-brand-muted">
+            Assemblage en cours…
+          </div>
+        )}
+
+        {videoUrl && (
+          <div className="bg-white rounded-2xl p-4 shadow-sm border border-brand-muted/10 space-y-3">
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+            <video
+              src={videoUrl}
+              controls
+              loop
+              className="mx-auto rounded-lg border border-brand-muted/15"
+              style={{ aspectRatio: "9/16", maxHeight: 480 }}
+            />
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-white rounded-full py-2 transition-all"
+                style={{ backgroundColor: "#6E1F2E" }}
+              >
+                <Download className="w-3.5 h-3.5" />
+                Télécharger le réel
+              </button>
+              <button
+                type="button"
+                onClick={handleGenerate}
+                className="flex items-center justify-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-text rounded-full py-2 px-3 border border-brand-muted/20 transition-all"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Régénérer
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {pickerOpen && (
+        <ReelMotifMediaPickerModal
+          motifTag={motifTag}
+          max={10}
+          initialSelectedIds={selected.map((m) => m.id)}
+          onClose={() => setPickerOpen(false)}
+          onConfirm={(media) => setSelected(media)}
+        />
+      )}
+    </div>
   );
 }
