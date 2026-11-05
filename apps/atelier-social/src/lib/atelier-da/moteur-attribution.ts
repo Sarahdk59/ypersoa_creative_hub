@@ -370,12 +370,15 @@ export function attribuerPattern(
     ? filsOverride.slice(0, pattern.fils_order.length)
     : pattern.fils_order;
 
-  // Détecte la ligne signature : dernière ligne qui contient un ESPACE ou un "&"
-  // (typique "David & Mathilde", "Famille Martin"). Un prénom seul (LOLA, EMMA)
-  // n'a pas d'espace et reste une "date".
+  // Détecte la ligne signature (texte bas, toujours d'UNE seule couleur) :
+  // dernière ligne qui contient au moins une LETTRE ("Edition", "Edition limitée",
+  // "David & Mathilde", "Famille Martin"). Une date = uniquement chiffres et
+  // séparateurs (AAAA ou JJ/MM/AAAA, cf. bible YPM-004).
+  // Bug corrigé 05/11/2026 : l'ancienne détection exigeait un espace ou un "&",
+  // un mot seul ("Edition") était pris pour une date et brodé multicolore.
   const lignesAvecCaractere = texteLignes.filter((l) => l.trim().length > 0);
   const dernIdx = lignesAvecCaractere.length - 1;
-  const isLigneSignature = (l: string) => / |&/.test(l.trim());
+  const isLigneSignature = (l: string) => /\p{L}|&/u.test(l.trim());
   const hasSignature = dernIdx >= 0 && isLigneSignature(lignesAvecCaractere[dernIdx]) && pattern.signature_line;
 
   const nbDates = hasSignature ? lignesAvecCaractere.length - 1 : lignesAvecCaractere.length;
