@@ -2,14 +2,14 @@
   "_meta": {
     "schema_version": "1.0",
     "referentiel": "zone_test",
-    "last_updated": "2026-08-25",
+    "last_updated": "2026-08-27",
     "description": "Zone de test broderie : dépôt des fichiers DST/PXF + aperçu JPG des tests à faire, attribution (Adriana, Rebecca, Cyrielle) et suivi par phase (réception → machine → modif à prévoir → modif faite le → validé)."
   },
   "tests": [
     {
       "id": "test_mpmlyelcmqtc",
       "titre": "set poignets",
-      "phase": "reception",
+      "phase": "valide",
       "files": [
         {
           "id": "f_mpmm2zi5jkz1",
@@ -45,8 +45,9 @@
         }
       ],
       "created_at": "2026-05-26",
-      "updated_at": "2026-08-25",
-      "assignee": "Rebecca"
+      "updated_at": "2026-08-27",
+      "assignee": "Rebecca",
+      "modif_faite_le": "2026-08-27"
     }
   ]
 }

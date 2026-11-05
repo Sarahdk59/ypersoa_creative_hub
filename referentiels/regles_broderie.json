@@ -2,7 +2,7 @@
   "_meta": {
     "schema_version": "1.0",
     "referentiel": "regles_broderie",
-    "last_updated": "2026-08-21",
+    "last_updated": "2026-08-27",
     "description": "Règles et contraintes officielles broderie Ypersoa par type de placement. Source de vérité pour la prod Adriana et pour les générations IA (atelier-shooting, atelier-DA shooting-book)."
   },
   "placements": [
@@ -61,7 +61,8 @@
       "label": "Production",
       "icone": "Ruler",
       "regles": [
-        "Utilisation de la machine à 800 points minutes"
+        "Utilisation de la machine à 800 points minutes",
+        "Casquette descendre à 700 pts/min"
       ],
       "note": ""
     }
