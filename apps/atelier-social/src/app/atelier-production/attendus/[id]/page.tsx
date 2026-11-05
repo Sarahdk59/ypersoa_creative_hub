@@ -8,7 +8,7 @@
 import { use, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Printer, FileSpreadsheet, CheckCheck, RefreshCw, Trash2, Link2, Plus, X, FileText, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Printer, FileSpreadsheet, CheckCheck, RefreshCw, Trash2, Link2, Plus, X, FileText, AlertTriangle, Split } from "lucide-react";
 import { STATUT_ATTENDU, USAGE_LABEL, type StatutAttenduUI } from "../ui";
 
 interface Ligne {
@@ -233,7 +233,24 @@ export default function AttenduPage({ params }: { params: Promise<{ id: string }
                   </td>
                   <td style={{ padding: 10 }}>{l.coloris}</td>
                   <td style={{ padding: 10 }}>{l.taille}</td>
-                  <td style={{ padding: 10, fontWeight: 600 }}>{l.quantite}</td>
+                  <td style={{ padding: 10, fontWeight: 600 }}>
+                    {l.quantite}
+                    {l.quantite > 1 && (
+                      <button
+                        title="Répartir sur 2 destinations (ex. 2 en stock + 1 pour une commande client)"
+                        onClick={() => {
+                          const v = prompt(`Combien de pièces (sur ${l.quantite}) vont vers une autre destination ?`, "1");
+                          const n = Number(v);
+                          if (v === null) return;
+                          if (!Number.isInteger(n) || n < 1 || n >= l.quantite) return alert(`Indique un nombre entre 1 et ${l.quantite - 1}.`);
+                          patch({ scinder_ligne: { id: l.id, quantite: n } });
+                        }}
+                        style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 6, background: "none", border: "none", padding: 0, cursor: "pointer", color: "var(--hub-teal)", fontSize: 11, fontWeight: 400, whiteSpace: "nowrap" }}
+                      >
+                        <Split size={11} /> Répartir
+                      </button>
+                    )}
+                  </td>
                   <td style={{ padding: 10, whiteSpace: "nowrap" }}>{l.pu_ht != null ? `${l.pu_ht.toFixed(2)} €` : "—"}</td>
                   <td style={{ padding: 10, whiteSpace: "nowrap" }}>{l.total_ht != null ? `${l.total_ht.toFixed(2)} €` : "—"}</td>
                   <td style={{ padding: 10, minWidth: 210 }}>

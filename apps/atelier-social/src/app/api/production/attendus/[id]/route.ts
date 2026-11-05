@@ -122,6 +122,37 @@ export async function PATCH(req: Request, { params }: Ctx) {
     }
     if (typeof body.supprimer_ligne === "string") a.lignes = a.lignes.filter((l) => l.id !== body.supprimer_ligne);
 
+    // Répartir une ligne sur 2 destinations (ex. 3 pièces → 2 stock + 1 commande client).
+    // La nouvelle ligne garde la même réf. ; montants et quantité reçue sont ventilés.
+    if (body.scinder_ligne && typeof body.scinder_ligne === "object") {
+      const { id: lid, quantite: q } = body.scinder_ligne as { id?: string; quantite?: number };
+      const i = a.lignes.findIndex((x) => x.id === lid);
+      if (i < 0) return err(`Ligne ${lid} introuvable.`);
+      const src = a.lignes[i];
+      const n = Math.round(Number(q) || 0);
+      if (n < 1 || n >= src.quantite) return err(`Quantité à répartir entre 1 et ${src.quantite - 1}.`);
+      const reste = src.quantite - n;
+      const recue = src.quantite_recue ?? 0;
+      const totalPour = (qte: number) =>
+        src.pu_ht != null ? Math.round(src.pu_ht * qte * 100) / 100
+        : src.total_ht != null ? Math.round((src.total_ht * qte / src.quantite) * 100) / 100
+        : null;
+      const nouvelle: LigneAttendu = {
+        ...src,
+        id: nouvelIdLigne(),
+        quantite: n,
+        total_ht: totalPour(n),
+        quantite_recue: recue > reste ? recue - reste : undefined,
+        usage: src.usage === "prod" ? "stock" : "prod",
+        commande_client: undefined,
+        note: undefined,
+      };
+      src.quantite = reste;
+      src.total_ht = totalPour(reste);
+      if (src.quantite_recue !== undefined) src.quantite_recue = Math.min(recue, reste);
+      a.lignes.splice(i + 1, 0, nouvelle);
+    }
+
     if (body.action === "rapprocher") {
       a.lignes = a.lignes.map((l) => (l.rattachement_manuel ? l : rattacherLigne(l, r)));
     }

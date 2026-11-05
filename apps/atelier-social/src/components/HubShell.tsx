@@ -27,8 +27,13 @@ export function HubShell({ children }: HubShellProps) {
     return <>{children}</>;
   }
 
-  // Documents imprimables (packing list, dossier technique) : sans chrome, pour un A4 propre.
-  if (pathname.endsWith("/packing-list") || pathname.endsWith("/dossier-technique")) {
+  // Documents imprimables (packing list, dossier technique, fiche réception d'un
+  // attendu de livraison) : sans chrome, pour un A4 propre.
+  if (
+    pathname.endsWith("/packing-list") ||
+    pathname.endsWith("/dossier-technique") ||
+    /^\/atelier-production\/attendus\/[^/]+\/reception$/.test(pathname)
+  ) {
     return <AuthProvider>{children}</AuthProvider>;
   }
 
