@@ -20,7 +20,7 @@ import { ArrowLeft, FileText, Loader2, UploadCloud, AlertTriangle, Check, X, Pap
 import type { Commande } from "@/lib/production/commandes-loader";
 import { TYPE_DOCUMENT_LABEL, devinerTypeDocument } from "@/lib/production/completude";
 
-const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp";
+const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp,.emb";
 interface PieceLocale { file: File; type: string }
 
 interface Warning {
@@ -60,7 +60,7 @@ export default function UploadCommandePage() {
   const isAdmin = role === "admin" || role === "prod"; // admin + atelier peuvent créer une commande
 
   function ajouterFichiers(files: FileList | File[]) {
-    const ok = Array.from(files).filter((f) => !f.type || ACCEPT.includes(f.type));
+    const ok = Array.from(files).filter((f) => !f.type || ACCEPT.includes(f.type) || f.name.toLowerCase().endsWith(".emb"));
     setPieces((prev) => [...prev, ...ok.map((file) => ({ file, type: devinerTypeDocument(file.name) }))]);
   }
 

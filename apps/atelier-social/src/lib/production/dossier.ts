@@ -6,6 +6,8 @@
  *  - devis        : source des articles SI aucun bon de commande
  *  - etiquette    : transporteur, mode (locker / relais / domicile), point relais, n° de suivi
  *                   → lue par Gemini, PRIORITAIRE sur le bon pour la livraison (c'est ce qui part)
+ *  - fiche_technique : FT du motif (PDF Hatch / Tajima Pulse) pour l'atelier
+ *  - fichier_emb  : fichier de travail Hatch (.emb) — téléchargeable, jamais lu
  *  - bat, bon_livraison, autre : pièces jointes (référence visuelle / traçabilité)
  */
 import "server-only";
@@ -16,7 +18,24 @@ import type { Commande, DocumentCommande, Livraison, ModeLivraison, TypeDocument
 export const BUCKET_DOCUMENTS = "commandes-pdf";
 export const MAX_BYTES_DOCUMENT = 20 * 1024 * 1024;
 export const MIMES_DOCUMENT = ["application/pdf", "image/png", "image/jpeg", "image/webp"];
-export const TYPES_DOCUMENT: TypeDocument[] = ["bon_commande", "devis", "bat", "bon_livraison", "etiquette", "autre"];
+/** Fichiers broderie (Hatch .emb) : binaire propriétaire, stocké tel quel. */
+export const EXTENSIONS_BRODERIE = [".emb"];
+export const MIME_BRODERIE = "application/octet-stream";
+export const TYPES_DOCUMENT: TypeDocument[] = [
+  "bon_commande",
+  "devis",
+  "bat",
+  "fiche_technique",
+  "fichier_emb",
+  "bon_livraison",
+  "etiquette",
+  "autre",
+];
+
+export function estFichierBroderie(name: string): boolean {
+  const n = name.toLowerCase();
+  return EXTENSIONS_BRODERIE.some((ext) => n.endsWith(ext));
+}
 
 export function isTypeDocument(t: unknown): t is TypeDocument {
   return typeof t === "string" && (TYPES_DOCUMENT as string[]).includes(t);
@@ -37,9 +56,12 @@ function sanitizeFilename(name: string): string {
 }
 
 /** Contrôle d'un fichier déposé. Renvoie un message d'erreur ou null. */
-export function checkFichier(file: File): string | null {
-  if (file.type && !MIMES_DOCUMENT.includes(file.type)) {
-    return `« ${file.name} » : type non supporté (${file.type}). PDF, PNG, JPG ou WebP attendu.`;
+export function checkFichier(file: File, type?: TypeDocument): string | null {
+  const broderie = estFichierBroderie(file.name);
+  if (type === "fichier_emb" && !broderie) return `« ${file.name} » : un fichier Hatch .emb est attendu.`;
+  if (broderie && type && type !== "fichier_emb") return `« ${file.name} » : un .emb se range en « Fichier EMB (Hatch) ».`;
+  if (!broderie && file.type && !MIMES_DOCUMENT.includes(file.type)) {
+    return `« ${file.name} » : type non supporté (${file.type}). PDF, PNG, JPG, WebP ou .emb attendu.`;
   }
   if (file.size > MAX_BYTES_DOCUMENT) {
     return `« ${file.name} » : trop volumineux (${(file.size / 1024 / 1024).toFixed(1)} Mo, max 20 Mo).`;
@@ -48,6 +70,7 @@ export function checkFichier(file: File): string | null {
 }
 
 export function mimeOf(file: File): string {
+  if (estFichierBroderie(file.name)) return MIME_BRODERIE;
   if (file.type) return file.type;
   const n = file.name.toLowerCase();
   if (n.endsWith(".png")) return "image/png";

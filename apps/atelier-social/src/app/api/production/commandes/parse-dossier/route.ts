@@ -49,8 +49,8 @@ export async function POST(req: Request) {
   if (types.length !== files.length || !types.every(isTypeDocument)) {
     return NextResponse.json({ ok: false, error: "Chaque fichier doit avoir un type de pièce." }, { status: 400 });
   }
-  for (const f of files) {
-    const err = checkFichier(f);
+  for (const [i, f] of files.entries()) {
+    const err = checkFichier(f, types[i] as TypeDocument);
     if (err) return NextResponse.json({ ok: false, error: err }, { status: 400 });
   }
 

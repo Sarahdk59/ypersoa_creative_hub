@@ -57,6 +57,8 @@ export const TYPE_DOCUMENT_LABEL: Record<string, string> = {
   bon_commande: "Bon de commande",
   devis: "Devis",
   bat: "BAT",
+  fiche_technique: "Fiche technique",
+  fichier_emb: "Fichier EMB (Hatch)",
   bon_livraison: "Bon de livraison",
   etiquette: "Étiquette d'expédition",
   autre: "Autre",
@@ -65,6 +67,8 @@ export const TYPE_DOCUMENT_LABEL: Record<string, string> = {
 /** Devine le type d'une pièce d'après son nom de fichier (modifiable ensuite). */
 export function devinerTypeDocument(filename: string): string {
   const n = filename.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  if (n.endsWith(".emb")) return "fichier_emb";
+  if (/fiche.?tech|(^|[^a-z])ft([^a-z]|$)|tech.?sheet|production.?worksheet/.test(n)) return "fiche_technique";
   if (/etiquette|label|mondial|colissimo|chronopost|relay|shipping|expedition/.test(n)) return "etiquette";
   if (/(^|[^a-z])bat([^a-z]|$)|bon.a.tirer|maquette|proof|mockup/.test(n)) return "bat";
   if (/devis|quote|estimate/.test(n)) return "devis";

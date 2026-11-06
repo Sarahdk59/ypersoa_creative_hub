@@ -140,6 +140,8 @@ export default async function DossierTechniquePage({
   const liv = commande.livraison;
   const docs = commande.documents ?? [];
   const bats = docs.filter((d) => d.type === "bat");
+  const fichesTech = docs.filter((d) => d.type === "fiche_technique");
+  const fichiersEmb = docs.filter((d) => d.type === "fichier_emb");
   const etiquettes = docs.filter((d) => d.type === "etiquette");
   const nbPieces = commande.articles.reduce((s, a) => s + (a.quantite || 1), 0);
   const articleIndex = new Map(commande.articles.map((a, i) => [a.id, i + 1]));
@@ -275,6 +277,20 @@ export default async function DossierTechniquePage({
         </table>
       ) : (
         <div style={{ opacity: 0.6 }}>Pas encore planifiée — générer le planning depuis la fiche commande.</div>
+      )}
+
+      {(fichesTech.length > 0 || fichiersEmb.length > 0) && (
+        <>
+          <h2>Fichiers broderie</h2>
+          <div className="box">
+            {fichesTech.map((d) => (
+              <div key={d.id}>Fiche technique : <strong>{d.filename}</strong> — à imprimer et joindre</div>
+            ))}
+            {fichiersEmb.map((d) => (
+              <div key={d.id}>Fichier Hatch : <strong>{d.filename}</strong> — à ouvrir dans Hatch (dossier de la commande dans le Hub)</div>
+            ))}
+          </div>
+        </>
       )}
 
       {bats.length > 0 && (

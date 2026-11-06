@@ -35,7 +35,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const type = form.get("type");
     if (!(file instanceof File)) return NextResponse.json({ ok: false, error: "Fichier manquant." }, { status: 400 });
     if (!isTypeDocument(type)) return NextResponse.json({ ok: false, error: "Type de pièce invalide." }, { status: 400 });
-    const err = checkFichier(file);
+    const err = checkFichier(file, type);
     if (err) return NextResponse.json({ ok: false, error: err }, { status: 400 });
 
     const mime = mimeOf(file);

@@ -216,7 +216,15 @@ export interface Planning {
   genere_le?: string;
 }
 
-export type TypeDocument = "bon_commande" | "devis" | "bat" | "bon_livraison" | "etiquette" | "autre";
+export type TypeDocument =
+  | "bon_commande"
+  | "devis"
+  | "bat"
+  | "fiche_technique"
+  | "fichier_emb"
+  | "bon_livraison"
+  | "etiquette"
+  | "autre";
 
 /** Pièce du dossier de commande (bucket `commandes-pdf`). */
 export interface DocumentCommande {
