@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, ArrowRight, Package, Clock, AlertCircle, Archive, UploadCloud, DownloadCloud } from "lucide-react";
 import type { Commande, StatutCommande } from "@/lib/production/commandes-loader";
+import { libelleMois } from "@/lib/production/historique";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
   a_planifier: { label: "À planifier", bg: "#FEF6E0", fg: "#7A5800" },
@@ -102,6 +103,22 @@ export default function CommandesListPage() {
             >
               <UploadCloud size={13} strokeWidth={1.6} />
               Nouveau dossier de commande
+            </Link>
+          )}
+          {(role === "admin" || role === "prod") && (
+            <Link
+              href="/atelier-production/commandes/historique"
+              title="Plusieurs bons d'un mois passé, archivés directement sans journal"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 14px", borderRadius: 6,
+                border: "0.5px solid var(--hub-border)", background: "white",
+                color: "var(--hub-foreground)", fontFamily: "var(--font-sans)", fontSize: 12,
+                fontWeight: 500, textDecoration: "none",
+              }}
+            >
+              <Archive size={13} strokeWidth={1.6} />
+              Rattraper l&apos;historique
             </Link>
           )}
           {role === "admin" && (
@@ -213,7 +230,9 @@ function CommandeCard({ c }: { c: Commande }) {
         }}>
           {c.expedition.nom} · {c.expedition.ville}<br />
           Commandé le {c.date_commande}
-          {c.journal?.archivee_le && <><br />Archivée le {c.journal.archivee_le}</>}
+          {c.journal?.historique ? (
+            <><br />Archivée en {libelleMois(c.journal.historique.mois)} (historique)</>
+          ) : c.journal?.archivee_le && <><br />Archivée le {c.journal.archivee_le}</>}
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: "auto", paddingTop: 12, borderTop: "1px solid var(--hub-border)" }}>

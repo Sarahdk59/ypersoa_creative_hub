@@ -65,8 +65,11 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const body = (await req.json()) as Body;
     const commande = await getCommande(id);
     if (!commande) return NextResponse.json({ ok: false, error: "Commande introuvable" }, { status: 404 });
-    if (commande.statut === "archivee") {
-      return NextResponse.json({ ok: false, error: "Commande archivée : désarchive-la avant de la modifier." }, { status: 409 });
+    // Archivée : on autorise seulement la correction d'identification (produit / motif /
+    // couleur / taille) — utile pour fiabiliser le bilan de ventes sur l'historique.
+    // Broderie et quantité restent verrouillées (prod déjà faite).
+    if (commande.statut === "archivee" && (body.broderie !== undefined || body.quantite !== undefined)) {
+      return NextResponse.json({ ok: false, error: "Commande archivée : désarchive-la avant de modifier la broderie ou la quantité." }, { status: 409 });
     }
     const article = commande.articles.find((a) => a.id === articleId);
     if (!article) return NextResponse.json({ ok: false, error: "Article introuvable" }, { status: 404 });

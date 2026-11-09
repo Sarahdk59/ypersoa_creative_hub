@@ -8,6 +8,8 @@
  *                   → lue par Gemini, PRIORITAIRE sur le bon pour la livraison (c'est ce qui part)
  *  - fiche_technique : FT du motif (PDF Hatch / Tajima Pulse) pour l'atelier
  *  - fichier_emb  : fichier de travail Hatch (.emb) — téléchargeable, jamais lu
+ *  - fichier_graphique : logo / fichier source client (AI, EPS, SVG, PSD, ZIP ou PDF/PNG) — B2B surtout
+ *  - mail_client  : échange client (.eml / .msg, ou PDF / capture du mail) — un .eml est résumé (de, objet, date)
  *  - bat, bon_livraison, autre : pièces jointes (référence visuelle / traçabilité)
  */
 import "server-only";
@@ -16,17 +18,29 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Commande, DocumentCommande, Livraison, ModeLivraison, TypeDocument } from "./commandes-loader";
 
 export const BUCKET_DOCUMENTS = "commandes-pdf";
-export const MAX_BYTES_DOCUMENT = 20 * 1024 * 1024;
+/** Aligné sur le file_size_limit du bucket et sur middlewareClientMaxBodySize (next.config). */
+export const MAX_BYTES_DOCUMENT = 50 * 1024 * 1024;
 export const MIMES_DOCUMENT = ["application/pdf", "image/png", "image/jpeg", "image/webp"];
 /** Fichiers broderie (Hatch .emb) : binaire propriétaire, stocké tel quel. */
 export const EXTENSIONS_BRODERIE = [".emb"];
+/** Fichiers sources graphiques (B2B) : jamais affichés dans le navigateur, téléchargés. */
+export const EXTENSIONS_GRAPHIQUE = [".ai", ".eps", ".svg", ".psd", ".zip"];
+/** Mails exportés depuis Mail / Outlook. */
+export const EXTENSIONS_MAIL = [".eml", ".msg"];
+/**
+ * Formats natifs stockés en octet-stream → toujours téléchargés, jamais
+ * servis inline (un SVG servi tel quel depuis une URL publique peut exécuter du script).
+ */
 export const MIME_BRODERIE = "application/octet-stream";
+export const MIME_TELECHARGEMENT = "application/octet-stream";
 export const TYPES_DOCUMENT: TypeDocument[] = [
   "bon_commande",
   "devis",
   "bat",
   "fiche_technique",
   "fichier_emb",
+  "fichier_graphique",
+  "mail_client",
   "bon_livraison",
   "etiquette",
   "autre",
@@ -35,6 +49,24 @@ export const TYPES_DOCUMENT: TypeDocument[] = [
 export function estFichierBroderie(name: string): boolean {
   const n = name.toLowerCase();
   return EXTENSIONS_BRODERIE.some((ext) => n.endsWith(ext));
+}
+
+function aExtension(name: string, exts: string[]): boolean {
+  const n = name.toLowerCase();
+  return exts.some((ext) => n.endsWith(ext));
+}
+
+export function estFichierGraphique(name: string): boolean {
+  return aExtension(name, EXTENSIONS_GRAPHIQUE);
+}
+
+export function estFichierMail(name: string): boolean {
+  return aExtension(name, EXTENSIONS_MAIL);
+}
+
+/** Format natif (EMB, AI, EML…) : stocké en octet-stream, à télécharger. */
+export function estFormatNatif(name: string): boolean {
+  return estFichierBroderie(name) || estFichierGraphique(name) || estFichierMail(name);
 }
 
 export function isTypeDocument(t: unknown): t is TypeDocument {
@@ -60,17 +92,25 @@ export function checkFichier(file: File, type?: TypeDocument): string | null {
   const broderie = estFichierBroderie(file.name);
   if (type === "fichier_emb" && !broderie) return `« ${file.name} » : un fichier Hatch .emb est attendu.`;
   if (broderie && type && type !== "fichier_emb") return `« ${file.name} » : un .emb se range en « Fichier EMB (Hatch) ».`;
-  if (!broderie && file.type && !MIMES_DOCUMENT.includes(file.type)) {
-    return `« ${file.name} » : type non supporté (${file.type}). PDF, PNG, JPG, WebP ou .emb attendu.`;
+  const graphique = estFichierGraphique(file.name);
+  if (graphique && type && !["fichier_graphique", "bat", "autre"].includes(type)) {
+    return `« ${file.name} » : un fichier AI / EPS / SVG / PSD / ZIP se range en « Fichier graphique », « BAT » ou « Autre ».`;
+  }
+  const mail = estFichierMail(file.name);
+  if (mail && type && !["mail_client", "autre"].includes(type)) {
+    return `« ${file.name} » : un .eml / .msg se range en « Mail client ».`;
+  }
+  if (!estFormatNatif(file.name) && file.type && !MIMES_DOCUMENT.includes(file.type)) {
+    return `« ${file.name} » : type non supporté (${file.type}). PDF, PNG, JPG, WebP, AI, EPS, SVG, PSD, ZIP, EML, MSG ou EMB attendu.`;
   }
   if (file.size > MAX_BYTES_DOCUMENT) {
-    return `« ${file.name} » : trop volumineux (${(file.size / 1024 / 1024).toFixed(1)} Mo, max 20 Mo).`;
+    return `« ${file.name} » : trop volumineux (${(file.size / 1024 / 1024).toFixed(1)} Mo, max ${MAX_BYTES_DOCUMENT / 1024 / 1024} Mo).`;
   }
   return null;
 }
 
 export function mimeOf(file: File): string {
-  if (estFichierBroderie(file.name)) return MIME_BRODERIE;
+  if (estFormatNatif(file.name)) return MIME_TELECHARGEMENT;
   if (file.type) return file.type;
   const n = file.name.toLowerCase();
   if (n.endsWith(".png")) return "image/png";
@@ -102,6 +142,49 @@ export async function uploadDocument(
     uploaded_by: opts.uploadedBy ?? undefined,
     uploaded_at: new Date().toISOString(),
   };
+}
+
+// ──────────────────────────────────────────────────────────
+// Mail client (.eml) → résumé de traçabilité (sans IA)
+// ──────────────────────────────────────────────────────────
+
+/** Décode les mots encodés RFC 2047 (=?UTF-8?B?…?= / =?UTF-8?Q?…?=). */
+function decoderEnTete(v: string): string {
+  return v
+    .replace(/\?=\s+=\?/g, "?==?")
+    .replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g, (_m, charset: string, enc: string, txt: string) => {
+      try {
+        const bytes =
+          enc.toUpperCase() === "B"
+            ? Buffer.from(txt, "base64")
+            : Buffer.from(
+                txt.replace(/_/g, " ").replace(/=([0-9A-Fa-f]{2})/g, (_x, h: string) => String.fromCharCode(parseInt(h, 16))),
+                "latin1",
+              );
+        return new TextDecoder(charset.toLowerCase()).decode(bytes);
+      } catch {
+        return txt;
+      }
+    });
+}
+
+/** Lit expéditeur, objet et date d'un .eml. Renvoie undefined si rien de lisible (ex. .msg Outlook). */
+export function resumerMail(buffer: Buffer, filename: string): string | undefined {
+  if (!filename.toLowerCase().endsWith(".eml")) return undefined;
+  const brut = buffer.subarray(0, 64 * 1024).toString("utf8");
+  const fin = brut.search(/\r?\n\r?\n/);
+  const entetes = (fin >= 0 ? brut.slice(0, fin) : brut).replace(/\r?\n[ \t]+/g, " ");
+  const lire = (nom: string) => {
+    const m = entetes.match(new RegExp(`^${nom}:\\s*(.+)$`, "im"));
+    return m ? decoderEnTete(m[1].trim()) : undefined;
+  };
+  const de = lire("From");
+  const objet = lire("Subject");
+  const date = lire("Date");
+  const d = date ? new Date(date) : null;
+  const dateFr = d && !Number.isNaN(d.getTime()) ? d.toLocaleDateString("fr-FR") : date;
+  const resume = [de && `de ${de}`, objet && `« ${objet} »`, dateFr].filter(Boolean).join(" · ");
+  return resume || undefined;
 }
 
 // ──────────────────────────────────────────────────────────

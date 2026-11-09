@@ -28,7 +28,8 @@ export type StatutCommande = "a_planifier" | "planifiee" | "en_cours" | "termine
 export type PrioriteCommande = "normale" | "urgente";
 export type EtapeJournal = "dst" | "broderie" | "cq" | "expedition";
 export type AlgoPlanning = "lpt" | "otif";
-export type CommandeSource = "shopify" | "etsy" | "manuel";
+/** b2b = commande pro (devis We Are Perso validé, client entreprise). */
+export type CommandeSource = "shopify" | "etsy" | "b2b" | "manuel";
 
 export interface JournalEntree {
   par: string;
@@ -48,6 +49,11 @@ export interface JournalCommande {
   expedition?: JournalEntree;
   reassort_fournisseur?: ReassortFournisseur;
   archivee_le?: string;
+  /**
+   * Rattrapage d'historique : commande archivée directement sur un mois,
+   * sans renseigner DST / broderie / CQ / expédition.
+   */
+  historique?: { mois: string; par?: string; le: string };
 }
 
 export interface ReworkOrigine {
@@ -82,7 +88,11 @@ export interface ContactClient {
   telephone?: string;
 }
 
-export type ModeLivraison = "locker" | "point_relais" | "domicile" | "retrait_atelier";
+/**
+ * main_propre = remise en main propre (livrée par l'atelier, fréquent en B2B) ;
+ * retrait_atelier = le client vient chercher. Ces deux modes n'ont ni transporteur ni suivi.
+ */
+export type ModeLivraison = "locker" | "point_relais" | "domicile" | "main_propre" | "retrait_atelier";
 
 export interface Livraison {
   /** Ex. "Mondial Relay", "Colissimo", "Chronopost", "La Poste". */
@@ -222,6 +232,8 @@ export type TypeDocument =
   | "bat"
   | "fiche_technique"
   | "fichier_emb"
+  | "fichier_graphique"
+  | "mail_client"
   | "bon_livraison"
   | "etiquette"
   | "autre";

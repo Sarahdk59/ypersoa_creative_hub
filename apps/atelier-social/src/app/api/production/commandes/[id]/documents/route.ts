@@ -1,6 +1,7 @@
 /**
  * POST /api/production/commandes/[id]/documents
- *   FormData : `file` + `type` (bon_commande | devis | bat | bon_livraison | etiquette | autre)
+ *   FormData : `file` + `type` (bon_commande | devis | bat | fiche_technique | fichier_emb |
+ *   fichier_graphique | mail_client | bon_livraison | etiquette | autre)
  *
  * Ajoute une pièce au dossier d'une commande existante (l'étiquette arrive
  * souvent après la commande). Une étiquette est lue et met à jour la
@@ -16,6 +17,7 @@ import {
   isTypeDocument,
   lireEtiquette,
   mimeOf,
+  resumerMail,
   uploadDocument,
 } from "@/lib/production/dossier";
 
@@ -52,6 +54,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         warnings.push(`Étiquette illisible (${e instanceof Error ? e.message : String(e)}) — saisis la livraison à la main.`);
       }
     }
+
+    if (type === "mail_client") extraction = resumerMail(buffer, file.name);
 
     const doc = await uploadDocument(await createClient(), {
       buffer,

@@ -8,7 +8,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, Plus, X } from "lucide-react";
 import type { Commande, ContactClient, Livraison, ModeLivraison, Broderie } from "@/lib/production/commandes-loader";
-import { MODE_LIVRAISON_LABEL, TRANSPORTEURS } from "@/lib/production/completude";
+import { MODE_LIVRAISON_LABEL, TRANSPORTEURS, sansTransporteur } from "@/lib/production/completude";
 import { loadBase, type CatalogueBase } from "./ArticleEditor";
 import { MAX_POLICES_PAR_ZONE, filsBroderie, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
 
@@ -64,23 +64,27 @@ export function LivraisonContactEditor({
       <div key={commande.updated_at} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12 }}>
         <div>
           <label style={lbl}>Transporteur</label>
-          <input list="transporteurs" defaultValue={liv.transporteur ?? ""} disabled={disabled} onBlur={(e) => e.target.value !== (liv.transporteur ?? "") && setLiv("transporteur", e.target.value)} placeholder="Mondial Relay" style={input} />
+          <input list="transporteurs" defaultValue={liv.transporteur ?? ""} disabled={disabled || sansTransporteur(liv)} onBlur={(e) => e.target.value !== (liv.transporteur ?? "") && setLiv("transporteur", e.target.value)} placeholder={sansTransporteur(liv) ? "Aucun" : "Mondial Relay"} style={input} />
           <datalist id="transporteurs">{TRANSPORTEURS.map((t) => <option key={t} value={t} />)}</datalist>
         </div>
         <div>
           <label style={lbl}>Mode</label>
-          <select value={liv.mode ?? ""} disabled={disabled} onChange={(e) => setLiv("mode", e.target.value as ModeLivraison)} style={input}>
+          <select value={liv.mode ?? ""} disabled={disabled} onChange={(e) => {
+            const mode = (e.target.value || undefined) as ModeLivraison | undefined;
+            // Main propre / retrait : on efface transporteur, locker et suivi devenus sans objet.
+            patch(sansTransporteur({ mode }) ? { mode } : { ...liv, mode }, contact);
+          }} style={input}>
             <option value="">— à compléter —</option>
             {Object.entries(MODE_LIVRAISON_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
         </div>
         <div>
           <label style={lbl}>{liv.mode === "locker" ? "Locker" : "Point relais"}</label>
-          <input defaultValue={liv.point_relais ?? ""} disabled={disabled || liv.mode === "domicile" || liv.mode === "retrait_atelier"} onBlur={(e) => e.target.value !== (liv.point_relais ?? "") && setLiv("point_relais", e.target.value)} placeholder="Nom / n° du locker" style={input} />
+          <input defaultValue={liv.point_relais ?? ""} disabled={disabled || liv.mode === "domicile" || sansTransporteur(liv)} onBlur={(e) => e.target.value !== (liv.point_relais ?? "") && setLiv("point_relais", e.target.value)} placeholder="Nom / n° du locker" style={input} />
         </div>
         <div>
           <label style={lbl}>N° de suivi</label>
-          <input defaultValue={liv.numero_suivi ?? ""} disabled={disabled} onBlur={(e) => e.target.value !== (liv.numero_suivi ?? "") && setLiv("numero_suivi", e.target.value)} style={input} />
+          <input defaultValue={liv.numero_suivi ?? ""} disabled={disabled || sansTransporteur(liv)} placeholder={sansTransporteur(liv) ? "Sans suivi" : undefined} onBlur={(e) => e.target.value !== (liv.numero_suivi ?? "") && setLiv("numero_suivi", e.target.value)} style={input} />
         </div>
         <div>
           <label style={lbl}>E-mail client</label>

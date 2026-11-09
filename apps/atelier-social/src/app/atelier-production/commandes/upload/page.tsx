@@ -18,9 +18,8 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, FileText, Loader2, UploadCloud, AlertTriangle, Check, X, Paperclip } from "lucide-react";
 
 import type { Commande } from "@/lib/production/commandes-loader";
-import { TYPE_DOCUMENT_LABEL, devinerTypeDocument } from "@/lib/production/completude";
+import { ACCEPT_DOCUMENTS as ACCEPT, SOURCE_LABEL, TYPE_DOCUMENT_LABEL, devinerTypeDocument, fichierAccepte } from "@/lib/production/completude";
 
-const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp,.emb";
 interface PieceLocale { file: File; type: string }
 
 interface Warning {
@@ -60,7 +59,7 @@ export default function UploadCommandePage() {
   const isAdmin = role === "admin" || role === "prod"; // admin + atelier peuvent créer une commande
 
   function ajouterFichiers(files: FileList | File[]) {
-    const ok = Array.from(files).filter((f) => !f.type || ACCEPT.includes(f.type) || f.name.toLowerCase().endsWith(".emb"));
+    const ok = Array.from(files).filter(fichierAccepte);
     setPieces((prev) => [...prev, ...ok.map((file) => ({ file, type: devinerTypeDocument(file.name) }))]);
   }
 
@@ -198,7 +197,8 @@ export default function UploadCommandePage() {
         </h1>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 760, lineHeight: 1.5 }}>
           Dépose toutes les pièces de la commande : bon de commande (Shopify,
-          Etsy…) ou devis, BAT, bon de livraison, étiquette d&apos;expédition.
+          Etsy…) ou devis (B2B), BAT, fichier graphique du client (AI, EPS,
+          SVG…), mail client, bon de livraison, étiquette d&apos;expédition.
           Le bon (ou le devis) donne les articles, l&apos;étiquette donne le
           transporteur, le locker et le suivi. Tu relis avant création ; toutes
           les pièces restent jointes à la commande.
@@ -300,7 +300,7 @@ export default function UploadCommandePage() {
               </h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, fontFamily: "var(--font-sans)", fontSize: 13 }}>
                 <KV label="Date" value={draft.date_commande} />
-                <KV label="Canal" value={draft.source === "etsy" ? "Etsy" : draft.source === "manuel" ? "Manuel" : "Shopify"} />
+                <KV label="Canal" value={SOURCE_LABEL[draft.source] ?? "Shopify"} />
                 <KV label="Priorité" value={draft.priorite} />
                 <KV label="Articles" value={`${draft.articles.length}`} />
                 <KV label="Durée totale" value={`${draft.duree_total_min} min`} />
@@ -468,8 +468,8 @@ function Dropzone({ onFiles }: { onFiles: (f: FileList | File[]) => void }) {
         Dépose les pièces de la commande
       </p>
       <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.6, margin: "6px 0 0 0" }}>
-        Bon de commande ou devis (obligatoire), BAT, bon de livraison, étiquette d&apos;expédition…
-        PDF, PNG, JPG ou WebP, 20 Mo max par pièce. Type deviné d&apos;après le nom, modifiable.
+        Bon de commande ou devis (obligatoire), BAT, fichier graphique, mail client, étiquette d&apos;expédition…
+        PDF, PNG, JPG, WebP, AI, EPS, SVG, PSD, ZIP, EML, MSG ou EMB — 50 Mo max par pièce. Type deviné d&apos;après le nom, modifiable.
       </p>
     </label>
   );

@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "10mb", // pour images base64
     },
+    // Le middleware (auth) couvre aussi /api : au-delà de cette taille Next 15.5
+    // tronque le corps de la requête. Dossiers de commande B2B = fichiers AI /
+    // PSD jusqu'à 50 Mo pièce, plusieurs pièces par envoi.
+    middlewareClientMaxBodySize: "150mb",
   },
   async redirects() {
     // Séparation Production ↔ DA (16/05/2026) : fils/palettes uniquement.

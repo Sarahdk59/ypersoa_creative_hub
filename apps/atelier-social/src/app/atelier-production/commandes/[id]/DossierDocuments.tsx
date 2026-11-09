@@ -6,12 +6,23 @@
  * et met à jour la livraison) ; seule l'admin peut en retirer.
  */
 import { useEffect, useState } from "react";
-import { Download, FileCode2, FileText, Image as ImageIcon, Loader2, Plus, Trash2 } from "lucide-react";
+import { Download, FileCode2, FileText, Image as ImageIcon, Loader2, Mail, PenTool, Plus, Trash2 } from "lucide-react";
 import type { Commande, DocumentCommande } from "@/lib/production/commandes-loader";
-import { TYPE_DOCUMENT_LABEL } from "@/lib/production/completude";
+import { ACCEPT_DOCUMENTS, TYPE_DOCUMENT_LABEL, devinerTypeDocument, estFormatNatif } from "@/lib/production/completude";
 
-const ORDRE = ["bon_commande", "devis", "bat", "fiche_technique", "fichier_emb", "etiquette", "bon_livraison", "autre"];
+const ORDRE = ["bon_commande", "devis", "bat", "fichier_graphique", "mail_client", "fiche_technique", "fichier_emb", "etiquette", "bon_livraison", "autre"];
 const estEmb = (name: string) => name.toLowerCase().endsWith(".emb");
+/** Un format natif (.ai, .eml…) déposé sous un type incompatible est rangé d'office. */
+const aTelecharger = (d: DocumentCommande) => d.mime === "application/octet-stream" || estFormatNatif(d.filename);
+
+function typePour(file: File, choisi: string): string {
+  if (estEmb(file.name)) return "fichier_emb";
+  if (!estFormatNatif(file.name)) return choisi;
+  const devine = devinerTypeDocument(file.name);
+  if (devine === "fichier_graphique" && ["fichier_graphique", "bat", "autre"].includes(choisi)) return choisi;
+  if (devine === "mail_client" && ["mail_client", "autre"].includes(choisi)) return choisi;
+  return devine;
+}
 
 export default function DossierDocuments({
   commande,
@@ -57,8 +68,8 @@ export default function DossierDocuments({
     try {
       const fd = new FormData();
       fd.append("file", file);
-      // Un .emb va toujours dans « Fichier EMB », quel que soit le type sélectionné.
-      fd.append("type", estEmb(file.name) ? "fichier_emb" : type);
+      // .emb / .ai / .eml… vont d'office dans le bon type si celui choisi ne convient pas.
+      fd.append("type", typePour(file, type));
       const res = await fetch(`/api/production/commandes/${commande.id}/documents`, { method: "POST", body: fd }).then((r) => r.json());
       if (!res.ok) throw new Error(res.error);
       onSaved(res.data);
@@ -107,7 +118,7 @@ export default function DossierDocuments({
               {busy ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} Ajouter une pièce
               <input
                 type="file"
-                accept={type === "fichier_emb" ? ".emb" : "application/pdf,image/png,image/jpeg,image/webp,.emb"}
+                accept={type === "fichier_emb" ? ".emb" : ACCEPT_DOCUMENTS}
                 disabled={busy}
                 onChange={(e) => { const f = e.target.files?.[0]; if (f) ajouter(f); e.target.value = ""; }}
                 style={{ display: "none" }}
@@ -137,20 +148,24 @@ export default function DossierDocuments({
                 <img src={d.public_url} alt="" style={{ width: 40, height: 40, objectFit: "cover", borderRadius: 4, flexShrink: 0 }} />
               ) : d.type === "fichier_emb" ? (
                 <FileCode2 size={18} strokeWidth={1.6} style={{ opacity: 0.6, flexShrink: 0, marginTop: 2 }} />
+              ) : d.type === "fichier_graphique" ? (
+                <PenTool size={18} strokeWidth={1.6} style={{ opacity: 0.6, flexShrink: 0, marginTop: 2 }} />
+              ) : d.type === "mail_client" ? (
+                <Mail size={18} strokeWidth={1.6} style={{ opacity: 0.6, flexShrink: 0, marginTop: 2 }} />
               ) : (
                 <FileText size={18} strokeWidth={1.6} style={{ opacity: 0.6, flexShrink: 0, marginTop: 2 }} />
               )}
               <div style={{ flex: 1, minWidth: 0, fontFamily: "var(--font-sans)", fontSize: 12, lineHeight: 1.35 }}>
                 <div style={{ fontWeight: 600 }}>{TYPE_DOCUMENT_LABEL[d.type] ?? d.type}</div>
                 <a
-                  href={d.type === "fichier_emb" ? `${d.public_url}?download=${encodeURIComponent(d.filename)}` : d.public_url}
-                  target={d.type === "fichier_emb" ? undefined : "_blank"}
+                  href={aTelecharger(d) ? `${d.public_url}?download=${encodeURIComponent(d.filename)}` : d.public_url}
+                  target={aTelecharger(d) ? undefined : "_blank"}
                   rel="noreferrer"
-                  title={d.type === "fichier_emb" ? "Télécharger pour ouvrir dans Hatch" : undefined}
+                  title={d.type === "fichier_emb" ? "Télécharger pour ouvrir dans Hatch" : aTelecharger(d) ? "Télécharger" : undefined}
                   style={{ color: "var(--hub-foreground)", opacity: 0.75, wordBreak: "break-all" }}
                 >
                   {d.mime.startsWith("image/") && <ImageIcon size={10} style={{ display: "inline", marginRight: 3, verticalAlign: "-1px" }} />}
-                  {d.type === "fichier_emb" && <Download size={10} style={{ display: "inline", marginRight: 3, verticalAlign: "-1px" }} />}
+                  {aTelecharger(d) && <Download size={10} style={{ display: "inline", marginRight: 3, verticalAlign: "-1px" }} />}
                   {d.filename}
                 </a>
                 {d.extraction && <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>Lu : {d.extraction}</div>}

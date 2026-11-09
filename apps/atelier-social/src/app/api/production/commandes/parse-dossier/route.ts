@@ -20,6 +20,7 @@ import {
   isTypeDocument,
   lireEtiquette,
   mimeOf,
+  resumerMail,
   uploadDocument,
 } from "@/lib/production/dossier";
 import type { DocumentCommande, TypeDocument } from "@/lib/production/commandes-loader";
@@ -109,6 +110,12 @@ export async function POST(req: Request) {
         message: `Étiquette « ${p.file.name} » illisible (${err instanceof Error ? err.message : String(err)}) — saisis transporteur et locker à la main.`,
       });
     }
+  }
+
+  // Mails .eml → expéditeur / objet / date (traçabilité, sans IA).
+  for (const p of pieces.filter((x) => x.type === "mail_client")) {
+    const resume = resumerMail(p.buffer, p.file.name);
+    if (resume) extractions.set(p, resume);
   }
 
   // 3. Stockage de toutes les pièces.

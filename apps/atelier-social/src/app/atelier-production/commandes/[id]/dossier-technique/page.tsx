@@ -27,6 +27,8 @@ import {
   manquesCommande,
   MODE_LIVRAISON_LABEL,
   TYPE_DOCUMENT_LABEL,
+  SOURCE_LABEL,
+  sansTransporteur,
 } from "@/lib/production/completude";
 import {
   getFils,
@@ -198,7 +200,7 @@ export default async function DossierTechniquePage({
           <h1>Commande {commande.numero_shopify}</h1>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div>Source : <strong>{commande.source === "etsy" ? "Etsy" : commande.source === "manuel" ? "Manuel" : "Shopify"}</strong>{commande.priorite === "urgente" ? <strong style={{ color: "#C23A2D" }}> · URGENTE</strong> : null}</div>
+          <div>Source : <strong>{SOURCE_LABEL[commande.source] ?? "Shopify"}</strong>{commande.priorite === "urgente" ? <strong style={{ color: "#C23A2D" }}> · URGENTE</strong> : null}</div>
           <div>Commandée le <strong>{dateFr(commande.date_commande)}</strong> · intégrée au Hub le <strong>{dateFr(commande.created_at)}</strong></div>
           <div>{commande.articles.length} article(s) · {nbPieces} pièce(s) · {Math.round(commande.duree_total_min)} min de prod estimées</div>
           <div style={{ opacity: 0.55, fontSize: 10 }}>Dossier généré le {dateFr(genereLe)} à {genereLe.slice(11, 16)} UTC</div>
@@ -216,7 +218,7 @@ export default async function DossierTechniquePage({
         <div className="box">
           <div className="lbl">Expédition</div>
           <div style={{ fontSize: 14, marginBottom: 4 }}>
-            <strong>{liv?.transporteur ?? "—"}</strong> · <strong>{liv?.mode ? MODE_LIVRAISON_LABEL[liv.mode] : "—"}</strong>
+            {!sansTransporteur(liv) && <><strong>{liv?.transporteur ?? "—"}</strong> · </>}<strong>{liv?.mode ? MODE_LIVRAISON_LABEL[liv.mode] : "—"}</strong>
           </div>
           {liv?.point_relais && <div>{liv.mode === "locker" ? "Locker" : "Point relais"} : <strong>{liv.point_relais}</strong></div>}
           {liv?.numero_suivi && <div>Suivi : <span className="ref">{liv.numero_suivi}</span></div>}

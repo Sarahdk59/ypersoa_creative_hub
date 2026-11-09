@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, use } from "react";
+import { useEffect, useRef, useState, useCallback, use } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Calendar, Clock, Truck, FileText, Cpu, Play, RotateCcw, Trash2, Package, Settings, Hash, FileCode, Archive, CheckCircle2, User, ShieldCheck, AlertTriangle, RefreshCw, Zap, Layers, Upload, Paperclip } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,8 @@ import ArticleEditor from "./ArticleEditor";
 import { LivraisonContactEditor, BroderieProdFields, NoteAtelierEditor } from "./ProdFields";
 import DossierDocuments from "./DossierDocuments";
 import AttributionZone from "./AttributionZone";
-import { manquesArticle } from "@/lib/production/completude";
+import { manquesArticle, SOURCE_LABEL } from "@/lib/production/completude";
+import { finDeMois, libelleMois, moisHistoriqueValide } from "@/lib/production/historique";
 import { filsBroderie, fondFils } from "@/lib/production/broderie-utils";
 import type { Commande, Article, Broderie, BroderieFileKind, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
 
@@ -57,6 +58,13 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
   const [planLoading, setPlanLoading] = useState(false);
   const [algo, setAlgo] = useState<AlgoPlanning>("otif");
   const [rebroderModal, setRebroderModal] = useState<{ article: Article } | null>(null);
+  // Arrivée depuis le bilan de ventes : ?article=<id>&corriger=1 → focus + éditeur ouvert.
+  const [cible, setCible] = useState<{ articleId: string; corriger: boolean } | null>(null);
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const articleId = sp.get("article");
+    if (articleId) setCible({ articleId, corriger: sp.get("corriger") === "1" });
+  }, []);
   const [dateDebut, setDateDebut] = useState<string>(() => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
@@ -178,6 +186,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
     if (!confirm(`Désarchiver cette commande et la remettre en "${nouveauStatut}" ?`)) return;
     const nextJournal = { ...(commande.journal ?? {}) };
     delete nextJournal.archivee_le;
+    delete nextJournal.historique;
     const res = await fetch(`/api/production/commandes/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -299,7 +308,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
             background: "var(--hub-bg)", color: "var(--hub-foreground)", opacity: 0.7,
             border: "0.5px solid var(--hub-border)",
           }}>
-            {commande.source === "etsy" ? "Etsy" : commande.source === "manuel" ? "Manuel" : "Shopify"}
+            {SOURCE_LABEL[commande.source] ?? "Shopify"}
           </span>
           <span style={{
             fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
@@ -366,6 +375,8 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
               commandeId={commande.id}
               article={art}
               disabled={commande.statut === "archivee"}
+              focus={cible?.articleId === art.id}
+              autoEdit={cible?.articleId === art.id && cible.corriger}
               onRebroder={commande.statut !== "archivee" ? () => setRebroderModal({ article: art }) : undefined}
               onDureeChange={
                 commande.statut !== "archivee"
@@ -563,20 +574,31 @@ function ArticleCard({
   onRebroder,
   onDureeChange,
   onCommandeUpdated,
+  focus,
+  autoEdit,
 }: {
   commandeId: string;
   article: Article;
   disabled?: boolean;
+  focus?: boolean;
+  autoEdit?: boolean;
   onRebroder?: () => void;
   onDureeChange?: (field: DureeField, value: number) => void;
   onCommandeUpdated: (c: Commande) => void;
 }) {
   const manques = manquesArticle(article);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(!!autoEdit);
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (focus) ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focus]);
+  useEffect(() => {
+    if (autoEdit) setEditing(true);
+  }, [autoEdit]);
   return (
-    <article style={{
-      border: "0.5px solid var(--hub-border)", borderRadius: 12, padding: 20,
-      background: "var(--hub-bg)",
+    <article ref={ref} style={{
+      border: focus ? "1.5px solid #1E6E77" : "0.5px solid var(--hub-border)", borderRadius: 12, padding: 20,
+      background: "var(--hub-bg)", scrollMarginTop: 24,
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16, gap: 16, flexWrap: "wrap" }}>
         <div>
@@ -612,9 +634,10 @@ function ArticleCard({
               ))}
             </div>
           )}
-          {!disabled && !editing && (
+          {!editing && (
             <button
               onClick={() => setEditing(true)}
+              title={disabled ? "Commande archivée : seule l'identification (produit / motif / couleur / taille) est corrigeable." : undefined}
               style={{
                 marginTop: 8, display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "4px 10px", borderRadius: 6, border: "0.5px solid #1E6E77",
@@ -773,6 +796,18 @@ function JournalProd({
   function archiver() {
     if (!confirm("Archiver cette commande ? Elle ne disparaîtra pas mais sera marquée comme archivée.")) return;
     onChange({ ...j, archivee_le: today });
+  }
+
+  // Rattrapage d'historique : archive sur un mois passé, sans les 4 étapes.
+  function archiverHistorique() {
+    const saisie = prompt("Mois de la commande (AAAA-MM), ex. 2026-03 :", today.slice(0, 7));
+    if (saisie === null) return;
+    const mois = saisie.trim();
+    if (!moisHistoriqueValide(mois)) {
+      alert("Mois invalide : format AAAA-MM, pas dans le futur.");
+      return;
+    }
+    onChange({ ...j, archivee_le: finDeMois(mois), historique: { mois, le: new Date().toISOString() } });
   }
 
   function desarchiverRemettreEnProd() {
@@ -935,7 +970,9 @@ function JournalProd({
         {j.archivee_le ? (
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)", opacity: 0.7 }}>
             <Archive size={13} strokeWidth={1.6} style={{ display: "inline", verticalAlign: "-2px", marginRight: 4 }} />
-            Archivée le <strong>{j.archivee_le}</strong>
+            {j.historique
+              ? <>Archivée en <strong>{libelleMois(j.historique.mois)}</strong> — rattrapage d&apos;historique</>
+              : <>Archivée le <strong>{j.archivee_le}</strong></>}
           </div>
         ) : (
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--hub-foreground)", opacity: 0.6 }}>
@@ -958,6 +995,21 @@ function JournalProd({
               <Zap size={13} /> Désarchiver et remettre en prod
             </button>
           ) : (
+            <>
+            {!allDone && (
+              <button
+                onClick={archiverHistorique}
+                title="Commande passée : archive sur un mois sans renseigner DST / broderie / CQ / expédition"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "8px 14px", borderRadius: 6, border: "0.5px solid var(--hub-border)",
+                  background: "white", color: "var(--hub-foreground)",
+                  fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500, cursor: "pointer",
+                }}
+              >
+                <Calendar size={13} /> Archiver sur un mois (historique)
+              </button>
+            )}
             <button
               onClick={archiver}
               disabled={!allDone}
@@ -971,6 +1023,7 @@ function JournalProd({
             >
               <Archive size={13} /> Archiver la commande
             </button>
+            </>
           )}
         </div>
       </div>

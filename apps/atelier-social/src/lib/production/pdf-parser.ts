@@ -1,5 +1,5 @@
 /**
- * Parsing d'un bon de commande Shopify OU Etsy (PDF) → draft Commande.
+ * Parsing d'un bon de commande Shopify, Etsy OU d'un devis B2B (PDF) → draft Commande.
  *
  * Pipeline :
  *  1. pdf-parse pour extraire le texte brut du PDF (côté Node, server-only)
@@ -97,7 +97,7 @@ interface DraftArticle {
 
 interface DraftCommande {
   numero_shopify: string;
-  source?: "shopify" | "etsy";
+  source?: "shopify" | "etsy" | "b2b";
   date_commande?: string;
   date_impression_bon?: string;
   priorite?: PrioriteCommande;
@@ -115,7 +115,7 @@ const VALID_PLACEMENTS: Placement[] = ["buste", "poignet", "dos", "nuque", "tete
 function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): string {
   return [
     "Tu es un assistant qui transforme un bon de commande Ypersoa (vêtements brodés à la commande) en JSON structuré.",
-    "Le PDF peut venir de DEUX sources différentes, à reconnaître automatiquement :",
+    "Le PDF peut venir de TROIS sources différentes, à reconnaître automatiquement :",
     "  (A) Shopify — bon de préparation interne, souvent avec un SKU explicite ou un libellé produit structuré.",
     "  (B) Etsy — confirmation de commande / reçu client. Le numéro de commande y apparaît en général comme",
     "      \"Order #XXXXXXXX\" ou un simple numéro (reprends-le tel quel dans `numero_shopify`, avec ou sans #).",
@@ -123,11 +123,20 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "      dans un champ de personnalisation (\"Personalization\", \"Note from buyer\", \"From [acheteur]:\" ou",
     "      équivalent) — c'est CE contenu qui remplit `champs[].valeur`, jamais le titre générique de l'annonce.",
     "      Les variantes (taille, couleur du support) apparaissent en clair après \"Variation:\" ou similaire.",
+    "  (C) B2B — devis ou bon de commande professionnel (en-tête « DEVIS », « We Are Perso », « PHENIX STORE »,",
+    "      numéro du type \"WAP-2026-021\", colonnes Produit / Marquages / Qté / PU HT). Le client est souvent une",
+    "      entreprise, une asso ou un club. Reprends le numéro du devis TEL QUEL dans `numero_shopify` (sans #),",
+    "      la date du devis dans `date_commande`, le nom du client dans `expedition.nom` et son e-mail dans `contact`.",
+    "      Les produits sont des références fournisseur (ex. \"JK900\", \"AT001\") absentes des codes YPxxx :",
+    "      mets `\"sku\": \"UNKNOWN\"` et reporte dans `notes` de l'article le libellé produit + la référence fournisseur",
+    "      + la couleur. Seuls les marquages BRODÉS vont dans `broderies` (placement, texte, couleur de fil) ;",
+    "      les marquages DTF / impression vont dans `notes` de l'article, préfixés « DTF : » (emplacement, taille, couleur).",
+    "      `montant_total_ttc` = le TOTAL TTC écrit sur le devis (frais de programmation et livraison compris).",
     "",
     "Schéma de sortie EXACT (renvoie UNIQUEMENT un JSON valide qui respecte cette forme) :",
     "{",
     '  "numero_shopify": "#1002",                           // avec le # le cas échéant',
-    '  "source": "shopify" | "etsy",                        // selon le format reconnu en (A)/(B) ci-dessus',
+    '  "source": "shopify" | "etsy" | "b2b",                // selon le format reconnu en (A)/(B)/(C) ci-dessus',
     '  "date_commande": "YYYY-MM-DD",                       // date de commande, format ISO',
     '  "date_impression_bon": "YYYY-MM-DD",                 // date d\'impression du bon si présente, sinon omettre',
     '  "priorite": "normale" | "urgente",                   // "urgente" uniquement si le PDF le précise',
@@ -143,7 +152,7 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     '  "contact": { "email": "client@mail.fr", "telephone": "06 12 34 56 78" },   // coordonnées acheteur si présentes, omettre sinon',
     '  "livraison": {                                         // mode d\'expédition choisi par le client, omettre si absent',
     '    "transporteur": "Mondial Relay",                     // Mondial Relay, Colissimo, Chronopost, La Poste, UPS…',
-    '    "mode": "locker" | "point_relais" | "domicile" | "retrait_atelier",',
+    '    "mode": "locker" | "point_relais" | "domicile" | "main_propre" | "retrait_atelier",',
     '    "point_relais": "Locker Auchan Leers 12345",         // nom/ID du locker ou point relais si indiqué',
     '    "numero_suivi": "…"                                  // omettre si absent',
     '  },',
@@ -171,7 +180,7 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "}",
     "",
     "Règles importantes :",
-    "- Indique toujours \"source\": \"shopify\" ou \"etsy\" selon le format reconnu en (A)/(B) ci-dessus.",
+    "- Indique toujours \"source\": \"shopify\", \"etsy\" ou \"b2b\" selon le format reconnu en (A)/(B)/(C) ci-dessus.",
     "- N'extrait \"montant_total_ttc\" que s'il est explicitement écrit sur le document (total commande, order total, amount paid…). Ne calcule JAMAIS ce total à partir des lignes d'articles — si le document ne donne pas de total explicite, OMETS ce champ plutôt que d'estimer (les bons de préparation Shopify n'ont généralement pas de prix, les confirmations Etsy en ont souvent).",
     "- Le format SKU est OBLIGATOIREMENT YPxxx-MMM-COULEUR-TAILLE. Que le bon donne un SKU Shopify explicite,",
     "  un libellé produit structuré (\"Sweat brodé Le Câlin Beige XS\"), ou un titre d'annonce Etsy en langage",
@@ -189,7 +198,7 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "- SKU réel au format Akanea YPxxx-CCCC-TTTT ou YPxxx-CCCC-TTTT-YPMxxx (ex. \"YP019-0049-0005-YPM005\", \"YP013-0064-0000\") : recopie-le TEL QUEL dans `sku`, sans le reformater.",
     "- Etsy — si le titre d'annonce ne permet pas d'identifier un produit précis, applique ces défauts : sweat à capuche / hoodie → YP001 ; sweat (sans capuche) → YP005 ; t-shirt → YP019 ; bonnet → YP009 ; casquette → YP013. Reporte toujours le titre d'annonce exact dans `notes` de l'article.",
     "- Couleur du SKU : si le bon donne un nom de couleur en clair (ex. \"Off-White\", \"Vintage sable\"), utilise-le tel quel comme segment COULEUR. Si le SKU réel du bon contient un code numérique à la place (ex. \"YP019-0049-...\"), garde ce code numérique tel quel comme segment COULEUR (ex. \"0049\") plutôt que d'inventer un nom — l'hydratation locale le décodera via le nuancier interne.",
-    "- Livraison : lis la méthode d'expédition (\"Shipping method\", \"Mode de livraison\", \"Expédition\"). « Locker » / « Lockers » → mode \"locker\" ; « Point Relais » / « Relais » → \"point_relais\" ; « Domicile » / « Colissimo à domicile » / « Standard » → \"domicile\" ; « Retrait » → \"retrait_atelier\".",
+    "- Livraison : lis la méthode d'expédition (\"Shipping method\", \"Mode de livraison\", \"Expédition\"). « Locker » / « Lockers » → mode \"locker\" ; « Point Relais » / « Relais » → \"point_relais\" ; « Domicile » / « Colissimo à domicile » / « Standard » → \"domicile\" ; « Retrait » → \"retrait_atelier\" ; « Remise en main propre » / « Livraison en main propre » / « Remis en mains propres » → \"main_propre\" (dans ces deux cas : PAS de transporteur ni de numéro de suivi, omets-les).",
     "- Contact : reprends l'e-mail et le téléphone de l'acheteur s'ils sont écrits sur le document, tels quels.",
     "- Adresse : sépare bien adresse_ligne1 (rue + n°) et adresse_ligne2 (complément type Apt/Bât). Pays par défaut = \"France\".",
     "- Si une info est absente du PDF, OMETS le champ (ne mets pas null ni \"\" ni \"N/A\").",
@@ -391,7 +400,7 @@ function splitSku(sku: string): { produit: string; motifCode: string; ypmFromSku
   return { produit, motifCode: parts[1] ?? "", ypmFromSku: null, couleur: parts[2] ?? "", taille: parts.slice(3).join("-") };
 }
 
-const MODES_LIVRAISON: ModeLivraison[] = ["locker", "point_relais", "domicile", "retrait_atelier"];
+const MODES_LIVRAISON: ModeLivraison[] = ["locker", "point_relais", "domicile", "main_propre", "retrait_atelier"];
 
 function normalizeLivraison(l: DraftCommande["livraison"]): Livraison | undefined {
   if (!l) return undefined;
@@ -522,7 +531,7 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
   const commande: Commande = {
     id: numeroNet,
     numero_shopify: draft.numero_shopify || `#${numeroNet}`,
-    source: draft.source ?? "manuel",
+    source: draft.source === "shopify" || draft.source === "etsy" || draft.source === "b2b" ? draft.source : "manuel",
     date_commande: draft.date_commande || today,
     date_impression_bon: draft.date_impression_bon,
     statut: "a_planifier",

@@ -11,7 +11,7 @@
 import { notFound } from "next/navigation";
 import { getCommande, type AdressePostale, type Article, type Broderie } from "@/lib/production/commandes-loader";
 import { couleursPourProduit, getCouleursAjouts, zoneTete } from "@/lib/production/catalogue";
-import { manquesArticle, manquesCommande, MODE_LIVRAISON_LABEL, TYPE_DOCUMENT_LABEL } from "@/lib/production/completude";
+import { manquesArticle, manquesCommande, MODE_LIVRAISON_LABEL, SOURCE_LABEL, TYPE_DOCUMENT_LABEL, sansTransporteur } from "@/lib/production/completude";
 import PrintBar from "./PrintBar";
 import { attributionManquante, filDeZone, filsBroderie, lettresParLigne, ordreFilsAttribution, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
 
@@ -97,7 +97,7 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
           <h1>Commande {commande.numero_shopify}</h1>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div>Source : <strong>{commande.source === "etsy" ? "Etsy" : commande.source === "manuel" ? "Manuel" : "Shopify"}</strong>{commande.priorite === "urgente" ? <strong style={{ color: "#C23A2D" }}> · URGENTE</strong> : null}</div>
+          <div>Source : <strong>{SOURCE_LABEL[commande.source] ?? "Shopify"}</strong>{commande.priorite === "urgente" ? <strong style={{ color: "#C23A2D" }}> · URGENTE</strong> : null}</div>
           <div>Commandée le <strong>{dateFr(commande.date_commande)}</strong></div>
           <div>Intégrée au Hub le <strong>{dateFr(commande.created_at)}</strong></div>
           <div>{commande.articles.length} article(s) · {nbPieces} pièce(s)</div>
@@ -128,8 +128,8 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
         <div className="box">
           <div className="lbl">Expédition</div>
           <div style={{ fontSize: 13, marginBottom: 6 }}>
-            {liv?.transporteur ? <strong>{liv.transporteur}</strong> : <Manque>Transporteur ?</Manque>}
-            {" · "}
+            {sansTransporteur(liv) ? null : liv?.transporteur ? <strong>{liv.transporteur}</strong> : <Manque>Transporteur ?</Manque>}
+            {sansTransporteur(liv) ? null : " · "}
             {liv?.mode ? <strong>{MODE_LIVRAISON_LABEL[liv.mode]}</strong> : <Manque>Mode ?</Manque>}
           </div>
           {(liv?.mode === "locker" || liv?.mode === "point_relais") && (
