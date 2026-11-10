@@ -33,6 +33,7 @@ import {
   type Broderie,
   type ChampBroderie,
   type Placement,
+  type TechniqueMarquage,
   type AdressePostale,
   type PrioriteCommande,
   type ContactClient,
@@ -53,7 +54,7 @@ import {
   type CouleurAjoutRow,
 } from "./catalogue";
 import { getMotifs } from "@/lib/atelier-da/referentiels-loader";
-import { splitTypos } from "./broderie-utils";
+import { estBrodee, splitTypos, TECHNIQUES_MARQUAGE } from "./broderie-utils";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
 const PALETTE_FILS_PATH = join(REFS_DIR, "palette_fils_broderie_v2.json");
@@ -88,6 +89,8 @@ interface DraftArticle {
   quantite: number;
   broderies: Array<{
     placement?: string;
+    technique?: string;
+    detail_technique?: string;
     fil_nom?: string;
     champs: Array<{ label: string; valeur: string }>;
     note_atelier?: string;
@@ -129,8 +132,10 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     "      la date du devis dans `date_commande`, le nom du client dans `expedition.nom` et son e-mail dans `contact`.",
     "      Les produits sont des références fournisseur (ex. \"JK900\", \"AT001\") absentes des codes YPxxx :",
     "      mets `\"sku\": \"UNKNOWN\"` et reporte dans `notes` de l'article le libellé produit + la référence fournisseur",
-    "      + la couleur. Seuls les marquages BRODÉS vont dans `broderies` (placement, texte, couleur de fil) ;",
-    "      les marquages DTF / impression vont dans `notes` de l'article, préfixés « DTF : » (emplacement, taille, couleur).",
+    "      + la couleur. TOUS les marquages vont dans `broderies`, une entrée par zone, avec leur `technique` :",
+    "      \"broderie\" (brodé), \"dtf\" (DTF, transfert, impression), \"ecusson\" (écusson, patch), \"sublimation\".",
+    "      Pour une zone non brodée, mets dans `detail_technique` la taille, les couleurs et toute précision du devis",
+    "      (ex. \"logo 10 cm quadri\", \"écusson tissé 7 cm\") et omets `fil_nom`.",
     "      `montant_total_ttc` = le TOTAL TTC écrit sur le devis (frais de programmation et livraison compris).",
     "",
     "Schéma de sortie EXACT (renvoie UNIQUEMENT un JSON valide qui respecte cette forme) :",
@@ -165,6 +170,8 @@ function buildSystemPrompt(motifsKnown: string[], produitsKnown: string[]): stri
     '      "broderies": [',
     "        {",
     '          "placement": "buste" | "poignet" | "dos" | "nuque" | "tete",   // emplacement ("tete" pour casquette/bonnet)',
+    '          "technique": "broderie" | "dtf" | "ecusson" | "sublimation",   // omettre = broderie (Shopify / Etsy : toujours broderie)',
+    '          "detail_technique": "logo 10 cm quadri",       // zones non brodées uniquement, omettre sinon',
     '          "fil_nom": "rose pâle",                       // couleur du fil saisie côté client, en français',
     '          "champs": [',
     '            { "label": "Texte buste", "valeur": "Maman" }',
@@ -465,7 +472,11 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
       // Coiffe : on ne parle jamais de buste (casquette = panneau frontal, bonnet = revers).
       if (isHeadwear(produitId) && placement === "buste") placement = "tete";
 
-      const fil = resolveFil(b.fil_nom, skuMapping, filsById);
+      const technique: TechniqueMarquage = TECHNIQUES_MARQUAGE.includes(b.technique as TechniqueMarquage)
+        ? (b.technique as TechniqueMarquage)
+        : "broderie";
+      const brodee = technique === "broderie";
+      const fil = brodee ? resolveFil(b.fil_nom, skuMapping, filsById) : undefined;
 
       const champs: ChampBroderie[] = (b.champs ?? []).map((c) => ({
         // GPT renvoie souvent « Texte buste » même sur une casquette : on suit la zone retenue.
@@ -480,9 +491,10 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
 
       return {
         placement,
+        ...(brodee ? {} : { technique, detail_technique: b.detail_technique?.trim() || undefined }),
         champs,
         fil_id: fil?.id ?? "",
-        fil_nom: fil?.nom ?? b.fil_nom ?? "",
+        fil_nom: fil?.nom ?? (brodee ? b.fil_nom ?? "" : ""),
         fil_hex: fil?.hex ?? "#000000",
         fil_code_gunold: fil?.code_gunold ?? "",
         duree_broderie_min: 0,
@@ -491,6 +503,7 @@ export function hydrateDraftToCommande(draft: DraftCommande, ctx: HydrateContext
         duree_total_min: 0,
         note_atelier: b.note_atelier,
         ...(() => {
+          if (!brodee) return {};
           const ps = splitTypos(ypmId ? ctx.motifsTypo?.get(ypmId) : undefined);
           return ps.length ? { police: ps[0], polices: ps } : {};
         })(),
@@ -677,7 +690,7 @@ export async function parseDocumentToCommande(buffer: Buffer, mime: string): Pro
       });
     }
     for (const b of a.broderies) {
-      if (!b.fil_id) {
+      if (estBrodee(b) && !b.fil_id) {
         warnings.push({
           level: "warning",
           message: `Couleur de fil non reconnue (${b.fil_nom || "vide"}) pour l'article ${a.sku || "(sans SKU)"}.`,

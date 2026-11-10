@@ -1,6 +1,6 @@
 /**
  * POST /api/production/commandes/[id]/documents
- *   FormData : `file` + `type` (bon_commande | devis | bat | fiche_technique | fichier_emb |
+ *   FormData : `file` + `type` (bon_commande | devis | facture | bat | fiche_technique | fichier_emb |
  *   fichier_graphique | mail_client | bon_livraison | etiquette | autre)
  *
  * Ajoute une pièce au dossier d'une commande existante (l'étiquette arrive

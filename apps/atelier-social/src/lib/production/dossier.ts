@@ -3,14 +3,16 @@
  *
  * Rôle de chaque pièce :
  *  - bon_commande : source des articles (prioritaire)
- *  - devis        : source des articles SI aucun bon de commande
+ *  - devis        : devis We Are Perso — n'est poussé dans le Hub qu'une fois PAYÉ,
+ *                   il vaut donc bon de commande (source des articles si aucun bon)
+ *  - facture      : copie de la facture client (traçabilité, jamais lue)
  *  - etiquette    : transporteur, mode (locker / relais / domicile), point relais, n° de suivi
  *                   → lue par Gemini, PRIORITAIRE sur le bon pour la livraison (c'est ce qui part)
  *  - fiche_technique : FT du motif (PDF Hatch / Tajima Pulse) pour l'atelier
  *  - fichier_emb  : fichier de travail Hatch (.emb) — téléchargeable, jamais lu
  *  - fichier_graphique : logo / fichier source client (AI, EPS, SVG, PSD, ZIP ou PDF/PNG) — B2B surtout
  *  - mail_client  : échange client (.eml / .msg, ou PDF / capture du mail) — un .eml est résumé (de, objet, date)
- *  - bat, bon_livraison, autre : pièces jointes (référence visuelle / traçabilité)
+ *  - bat, bon_livraison (bon d'expédition / livraison), autre : pièces jointes (référence visuelle / traçabilité)
  */
 import "server-only";
 import { GoogleGenAI } from "@google/genai";
@@ -36,6 +38,7 @@ export const MIME_TELECHARGEMENT = "application/octet-stream";
 export const TYPES_DOCUMENT: TypeDocument[] = [
   "bon_commande",
   "devis",
+  "facture",
   "bat",
   "fiche_technique",
   "fichier_emb",

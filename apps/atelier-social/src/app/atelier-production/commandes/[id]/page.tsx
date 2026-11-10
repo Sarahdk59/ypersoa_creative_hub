@@ -10,8 +10,8 @@ import DossierDocuments from "./DossierDocuments";
 import AttributionZone from "./AttributionZone";
 import { manquesArticle, SOURCE_LABEL } from "@/lib/production/completude";
 import { finDeMois, libelleMois, moisHistoriqueValide } from "@/lib/production/historique";
-import { filsBroderie, fondFils } from "@/lib/production/broderie-utils";
-import type { Commande, Article, Broderie, BroderieFileKind, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
+import { estBrodee, filsBroderie, fondFils, TECHNIQUE_LABEL, TECHNIQUES_MARQUAGE, techniqueZone } from "@/lib/production/broderie-utils";
+import type { Commande, Article, Broderie, BroderieFileKind, TechniqueMarquage, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
   a_planifier: { label: "À planifier", bg: "#FEF6E0", fg: "#7A5800" },
@@ -1059,6 +1059,24 @@ function BroderieRow({
 }) {
   const [uploading, setUploading] = useState<BroderieFileKind | null>(null);
   const baseUrl = `/api/production/commandes/${commandeId}/articles/${articleId}/broderies/${index}/file`;
+  const brodee = estBrodee(broderie);
+  const technique = techniqueZone(broderie);
+  const [detail, setDetail] = useState(broderie.detail_technique ?? "");
+  useEffect(() => setDetail(broderie.detail_technique ?? ""), [broderie.detail_technique]);
+
+  async function patchZone(zone: { technique?: TechniqueMarquage; detail_technique?: string }) {
+    try {
+      const res = await fetch(`/api/production/commandes/${commandeId}/articles/${articleId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ broderie: { index, ...zone } }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      onCommandeUpdated(res.data);
+    } catch (e) {
+      alert("Erreur enregistrement : " + (e instanceof Error ? e.message : String(e)));
+    }
+  }
 
   async function uploadFile(kind: BroderieFileKind, file: File) {
     setUploading(kind);
@@ -1090,9 +1108,9 @@ function BroderieRow({
     <div style={{
       display: "grid", gridTemplateColumns: "100px 1fr auto",
       gap: 12, padding: "10px 12px",
-      background: "#FAF7F2", borderLeft: `3px solid ${broderie.fil_hex}`,
+      background: "#FAF7F2", borderLeft: `3px solid ${brodee ? broderie.fil_hex : "#7A6F66"}`,
       // Palette multi-fils : liseré en dégradé des fils (border-image ignore l'arrondi, assumé).
-      ...(broderie.fils_palette?.length ? { borderImage: `${fondFils(broderie)} 1` } : {}),
+      ...(brodee && broderie.fils_palette?.length ? { borderImage: `${fondFils(broderie)} 1` } : {}),
       borderRadius: "0 6px 6px 0", alignItems: "center",
     }}>
       <div style={{
@@ -1101,15 +1119,29 @@ function BroderieRow({
         color: "var(--hub-foreground)", opacity: 0.7,
       }}>
         {PLACEMENT_LABEL[broderie.placement] ?? broderie.placement}
+        {disabled ? (
+          <div style={{ marginTop: 4, letterSpacing: "0.04em", opacity: brodee ? 0.6 : 1 }}>{TECHNIQUE_LABEL[technique]}</div>
+        ) : (
+          <select
+            value={technique}
+            onChange={(e) => patchZone({ technique: e.target.value as TechniqueMarquage })}
+            title="Technique de marquage de la zone"
+            style={{ display: "block", marginTop: 4, width: "100%", fontFamily: "var(--font-sans)", fontSize: 11, padding: "3px 4px", borderRadius: 4, border: "0.5px solid var(--hub-border)", background: "white", textTransform: "none", letterSpacing: 0 }}
+          >
+            {TECHNIQUES_MARQUAGE.map((t) => <option key={t} value={t}>{TECHNIQUE_LABEL[t]}</option>)}
+          </select>
+        )}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         {broderie.champs.map((c, i) => (
           <div key={i} style={{ fontFamily: "var(--font-sans)", fontSize: 13 }}>
             <span style={{ color: "var(--hub-foreground)", opacity: 0.6 }}>{c.label} : </span>
             <strong>{c.valeur}</strong>
-            <span style={{ marginLeft: 8, color: "var(--hub-foreground)", opacity: 0.4, fontSize: 11 }}>
-              {c.type} · {c.duree_min} min
-            </span>
+            {brodee && (
+              <span style={{ marginLeft: 8, color: "var(--hub-foreground)", opacity: 0.4, fontSize: 11 }}>
+                {c.type} · {c.duree_min} min
+              </span>
+            )}
           </div>
         ))}
         <div style={{ display: "flex", gap: 8, marginTop: 4, alignItems: "center", flexWrap: "wrap" }}>
@@ -1118,7 +1150,7 @@ function BroderieRow({
               {broderie.palette_nom} ·
             </span>
           )}
-          {filsBroderie(broderie).map((f, k) => (
+          {brodee && filsBroderie(broderie).map((f, k) => (
             <ThreadChip key={`${f.fil_id}-${k}`} name={f.fil_nom} hex={f.fil_hex} code={f.fil_code_gunold} />
           ))}
           {broderie.note_atelier && (
@@ -1127,22 +1159,41 @@ function BroderieRow({
             </span>
           )}
         </div>
-        <BroderieProdFields
-          commandeId={commandeId}
-          articleId={articleId}
-          index={index}
-          broderie={broderie}
-          disabled={disabled}
-          onSaved={onCommandeUpdated}
-        />
-        <AttributionZone
-          commandeId={commandeId}
-          articleId={articleId}
-          index={index}
-          broderie={broderie}
-          disabled={disabled}
-          onSaved={onCommandeUpdated}
-        />
+        {brodee ? (
+          <>
+            <BroderieProdFields
+              commandeId={commandeId}
+              articleId={articleId}
+              index={index}
+              broderie={broderie}
+              disabled={disabled}
+              onSaved={onCommandeUpdated}
+            />
+            <AttributionZone
+              commandeId={commandeId}
+              articleId={articleId}
+              index={index}
+              broderie={broderie}
+              disabled={disabled}
+              onSaved={onCommandeUpdated}
+            />
+          </>
+        ) : (
+          <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, marginTop: 4 }}>
+            {disabled ? (
+              broderie.detail_technique && <span style={{ opacity: 0.75 }}>{broderie.detail_technique}</span>
+            ) : (
+              <input
+                value={detail}
+                onChange={(e) => setDetail(e.target.value)}
+                onBlur={() => { if (detail.trim() !== (broderie.detail_technique ?? "")) patchZone({ detail_technique: detail }); }}
+                placeholder={`Détail ${TECHNIQUE_LABEL[technique]} : taille, couleurs, réf. (ex. logo 10 cm quadri)`}
+                style={{ width: "100%", boxSizing: "border-box", fontFamily: "var(--font-sans)", fontSize: 12, padding: "5px 8px", borderRadius: 4, border: "0.5px solid var(--hub-border)", background: "white" }}
+              />
+            )}
+            <div style={{ fontSize: 10, opacity: 0.5, marginTop: 3 }}>Hors machines à broder : pas de fil, pas de temps TMEZ ni de planning.</div>
+          </div>
+        )}
         <div style={{ display: "flex", gap: 6, marginTop: 6, alignItems: "center", flexWrap: "wrap" }}>
           {(broderie.fichiers ?? []).map((f) => (
             <a

@@ -39,7 +39,7 @@ import {
 } from "@/lib/atelier-da/referentiels-loader";
 import { motifImageSrc } from "@/lib/atelier-da/motif-image";
 import PrintBar from "../packing-list/PrintBar";
-import { filDeZone, filsBroderie, lettresParLigne, ordreFilsAttribution, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
+import { estBrodee, TECHNIQUE_LABEL, techniqueZone, filDeZone, filsBroderie, lettresParLigne, ordreFilsAttribution, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -151,6 +151,10 @@ export default async function DossierTechniquePage({
   const genereLe = new Date().toISOString();
 
   function cadre(b: Broderie, a: Article): { titre: string; detail: string } {
+    if (!estBrodee(b)) {
+      const lieu = b.placement === "tete" ? `Tête — ${zoneTete(a.produit_id)}` : (placements[b.placement]?.label ?? b.placement);
+      return { titre: `${lieu} · ${TECHNIQUE_LABEL[techniqueZone(b)]}`, detail: b.detail_technique ?? "Hors machine à broder." };
+    }
     if (b.placement === "tete") {
       const z = zoneTete(a.produit_id);
       return { titre: `Tête — ${z}`, detail: z === "revers" ? "Cadre bonnet, broderie centrée sur le revers replié." : "Cadre casquette (~5-7 cm), panneau frontal de la calotte." };
@@ -402,13 +406,13 @@ export default async function DossierTechniquePage({
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div className="lbl">Temps</div>
-                      <div>broderie {b.duree_broderie_min} min · cadrage {b.duree_cadrage_min} min</div>
+                      <div>{estBrodee(b) ? `broderie ${b.duree_broderie_min} min · cadrage ${b.duree_cadrage_min} min` : "hors machine à broder"}</div>
                       {ftPoints && <div>{ftPoints.nb_points} points ({ftPoints.dimensions_mm.largeur}×{ftPoints.dimensions_mm.hauteur} mm)</div>}
                     </div>
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 12, padding: "10px 12px" }}>
                     <div>
-                      <div className="lbl">À broder {policesBroderie(b).length ? `· police${policesBroderie(b).length > 1 ? "s" : ""} ${policesBroderie(b).join(" + ")}` : ""}</div>
+                      <div className="lbl">{estBrodee(b) ? "À broder" : `À marquer (${TECHNIQUE_LABEL[techniqueZone(b)]})`} {policesBroderie(b).length ? `· police${policesBroderie(b).length > 1 ? "s" : ""} ${policesBroderie(b).join(" + ")}` : ""}</div>
                       {b.champs.filter((ch) => ch.valeur.trim()).map((ch, k) => (
                         <div key={k} style={{ marginBottom: 6 }}>
                           <div style={{ opacity: 0.55, fontSize: 10 }}>

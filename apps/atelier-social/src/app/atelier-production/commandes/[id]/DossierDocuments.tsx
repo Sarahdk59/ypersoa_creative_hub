@@ -10,7 +10,7 @@ import { Download, FileCode2, FileText, Image as ImageIcon, Loader2, Mail, PenTo
 import type { Commande, DocumentCommande } from "@/lib/production/commandes-loader";
 import { ACCEPT_DOCUMENTS, TYPE_DOCUMENT_LABEL, devinerTypeDocument, estFormatNatif } from "@/lib/production/completude";
 
-const ORDRE = ["bon_commande", "devis", "bat", "fichier_graphique", "mail_client", "fiche_technique", "fichier_emb", "etiquette", "bon_livraison", "autre"];
+const ORDRE = ["bon_commande", "devis", "facture", "bat", "fichier_graphique", "mail_client", "fiche_technique", "fichier_emb", "etiquette", "bon_livraison", "autre"];
 const estEmb = (name: string) => name.toLowerCase().endsWith(".emb");
 /** Un format natif (.ai, .eml…) déposé sous un type incompatible est rangé d'office. */
 const aTelecharger = (d: DocumentCommande) => d.mime === "application/octet-stream" || estFormatNatif(d.filename);

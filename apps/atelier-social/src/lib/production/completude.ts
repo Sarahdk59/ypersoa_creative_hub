@@ -5,7 +5,7 @@
  * la packing list).
  */
 import type { Article, Commande } from "./commandes-loader";
-import { attributionManquante, filsBroderie, policesBroderie } from "./broderie-utils";
+import { attributionManquante, estBrodee, filsBroderie, policesBroderie, TECHNIQUE_LABEL, techniqueZone } from "./broderie-utils";
 
 const TYPES_SYMBOLE = new Set(["symbole_simple", "symbole_complexe"]);
 
@@ -15,9 +15,16 @@ export function manquesArticle(a: Article): string[] {
   if (!a.ypm_id) out.push("motif");
   if (!a.code_couleur) out.push("couleur produit");
   if (!a.code_taille) out.push("taille");
-  if (!a.broderies.length) out.push("broderie");
+  if (!a.broderies.length) out.push("marquage");
   a.broderies.forEach((b, i) => {
-    const z = a.broderies.length > 1 ? ` (broderie ${i + 1})` : "";
+    const z = a.broderies.length > 1 ? ` (zone ${i + 1})` : "";
+    if (!estBrodee(b)) {
+      // DTF / écusson / sublimation : pas de fil ni de police, juste de quoi produire.
+      if (!b.champs.some((c) => c.valeur.trim()) && !b.detail_technique?.trim()) {
+        out.push(`détail ${TECHNIQUE_LABEL[techniqueZone(b)]}${z}`);
+      }
+      return;
+    }
     if (!b.champs.some((c) => c.valeur.trim())) out.push(`texte${z}`);
     const fils = filsBroderie(b);
     if (!fils.length || fils.some((f) => !f.fil_code_gunold)) out.push(`fil Gunold${z}`);
@@ -69,13 +76,14 @@ export const SOURCE_LABEL: Record<string, string> = {
 
 export const TYPE_DOCUMENT_LABEL: Record<string, string> = {
   bon_commande: "Bon de commande",
-  devis: "Devis",
+  devis: "Devis WAP payé (= bon de commande)",
+  facture: "Copie facture",
   bat: "BAT",
   fiche_technique: "Fiche technique",
   fichier_emb: "Fichier EMB (Hatch)",
   fichier_graphique: "Fichier graphique (AI, EPS, SVG…)",
   mail_client: "Mail client",
-  bon_livraison: "Bon de livraison",
+  bon_livraison: "Bon d'expédition / livraison",
   etiquette: "Étiquette d'expédition",
   autre: "Autre",
 };
@@ -106,7 +114,8 @@ export function devinerTypeDocument(filename: string): string {
   if (/fiche.?tech|(^|[^a-z])ft([^a-z]|$)|tech.?sheet|production.?worksheet/.test(n)) return "fiche_technique";
   if (/etiquette|label|mondial|colissimo|chronopost|relay|shipping|expedition/.test(n)) return "etiquette";
   if (/(^|[^a-z])bat([^a-z]|$)|bon.a.tirer|maquette|proof|mockup/.test(n)) return "bat";
-  if (/devis|quote|estimate/.test(n)) return "devis";
-  if (/livraison|delivery|(^|[^a-z])bl([^a-z]|$)/.test(n)) return "bon_livraison";
+  if (/facture|invoice|(^|[^a-z])fa[-_ ]?\d/.test(n)) return "facture";
+  if (/devis|quote|estimate|(^|[^a-z])wap[-_ ]?\d/.test(n)) return "devis";
+  if (/livraison|delivery|bon.?d.?exp|(^|[^a-z])bl([^a-z]|$)/.test(n)) return "bon_livraison";
   return "bon_commande";
 }

@@ -9,7 +9,25 @@
  *    multicolore : Orage, Printemps basque…) → `fils_palette[]`. Sinon fil
  *    principal (+ secondaire éventuel).
  */
-import type { AttributionCouleurs, Broderie, ChampBroderie, LettreAttribuee } from "./commandes-loader";
+import type { AttributionCouleurs, Broderie, ChampBroderie, LettreAttribuee, TechniqueMarquage } from "./commandes-loader";
+
+export const TECHNIQUES_MARQUAGE: TechniqueMarquage[] = ["broderie", "dtf", "ecusson", "sublimation"];
+
+export const TECHNIQUE_LABEL: Record<TechniqueMarquage, string> = {
+  broderie: "Broderie",
+  dtf: "DTF",
+  ecusson: "Écusson",
+  sublimation: "Sublimation",
+};
+
+export function techniqueZone(b: { technique?: TechniqueMarquage }): TechniqueMarquage {
+  return b.technique ?? "broderie";
+}
+
+/** Zone brodée sur TMEZ (par opposition à DTF / écusson / sublimation, hors planning machine). */
+export function estBrodee(b: { technique?: TechniqueMarquage }): boolean {
+  return techniqueZone(b) === "broderie";
+}
 
 export const MAX_POLICES_PAR_ZONE = 3;
 

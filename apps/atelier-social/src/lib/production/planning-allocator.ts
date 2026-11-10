@@ -23,6 +23,7 @@
  */
 import type { Article, Commande, Machine, Planning, PlanningSlot, AlgoPlanning } from "./commandes-loader";
 import type { DureesRef } from "./commandes-loader";
+import { estBrodee } from "./broderie-utils";
 
 interface MachineState {
   nom: Machine;
@@ -85,7 +86,7 @@ function genererSlotId(): string {
 /** Fil principal d'un article = fil qui cumule le plus de temps de broderie. */
 function filPrincipalArticle(article: Article): string | undefined {
   const totParFil = new Map<string, number>();
-  for (const b of article.broderies) {
+  for (const b of article.broderies.filter(estBrodee)) {
     // Une palette (Orage, Printemps…) se monte en bloc : on regroupe par palette.
     if (b.palette_id) {
       const k = `palette:${b.palette_id}`;
@@ -144,6 +145,8 @@ export function allouerPlanningAuto(
   const articlesPlanifies: PlanningSlot[] = [];
 
   for (const article of articlesTries) {
+    // 100 % DTF / écusson / sublimation : rien à faire sur les TMEZ.
+    if (!article.broderies.some(estBrodee)) continue;
     const filPrinc = filPrincipalArticle(article);
 
     // Stratégie de choix machine

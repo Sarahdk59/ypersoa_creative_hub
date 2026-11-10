@@ -13,6 +13,7 @@ import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { supabase } from "@/lib/supabase";
 import { alignerZoneCoiffe } from "./catalogue";
+import { estBrodee } from "./broderie-utils";
 
 const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
 
@@ -73,6 +74,12 @@ export type TypeBroderie =
 /** "tete" = coiffe (casquette : panneau frontal / bonnet : revers) — jamais « buste » sur une coiffe. */
 export type Placement = "buste" | "poignet" | "dos" | "nuque" | "tete";
 export type Machine = "TMEZ-1" | "TMEZ-2";
+/**
+ * Technique de marquage d'une zone. Seule la broderie passe sur les TMEZ (durées,
+ * planning, fils) ; DTF / écusson / sublimation sont suivis mais hors planning machine.
+ * Absent = "broderie" (toutes les commandes antérieures au 10/11/2026).
+ */
+export type TechniqueMarquage = "broderie" | "dtf" | "ecusson" | "sublimation";
 
 export interface AdressePostale {
   nom: string;
@@ -148,8 +155,13 @@ export interface BroderieFile {
   uploaded_at: string; // ISO datetime
 }
 
+/** Zone de marquage d'un article (nom historique : la plupart sont brodées). */
 export interface Broderie {
   placement: Placement;
+  /** Absent = broderie. */
+  technique?: TechniqueMarquage;
+  /** DTF / écusson / sublimation : dimensions, couleurs, réf. écusson… (texte libre). */
+  detail_technique?: string;
   champs: ChampBroderie[];
   /** Visuel attendu, fichier machine (PXF/DST) et/ou capture de la demande client — bucket Supabase `commandes-broderies`. */
   fichiers?: BroderieFile[];
@@ -229,6 +241,7 @@ export interface Planning {
 export type TypeDocument =
   | "bon_commande"
   | "devis"
+  | "facture"
   | "bat"
   | "fiche_technique"
   | "fichier_emb"
@@ -585,6 +598,23 @@ export function recalculerDureesCommande(
   let nbChangementsFil = 0;
 
   for (const article of commande.articles) {
+    // Article sans aucune zone brodée (100 % DTF / écusson / sublimation) :
+    // ne passe pas sur les TMEZ → 0 min machine, hors planning.
+    const brodees = article.broderies.filter(estBrodee);
+    for (const b of article.broderies) {
+      if (estBrodee(b)) continue;
+      b.duree_broderie_min = 0;
+      b.duree_cadrage_min = 0;
+      b.duree_changement_fil_min = 0;
+      b.duree_total_min = 0;
+      for (const c of b.champs) c.duree_min = 0;
+    }
+    if (brodees.length === 0) {
+      article.duree_preparation_dst_min = 0;
+      article.duree_total_article_min = 0;
+      continue;
+    }
+
     // (1) Préparation DST : mutualisée par YPM si activée
     if (mutualiser && ypmAvecPrepDejaCompte.has(article.ypm_id)) {
       article.duree_preparation_dst_min = 0;
@@ -594,7 +624,7 @@ export function recalculerDureesCommande(
     }
 
     // (2) Recalcul des champs broderie
-    for (const broderie of article.broderies) {
+    for (const broderie of brodees) {
       for (const champ of broderie.champs) {
         const ft = findFicheTechnique(fichesTech, champ.variante_filename);
         if (ft) {

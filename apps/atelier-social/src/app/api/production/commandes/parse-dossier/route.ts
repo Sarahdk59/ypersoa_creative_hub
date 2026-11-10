@@ -84,7 +84,8 @@ export async function POST(req: Request) {
   }
   const commande = parsed.commande;
   const warnings = [...parsed.warnings];
-  if (source.type === "devis") {
+  // Un devis We Are Perso n'est déposé qu'une fois payé : il vaut bon de commande, pas d'alerte.
+  if (source.type === "devis" && commande.source !== "b2b") {
     warnings.push({ level: "info", message: "Commande construite depuis le devis (aucun bon de commande dans le dossier)." });
   }
   const autresSources = pieces.filter((p) => (p.type === "bon_commande" || p.type === "devis") && p !== source);

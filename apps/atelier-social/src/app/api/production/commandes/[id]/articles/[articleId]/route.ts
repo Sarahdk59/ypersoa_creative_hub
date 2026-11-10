@@ -8,6 +8,7 @@
  *  - couleur : code présent pour ce produit (catalogue ou ajout Hub) — sinon
  *              la créer d'abord via POST /api/production/catalogue/couleurs
  *  - taille  : code taille Akanea
+ *  - zone    : technique (broderie / DTF / écusson / sublimation) + détail
  *  - broderie: polices (1 à 3) / fil unique OU palette nommée (Orage, Printemps…)
  *              d'une zone, police dédiée d'un champ quand la zone en combine plusieurs
  * Recalcule la réf. article YPxxx-CCCC-TTTT et les durées.
@@ -32,7 +33,8 @@ import {
   produitCatalogue,
 } from "@/lib/production/catalogue";
 import { getFils, getMotifs, getPalettes } from "@/lib/atelier-da/referentiels-loader";
-import { MAX_POLICES_PAR_ZONE, normaliserPolices, splitTypos } from "@/lib/production/broderie-utils";
+import { MAX_POLICES_PAR_ZONE, normaliserPolices, splitTypos, TECHNIQUES_MARQUAGE } from "@/lib/production/broderie-utils";
+import type { TechniqueMarquage } from "@/lib/production/commandes-loader";
 
 type Body = {
   produit_id?: string;
@@ -53,6 +55,10 @@ type Body = {
     fil_id?: string;
     /** Palette nommée (palettes_fils_associations) — "" = retirer la palette. */
     palette_id?: string;
+    /** Technique de la zone : broderie (TMEZ) / dtf / ecusson / sublimation. */
+    technique?: string;
+    /** Précisions d'une zone non brodée (taille, couleurs, réf. écusson). "" = effacer. */
+    detail_technique?: string;
   };
 };
 
@@ -137,6 +143,21 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (body.broderie) {
       const b = article.broderies[body.broderie.index];
       if (!b) return bad(`Broderie ${body.broderie.index} introuvable.`);
+      if (body.broderie.technique !== undefined) {
+        const t = body.broderie.technique as TechniqueMarquage;
+        if (!TECHNIQUES_MARQUAGE.includes(t)) return bad(`Technique ${body.broderie.technique} inconnue.`);
+        b.technique = t === "broderie" ? undefined : t;
+        if (t === "broderie") {
+          // Retour en broderie : cadrage TMEZ standard (remis à 0 tant que la zone était hors machine).
+          const cadrage = getDureesRef().operations.cadrage_zone?.duree_min ?? 3;
+          if (!b.duree_cadrage_min) b.duree_cadrage_min = cadrage;
+        } else {
+          b.attribution_couleurs = undefined;
+        }
+      }
+      if (body.broderie.detail_technique !== undefined) {
+        b.detail_technique = String(body.broderie.detail_technique).trim() || undefined;
+      }
       const setPolices = (list: string[]) => {
         const ps = normaliserPolices(list);
         b.polices = ps.length ? ps : undefined;

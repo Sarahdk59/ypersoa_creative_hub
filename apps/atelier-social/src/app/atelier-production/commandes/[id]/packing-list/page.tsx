@@ -13,7 +13,7 @@ import { getCommande, type AdressePostale, type Article, type Broderie } from "@
 import { couleursPourProduit, getCouleursAjouts, zoneTete } from "@/lib/production/catalogue";
 import { manquesArticle, manquesCommande, MODE_LIVRAISON_LABEL, SOURCE_LABEL, TYPE_DOCUMENT_LABEL, sansTransporteur } from "@/lib/production/completude";
 import PrintBar from "./PrintBar";
-import { attributionManquante, filDeZone, filsBroderie, lettresParLigne, ordreFilsAttribution, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
+import { attributionManquante, estBrodee, TECHNIQUE_LABEL, techniqueZone, filDeZone, filsBroderie, lettresParLigne, ordreFilsAttribution, policeChamp, policesBroderie } from "@/lib/production/broderie-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -198,7 +198,10 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
               <tbody>
                 {a.broderies.map((b, j) => (
                   <tr key={j}>
-                    <td><strong>{emplacement(b, a)}</strong></td>
+                    <td>
+                      <strong>{emplacement(b, a)}</strong>
+                      {!estBrodee(b) && <div style={{ fontWeight: 700, textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>{TECHNIQUE_LABEL[techniqueZone(b)]}</div>}
+                    </td>
                     <td>
                       {b.champs.filter((c) => c.valeur.trim()).map((c, k) => (
                         <div key={k}>
@@ -207,7 +210,8 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
                           {policesBroderie(b).length > 1 && policeChamp(b, c) && <span style={{ opacity: 0.55 }}> — {policeChamp(b, c)}</span>}
                         </div>
                       ))}
-                      {!b.champs.some((c) => c.valeur.trim()) && <Manque>texte ?</Manque>}
+                      {!estBrodee(b) && b.detail_technique && <div>{b.detail_technique}</div>}
+                      {!b.champs.some((c) => c.valeur.trim()) && (estBrodee(b) || !b.detail_technique) && <Manque>{estBrodee(b) ? "texte ?" : "détail ?"}</Manque>}
                       {b.attribution_couleurs && (
                         <div style={{ marginTop: 4 }}>
                           {lettresParLigne(b.attribution_couleurs).map((ls, k) => (
@@ -228,11 +232,11 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
                       {b.note_atelier && <div style={{ fontStyle: "italic", opacity: 0.7, marginTop: 2 }}>{b.note_atelier}</div>}
                     </td>
                     <td>
-                      {policesBroderie(b).length ? policesBroderie(b).map((p) => <div key={p}><strong>{p}</strong></div>) : <Manque>?</Manque>}
+                      {!estBrodee(b) ? <span style={{ opacity: 0.4 }}>—</span> : policesBroderie(b).length ? policesBroderie(b).map((p) => <div key={p}><strong>{p}</strong></div>) : <Manque>?</Manque>}
                     </td>
                     <td>
                       {b.palette_nom && <div style={{ fontWeight: 700, textTransform: "uppercase", fontSize: 10, letterSpacing: "0.05em" }}>{b.palette_nom} · {filsBroderie(b).length} fils</div>}
-                      {filsBroderie(b).length ? filsBroderie(b).map((f, k) => (
+                      {!estBrodee(b) ? <span style={{ opacity: 0.4 }}>—</span> : filsBroderie(b).length ? filsBroderie(b).map((f, k) => (
                         f.fil_code_gunold ? (
                           <div key={k}>{b.palette_nom && <span style={{ opacity: 0.5 }}>{k + 1}. </span>}<span className="sw" style={{ background: f.fil_hex }} /><strong>{f.fil_code_gunold}</strong> · {f.fil_nom}</div>
                         ) : (
