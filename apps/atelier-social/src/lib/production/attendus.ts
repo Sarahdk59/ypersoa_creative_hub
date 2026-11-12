@@ -209,3 +209,44 @@ export function resumeAttendu(a: Attendu) {
   const rnd = a.lignes.filter((l) => l.usage === "rnd").length;
   return { pieces, recues, aCreer, rnd, nbLignes: a.lignes.length };
 }
+
+// ──────────────────────────────────────────────────────────
+// Lien attendu ↔ commande client
+// ──────────────────────────────────────────────────────────
+
+/** "#1002", " wap-2026-021 " → "1002", "wap-2026-021". */
+export function normaliserNumeroCommande(s: string | undefined | null): string {
+  return (s ?? "").trim().toLowerCase().replace(/^#/, "").replace(/\s+/g, "");
+}
+
+export interface LigneAttenduCommande {
+  attendu_id: string;
+  fournisseur: string;
+  numero_facture?: string;
+  statut: StatutAttendu;
+  date_livraison_prevue?: string;
+  ligne: LigneAttendu;
+}
+
+/**
+ * Lignes d'attendu dont le champ « N° commande client » désigne cette commande
+ * (id Hub ou numéro affiché, # et casse ignorés).
+ */
+export async function lignesAttenduPourCommande(commande: { id: string; numero_shopify: string }): Promise<LigneAttenduCommande[]> {
+  const cibles = new Set([normaliserNumeroCommande(commande.id), normaliserNumeroCommande(commande.numero_shopify)].filter(Boolean));
+  const out: LigneAttenduCommande[] = [];
+  for (const a of await listAttendus()) {
+    for (const l of a.lignes) {
+      if (!l.commande_client || !cibles.has(normaliserNumeroCommande(l.commande_client))) continue;
+      out.push({
+        attendu_id: a.id,
+        fournisseur: a.fournisseur,
+        numero_facture: a.numero_facture,
+        statut: a.statut,
+        date_livraison_prevue: a.date_livraison_prevue,
+        ligne: l,
+      });
+    }
+  }
+  return out;
+}

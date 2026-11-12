@@ -11,15 +11,12 @@
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth-guard";
 import {
-  couleursPourProduit,
   getCatalogue,
-  getCouleursAjouts,
   isHeadwear,
-  produitCatalogue,
-  taillesPourProduit,
   zoneTete,
 } from "@/lib/production/catalogue";
 import { getSkuMapping } from "@/lib/production/commandes-loader";
+import { chargerReferentiel, couleursProduitEtendu, taillesProduitEtendu, toutesTailles } from "@/lib/production/referentiel-articles";
 import { getFils, getMotifs, getPalettes } from "@/lib/atelier-da/referentiels-loader";
 import { splitTypos } from "@/lib/production/broderie-utils";
 
@@ -32,17 +29,20 @@ export async function GET(req: Request) {
 
   try {
     const ref = new URL(req.url).searchParams.get("ref");
+    // Catalogue Akanea + produits / couleurs / tailles créés depuis le Hub (attendus, R&D).
+    const referentiel = await chargerReferentiel();
     if (ref) {
-      if (!produitCatalogue(ref)) {
+      if (!referentiel.produits.has(ref)) {
         return NextResponse.json({ ok: false, error: `Produit ${ref} inconnu du catalogue.` }, { status: 404 });
       }
-      const ajouts = await getCouleursAjouts();
+      const tailles = taillesProduitEtendu(ref, referentiel);
       return NextResponse.json({
         ok: true,
         data: {
           ref,
-          couleurs: couleursPourProduit(ref, ajouts),
-          tailles: taillesPourProduit(ref),
+          couleurs: couleursProduitEtendu(ref, referentiel),
+          // Produit R&D encore sans taille déclarée : toutes les tailles Akanea au choix.
+          tailles: tailles.length ? tailles : toutesTailles(),
           coiffe: isHeadwear(ref),
           zone_tete: isHeadwear(ref) ? zoneTete(ref) : null,
         },
@@ -51,13 +51,15 @@ export async function GET(req: Request) {
 
     const cat = getCatalogue();
     const mapping = getSkuMapping();
-    // Produits Ypersoa déjà vendus (présents dans le pivot SKU) en tête de liste.
-    const produits = Object.values(cat.produits)
+    // Produits Ypersoa déjà vendus (présents dans le pivot SKU) en tête de liste ;
+    // produits créés depuis le Hub (attendus de livraison, R&D) marqués `hub`.
+    const produits = Array.from(referentiel.produits.values())
       .map((p) => ({
         ref: p.ref,
         libelle: mapping.produits[p.ref]?.nom_commercial ?? p.libelle,
         famille: p.famille,
         ypersoa: Boolean(mapping.produits[p.ref]),
+        hub: p.origine === "hub",
       }))
       .sort((a, b) => Number(b.ypersoa) - Number(a.ypersoa) || a.ref.localeCompare(b.ref));
 

@@ -209,6 +209,8 @@ export interface Article {
   code_taille?: string;
   /** Réf. article Akanea YPxxx-CCCC-TTTT (ex. YP013-0064-0000). */
   ref_article?: string;
+  /** Réf. rattachée depuis une ligne d'attendu de livraison fournisseur (traçabilité). */
+  rattachement_attendu?: { attendu_id: string; ligne_id: string; le: string; par?: string };
   quantite: number;
   broderies: Broderie[];
   duree_preparation_dst_min: number;

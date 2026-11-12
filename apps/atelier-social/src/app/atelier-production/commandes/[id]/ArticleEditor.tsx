@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Loader2, Plus, Save, X } from "lucide-react";
 import type { Article, Commande } from "@/lib/production/commandes-loader";
 
-interface ProduitOpt { ref: string; libelle: string; famille: string; ypersoa: boolean }
+interface ProduitOpt { ref: string; libelle: string; famille: string; ypersoa: boolean; hub?: boolean }
 interface CouleurRefOpt { code: string; libelle: string; hex: string | null }
 interface MotifOpt { id: string; nom: string; typographie: string | null }
 export interface FilOpt { id: string; nom: string; hex: string; code_gunold: string }
@@ -169,8 +169,15 @@ export default function ArticleEditor({
                     <option key={p.ref} value={p.ref}>{p.ref} · {p.libelle}</option>
                   ))}
                 </optgroup>
+                {base.produits.some((p) => p.hub && !p.ypersoa) && (
+                  <optgroup label="Créés depuis le Hub (attendus, R&D)">
+                    {base.produits.filter((p) => p.hub && !p.ypersoa).map((p) => (
+                      <option key={p.ref} value={p.ref}>{p.ref} · {p.libelle}</option>
+                    ))}
+                  </optgroup>
+                )}
                 <optgroup label="Autres produits du catalogue">
-                  {base.produits.filter((p) => !p.ypersoa).map((p) => (
+                  {base.produits.filter((p) => !p.ypersoa && !p.hub).map((p) => (
                     <option key={p.ref} value={p.ref}>{p.ref} · {p.libelle}</option>
                   ))}
                 </optgroup>

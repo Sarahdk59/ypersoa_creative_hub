@@ -3,7 +3,9 @@
  *   { produit_id?: "YP013", ypm_id?: "YPM018", code_couleur?: "0064", code_taille?: "0000", quantite?: 1 }
  *
  * Correction manuelle d'un article « à identifier » par l'atelier.
- *  - produit : réf. du catalogue ; casquette/bonnet → zones buste basculées en « tête »
+ *  - ref_article : YPxxx-CCCC-TTTT en une fois (rattachement depuis un attendu de livraison)
+ *  - produit : réf. du catalogue OU produit créé depuis le Hub (R&D, attendus) ;
+ *              casquette/bonnet → zones buste basculées en « tête »
  *  - motif   : YPM-XXX existant (motifs_ypm)
  *  - couleur : code présent pour ce produit (catalogue ou ajout Hub) — sinon
  *              la créer d'abord via POST /api/production/catalogue/couleurs
@@ -25,18 +27,20 @@ import {
 } from "@/lib/production/commandes-loader";
 import {
   buildRefArticle,
-  couleursPourProduit,
   getCatalogue,
-  getCouleursAjouts,
   alignerZoneCoiffe,
   normalizeYpmId,
-  produitCatalogue,
 } from "@/lib/production/catalogue";
+import { chargerReferentiel, couleursProduitEtendu } from "@/lib/production/referentiel-articles";
 import { getFils, getMotifs, getPalettes } from "@/lib/atelier-da/referentiels-loader";
 import { MAX_POLICES_PAR_ZONE, normaliserPolices, splitTypos, TECHNIQUES_MARQUAGE } from "@/lib/production/broderie-utils";
 import type { TechniqueMarquage } from "@/lib/production/commandes-loader";
 
 type Body = {
+  /** Raccourci : réf. article complète YPxxx-CCCC-TTTT (ex. créée depuis un attendu de livraison). */
+  ref_article?: string;
+  /** Traçabilité : ligne d'attendu fournisseur d'où vient la réf. */
+  depuis_attendu?: { attendu_id: string; ligne_id: string };
   produit_id?: string;
   ypm_id?: string;
   code_couleur?: string;
@@ -83,12 +87,22 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const mapping = getSkuMapping();
     const cat = getCatalogue();
     const bad = (msg: string) => NextResponse.json({ ok: false, error: msg }, { status: 400 });
+    // Catalogue Akanea + produits / couleurs / tailles créés depuis le Hub (attendus, R&D).
+    const referentiel = await chargerReferentiel();
+
+    if (body.ref_article !== undefined) {
+      const m = body.ref_article.trim().toUpperCase().match(/^(YP\d{3})-(\d{4})-(\d{4})$/);
+      if (!m) return bad(`Réf. article ${body.ref_article} invalide (attendu YPxxx-CCCC-TTTT).`);
+      body.produit_id = m[1];
+      body.code_couleur = m[2];
+      body.code_taille = m[3];
+    }
 
     // 1) Produit
     if (body.produit_id !== undefined) {
       const ref = body.produit_id.trim().toUpperCase();
-      const p = produitCatalogue(ref);
-      if (!p) return bad(`Produit ${ref} inconnu du catalogue.`);
+      const p = referentiel.produits.get(ref);
+      if (!p) return bad(`Produit ${ref} inconnu du catalogue (ni créé depuis le Hub).`);
       article.produit_id = ref;
       article.produit_nom = mapping.produits[ref]?.nom_commercial ?? p.libelle;
       const setup = mapping.produits[ref]?.duree_setup_machine_min;
@@ -96,8 +110,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       alignerZoneCoiffe(article, true);
     }
 
-    const ajouts = await getCouleursAjouts();
-    const couleurs = article.produit_id ? couleursPourProduit(article.produit_id, ajouts) : [];
+    const couleurs = article.produit_id ? couleursProduitEtendu(article.produit_id, referentiel) : [];
 
     // 2) Couleur (explicite, ou revalidée si le produit a changé)
     if (body.code_couleur !== undefined) {
@@ -238,6 +251,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
 
     article.ref_article = buildRefArticle(article.produit_id, article.code_couleur, article.code_taille);
+    if (body.depuis_attendu?.attendu_id && body.depuis_attendu.ligne_id && article.ref_article) {
+      article.rattachement_attendu = {
+        attendu_id: body.depuis_attendu.attendu_id,
+        ligne_id: body.depuis_attendu.ligne_id,
+        le: new Date().toISOString().slice(0, 10),
+        par: auth.email ?? undefined,
+      };
+    }
 
     recalculerDureesCommande(commande, getDureesRef(), getFichesTechniques());
     await writeCommande(commande);

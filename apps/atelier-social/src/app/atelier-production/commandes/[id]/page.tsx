@@ -83,6 +83,15 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
       .finally(() => setLoading(false));
   }, [refresh]);
 
+  // Lignes d'attendus fournisseur destinées à cette commande (rattachement de réf.).
+  const [lignesAttendu, setLignesAttendu] = useState<LigneAttenduCmd[]>([]);
+  useEffect(() => {
+    fetch(`/api/production/commandes/${id}/attendus`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => { if (res.ok) setLignesAttendu(res.data); })
+      .catch(() => setLignesAttendu([]));
+  }, [id]);
+
   async function genererPlanning() {
     setPlanLoading(true);
     try {
@@ -384,6 +393,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
                   : undefined
               }
               onCommandeUpdated={setCommande}
+              lignesAttendu={lignesAttendu}
             />
           ))}
         </div>
@@ -567,6 +577,128 @@ function DureeBadge({
   );
 }
 
+interface LigneAttenduCmd {
+  attendu_id: string;
+  fournisseur: string;
+  numero_facture: string | null;
+  statut: string;
+  date_livraison_prevue: string | null;
+  ligne_id: string;
+  designation: string;
+  ref_fournisseur: string;
+  ref_modele: string | null;
+  coloris: string;
+  taille: string;
+  quantite: number;
+  quantite_recue: number;
+  etat: "reference" | "a_creer" | "produit_inconnu";
+  ref_article: string | null;
+  libelle_article: string | null;
+}
+
+const STATUT_ATTENDU_LABEL: Record<string, string> = {
+  attendu: "attendu",
+  recu_partiel: "reçu en partie",
+  recu: "reçu",
+  litige: "litige",
+};
+
+/**
+ * Lignes d'attendu fournisseur qui désignent cette commande : la réf. créée dans
+ * l'attendu (produit absent du devis WAP, R&D…) se rattache à l'article en un clic.
+ */
+function RattachementAttendu({ commandeId, article, lignes, onSaved }: {
+  commandeId: string;
+  article: Article;
+  lignes: LigneAttenduCmd[];
+  onSaved: (c: Commande) => void;
+}) {
+  const [saving, setSaving] = useState<string | null>(null);
+  const aIdentifier = !article.ref_article;
+  // Article déjà identifié et sans lien avec ces lignes : on n'encombre pas la carte.
+  if (!aIdentifier && !lignes.some((l) => l.ref_article === article.ref_article)) return null;
+
+  // La réf. fournisseur de la ligne (JK900, AT001…) figure dans les notes de l'article issues du devis.
+  const notes = (article.notes ?? "").toUpperCase();
+  const correspond = (l: LigneAttenduCmd) =>
+    [l.ref_modele, l.ref_fournisseur].some((r) => r && r.length >= 4 && notes.includes(r.toUpperCase()));
+  const tries = [...lignes].sort((a, b) => Number(correspond(b)) - Number(correspond(a)));
+
+  async function rattacher(l: LigneAttenduCmd) {
+    if (!l.ref_article) return;
+    if (article.ref_article && article.ref_article !== l.ref_article &&
+        !confirm(`Remplacer ${article.ref_article} par ${l.ref_article} sur cet article ?`)) return;
+    setSaving(l.ligne_id);
+    try {
+      const res = await fetch(`/api/production/commandes/${commandeId}/articles/${article.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ref_article: l.ref_article, depuis_attendu: { attendu_id: l.attendu_id, ligne_id: l.ligne_id } }),
+      }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      onSaved(res.data);
+    } catch (e) {
+      alert("Rattachement impossible : " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setSaving(null);
+    }
+  }
+
+  return (
+    <div style={{ marginBottom: 12, padding: "10px 12px", borderRadius: 8, border: "0.5px solid #1E6E77", background: "#F3F8F8", fontFamily: "var(--font-sans)", fontSize: 12 }}>
+      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.65, marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
+        <Truck size={11} strokeWidth={1.8} /> Attendu fournisseur pour cette commande
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        {tries.map((l) => {
+          const rattachee = !!l.ref_article && l.ref_article === article.ref_article;
+          const pret = l.etat === "reference" && !!l.ref_article;
+          return (
+            <div key={`${l.attendu_id}-${l.ligne_id}`} style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              <div style={{ flex: "1 1 260px", minWidth: 0 }}>
+                <div>
+                  <strong>{l.designation || l.ref_fournisseur}</strong>
+                  {aIdentifier && correspond(l) && (
+                    <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 600, padding: "1px 6px", borderRadius: 999, background: "#1E6E77", color: "white" }}>
+                      correspond au devis
+                    </span>
+                  )}
+                  <span style={{ opacity: 0.65 }}> · {[l.coloris, l.taille].filter(Boolean).join(" / ")} · ×{l.quantite}</span>
+                </div>
+                <div style={{ opacity: 0.6, fontSize: 11 }}>
+                  <Link href={`/atelier-production/attendus/${encodeURIComponent(l.attendu_id)}`} style={{ color: "inherit", textDecoration: "underline dotted" }}>
+                    {l.fournisseur || "Fournisseur"}{l.numero_facture ? ` · ${l.numero_facture}` : ""}
+                  </Link>
+                  {" "}· {STATUT_ATTENDU_LABEL[l.statut] ?? l.statut}{l.quantite_recue ? ` (${l.quantite_recue}/${l.quantite})` : ""}
+                  {pret && <> → <code style={{ fontFamily: "ui-monospace, monospace" }}>{l.ref_article}</code>{l.libelle_article ? ` ${l.libelle_article}` : ""}</>}
+                </div>
+              </div>
+              {rattachee ? (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4, color: "#2F7A3E", fontWeight: 600, fontSize: 11 }}>
+                  <CheckCircle2 size={12} strokeWidth={1.8} /> Rattachée
+                </span>
+              ) : pret ? (
+                <button
+                  type="button"
+                  disabled={saving !== null}
+                  onClick={() => rattacher(l)}
+                  style={{ padding: "4px 10px", borderRadius: 6, border: "none", background: "#1E6E77", color: "white", fontSize: 11, fontWeight: 600, cursor: "pointer" }}
+                >
+                  {saving === l.ligne_id ? "Rattachement…" : "Rattacher à cet article"}
+                </button>
+              ) : (
+                <Link href={`/atelier-production/attendus/${encodeURIComponent(l.attendu_id)}`} style={{ fontSize: 11, color: "#9A1818", fontWeight: 600 }}>
+                  Réf. à créer dans l&apos;attendu →
+                </Link>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ArticleCard({
   commandeId,
   article,
@@ -576,9 +708,11 @@ function ArticleCard({
   onCommandeUpdated,
   focus,
   autoEdit,
+  lignesAttendu = [],
 }: {
   commandeId: string;
   article: Article;
+  lignesAttendu?: LigneAttenduCmd[];
   disabled?: boolean;
   focus?: boolean;
   autoEdit?: boolean;
@@ -658,6 +792,10 @@ function ArticleCard({
           </div>
         </div>
       </div>
+
+      {lignesAttendu.length > 0 && (
+        <RattachementAttendu commandeId={commandeId} article={article} lignes={lignesAttendu} onSaved={onCommandeUpdated} />
+      )}
 
       {editing && (
         <div style={{ marginBottom: 12 }}>
