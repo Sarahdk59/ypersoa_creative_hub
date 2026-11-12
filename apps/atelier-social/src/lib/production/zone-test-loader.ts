@@ -1,20 +1,18 @@
 /**
  * Loader serveur pour le module Atelier Production → Zone de test.
  *
- * Lit/écrit :
- *  - referentiels/zone_test.json (1 fichier, tableau de tests)
- *  - assets/zone-test/{file_id}.{ext} (fichiers DST / PXF / aperçu JPG-PNG sur disque)
+ * Persisté en Supabase (12/11/2026) — le disque Railway est éphémère et
+ * chaque déploiement effaçait les tests créés en ligne :
+ *  - table `zone_tests` (1 ligne = 1 test, ZoneTest complet en jsonb)
+ *  - bucket privé `zone-test` : fichiers DST / PXF / aperçus, {test_id}/{file_id}.{ext}
  *
- * Aucun import statique : tout via fs côté API route (pattern aligné prod_kanban / commandes).
+ * Remplace referentiels/zone_test.json + assets/zone-test/ (cf. migration 20261112_zone_tests.sql).
  */
-import { readFileSync, writeFileSync } from "fs";
-import { join } from "path";
+import "server-only";
+import { supabase } from "@/lib/supabase";
 
-const REFS_DIR = join(process.cwd(), "..", "..", "referentiels");
-
-export const ZONE_TEST_PATH = join(REFS_DIR, "zone_test.json");
-/** Dossier des fichiers attachés aux tests (repo root). */
-export const ASSETS_ZONE_TEST_DIR = join(process.cwd(), "..", "..", "assets", "zone-test");
+const TBL = "zone_tests";
+export const BUCKET_ZONE_TEST = "zone-test";
 
 // ──────────────────────────────────────────────────────────
 // Attribution
@@ -99,17 +97,81 @@ export interface ZoneTestRef {
 }
 
 // ──────────────────────────────────────────────────────────
-// CRUD fichier JSON
+// CRUD Supabase
 // ──────────────────────────────────────────────────────────
-export function readZoneTest(): ZoneTestRef {
-  const ref = JSON.parse(readFileSync(ZONE_TEST_PATH, "utf-8")) as ZoneTestRef;
-  if (!Array.isArray(ref.tests)) ref.tests = [];
-  return ref;
+function client() {
+  if (!supabase) throw new Error("Supabase non configuré : la Zone de test ne peut pas être enregistrée.");
+  return supabase;
 }
 
-export function writeZoneTest(data: ZoneTestRef) {
-  data._meta.last_updated = new Date().toISOString().slice(0, 10);
-  writeFileSync(ZONE_TEST_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
+function erreur(contexte: string, message: string): Error {
+  return /does not exist|schema cache|bucket not found/i.test(message)
+    ? new Error(`${contexte} : stockage Zone de test absent — appliquer la migration 20261112_zone_tests.sql.`)
+    : new Error(`${contexte} : ${message}`);
+}
+
+/** Tous les tests, plus récents d'abord (même forme que l'ancien fichier JSON). */
+export async function readZoneTest(): Promise<ZoneTestRef> {
+  const { data, error } = await client().from(TBL).select("data, created_at").order("created_at", { ascending: false });
+  if (error) throw erreur("Lecture des tests", error.message);
+  const tests = (data ?? []).map((r) => {
+    const t = r.data as ZoneTest;
+    if (!Array.isArray(t.files)) t.files = [];
+    return t;
+  });
+  return {
+    _meta: { schema_version: "2.0", referentiel: "zone_test", description: "Supabase — table zone_tests + bucket zone-test" },
+    tests,
+  };
+}
+
+export async function getZoneTest(id: string): Promise<ZoneTest | null> {
+  const { data, error } = await client().from(TBL).select("data").eq("id", id).maybeSingle();
+  if (error) throw erreur(`Lecture du test ${id}`, error.message);
+  if (!data) return null;
+  const t = data.data as ZoneTest;
+  if (!Array.isArray(t.files)) t.files = [];
+  return t;
+}
+
+export async function saveZoneTest(test: ZoneTest): Promise<void> {
+  const { error } = await client().from(TBL).upsert({ id: test.id, data: test }, { onConflict: "id" });
+  if (error) throw erreur(`Enregistrement du test ${test.id}`, error.message);
+}
+
+export async function deleteZoneTest(test: ZoneTest): Promise<void> {
+  const paths = test.files.map((f) => storagePath(test.id, f));
+  if (paths.length) await client().storage.from(BUCKET_ZONE_TEST).remove(paths); // best effort
+  const { error } = await client().from(TBL).delete().eq("id", test.id);
+  if (error) throw erreur(`Suppression du test ${test.id}`, error.message);
+}
+
+export function storagePath(testId: string, f: Pick<ZoneTestFile, "filename">): string {
+  return `${testId}/${f.filename}`;
+}
+
+export function contentTypeZoneTest(filename: string): string {
+  const ext = filename.toLowerCase().split(".").pop();
+  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+  if (ext === "png") return "image/png";
+  return "application/octet-stream"; // .dst / .pxf : binaire générique
+}
+
+export async function uploadZoneTestFile(testId: string, filename: string, buffer: Buffer): Promise<void> {
+  const { error } = await client()
+    .storage.from(BUCKET_ZONE_TEST)
+    .upload(`${testId}/${filename}`, buffer, { contentType: contentTypeZoneTest(filename), upsert: true });
+  if (error) throw erreur("Envoi du fichier", error.message);
+}
+
+export async function downloadZoneTestFile(testId: string, f: ZoneTestFile): Promise<Buffer | null> {
+  const { data, error } = await client().storage.from(BUCKET_ZONE_TEST).download(storagePath(testId, f));
+  if (error || !data) return null;
+  return Buffer.from(await data.arrayBuffer());
+}
+
+export async function removeZoneTestFile(testId: string, f: ZoneTestFile): Promise<void> {
+  await client().storage.from(BUCKET_ZONE_TEST).remove([storagePath(testId, f)]); // best effort
 }
 
 export function makeTestId() {

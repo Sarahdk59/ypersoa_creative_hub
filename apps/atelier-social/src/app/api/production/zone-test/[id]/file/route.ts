@@ -1,16 +1,14 @@
 /**
  * Upload d'un fichier sur un test : POST FormData { file, kind }.
  *  kind ∈ "dst" | "pxf" | "jpg" (jpg = aperçu PNG/JPG).
- *  Stocké sur disque dans assets/zone-test/{file_id}.{ext}.
+ *  Stocké dans le bucket Supabase `zone-test` : {test_id}/{file_id}.{ext}.
  */
 import { NextResponse } from "next/server";
-import { writeFileSync, existsSync, mkdirSync } from "fs";
-import { join } from "path";
 import {
-  readZoneTest,
-  writeZoneTest,
+  getZoneTest,
+  saveZoneTest,
+  uploadZoneTestFile,
   makeFileId,
-  ASSETS_ZONE_TEST_DIR,
   ZONE_TEST_KIND_EXT,
   type ZoneTestFile,
   type ZoneTestFileKind,
@@ -21,8 +19,7 @@ const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const data = readZoneTest();
-    const test = data.tests.find((t) => t.id === id);
+    const test = await getZoneTest(id);
     if (!test) return NextResponse.json({ ok: false, error: `Test ${id} introuvable` }, { status: 404 });
 
     const form = await request.formData();
@@ -60,11 +57,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       );
     }
 
-    if (!existsSync(ASSETS_ZONE_TEST_DIR)) mkdirSync(ASSETS_ZONE_TEST_DIR, { recursive: true });
-
     const fileId = makeFileId();
     const filename = `${fileId}.${ext}`;
-    writeFileSync(join(ASSETS_ZONE_TEST_DIR, filename), Buffer.from(await file.arrayBuffer()));
+    await uploadZoneTestFile(test.id, filename, Buffer.from(await file.arrayBuffer()));
 
     const entry: ZoneTestFile = {
       id: fileId,
@@ -76,7 +71,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     };
     test.files.push(entry);
     test.updated_at = new Date().toISOString().slice(0, 10);
-    writeZoneTest(data);
+    await saveZoneTest(test);
 
     return NextResponse.json({ ok: true, data: entry });
   } catch (err) {
