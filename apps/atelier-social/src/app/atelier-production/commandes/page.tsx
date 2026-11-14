@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, ArrowRight, Package, Clock, AlertCircle, Archive, UploadCloud, DownloadCloud } from "lucide-react";
+import { ArrowLeft, Loader2, ArrowRight, Package, Clock, AlertCircle, Archive, UploadCloud, DownloadCloud, CheckCircle2 } from "lucide-react";
 import type { Commande, StatutCommande } from "@/lib/production/commandes-loader";
+import { BLOCAGE_META, ORDRE_BLOCAGES, type Brodabilite, type CleBlocage } from "@/lib/production/brodabilite";
 import { libelleMois } from "@/lib/production/historique";
 
 const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: string }> = {
@@ -15,6 +16,28 @@ const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: strin
   archivee:    { label: "Archivée",    bg: "#EBE7E0", fg: "#5A5142" },
 };
 
+type CommandeListe = Commande & { brodabilite?: Brodabilite };
+type Filtre = "toutes" | "prete" | CleBlocage | "brodee";
+
+const ETAT_RANG = { prete: 0, bloquee: 1, brodee: 2 } as const;
+
+/** Backlog : prêtes d'abord, puis bloquées, puis déjà brodées ; urgentes puis plus anciennes en tête (OTIF). */
+function trierBacklog(a: CommandeListe, b: CommandeListe): number {
+  const ea = ETAT_RANG[a.brodabilite?.etat ?? "bloquee"];
+  const eb = ETAT_RANG[b.brodabilite?.etat ?? "bloquee"];
+  if (ea !== eb) return ea - eb;
+  if (a.priorite !== b.priorite) return a.priorite === "urgente" ? -1 : 1;
+  return (a.date_commande ?? "").localeCompare(b.date_commande ?? "");
+}
+
+function correspondFiltre(c: CommandeListe, f: Filtre): boolean {
+  if (f === "toutes") return true;
+  const b = c.brodabilite;
+  if (!b) return false;
+  if (f === "prete" || f === "brodee") return b.etat === f;
+  return b.blocages.some((x) => x.cle === f);
+}
+
 function formatDuree(min: number): string {
   if (min < 60) return `${min} min`;
   const h = Math.floor(min / 60);
@@ -23,19 +46,21 @@ function formatDuree(min: number): string {
 }
 
 export default function CommandesListPage() {
-  const [commandes, setCommandes] = useState<Commande[]>([]);
+  const [commandes, setCommandes] = useState<CommandeListe[]>([]);
+  const [filtre, setFiltre] = useState<Filtre>("toutes");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showArchived, setShowArchived] = useState(false);
   const [role, setRole] = useState<string | null>(null);
 
   const { active, archived } = useMemo(() => {
-    const a: Commande[] = [];
-    const ar: Commande[] = [];
+    const a: CommandeListe[] = [];
+    const ar: CommandeListe[] = [];
     for (const c of commandes) {
       if (c.statut === "archivee") ar.push(c);
       else a.push(c);
     }
+    a.sort(trierBacklog);
     return { active: a, archived: ar };
   }, [commandes]);
 
@@ -178,10 +203,15 @@ export default function CommandesListPage() {
         </div>
       )}
 
+      {active.length > 0 && <BacklogBar commandes={active} filtre={filtre} onFiltre={setFiltre} />}
+
       {/* Actives */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 16 }}>
-        {active.map((c) => <CommandeCard key={c.id} c={c} />)}
+        {active.filter((c) => correspondFiltre(c, filtre)).map((c) => <CommandeCard key={c.id} c={c} />)}
       </div>
+      {active.length > 0 && !active.some((c) => correspondFiltre(c, filtre)) && (
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, opacity: 0.6 }}>Aucune commande dans ce filtre.</p>
+      )}
 
       {/* Archives */}
       {showArchived && archived.length > 0 && (
@@ -201,7 +231,91 @@ export default function CommandesListPage() {
   );
 }
 
-function CommandeCard({ c }: { c: Commande }) {
+function BacklogBar({ commandes, filtre, onFiltre }: { commandes: CommandeListe[]; filtre: Filtre; onFiltre: (f: Filtre) => void }) {
+  const aBroder = commandes.filter((c) => c.brodabilite && c.brodabilite.etat !== "brodee");
+  const nb = (f: Filtre) => commandes.filter((c) => correspondFiltre(c, f)).length;
+  const tuiles: Array<{ f: Filtre; label: string; aide: string; bg: string; fg: string }> = [
+    { f: "prete", label: "Prêtes à broder", aide: "Rien ne bloque : à planifier en machine", bg: "#E5F0E8", fg: "#2F7A3E" },
+    ...ORDRE_BLOCAGES.map((k) => ({
+      f: k as Filtre,
+      label: BLOCAGE_META[k].label,
+      aide:
+        k === "fournisseur"
+          ? "Pièces pas encore reçues (attendu de livraison)"
+          : k === "dst"
+            ? "Préparation DST pas signée au journal"
+            : "Info de prod manquante sur un article",
+      bg: BLOCAGE_META[k].bg,
+      fg: BLOCAGE_META[k].fg,
+    })),
+    { f: "brodee", label: "Brodées", aide: "CQ / expédition / archivage", bg: "#EBE7E0", fg: "#5A5142" },
+  ];
+  return (
+    <section style={{ marginBottom: 24 }}>
+      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 10 }}>
+        <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 20, fontWeight: 500, margin: 0 }}>
+          Backlog broderie · {aBroder.length} commande{aBroder.length > 1 ? "s" : ""}
+        </h2>
+        {filtre !== "toutes" && (
+          <button
+            onClick={() => onFiltre("toutes")}
+            style={{ border: "none", background: "none", padding: 0, cursor: "pointer", fontFamily: "var(--font-sans)", fontSize: 12, textDecoration: "underline", color: "var(--hub-foreground)" }}
+          >
+            Tout afficher
+          </button>
+        )}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 10 }}>
+        {tuiles.map((t) => {
+          const n = nb(t.f);
+          const actif = filtre === t.f;
+          return (
+            <button
+              key={t.f}
+              onClick={() => onFiltre(actif ? "toutes" : t.f)}
+              title={t.aide}
+              style={{
+                textAlign: "left", cursor: "pointer", padding: "12px 14px", borderRadius: 10,
+                border: actif ? `1.5px solid ${t.fg}` : "0.5px solid var(--hub-border)",
+                background: n ? t.bg : "var(--hub-bg)", color: n ? t.fg : "var(--hub-foreground)",
+                opacity: n ? 1 : 0.55, fontFamily: "var(--font-sans)",
+              }}
+            >
+              <div style={{ fontSize: 26, fontWeight: 600, lineHeight: 1 }}>{n}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, marginTop: 6 }}>{t.label}</div>
+              <div style={{ fontSize: 11, opacity: 0.8, marginTop: 2 }}>{t.aide}</div>
+            </button>
+          );
+        })}
+      </div>
+      <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, opacity: 0.6, margin: "8px 0 0" }}>
+        Une commande peut cumuler plusieurs blocages. Elle passe en « Prête à broder » toute seule dès que l&apos;attendu est réceptionné, la DST signée au journal et la fiche complète.
+      </p>
+    </section>
+  );
+}
+
+function BrodabiliteBloc({ b }: { b: Brodabilite }) {
+  if (b.etat === "brodee") return null;
+  if (b.etat === "prete") {
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 10px", borderRadius: 8, background: "#E5F0E8", color: "#2F7A3E", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600 }}>
+        <CheckCircle2 size={14} strokeWidth={1.8} /> Prête à broder
+      </div>
+    );
+  }
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      {b.blocages.map((x) => (
+        <div key={x.cle} style={{ padding: "6px 10px", borderRadius: 8, background: BLOCAGE_META[x.cle].bg, color: BLOCAGE_META[x.cle].fg, fontFamily: "var(--font-sans)", fontSize: 12, lineHeight: 1.35 }}>
+          <strong>{BLOCAGE_META[x.cle].label}</strong> · {x.detail}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CommandeCard({ c }: { c: CommandeListe }) {
   const statut = STATUT_META[c.statut];
   const nbBroderies = c.articles.reduce((s, a) => s + a.broderies.length, 0);
   return (
@@ -234,6 +348,8 @@ function CommandeCard({ c }: { c: Commande }) {
             <><br />Archivée en {libelleMois(c.journal.historique.mois)} (historique)</>
           ) : c.journal?.archivee_le && <><br />Archivée le {c.journal.archivee_le}</>}
         </div>
+
+        {c.brodabilite && c.statut !== "archivee" && <BrodabiliteBloc b={c.brodabilite} />}
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: "auto", paddingTop: 12, borderTop: "1px solid var(--hub-border)" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-sans)", fontSize: 12 }}>

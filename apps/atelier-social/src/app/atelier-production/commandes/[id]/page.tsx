@@ -9,6 +9,7 @@ import { LivraisonContactEditor, BroderieProdFields, NoteAtelierEditor } from ".
 import DossierDocuments from "./DossierDocuments";
 import AttributionZone from "./AttributionZone";
 import { manquesArticle, SOURCE_LABEL } from "@/lib/production/completude";
+import { BLOCAGE_META, brodabiliteCommande } from "@/lib/production/brodabilite";
 import { finDeMois, libelleMois, moisHistoriqueValide } from "@/lib/production/historique";
 import { estBrodee, filsBroderie, fondFils, TECHNIQUE_LABEL, TECHNIQUES_MARQUAGE, techniqueZone } from "@/lib/production/broderie-utils";
 import type { Commande, Article, Broderie, BroderieFileKind, TechniqueMarquage, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
@@ -22,7 +23,7 @@ const STATUT_META: Record<StatutCommande, { label: string; bg: string; fg: strin
   archivee:    { label: "Archivée",    bg: "#EBE7E0", fg: "#5A5142" },
 };
 
-const PERSONNES_PROD = ["Adriana", "Felismina", "Rebecca", "Sarah", "Thierry", "Cyrielle"] as const;
+const PERSONNES_PROD = ["Adriana", "Felismina", "Yasmine", "Sarah", "Thierry", "Cyrielle"] as const;
 
 const PLACEMENT_LABEL: Record<string, string> = {
   buste: "Buste",
@@ -330,6 +331,8 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
         </div>
       </header>
 
+      <BandeauBrodabilite commande={commande} lignes={lignesAttendu} />
+
       {/* NOTE POUR L'ATELIER (info client avant prod) */}
       <NoteAtelierEditor
         commande={commande}
@@ -373,7 +376,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
       />
 
       {/* SECTION ARTICLES */}
-      <section style={{ marginBottom: 40 }}>
+      <section id="articles" style={{ marginBottom: 40, scrollMarginTop: 24 }}>
         <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, marginBottom: 16 }}>
           Articles à broder ({commande.articles.length})
         </h2>
@@ -409,7 +412,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
       )}
 
       {/* SECTION JOURNAL DE PROD */}
-      <section style={{ marginBottom: 40 }}>
+      <section id="journal" style={{ marginBottom: 40, scrollMarginTop: 24 }}>
         <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, marginBottom: 16 }}>
           Journal de production
         </h2>
@@ -574,6 +577,55 @@ function DureeBadge({
       />
       min
     </span>
+  );
+}
+
+/** « Pourquoi on ne peut pas encore broder » : verrous fournisseur / DST / fiche + où les lever. */
+function BandeauBrodabilite({ commande, lignes }: { commande: Commande; lignes: LigneAttenduCmd[] }) {
+  const b = brodabiliteCommande(
+    commande,
+    lignes.map((l) => ({
+      attendu_id: l.attendu_id,
+      fournisseur: l.fournisseur,
+      statut: l.statut,
+      date_livraison_prevue: l.date_livraison_prevue,
+      quantite: l.quantite,
+      quantite_recue: l.quantite_recue,
+    })),
+  );
+  if (b.etat === "brodee") return null;
+  if (b.etat === "prete") {
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 16px", marginBottom: 24, borderRadius: 10, background: "#E5F0E8", color: "#2F7A3E", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 600 }}>
+        <CheckCircle2 size={16} strokeWidth={1.8} /> Prête à broder : fournitures reçues, DST signée, fiche complète.
+      </div>
+    );
+  }
+  const ancre = { fournisseur: undefined, dst: "#journal", fiche: "#articles" } as const;
+  return (
+    <div style={{ padding: "12px 16px", marginBottom: 24, borderRadius: 10, border: "0.5px solid #B5792A", background: "#FFFBF4", fontFamily: "var(--font-sans)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+        <AlertTriangle size={15} strokeWidth={1.8} color="#B5792A" /> Pas encore brodable
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        {b.blocages.map((x) => {
+          const href = x.href ?? ancre[x.cle];
+          return (
+            <div key={x.cle} style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", fontSize: 12 }}>
+              <span style={{ padding: "2px 10px", borderRadius: 999, background: BLOCAGE_META[x.cle].bg, color: BLOCAGE_META[x.cle].fg, fontWeight: 600 }}>
+                {BLOCAGE_META[x.cle].label}
+              </span>
+              <span>{x.detail}</span>
+              {href && (
+                <a href={href} style={{ color: "#1E6E77", fontWeight: 500 }}>
+                  {x.cle === "fournisseur" ? "Voir l'attendu" : x.cle === "dst" ? "Signer au journal" : "Compléter"}
+                </a>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

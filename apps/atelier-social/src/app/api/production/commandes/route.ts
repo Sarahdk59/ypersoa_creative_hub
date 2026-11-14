@@ -13,10 +13,46 @@ import {
   writeCommande,
   type Commande,
 } from "@/lib/production/commandes-loader";
+import { listAttendus, normaliserNumeroCommande } from "@/lib/production/attendus";
+import { brodabiliteCommande, type LigneAttenduBrodabilite } from "@/lib/production/brodabilite";
+
+/** Lignes d'attendu indexées par n° de commande client normalisé. */
+async function lignesAttenduParCommande(): Promise<Map<string, LigneAttenduBrodabilite[]>> {
+  const map = new Map<string, LigneAttenduBrodabilite[]>();
+  let attendus: Awaited<ReturnType<typeof listAttendus>> = [];
+  try {
+    attendus = await listAttendus();
+  } catch {
+    return map; // table absente : la liste reste lisible, sans le verrou fournisseur
+  }
+  for (const a of attendus) {
+    for (const l of a.lignes) {
+      const cle = normaliserNumeroCommande(l.commande_client);
+      if (!cle) continue;
+      const liste = map.get(cle) ?? [];
+      liste.push({
+        attendu_id: a.id,
+        fournisseur: a.fournisseur,
+        statut: a.statut,
+        date_livraison_prevue: a.date_livraison_prevue,
+        quantite: l.quantite,
+        quantite_recue: l.quantite_recue,
+      });
+      map.set(cle, liste);
+    }
+  }
+  return map;
+}
 
 export async function GET() {
   try {
-    return NextResponse.json({ ok: true, data: await listCommandes() });
+    const [commandes, parCommande] = await Promise.all([listCommandes(), lignesAttenduParCommande()]);
+    const data = commandes.map((c) => {
+      const cles = new Set([normaliserNumeroCommande(c.id), normaliserNumeroCommande(c.numero_shopify)]);
+      const lignes = [...cles].flatMap((k) => parCommande.get(k) ?? []);
+      return { ...c, brodabilite: brodabiliteCommande(c, lignes) };
+    });
+    return NextResponse.json({ ok: true, data });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : String(err) },
