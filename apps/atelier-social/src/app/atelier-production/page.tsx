@@ -86,7 +86,7 @@ const SUBMODULES: SubmoduleCard[] = [
   {
     id: 9,
     title: "Zone de test",
-    description: "Dépôt des fichiers DST/PXF + aperçu JPG des tests broderie à faire. Attribution à Adriana, Rebecca ou Cyrielle et suivi par phase : réception → machine → modification à prévoir → modification faite le → validé.",
+    description: "Dépôt des fichiers DST/PXF + aperçu JPG des tests broderie à faire. Attribution à Adriana, Cyrielle ou Yasmine et suivi par phase : réception → machine → modification à prévoir → modification faite le → validé.",
     href: "/atelier-production/zone-test",
     icon: <FlaskConical size={22} strokeWidth={1.4} />,
     status: "v0",

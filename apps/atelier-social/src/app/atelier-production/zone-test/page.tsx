@@ -2,7 +2,7 @@
 
 /**
  * Zone de test broderie — dépôt des fichiers DST/PXF + aperçu JPG des tests à faire,
- * attribution (Adriana / Rebecca / Cyrielle) et suivi par phase.
+ * attribution (Adriana / Cyrielle / Yasmine) et suivi par phase.
  *
  * Board à 5 colonnes (phases) : En réception → En machine → Modification à prévoir
  * → Modification faite (le ../../..) → Validé. On glisse un test (← →) pour avancer.
@@ -24,7 +24,7 @@ const PHASES: ZoneTestPhaseMeta[] = [
   { id: "modif_faite", numero: 4, label: "Modification faite", couleur: "#6F8E70" },
   { id: "valide", numero: 5, label: "Validé", couleur: "#2F7A3E" },
 ];
-const ASSIGNEES = ["Adriana", "Rebecca", "Cyrielle"] as const;
+const ASSIGNEES = ["Adriana", "Cyrielle", "Yasmine"] as const;
 
 const KIND_META: Record<ZoneTestFileKind, { label: string; accept: string; icon: React.ReactNode }> = {
   dst: { label: "DST", accept: ".dst", icon: <FileBox size={11} /> },
@@ -87,7 +87,7 @@ export default function ZoneTestPage() {
           </h1>
           <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 760, margin: 0 }}>
             {total} test{total > 1 ? "s" : ""} · Dépose les <strong>DST / PXF</strong> et un <strong>aperçu JPG</strong>, attribue le test à
-            Adriana, Rebecca ou Cyrielle, et suis l&apos;avancement de la réception à la validation. Glisse un test (← →) pour changer de phase.
+            Adriana, Cyrielle ou Yasmine, et suis l&apos;avancement de la réception à la validation. Glisse un test (← →) pour changer de phase.
           </p>
         </div>
         <button

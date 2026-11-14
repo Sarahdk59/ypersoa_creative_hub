@@ -444,7 +444,7 @@ export interface KanbanColumn {
   couleur?: string;
 }
 export type KanbanCardType = "question" | "bug" | "amelioration" | "decision" | "regle" | "autre";
-export type KanbanStakeholder = "Rebecca" | "Cyrielle" | "Adriana" | "Thierry" | "Sarah";
+export type KanbanStakeholder = "Cyrielle" | "Adriana" | "Yasmine" | "Thierry" | "Sarah";
 export interface KanbanCard {
   id: string;
   column_id: string;
@@ -453,7 +453,7 @@ export interface KanbanCard {
   type?: KanbanCardType;
   tags?: string[];
   auteur?: "sarah" | "adriana" | "autre";
-  /** Parties prenantes informées sur la card (Rebecca, Cyrielle, Adriana, Thierry, Sarah). */
+  /** Parties prenantes informées sur la card (Cyrielle, Adriana, Yasmine, Thierry, Sarah). */
   stakeholders?: KanbanStakeholder[];
   /** Date à laquelle la card est passée en colonne "fait" (pour archive auto à +7j). */
   done_at?: string;
@@ -462,7 +462,7 @@ export interface KanbanCard {
   created_at: string;
   updated_at: string;
 }
-export const KANBAN_STAKEHOLDERS: KanbanStakeholder[] = ["Rebecca", "Cyrielle", "Adriana", "Thierry", "Sarah"];
+export const KANBAN_STAKEHOLDERS: KanbanStakeholder[] = ["Cyrielle", "Adriana", "Yasmine", "Thierry", "Sarah"];
 export interface ProdKanbanRef {
   _meta: { schema_version: string; referentiel: string; last_updated?: string; description?: string };
   columns: KanbanColumn[];

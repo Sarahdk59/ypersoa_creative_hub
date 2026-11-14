@@ -1173,7 +1173,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     title: "Gérer la production broderie",
     atelier: "Atelier Production",
     pitch:
-      "C'est l'atelier où la commande devient broderie. Tu y transformes un bon Shopify en fiche de prod planifiée sur tes deux machines, tu attribues les couleurs aux lettres, tu pioches dans tes motifs, fils et palettes, et tu suis chaque pièce jusqu'à l'expédition. Tout ce dont Adriana, Felismina et Rebecca ont besoin pour broder vite et bien est ici.",
+      "C'est l'atelier où la commande devient broderie. Tu y transformes un bon Shopify en fiche de prod planifiée sur tes deux machines, tu attribues les couleurs aux lettres, tu pioches dans tes motifs, fils et palettes, et tu suis chaque pièce jusqu'à l'expédition. Tout ce dont Adriana, Felismina et Yasmine ont besoin pour broder vite et bien est ici.",
     features: [
       {
         id: "prod-commandes-shopify",
@@ -1191,7 +1191,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           "En fin de cycle, clique « Archiver » ; pour la relancer plus tard, « Désarchiver et remettre en prod ».",
         ],
         exemple:
-          "Le bon #1002 arrive : 3 sweats brodés (motif Le Câlin YPM-006), livraison à Mouvaux. Tu déposes le PDF, l'outil reconnaît le motif, associe le fil Gunold et calcule 86 min de production. Tu valides : la commande passe « À planifier ». Tu génères le planning en OTIF, le Gantt répartit les articles sur TMEZ-1 et TMEZ-2. Adriana note la DST le 20/05, Felismina la broderie le 22/05, Rebecca l'expédition le 23/05.",
+          "Le bon #1002 arrive : 3 sweats brodés (motif Le Câlin YPM-006), livraison à Mouvaux. Tu déposes le PDF, l'outil reconnaît le motif, associe le fil Gunold et calcule 86 min de production. Tu valides : la commande passe « À planifier ». Tu génères le planning en OTIF, le Gantt répartit les articles sur TMEZ-1 et TMEZ-2. Adriana note la DST le 20/05, Felismina la broderie le 22/05, Yasmine l'expédition le 23/05.",
         resultat:
           "Une fiche commande avec ses articles, fils (hex + code Gunold), durées, un journal de suivi et un planning Gantt sur 2 machines. Statut qui évolue d'« À planifier » à « Expédiée » puis « Archivée ».",
         limites: [
@@ -1384,7 +1384,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         commentFaire: [
           "Ouvre Atelier Production, puis « Zone de test ».",
           "Clique « Nouveau test » pour créer une carte.",
-          "Ajoute les fichiers DST/PXF/JPG (upload) et assigne le test (Adriana, Rebecca ou Cyrielle).",
+          "Ajoute les fichiers DST/PXF/JPG (upload) et assigne le test (Adriana, Cyrielle ou Yasmine).",
           "Fais avancer la carte de phase en phase : En réception → En machine → Modification à prévoir → Modification faite → Validé.",
         ],
         exemple:

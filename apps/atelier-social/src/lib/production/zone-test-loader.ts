@@ -17,8 +17,8 @@ export const BUCKET_ZONE_TEST = "zone-test";
 // ──────────────────────────────────────────────────────────
 // Attribution
 // ──────────────────────────────────────────────────────────
-export type ZoneTestAssignee = "Adriana" | "Rebecca" | "Cyrielle";
-export const ZONE_TEST_ASSIGNEES: ZoneTestAssignee[] = ["Adriana", "Rebecca", "Cyrielle"];
+export type ZoneTestAssignee = "Adriana" | "Cyrielle" | "Yasmine";
+export const ZONE_TEST_ASSIGNEES: ZoneTestAssignee[] = ["Adriana", "Cyrielle", "Yasmine"];
 
 // ──────────────────────────────────────────────────────────
 // Phases (suivi de l'avancement du test)

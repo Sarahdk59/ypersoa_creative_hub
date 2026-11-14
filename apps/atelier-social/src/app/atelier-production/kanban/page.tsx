@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Loader2, Plus, X, ChevronLeft, ChevronRight, Trash2, Pencil, Save, HelpCircle, Bug, Sparkles, ScrollText, StickyNote, Gavel, Search, Archive, Users, Upload, ImagePlus, Download } from "lucide-react";
 import type { ProdKanbanRef, KanbanCard, KanbanColumn } from "@/lib/atelier-da/referentiels-loader";
 
-const STAKEHOLDERS = ["Rebecca", "Cyrielle", "Adriana", "Thierry", "Sarah"] as const;
+const STAKEHOLDERS = ["Cyrielle", "Adriana", "Yasmine", "Thierry", "Sarah"] as const;
 const ARCHIVE_AFTER_DAYS = 7;
 
 const TYPE_META: Record<string, { label: string; icon: React.ReactNode; bg: string }> = {
@@ -76,7 +76,7 @@ export default function KanbanPage() {
           Kanban prod
         </h1>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--hub-foreground)", opacity: 0.65, maxWidth: 720 }}>
-          {liveCards.length} card{liveCards.length > 1 ? "s" : ""} actives · {archivedCards.length} archivée{archivedCards.length > 1 ? "s" : ""} · Adriana, Sarah, Rebecca, Cyrielle, Thierry posent leurs questions, améliorations, décisions, règles. Glisse une card (← →) pour suivre l&apos;avancement. Les <strong>Fait</strong> &gt; {ARCHIVE_AFTER_DAYS} jours basculent automatiquement dans Archives.
+          {liveCards.length} card{liveCards.length > 1 ? "s" : ""} actives · {archivedCards.length} archivée{archivedCards.length > 1 ? "s" : ""} · Adriana, Cyrielle, Yasmine, Thierry, Sarah posent leurs questions, améliorations, décisions, règles. Glisse une card (← →) pour suivre l&apos;avancement. Les <strong>Fait</strong> &gt; {ARCHIVE_AFTER_DAYS} jours basculent automatiquement dans Archives.
         </p>
       </header>
 
