@@ -2,71 +2,103 @@
  "_meta": {
   "referentiel": "catalogue_produits",
   "schema_version": "1.0",
-  "source": "base produit octobre 2026.xlsx",
-  "importe_le": "2026-11-04",
+  "source": "Base Produits - Novembre 2026.xlsx",
+  "importe_le": "2026-11-17",
   "format_ref_article": "YPxxx-CCCC-TTTT = réf. interne - code couleur (famille Akanea) - code taille Akanea",
   "note": "Généré par scripts/import_catalogue_produits.py — ne pas éditer à la main, relancer l'import. Les couleurs ajoutées depuis le Hub vivent en base (table catalogue_couleurs_ajouts). Sans notion de fournisseur.",
   "generique": "Code 9999 = couleur ou taille à préciser (produit pas encore enrichi)."
  },
  "produits": {
-  "YP051": {
-   "ref": "YP051",
-   "ref_fabricant": "PK705",
-   "libelle": "Arctic Men",
-   "famille": "Polaire",
+  "YP001": {
+   "ref": "YP001",
+   "ref_fabricant": "JH001",
+   "libelle": "Sweat à Capuche Classique 280 g",
+   "famille": "Hoodie",
    "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire",
-    "fleece",
-    "micropolaire"
-   ]
-  },
-  "YP052": {
-   "ref": "YP052",
-   "ref_fabricant": "PK706",
-   "libelle": "Arctic Women",
-   "famille": "Polaire",
-   "sous_famille": "Regular",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire",
-    "fleece",
-    "micropolaire"
-   ]
-  },
-  "YP041": {
-   "ref": "YP041",
-   "ref_fabricant": "PK764",
-   "libelle": "Atlantic Hoodie",
-   "famille": "Softshell",
-   "sous_famille": "Capuche",
    "genre": "Unisexe",
-   "gabarit": "G-ZIP",
+   "gabarit": "G-HOODIE",
    "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie",
+    "sweat à capuche",
+    "capuche",
+    "kangourou"
+   ]
+  },
+  "YP002": {
+   "ref": "YP002",
+   "ref_fabricant": "JH101",
+   "libelle": "Sweat à Capuche Épais 330 g",
+   "famille": "Hoodie",
+   "sous_famille": "Heavy",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie épais",
+    "heavy hoodie",
+    "sweat à capuche lourd",
+    "sweat capuche premium",
+    "graduate hoodie"
+   ]
+  },
+  "YP003": {
+   "ref": "YP003",
+   "ref_fabricant": "JH120",
+   "libelle": "Sweat à Capuche Oversize Épais 440 g",
+   "famille": "Hoodie",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie oversize",
+    "sweat oversize",
+    "hoodie boxy",
+    "heavyweight hoodie",
+    "sweat épais streetwear",
+    "hoodie 440 g"
+   ]
+  },
+  "YP004": {
+   "ref": "YP004",
+   "ref_fabricant": "JH01J",
+   "libelle": "Sweat à Capuche Enfant",
+   "famille": "Hoodie",
+   "sous_famille": "Regular",
+   "genre": "Enfant",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "DTF",
     "BRO"
    ],
    "statut": "Actif",
    "synonymes": [
-    "softshell",
-    "veste coupe-vent",
-    "veste technique"
+    "hoodie enfant",
+    "sweat à capuche enfant",
+    "sweat capuche garçon",
+    "sweat capuche fille",
+    "sweat école",
+    "sweat kermesse",
+    "kids hoodie"
    ]
   },
   "YP005": {
    "ref": "YP005",
    "ref_fabricant": "JH030",
-   "libelle": "AWDis Sweat (College Sweatshirt)",
+   "libelle": "Sweat Col Rond Classique 280 g",
    "famille": "Sweat",
    "sous_famille": "Regular",
    "genre": "Unisexe",
@@ -85,45 +117,53 @@
     "sweat sans capuche"
    ]
   },
-  "YP042": {
-   "ref": "YP042",
-   "ref_fabricant": "NM042",
-   "libelle": "Basic Trackpants",
-   "famille": "Jogging",
+  "YP006": {
+   "ref": "YP006",
+   "ref_fabricant": "JH030J",
+   "libelle": "Sweat Col Rond Enfant",
+   "famille": "Sweat",
    "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-BAS",
+   "genre": "Enfant",
+   "gabarit": "G-HAUT",
    "technos": [
     "BRO",
     "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "jogging",
-    "pantalon",
-    "bas de survêtement"
+    "sweat enfant",
+    "sweatshirt enfant",
+    "pull enfant",
+    "col rond enfant",
+    "crewneck enfant"
    ]
   },
-  "YP124": {
-   "ref": "YP124",
-   "ref_fabricant": "NB1531",
-   "libelle": "Bloc-notes A5 couverture rigide (Sandro)",
-   "famille": "Bloc-notes",
-   "sous_famille": "A5",
-   "genre": "Unisexe",
-   "gabarit": "",
+  "YP007": {
+   "ref": "YP007",
+   "ref_fabricant": "JH043J",
+   "libelle": "Veste Teddy Universitaire Enfant",
+   "famille": "Teddy",
+   "sous_famille": "Regular",
+   "genre": "Enfant",
+   "gabarit": "G-ZIP",
    "technos": [
-    "SUB-A3"
+    "BRO",
+    "DTF"
    ],
-   "statut": "À compléter",
-   "synonymes": []
+   "statut": "Actif",
+   "synonymes": [
+    "teddy enfant",
+    "varsity enfant",
+    "veste universitaire enfant",
+    "bomber college enfant"
+   ]
   },
-  "YP057": {
-   "ref": "YP057",
-   "ref_fabricant": "V1060",
-   "libelle": "Blouson 100% coton",
-   "famille": "Blouson",
-   "sous_famille": "Workwear",
+  "YP008": {
+   "ref": "YP008",
+   "ref_fabricant": "JH043",
+   "libelle": "Veste Teddy Universitaire",
+   "famille": "Teddy",
+   "sous_famille": "Regular",
    "genre": "Unisexe",
    "gabarit": "G-ZIP",
    "technos": [
@@ -132,118 +172,63 @@
    ],
    "statut": "Actif",
    "synonymes": [
-    "blouson",
-    "veste de travail",
-    "workwear"
+    "teddy",
+    "varsity",
+    "veste universitaire",
+    "bomber college",
+    "veste baseball",
+    "veste américaine"
    ]
   },
-  "YP123": {
-   "ref": "YP123",
-   "ref_fabricant": "JR3986",
-   "libelle": "Bocal verre borosilicate givré 500 ml (Adaya)",
-   "famille": "Verre",
-   "sous_famille": "Bocal",
+  "YP009": {
+   "ref": "YP009",
+   "ref_fabricant": "BF045",
+   "libelle": "Bonnet à Revers Acrylique",
+   "famille": "Bonnet",
+   "sous_famille": "Revers",
    "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP109": {
-   "ref": "YP109",
-   "ref_fabricant": "BI4126",
-   "libelle": "Bouteille isotherme 500 ml (Fancy)",
-   "famille": "Gourde",
-   "sous_famille": "Isotherme",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "SUB-A3",
-    "DTF-UV"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP111": {
-   "ref": "YP111",
-   "ref_fabricant": "BI4122",
-   "libelle": "Bouteille isotherme 550 ml (Balax)",
-   "famille": "Gourde",
-   "sous_famille": "Isotherme",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "SUB-A3",
-    "DTF-UV"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP024": {
-   "ref": "YP024",
-   "ref_fabricant": "BZ063",
-   "libelle": "Bébé Hoodie",
-   "famille": "Hoodie",
-   "sous_famille": "Regular",
-   "genre": "Bébé",
-   "gabarit": "G-HOODIE",
-   "technos": [],
-   "statut": "À compléter",
-   "synonymes": [
-    "hoodie",
-    "sweat à capuche",
-    "capuche",
-    "kangourou"
-   ]
-  },
-  "YP128": {
-   "ref": "YP128",
-   "ref_fabricant": "GO7000",
-   "libelle": "Casquette 5 panneaux (Basica)",
-   "famille": "Casquette",
-   "sous_famille": "5 pans",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
+   "gabarit": "G-BONNET",
    "technos": [
     "BRO",
-    "DTF",
-    "ECU",
-    "ECU-SUB",
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP014": {
-   "ref": "YP014",
-   "ref_fabricant": "BC645",
-   "libelle": "Casquette Base Ball",
-   "famille": "Casquette",
-   "sous_famille": "6 pans",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
-   "technos": [
-    "BRO",
-    "DTF",
     "ECU",
     "ECU-SUB"
    ],
-   "statut": "À compléter",
+   "statut": "Actif",
    "synonymes": [
-    "casquette",
-    "cap",
-    "snapback",
-    "trucker"
+    "bonnet",
+    "bonnet à revers",
+    "beanie",
+    "bonnet hiver",
+    "bonnet acrylique"
    ]
   },
-  "YP015": {
-   "ref": "YP015",
-   "ref_fabricant": "BC673",
-   "libelle": "Casquette Bicolore",
+  "YP010": {
+   "ref": "YP010",
+   "ref_fabricant": "BF385R",
+   "libelle": "Bonnet à Large Revers Recyclé",
+   "famille": "Bonnet",
+   "sous_famille": "Revers",
+   "genre": "Unisexe",
+   "gabarit": "G-BONNET",
+   "technos": [
+    "BRO",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "bonnet épais",
+    "bonnet large revers",
+    "beanie recyclé",
+    "bonnet hiver"
+   ]
+  },
+  "YP011": {
+   "ref": "YP011",
+   "ref_fabricant": "BF680",
+   "libelle": "Casquette Velours Côtelé Bio",
    "famille": "Casquette",
-   "sous_famille": "Bicolore",
+   "sous_famille": "Vintage",
    "genre": "Unisexe",
    "gabarit": "G-CASQ",
    "technos": [
@@ -263,7 +248,7 @@
   "YP012": {
    "ref": "YP012",
    "ref_fabricant": "BC018",
-   "libelle": "Casquette classique",
+   "libelle": "Casquette 6 Pans Coton Sergé",
    "famille": "Casquette",
    "sous_famille": "6 pans",
    "genre": "Unisexe",
@@ -285,7 +270,7 @@
   "YP013": {
    "ref": "YP013",
    "ref_fabricant": "BC655",
-   "libelle": "Casquette classique vintage",
+   "libelle": "Casquette Vintage Coton Délavé",
    "famille": "Casquette",
    "sous_famille": "Vintage",
    "genre": "Unisexe",
@@ -304,13 +289,13 @@
     "trucker"
    ]
   },
-  "YP104": {
-   "ref": "YP104",
-   "ref_fabricant": "BF655B",
-   "libelle": "Casquette classique vintage junior",
+  "YP014": {
+   "ref": "YP014",
+   "ref_fabricant": "BC645",
+   "libelle": "Casquette Trucker Vintage",
    "famille": "Casquette",
-   "sous_famille": "Vintage",
-   "genre": "Enfant",
+   "sous_famille": "6 pans",
+   "genre": "Unisexe",
    "gabarit": "G-CASQ",
    "technos": [
     "BRO",
@@ -319,120 +304,161 @@
     "ECU-SUB"
    ],
    "statut": "À compléter",
-   "synonymes": []
+   "synonymes": [
+    "casquette",
+    "cap",
+    "snapback",
+    "trucker"
+   ]
   },
-  "YP129": {
-   "ref": "YP129",
-   "ref_fabricant": "GO7050",
-   "libelle": "Casquette RPET 5 panneaux (Calisto)",
+  "YP015": {
+   "ref": "YP015",
+   "ref_fabricant": "BC673",
+   "libelle": "Casquette Vintage Bicolore",
    "famille": "Casquette",
-   "sous_famille": "5 pans",
+   "sous_famille": "Bicolore",
    "genre": "Unisexe",
    "gabarit": "G-CASQ",
    "technos": [
     "BRO",
     "DTF",
     "ECU",
-    "ECU-SUB",
-    "SUB-A3"
+    "ECU-SUB"
+   ],
+   "statut": "À compléter",
+   "synonymes": [
+    "casquette",
+    "cap",
+    "snapback",
+    "trucker"
+   ]
+  },
+  "YP016": {
+   "ref": "YP016",
+   "ref_fabricant": "JK215",
+   "libelle": "Polo Manches Longues Homme",
+   "famille": "Polo",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
    ],
    "statut": "À compléter",
    "synonymes": []
   },
-  "YP043": {
-   "ref": "YP043",
-   "ref_fabricant": "AT001",
-   "libelle": "Casquette Start Five 5 pans",
-   "famille": "Casquette",
-   "sous_famille": "5 pans",
+  "YP017": {
+   "ref": "YP017",
+   "ref_fabricant": "WM801",
+   "libelle": "Tote Bag Coton Bio Épais",
+   "famille": "Tote bag",
+   "sous_famille": "Anses longues",
    "genre": "Unisexe",
-   "gabarit": "G-CASQ",
+   "gabarit": "G-TOTE",
    "technos": [
     "BRO",
     "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "casquette",
-    "cap",
-    "snapback",
-    "trucker"
+    "tote bag",
+    "sac",
+    "cabas",
+    "sac coton"
    ]
   },
-  "YP130": {
-   "ref": "YP130",
-   "ref_fabricant": "GO7020",
-   "libelle": "Casquette technique 3 panneaux (Mercury)",
-   "famille": "Casquette",
-   "sous_famille": "3 pans",
+  "YP018": {
+   "ref": "YP018",
+   "ref_fabricant": "GD001",
+   "libelle": "T-shirt Coton Léger 150 g",
+   "famille": "T-shirt",
+   "sous_famille": "Regular",
    "genre": "Unisexe",
-   "gabarit": "G-CASQ",
+   "gabarit": "G-HAUT",
    "technos": [
-    "BRO",
-    "DTF",
-    "ECU",
-    "ECU-SUB",
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP011": {
-   "ref": "YP011",
-   "ref_fabricant": "BF680",
-   "libelle": "Casquette vintage velours",
-   "famille": "Casquette",
-   "sous_famille": "Vintage",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
-   "technos": [
-    "BRO",
-    "DTF",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "À compléter",
-   "synonymes": [
-    "casquette",
-    "cap",
-    "snapback",
-    "trucker"
-   ]
-  },
-  "YP010": {
-   "ref": "YP010",
-   "ref_fabricant": "BF385R",
-   "libelle": "Classic Engineered Deep Cuffed Beanie",
-   "famille": "Bonnet",
-   "sous_famille": "Revers",
-   "genre": "Unisexe",
-   "gabarit": "G-BONNET",
-   "technos": [
-    "BRO",
-    "ECU",
-    "ECU-SUB"
+    "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "bonnet épais",
-    "bonnet large revers",
-    "beanie recyclé",
-    "bonnet hiver"
+    "tee",
+    "tee-shirt",
+    "tshirt",
+    "t shirt",
+    "haut manches courtes"
    ]
   },
-  "YP001": {
-   "ref": "YP001",
-   "ref_fabricant": "JH001",
-   "libelle": "College Hoodie",
+  "YP019": {
+   "ref": "YP019",
+   "ref_fabricant": "BC09T",
+   "libelle": "T-shirt Épais 220 g",
+   "famille": "T-shirt",
+   "sous_famille": "Heavy",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "tee",
+    "tee-shirt",
+    "tshirt",
+    "t shirt",
+    "haut manches courtes"
+   ]
+  },
+  "YP020": {
+   "ref": "YP020",
+   "ref_fabricant": "JH050",
+   "libelle": "Sweat Zippé à Capuche 280 g",
+   "famille": "Zoodie",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "zoodie",
+    "sweat zippé",
+    "veste zippée à capuche",
+    "zip hoodie"
+   ]
+  },
+  "YP021": {
+   "ref": "YP021",
+   "ref_fabricant": "JH125",
+   "libelle": "Sweat Zippé à Capuche Oversize 440 g",
+   "famille": "Zoodie",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "zoodie",
+    "sweat zippé",
+    "veste zippée à capuche",
+    "zip hoodie"
+   ]
+  },
+  "YP022": {
+   "ref": "YP022",
+   "ref_fabricant": "CN022",
+   "libelle": "Sweat à Capuche Import Chine",
    "famille": "Hoodie",
    "sous_famille": "Regular",
    "genre": "Unisexe",
    "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
+   "technos": [],
+   "statut": "À compléter (fournisseur Chine)",
    "synonymes": [
     "hoodie",
     "sweat à capuche",
@@ -440,10 +466,86 @@
     "kangourou"
    ]
   },
+  "YP023": {
+   "ref": "YP023",
+   "ref_fabricant": "CN023",
+   "libelle": "T-shirt Import Chine",
+   "famille": "T-shirt",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [],
+   "statut": "À compléter (fournisseur Chine)",
+   "synonymes": [
+    "tee",
+    "tee-shirt",
+    "tshirt",
+    "t shirt",
+    "haut manches courtes"
+   ]
+  },
+  "YP024": {
+   "ref": "YP024",
+   "ref_fabricant": "BZ063",
+   "libelle": "Sweat à Capuche Bébé",
+   "famille": "Hoodie",
+   "sous_famille": "Regular",
+   "genre": "Bébé",
+   "gabarit": "G-HOODIE",
+   "technos": [],
+   "statut": "À compléter",
+   "synonymes": [
+    "hoodie",
+    "sweat à capuche",
+    "capuche",
+    "kangourou"
+   ]
+  },
+  "YP025": {
+   "ref": "YP025",
+   "ref_fabricant": "JKJT150",
+   "libelle": "T-shirt Essentiel 150 g",
+   "famille": "T-shirt",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "tee",
+    "tee-shirt",
+    "tshirt",
+    "t shirt",
+    "haut manches courtes"
+   ]
+  },
+  "YP026": {
+   "ref": "YP026",
+   "ref_fabricant": "JK190",
+   "libelle": "T-shirt Premium 190 g",
+   "famille": "T-shirt",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "tee",
+    "tee-shirt",
+    "tshirt",
+    "t shirt",
+    "haut manches courtes"
+   ]
+  },
   "YP027": {
    "ref": "YP027",
    "ref_fabricant": "JC043",
-   "libelle": "Contrast Cool Polo",
+   "libelle": "Polo Sport Respirant Raglan",
    "famille": "Polo",
    "sous_famille": "Technique",
    "genre": "Unisexe",
@@ -458,390 +560,64 @@
     "polo brodé"
    ]
   },
-  "YP055": {
-   "ref": "YP055",
-   "ref_fabricant": "FR054",
-   "libelle": "Drill Overshirt",
-   "famille": "Surchemise",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "surchemise",
-    "overshirt",
-    "chemise épaisse"
-   ]
-  },
-  "YP084": {
-   "ref": "YP084",
-   "ref_fabricant": "03995",
-   "libelle": "Falcon 3in1",
-   "famille": "Softshell",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell 3 en 1",
-    "softshell manches amovibles",
-    "softshell transformable",
-    "veste convertible"
-   ]
-  },
-  "YP089": {
-   "ref": "YP089",
-   "ref_fabricant": "03825",
-   "libelle": "Falcon BW Men",
-   "famille": "Softshell",
+  "YP028": {
+   "ref": "YP028",
+   "ref_fabricant": "JK205",
+   "libelle": "Polo Piqué Classique Homme",
+   "famille": "Polo",
    "sous_famille": "Regular",
    "genre": "Homme",
-   "gabarit": "G-ZIP",
+   "gabarit": "G-HAUT",
    "technos": [
     "BRO",
     "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "softshell sans manches homme",
-    "gilet softshell",
-    "bodywarmer softshell"
+    "polo",
+    "polo brodé"
    ]
   },
-  "YP088": {
-   "ref": "YP088",
-   "ref_fabricant": "03826",
-   "libelle": "Falcon BW Women",
-   "famille": "Softshell",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell sans manches femme",
-    "gilet softshell femme",
-    "bodywarmer softshell"
-   ]
-  },
-  "YP081": {
-   "ref": "YP081",
-   "ref_fabricant": "03827",
-   "libelle": "Falcon Men",
-   "famille": "Softshell",
+  "YP029": {
+   "ref": "YP029",
+   "ref_fabricant": "BM100",
+   "libelle": "Polo Piqué Col Contrasté Homme",
+   "famille": "Polo",
    "sous_famille": "Regular",
    "genre": "Homme",
-   "gabarit": "G-ZIP",
+   "gabarit": "G-HAUT",
    "technos": [
     "BRO",
     "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "softshell homme",
-    "veste softshell zippée",
-    "softshell imperméable"
+    "polo",
+    "polo brodé"
    ]
   },
-  "YP090": {
-   "ref": "YP090",
-   "ref_fabricant": "04809",
-   "libelle": "Falcon Padded BW",
-   "famille": "Softshell",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "bodywarmer softshell matelassé",
-    "gilet softshell doublé",
-    "softshell sans manches chaud"
-   ]
-  },
-  "YP083": {
-   "ref": "YP083",
-   "ref_fabricant": "04449",
-   "libelle": "Falcon Padded Men",
-   "famille": "Softshell",
-   "sous_famille": "Regular",
+  "YP030": {
+   "ref": "YP030",
+   "ref_fabricant": "TJ1405",
+   "libelle": "Polo Stretch Ajusté Homme",
+   "famille": "Polo",
+   "sous_famille": "Ajusté",
    "genre": "Homme",
-   "gabarit": "G-ZIP",
+   "gabarit": "G-HAUT",
    "technos": [
     "BRO",
     "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "parka softshell homme",
-    "softshell matelassée",
-    "veste hiver"
-   ]
-  },
-  "YP082": {
-   "ref": "YP082",
-   "ref_fabricant": "04450",
-   "libelle": "Falcon Padded Women",
-   "famille": "Softshell",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "parka softshell femme",
-    "softshell matelassée",
-    "veste hiver femme"
-   ]
-  },
-  "YP080": {
-   "ref": "YP080",
-   "ref_fabricant": "03828",
-   "libelle": "Falcon Women",
-   "famille": "Softshell",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell femme",
-    "veste softshell zippée femme",
-    "softshell imperméable"
-   ]
-  },
-  "YP076": {
-   "ref": "YP076",
-   "ref_fabricant": "04022",
-   "libelle": "Finch",
-   "famille": "Polaire",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire sherpa",
-    "veste polaire effet sherpa",
-    "polaire soft touch",
-    "fleece premium"
-   ]
-  },
-  "YP105": {
-   "ref": "YP105",
-   "ref_fabricant": "BI1791",
-   "libelle": "Gourde inox 500 ml blanche — sublimation (Mikel)",
-   "famille": "Gourde",
-   "sous_famille": "Inox",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP106": {
-   "ref": "YP106",
-   "ref_fabricant": "BI1791",
-   "libelle": "Gourde inox 500 ml couleur — DTF UV (Mikel)",
-   "famille": "Gourde",
-   "sous_famille": "Inox",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "DTF-UV"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP107": {
-   "ref": "YP107",
-   "ref_fabricant": "BI1790",
-   "libelle": "Gourde inox 750 ml (Tomak)",
-   "famille": "Gourde",
-   "sous_famille": "Inox",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "SUB-A3",
-    "DTF-UV"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP108": {
-   "ref": "YP108",
-   "ref_fabricant": "BI1872",
-   "libelle": "Gourde isotherme 500 ml (Luwak)",
-   "famille": "Gourde",
-   "sous_famille": "Isotherme",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "SUB-A3",
-    "DTF-UV"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP110": {
-   "ref": "YP110",
-   "ref_fabricant": "BI4059",
-   "libelle": "Gourde isotherme 500 ml blanche — sublimation (Copo)",
-   "famille": "Gourde",
-   "sous_famille": "Isotherme",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP002": {
-   "ref": "YP002",
-   "ref_fabricant": "JH101",
-   "libelle": "Graduate Heavyweight Hoodie",
-   "famille": "Hoodie",
-   "sous_famille": "Heavy",
-   "genre": "Unisexe",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "hoodie épais",
-    "heavy hoodie",
-    "sweat à capuche lourd",
-    "sweat capuche premium",
-    "graduate hoodie"
-   ]
-  },
-  "YP036": {
-   "ref": "YP036",
-   "ref_fabricant": "IT475",
-   "libelle": "Hooded Sweat",
-   "famille": "Hoodie",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "hoodie",
-    "sweat à capuche",
-    "capuche",
-    "kangourou"
-   ]
-  },
-  "YP022": {
-   "ref": "YP022",
-   "ref_fabricant": "CN022",
-   "libelle": "Hoodie CN",
-   "famille": "Hoodie",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-HOODIE",
-   "technos": [],
-   "statut": "À compléter (fournisseur Chine)",
-   "synonymes": [
-    "hoodie",
-    "sweat à capuche",
-    "capuche",
-    "kangourou"
-   ]
-  },
-  "YP047": {
-   "ref": "YP047",
-   "ref_fabricant": "04101",
-   "libelle": "Ibiza",
-   "famille": "Tote bag",
-   "sous_famille": "Anses longues",
-   "genre": "Unisexe",
-   "gabarit": "G-TOTE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "tote bag",
-    "sac",
-    "sac shopping",
-    "sac coton"
-   ]
-  },
-  "YP056": {
-   "ref": "YP056",
-   "ref_fabricant": "VL214",
-   "libelle": "Italian Model Overalls",
-   "famille": "Combinaison",
-   "sous_famille": "Workwear",
-   "genre": "Unisexe",
-   "gabarit": "G-BAS",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "combinaison",
-    "salopette",
-    "cotte"
-   ]
-  },
-  "YP035": {
-   "ref": "YP035",
-   "ref_fabricant": "JKJT295",
-   "libelle": "JT Kangaroo",
-   "famille": "Hoodie",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "hoodie",
-    "sweat à capuche",
-    "capuche",
-    "kangourou"
+    "polo",
+    "polo brodé"
    ]
   },
   "YP031": {
    "ref": "YP031",
    "ref_fabricant": "JK250",
-   "libelle": "JT Polo",
+   "libelle": "Polo Piqué Essentiel 180 g",
    "famille": "Polo",
    "sous_famille": "Regular",
    "genre": "Unisexe",
@@ -856,28 +632,10 @@
     "polo brodé"
    ]
   },
-  "YP039": {
-   "ref": "YP039",
-   "ref_fabricant": "JKJT500",
-   "libelle": "JT Softshell",
-   "famille": "Softshell",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell",
-    "veste coupe-vent",
-    "veste technique"
-   ]
-  },
   "YP032": {
    "ref": "YP032",
    "ref_fabricant": "JKJT290",
-   "libelle": "JT Sweatshirt CR",
+   "libelle": "Sweat Col Rond Essentiel 265 g",
    "famille": "Sweat",
    "sous_famille": "Regular",
    "genre": "Unisexe",
@@ -895,920 +653,10 @@
     "crewneck"
    ]
   },
-  "YP091": {
-   "ref": "YP091",
-   "ref_fabricant": "BF45B",
-   "libelle": "Junior Original Cuffed Beanie",
-   "famille": "Bonnet",
-   "sous_famille": "Revers",
-   "genre": "Enfant",
-   "gabarit": "G-BONNET",
-   "technos": [
-    "BRO",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "bonnet enfant",
-    "beanie enfant",
-    "bonnet à revers enfant"
-   ]
-  },
-  "YP006": {
-   "ref": "YP006",
-   "ref_fabricant": "JH030J",
-   "libelle": "Kids AWDis Sweat (College Sweatshirt Junior)",
-   "famille": "Sweat",
-   "sous_famille": "Regular",
-   "genre": "Enfant",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "sweat enfant",
-    "sweatshirt enfant",
-    "pull enfant",
-    "col rond enfant",
-    "crewneck enfant"
-   ]
-  },
-  "YP004": {
-   "ref": "YP004",
-   "ref_fabricant": "JH01J",
-   "libelle": "Kids Hoodie (College Hoodie Junior)",
-   "famille": "Hoodie",
-   "sous_famille": "Regular",
-   "genre": "Enfant",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "DTF",
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "hoodie enfant",
-    "sweat à capuche enfant",
-    "sweat capuche garçon",
-    "sweat capuche fille",
-    "sweat école",
-    "sweat kermesse",
-    "kids hoodie"
-   ]
-  },
-  "YP007": {
-   "ref": "YP007",
-   "ref_fabricant": "JH043J",
-   "libelle": "Kids Varsity Jacket (Varsity Jacket Junior)",
-   "famille": "Teddy",
-   "sous_famille": "Regular",
-   "genre": "Enfant",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "teddy enfant",
-    "varsity enfant",
-    "veste universitaire enfant",
-    "bomber college enfant"
-   ]
-  },
-  "YP100": {
-   "ref": "YP100",
-   "ref_fabricant": "BCU01K",
-   "libelle": "King Crew Neck",
-   "famille": "Sweat",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP101": {
-   "ref": "YP101",
-   "ref_fabricant": "BCU02K",
-   "libelle": "King Hooded",
-   "famille": "Hoodie",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP066": {
-   "ref": "YP066",
-   "ref_fabricant": "03996",
-   "libelle": "Legacy",
-   "famille": "T-shirt",
-   "sous_famille": "Oversize",
-   "genre": "Unisexe",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "t-shirt oversize",
-    "tee oversize",
-    "t-shirt large",
-    "boxy tee",
-    "t-shirt épaules tombantes"
-   ]
-  },
-  "YP067": {
-   "ref": "YP067",
-   "ref_fabricant": "04883",
-   "libelle": "Legacy LSL",
-   "famille": "T-shirt",
-   "sous_famille": "Oversize",
-   "genre": "Unisexe",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "t-shirt oversize manches longues",
-    "tee oversize ML",
-    "longsleeve oversize"
-   ]
-  },
-  "YP044": {
-   "ref": "YP044",
-   "ref_fabricant": "AT003",
-   "libelle": "Liberty Sandwich Cap",
-   "famille": "Casquette",
-   "sous_famille": "Sandwich",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "casquette",
-    "cap",
-    "snapback",
-    "trucker"
-   ]
-  },
-  "YP046": {
-   "ref": "YP046",
-   "ref_fabricant": "LS42B",
-   "libelle": "Long Handle Promo Shopper",
-   "famille": "Tote bag",
-   "sous_famille": "Anses longues",
-   "genre": "Unisexe",
-   "gabarit": "G-TOTE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "tote bag",
-    "sac",
-    "cabas",
-    "sac coton"
-   ]
-  },
-  "YP030": {
-   "ref": "YP030",
-   "ref_fabricant": "TJ1405",
-   "libelle": "Luxury Stretch Polo",
-   "famille": "Polo",
-   "sous_famille": "Ajusté",
-   "genre": "Homme",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polo",
-    "polo brodé"
-   ]
-  },
-  "YP077": {
-   "ref": "YP077",
-   "ref_fabricant": "03780",
-   "libelle": "Mael",
-   "famille": "Veste de travail",
-   "sous_famille": "Workwear",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "bleu de travail",
-    "veste de travail",
-    "workwear",
-    "veste ouvrier",
-    "chore jacket"
-   ]
-  },
-  "YP016": {
-   "ref": "YP016",
-   "ref_fabricant": "JK215",
-   "libelle": "Man Regular Long Sleeve Polo",
-   "famille": "Polo",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP028": {
-   "ref": "YP028",
-   "ref_fabricant": "JK205",
-   "libelle": "Man Regular Polo",
-   "famille": "Polo",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polo",
-    "polo brodé"
-   ]
-  },
-  "YP099": {
-   "ref": "YP099",
-   "ref_fabricant": "JK210",
-   "libelle": "Man Regular Polo",
-   "famille": "Polo",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP050": {
-   "ref": "YP050",
-   "ref_fabricant": "JZ870",
-   "libelle": "Men's Full Zip Outdoor Fleece",
-   "famille": "Polaire",
-   "sous_famille": "Technique",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire",
-    "fleece",
-    "micropolaire"
-   ]
-  },
-  "YP097": {
-   "ref": "YP097",
-   "ref_fabricant": "RS192",
-   "libelle": "Men's Ice Bird Padded Jacket",
-   "famille": "Doudoune",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "doudoune homme",
-    "manteau doudoune",
-    "veste matelassée",
-    "puffer jacket"
-   ]
-  },
-  "YP117": {
-   "ref": "YP117",
-   "ref_fabricant": "MD4084",
-   "libelle": "Mug céramique 250 ml (Marang)",
-   "famille": "Mug",
-   "sous_famille": "Céramique",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP114": {
-   "ref": "YP114",
-   "ref_fabricant": "MD4000",
-   "libelle": "Mug céramique 350 ml (Lima)",
-   "famille": "Mug",
-   "sous_famille": "Céramique",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP116": {
-   "ref": "YP116",
-   "ref_fabricant": "MD4001",
-   "libelle": "Mug céramique 350 ml intérieur couleur (Mango)",
-   "famille": "Mug",
-   "sous_famille": "Céramique",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP113": {
-   "ref": "YP113",
-   "ref_fabricant": "TZ3999",
-   "libelle": "Mug céramique 350 ml qualité AAA (Lemon)",
-   "famille": "Mug",
-   "sous_famille": "Céramique",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP115": {
-   "ref": "YP115",
-   "ref_fabricant": "MD4003",
-   "libelle": "Mug céramique mat 350 ml (Rambu)",
-   "famille": "Mug",
-   "sous_famille": "Céramique",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP119": {
-   "ref": "YP119",
-   "ref_fabricant": "TZ1508",
-   "libelle": "Mug céramique pailleté 350 ml (Fiona)",
-   "famille": "Mug",
-   "sous_famille": "Céramique",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP118": {
-   "ref": "YP118",
-   "ref_fabricant": "TZ4002",
-   "libelle": "Mug céramique rétro 300 ml (Kumbo)",
-   "famille": "Mug",
-   "sous_famille": "Céramique",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP120": {
-   "ref": "YP120",
-   "ref_fabricant": "MD4014",
-   "libelle": "Mug métal vintage 370 ml (Damasco)",
-   "famille": "Mug",
-   "sous_famille": "Métal",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP096": {
-   "ref": "YP096",
-   "ref_fabricant": "SD060",
-   "libelle": "Noah Denim Jacket",
-   "famille": "Veste en jean",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "veste en jean",
-    "veste denim",
-    "blouson jean",
-    "trucker jacket"
-   ]
-  },
-  "YP073": {
-   "ref": "YP073",
-   "ref_fabricant": "02093",
-   "libelle": "Norman Men",
-   "famille": "Polaire",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire homme",
-    "veste polaire zippée",
-    "gilet polaire",
-    "fleece"
-   ]
-  },
-  "YP072": {
-   "ref": "YP072",
-   "ref_fabricant": "02094",
-   "libelle": "Norman Women",
-   "famille": "Polaire",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire femme",
-    "veste polaire zippée",
-    "gilet polaire",
-    "fleece"
-   ]
-  },
-  "YP075": {
-   "ref": "YP075",
-   "ref_fabricant": "55000",
-   "libelle": "North",
-   "famille": "Polaire",
-   "sous_famille": "Ajusté",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "micropolaire homme",
-    "polaire anti-bouloche",
-    "veste polaire zippée"
-   ]
-  },
-  "YP074": {
-   "ref": "YP074",
-   "ref_fabricant": "54500",
-   "libelle": "North Women",
-   "famille": "Polaire",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "micropolaire femme",
-    "polaire anti-bouloche",
-    "veste polaire zippée femme"
-   ]
-  },
-  "YP009": {
-   "ref": "YP009",
-   "ref_fabricant": "BF045",
-   "libelle": "Original Cuffed Beanie",
-   "famille": "Bonnet",
-   "sous_famille": "Revers",
-   "genre": "Unisexe",
-   "gabarit": "G-BONNET",
-   "technos": [
-    "BRO",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "bonnet",
-    "bonnet à revers",
-    "beanie",
-    "bonnet hiver",
-    "bonnet acrylique"
-   ]
-  },
-  "YP038": {
-   "ref": "YP038",
-   "ref_fabricant": "NM013",
-   "libelle": "Oversized Zip Hoody",
-   "famille": "Zoodie",
-   "sous_famille": "Oversize",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "zoodie",
-    "sweat zippé",
-    "veste zippée à capuche",
-    "zip hoodie"
-   ]
-  },
-  "YP054": {
-   "ref": "YP054",
-   "ref_fabricant": "JK300F",
-   "libelle": "Polar Fleece Lady",
-   "famille": "Polaire",
-   "sous_famille": "Regular",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire",
-    "fleece",
-    "micropolaire"
-   ]
-  },
-  "YP053": {
-   "ref": "YP053",
-   "ref_fabricant": "JK300M",
-   "libelle": "Polar Fleece Man",
-   "famille": "Polaire",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "polaire",
-    "fleece",
-    "micropolaire"
-   ]
-  },
-  "YP025": {
-   "ref": "YP025",
-   "ref_fabricant": "JKJT150",
-   "libelle": "POP TEE",
-   "famille": "T-shirt",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "tee",
-    "tee-shirt",
-    "tshirt",
-    "t shirt",
-    "haut manches courtes"
-   ]
-  },
-  "YP102": {
-   "ref": "YP102",
-   "ref_fabricant": "BCW01Q",
-   "libelle": "Queen Crew Neck",
-   "famille": "Sweat",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP103": {
-   "ref": "YP103",
-   "ref_fabricant": "BCW02Q",
-   "libelle": "Queen Hooded",
-   "famille": "Hoodie",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP085": {
-   "ref": "YP085",
-   "ref_fabricant": "02887",
-   "libelle": "Race BW Men",
-   "famille": "Softshell",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell sans manches homme",
-    "bodywarmer softshell",
-    "gilet softshell"
-   ]
-  },
-  "YP079": {
-   "ref": "YP079",
-   "ref_fabricant": "04447",
-   "libelle": "Race Hooded Men",
-   "famille": "Softshell",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell capuche homme",
-    "veste softshell",
-    "coupe-vent chaud"
-   ]
-  },
-  "YP078": {
-   "ref": "YP078",
-   "ref_fabricant": "04448",
-   "libelle": "Race Hooded Women",
-   "famille": "Softshell",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell capuche femme",
-    "veste softshell femme",
-    "coupe-vent chaud"
-   ]
-  },
-  "YP087": {
-   "ref": "YP087",
-   "ref_fabricant": "46601",
-   "libelle": "Rallye Men",
-   "famille": "Softshell",
-   "sous_famille": "Regular",
-   "genre": "Homme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell sans manches homme",
-    "gilet softshell"
-   ]
-  },
-  "YP086": {
-   "ref": "YP086",
-   "ref_fabricant": "46801",
-   "libelle": "Rallye Women",
-   "famille": "Softshell",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "softshell sans manches femme",
-    "gilet softshell femme"
-   ]
-  },
-  "YP045": {
-   "ref": "YP045",
-   "ref_fabricant": "AT313",
-   "libelle": "Rapper Jersey-S",
-   "famille": "Casquette",
-   "sous_famille": "Visière plate",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "casquette",
-    "cap",
-    "snapback",
-    "trucker"
-   ]
-  },
-  "YP093": {
-   "ref": "YP093",
-   "ref_fabricant": "AT226",
-   "libelle": "Recy Five",
-   "famille": "Casquette",
-   "sous_famille": "5 pans",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
-   "technos": [
-    "BRO",
-    "DTF",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "casquette",
-    "casquette 5 pans",
-    "casquette recyclée",
-    "casquette baseball"
-   ]
-  },
-  "YP095": {
-   "ref": "YP095",
-   "ref_fabricant": "AT297",
-   "libelle": "Recy Five Piping",
-   "famille": "Casquette",
-   "sous_famille": "Bicolore",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
-   "technos": [
-    "BRO",
-    "DTF",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "casquette bicolore",
-    "casquette passepoil",
-    "casquette 5 pans recyclée"
-   ]
-  },
-  "YP026": {
-   "ref": "YP026",
-   "ref_fabricant": "JK190",
-   "libelle": "Regular Premium T-shirt",
-   "famille": "T-shirt",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "tee",
-    "tee-shirt",
-    "tshirt",
-    "t shirt",
-    "haut manches courtes"
-   ]
-  },
-  "YP131": {
-   "ref": "YP131",
-   "ref_fabricant": "TW1751",
-   "libelle": "Serviette microfibre RPET (Gulpi)",
-   "famille": "Serviette",
-   "sous_famille": "Microfibre",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "BRO",
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP132": {
-   "ref": "YP132",
-   "ref_fabricant": "TW7119",
-   "libelle": "Serviette multisport microfibre (Cork)",
-   "famille": "Serviette",
-   "sous_famille": "Microfibre",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "BRO",
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP065": {
-   "ref": "YP065",
-   "ref_fabricant": "04758",
-   "libelle": "Shield",
-   "famille": "Coupe-vent",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "DTF",
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "coupe-vent",
-    "k-way",
-    "veste pluie légère",
-    "windbreaker",
-    "imperméable léger"
-   ]
-  },
-  "YP003": {
-   "ref": "YP003",
-   "ref_fabricant": "JH120",
-   "libelle": "Signature Heavyweight Hoodie",
-   "famille": "Hoodie",
-   "sous_famille": "Oversize",
-   "genre": "Unisexe",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "hoodie oversize",
-    "sweat oversize",
-    "hoodie boxy",
-    "heavyweight hoodie",
-    "sweat épais streetwear",
-    "hoodie 440 g"
-   ]
-  },
   "YP033": {
    "ref": "YP033",
    "ref_fabricant": "JH123",
-   "libelle": "Signature Heavyweight Sweat",
+   "libelle": "Sweat Col Rond Oversize Épais 440 g",
    "famille": "Sweat",
    "sous_famille": "Heavy",
    "genre": "Unisexe",
@@ -1829,7 +677,7 @@
   "YP034": {
    "ref": "YP034",
    "ref_fabricant": "47101",
-   "libelle": "Snake",
+   "libelle": "Sweat à Capuche Ajusté 50/50",
    "famille": "Hoodie",
    "sous_famille": "Regular",
    "genre": "Unisexe",
@@ -1846,10 +694,90 @@
     "kangourou"
    ]
   },
-  "YP040": {
-   "ref": "YP040",
-   "ref_fabricant": "KB401",
-   "libelle": "Softshell Veste",
+  "YP035": {
+   "ref": "YP035",
+   "ref_fabricant": "JKJT295",
+   "libelle": "Sweat à Capuche Essentiel 265 g",
+   "famille": "Hoodie",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie",
+    "sweat à capuche",
+    "capuche",
+    "kangourou"
+   ]
+  },
+  "YP036": {
+   "ref": "YP036",
+   "ref_fabricant": "IT475",
+   "libelle": "Sweat à Capuche Liseré Contrasté",
+   "famille": "Hoodie",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie",
+    "sweat à capuche",
+    "capuche",
+    "kangourou"
+   ]
+  },
+  "YP037": {
+   "ref": "YP037",
+   "ref_fabricant": "TJ5152",
+   "libelle": "Sweat à Capuche Bio Sans Étiquette 300 g",
+   "famille": "Hoodie",
+   "sous_famille": "Heavy",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie",
+    "sweat à capuche",
+    "capuche",
+    "kangourou"
+   ]
+  },
+  "YP038": {
+   "ref": "YP038",
+   "ref_fabricant": "NM013",
+   "libelle": "Sweat Zippé à Capuche Oversize Bio",
+   "famille": "Zoodie",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "zoodie",
+    "sweat zippé",
+    "veste zippée à capuche",
+    "zip hoodie"
+   ]
+  },
+  "YP039": {
+   "ref": "YP039",
+   "ref_fabricant": "JKJT500",
+   "libelle": "Veste Softshell Essentielle",
    "famille": "Softshell",
    "sous_famille": "Regular",
    "genre": "Unisexe",
@@ -1864,13 +792,373 @@
     "veste technique"
    ]
   },
-  "YP029": {
-   "ref": "YP029",
-   "ref_fabricant": "BM100",
-   "libelle": "Spirit Men",
-   "famille": "Polo",
+  "YP040": {
+   "ref": "YP040",
+   "ref_fabricant": "KB401",
+   "libelle": "Veste Softshell Imperméable 3 Couches",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell",
+    "veste coupe-vent",
+    "veste technique"
+   ]
+  },
+  "YP041": {
+   "ref": "YP041",
+   "ref_fabricant": "PK764",
+   "libelle": "Veste à Capuche Softshell Imperméable",
+   "famille": "Softshell",
+   "sous_famille": "Capuche",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell",
+    "veste coupe-vent",
+    "veste technique"
+   ]
+  },
+  "YP042": {
+   "ref": "YP042",
+   "ref_fabricant": "NM042",
+   "libelle": "Pantalon de Jogging Bio",
+   "famille": "Jogging",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-BAS",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "jogging",
+    "pantalon",
+    "bas de survêtement"
+   ]
+  },
+  "YP043": {
+   "ref": "YP043",
+   "ref_fabricant": "AT001",
+   "libelle": "Casquette 5 Pans Coton Léger",
+   "famille": "Casquette",
+   "sous_famille": "5 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "casquette",
+    "cap",
+    "snapback",
+    "trucker"
+   ]
+  },
+  "YP044": {
+   "ref": "YP044",
+   "ref_fabricant": "AT003",
+   "libelle": "Casquette Sandwich Visière Contrastée",
+   "famille": "Casquette",
+   "sous_famille": "Sandwich",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "casquette",
+    "cap",
+    "snapback",
+    "trucker"
+   ]
+  },
+  "YP045": {
+   "ref": "YP045",
+   "ref_fabricant": "AT313",
+   "libelle": "Casquette Rappeur Visière Plate Recyclée",
+   "famille": "Casquette",
+   "sous_famille": "Visière plate",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "casquette",
+    "cap",
+    "snapback",
+    "trucker"
+   ]
+  },
+  "YP046": {
+   "ref": "YP046",
+   "ref_fabricant": "LS42B",
+   "libelle": "Tote Bag Coton Léger 110 g",
+   "famille": "Tote bag",
+   "sous_famille": "Anses longues",
+   "genre": "Unisexe",
+   "gabarit": "G-TOTE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "tote bag",
+    "sac",
+    "cabas",
+    "sac coton"
+   ]
+  },
+  "YP047": {
+   "ref": "YP047",
+   "ref_fabricant": "04101",
+   "libelle": "Tote Bag Coton 140 g",
+   "famille": "Tote bag",
+   "sous_famille": "Anses longues",
+   "genre": "Unisexe",
+   "gabarit": "G-TOTE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "tote bag",
+    "sac",
+    "sac shopping",
+    "sac coton"
+   ]
+  },
+  "YP048": {
+   "ref": "YP048",
+   "ref_fabricant": "TJ9130",
+   "libelle": "Veste Polaire Technique Homme",
+   "famille": "Polaire",
+   "sous_famille": "Technique",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire",
+    "fleece",
+    "micropolaire"
+   ]
+  },
+  "YP049": {
+   "ref": "YP049",
+   "ref_fabricant": "TJ9131",
+   "libelle": "Veste Polaire Technique Femme",
+   "famille": "Polaire",
+   "sous_famille": "Technique",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire",
+    "fleece",
+    "micropolaire"
+   ]
+  },
+  "YP050": {
+   "ref": "YP050",
+   "ref_fabricant": "JZ870",
+   "libelle": "Veste Polaire Zippée Ajustée Homme",
+   "famille": "Polaire",
+   "sous_famille": "Technique",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire",
+    "fleece",
+    "micropolaire"
+   ]
+  },
+  "YP051": {
+   "ref": "YP051",
+   "ref_fabricant": "PK705",
+   "libelle": "Veste Micropolaire Homme 200 g",
+   "famille": "Polaire",
    "sous_famille": "Regular",
    "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire",
+    "fleece",
+    "micropolaire"
+   ]
+  },
+  "YP052": {
+   "ref": "YP052",
+   "ref_fabricant": "PK706",
+   "libelle": "Veste Micropolaire Femme 200 g",
+   "famille": "Polaire",
+   "sous_famille": "Regular",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire",
+    "fleece",
+    "micropolaire"
+   ]
+  },
+  "YP053": {
+   "ref": "YP053",
+   "ref_fabricant": "JK300M",
+   "libelle": "Veste Polaire Recyclée Homme 300 g",
+   "famille": "Polaire",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire",
+    "fleece",
+    "micropolaire"
+   ]
+  },
+  "YP054": {
+   "ref": "YP054",
+   "ref_fabricant": "JK300F",
+   "libelle": "Veste Polaire Recyclée Femme 300 g",
+   "famille": "Polaire",
+   "sous_famille": "Regular",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire",
+    "fleece",
+    "micropolaire"
+   ]
+  },
+  "YP055": {
+   "ref": "YP055",
+   "ref_fabricant": "FR054",
+   "libelle": "Surchemise Coton Drill",
+   "famille": "Surchemise",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "surchemise",
+    "overshirt",
+    "chemise épaisse"
+   ]
+  },
+  "YP056": {
+   "ref": "YP056",
+   "ref_fabricant": "VL214",
+   "libelle": "Combinaison de Travail",
+   "famille": "Combinaison",
+   "sous_famille": "Workwear",
+   "genre": "Unisexe",
+   "gabarit": "G-BAS",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "combinaison",
+    "salopette",
+    "cotte"
+   ]
+  },
+  "YP057": {
+   "ref": "YP057",
+   "ref_fabricant": "V1060",
+   "libelle": "Blouson de Travail Coton",
+   "famille": "Blouson",
+   "sous_famille": "Workwear",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "blouson",
+    "veste de travail",
+    "workwear"
+   ]
+  },
+  "YP060": {
+   "ref": "YP060",
+   "ref_fabricant": "JH01F",
+   "libelle": "Sweat à Capuche Femme 280 g",
+   "famille": "Hoodie",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie femme",
+    "sweat à capuche femme",
+    "sweat capuche fille",
+    "sweat cintré",
+    "girlie hoodie",
+    "college hoodie femme"
+   ]
+  },
+  "YP061": {
+   "ref": "YP061",
+   "ref_fabricant": "JH030F",
+   "libelle": "Sweat Col Rond Femme 280 g",
+   "famille": "Sweat",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
    "gabarit": "G-HAUT",
    "technos": [
     "BRO",
@@ -1878,33 +1166,17 @@
    ],
    "statut": "Actif",
    "synonymes": [
-    "polo",
-    "polo brodé"
-   ]
-  },
-  "YP064": {
-   "ref": "YP064",
-   "ref_fabricant": "04446",
-   "libelle": "Stream BW Kids",
-   "famille": "Bodywarmer",
-   "sous_famille": "Regular",
-   "genre": "Enfant",
-   "gabarit": "G-ZIP",
-   "technos": [
-    "DTF",
-    "BRO"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "doudoune sans manches enfant",
-    "bodywarmer enfant",
-    "gilet matelassé enfant"
+    "sweat femme",
+    "sweatshirt femme",
+    "pull femme",
+    "col rond femme",
+    "crewneck femme"
    ]
   },
   "YP062": {
    "ref": "YP062",
    "ref_fabricant": "04020",
-   "libelle": "Stream BW Men",
+   "libelle": "Doudoune Sans Manches Légère Homme",
    "famille": "Bodywarmer",
    "sous_famille": "Regular",
    "genre": "Homme",
@@ -1925,7 +1197,7 @@
   "YP063": {
    "ref": "YP063",
    "ref_fabricant": "04021",
-   "libelle": "Stream BW Women",
+   "libelle": "Doudoune Sans Manches Légère Femme",
    "famille": "Bodywarmer",
    "sous_famille": "Ajusté",
    "genre": "Femme",
@@ -1941,257 +1213,90 @@
     "gilet matelassé femme"
    ]
   },
-  "YP018": {
-   "ref": "YP018",
-   "ref_fabricant": "GD001",
-   "libelle": "T-Shirt Adulte",
-   "famille": "T-shirt",
+  "YP064": {
+   "ref": "YP064",
+   "ref_fabricant": "04446",
+   "libelle": "Doudoune Sans Manches Légère Enfant",
+   "famille": "Bodywarmer",
    "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "tee",
-    "tee-shirt",
-    "tshirt",
-    "t shirt",
-    "haut manches courtes"
-   ]
-  },
-  "YP019": {
-   "ref": "YP019",
-   "ref_fabricant": "BC09T",
-   "libelle": "T-Shirt Adulte Premium",
-   "famille": "T-shirt",
-   "sous_famille": "Heavy",
-   "genre": "Unisexe",
-   "gabarit": "G-HAUT",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "tee",
-    "tee-shirt",
-    "tshirt",
-    "t shirt",
-    "haut manches courtes"
-   ]
-  },
-  "YP023": {
-   "ref": "YP023",
-   "ref_fabricant": "CN023",
-   "libelle": "T-Shirt CN",
-   "famille": "T-shirt",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-HAUT",
-   "technos": [],
-   "statut": "À compléter (fournisseur Chine)",
-   "synonymes": [
-    "tee",
-    "tee-shirt",
-    "tshirt",
-    "t shirt",
-    "haut manches courtes"
-   ]
-  },
-  "YP125": {
-   "ref": "YP125",
-   "ref_fabricant": "IA3011",
-   "libelle": "Tapis de souris (Sira)",
-   "famille": "Tapis de souris",
-   "sous_famille": "Plat",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP121": {
-   "ref": "YP121",
-   "ref_fabricant": "TZ1359",
-   "libelle": "Tasse verre dépoli 350 ml (Alamy)",
-   "famille": "Verre",
-   "sous_famille": "Verre",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP112": {
-   "ref": "YP112",
-   "ref_fabricant": "TE4123",
-   "libelle": "Thermos inox 500 ml (Salvia)",
-   "famille": "Gourde",
-   "sous_famille": "Isotherme",
-   "genre": "Unisexe",
-   "gabarit": "G-GOURDE",
-   "technos": [
-    "SUB-A3",
-    "DTF-UV"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP017": {
-   "ref": "YP017",
-   "ref_fabricant": "WM801",
-   "libelle": "Tote bag",
-   "famille": "Tote bag",
-   "sous_famille": "Anses longues",
-   "genre": "Unisexe",
-   "gabarit": "G-TOTE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "tote bag",
-    "sac",
-    "cabas",
-    "sac coton"
-   ]
-  },
-  "YP127": {
-   "ref": "YP127",
-   "ref_fabricant": "BO7618",
-   "libelle": "Tote bag polyester — sublimation (Miso)",
-   "famille": "Tote bag",
-   "sous_famille": "Anses longues",
-   "genre": "Unisexe",
-   "gabarit": "G-TOTE",
-   "technos": [
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP048": {
-   "ref": "YP048",
-   "ref_fabricant": "TJ9130",
-   "libelle": "Trail Fleece Jacket",
-   "famille": "Polaire",
-   "sous_famille": "Technique",
-   "genre": "Homme",
+   "genre": "Enfant",
    "gabarit": "G-ZIP",
    "technos": [
+    "DTF",
     "BRO"
    ],
    "statut": "Actif",
    "synonymes": [
-    "polaire",
-    "fleece",
-    "micropolaire"
+    "doudoune sans manches enfant",
+    "bodywarmer enfant",
+    "gilet matelassé enfant"
    ]
   },
-  "YP126": {
-   "ref": "YP126",
-   "ref_fabricant": "NE7569",
-   "libelle": "Trousse de toilette polyester (Osak)",
-   "famille": "Trousse",
-   "sous_famille": "Zippée",
-   "genre": "Unisexe",
-   "gabarit": "",
-   "technos": [
-    "BRO",
-    "SUB-A3"
-   ],
-   "statut": "À compléter",
-   "synonymes": []
-  },
-  "YP094": {
-   "ref": "YP094",
-   "ref_fabricant": "BF015",
-   "libelle": "Ultimate 5 Panel Cap",
-   "famille": "Casquette",
-   "sous_famille": "5 pans",
-   "genre": "Unisexe",
-   "gabarit": "G-CASQ",
-   "technos": [
-    "BRO",
-    "DTF",
-    "ECU",
-    "ECU-SUB"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "casquette",
-    "casquette 5 pans",
-    "casquette coton",
-    "casquette baseball"
-   ]
-  },
-  "YP037": {
-   "ref": "YP037",
-   "ref_fabricant": "TJ5152",
-   "libelle": "Unlabeled Hooded Sweatshirt",
-   "famille": "Hoodie",
-   "sous_famille": "Heavy",
-   "genre": "Unisexe",
-   "gabarit": "G-HOODIE",
-   "technos": [
-    "BRO",
-    "DTF"
-   ],
-   "statut": "Actif",
-   "synonymes": [
-    "hoodie",
-    "sweat à capuche",
-    "capuche",
-    "kangourou"
-   ]
-  },
-  "YP008": {
-   "ref": "YP008",
-   "ref_fabricant": "JH043",
-   "libelle": "Varsity Jacket",
-   "famille": "Teddy",
+  "YP065": {
+   "ref": "YP065",
+   "ref_fabricant": "04758",
+   "libelle": "Coupe-vent Déperlant Recyclé",
+   "famille": "Coupe-vent",
    "sous_famille": "Regular",
    "genre": "Unisexe",
    "gabarit": "G-ZIP",
    "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "coupe-vent",
+    "k-way",
+    "veste pluie légère",
+    "windbreaker",
+    "imperméable léger"
+   ]
+  },
+  "YP066": {
+   "ref": "YP066",
+   "ref_fabricant": "03996",
+   "libelle": "T-shirt Oversize 220 g",
+   "famille": "T-shirt",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
     "BRO",
     "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "teddy",
-    "varsity",
-    "veste universitaire",
-    "bomber college",
-    "veste baseball",
-    "veste américaine"
+    "t-shirt oversize",
+    "tee oversize",
+    "t-shirt large",
+    "boxy tee",
+    "t-shirt épaules tombantes"
    ]
   },
-  "YP122": {
-   "ref": "YP122",
-   "ref_fabricant": "VA4148",
-   "libelle": "Verre borosilicate effet givré 330 ml (Puket)",
-   "famille": "Verre",
-   "sous_famille": "Verre",
+  "YP067": {
+   "ref": "YP067",
+   "ref_fabricant": "04883",
+   "libelle": "T-shirt Oversize Manches Longues",
+   "famille": "T-shirt",
+   "sous_famille": "Oversize",
    "genre": "Unisexe",
-   "gabarit": "",
+   "gabarit": "G-HAUT",
    "technos": [
-    "SUB-A3"
+    "BRO",
+    "DTF"
    ],
-   "statut": "À compléter",
-   "synonymes": []
+   "statut": "Actif",
+   "synonymes": [
+    "t-shirt oversize manches longues",
+    "tee oversize ML",
+    "longsleeve oversize"
+   ]
   },
   "YP068": {
    "ref": "YP068",
    "ref_fabricant": "02916",
-   "libelle": "Victoire BW Men",
+   "libelle": "Doudoune Sans Manches Tricolore Homme",
    "famille": "Bodywarmer",
    "sous_famille": "Regular",
    "genre": "Homme",
@@ -2211,7 +1316,7 @@
   "YP069": {
    "ref": "YP069",
    "ref_fabricant": "02937",
-   "libelle": "Victoire BW Women",
+   "libelle": "Doudoune Sans Manches Tricolore Femme",
    "famille": "Bodywarmer",
    "sous_famille": "Ajusté",
    "genre": "Femme",
@@ -2229,7 +1334,7 @@
   "YP070": {
    "ref": "YP070",
    "ref_fabricant": "02889",
-   "libelle": "Wilson BW Men",
+   "libelle": "Doudoune Sans Manches Ultra-Légère Homme",
    "famille": "Bodywarmer",
    "sous_famille": "Ajusté",
    "genre": "Homme",
@@ -2248,7 +1353,7 @@
   "YP071": {
    "ref": "YP071",
    "ref_fabricant": "02890",
-   "libelle": "Wilson BW Women",
+   "libelle": "Doudoune Sans Manches Ultra-Légère Femme",
    "famille": "Bodywarmer",
    "sous_famille": "Ajusté",
    "genre": "Femme",
@@ -2263,10 +1368,394 @@
     "bodywarmer femme"
    ]
   },
+  "YP072": {
+   "ref": "YP072",
+   "ref_fabricant": "02094",
+   "libelle": "Veste Polaire Zippée Femme 220 g",
+   "famille": "Polaire",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire femme",
+    "veste polaire zippée",
+    "gilet polaire",
+    "fleece"
+   ]
+  },
+  "YP073": {
+   "ref": "YP073",
+   "ref_fabricant": "02093",
+   "libelle": "Veste Polaire Zippée Homme 220 g",
+   "famille": "Polaire",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire homme",
+    "veste polaire zippée",
+    "gilet polaire",
+    "fleece"
+   ]
+  },
+  "YP074": {
+   "ref": "YP074",
+   "ref_fabricant": "54500",
+   "libelle": "Veste Micropolaire Anti-bouloche Femme",
+   "famille": "Polaire",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "micropolaire femme",
+    "polaire anti-bouloche",
+    "veste polaire zippée femme"
+   ]
+  },
+  "YP075": {
+   "ref": "YP075",
+   "ref_fabricant": "55000",
+   "libelle": "Veste Micropolaire Anti-bouloche Homme",
+   "famille": "Polaire",
+   "sous_famille": "Ajusté",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "micropolaire homme",
+    "polaire anti-bouloche",
+    "veste polaire zippée"
+   ]
+  },
+  "YP076": {
+   "ref": "YP076",
+   "ref_fabricant": "04022",
+   "libelle": "Veste Polaire Effet Sherpa",
+   "famille": "Polaire",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "polaire sherpa",
+    "veste polaire effet sherpa",
+    "polaire soft touch",
+    "fleece premium"
+   ]
+  },
+  "YP077": {
+   "ref": "YP077",
+   "ref_fabricant": "03780",
+   "libelle": "Veste Bleu de Travail Coton Bio",
+   "famille": "Veste de travail",
+   "sous_famille": "Workwear",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "bleu de travail",
+    "veste de travail",
+    "workwear",
+    "veste ouvrier",
+    "chore jacket"
+   ]
+  },
+  "YP078": {
+   "ref": "YP078",
+   "ref_fabricant": "04448",
+   "libelle": "Veste à Capuche Softshell Femme",
+   "famille": "Softshell",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell capuche femme",
+    "veste softshell femme",
+    "coupe-vent chaud"
+   ]
+  },
+  "YP079": {
+   "ref": "YP079",
+   "ref_fabricant": "04447",
+   "libelle": "Veste à Capuche Softshell Homme",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell capuche homme",
+    "veste softshell",
+    "coupe-vent chaud"
+   ]
+  },
+  "YP080": {
+   "ref": "YP080",
+   "ref_fabricant": "03828",
+   "libelle": "Veste Softshell Imperméable Femme",
+   "famille": "Softshell",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell femme",
+    "veste softshell zippée femme",
+    "softshell imperméable"
+   ]
+  },
+  "YP081": {
+   "ref": "YP081",
+   "ref_fabricant": "03827",
+   "libelle": "Veste Softshell Imperméable Homme",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell homme",
+    "veste softshell zippée",
+    "softshell imperméable"
+   ]
+  },
+  "YP082": {
+   "ref": "YP082",
+   "ref_fabricant": "04450",
+   "libelle": "Parka Softshell Matelassée Femme",
+   "famille": "Softshell",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "parka softshell femme",
+    "softshell matelassée",
+    "veste hiver femme"
+   ]
+  },
+  "YP083": {
+   "ref": "YP083",
+   "ref_fabricant": "04449",
+   "libelle": "Parka Softshell Matelassée Homme",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "parka softshell homme",
+    "softshell matelassée",
+    "veste hiver"
+   ]
+  },
+  "YP084": {
+   "ref": "YP084",
+   "ref_fabricant": "03995",
+   "libelle": "Veste Softshell 3-en-1 Manches Amovibles",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell 3 en 1",
+    "softshell manches amovibles",
+    "softshell transformable",
+    "veste convertible"
+   ]
+  },
+  "YP085": {
+   "ref": "YP085",
+   "ref_fabricant": "02887",
+   "libelle": "Softshell Sans Manches Essentiel Homme",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell sans manches homme",
+    "bodywarmer softshell",
+    "gilet softshell"
+   ]
+  },
+  "YP086": {
+   "ref": "YP086",
+   "ref_fabricant": "46801",
+   "libelle": "Softshell Sans Manches 8000 mm Femme",
+   "famille": "Softshell",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell sans manches femme",
+    "gilet softshell femme"
+   ]
+  },
+  "YP087": {
+   "ref": "YP087",
+   "ref_fabricant": "46601",
+   "libelle": "Softshell Sans Manches 8000 mm Homme",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell sans manches homme",
+    "gilet softshell"
+   ]
+  },
+  "YP088": {
+   "ref": "YP088",
+   "ref_fabricant": "03826",
+   "libelle": "Softshell Sans Manches Recyclé Femme",
+   "famille": "Softshell",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell sans manches femme",
+    "gilet softshell femme",
+    "bodywarmer softshell"
+   ]
+  },
+  "YP089": {
+   "ref": "YP089",
+   "ref_fabricant": "03825",
+   "libelle": "Softshell Sans Manches Recyclé Homme",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "softshell sans manches homme",
+    "gilet softshell",
+    "bodywarmer softshell"
+   ]
+  },
+  "YP090": {
+   "ref": "YP090",
+   "ref_fabricant": "04809",
+   "libelle": "Bodywarmer Softshell Matelassé",
+   "famille": "Softshell",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "bodywarmer softshell matelassé",
+    "gilet softshell doublé",
+    "softshell sans manches chaud"
+   ]
+  },
+  "YP091": {
+   "ref": "YP091",
+   "ref_fabricant": "BF45B",
+   "libelle": "Bonnet à Revers Enfant",
+   "famille": "Bonnet",
+   "sous_famille": "Revers",
+   "genre": "Enfant",
+   "gabarit": "G-BONNET",
+   "technos": [
+    "BRO",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "bonnet enfant",
+    "beanie enfant",
+    "bonnet à revers enfant"
+   ]
+  },
   "YP092": {
    "ref": "YP092",
    "ref_fabricant": "AT235",
-   "libelle": "Wind (bonnet recyclé)",
+   "libelle": "Bonnet Doublé Recyclé",
    "famille": "Bonnet",
    "sous_famille": "Revers",
    "genre": "Unisexe",
@@ -2284,53 +1773,118 @@
     "bonnet à revers"
    ]
   },
-  "YP061": {
-   "ref": "YP061",
-   "ref_fabricant": "JH030F",
-   "libelle": "Women's AWDis Sweat",
-   "famille": "Sweat",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-HAUT",
+  "YP093": {
+   "ref": "YP093",
+   "ref_fabricant": "AT226",
+   "libelle": "Casquette 5 Pans Recyclée",
+   "famille": "Casquette",
+   "sous_famille": "5 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
    "technos": [
     "BRO",
-    "DTF"
+    "DTF",
+    "ECU",
+    "ECU-SUB"
    ],
    "statut": "Actif",
    "synonymes": [
-    "sweat femme",
-    "sweatshirt femme",
-    "pull femme",
-    "col rond femme",
-    "crewneck femme"
+    "casquette",
+    "casquette 5 pans",
+    "casquette recyclée",
+    "casquette baseball"
    ]
   },
-  "YP060": {
-   "ref": "YP060",
-   "ref_fabricant": "JH01F",
-   "libelle": "Women's College Hoodie",
-   "famille": "Hoodie",
-   "sous_famille": "Ajusté",
-   "genre": "Femme",
-   "gabarit": "G-HOODIE",
+  "YP094": {
+   "ref": "YP094",
+   "ref_fabricant": "BF015",
+   "libelle": "Casquette 5 Pans Coton Épais",
+   "famille": "Casquette",
+   "sous_famille": "5 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
    "technos": [
     "BRO",
-    "DTF"
+    "DTF",
+    "ECU",
+    "ECU-SUB"
    ],
    "statut": "Actif",
    "synonymes": [
-    "hoodie femme",
-    "sweat à capuche femme",
-    "sweat capuche fille",
-    "sweat cintré",
-    "girlie hoodie",
-    "college hoodie femme"
+    "casquette",
+    "casquette 5 pans",
+    "casquette coton",
+    "casquette baseball"
+   ]
+  },
+  "YP095": {
+   "ref": "YP095",
+   "ref_fabricant": "AT297",
+   "libelle": "Casquette 5 Pans Recyclée Passepoil",
+   "famille": "Casquette",
+   "sous_famille": "Bicolore",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "casquette bicolore",
+    "casquette passepoil",
+    "casquette 5 pans recyclée"
+   ]
+  },
+  "YP096": {
+   "ref": "YP096",
+   "ref_fabricant": "SD060",
+   "libelle": "Veste en Jean Stretch Homme",
+   "famille": "Veste en jean",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "veste en jean",
+    "veste denim",
+    "blouson jean",
+    "trucker jacket"
+   ]
+  },
+  "YP097": {
+   "ref": "YP097",
+   "ref_fabricant": "RS192",
+   "libelle": "Doudoune Matelassée Homme",
+   "famille": "Doudoune",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-ZIP",
+   "technos": [
+    "BRO",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "doudoune homme",
+    "manteau doudoune",
+    "veste matelassée",
+    "puffer jacket"
    ]
   },
   "YP098": {
    "ref": "YP098",
    "ref_fabricant": "R192F",
-   "libelle": "Women's Ice Bird Padded Jacket",
+   "libelle": "Doudoune Matelassée Femme",
    "famille": "Doudoune",
    "sous_famille": "Ajusté",
    "genre": "Femme",
@@ -2347,62 +1901,1723 @@
     "veste matelassée femme"
    ]
   },
-  "YP049": {
-   "ref": "YP049",
-   "ref_fabricant": "TJ9131",
-   "libelle": "Women's Trail Fleece Jacket",
-   "famille": "Polaire",
-   "sous_famille": "Technique",
+  "YP099": {
+   "ref": "YP099",
+   "ref_fabricant": "JK210",
+   "libelle": "Polo Piqué Homme 210 g",
+   "famille": "Polo",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP100": {
+   "ref": "YP100",
+   "ref_fabricant": "BCU01K",
+   "libelle": "Sweat Col Rond Homme Better Cotton",
+   "famille": "Sweat",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP101": {
+   "ref": "YP101",
+   "ref_fabricant": "BCU02K",
+   "libelle": "Sweat à Capuche Homme Better Cotton",
+   "famille": "Hoodie",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP102": {
+   "ref": "YP102",
+   "ref_fabricant": "BCW01Q",
+   "libelle": "Sweat Col Rond Femme Better Cotton",
+   "famille": "Sweat",
+   "sous_famille": "Ajusté",
    "genre": "Femme",
-   "gabarit": "G-ZIP",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP103": {
+   "ref": "YP103",
+   "ref_fabricant": "BCW02Q",
+   "libelle": "Sweat à Capuche Femme Better Cotton",
+   "famille": "Hoodie",
+   "sous_famille": "Ajusté",
+   "genre": "Femme",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP104": {
+   "ref": "YP104",
+   "ref_fabricant": "BF655B",
+   "libelle": "Casquette Vintage Enfant",
+   "famille": "Casquette",
+   "sous_famille": "Vintage",
+   "genre": "Enfant",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP105": {
+   "ref": "YP105",
+   "ref_fabricant": "BI1791",
+   "libelle": "Gourde Inox 500 ml Blanche Sublimation",
+   "famille": "Gourde",
+   "sous_famille": "Inox",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP106": {
+   "ref": "YP106",
+   "ref_fabricant": "BI1791",
+   "libelle": "Gourde Inox 500 ml Couleur DTF UV",
+   "famille": "Gourde",
+   "sous_famille": "Inox",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "DTF-UV"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP107": {
+   "ref": "YP107",
+   "ref_fabricant": "BI1790",
+   "libelle": "Gourde Inox 750 ml",
+   "famille": "Gourde",
+   "sous_famille": "Inox",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "SUB-A3",
+    "DTF-UV"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP108": {
+   "ref": "YP108",
+   "ref_fabricant": "BI1872",
+   "libelle": "Gourde Isotherme 500 ml Anti-goutte",
+   "famille": "Gourde",
+   "sous_famille": "Isotherme",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "SUB-A3",
+    "DTF-UV"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP109": {
+   "ref": "YP109",
+   "ref_fabricant": "BI4126",
+   "libelle": "Bouteille Isotherme 500 ml",
+   "famille": "Gourde",
+   "sous_famille": "Isotherme",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "SUB-A3",
+    "DTF-UV"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP110": {
+   "ref": "YP110",
+   "ref_fabricant": "BI4059",
+   "libelle": "Gourde Isotherme 500 ml Blanche Sublimation",
+   "famille": "Gourde",
+   "sous_famille": "Isotherme",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP111": {
+   "ref": "YP111",
+   "ref_fabricant": "BI4122",
+   "libelle": "Bouteille Isotherme 520 ml",
+   "famille": "Gourde",
+   "sous_famille": "Isotherme",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "SUB-A3",
+    "DTF-UV"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP112": {
+   "ref": "YP112",
+   "ref_fabricant": "TE4123",
+   "libelle": "Thermos Inox 500 ml",
+   "famille": "Gourde",
+   "sous_famille": "Isotherme",
+   "genre": "Unisexe",
+   "gabarit": "G-GOURDE",
+   "technos": [
+    "SUB-A3",
+    "DTF-UV"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP113": {
+   "ref": "YP113",
+   "ref_fabricant": "TZ3999",
+   "libelle": "Mug Céramique 350 ml Qualité AAA",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP114": {
+   "ref": "YP114",
+   "ref_fabricant": "MD4000",
+   "libelle": "Mug Céramique Blanc 350 ml",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP115": {
+   "ref": "YP115",
+   "ref_fabricant": "MD4003",
+   "libelle": "Mug Céramique Mat 350 ml",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP116": {
+   "ref": "YP116",
+   "ref_fabricant": "MD4001",
+   "libelle": "Mug Céramique Intérieur Couleur 350 ml",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP117": {
+   "ref": "YP117",
+   "ref_fabricant": "MD4084",
+   "libelle": "Mug Céramique 250 ml",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP118": {
+   "ref": "YP118",
+   "ref_fabricant": "TZ4002",
+   "libelle": "Mug Céramique Rétro 300 ml",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP119": {
+   "ref": "YP119",
+   "ref_fabricant": "TZ1508",
+   "libelle": "Mug Céramique Pailleté 350 ml",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP120": {
+   "ref": "YP120",
+   "ref_fabricant": "MD4014",
+   "libelle": "Mug Métal Vintage 380 ml",
+   "famille": "Mug",
+   "sous_famille": "Métal",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP121": {
+   "ref": "YP121",
+   "ref_fabricant": "TZ1359",
+   "libelle": "Tasse Verre Dépoli 350 ml",
+   "famille": "Verre",
+   "sous_famille": "Verre",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP122": {
+   "ref": "YP122",
+   "ref_fabricant": "VA4148",
+   "libelle": "Verre Borosilicate Givré",
+   "famille": "Verre",
+   "sous_famille": "Verre",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP123": {
+   "ref": "YP123",
+   "ref_fabricant": "JR3986",
+   "libelle": "Bocal Verre Givré 500 ml",
+   "famille": "Verre",
+   "sous_famille": "Bocal",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP124": {
+   "ref": "YP124",
+   "ref_fabricant": "NB1531",
+   "libelle": "Carnet A5 Couverture Rigide",
+   "famille": "Bloc-notes",
+   "sous_famille": "A5",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP125": {
+   "ref": "YP125",
+   "ref_fabricant": "IA3011",
+   "libelle": "Tapis de Souris",
+   "famille": "Tapis de souris",
+   "sous_famille": "Plat",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP126": {
+   "ref": "YP126",
+   "ref_fabricant": "NE7569",
+   "libelle": "Trousse de Toilette Sublimation",
+   "famille": "Trousse",
+   "sous_famille": "Zippée",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP127": {
+   "ref": "YP127",
+   "ref_fabricant": "BO7618",
+   "libelle": "Tote Bag Polyester Sublimation",
+   "famille": "Tote bag",
+   "sous_famille": "Anses longues",
+   "genre": "Unisexe",
+   "gabarit": "G-TOTE",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP128": {
+   "ref": "YP128",
+   "ref_fabricant": "GO7000",
+   "libelle": "Casquette 5 Pans Polyester",
+   "famille": "Casquette",
+   "sous_famille": "5 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB",
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP129": {
+   "ref": "YP129",
+   "ref_fabricant": "GO7050",
+   "libelle": "Casquette 5 Pans RPET",
+   "famille": "Casquette",
+   "sous_famille": "5 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB",
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP130": {
+   "ref": "YP130",
+   "ref_fabricant": "GO7020",
+   "libelle": "Casquette Technique Running",
+   "famille": "Casquette",
+   "sous_famille": "3 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB",
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP131": {
+   "ref": "YP131",
+   "ref_fabricant": "TW1751",
+   "libelle": "Serviette Microfibre RPET",
+   "famille": "Serviette",
+   "sous_famille": "Microfibre",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP132": {
+   "ref": "YP132",
+   "ref_fabricant": "TW7119",
+   "libelle": "Serviette de Sport Microfibre",
+   "famille": "Serviette",
+   "sous_famille": "Microfibre",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "SUB-A3"
+   ],
+   "statut": "À compléter",
+   "synonymes": []
+  },
+  "YP133": {
+   "ref": "YP133",
+   "ref_fabricant": "BG841",
+   "libelle": "Patch Étiquette Sublimation",
+   "famille": "Etiquette",
+   "sous_famille": "Patch",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP134": {
+   "ref": "YP134",
+   "ref_fabricant": "BC062",
+   "libelle": "T-shirt Sublimation Homme",
+   "famille": "T-shirt",
+   "sous_famille": "Regular",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP135": {
+   "ref": "YP135",
+   "ref_fabricant": "KB911",
+   "libelle": "Veste Polaire Zippée Essentielle",
+   "famille": "Polaire",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP136": {
+   "ref": "YP136",
+   "ref_fabricant": "FR050",
+   "libelle": "Chemise à Enfiler Drill",
+   "famille": "Surchemise",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP137": {
+   "ref": "YP137",
+   "ref_fabricant": "JK900",
+   "libelle": "T-shirt Sport Technique Homme",
+   "famille": "T-shirt",
+   "sous_famille": "Technique",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP138": {
+   "ref": "YP138",
+   "ref_fabricant": "GN640",
+   "libelle": "T-shirt Coton Léger 150 g (Doublon YP018)",
+   "famille": "T-shirt",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP139": {
+   "ref": "YP139",
+   "ref_fabricant": "BC630",
+   "libelle": "Coupe-vent Léger",
+   "famille": "Coupe-vent",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP140": {
+   "ref": "YP140",
+   "ref_fabricant": "JK196",
+   "libelle": "T-shirt Boxy 240 g",
+   "famille": "T-shirt",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "R&D",
+   "synonymes": []
+  },
+  "YP141": {
+   "ref": "YP141",
+   "ref_fabricant": "NS611",
+   "libelle": "Veste Worker Délavée Bio",
+   "famille": "Veste de travail",
+   "sous_famille": "Workwear",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "veste worker",
+    "workwear",
+    "veste de travail"
+   ]
+  },
+  "YP142": {
+   "ref": "YP142",
+   "ref_fabricant": "NS614",
+   "libelle": "Veste en Jean Épaules Tombantes Bio",
+   "famille": "Veste en jean",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "veste jean",
+    "denim",
+    "jacket"
+   ]
+  },
+  "YP143": {
+   "ref": "YP143",
+   "ref_fabricant": "NS603",
+   "libelle": "Veste Velours Côtelé Homme",
+   "famille": "Veste de travail",
+   "sous_famille": "Velours",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "veste velours",
+    "côtelé",
+    "corduroy"
+   ]
+  },
+  "YP144": {
+   "ref": "YP144",
+   "ref_fabricant": "NS609",
+   "libelle": "Veste Imperméable Doublée Sherpa",
+   "famille": "Coupe-vent",
+   "sous_famille": "Doublé sherpa",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
    "technos": [
     "BRO"
    ],
    "statut": "Actif",
    "synonymes": [
-    "polaire",
-    "fleece",
-    "micropolaire"
+    "imperméable",
+    "parka",
+    "sherpa",
+    "veste pluie"
    ]
   },
-  "YP020": {
-   "ref": "YP020",
-   "ref_fabricant": "JH050",
-   "libelle": "Zoodie",
-   "famille": "Zoodie",
-   "sous_famille": "Regular",
-   "genre": "Unisexe",
-   "gabarit": "G-ZIP",
+  "YP145": {
+   "ref": "YP145",
+   "ref_fabricant": "BBMONCTON",
+   "libelle": "Blouson Polaire Col Montant Homme",
+   "famille": "Blouson",
+   "sous_famille": "Polaire",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
    "technos": [
-    "BRO",
-    "DTF"
+    "BRO"
    ],
    "statut": "Actif",
    "synonymes": [
-    "zoodie",
-    "sweat zippé",
-    "veste zippée à capuche",
-    "zip hoodie"
+    "blouson",
+    "polaire",
+    "moncton"
    ]
   },
-  "YP021": {
-   "ref": "YP021",
-   "ref_fabricant": "JH125",
-   "libelle": "Zoodie Signature",
-   "famille": "Zoodie",
+  "YP146": {
+   "ref": "YP146",
+   "ref_fabricant": "PA497",
+   "libelle": "Maillot Col Polo Sublimé",
+   "famille": "Maillot",
+   "sous_famille": "Col polo",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "maillot",
+    "polo sport",
+    "jersey"
+   ]
+  },
+  "YP147": {
+   "ref": "YP147",
+   "ref_fabricant": "PA4050",
+   "libelle": "Maillot de Basket Homme",
+   "famille": "Maillot",
+   "sous_famille": "Basket",
+   "genre": "Homme",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "maillot basket",
+    "débardeur basket"
+   ]
+  },
+  "YP148": {
+   "ref": "YP148",
+   "ref_fabricant": "PA4027",
+   "libelle": "Maillot de Rugby",
+   "famille": "Maillot",
+   "sous_famille": "Rugby",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "maillot rugby"
+   ]
+  },
+  "YP149": {
+   "ref": "YP149",
+   "ref_fabricant": "PA4023",
+   "libelle": "Maillot Multisport Bicolore",
+   "famille": "Maillot",
+   "sous_famille": "Multisport",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "maillot foot",
+    "maillot sport",
+    "jersey"
+   ]
+  },
+  "YP150": {
+   "ref": "YP150",
+   "ref_fabricant": "STTU078",
+   "libelle": "T-shirt Boxy Épais Bio 280 g",
+   "famille": "T-shirt",
    "sous_famille": "Oversize",
    "genre": "Unisexe",
-   "gabarit": "G-ZIP",
+   "gabarit": "G-HAUT",
    "technos": [
     "BRO",
     "DTF"
    ],
    "statut": "Actif",
    "synonymes": [
-    "zoodie",
-    "sweat zippé",
-    "veste zippée à capuche",
-    "zip hoodie"
+    "t-shirt boxy",
+    "oversize",
+    "heavyweight"
+   ]
+  },
+  "YP151": {
+   "ref": "YP151",
+   "ref_fabricant": "STSU279",
+   "libelle": "Sweat Col Rond Boxy 500 g",
+   "famille": "Sweat",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "sweat col rond",
+    "crewneck",
+    "boxy"
+   ]
+  },
+  "YP152": {
+   "ref": "YP152",
+   "ref_fabricant": "STBU276",
+   "libelle": "Pantalon de Jogging Barrel",
+   "famille": "Jogging",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-BAS",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "jogging",
+    "pantalon survêtement",
+    "barrel"
+   ]
+  },
+  "YP153": {
+   "ref": "YP153",
+   "ref_fabricant": "STSU256",
+   "libelle": "Sweat à Capuche Boxy 400 g",
+   "famille": "Hoodie",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie",
+    "sweat à capuche",
+    "boxy"
+   ]
+  },
+  "YP154": {
+   "ref": "YP154",
+   "ref_fabricant": "STWU287",
+   "libelle": "Surchemise Denim",
+   "famille": "Surchemise",
+   "sous_famille": "Denim",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "chemise jean",
+    "surchemise",
+    "denim"
+   ]
+  },
+  "YP155": {
+   "ref": "YP155",
+   "ref_fabricant": "STAU891",
+   "libelle": "Sac Banane Toile",
+   "famille": "Banane",
+   "sous_famille": "Toile",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "banane",
+    "sac banane",
+    "hip bag"
+   ]
+  },
+  "YP156": {
+   "ref": "YP156",
+   "ref_fabricant": "STTU258",
+   "libelle": "T-shirt Boxy Coton Recyclé 200 g",
+   "famille": "T-shirt",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "t-shirt boxy",
+    "oversize"
+   ]
+  },
+  "YP157": {
+   "ref": "YP157",
+   "ref_fabricant": "STSU797",
+   "libelle": "Sweat à Capuche Boxy Toucher Sec",
+   "famille": "Hoodie",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Arrêté",
+   "synonymes": [
+    "hoodie",
+    "sweat à capuche",
+    "boxy"
+   ]
+  },
+  "YP158": {
+   "ref": "YP158",
+   "ref_fabricant": "STJU294",
+   "libelle": "Veste Worker Toile Col Velours",
+   "famille": "Veste de travail",
+   "sous_famille": "Workwear",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "veste worker",
+    "chore jacket",
+    "col velours"
+   ]
+  },
+  "YP159": {
+   "ref": "YP159",
+   "ref_fabricant": "STPU222",
+   "libelle": "Polo Piqué Bio 240 g",
+   "famille": "Polo",
+   "sous_famille": "Regular",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "À compléter",
+   "synonymes": [
+    "polo"
+   ]
+  },
+  "YP160": {
+   "ref": "YP160",
+   "ref_fabricant": "STSU255",
+   "libelle": "Sweat Col Rond Boxy 400 g",
+   "famille": "Sweat",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "sweat col rond",
+    "crewneck"
+   ]
+  },
+  "YP161": {
+   "ref": "YP161",
+   "ref_fabricant": "STAU296",
+   "libelle": "Bonnet Pêcheur Côtelé",
+   "famille": "Bonnet",
+   "sous_famille": "Pêcheur",
+   "genre": "Unisexe",
+   "gabarit": "G-BONNET",
+   "technos": [
+    "BRO",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "bonnet",
+    "bonnet pêcheur",
+    "beanie"
+   ]
+  },
+  "YP162": {
+   "ref": "YP162",
+   "ref_fabricant": "STJU292",
+   "libelle": "Doudoune à Capuche Recyclée",
+   "famille": "Doudoune",
+   "sous_famille": "Capuche",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "À compléter",
+   "synonymes": [
+    "doudoune",
+    "puffer"
+   ]
+  },
+  "YP163": {
+   "ref": "YP163",
+   "ref_fabricant": "STJU293",
+   "libelle": "Doudoune Sans Manches Recyclée",
+   "famille": "Bodywarmer",
+   "sous_famille": "Doudoune",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "doudoune sans manche",
+    "gilet",
+    "bodywarmer"
+   ]
+  },
+  "YP164": {
+   "ref": "YP164",
+   "ref_fabricant": "STSU278",
+   "libelle": "Sweat à Capuche Boxy 500 g",
+   "famille": "Hoodie",
+   "sous_famille": "Oversize",
+   "genre": "Unisexe",
+   "gabarit": "G-HOODIE",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "hoodie boxy",
+    "heavyweight"
+   ]
+  },
+  "YP165": {
+   "ref": "YP165",
+   "ref_fabricant": "B690",
+   "libelle": "Casquette Velours Visière Contrastée",
+   "famille": "Casquette",
+   "sous_famille": "Velours",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "casquette velours",
+    "corduroy"
+   ]
+  },
+  "YP166": {
+   "ref": "YP166",
+   "ref_fabricant": "B65",
+   "libelle": "Casquette Coton Épais Gratté",
+   "famille": "Casquette",
+   "sous_famille": "6 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "casquette"
+   ]
+  },
+  "YP167": {
+   "ref": "YP167",
+   "ref_fabricant": "BG118",
+   "libelle": "Sac à Dos Roll-top",
+   "famille": "Sac à dos",
+   "sous_famille": "Roll-top",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "sac à dos",
+    "repliable",
+    "roll top"
+   ]
+  },
+  "YP168": {
+   "ref": "YP168",
+   "ref_fabricant": "BG140",
+   "libelle": "Sac Polochon Polyester 20 L",
+   "famille": "Sac de sport",
+   "sous_famille": "Polochon",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "À compléter",
+   "synonymes": [
+    "sac polochon",
+    "sac de sport",
+    "barrel bag"
+   ]
+  },
+  "YP169": {
+   "ref": "YP169",
+   "ref_fabricant": "BY032",
+   "libelle": "T-shirt Rayé Jersey",
+   "famille": "T-shirt",
+   "sous_famille": "Rayé",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "jersey",
+    "t-shirt rayé",
+    "maillot rétro"
+   ]
+  },
+  "YP170": {
+   "ref": "YP170",
+   "ref_fabricant": "NM034",
+   "libelle": "Débardeur Mesh Recyclé",
+   "famille": "Débardeur",
+   "sous_famille": "Mesh",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "débardeur",
+    "mesh",
+    "maillot"
+   ]
+  },
+  "YP171": {
+   "ref": "YP171",
+   "ref_fabricant": "BY009",
+   "libelle": "Débardeur Maillot Mesh",
+   "famille": "Débardeur",
+   "sous_famille": "Mesh",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "débardeur",
+    "maillot basket",
+    "mesh"
+   ]
+  },
+  "YP172": {
+   "ref": "YP172",
+   "ref_fabricant": "BG125",
+   "libelle": "Sac à Dos Classique 18 L",
+   "famille": "Sac à dos",
+   "sous_famille": "Classique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "sac à dos",
+    "backpack"
+   ]
+  },
+  "YP173": {
+   "ref": "YP173",
+   "ref_fabricant": "BF025",
+   "libelle": "Casquette 5 Pans Coton Structurée",
+   "famille": "Casquette",
+   "sous_famille": "5 pans",
+   "genre": "Unisexe",
+   "gabarit": "G-CASQ",
+   "technos": [
+    "BRO",
+    "DTF",
+    "ECU",
+    "ECU-SUB"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "casquette 5 pans"
+   ]
+  },
+  "YP174": {
+   "ref": "YP174",
+   "ref_fabricant": "BF500",
+   "libelle": "Écharpe Tissée à Franges",
+   "famille": "Écharpe",
+   "sous_famille": "Tissée",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "écharpe",
+    "scarf"
+   ]
+  },
+  "YP175": {
+   "ref": "YP175",
+   "ref_fabricant": "BG613",
+   "libelle": "Sac à Dos Ordinateur Vintage 17\"",
+   "famille": "Sac à dos",
+   "sous_famille": "Ordinateur",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "sac ordinateur",
+    "laptop",
+    "sac à dos"
+   ]
+  },
+  "YP176": {
+   "ref": "YP176",
+   "ref_fabricant": "BG655",
+   "libelle": "Sac Polochon Toile Vintage 24 L",
+   "famille": "Sac de sport",
+   "sous_famille": "Polochon",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "sac polochon",
+    "barrel bag",
+    "toile"
+   ]
+  },
+  "YP177": {
+   "ref": "YP177",
+   "ref_fabricant": "BG220",
+   "libelle": "Sac de Sport 50 L",
+   "famille": "Sac de sport",
+   "sous_famille": "Holdall",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "BRO",
+    "DTF"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "sac de sport",
+    "sac entraînement",
+    "holdall"
+   ]
+  },
+  "YP178": {
+   "ref": "YP178",
+   "ref_fabricant": "LENA-ST-AAA",
+   "libelle": "Mug Céramique 330 ml Sublistar AAA",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "mug",
+    "tasse"
+   ]
+  },
+  "YP179": {
+   "ref": "YP179",
+   "ref_fabricant": "925353",
+   "libelle": "Badge Rond 58 mm",
+   "famille": "Badge",
+   "sous_famille": "Rond 58 mm",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "badge",
+    "pin's"
+   ]
+  },
+  "YP180": {
+   "ref": "YP180",
+   "ref_fabricant": "925108",
+   "libelle": "Manchettes de Sport Sublimables",
+   "famille": "Accessoire sport",
+   "sous_famille": "Manchettes",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "manchettes",
+    "manches de bras"
+   ]
+  },
+  "YP181": {
+   "ref": "YP181",
+   "ref_fabricant": "943735",
+   "libelle": "Chaussettes Sport Sublimation",
+   "famille": "Chaussettes",
+   "sous_famille": "Mi-mollet",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "chaussettes"
+   ]
+  },
+  "YP182": {
+   "ref": "YP182",
+   "ref_fabricant": "LY1880",
+   "libelle": "Tour de Cou Lanyard Sublimation",
+   "famille": "Lanière",
+   "sous_famille": "Mousqueton",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "lanyard",
+    "tour de cou",
+    "badge salon"
+   ]
+  },
+  "YP183": {
+   "ref": "YP183",
+   "ref_fabricant": "KO4124",
+   "libelle": "Porte-clés Sangle Sublimation",
+   "famille": "Porte-clés",
+   "sous_famille": "Sangle",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "porte-clés",
+    "keyring"
+   ]
+  },
+  "YP184": {
+   "ref": "YP184",
+   "ref_fabricant": "CA6595",
+   "libelle": "T-shirt Technique Raglan Bicolore",
+   "famille": "T-shirt",
+   "sous_famille": "Technique",
+   "genre": "Unisexe",
+   "gabarit": "G-HAUT",
+   "technos": [
+    "DTF",
+    "BRO"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "maillot",
+    "t-shirt sport",
+    "jersey"
+   ]
+  },
+  "YP185": {
+   "ref": "YP185",
+   "ref_fabricant": "040619",
+   "libelle": "Cahier A5 Sublimable",
+   "famille": "Papeterie",
+   "sous_famille": "Cahier A5",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "cahier",
+    "carnet",
+    "bloc-notes"
+   ]
+  },
+  "YP186": {
+   "ref": "YP186",
+   "ref_fabricant": "000495",
+   "libelle": "Porte-clés Tissu Rectangulaire 3 x 12 cm",
+   "famille": "Porte-clés",
+   "sous_famille": "Tissu rectangulaire",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "porte-clés",
+    "keyring",
+    "porte clef"
+   ]
+  },
+  "YP187": {
+   "ref": "YP187",
+   "ref_fabricant": "000497",
+   "libelle": "Porte-clés Tissu Ovale 5 x 8 cm",
+   "famille": "Porte-clés",
+   "sous_famille": "Tissu ovale",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "porte-clés",
+    "keyring",
+    "porte clef"
+   ]
+  },
+  "YP188": {
+   "ref": "YP188",
+   "ref_fabricant": "051364",
+   "libelle": "Porte-clés Tissu Rond Ø 6 cm",
+   "famille": "Porte-clés",
+   "sous_famille": "Tissu rond",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "porte-clés",
+    "keyring",
+    "porte clef"
+   ]
+  },
+  "YP189": {
+   "ref": "YP189",
+   "ref_fabricant": "000496",
+   "libelle": "Porte-clés Tissu Carré 8 x 8 cm",
+   "famille": "Porte-clés",
+   "sous_famille": "Tissu carré",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "porte-clés",
+    "keyring",
+    "porte clef"
+   ]
+  },
+  "YP190": {
+   "ref": "YP190",
+   "ref_fabricant": "051362",
+   "libelle": "Porte-clés Tissu Forme T-shirt 8 x 9 cm",
+   "famille": "Porte-clés",
+   "sous_famille": "Tissu forme T-shirt",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "porte-clés",
+    "keyring",
+    "porte clef",
+    "t-shirt"
+   ]
+  },
+  "YP191": {
+   "ref": "YP191",
+   "ref_fabricant": "038834",
+   "libelle": "Chaussettes Sublimables Sans Talon",
+   "famille": "Chaussettes",
+   "sous_famille": "Sans talon",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "chaussettes",
+    "socks"
+   ]
+  },
+  "YP192": {
+   "ref": "YP192",
+   "ref_fabricant": "000505",
+   "libelle": "Magnet Céramique Rond Ø 5 cm",
+   "famille": "Magnet",
+   "sous_famille": "Céramique rond",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "magnet",
+    "aimant frigo",
+    "aimant"
+   ]
+  },
+  "YP193": {
+   "ref": "YP193",
+   "ref_fabricant": "000504",
+   "libelle": "Magnet Céramique Carré 5 x 5 cm",
+   "famille": "Magnet",
+   "sous_famille": "Céramique carré",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "magnet",
+    "aimant frigo",
+    "aimant"
+   ]
+  },
+  "YP194": {
+   "ref": "YP194",
+   "ref_fabricant": "041181",
+   "libelle": "Magnet Céramique Carré 6 x 6 cm",
+   "famille": "Magnet",
+   "sous_famille": "Céramique carré",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "magnet",
+    "aimant frigo",
+    "aimant"
+   ]
+  },
+  "YP195": {
+   "ref": "YP195",
+   "ref_fabricant": "053636",
+   "libelle": "Magnet Céramique Cœur 6,5 x 6,5 cm",
+   "famille": "Magnet",
+   "sous_famille": "Céramique cœur",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "magnet",
+    "aimant frigo",
+    "aimant"
+   ]
+  },
+  "YP196": {
+   "ref": "YP196",
+   "ref_fabricant": "049934",
+   "libelle": "Magnet Céramique Rectangulaire 7,2 x 5 cm",
+   "famille": "Magnet",
+   "sous_famille": "Céramique rectangulaire",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "magnet",
+    "aimant frigo",
+    "aimant"
+   ]
+  },
+  "YP197": {
+   "ref": "YP197",
+   "ref_fabricant": "003868",
+   "libelle": "Magnet Céramique Rectangulaire 8,5 x 5,4 cm",
+   "famille": "Magnet",
+   "sous_famille": "Céramique rectangulaire",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "magnet",
+    "aimant frigo",
+    "aimant"
+   ]
+  },
+  "YP198": {
+   "ref": "YP198",
+   "ref_fabricant": "054066",
+   "libelle": "Gourde Isotherme Inox 500 ml Blanche",
+   "famille": "Gourde",
+   "sous_famille": "Isotherme inox",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "gourde",
+    "bouteille isotherme",
+    "thermos"
+   ]
+  },
+  "YP199": {
+   "ref": "YP199",
+   "ref_fabricant": "037028",
+   "libelle": "Gourde Isotherme Inox 500 ml Blanche Bouchon Argent",
+   "famille": "Gourde",
+   "sous_famille": "Isotherme inox",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "gourde",
+    "bouteille isotherme",
+    "thermos"
+   ]
+  },
+  "YP200": {
+   "ref": "YP200",
+   "ref_fabricant": "032452",
+   "libelle": "Mug Céramique 325 ml Premium AAA ORCA",
+   "famille": "Mug",
+   "sous_famille": "Céramique",
+   "genre": "Unisexe",
+   "gabarit": "",
+   "technos": [
+    "SUB-A3"
+   ],
+   "statut": "Actif",
+   "synonymes": [
+    "mug",
+    "tasse"
    ]
   }
  },
@@ -3701,6 +4916,223 @@
    "famille": "",
    "hex": null,
    "statut": "Générique"
+  },
+  "0187": {
+   "code": "0187",
+   "libelle": "Vintage Marron",
+   "famille": "Marron",
+   "hex": null,
+   "statut": "Nouvelle famille Akanea [À CONFIRMER: Sarah]"
+  },
+  "0188": {
+   "code": "0188",
+   "libelle": "Black / Sporty Red",
+   "famille": "Noir",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0189": {
+   "code": "0189",
+   "libelle": "Black / Sporty Yellow",
+   "famille": "Noir",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0190": {
+   "code": "0190",
+   "libelle": "Dark Royal Blue / White",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0191": {
+   "code": "0191",
+   "libelle": "Light Turquoise / Dark Grey",
+   "famille": "Bleu",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0192": {
+   "code": "0192",
+   "libelle": "Orange / Black",
+   "famille": "Noir",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0193": {
+   "code": "0193",
+   "libelle": "sporty grey / Black",
+   "famille": "Noir",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0194": {
+   "code": "0194",
+   "libelle": "Sporty Navy / White",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0195": {
+   "code": "0195",
+   "libelle": "Sporty Pink / Dark Grey",
+   "famille": "Gris",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0196": {
+   "code": "0196",
+   "libelle": "Sporty Purple / White",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0197": {
+   "code": "0197",
+   "libelle": "Sporty r blue/Sporty yellow",
+   "famille": "Bleu",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0198": {
+   "code": "0198",
+   "libelle": "Sporty Red / White",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0199": {
+   "code": "0199",
+   "libelle": "White / Dark Royal Blue",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0200": {
+   "code": "0200",
+   "libelle": "White / Sporty Red",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0201": {
+   "code": "0201",
+   "libelle": "Natural/Bottle Green",
+   "famille": "Vert",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0202": {
+   "code": "0202",
+   "libelle": "Natural/Burgundy",
+   "famille": "Rouge",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0203": {
+   "code": "0203",
+   "libelle": "Natural/Navy",
+   "famille": "Bleu",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0204": {
+   "code": "0204",
+   "libelle": "French Navy/Stone",
+   "famille": "Bleu",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0205": {
+   "code": "0205",
+   "libelle": "Black/Fuchsia",
+   "famille": "Noir",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0206": {
+   "code": "0206",
+   "libelle": "Black/Grey",
+   "famille": "Noir",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0207": {
+   "code": "0207",
+   "libelle": "Classic Pink/White",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0208": {
+   "code": "0208",
+   "libelle": "French Navy/Off White",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0209": {
+   "code": "0209",
+   "libelle": "Mint Green/White",
+   "famille": "Blanc",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0210": {
+   "code": "0210",
+   "libelle": "Classic Red",
+   "famille": "Rouge",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0211": {
+   "code": "0211",
+   "libelle": "Black/Black",
+   "famille": "Noir",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0212": {
+   "code": "0212",
+   "libelle": "Classic Pink/Graphite Grey",
+   "famille": "Gris",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0213": {
+   "code": "0213",
+   "libelle": "Fuchsia/Graphite Grey",
+   "famille": "Gris",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0214": {
+   "code": "0214",
+   "libelle": "Lime Green/Graphite Grey",
+   "famille": "Vert",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0215": {
+   "code": "0215",
+   "libelle": "Mint Green/Light Grey",
+   "famille": "Vert",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0216": {
+   "code": "0216",
+   "libelle": "Orange/Graphite Grey",
+   "famille": "Gris",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
+  },
+  "0217": {
+   "code": "0217",
+   "libelle": "Surf Blue/Graphite Grey",
+   "famille": "Bleu",
+   "hex": null,
+   "statut": "Nouvelle famille [À CONFIRMER: Sarah]"
   }
  },
  "couleurs_produit": {
@@ -5800,7 +7232,7 @@
    {
     "code": "0160",
     "couleur_fabricant": "Marine Green",
-    "libelle": "Marine Green",
+    "libelle": "Vert Marin",
     "hex": "#40746F"
    },
    {
@@ -6048,7 +7480,7 @@
    {
     "code": "0160",
     "couleur_fabricant": "Marine Green",
-    "libelle": "Marine Green",
+    "libelle": "Vert Marin",
     "hex": "#40746F"
    },
    {
@@ -8221,6 +9653,2034 @@
     "libelle": "Noir",
     "hex": "#000000"
    }
+  ],
+  "YP013": [
+   {
+    "code": "0064",
+    "couleur_fabricant": "Vintage Bleu",
+    "libelle": "Vintage Bleu",
+    "hex": null
+   },
+   {
+    "code": "0062",
+    "couleur_fabricant": "Vintage Rouge Bordeaux",
+    "libelle": "Vintage Rouge Bordeaux",
+    "hex": null
+   },
+   {
+    "code": "0059",
+    "couleur_fabricant": "Vintage Bleu Denim Clair",
+    "libelle": "Vintage Bleu Denim Clair",
+    "hex": null
+   },
+   {
+    "code": "0187",
+    "couleur_fabricant": "Vintage Marron",
+    "libelle": "Vintage Marron",
+    "hex": null
+   },
+   {
+    "code": "0058",
+    "couleur_fabricant": "Vintage Denim",
+    "libelle": "Vintage Denim",
+    "hex": null
+   },
+   {
+    "code": "0060",
+    "couleur_fabricant": "Vintage sable",
+    "libelle": "Vintage sable",
+    "hex": null
+   },
+   {
+    "code": "0057",
+    "couleur_fabricant": "Vintage Rose Pâle",
+    "libelle": "Vintage Rose Pâle",
+    "hex": null
+   },
+   {
+    "code": "0066",
+    "couleur_fabricant": "Vintage pêche",
+    "libelle": "Vintage pêche",
+    "hex": null
+   },
+   {
+    "code": "0111",
+    "couleur_fabricant": "Mustard",
+    "libelle": "Mustard",
+    "hex": "#E89E00"
+   },
+   {
+    "code": "0026",
+    "couleur_fabricant": "Bleu clair",
+    "libelle": "Bleu clair",
+    "hex": "#C5D8ED"
+   },
+   {
+    "code": "0070",
+    "couleur_fabricant": "Gris nuage",
+    "libelle": "Gris nuage",
+    "hex": "#D9E0E6"
+   },
+   {
+    "code": "0017",
+    "couleur_fabricant": "Vert sauge",
+    "libelle": "Vert sauge",
+    "hex": "#759D8B"
+   },
+   {
+    "code": "0065",
+    "couleur_fabricant": "Vintage Pierre Naturelle",
+    "libelle": "Vintage Pierre Naturelle",
+    "hex": null
+   },
+   {
+    "code": "0061",
+    "couleur_fabricant": "Vintage Rose Vif",
+    "libelle": "Vintage Rose Vif",
+    "hex": null
+   }
+  ],
+  "YP019": [
+   {
+    "code": "0050",
+    "couleur_fabricant": "Beige foncé",
+    "libelle": "Beige foncé",
+    "hex": null
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Bleu marine",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   }
+  ],
+  "YP133": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "Blanc",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP134": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "Blanc",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP051": [
+   {
+    "code": "0039",
+    "couleur_fabricant": "Bleu roi",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   }
+  ],
+  "YP039": [
+   {
+    "code": "0034",
+    "couleur_fabricant": "Bleu marine",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   }
+  ],
+  "YP050": [
+   {
+    "code": "0034",
+    "couleur_fabricant": "Bleu marine",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Noir",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Bordeaux",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   }
+  ],
+  "YP135": [
+   {
+    "code": "0071",
+    "couleur_fabricant": "Marine nuit",
+    "libelle": "Marine nuit",
+    "hex": "#101B2B"
+   }
+  ],
+  "YP040": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Noir",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   }
+  ],
+  "YP136": [
+   {
+    "code": "0034",
+    "couleur_fabricant": "Bleu marine",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   }
+  ],
+  "YP137": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Noir",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "Blanc",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP138": [
+   {
+    "code": "0044",
+    "couleur_fabricant": "Jaune",
+    "libelle": "Jaune",
+    "hex": "#FFE800"
+   }
+  ],
+  "YP043": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Noir",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   }
+  ],
+  "YP139": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "Blanc",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Bleu marine",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   }
+  ],
+  "YP026": [
+   {
+    "code": "0039",
+    "couleur_fabricant": "Bleu roi",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   }
+  ],
+  "YP052": [
+   {
+    "code": "0039",
+    "couleur_fabricant": "Bleu roi",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   }
+  ],
+  "YP140": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "Blanc",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP033": [
+   {
+    "code": "0021",
+    "couleur_fabricant": "Vert Terre",
+    "libelle": "Vert Terre",
+    "hex": "#476240"
+   }
+  ],
+  "YP141": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Washed black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0009",
+    "couleur_fabricant": "Washed Dark Camel",
+    "libelle": "Caramel",
+    "hex": "#A37C68"
+   },
+   {
+    "code": "0027",
+    "couleur_fabricant": "Washed Indigo",
+    "libelle": "Bleu profond",
+    "hex": "#032D5F"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Washed Navy Blue",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0048",
+    "couleur_fabricant": "Washed Organic Khaki",
+    "libelle": "Kaki",
+    "hex": "#B8A58A"
+   }
+  ],
+  "YP142": [
+   {
+    "code": "0058",
+    "couleur_fabricant": "Denim",
+    "libelle": "Vintage Denim",
+    "hex": null
+   }
+  ],
+  "YP143": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Washed black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0009",
+    "couleur_fabricant": "Washed Dark Camel",
+    "libelle": "Caramel",
+    "hex": "#A37C68"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Washed Navy Blue",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0048",
+    "couleur_fabricant": "Washed Organic Khaki",
+    "libelle": "Kaki",
+    "hex": "#B8A58A"
+   }
+  ],
+  "YP144": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Navy Blue",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0048",
+    "couleur_fabricant": "Organic Khaki",
+    "libelle": "Kaki",
+    "hex": "#B8A58A"
+   }
+  ],
+  "YP145": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Crème",
+    "libelle": "Blanc cassé",
+    "hex": null
+   }
+  ],
+  "YP146": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black / White / Gold",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Navy / White / Gold",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Sporty Red / White / Gold",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White / Navy / Gold",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP147": [
+   {
+    "code": "0173",
+    "couleur_fabricant": "Black / White",
+    "libelle": "Black/White",
+    "hex": "#000000"
+   },
+   {
+    "code": "0099",
+    "couleur_fabricant": "Dark Green / White",
+    "libelle": "Forest Green",
+    "hex": "#1A3521"
+   },
+   {
+    "code": "0179",
+    "couleur_fabricant": "Navy / White",
+    "libelle": "Navy/White",
+    "hex": "#002466"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Sporty Red / White",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0039",
+    "couleur_fabricant": "Sporty Royal Blue / White",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   },
+   {
+    "code": "0044",
+    "couleur_fabricant": "Sporty Yellow / Black",
+    "libelle": "Jaune",
+    "hex": "#FFE800"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White / Black",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP148": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0039",
+    "couleur_fabricant": "Dark Royal Blue",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Sporty Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Sporty Red",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   }
+  ],
+  "YP149": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black / sporty grey",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0188",
+    "couleur_fabricant": "Black / Sporty Red",
+    "libelle": "Black / Sporty Red",
+    "hex": null
+   },
+   {
+    "code": "0189",
+    "couleur_fabricant": "Black / Sporty Yellow",
+    "libelle": "Black / Sporty Yellow",
+    "hex": null
+   },
+   {
+    "code": "0173",
+    "couleur_fabricant": "Black / White",
+    "libelle": "Black/White",
+    "hex": "#000000"
+   },
+   {
+    "code": "0039",
+    "couleur_fabricant": "Dark Royal Blue / Black",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   },
+   {
+    "code": "0190",
+    "couleur_fabricant": "Dark Royal Blue / White",
+    "libelle": "Dark Royal Blue / White",
+    "hex": null
+   },
+   {
+    "code": "0175",
+    "couleur_fabricant": "Green / White",
+    "libelle": "Green/White",
+    "hex": "#006938"
+   },
+   {
+    "code": "0191",
+    "couleur_fabricant": "Light Turquoise / Dark Grey",
+    "libelle": "Light Turquoise / Dark Grey",
+    "hex": null
+   },
+   {
+    "code": "0192",
+    "couleur_fabricant": "Orange / Black",
+    "libelle": "Orange / Black",
+    "hex": null
+   },
+   {
+    "code": "0042",
+    "couleur_fabricant": "Sky Blue / White",
+    "libelle": "Bleu ciel",
+    "hex": "#80C9F2"
+   },
+   {
+    "code": "0193",
+    "couleur_fabricant": "sporty grey / Black",
+    "libelle": "sporty grey / Black",
+    "hex": null
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "Sporty Navy / Sporty Red",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0194",
+    "couleur_fabricant": "Sporty Navy / White",
+    "libelle": "Sporty Navy / White",
+    "hex": null
+   },
+   {
+    "code": "0195",
+    "couleur_fabricant": "Sporty Pink / Dark Grey",
+    "libelle": "Sporty Pink / Dark Grey",
+    "hex": null
+   },
+   {
+    "code": "0196",
+    "couleur_fabricant": "Sporty Purple / White",
+    "libelle": "Sporty Purple / White",
+    "hex": null
+   },
+   {
+    "code": "0197",
+    "couleur_fabricant": "Sporty r blue/Sporty yellow",
+    "libelle": "Sporty r blue/Sporty yellow",
+    "hex": null
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Sporty Red / Black",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0198",
+    "couleur_fabricant": "Sporty Red / White",
+    "libelle": "Sporty Red / White",
+    "hex": null
+   },
+   {
+    "code": "0044",
+    "couleur_fabricant": "Sporty Yellow / Black",
+    "libelle": "Jaune",
+    "hex": "#FFE800"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White / Black",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   },
+   {
+    "code": "0199",
+    "couleur_fabricant": "White / Dark Royal Blue",
+    "libelle": "White / Dark Royal Blue",
+    "hex": null
+   },
+   {
+    "code": "0200",
+    "couleur_fabricant": "White / Sporty Red",
+    "libelle": "White / Sporty Red",
+    "hex": null
+   }
+  ],
+  "YP150": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0013",
+    "couleur_fabricant": "Deep Teal",
+    "libelle": "Bleu pétrole",
+    "hex": "#002B32"
+   },
+   {
+    "code": "0028",
+    "couleur_fabricant": "Green Bay",
+    "libelle": "Jade",
+    "hex": "#00685E"
+   },
+   {
+    "code": "0110",
+    "couleur_fabricant": "Mocha",
+    "libelle": "Mocha Brown",
+    "hex": "#65554A"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Cream",
+    "libelle": "Blanc cassé",
+    "hex": null
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Cool Heather Grey",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   },
+   {
+    "code": "0070",
+    "couleur_fabricant": "Misty Grey",
+    "libelle": "Gris nuage",
+    "hex": "#D9E0E6"
+   }
+  ],
+  "YP151": [
+   {
+    "code": "0016",
+    "couleur_fabricant": "Pebble Blue",
+    "libelle": "Bleu grisé",
+    "hex": "#6698B4"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   }
+  ],
+  "YP152": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0070",
+    "couleur_fabricant": "Misty Grey",
+    "libelle": "Gris nuage",
+    "hex": "#D9E0E6"
+   }
+  ],
+  "YP153": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Natural Raw",
+    "libelle": "Blanc cassé",
+    "hex": null
+   },
+   {
+    "code": "0035",
+    "couleur_fabricant": "Faded Olive",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0070",
+    "couleur_fabricant": "Misty Grey",
+    "libelle": "Gris nuage",
+    "hex": "#D9E0E6"
+   }
+  ],
+  "YP154": [
+   {
+    "code": "0185",
+    "couleur_fabricant": "Rinse Wash",
+    "libelle": "Dark Blue Wash",
+    "hex": "#006688"
+   },
+   {
+    "code": "0186",
+    "couleur_fabricant": "Mid Wash",
+    "libelle": "Light Blue Wash",
+    "hex": "#9BD7F7"
+   }
+  ],
+  "YP155": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Heather Grey",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Natural",
+    "libelle": "Blanc cassé",
+    "hex": null
+   }
+  ],
+  "YP156": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Natural Raw",
+    "libelle": "Blanc cassé",
+    "hex": null
+   },
+   {
+    "code": "0035",
+    "couleur_fabricant": "Faded Olive",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0046",
+    "couleur_fabricant": "Grounded Beige",
+    "libelle": "Beige",
+    "hex": "#FCFAC2"
+   },
+   {
+    "code": "0070",
+    "couleur_fabricant": "Misty Grey",
+    "libelle": "Gris nuage",
+    "hex": "#D9E0E6"
+   }
+  ],
+  "YP157": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Heather Grey",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   },
+   {
+    "code": "0115",
+    "couleur_fabricant": "Fraiche Peche",
+    "libelle": "Peach Perfect",
+    "hex": "#FFCCC9"
+   },
+   {
+    "code": "0163",
+    "couleur_fabricant": "Red Earth",
+    "libelle": "Rust",
+    "hex": "#B53217"
+   },
+   {
+    "code": "0102",
+    "couleur_fabricant": "Kaffa Coffee",
+    "libelle": "Hot Chocolate",
+    "hex": "#382E2C"
+   },
+   {
+    "code": "0003",
+    "couleur_fabricant": "Worker Blue",
+    "libelle": "Bleu atlantique",
+    "hex": "#5174A8"
+   },
+   {
+    "code": "0167",
+    "couleur_fabricant": "Bright Blue",
+    "libelle": "Bright Blue",
+    "hex": "#38A5D1"
+   },
+   {
+    "code": "0118",
+    "couleur_fabricant": "Aloe",
+    "libelle": "Pistachio Green",
+    "hex": "#98C18C"
+   },
+   {
+    "code": "0016",
+    "couleur_fabricant": "Stargazer",
+    "libelle": "Bleu grisé",
+    "hex": "#6698B4"
+   },
+   {
+    "code": "0041",
+    "couleur_fabricant": "Butter",
+    "libelle": "Citron",
+    "hex": "#F0E35E"
+   },
+   {
+    "code": "0014",
+    "couleur_fabricant": "Desert Dust",
+    "libelle": "Sable",
+    "hex": "#DDCA8F"
+   }
+  ],
+  "YP158": [
+   {
+    "code": "0091",
+    "couleur_fabricant": "G.Dyed Bronze",
+    "libelle": "Caramel Toffee",
+    "hex": "#583C2B"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "G. Dyed Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "G.Dyed Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   }
+  ],
+  "YP159": [
+   {
+    "code": "9999",
+    "couleur_fabricant": "Couleur à préciser",
+    "libelle": "couleur à préciser",
+    "hex": null
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Red",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0010",
+    "couleur_fabricant": "Anthracite",
+    "libelle": "Gris anthracite",
+    "hex": "#33424A"
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Heather Grey",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Natural Raw",
+    "libelle": "Blanc cassé",
+    "hex": null
+   },
+   {
+    "code": "0068",
+    "couleur_fabricant": "Passionate Red",
+    "libelle": "Rouge vif",
+    "hex": "#B8002E"
+   },
+   {
+    "code": "0026",
+    "couleur_fabricant": "Pebble Blue",
+    "libelle": "Bleu clair",
+    "hex": "#C5D8ED"
+   },
+   {
+    "code": "0004",
+    "couleur_fabricant": "Bubble Pink",
+    "libelle": "Rose pâle",
+    "hex": "#F0D4EB"
+   },
+   {
+    "code": "0124",
+    "couleur_fabricant": "Red Brown",
+    "libelle": "Red Rust",
+    "hex": "#622938"
+   },
+   {
+    "code": "0120",
+    "couleur_fabricant": "Deep Plum",
+    "libelle": "Plum",
+    "hex": "#341B50"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   },
+   {
+    "code": "0003",
+    "couleur_fabricant": "Worker Blue",
+    "libelle": "Bleu atlantique",
+    "hex": "#5174A8"
+   },
+   {
+    "code": "0076",
+    "couleur_fabricant": "Blue soul",
+    "libelle": "Bleu saphir",
+    "hex": "#0061ED"
+   },
+   {
+    "code": "0016",
+    "couleur_fabricant": "Blue Grey",
+    "libelle": "Bleu grisé",
+    "hex": "#6698B4"
+   },
+   {
+    "code": "0118",
+    "couleur_fabricant": "Aloe",
+    "libelle": "Pistachio Green",
+    "hex": "#98C18C"
+   },
+   {
+    "code": "0027",
+    "couleur_fabricant": "Stargazer",
+    "libelle": "Bleu profond",
+    "hex": "#032D5F"
+   },
+   {
+    "code": "0013",
+    "couleur_fabricant": "Deep Teal",
+    "libelle": "Bleu pétrole",
+    "hex": "#002B32"
+   },
+   {
+    "code": "0037",
+    "couleur_fabricant": "Glazed Green",
+    "libelle": "Vert d'eau",
+    "hex": "#B5FFD1"
+   },
+   {
+    "code": "0048",
+    "couleur_fabricant": "Khaki",
+    "libelle": "Kaki",
+    "hex": "#B8A58A"
+   },
+   {
+    "code": "0110",
+    "couleur_fabricant": "Mocha",
+    "libelle": "Mocha Brown",
+    "hex": "#65554A"
+   },
+   {
+    "code": "0046",
+    "couleur_fabricant": "Latte",
+    "libelle": "Beige",
+    "hex": "#FCFAC2"
+   },
+   {
+    "code": "0036",
+    "couleur_fabricant": "Nispero",
+    "libelle": "Orange",
+    "hex": "#FF7019"
+   },
+   {
+    "code": "0074",
+    "couleur_fabricant": "Dark Heather Blue",
+    "libelle": "Marine chiné",
+    "hex": "#253857"
+   },
+   {
+    "code": "0002",
+    "couleur_fabricant": "Cool Heather Grey",
+    "libelle": "Gris clair",
+    "hex": "#EDF2F0"
+   },
+   {
+    "code": "0078",
+    "couleur_fabricant": "Dark Heather Grey",
+    "libelle": "Gris foncé",
+    "hex": "#555A60"
+   },
+   {
+    "code": "0157",
+    "couleur_fabricant": "Eco-Heather",
+    "libelle": "Heather Oatmeal",
+    "hex": "#C9B069"
+   }
+  ],
+  "YP160": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Natural Raw",
+    "libelle": "Blanc cassé",
+    "hex": null
+   },
+   {
+    "code": "0035",
+    "couleur_fabricant": "Faded Olive",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0070",
+    "couleur_fabricant": "Misty Grey",
+    "libelle": "Gris nuage",
+    "hex": "#D9E0E6"
+   }
+  ],
+  "YP161": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0005",
+    "couleur_fabricant": "Earthy Red",
+    "libelle": "Rouge brique",
+    "hex": "#AF0029"
+   },
+   {
+    "code": "0013",
+    "couleur_fabricant": "Deep Teal",
+    "libelle": "Bleu pétrole",
+    "hex": "#002B32"
+   },
+   {
+    "code": "0048",
+    "couleur_fabricant": "Khaki",
+    "libelle": "Kaki",
+    "hex": "#B8A58A"
+   },
+   {
+    "code": "0035",
+    "couleur_fabricant": "Faded Olive",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0110",
+    "couleur_fabricant": "Mocha",
+    "libelle": "Mocha Brown",
+    "hex": "#65554A"
+   },
+   {
+    "code": "0049",
+    "couleur_fabricant": "Natural",
+    "libelle": "Blanc cassé",
+    "hex": null
+   }
+  ],
+  "YP162": [
+   {
+    "code": "9999",
+    "couleur_fabricant": "Couleur à préciser",
+    "libelle": "couleur à préciser",
+    "hex": null
+   },
+   {
+    "code": "0091",
+    "couleur_fabricant": "Bronze",
+    "libelle": "Caramel Toffee",
+    "hex": "#583C2B"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0124",
+    "couleur_fabricant": "Red Brown",
+    "libelle": "Red Rust",
+    "hex": "#622938"
+   },
+   {
+    "code": "0081",
+    "couleur_fabricant": "Off White",
+    "libelle": "Beige (Off White)",
+    "hex": "#F5EDDE"
+   }
+  ],
+  "YP163": [
+   {
+    "code": "0091",
+    "couleur_fabricant": "Bronze",
+    "libelle": "Caramel Toffee",
+    "hex": "#583C2B"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0124",
+    "couleur_fabricant": "Red Brown",
+    "libelle": "Red Rust",
+    "hex": "#622938"
+   }
+  ],
+  "YP164": [
+   {
+    "code": "0016",
+    "couleur_fabricant": "Pebble Blue",
+    "libelle": "Bleu grisé",
+    "hex": "#6698B4"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   }
+  ],
+  "YP165": [
+   {
+    "code": "0049",
+    "couleur_fabricant": "Natural/Black",
+    "libelle": "Blanc cassé",
+    "hex": null
+   },
+   {
+    "code": "0201",
+    "couleur_fabricant": "Natural/Bottle Green",
+    "libelle": "Natural/Bottle Green",
+    "hex": null
+   },
+   {
+    "code": "0202",
+    "couleur_fabricant": "Natural/Burgundy",
+    "libelle": "Natural/Burgundy",
+    "hex": null
+   },
+   {
+    "code": "0203",
+    "couleur_fabricant": "Natural/Navy",
+    "libelle": "Natural/Navy",
+    "hex": null
+   }
+  ],
+  "YP166": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0039",
+    "couleur_fabricant": "Bright Royal",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Classic Red",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0099",
+    "couleur_fabricant": "Forest Green",
+    "libelle": "Forest Green",
+    "hex": "#1A3521"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0204",
+    "couleur_fabricant": "French Navy/Stone",
+    "libelle": "French Navy/Stone",
+    "hex": null
+   },
+   {
+    "code": "0073",
+    "couleur_fabricant": "Graphite Grey",
+    "libelle": "Gris graphite",
+    "hex": "#1F2A27"
+   },
+   {
+    "code": "0035",
+    "couleur_fabricant": "Olive Green",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0033",
+    "couleur_fabricant": "Stone",
+    "libelle": "Pierre naturelle",
+    "hex": "#A4ADA6"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP167": [
+   {
+    "code": "0082",
+    "couleur_fabricant": "Airforce Blue",
+    "libelle": "Airforce Blue",
+    "hex": "#266792"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0004",
+    "couleur_fabricant": "Blush Pink",
+    "libelle": "Rose pâle",
+    "hex": "#F0D4EB"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   },
+   {
+    "code": "0073",
+    "couleur_fabricant": "Graphite Grey",
+    "libelle": "Gris graphite",
+    "hex": "#1F2A27"
+   },
+   {
+    "code": "0002",
+    "couleur_fabricant": "Light Grey",
+    "libelle": "Gris clair",
+    "hex": "#EDF2F0"
+   },
+   {
+    "code": "0111",
+    "couleur_fabricant": "Mustard",
+    "libelle": "Mustard",
+    "hex": "#E89E00"
+   },
+   {
+    "code": "0071",
+    "couleur_fabricant": "Navy Dusk",
+    "libelle": "Marine nuit",
+    "hex": "#101B2B"
+   },
+   {
+    "code": "0035",
+    "couleur_fabricant": "Olive Green",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0017",
+    "couleur_fabricant": "Sage Green",
+    "libelle": "Vert sauge",
+    "hex": "#759D8B"
+   }
+  ],
+  "YP168": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black/Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0205",
+    "couleur_fabricant": "Black/Fuchsia",
+    "libelle": "Black/Fuchsia",
+    "hex": null
+   },
+   {
+    "code": "0206",
+    "couleur_fabricant": "Black/Grey",
+    "libelle": "Black/Grey",
+    "hex": null
+   },
+   {
+    "code": "0039",
+    "couleur_fabricant": "Bright Royal/Off White",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy/Off White",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   },
+   {
+    "code": "0207",
+    "couleur_fabricant": "Classic Pink/White",
+    "libelle": "Classic Pink/White",
+    "hex": null
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Classic Red/Off White",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy/Classic Red",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0208",
+    "couleur_fabricant": "French Navy/Off White",
+    "libelle": "French Navy/Off White",
+    "hex": null
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Grey Marl/Black",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   },
+   {
+    "code": "0029",
+    "couleur_fabricant": "Kelly Green/Off White",
+    "libelle": "Vert Vif",
+    "hex": "#24B945"
+   },
+   {
+    "code": "0002",
+    "couleur_fabricant": "Light Grey/French Navy",
+    "libelle": "Gris clair",
+    "hex": "#EDF2F0"
+   },
+   {
+    "code": "0209",
+    "couleur_fabricant": "Mint Green/White",
+    "libelle": "Mint Green/White",
+    "hex": null
+   }
+  ],
+  "YP169": [
+   {
+    "code": "0173",
+    "couleur_fabricant": "Black/White",
+    "libelle": "Black/White",
+    "hex": "#000000"
+   }
+  ],
+  "YP170": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   }
+  ],
+  "YP171": [
+   {
+    "code": "0173",
+    "couleur_fabricant": "Black/White",
+    "libelle": "Black/White",
+    "hex": "#000000"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White/Black",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP172": [
+   {
+    "code": "0082",
+    "couleur_fabricant": "Airforce Blue",
+    "libelle": "Airforce Blue",
+    "hex": "#266792"
+   },
+   {
+    "code": "0010",
+    "couleur_fabricant": "Anthracite",
+    "libelle": "Gris anthracite",
+    "hex": "#33424A"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0211",
+    "couleur_fabricant": "Black/Black",
+    "libelle": "Black/Black",
+    "hex": null
+   },
+   {
+    "code": "0085",
+    "couleur_fabricant": "Bottle Green",
+    "libelle": "Bottle Green",
+    "hex": "#205C40"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Bright Red",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0039",
+    "couleur_fabricant": "Bright Royal",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   },
+   {
+    "code": "0009",
+    "couleur_fabricant": "Caramel",
+    "libelle": "Caramel",
+    "hex": "#A37C68"
+   },
+   {
+    "code": "0212",
+    "couleur_fabricant": "Classic Pink/Graphite Grey",
+    "libelle": "Classic Pink/Graphite Grey",
+    "hex": null
+   },
+   {
+    "code": "0210",
+    "couleur_fabricant": "Classic Red",
+    "libelle": "Classic Red",
+    "hex": null
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0213",
+    "couleur_fabricant": "Fuchsia/Graphite Grey",
+    "libelle": "Fuchsia/Graphite Grey",
+    "hex": null
+   },
+   {
+    "code": "0073",
+    "couleur_fabricant": "Graphite Grey",
+    "libelle": "Gris graphite",
+    "hex": "#1F2A27"
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Grey Marl",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   },
+   {
+    "code": "0029",
+    "couleur_fabricant": "Kelly Green",
+    "libelle": "Vert Vif",
+    "hex": "#24B945"
+   },
+   {
+    "code": "0002",
+    "couleur_fabricant": "Light Grey/Graphite Grey",
+    "libelle": "Gris clair",
+    "hex": "#EDF2F0"
+   },
+   {
+    "code": "0214",
+    "couleur_fabricant": "Lime Green/Graphite Grey",
+    "libelle": "Lime Green/Graphite Grey",
+    "hex": null
+   },
+   {
+    "code": "0215",
+    "couleur_fabricant": "Mint Green/Light Grey",
+    "libelle": "Mint Green/Light Grey",
+    "hex": null
+   },
+   {
+    "code": "0216",
+    "couleur_fabricant": "Orange/Graphite Grey",
+    "libelle": "Orange/Graphite Grey",
+    "hex": null
+   },
+   {
+    "code": "0122",
+    "couleur_fabricant": "Purple",
+    "libelle": "Purple",
+    "hex": "#362289"
+   },
+   {
+    "code": "0076",
+    "couleur_fabricant": "Sapphire Blue",
+    "libelle": "Bleu saphir",
+    "hex": "#0061ED"
+   },
+   {
+    "code": "0042",
+    "couleur_fabricant": "Sky Blue/French Navy",
+    "libelle": "Bleu ciel",
+    "hex": "#80C9F2"
+   },
+   {
+    "code": "0217",
+    "couleur_fabricant": "Surf Blue/Graphite Grey",
+    "libelle": "Surf Blue/Graphite Grey",
+    "hex": null
+   },
+   {
+    "code": "0044",
+    "couleur_fabricant": "Yellow/Graphite Grey",
+    "libelle": "Jaune",
+    "hex": "#FFE800"
+   }
+  ],
+  "YP173": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0085",
+    "couleur_fabricant": "Bottle Green",
+    "libelle": "Bottle Green",
+    "hex": "#205C40"
+   },
+   {
+    "code": "0039",
+    "couleur_fabricant": "Bright Royal",
+    "libelle": "Bleu roi",
+    "hex": "#0A48D9"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Classic Red",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0073",
+    "couleur_fabricant": "Graphite Grey",
+    "libelle": "Gris graphite",
+    "hex": "#1F2A27"
+   },
+   {
+    "code": "0035",
+    "couleur_fabricant": "Olive Green",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0014",
+    "couleur_fabricant": "Sand",
+    "libelle": "Sable",
+    "hex": "#DDCA8F"
+   },
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP174": [
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0150",
+    "couleur_fabricant": "Almond",
+    "libelle": "Almond",
+    "hex": "#E3D6CC"
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Heather Grey",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   },
+   {
+    "code": "0151",
+    "couleur_fabricant": "Biscuit",
+    "libelle": "Biscuit",
+    "hex": "#A68C68"
+   },
+   {
+    "code": "0010",
+    "couleur_fabricant": "Charcoal",
+    "libelle": "Gris anthracite",
+    "hex": "#33424A"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Classic Red",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   }
+  ],
+  "YP175": [
+   {
+    "code": "0211",
+    "couleur_fabricant": "Black/Black",
+    "libelle": "Black/Black",
+    "hex": null
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0007",
+    "couleur_fabricant": "Burgundy",
+    "libelle": "Bordeaux",
+    "hex": "#3D1439"
+   },
+   {
+    "code": "0073",
+    "couleur_fabricant": "Graphite Grey/Black",
+    "libelle": "Gris graphite",
+    "hex": "#1F2A27"
+   }
+  ],
+  "YP176": [
+   {
+    "code": "0035",
+    "couleur_fabricant": "Vintage Military Green",
+    "libelle": "Vert Olive",
+    "hex": "#211C0F"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Vintage Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   }
+  ],
+  "YP177": [
+   {
+    "code": "0012",
+    "couleur_fabricant": "Black",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   },
+   {
+    "code": "0034",
+    "couleur_fabricant": "French Navy",
+    "libelle": "Bleu marine",
+    "hex": "#000710"
+   },
+   {
+    "code": "0024",
+    "couleur_fabricant": "Grey Marl",
+    "libelle": "Gris chiné",
+    "hex": "#91A4A7"
+   }
+  ],
+  "YP178": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP179": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP180": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP181": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP182": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP183": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP184": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "Blanc / Plomb foncé",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   },
+   {
+    "code": "0156",
+    "couleur_fabricant": "Jaune fluo / Noir",
+    "libelle": "Fluorescent Yellow",
+    "hex": "#FFFF19"
+   },
+   {
+    "code": "0169",
+    "couleur_fabricant": "Orange fluo / Noir",
+    "libelle": "Fluo Orange",
+    "hex": "#FF404A"
+   },
+   {
+    "code": "0022",
+    "couleur_fabricant": "Rouge / Plomb foncé",
+    "libelle": "Rouge",
+    "hex": "#DA0043"
+   },
+   {
+    "code": "0045",
+    "couleur_fabricant": "Turquoise / Plomb foncé",
+    "libelle": "Turquoise",
+    "hex": "#52FFDE"
+   },
+   {
+    "code": "0154",
+    "couleur_fabricant": "Vert fluo / Noir",
+    "libelle": "Fluorescent Green",
+    "hex": "#17BD09"
+   },
+   {
+    "code": "0012",
+    "couleur_fabricant": "Noir / Plomb foncé",
+    "libelle": "Noir",
+    "hex": "#171C21"
+   }
+  ],
+  "YP185": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP186": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP187": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP188": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP189": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP190": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP191": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP192": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP193": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP194": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP195": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP196": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP197": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP198": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP199": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
+  ],
+  "YP200": [
+   {
+    "code": "0001",
+    "couleur_fabricant": "White",
+    "libelle": "Blanc",
+    "hex": "#FFFFFF"
+   }
   ]
  },
  "tailles": {
@@ -8926,6 +12386,335 @@
   ],
   "YP132": [
    "TU"
+  ],
+  "YP133": [
+   "TU"
+  ],
+  "YP134": [
+   "M"
+  ],
+  "YP135": [
+   "M"
+  ],
+  "YP136": [
+   "L"
+  ],
+  "YP137": [
+   "M",
+   "S"
+  ],
+  "YP138": [
+   "M",
+   "XL"
+  ],
+  "YP139": [
+   "M"
+  ],
+  "YP026": [
+   "12-13"
+  ],
+  "YP140": [
+   "L",
+   "M",
+   "S",
+   "XL",
+   "XS",
+   "XXL"
+  ],
+  "YP141": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP142": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "YP143": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP144": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP145": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "YP146": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP147": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL",
+   "4XL"
+  ],
+  "YP148": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL",
+   "4XL"
+  ],
+  "YP149": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP150": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP151": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP152": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP153": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP154": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "YP155": [
+   "TU"
+  ],
+  "YP156": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP157": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP158": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP159": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL",
+   "4XL",
+   "5XL"
+  ],
+  "YP160": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP161": [
+   "TU"
+  ],
+  "YP162": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP163": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP164": [
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "YP165": [
+   "TU"
+  ],
+  "YP166": [
+   "TU"
+  ],
+  "YP167": [
+   "TU"
+  ],
+  "YP168": [
+   "TU"
+  ],
+  "YP169": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "YP170": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL",
+   "4XL",
+   "5XL"
+  ],
+  "YP171": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "YP172": [
+   "TU"
+  ],
+  "YP173": [
+   "TU"
+  ],
+  "YP174": [
+   "TU"
+  ],
+  "YP175": [
+   "TU"
+  ],
+  "YP176": [
+   "TU"
+  ],
+  "YP177": [
+   "TU"
+  ],
+  "YP178": [
+   "TU"
+  ],
+  "YP179": [
+   "TU"
+  ],
+  "YP180": [
+   "TU"
+  ],
+  "YP181": [
+   "M",
+   "L",
+   "XL"
+  ],
+  "YP182": [
+   "TU"
+  ],
+  "YP183": [
+   "TU"
+  ],
+  "YP184": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
   ]
  },
  "skus": {
@@ -11117,7 +14906,19 @@
    "9999-9999"
   ],
   "YP013": [
-   "9999-9999"
+   "9999-9999",
+   "0064-0000",
+   "0062-0000",
+   "0059-0000",
+   "0187-0000",
+   "0066-0000",
+   "0111-0000",
+   "0026-0000",
+   "0060-0000",
+   "0070-0000",
+   "0017-0000",
+   "0065-0000",
+   "0061-0000"
   ],
   "YP014": [
    "9999-9999"
@@ -11153,7 +14954,11 @@
    "9999-9999"
   ],
   "YP026": [
-   "9999-9999"
+   "9999-9999",
+   "0039-0014",
+   "0039-0004",
+   "0039-0003",
+   "0039-0002"
   ],
   "YP027": [
    "9999-9999"
@@ -11174,7 +14979,11 @@
    "9999-9999"
   ],
   "YP033": [
-   "9999-9999"
+   "9999-9999",
+   "0021-0004",
+   "0021-0003",
+   "0021-0002",
+   "0021-0001"
   ],
   "YP034": [
    "0010-0001",
@@ -11341,10 +15150,12 @@
    "9999-9999"
   ],
   "YP039": [
-   "9999-9999"
+   "9999-9999",
+   "0034-0003"
   ],
   "YP040": [
-   "9999-9999"
+   "9999-9999",
+   "0012-0003"
   ],
   "YP041": [
    "9999-9999"
@@ -11353,7 +15164,8 @@
    "9999-9999"
   ],
   "YP043": [
-   "9999-9999"
+   "9999-9999",
+   "0012-0000"
   ],
   "YP044": [
    "9999-9999"
@@ -11388,13 +15200,32 @@
    "9999-9999"
   ],
   "YP050": [
-   "9999-9999"
+   "9999-9999",
+   "0034-0003",
+   "0012-0003",
+   "0007-0002",
+   "0012-0001",
+   "0012-0006",
+   "0012-0005",
+   "0012-0002",
+   "0012-0004"
   ],
   "YP051": [
-   "9999-9999"
+   "9999-9999",
+   "0039-0004",
+   "0039-0005",
+   "0039-0002",
+   "0039-0003",
+   "0039-0007",
+   "0039-0006"
   ],
   "YP052": [
-   "9999-9999"
+   "9999-9999",
+   "0039-0006",
+   "0039-0004",
+   "0039-0005",
+   "0039-0002",
+   "0039-0003"
   ],
   "YP053": [
    "9999-9999"
@@ -13090,6 +16921,1431 @@
   ],
   "YP132": [
    "9999-0000"
+  ],
+  "YP133": [
+   "0001-0000"
+  ],
+  "YP134": [
+   "0001-0003"
+  ],
+  "YP135": [
+   "0071-0003"
+  ],
+  "YP136": [
+   "0034-0004"
+  ],
+  "YP137": [
+   "0012-0003",
+   "0001-0003",
+   "0012-0002"
+  ],
+  "YP138": [
+   "0044-0003",
+   "0044-0005"
+  ],
+  "YP139": [
+   "0001-0003",
+   "0034-0003"
+  ],
+  "YP140": [
+   "0001-0004",
+   "0001-0003",
+   "0001-0002",
+   "0001-0005",
+   "0001-0001",
+   "0001-0006"
+  ],
+  "YP141": [
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0009-0001",
+   "0009-0002",
+   "0009-0003",
+   "0009-0004",
+   "0009-0005",
+   "0009-0006",
+   "0009-0007",
+   "0027-0001",
+   "0027-0002",
+   "0027-0003",
+   "0027-0004",
+   "0027-0005",
+   "0027-0006",
+   "0027-0007",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0048-0001",
+   "0048-0002",
+   "0048-0003",
+   "0048-0004",
+   "0048-0005",
+   "0048-0006",
+   "0048-0007"
+  ],
+  "YP142": [
+   "0058-0001",
+   "0058-0002",
+   "0058-0003",
+   "0058-0004",
+   "0058-0005",
+   "0058-0006"
+  ],
+  "YP143": [
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0009-0002",
+   "0009-0003",
+   "0009-0004",
+   "0009-0005",
+   "0009-0006",
+   "0009-0007",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0048-0002",
+   "0048-0003",
+   "0048-0004",
+   "0048-0005",
+   "0048-0006",
+   "0048-0007"
+  ],
+  "YP144": [
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0048-0001",
+   "0048-0002",
+   "0048-0003",
+   "0048-0004",
+   "0048-0005",
+   "0048-0006",
+   "0048-0007"
+  ],
+  "YP145": [
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0049-0002",
+   "0049-0003",
+   "0049-0004",
+   "0049-0005",
+   "0049-0006"
+  ],
+  "YP146": [
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0022-0001",
+   "0022-0002",
+   "0022-0003",
+   "0022-0004",
+   "0022-0005",
+   "0022-0006",
+   "0022-0007",
+   "0001-0001",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007"
+  ],
+  "YP147": [
+   "0173-0002",
+   "0173-0003",
+   "0173-0004",
+   "0173-0005",
+   "0173-0006",
+   "0173-0007",
+   "0173-0008",
+   "0099-0002",
+   "0099-0003",
+   "0099-0004",
+   "0099-0005",
+   "0099-0006",
+   "0099-0007",
+   "0099-0008",
+   "0179-0002",
+   "0179-0003",
+   "0179-0004",
+   "0179-0005",
+   "0179-0006",
+   "0179-0007",
+   "0179-0008",
+   "0022-0002",
+   "0022-0003",
+   "0022-0004",
+   "0022-0005",
+   "0022-0006",
+   "0022-0007",
+   "0022-0008",
+   "0039-0002",
+   "0039-0003",
+   "0039-0004",
+   "0039-0005",
+   "0039-0006",
+   "0039-0007",
+   "0039-0008",
+   "0044-0002",
+   "0044-0003",
+   "0044-0004",
+   "0044-0005",
+   "0044-0006",
+   "0044-0007",
+   "0044-0008",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007",
+   "0001-0008"
+  ],
+  "YP148": [
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0012-0008",
+   "0039-0001",
+   "0039-0002",
+   "0039-0003",
+   "0039-0004",
+   "0039-0005",
+   "0039-0006",
+   "0039-0007",
+   "0039-0008",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0034-0008",
+   "0022-0001",
+   "0022-0002",
+   "0022-0003",
+   "0022-0004",
+   "0022-0005",
+   "0022-0006",
+   "0022-0007",
+   "0022-0008"
+  ],
+  "YP149": [
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0188-0001",
+   "0188-0002",
+   "0188-0003",
+   "0188-0004",
+   "0188-0005",
+   "0188-0006",
+   "0188-0007",
+   "0189-0001",
+   "0189-0002",
+   "0189-0003",
+   "0189-0004",
+   "0189-0005",
+   "0189-0006",
+   "0189-0007",
+   "0173-0001",
+   "0173-0002",
+   "0173-0003",
+   "0173-0004",
+   "0173-0005",
+   "0173-0006",
+   "0173-0007",
+   "0039-0001",
+   "0039-0002",
+   "0039-0003",
+   "0039-0004",
+   "0039-0005",
+   "0039-0006",
+   "0039-0007",
+   "0190-0001",
+   "0190-0002",
+   "0190-0003",
+   "0190-0004",
+   "0190-0005",
+   "0190-0006",
+   "0190-0007",
+   "0175-0001",
+   "0175-0002",
+   "0175-0003",
+   "0175-0004",
+   "0175-0005",
+   "0175-0006",
+   "0175-0007",
+   "0191-0001",
+   "0191-0002",
+   "0191-0003",
+   "0191-0004",
+   "0191-0005",
+   "0191-0006",
+   "0191-0007",
+   "0192-0001",
+   "0192-0002",
+   "0192-0003",
+   "0192-0004",
+   "0192-0005",
+   "0192-0006",
+   "0192-0007",
+   "0042-0001",
+   "0042-0002",
+   "0042-0003",
+   "0042-0004",
+   "0042-0005",
+   "0042-0006",
+   "0042-0007",
+   "0193-0001",
+   "0193-0002",
+   "0193-0003",
+   "0193-0004",
+   "0193-0005",
+   "0193-0006",
+   "0193-0007",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0194-0001",
+   "0194-0002",
+   "0194-0003",
+   "0194-0004",
+   "0194-0005",
+   "0194-0006",
+   "0194-0007",
+   "0195-0001",
+   "0195-0002",
+   "0195-0003",
+   "0195-0004",
+   "0195-0005",
+   "0195-0006",
+   "0195-0007",
+   "0196-0001",
+   "0196-0002",
+   "0196-0003",
+   "0196-0004",
+   "0196-0005",
+   "0196-0006",
+   "0196-0007",
+   "0197-0001",
+   "0197-0002",
+   "0197-0003",
+   "0197-0004",
+   "0197-0005",
+   "0197-0006",
+   "0197-0007",
+   "0022-0001",
+   "0022-0002",
+   "0022-0003",
+   "0022-0004",
+   "0022-0005",
+   "0022-0006",
+   "0022-0007",
+   "0198-0001",
+   "0198-0002",
+   "0198-0003",
+   "0198-0004",
+   "0198-0005",
+   "0198-0006",
+   "0198-0007",
+   "0044-0001",
+   "0044-0002",
+   "0044-0003",
+   "0044-0004",
+   "0044-0005",
+   "0044-0006",
+   "0044-0007",
+   "0001-0001",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007",
+   "0199-0001",
+   "0199-0002",
+   "0199-0003",
+   "0199-0004",
+   "0199-0005",
+   "0199-0006",
+   "0199-0007",
+   "0200-0001",
+   "0200-0002",
+   "0200-0003",
+   "0200-0004",
+   "0200-0005",
+   "0200-0006",
+   "0200-0007"
+  ],
+  "YP150": [
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0001-0015",
+   "0001-0001",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0013-0015",
+   "0013-0001",
+   "0013-0002",
+   "0013-0003",
+   "0013-0004",
+   "0013-0005",
+   "0013-0006",
+   "0013-0007",
+   "0028-0015",
+   "0028-0001",
+   "0028-0002",
+   "0028-0003",
+   "0028-0004",
+   "0028-0005",
+   "0028-0006",
+   "0028-0007",
+   "0110-0015",
+   "0110-0001",
+   "0110-0002",
+   "0110-0003",
+   "0110-0004",
+   "0110-0005",
+   "0110-0006",
+   "0110-0007",
+   "0049-0015",
+   "0049-0001",
+   "0049-0002",
+   "0049-0003",
+   "0049-0004",
+   "0049-0005",
+   "0049-0006",
+   "0049-0007",
+   "0024-0015",
+   "0024-0001",
+   "0024-0002",
+   "0024-0003",
+   "0024-0004",
+   "0024-0005",
+   "0024-0006",
+   "0024-0007",
+   "0070-0015",
+   "0070-0001",
+   "0070-0002",
+   "0070-0003",
+   "0070-0004",
+   "0070-0005",
+   "0070-0006",
+   "0070-0007"
+  ],
+  "YP151": [
+   "0016-0015",
+   "0016-0001",
+   "0016-0002",
+   "0016-0003",
+   "0016-0004",
+   "0016-0005",
+   "0016-0006",
+   "0016-0007",
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007"
+  ],
+  "YP152": [
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0070-0001",
+   "0070-0002",
+   "0070-0003",
+   "0070-0004",
+   "0070-0005",
+   "0070-0006",
+   "0070-0007"
+  ],
+  "YP153": [
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0049-0015",
+   "0049-0001",
+   "0049-0002",
+   "0049-0003",
+   "0049-0004",
+   "0049-0005",
+   "0049-0006",
+   "0049-0007",
+   "0035-0015",
+   "0035-0001",
+   "0035-0002",
+   "0035-0003",
+   "0035-0004",
+   "0035-0005",
+   "0035-0006",
+   "0035-0007",
+   "0070-0015",
+   "0070-0001",
+   "0070-0002",
+   "0070-0003",
+   "0070-0004",
+   "0070-0005",
+   "0070-0006",
+   "0070-0007"
+  ],
+  "YP154": [
+   "0185-0001",
+   "0185-0002",
+   "0185-0003",
+   "0185-0004",
+   "0185-0005",
+   "0185-0006",
+   "0186-0001",
+   "0186-0002",
+   "0186-0003",
+   "0186-0004",
+   "0186-0005",
+   "0186-0006"
+  ],
+  "YP155": [
+   "0012-0000",
+   "0024-0000",
+   "0049-0000"
+  ],
+  "YP156": [
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0001-0015",
+   "0001-0001",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0049-0015",
+   "0049-0001",
+   "0049-0002",
+   "0049-0003",
+   "0049-0004",
+   "0049-0005",
+   "0049-0006",
+   "0049-0007",
+   "0035-0015",
+   "0035-0001",
+   "0035-0002",
+   "0035-0003",
+   "0035-0004",
+   "0035-0005",
+   "0035-0006",
+   "0035-0007",
+   "0046-0015",
+   "0046-0001",
+   "0046-0002",
+   "0046-0003",
+   "0046-0004",
+   "0046-0005",
+   "0046-0006",
+   "0046-0007",
+   "0070-0015",
+   "0070-0001",
+   "0070-0002",
+   "0070-0003",
+   "0070-0004",
+   "0070-0005",
+   "0070-0006",
+   "0070-0007"
+  ],
+  "YP157": [
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0001-0015",
+   "0001-0001",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0024-0015",
+   "0024-0001",
+   "0024-0002",
+   "0024-0003",
+   "0024-0004",
+   "0024-0005",
+   "0024-0006",
+   "0024-0007",
+   "0115-0015",
+   "0115-0001",
+   "0115-0002",
+   "0115-0003",
+   "0115-0004",
+   "0115-0005",
+   "0115-0006",
+   "0115-0007",
+   "0163-0015",
+   "0163-0001",
+   "0163-0002",
+   "0163-0003",
+   "0163-0004",
+   "0163-0005",
+   "0163-0006",
+   "0163-0007",
+   "0102-0015",
+   "0102-0001",
+   "0102-0002",
+   "0102-0003",
+   "0102-0004",
+   "0102-0005",
+   "0102-0006",
+   "0102-0007",
+   "0003-0015",
+   "0003-0001",
+   "0003-0002",
+   "0003-0003",
+   "0003-0004",
+   "0003-0005",
+   "0003-0006",
+   "0003-0007",
+   "0167-0015",
+   "0167-0001",
+   "0167-0002",
+   "0167-0003",
+   "0167-0004",
+   "0167-0005",
+   "0167-0006",
+   "0167-0007",
+   "0118-0015",
+   "0118-0001",
+   "0118-0002",
+   "0118-0003",
+   "0118-0004",
+   "0118-0005",
+   "0118-0006",
+   "0118-0007",
+   "0016-0015",
+   "0016-0001",
+   "0016-0002",
+   "0016-0003",
+   "0016-0004",
+   "0016-0005",
+   "0016-0006",
+   "0016-0007",
+   "0041-0015",
+   "0041-0001",
+   "0041-0002",
+   "0041-0003",
+   "0041-0004",
+   "0041-0005",
+   "0041-0006",
+   "0041-0007",
+   "0014-0015",
+   "0014-0001",
+   "0014-0002",
+   "0014-0003",
+   "0014-0004",
+   "0014-0005",
+   "0014-0006",
+   "0014-0007"
+  ],
+  "YP158": [
+   "0091-0015",
+   "0091-0001",
+   "0091-0002",
+   "0091-0003",
+   "0091-0004",
+   "0091-0005",
+   "0091-0006",
+   "0091-0007",
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007"
+  ],
+  "YP159": [
+   "9999-0015",
+   "9999-0001",
+   "9999-0002",
+   "9999-0003",
+   "9999-0004",
+   "9999-0005",
+   "9999-0006",
+   "9999-0007",
+   "9999-0008",
+   "9999-0016",
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0012-0008",
+   "0012-0016",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0034-0008",
+   "0034-0016",
+   "0022-0015",
+   "0022-0001",
+   "0022-0002",
+   "0022-0003",
+   "0022-0004",
+   "0022-0005",
+   "0022-0006",
+   "0022-0007",
+   "0022-0008",
+   "0022-0016",
+   "0010-0015",
+   "0010-0001",
+   "0010-0002",
+   "0010-0003",
+   "0010-0004",
+   "0010-0005",
+   "0010-0006",
+   "0010-0007",
+   "0010-0008",
+   "0010-0016",
+   "0024-0015",
+   "0024-0001",
+   "0024-0002",
+   "0024-0003",
+   "0024-0004",
+   "0024-0005",
+   "0024-0006",
+   "0024-0007",
+   "0024-0008",
+   "0024-0016",
+   "0001-0015",
+   "0001-0001",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007",
+   "0001-0008",
+   "0001-0016",
+   "0049-0015",
+   "0049-0001",
+   "0049-0002",
+   "0049-0003",
+   "0049-0004",
+   "0049-0005",
+   "0049-0006",
+   "0049-0007",
+   "0049-0008",
+   "0049-0016",
+   "0068-0015",
+   "0068-0001",
+   "0068-0002",
+   "0068-0003",
+   "0068-0004",
+   "0068-0005",
+   "0068-0006",
+   "0068-0007",
+   "0026-0015",
+   "0026-0001",
+   "0026-0002",
+   "0026-0003",
+   "0026-0004",
+   "0026-0005",
+   "0026-0006",
+   "0026-0007",
+   "0004-0015",
+   "0004-0001",
+   "0004-0002",
+   "0004-0003",
+   "0004-0004",
+   "0004-0005",
+   "0004-0006",
+   "0004-0007",
+   "0124-0015",
+   "0124-0001",
+   "0124-0002",
+   "0124-0003",
+   "0124-0004",
+   "0124-0005",
+   "0124-0006",
+   "0124-0007",
+   "0120-0015",
+   "0120-0001",
+   "0120-0002",
+   "0120-0003",
+   "0120-0004",
+   "0120-0005",
+   "0120-0006",
+   "0120-0007",
+   "0007-0015",
+   "0007-0001",
+   "0007-0002",
+   "0007-0003",
+   "0007-0004",
+   "0007-0005",
+   "0007-0006",
+   "0007-0007",
+   "0003-0015",
+   "0003-0001",
+   "0003-0002",
+   "0003-0003",
+   "0003-0004",
+   "0003-0005",
+   "0003-0006",
+   "0003-0007",
+   "0076-0015",
+   "0076-0001",
+   "0076-0002",
+   "0076-0003",
+   "0076-0004",
+   "0076-0005",
+   "0076-0006",
+   "0076-0007",
+   "0016-0015",
+   "0016-0001",
+   "0016-0002",
+   "0016-0003",
+   "0016-0004",
+   "0016-0005",
+   "0016-0006",
+   "0016-0007",
+   "0118-0015",
+   "0118-0001",
+   "0118-0002",
+   "0118-0003",
+   "0118-0004",
+   "0118-0005",
+   "0118-0006",
+   "0118-0007",
+   "0027-0015",
+   "0027-0001",
+   "0027-0002",
+   "0027-0003",
+   "0027-0004",
+   "0027-0005",
+   "0027-0006",
+   "0027-0007",
+   "0013-0015",
+   "0013-0001",
+   "0013-0002",
+   "0013-0003",
+   "0013-0004",
+   "0013-0005",
+   "0013-0006",
+   "0013-0007",
+   "0037-0015",
+   "0037-0001",
+   "0037-0002",
+   "0037-0003",
+   "0037-0004",
+   "0037-0005",
+   "0037-0006",
+   "0037-0007",
+   "0048-0015",
+   "0048-0001",
+   "0048-0002",
+   "0048-0003",
+   "0048-0004",
+   "0048-0005",
+   "0048-0006",
+   "0048-0007",
+   "0110-0015",
+   "0110-0001",
+   "0110-0002",
+   "0110-0003",
+   "0110-0004",
+   "0110-0005",
+   "0110-0006",
+   "0110-0007",
+   "0046-0015",
+   "0046-0001",
+   "0046-0002",
+   "0046-0003",
+   "0046-0004",
+   "0046-0005",
+   "0046-0006",
+   "0046-0007",
+   "0036-0015",
+   "0036-0001",
+   "0036-0002",
+   "0036-0003",
+   "0036-0004",
+   "0036-0005",
+   "0036-0006",
+   "0036-0007",
+   "0074-0015",
+   "0074-0001",
+   "0074-0002",
+   "0074-0003",
+   "0074-0004",
+   "0074-0005",
+   "0074-0006",
+   "0074-0007",
+   "0002-0015",
+   "0002-0001",
+   "0002-0002",
+   "0002-0003",
+   "0002-0004",
+   "0002-0005",
+   "0002-0006",
+   "0002-0007",
+   "0078-0015",
+   "0078-0001",
+   "0078-0002",
+   "0078-0003",
+   "0078-0004",
+   "0078-0005",
+   "0078-0006",
+   "0078-0007",
+   "0157-0015",
+   "0157-0001",
+   "0157-0002",
+   "0157-0003",
+   "0157-0004",
+   "0157-0005",
+   "0157-0006",
+   "0157-0007"
+  ],
+  "YP160": [
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0049-0015",
+   "0049-0001",
+   "0049-0002",
+   "0049-0003",
+   "0049-0004",
+   "0049-0005",
+   "0049-0006",
+   "0049-0007",
+   "0035-0015",
+   "0035-0001",
+   "0035-0002",
+   "0035-0003",
+   "0035-0004",
+   "0035-0005",
+   "0035-0006",
+   "0035-0007",
+   "0070-0015",
+   "0070-0001",
+   "0070-0002",
+   "0070-0003",
+   "0070-0004",
+   "0070-0005",
+   "0070-0006",
+   "0070-0007"
+  ],
+  "YP161": [
+   "0012-0000",
+   "0034-0000",
+   "0005-0000",
+   "0013-0000",
+   "0048-0000",
+   "0035-0000",
+   "0110-0000",
+   "0049-0000"
+  ],
+  "YP162": [
+   "9999-0015",
+   "9999-0001",
+   "9999-0002",
+   "9999-0003",
+   "9999-0004",
+   "9999-0005",
+   "9999-0006",
+   "9999-0007",
+   "0091-0015",
+   "0091-0001",
+   "0091-0002",
+   "0091-0003",
+   "0091-0004",
+   "0091-0005",
+   "0091-0006",
+   "0091-0007",
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0124-0015",
+   "0124-0001",
+   "0124-0002",
+   "0124-0003",
+   "0124-0004",
+   "0124-0005",
+   "0124-0006",
+   "0124-0007",
+   "0081-0015",
+   "0081-0001",
+   "0081-0002",
+   "0081-0003",
+   "0081-0004",
+   "0081-0005",
+   "0081-0006",
+   "0081-0007"
+  ],
+  "YP163": [
+   "0091-0015",
+   "0091-0001",
+   "0091-0002",
+   "0091-0003",
+   "0091-0004",
+   "0091-0005",
+   "0091-0006",
+   "0091-0007",
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0034-0015",
+   "0034-0001",
+   "0034-0002",
+   "0034-0003",
+   "0034-0004",
+   "0034-0005",
+   "0034-0006",
+   "0034-0007",
+   "0124-0015",
+   "0124-0001",
+   "0124-0002",
+   "0124-0003",
+   "0124-0004",
+   "0124-0005",
+   "0124-0006",
+   "0124-0007"
+  ],
+  "YP164": [
+   "0016-0015",
+   "0016-0001",
+   "0016-0002",
+   "0016-0003",
+   "0016-0004",
+   "0016-0005",
+   "0016-0006",
+   "0016-0007",
+   "0012-0015",
+   "0012-0001",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007"
+  ],
+  "YP165": [
+   "0049-0000",
+   "0201-0000",
+   "0202-0000",
+   "0203-0000"
+  ],
+  "YP166": [
+   "0012-0000",
+   "0039-0000",
+   "0007-0000",
+   "0022-0000",
+   "0099-0000",
+   "0034-0000",
+   "0204-0000",
+   "0073-0000",
+   "0035-0000",
+   "0033-0000",
+   "0001-0000"
+  ],
+  "YP167": [
+   "0082-0000",
+   "0012-0000",
+   "0004-0000",
+   "0007-0000",
+   "0073-0000",
+   "0002-0000",
+   "0111-0000",
+   "0071-0000",
+   "0035-0000",
+   "0017-0000"
+  ],
+  "YP168": [
+   "0012-0000",
+   "0205-0000",
+   "0206-0000",
+   "0039-0000",
+   "0007-0000",
+   "0207-0000",
+   "0022-0000",
+   "0034-0000",
+   "0208-0000",
+   "0024-0000",
+   "0029-0000",
+   "0002-0000",
+   "0209-0000"
+  ],
+  "YP169": [
+   "0173-0002",
+   "0173-0003",
+   "0173-0004",
+   "0173-0005",
+   "0173-0006"
+  ],
+  "YP170": [
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007",
+   "0012-0008",
+   "0012-0016"
+  ],
+  "YP171": [
+   "0173-0002",
+   "0173-0003",
+   "0173-0004",
+   "0173-0005",
+   "0173-0006",
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006"
+  ],
+  "YP172": [
+   "0082-0000",
+   "0010-0000",
+   "0012-0000",
+   "0211-0000",
+   "0085-0000",
+   "0022-0000",
+   "0039-0000",
+   "0007-0000",
+   "0009-0000",
+   "0212-0000",
+   "0210-0000",
+   "0034-0000",
+   "0213-0000",
+   "0073-0000",
+   "0024-0000",
+   "0029-0000",
+   "0002-0000",
+   "0214-0000",
+   "0215-0000",
+   "0216-0000",
+   "0122-0000",
+   "0076-0000",
+   "0042-0000",
+   "0217-0000",
+   "0044-0000"
+  ],
+  "YP173": [
+   "0012-0000",
+   "0085-0000",
+   "0039-0000",
+   "0007-0000",
+   "0022-0000",
+   "0034-0000",
+   "0073-0000",
+   "0035-0000",
+   "0014-0000",
+   "0001-0000"
+  ],
+  "YP174": [
+   "0034-0000",
+   "0012-0000",
+   "0150-0000",
+   "0024-0000",
+   "0151-0000",
+   "0010-0000",
+   "0022-0000",
+   "0007-0000"
+  ],
+  "YP175": [
+   "0211-0000",
+   "0034-0000",
+   "0012-0000",
+   "0007-0000",
+   "0073-0000"
+  ],
+  "YP176": [
+   "0035-0000",
+   "0012-0000"
+  ],
+  "YP177": [
+   "0012-0000",
+   "0034-0000",
+   "0024-0000"
+  ],
+  "YP178": [
+   "0001-0000"
+  ],
+  "YP179": [
+   "0001-0000"
+  ],
+  "YP180": [
+   "0001-0000"
+  ],
+  "YP181": [
+   "0001-0003",
+   "0001-0004",
+   "0001-0005"
+  ],
+  "YP182": [
+   "0001-0000"
+  ],
+  "YP183": [
+   "0001-0000"
+  ],
+  "YP184": [
+   "0001-0002",
+   "0001-0003",
+   "0001-0004",
+   "0001-0005",
+   "0001-0006",
+   "0001-0007",
+   "0156-0002",
+   "0156-0003",
+   "0156-0004",
+   "0156-0005",
+   "0156-0006",
+   "0156-0007",
+   "0169-0002",
+   "0169-0003",
+   "0169-0004",
+   "0169-0005",
+   "0169-0006",
+   "0169-0007",
+   "0022-0002",
+   "0022-0003",
+   "0022-0004",
+   "0022-0005",
+   "0022-0006",
+   "0022-0007",
+   "0045-0002",
+   "0045-0003",
+   "0045-0004",
+   "0045-0005",
+   "0045-0006",
+   "0045-0007",
+   "0154-0002",
+   "0154-0003",
+   "0154-0004",
+   "0154-0005",
+   "0154-0006",
+   "0154-0007",
+   "0012-0002",
+   "0012-0003",
+   "0012-0004",
+   "0012-0005",
+   "0012-0006",
+   "0012-0007"
+  ],
+  "YP185": [
+   "0001-0000"
+  ],
+  "YP186": [
+   "0001-0000"
+  ],
+  "YP187": [
+   "0001-0000"
+  ],
+  "YP188": [
+   "0001-0000"
+  ],
+  "YP189": [
+   "0001-0000"
+  ],
+  "YP190": [
+   "0001-0000"
+  ],
+  "YP191": [
+   "0001-0000"
+  ],
+  "YP192": [
+   "0001-0000"
+  ],
+  "YP193": [
+   "0001-0000"
+  ],
+  "YP194": [
+   "0001-0000"
+  ],
+  "YP195": [
+   "0001-0000"
+  ],
+  "YP196": [
+   "0001-0000"
+  ],
+  "YP197": [
+   "0001-0000"
+  ],
+  "YP198": [
+   "0001-0000"
+  ],
+  "YP199": [
+   "0001-0000"
+  ],
+  "YP200": [
+   "0001-0000"
   ]
  }
 }
