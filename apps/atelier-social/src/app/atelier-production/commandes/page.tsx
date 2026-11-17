@@ -243,7 +243,7 @@ function BacklogBar({ commandes, filtre, onFiltre }: { commandes: CommandeListe[
         k === "fournisseur"
           ? "Pièces pas encore reçues (attendu de livraison)"
           : k === "dst"
-            ? "Préparation DST pas signée au journal"
+            ? "Préparation DST ou DTF pas signée au journal"
             : "Info de prod manquante sur un article",
       bg: BLOCAGE_META[k].bg,
       fg: BLOCAGE_META[k].fg,

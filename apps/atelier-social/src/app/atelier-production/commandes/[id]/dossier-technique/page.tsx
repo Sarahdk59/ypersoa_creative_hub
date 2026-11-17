@@ -329,8 +329,8 @@ export default async function DossierTechniquePage({
         <thead><tr><th style={{ width: "26%" }}>Étape</th><th>Par</th><th>Le</th><th>Visa</th></tr></thead>
         <tbody>
           {([
-            ["Fichier DST préparé", commande.journal?.dst],
-            ["Broderie", commande.journal?.broderie],
+            ["Préparation DST ou DTF", commande.journal?.dst],
+            ["Broderie ou impression & presse", commande.journal?.broderie],
             ["Contrôle qualité", commande.journal?.cq],
             ["Expédition", commande.journal?.expedition],
           ] as const).map(([label, e]) => (

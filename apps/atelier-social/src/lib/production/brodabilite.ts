@@ -43,7 +43,7 @@ export interface Brodabilite {
 
 export const BLOCAGE_META: Record<CleBlocage, { label: string; court: string; bg: string; fg: string }> = {
   fournisseur: { label: "Attente fournisseur", court: "Fournisseur", bg: "#FBEFE0", fg: "#8A5310" },
-  dst: { label: "DST à faire", court: "DST", bg: "#E5EAF5", fg: "#1F3A7A" },
+  dst: { label: "DST / DTF à faire", court: "DST/DTF", bg: "#E5EAF5", fg: "#1F3A7A" },
   fiche: { label: "Fiche à compléter", court: "Fiche", bg: "#F6E3E1", fg: "#8E2F25" },
 };
 

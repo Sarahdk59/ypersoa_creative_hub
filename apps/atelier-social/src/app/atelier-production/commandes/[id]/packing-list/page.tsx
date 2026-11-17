@@ -275,7 +275,7 @@ export default async function PackingListPage({ params }: { params: Promise<{ id
       )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginTop: 18 }}>
-        {["Préparé par", "Brodé par", "Contrôlé (CQ) par"].map((l) => (
+        {["Préparé (DST / DTF) par", "Brodé / imprimé & pressé par", "Contrôlé (CQ) par"].map((l) => (
           <div key={l} className="box" style={{ height: 52 }}>
             <div className="lbl">{l}</div>
             <div style={{ marginTop: 14, opacity: 0.4 }}>__________ le ___/___/______</div>
