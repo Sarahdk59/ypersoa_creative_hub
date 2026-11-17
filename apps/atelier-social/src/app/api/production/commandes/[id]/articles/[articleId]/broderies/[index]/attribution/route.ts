@@ -33,6 +33,7 @@ import {
   type AttributionsLibraryRef,
 } from "@/lib/atelier-da/referentiels-loader";
 import { attribuer, attribuerPattern, type Position } from "@/lib/atelier-da/moteur-attribution";
+import { refusMarquageHorsModele } from "@/lib/production/serie";
 
 type Params = { params: Promise<{ id: string; articleId: string; index: string }> };
 
@@ -126,6 +127,8 @@ export async function POST(req: Request, { params }: Params) {
     const r = await charger(params);
     if ("err" in r) return r.err;
     const { commande, article, broderie: b } = r;
+    const refusSerie = refusMarquageHorsModele(commande, article.id);
+    if (refusSerie) return bad(refusSerie);
     if (commande.statut === "archivee") return NextResponse.json({ ok: false, error: "Commande archivée : désarchive-la avant de la modifier." }, { status: 409 });
 
     const body = (await req.json()) as { source?: string; texte_lignes?: unknown; library_id?: string };
@@ -208,6 +211,8 @@ export async function DELETE(_req: Request, { params }: Params) {
   try {
     const r = await charger(params);
     if ("err" in r) return r.err;
+    const refusSerie = refusMarquageHorsModele(r.commande, r.article.id);
+    if (refusSerie) return NextResponse.json({ ok: false, error: refusSerie }, { status: 400 });
     r.broderie.attribution_couleurs = undefined;
     await writeCommande(r.commande);
     return NextResponse.json({ ok: true, data: r.commande });

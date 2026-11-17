@@ -122,8 +122,13 @@ export function allouerPlanningAuto(
   durees: DureesRef,
   options: AllouerOptions = {}
 ): Planning {
-  const horizonJours = options.horizon_jours ?? 3;
   const minParJour = options.min_par_jour ?? durees.capacite_atelier.minutes_effectives_par_jour ?? MIN_PAR_JOUR_DEFAUT;
+  // Horizon par défaut : 3 jours, allongé si la charge (séries B2B de 20-40 pièces) le demande.
+  const nbMachines = (durees.capacite_atelier.noms_machines ?? ["TMEZ-1", "TMEZ-2"]).length;
+  const chargeMin = commande.articles
+    .filter((a) => a.broderies.some(estBrodee))
+    .reduce((s, a) => s + a.duree_preparation_dst_min + (a.duree_total_article_min - a.duree_preparation_dst_min) * Math.max(1, a.quantite || 1), 0);
+  const horizonJours = options.horizon_jours ?? Math.max(3, Math.ceil(chargeMin / (nbMachines * minParJour)) + 1);
   const dateDebut = options.date_debut ?? new Date().toISOString().slice(0, 10);
   const algoPref = (options.algo ?? (durees.capacite_atelier as { algo_planning_par_defaut?: AlgoPlanning }).algo_planning_par_defaut ?? "otif") as AlgoPlanning;
 
@@ -143,66 +148,86 @@ export function allouerPlanningAuto(
   const dateFin = ajouterJoursOuvres(dateDebut, horizonJours - 1);
 
   const articlesPlanifies: PlanningSlot[] = [];
+  let piecesNonPlanifiees = 0;
+  // Lot en cours par machine : pièces consécutives du même article fusionnées en 1 créneau.
+  const lotEnCours = new Map<Machine, { slot: PlanningSlot; debutConsomme: number }>();
 
   for (const article of articlesTries) {
     // 100 % DTF / écusson / sublimation : rien à faire sur les TMEZ.
     if (!article.broderies.some(estBrodee)) continue;
     const filPrinc = filPrincipalArticle(article);
+    const prep = article.duree_preparation_dst_min || 0;
+    const parPiece = Math.max(1, article.duree_total_article_min - prep);
+    const quantite = Math.max(1, article.quantite || 1);
 
-    // Stratégie de choix machine
-    let idxMachine: number;
-    if (algoPref === "otif" && filPrinc) {
-      // Préférence : machine où le dernier article = même fil principal (0 changement)
-      const idxMatchFil = machines.findIndex((m) => m.dernier_fil_principal === filPrinc);
-      if (idxMatchFil >= 0 && machines[idxMatchFil].minutes_consommees_aujourdhui + article.duree_total_article_min <= minParJour) {
-        idxMachine = idxMatchFil;
+    // Pièce par pièce : une série de 40 se répartit sur les 2 machines et sur les jours.
+    for (let k = 0; k < quantite; k++) {
+      const duree = parPiece + (k === 0 ? prep : 0);
+
+      // Stratégie de choix machine
+      let idxMachine: number;
+      if (algoPref === "otif" && filPrinc) {
+        // Préférence : machine où le dernier article = même fil principal (0 changement)
+        const idxMatchFil = machines.findIndex((m) => m.dernier_fil_principal === filPrinc);
+        if (idxMatchFil >= 0 && machines[idxMatchFil].minutes_consommees_aujourdhui + duree <= minParJour) {
+          idxMachine = idxMatchFil;
+        } else {
+          // Sinon, machine la moins avancée (jour puis charge du jour)
+          idxMachine = machines.reduce((best, m, i) => {
+            const b = machines[best];
+            if (m.jour !== b.jour) return m.jour < b.jour ? i : best;
+            return m.minutes_consommees_aujourdhui < b.minutes_consommees_aujourdhui ? i : best;
+          }, 0);
+        }
       } else {
-        // Sinon, machine la moins chargée (par jour pour rester compact)
-        idxMachine = machines.reduce((best, m, i) => (m.minutes_consommees_aujourdhui < machines[best].minutes_consommees_aujourdhui ? i : best), 0);
+        // LPT pur : la moins chargée en cumul total
+        const totaux = machines.map((m) => m.slots.reduce((s, sl) => s + sl.duree_min, 0));
+        idxMachine = totaux.indexOf(Math.min(...totaux));
       }
-    } else {
-      // LPT pur : la moins chargée en cumul total
-      const totaux = machines.map((m) => m.slots.reduce((s, sl) => s + sl.duree_min, 0));
-      idxMachine = totaux.indexOf(Math.min(...totaux));
+
+      const machine = machines[idxMachine];
+
+      // Sauter au jour suivant si pas de place
+      while (machine.minutes_consommees_aujourdhui + duree > minParJour && machine.jour < dateFin) {
+        machine.jour = ajouterJourOuvre(machine.jour);
+        machine.minutes_consommees_aujourdhui = 0;
+        machine.dernier_fil_principal = undefined; // nouvelle journée = nouveau setup
+        lotEnCours.delete(machine.nom);
+      }
+
+      if (machine.minutes_consommees_aujourdhui + duree > minParJour) {
+        // Ne tient pas dans l'horizon → signalé, à replanifier sur un horizon plus long
+        piecesNonPlanifiees++;
+        continue;
+      }
+
+      const lot = lotEnCours.get(machine.nom);
+      if (lot && lot.slot.article_id === article.id && lot.slot.jour === machine.jour) {
+        // Pièce suivante du même article, juste derrière : on allonge le créneau.
+        lot.slot.duree_min += duree;
+        lot.slot.nb_pieces = (lot.slot.nb_pieces ?? 1) + 1;
+        const { fin } = calculerCreneau(lot.debutConsomme, lot.slot.duree_min, minParJour);
+        lot.slot.heure_fin = minutesVersHHMM(fin);
+      } else {
+        const { debut, fin } = calculerCreneau(machine.minutes_consommees_aujourdhui, duree, minParJour);
+        const slot: PlanningSlot = {
+          id: genererSlotId(),
+          machine: machine.nom,
+          jour: machine.jour,
+          heure_debut: minutesVersHHMM(debut),
+          heure_fin: minutesVersHHMM(fin),
+          duree_min: duree,
+          article_id: article.id,
+          commande_id: commande.id,
+          nb_pieces: 1,
+        };
+        machine.slots.push(slot);
+        articlesPlanifies.push(slot);
+        lotEnCours.set(machine.nom, { slot, debutConsomme: machine.minutes_consommees_aujourdhui });
+      }
+      machine.minutes_consommees_aujourdhui += duree;
+      machine.dernier_fil_principal = filPrinc;
     }
-
-    const machine = machines[idxMachine];
-
-    // Sauter au jour suivant si pas de place
-    while (
-      machine.minutes_consommees_aujourdhui + article.duree_total_article_min > minParJour &&
-      machine.jour < dateFin
-    ) {
-      machine.jour = ajouterJourOuvre(machine.jour);
-      machine.minutes_consommees_aujourdhui = 0;
-      machine.dernier_fil_principal = undefined; // nouvelle journée = nouveau setup
-    }
-
-    if (machine.minutes_consommees_aujourdhui + article.duree_total_article_min > minParJour) {
-      // Article ne tient pas dans l'horizon → on saute (à traiter ultérieurement)
-      continue;
-    }
-
-    const { debut, fin } = calculerCreneau(
-      machine.minutes_consommees_aujourdhui,
-      article.duree_total_article_min,
-      minParJour
-    );
-
-    const slot: PlanningSlot = {
-      id: genererSlotId(),
-      machine: machine.nom,
-      jour: machine.jour,
-      heure_debut: minutesVersHHMM(debut),
-      heure_fin: minutesVersHHMM(fin),
-      duree_min: article.duree_total_article_min,
-      article_id: article.id,
-      commande_id: commande.id,
-    };
-    machine.slots.push(slot);
-    machine.minutes_consommees_aujourdhui += article.duree_total_article_min;
-    machine.dernier_fil_principal = filPrinc;
-    articlesPlanifies.push(slot);
   }
 
   // Tri final des slots par jour/machine/heure pour cohérence d'affichage
@@ -219,5 +244,6 @@ export function allouerPlanningAuto(
     date_debut: dateDebut,
     slots: articlesPlanifies,
     genere_le: new Date().toISOString(),
+    ...(piecesNonPlanifiees ? { pieces_non_planifiees: piecesNonPlanifiees } : {}),
   };
 }

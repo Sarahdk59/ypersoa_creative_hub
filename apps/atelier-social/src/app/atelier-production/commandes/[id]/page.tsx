@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, use } from "react";
+import { Fragment, useEffect, useRef, useState, useCallback, use } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Calendar, Clock, Truck, FileText, Cpu, Play, RotateCcw, Trash2, Package, Settings, Hash, FileCode, Archive, CheckCircle2, User, ShieldCheck, AlertTriangle, RefreshCw, Zap, Layers, Upload, Paperclip } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import DossierDocuments from "./DossierDocuments";
 import AttributionZone from "./AttributionZone";
 import { manquesArticle, SOURCE_LABEL } from "@/lib/production/completude";
 import { BLOCAGE_META, brodabiliteCommande } from "@/lib/production/brodabilite";
+import { articleModeleSerie, lignesApresRegroupement, nbPieces } from "@/lib/production/serie";
 import { finDeMois, libelleMois, moisHistoriqueValide } from "@/lib/production/historique";
 import { estBrodee, filsBroderie, fondFils, TECHNIQUE_LABEL, TECHNIQUES_MARQUAGE, techniqueZone } from "@/lib/production/broderie-utils";
 import type { Commande, Article, Broderie, BroderieFileKind, TechniqueMarquage, StatutCommande, PlanningSlot, JournalCommande, EtapeJournal, AlgoPlanning, Placement } from "@/lib/production/commandes-loader";
@@ -61,6 +62,14 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
   const [rebroderModal, setRebroderModal] = useState<{ article: Article } | null>(null);
   // Arrivée depuis le bilan de ventes : ?article=<id>&corriger=1 → focus + éditeur ouvert.
   const [cible, setCible] = useState<{ articleId: string; corriger: boolean } | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [suppression, setSuppression] = useState(false);
+  useEffect(() => {
+    fetch("/api/me", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((res) => setRole(res?.data?.role ?? null))
+      .catch(() => setRole(null));
+  }, []);
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
     const articleId = sp.get("article");
@@ -99,7 +108,7 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
       const res = await fetch(`/api/production/commandes/${id}/planning`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date_debut: dateDebut, horizon_jours: 3, algo }),
+        body: JSON.stringify({ date_debut: dateDebut, algo }),
       }).then((r) => r.json());
       if (!res.ok) throw new Error(res.error);
       await refresh();
@@ -188,6 +197,33 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
       setCommande(res.data);
     } catch (e) {
       alert("Erreur mise à jour montant : " + (e instanceof Error ? e.message : String(e)));
+    }
+  }
+
+  async function supprimerCommande() {
+    if (!commande) return;
+    const numero = commande.numero_shopify.replace(/^#/, "");
+    const saisie = prompt(
+      `Supprimer DÉFINITIVEMENT la commande ${commande.numero_shopify} (${commande.expedition?.nom ?? "client inconnu"}) ?\n\n` +
+      "Ses fichiers (bon PDF, pièces du dossier, fichiers broderie) seront aussi supprimés. Action irréversible.\n\n" +
+      `Tape ${numero} pour confirmer :`,
+    );
+    if (saisie === null) return;
+    if (saisie.trim().replace(/^#/, "") !== numero) {
+      alert("Numéro différent : suppression annulée.");
+      return;
+    }
+    setSuppression(true);
+    try {
+      const res = await fetch(`/api/production/commandes/${encodeURIComponent(commande.id)}`, { method: "DELETE" }).then((r) => r.json());
+      if (!res.ok) throw new Error(res.error);
+      if (res.data.reworks_orphelins?.length) {
+        alert(`Commande supprimée. Attention : rework(s) liés encore présents : ${res.data.reworks_orphelins.join(", ")}.`);
+      }
+      router.push("/atelier-production/commandes");
+    } catch (e) {
+      alert("Erreur suppression : " + (e instanceof Error ? e.message : String(e)));
+      setSuppression(false);
     }
   }
 
@@ -311,6 +347,21 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
           >
             <FileCode size={13} strokeWidth={1.8} /> Dossier technique
           </Link>
+          {role === "admin" && (
+            <button
+              onClick={supprimerCommande}
+              disabled={suppression}
+              title="Supprimer définitivement cette commande (erreur de saisie, devis mal importé…)"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "6px 14px", borderRadius: 999, border: "0.5px solid #C23A2D",
+                background: "white", color: "#C23A2D", cursor: suppression ? "wait" : "pointer",
+                fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
+              }}
+            >
+              {suppression ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} strokeWidth={1.8} />} Supprimer
+            </button>
+          )}
           <span style={{
             fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600,
             textTransform: "uppercase", letterSpacing: "0.08em",
@@ -378,10 +429,13 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
       {/* SECTION ARTICLES */}
       <section id="articles" style={{ marginBottom: 40, scrollMarginTop: 24 }}>
         <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 24, fontWeight: 500, marginBottom: 16 }}>
-          Articles à broder ({commande.articles.length})
+          Articles à broder ({commande.articles.length} ligne{commande.articles.length > 1 ? "s" : ""} · {nbPieces(commande)} pièce{nbPieces(commande) > 1 ? "s" : ""})
         </h2>
+        {commande.articles.length > 1 && (
+          <SeriePanel commande={commande} disabled={commande.statut === "archivee"} onSaved={setCommande} />
+        )}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {commande.articles.map((art) => (
+          {(articleModeleSerie(commande) ? [articleModeleSerie(commande)!] : commande.articles).map((art) => (
             <ArticleCard
               key={art.id}
               commandeId={commande.id}
@@ -397,9 +451,18 @@ export default function CommandeDetailPage({ params }: { params: Promise<{ id: s
               }
               onCommandeUpdated={setCommande}
               lignesAttendu={lignesAttendu}
+              modeleSerie={!!art.modele_serie}
             />
           ))}
         </div>
+        {articleModeleSerie(commande) && (
+          <DeclinaisonsSerie
+            commande={commande}
+            disabled={commande.statut === "archivee"}
+            lignesAttendu={lignesAttendu}
+            onSaved={setCommande}
+          />
+        )}
       </section>
 
       {rebroderModal && (
@@ -751,6 +814,205 @@ function RattachementAttendu({ commandeId, article, lignes, onSaved }: {
   );
 }
 
+// ──────────────────────────────────────────────────────────
+// Mode série (B2B) : 1 marquage × N pièces
+// ──────────────────────────────────────────────────────────
+
+async function patchCommande(commandeId: string, body: unknown): Promise<Commande> {
+  const r = await fetch(`/api/production/commandes/${commandeId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const res = await r.json();
+  if (!res.ok) throw new Error(res.error);
+  return res.data as Commande;
+}
+
+function libelleLigne(a: Article): string {
+  return `${a.produit_nom} · ${a.couleur_support || "?"} · ${a.taille || "?"} ×${a.quantite}`;
+}
+
+function SeriePanel({ commande, disabled, onSaved }: { commande: Commande; disabled?: boolean; onSaved: (c: Commande) => void }) {
+  const modele = articleModeleSerie(commande);
+  const nbFichiers = (a: Article) => a.broderies.reduce((s, b) => s + (b.fichiers?.length ?? 0), 0);
+  const parDefaut = [...commande.articles].sort((a, b) => nbFichiers(b) - nbFichiers(a))[0]?.id ?? "";
+  const [choix, setChoix] = useState(parDefaut);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const apres = lignesApresRegroupement(commande);
+
+  async function run(body: unknown, confirmation?: string) {
+    if (confirmation && !window.confirm(confirmation)) return;
+    setBusy(true);
+    setErr(null);
+    try {
+      onSaved(await patchCommande(commande.id, body));
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const btn = (primary?: boolean): React.CSSProperties => ({
+    display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 6,
+    border: "0.5px solid #1E6E77", background: primary ? "#1E6E77" : "white", color: primary ? "white" : "#1E6E77",
+    fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500, cursor: busy || disabled ? "default" : "pointer",
+    opacity: busy || disabled ? 0.6 : 1,
+  });
+
+  return (
+    <div style={{ marginBottom: 16, padding: "14px 16px", borderRadius: 10, border: `0.5px solid ${modele ? "#1E6E77" : "var(--hub-border)"}`, background: modele ? "#EEF6F6" : "#FAF7F2", fontFamily: "var(--font-sans)", fontSize: 12 }}>
+      {modele ? (
+        <>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 600, fontSize: 13, color: "#1E6E77" }}>
+            <Layers size={15} strokeWidth={1.8} /> Série : 1 marquage × {nbPieces(commande)} pièces sur {commande.articles.length} déclinaison{commande.articles.length > 1 ? "s" : ""}
+          </div>
+          <p style={{ margin: "6px 0 10px", opacity: 0.75, lineHeight: 1.5 }}>
+            Zones, fichiers DST / DTF, fils et polices se saisissent une seule fois sur la carte « Marquage de la série ». Ils sont recopiés automatiquement sur toutes les lignes. Le planning répartit les pièces sur les 2 machines.
+          </p>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {apres < commande.articles.length && (
+              <button
+                style={btn(true)}
+                disabled={busy || disabled}
+                onClick={() => run({ action: "regrouper_declinaisons" }, `Fusionner les lignes identiques (même réf. produit / couleur / taille) en additionnant les quantités ?\n${commande.articles.length} lignes → ${apres} lignes.${commande.planning ? "\nLe planning sera à régénérer." : ""}`)}
+              >
+                Regrouper les lignes identiques ({commande.articles.length} → {apres})
+              </button>
+            )}
+            <button style={btn()} disabled={busy || disabled} onClick={() => run({ serie: null }, "Quitter le mode série ? Chaque ligne garde une copie du marquage actuel et redevient modifiable séparément.")}>
+              Quitter le mode série
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ fontWeight: 600, fontSize: 13 }}>Même marquage sur toutes les pièces ? (devis B2B, série)</div>
+          <p style={{ margin: "6px 0 10px", opacity: 0.75, lineHeight: 1.5 }}>
+            Passe la commande en série : tu saisis le marquage et déposes le fichier une seule fois, il est recopié sur les {commande.articles.length} lignes ({nbPieces(commande)} pièces). Les fichiers déjà déposés sur d&apos;autres lignes sont conservés.
+          </p>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <label style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              Ligne modèle
+              <select value={choix} onChange={(e) => setChoix(e.target.value)} disabled={busy || disabled} style={{ fontFamily: "var(--font-sans)", fontSize: 12, padding: "4px 6px", borderRadius: 6, border: "0.5px solid var(--hub-border)", maxWidth: 360 }}>
+                {commande.articles.map((a) => (
+                  <option key={a.id} value={a.id}>{libelleLigne(a)}{nbFichiers(a) ? ` · ${nbFichiers(a)} fichier${nbFichiers(a) > 1 ? "s" : ""}` : ""}</option>
+                ))}
+              </select>
+            </label>
+            <button
+              style={btn(true)}
+              disabled={busy || disabled || !choix}
+              onClick={() => run({ serie: { modele_article_id: choix } }, "Le marquage de la ligne modèle va remplacer celui de toutes les autres lignes. Continuer ?")}
+            >
+              <Layers size={13} strokeWidth={1.8} /> Passer en série
+            </button>
+          </div>
+        </>
+      )}
+      {err && <div style={{ marginTop: 8, color: "#9A1818" }}>{err}</div>}
+    </div>
+  );
+}
+
+function DeclinaisonsSerie({ commande, disabled, lignesAttendu, onSaved }: {
+  commande: Commande;
+  disabled?: boolean;
+  lignesAttendu: LigneAttenduCmd[];
+  onSaved: (c: Commande) => void;
+}) {
+  const [ouverte, setOuverte] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function majQuantite(a: Article, q: number) {
+    if (!Number.isInteger(q) || q < 1 || q === a.quantite) return;
+    setErr(null);
+    try {
+      const r = await fetch(`/api/production/commandes/${commande.id}/articles/${a.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantite: q }),
+      });
+      const res = await r.json();
+      if (!res.ok) throw new Error(res.error);
+      onSaved(res.data);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  const cell: React.CSSProperties = { padding: "8px 10px", borderBottom: "0.5px solid var(--hub-border)", textAlign: "left", verticalAlign: "top" };
+  return (
+    <div style={{ marginTop: 16, border: "0.5px solid var(--hub-border)", borderRadius: 12, overflow: "hidden" }}>
+      <div style={{ padding: "12px 16px", fontFamily: "var(--font-editorial)", fontSize: 18, fontWeight: 500, background: "#FAF7F2" }}>
+        Déclinaisons ({commande.articles.length} lignes · {nbPieces(commande)} pièces)
+      </div>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-sans)", fontSize: 12 }}>
+          <thead>
+            <tr style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.06em", opacity: 0.6 }}>
+              <th style={cell}>Produit</th><th style={cell}>Couleur</th><th style={cell}>Taille</th><th style={cell}>Réf. article</th><th style={cell}>Qté</th><th style={cell}>À compléter</th><th style={cell}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {commande.articles.map((a) => {
+              const manques = manquesArticle(a);
+              return (
+                <Fragment key={a.id}>
+                  <tr style={{ background: a.modele_serie ? "#EEF6F6" : undefined }}>
+                    <td style={cell}>{a.produit_nom}{a.modele_serie && <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 600, color: "#1E6E77" }}>MODÈLE</span>}</td>
+                    <td style={cell}>{a.couleur_support || "—"}</td>
+                    <td style={cell}>{a.taille || "—"}</td>
+                    <td style={cell}>
+                      <code style={{ fontFamily: "ui-monospace, monospace", fontSize: 11, padding: "1px 6px", borderRadius: 4, background: a.ref_article ? "#E5F0E8" : "#FBE9E7", color: a.ref_article ? "#2F7A3E" : "#9A1818" }}>
+                        {a.ref_article ?? "à compléter"}
+                      </code>
+                    </td>
+                    <td style={cell}>
+                      <input
+                        type="number"
+                        min={1}
+                        defaultValue={a.quantite}
+                        key={`${a.id}-${a.quantite}`}
+                        disabled={disabled}
+                        onBlur={(e) => majQuantite(a, Number(e.target.value))}
+                        onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+                        style={{ width: 56, padding: "2px 6px", fontSize: 12, borderRadius: 4, border: "0.5px solid var(--hub-border)" }}
+                      />
+                    </td>
+                    <td style={{ ...cell, color: "#9A1818" }}>{manques.length ? manques.join(", ") : <span style={{ color: "#2F7A3E" }}>OK</span>}</td>
+                    <td style={{ ...cell, whiteSpace: "nowrap" }}>
+                      <button
+                        onClick={() => setOuverte(ouverte === a.id ? null : a.id)}
+                        style={{ border: "0.5px solid #1E6E77", background: "white", color: "#1E6E77", borderRadius: 6, padding: "3px 8px", fontSize: 11, cursor: "pointer" }}
+                      >
+                        {ouverte === a.id ? "Fermer" : "Corriger"}
+                      </button>
+                    </td>
+                  </tr>
+                  {ouverte === a.id && (
+                    <tr>
+                      <td colSpan={7} style={{ ...cell, background: "#FCFBF8" }}>
+                        {lignesAttendu.length > 0 && (
+                          <RattachementAttendu commandeId={commande.id} article={a} lignes={lignesAttendu} onSaved={onSaved} />
+                        )}
+                        <ArticleEditor commandeId={commande.id} article={a} onSaved={onSaved} onClose={() => setOuverte(null)} />
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      {err && <div style={{ padding: "8px 16px", color: "#9A1818", fontFamily: "var(--font-sans)", fontSize: 12 }}>{err}</div>}
+    </div>
+  );
+}
+
 function ArticleCard({
   commandeId,
   article,
@@ -761,10 +1023,13 @@ function ArticleCard({
   focus,
   autoEdit,
   lignesAttendu = [],
+  modeleSerie,
 }: {
   commandeId: string;
   article: Article;
   lignesAttendu?: LigneAttenduCmd[];
+  /** Mode série : cette carte porte le marquage commun de toutes les déclinaisons. */
+  modeleSerie?: boolean;
   disabled?: boolean;
   focus?: boolean;
   autoEdit?: boolean;
@@ -786,6 +1051,11 @@ function ArticleCard({
       border: focus ? "1.5px solid #1E6E77" : "0.5px solid var(--hub-border)", borderRadius: 12, padding: 20,
       background: "var(--hub-bg)", scrollMarginTop: 24,
     }}>
+      {modeleSerie && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#1E6E77" }}>
+          <Layers size={13} strokeWidth={1.8} /> Marquage de la série · recopié sur toutes les déclinaisons
+        </div>
+      )}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16, gap: 16, flexWrap: "wrap" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
@@ -837,10 +1107,10 @@ function ArticleCard({
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontFamily: "var(--font-editorial)", fontSize: 28, fontWeight: 500, lineHeight: 1 }}>
-            {formatDuree(article.duree_total_article_min)}
+            {formatDuree(article.duree_preparation_dst_min + (article.duree_total_article_min - article.duree_preparation_dst_min) * (article.quantite || 1))}
           </div>
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--hub-foreground)", opacity: 0.55, marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            ×{article.quantite} · prod totale
+            ×{article.quantite} · prod totale{(article.quantite || 1) > 1 ? ` (${formatDuree(article.duree_total_article_min - article.duree_preparation_dst_min)} / pièce)` : ""}
           </div>
         </div>
       </div>
@@ -930,8 +1200,8 @@ function ArticleCard({
 // ──────────────────────────────────────────────────────────
 
 const ETAPES: { key: EtapeJournal; label: string; icon: React.ReactNode }[] = [
-  { key: "dst",        label: "Préparation DST",   icon: <FileCode size={14} strokeWidth={1.6} /> },
-  { key: "broderie",   label: "Broderie",          icon: <Cpu size={14} strokeWidth={1.6} /> },
+  { key: "dst",        label: "Préparation DST ou DTF",            icon: <FileCode size={14} strokeWidth={1.6} /> },
+  { key: "broderie",   label: "Broderie ou impression & presse",   icon: <Cpu size={14} strokeWidth={1.6} /> },
   { key: "cq",         label: "Contrôle qualité",  icon: <ShieldCheck size={14} strokeWidth={1.6} /> },
   { key: "expedition", label: "Expédition",        icon: <Truck size={14} strokeWidth={1.6} /> },
 ];
@@ -1487,8 +1757,20 @@ function PlanningGantt({
 
   const machineMins = (m: string) => planning.slots.filter((s) => s.machine === m).reduce((sum, s) => sum + s.duree_min, 0);
 
+  if (!planning.slots.length && !planning.pieces_non_planifiees) {
+    return (
+      <div style={{ padding: "12px 16px", borderRadius: 8, background: "#FAF7F2", border: "0.5px solid var(--hub-border)", fontFamily: "var(--font-sans)", fontSize: 12 }}>
+        Rien à passer sur les TMEZ : tous les marquages de cette commande sont hors machine à broder (DTF, écusson, sublimation).
+      </div>
+    );
+  }
   return (
     <div>
+      {!!planning.pieces_non_planifiees && (
+        <div style={{ marginBottom: 12, padding: "8px 12px", borderRadius: 8, background: "#FBEFE0", color: "#8A5310", fontFamily: "var(--font-sans)", fontSize: 12 }}>
+          <strong>{planning.pieces_non_planifiees} pièce{planning.pieces_non_planifiees > 1 ? "s" : ""}</strong> ne tien{planning.pieces_non_planifiees > 1 ? "nent" : "t"} pas dans l&apos;horizon de {planning.horizon_jours} jour{planning.horizon_jours > 1 ? "s" : ""} : régénère le planning (l&apos;horizon s&apos;adapte à la charge).
+        </div>
+      )}
       {/* Résumé charge */}
       <div style={{ display: "flex", gap: 12, marginBottom: 16, fontFamily: "var(--font-sans)", fontSize: 12 }}>
         {machines.map((m) => {
@@ -1561,11 +1843,14 @@ function PlanningGantt({
                           const art = articleById.get(slot.article_id);
                           const startMin = parseInt(slot.heure_debut.split(":")[0]) * 60 + parseInt(slot.heure_debut.split(":")[1]);
                           const left = (startMin - heureMin) * pxParMin;
-                          const width = slot.duree_min * pxParMin;
+                          // Horloge (et non durée) : un lot qui enjambe la pause déjeuner s'étire jusqu'à sa vraie fin.
+                          const endMin = parseInt(slot.heure_fin.split(":")[0]) * 60 + parseInt(slot.heure_fin.split(":")[1]);
+                          const width = Math.max(slot.duree_min, endMin - startMin) * pxParMin;
+                          const pieces = slot.nb_pieces && slot.nb_pieces > 1 ? ` ×${slot.nb_pieces}` : "";
                           return (
                             <div
                               key={slot.id}
-                              title={`${art?.produit_nom} — ${art?.ypm_nom} · ${slot.heure_debut} → ${slot.heure_fin}`}
+                              title={`${art?.produit_nom} ${art?.couleur_support ?? ""} ${art?.taille ?? ""}${pieces} — ${art?.ypm_nom} · ${slot.heure_debut} → ${slot.heure_fin}`}
                               style={{
                                 position: "absolute", top: 6, left, width, height: 44,
                                 background: col.bg, border: `1px solid ${col.border}`,
@@ -1576,7 +1861,7 @@ function PlanningGantt({
                               }}
                             >
                               <strong style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                {art?.ypm_nom ?? slot.article_id}
+                                {art?.ypm_nom ?? slot.article_id}{pieces}{art?.taille ? ` · ${art.taille}` : ""}
                               </strong>
                               <span style={{ fontSize: 10, opacity: 0.8 }}>
                                 {slot.heure_debut}–{slot.heure_fin} · {formatDuree(slot.duree_min)}

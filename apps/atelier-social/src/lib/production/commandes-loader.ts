@@ -11,6 +11,7 @@
  */
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { estEnSerie, propagerSerie } from "./serie";
 import { supabase } from "@/lib/supabase";
 import { alignerZoneCoiffe } from "./catalogue";
 import { estBrodee } from "./broderie-utils";
@@ -211,6 +212,8 @@ export interface Article {
   ref_article?: string;
   /** Réf. rattachée depuis une ligne d'attendu de livraison fournisseur (traçabilité). */
   rattachement_attendu?: { attendu_id: string; ligne_id: string; le: string; par?: string };
+  /** Mode série (B2B) : cette ligne porte le marquage commun recopié sur toutes les autres (lib/production/serie.ts). */
+  modele_serie?: boolean;
   quantite: number;
   broderies: Broderie[];
   duree_preparation_dst_min: number;
@@ -229,6 +232,8 @@ export interface PlanningSlot {
   duree_min: number;
   article_id: string;
   commande_id: string;
+  /** Nombre de pièces de l'article brodées dans ce créneau (absent = 1). */
+  nb_pieces?: number;
 }
 
 export interface Planning {
@@ -238,6 +243,8 @@ export interface Planning {
   date_debut: string;
   slots: PlanningSlot[];
   genere_le?: string;
+  /** Pièces qui ne tiennent pas dans l'horizon (à replanifier en allongeant l'horizon). */
+  pieces_non_planifiees?: number;
 }
 
 export type TypeDocument =
@@ -519,6 +526,11 @@ export async function getCommande(id: string): Promise<Commande | null> {
 
 export async function writeCommande(commande: Commande): Promise<void> {
   commande.updated_at = new Date().toISOString();
+  // Mode série : le marquage du modèle est recopié sur toutes les lignes avant chaque écriture.
+  if (estEnSerie(commande)) {
+    propagerSerie(commande);
+    recalculerDureesCommande(commande, getDureesRef());
+  }
   // Colonnes dénormalisées pour recherche/tri — resynchronisées depuis expedition à chaque écriture.
   const clientNom = commande.expedition?.nom ?? null;
   const clientVille = commande.expedition?.ville ?? null;
@@ -536,6 +548,16 @@ export async function writeCommande(commande: Commande): Promise<void> {
   };
   const { error } = await supabase.from(TBL_COMMANDES).upsert(row, { onConflict: "id" });
   if (error) throw new Error(`Écriture commande ${commande.id} échouée : ${error.message}`);
+}
+
+/** Suppression définitive de la ligne commande (les fichiers Storage sont gérés par l'appelant). */
+export async function deleteCommande(id: string): Promise<void> {
+  if (!supabase) {
+    memStore().delete(id);
+    return;
+  }
+  const { error } = await supabase.from(TBL_COMMANDES).delete().eq("id", id);
+  if (error) throw new Error(`Suppression commande ${id} échouée : ${error.message}`);
 }
 
 // ──────────────────────────────────────────────────────────
@@ -659,7 +681,8 @@ export function recalculerDureesCommande(
       article.broderies.reduce((s, b) => s + b.duree_total_min, 0) +
       article.duree_cq_min;
     article.duree_total_article_min = articleTotal;
-    totalMin += articleTotal * (article.quantite || 1);
+    // La préparation DST se fait une fois par ligne, pas une fois par pièce.
+    totalMin += article.duree_preparation_dst_min + (articleTotal - article.duree_preparation_dst_min) * (article.quantite || 1);
   }
 
   commande.duree_total_min = totalMin;

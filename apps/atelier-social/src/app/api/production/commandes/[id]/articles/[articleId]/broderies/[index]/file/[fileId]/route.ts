@@ -6,6 +6,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCommande, writeCommande } from "@/lib/production/commandes-loader";
+import { refusMarquageHorsModele } from "@/lib/production/serie";
 
 const BUCKET = "commandes-broderies";
 
@@ -24,6 +25,8 @@ export async function DELETE(
     if (!article) {
       return NextResponse.json({ ok: false, error: "Article introuvable" }, { status: 404 });
     }
+    const refusSerie = refusMarquageHorsModele(commande, articleId);
+    if (refusSerie) return NextResponse.json({ ok: false, error: refusSerie }, { status: 400 });
     const broderie = article.broderies[idx];
     if (!broderie) {
       return NextResponse.json({ ok: false, error: "Broderie introuvable" }, { status: 404 });

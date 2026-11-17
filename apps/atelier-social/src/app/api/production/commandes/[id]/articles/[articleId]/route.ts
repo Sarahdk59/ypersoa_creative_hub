@@ -35,6 +35,7 @@ import { chargerReferentiel, couleursProduitEtendu } from "@/lib/production/refe
 import { getFils, getMotifs, getPalettes } from "@/lib/atelier-da/referentiels-loader";
 import { MAX_POLICES_PAR_ZONE, normaliserPolices, splitTypos, TECHNIQUES_MARQUAGE } from "@/lib/production/broderie-utils";
 import type { TechniqueMarquage } from "@/lib/production/commandes-loader";
+import { refusMarquageHorsModele } from "@/lib/production/serie";
 
 type Body = {
   /** Raccourci : réf. article complète YPxxx-CCCC-TTTT (ex. créée depuis un attendu de livraison). */
@@ -83,6 +84,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
     const article = commande.articles.find((a) => a.id === articleId);
     if (!article) return NextResponse.json({ ok: false, error: "Article introuvable" }, { status: 404 });
+    const refusSerie = body.broderie !== undefined || body.ypm_id !== undefined ? refusMarquageHorsModele(commande, articleId) : null;
+    if (refusSerie) return NextResponse.json({ ok: false, error: refusSerie }, { status: 400 });
 
     const mapping = getSkuMapping();
     const cat = getCatalogue();
